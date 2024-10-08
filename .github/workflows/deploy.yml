@@ -6,6 +6,7 @@ on:
       - main
 env:
   AWS_REGION: ap-southeast-2
+  S3_BUCKET_NAME: dev-forte-spa-cloudfront
   
 jobs:
   build_and_deploy:
@@ -35,5 +36,4 @@ jobs:
 
       - name: Deploy to S3
         run: |
-          aws s3 ls
-          # aws s3 sync ./build s3://$S3_BUCKET_NAME --region $AWS_REGION --delete
+          aws s3 sync ./build s3://${{ env.S3_BUCKET_NAME }} --region ${{ env.AWS_REGION }} --delete
