@@ -1,8 +1,0 @@
-repos:
-  - repo: local
-    hooks:
-      - id: jira-pre-commit
-        name: jira ticket (local)
-        entry: jira-pre-commit.sh
-        language: script
-        stages: [commit-msg]
