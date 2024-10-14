@@ -5,6 +5,16 @@ on:
     branches: 
       - main
   workflow_dispatch: 
+    inputs:
+      environment:
+        description: 'Environment to deploy (e.g., dev, test, prod)'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - testing
+          - prod
         
 env:
   AWS_REGION: ap-southeast-2
