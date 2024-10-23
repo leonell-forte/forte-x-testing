@@ -9,7 +9,7 @@ const Input = ({ ...props }: TextFieldProps) => {
     primary: {
       "& .MuiOutlinedInput-root": {
         borderRadius: "10px",
-        color: "white",
+        color: "#fff",
         "& fieldset": {
           borderColor: "#fff",
         },
@@ -63,7 +63,7 @@ const Input = ({ ...props }: TextFieldProps) => {
         },
       },
       "& .MuiInputLabel-root": {
-        color: "#787878",
+        color: "#787878 !important",
       },
     },
   };
