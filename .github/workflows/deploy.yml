@@ -26,7 +26,7 @@ jobs:
 
 
       - name: List directory contents
-        run: cd .next && ls -a
+        run: cd out && ls -a
    
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -38,7 +38,7 @@ jobs:
 
       - name: Deploy to S3
         run: |
-          aws s3 sync .next/ s3://${{ secrets.S3_BUCKET_NAME }} --region ${{ secrets.AWS_REGION }} --delete
+          aws s3 sync out/ s3://${{ secrets.S3_BUCKET_NAME }} --region ${{ secrets.AWS_REGION }} --delete
 
       - name: Invalidate CloudFront Cache
         run: |
