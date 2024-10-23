@@ -12,7 +12,7 @@
 @font-face {
   font-family: "TWKLausanne";
   src: url("/fonts/TWKLausanne-450.ttf") format("truetype");
-  font-weight: 450;
+  font-weight: 400;
   font-style: normal;
 }
 
@@ -23,6 +23,15 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: "FAMAime";
+  src: url("/fonts/FAMAime-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
 * {
+  @apply font-light;
   font-family: "TWKLausanne", sans-serif;
+  color: #fff;
 }

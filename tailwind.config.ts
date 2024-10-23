@@ -8,6 +8,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        "body-gradient":
+          "linear-gradient(205.47deg, #229B83 8.69%, #094548 44.83%, #011217 80.96%)",
+      },
       colors: {
         "text-black": "#000000",
         "forest-green": "#0A312A",
@@ -34,6 +38,9 @@ const config: Config = {
         "body-1": "16px",
         "body-2": "14px",
         "body-3": "12px",
+      },
+      fontFamily: {
+        famaime: ["FAMAime", "sans-serif"],
       },
     },
   },

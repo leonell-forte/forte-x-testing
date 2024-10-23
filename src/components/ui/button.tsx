@@ -2,7 +2,7 @@ import React from "react";
 import { Button as ButtonComponent, ButtonProps } from "@mui/material";
 
 interface IButtonProp extends ButtonProps {
-  buttonType: "primary" | "secondary" | "tertiary";
+  buttonType?: "primary" | "secondary" | "tertiary";
   active?: boolean;
 }
 
@@ -45,7 +45,7 @@ const Button = ({
 
   return (
     <ButtonComponent
-      sx={variants[buttonType as keyof typeof variants]}
+      sx={variants[(buttonType as keyof typeof variants) || "primary"]}
       {...props}
       className={"gap-[10px] !px-6 !normal-case h-11"}
     >

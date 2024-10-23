@@ -1,3 +1,4 @@
+"use client";
 import { TextField, TextFieldProps } from "@mui/material";
 import React from "react";
 
@@ -9,20 +10,20 @@ const Input = ({ ...props }: TextFieldProps) => {
     primary: {
       "& .MuiOutlinedInput-root": {
         borderRadius: "10px",
-        color: "#fff",
+        color: "white",
         "& fieldset": {
-          borderColor: "#fff",
+          borderColor: "#ffffff",
         },
         "&:hover fieldset": {
-          borderColor: "#fff",
+          borderColor: "#ffffff",
         },
         "&.Mui-focused fieldset": {
           border: "1.5px solid",
-          borderColor: "#fff",
+          borderColor: "#ffffff",
         },
       },
       "& .MuiInputLabel-root": {
-        color: "#fff",
+        color: "#ffffff",
       },
     },
     success: {
@@ -73,9 +74,14 @@ const Input = ({ ...props }: TextFieldProps) => {
     ? variants["disabled"]
     : error
     ? variants["error"]
-    : variants[color || "default"];
+    : variants["primary"];
 
-  return <TextField sx={{ ...appliedVariant }} {...props} />;
+  return (
+    <TextField
+      sx={{ ...appliedVariant, height: "50px !important" }}
+      {...props}
+    />
+  );
 };
 
 export default Input;
