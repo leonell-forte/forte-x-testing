@@ -53,7 +53,7 @@ const OTPInput = ({ onChange }: IOTPInputProps) => {
             onChange={(e) => handleChange(e.target.value, index)}
             maxLength={1}
             className={classNames(
-              "w-10 md:w-[76px] h-10 md:h-[76px] rounded-xl md:rounded-[20px] bg-white !bg-opacity-[50%] text-center text-[40px] text-forest-green outline-none",
+              "w-10 md:w-[76px] h-10 md:h-[76px] rounded-xl md:rounded-[20px] bg-white !bg-opacity-[50%] text-center text-[24px] md:text-[40px] text-forest-green outline-none",
               digit && "!bg-mint"
             )}
           />
