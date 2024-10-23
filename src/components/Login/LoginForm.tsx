@@ -45,6 +45,8 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
             error={!!errors.email?.message}
             helperText={errors.email?.message}
             label="Email"
+            type="email"
+            autoComplete="email"
           />
           <Input
             {...register("password")}

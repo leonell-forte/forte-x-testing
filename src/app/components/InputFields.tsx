@@ -8,10 +8,10 @@ const InputFields = () => {
         Input Fields
       </p>
       <div className="flex flex-wrap gap-4">
-        <Input color="primary" label="Label" />
-        <Input color="success" label="Label" />
-        <Input disabled color="success" label="Label" />
-        <Input error color="success" label="Label" />
+        <Input color="primary" label="Label" helperText="Helper Text" />
+        <Input color="success" label="Label" helperText="Helper Text" />
+        <Input disabled label="Label" helperText="Helper Text" />
+        <Input error label="Label" helperText="Helper Text" />
       </div>
     </div>
   );

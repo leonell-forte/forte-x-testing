@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import StoreProvider from "./StoreProvider";
+import MuiProvider from "./MuiProvider";
 
 export const metadata: Metadata = {
   title: "Forte Global",
@@ -17,14 +18,16 @@ export default function RootLayout({
       <link rel="icon" href="/favicon.png" sizes="32x32" type="image/png" />
       <head></head>
       <body>
-        <StoreProvider>
-          <div>
-            <div className="bg-body-gradient w-screen h-screen fixed top-0 left-0 z-[-1]"></div>
-            <div className="p-4 md:px-[50px] xl:px-[66px] min-h-screen max-w-[1440px] mx-auto">
-              {children}
+        <MuiProvider>
+          <StoreProvider>
+            <div>
+              <div className="bg-body-gradient w-screen h-screen fixed top-0 left-0 z-[-1]"></div>
+              <div className="p-4 md:px-[50px] xl:px-[66px] min-h-screen max-w-[1440px] mx-auto">
+                {children}
+              </div>
             </div>
-          </div>
-        </StoreProvider>
+          </StoreProvider>
+        </MuiProvider>
       </body>
     </html>
   );

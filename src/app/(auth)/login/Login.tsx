@@ -62,7 +62,7 @@ const Login = () => {
             width={122}
             height={122}
             alt="logo"
-            src="/forte-logo.png"
+            src="/logo.png"
             className="w-auto h-auto mx-auto"
           />
           {renderStep(step)}
