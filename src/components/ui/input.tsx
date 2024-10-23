@@ -12,18 +12,18 @@ const Input = ({ ...props }: TextFieldProps) => {
         borderRadius: "10px",
         color: "white",
         "& fieldset": {
-          borderColor: "#ffffff",
+          borderColor: "#ffffff !important",
         },
         "&:hover fieldset": {
-          borderColor: "#ffffff",
+          borderColor: "#ffffff !important",
         },
         "&.Mui-focused fieldset": {
           border: "1.5px solid",
-          borderColor: "#ffffff",
+          borderColor: "#ffffff !important",
         },
       },
       "& .MuiInputLabel-root": {
-        color: "#ffffff",
+        color: "#ffffff !important",
       },
     },
     success: {
