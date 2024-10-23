@@ -1,12 +1,14 @@
 import LoginForm from "@/components/Login/LoginForm";
+import OTPForm from "@/components/Login/OTPForm";
+import ResetPasswordForm from "@/components/Login/ResetPasswordForm";
 import Card from "@/components/ui/card";
 import Image from "next/image";
 import React from "react";
 
 const LoginPage = () => {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-[99px] items-center">
-      <div>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-[99px] items-center h-[95vh]">
+      <div className="hidden lg:block">
         <div className="max-w-[437px] w-auto h-auto mx-auto md:mx-0">
           <Image
             width={437}
@@ -28,13 +30,21 @@ const LoginPage = () => {
           </p>
         </div>
       </div>
-      <div>
-        <Card className="px-10 py-24 md:py-[196px]">
-          <div className="max-w-[400px] mx-auto">
-            <LoginForm />
-          </div>
-        </Card>
-      </div>
+
+      <Card className="px-10 py-24 max-h-[838px] h-full flex items-center">
+        <div className="max-w-[400px] mx-auto space-y-5 w-full">
+          <Image
+            width={122}
+            height={122}
+            alt="logo"
+            src="/forte-logo.png"
+            className="w-auto h-auto mx-auto"
+          />
+          {/* <LoginForm /> */}
+          {/* <OTPForm /> */}
+          <ResetPasswordForm />
+        </div>
+      </Card>
     </div>
   );
 };

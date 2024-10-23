@@ -24,15 +24,7 @@ const LoginForm = () => {
   const onSubmit = async (values: z.infer<typeof login.schema>) => {};
 
   return (
-    <div className="flex flex-col items-center w-full gap-5">
-      <Image
-        width={122}
-        height={122}
-        alt="logo"
-        src="/forte-logo.png"
-        className="w-auto h-auto"
-      />
-
+    <div className="w-full">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-10 w-full">
         <div className="text-center">
           <p>Welcome</p>
@@ -64,7 +56,7 @@ const LoginForm = () => {
           <Button type="submit" fullWidth>
             Log in
           </Button>
-          <p className="text-[18px]">OR</p>
+          <p className="text-[14px] md:ext-[18px]">OR</p>
           <Button type="button" fullWidth buttonType="secondary">
             Log in with google{" "}
           </Button>

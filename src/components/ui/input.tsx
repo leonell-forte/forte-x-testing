@@ -76,12 +76,7 @@ const Input = ({ ...props }: TextFieldProps) => {
     ? variants["error"]
     : variants["primary"];
 
-  return (
-    <TextField
-      sx={{ ...appliedVariant, height: "50px !important" }}
-      {...props}
-    />
-  );
+  return <TextField sx={{ ...appliedVariant }} {...props} />;
 };
 
 export default Input;
