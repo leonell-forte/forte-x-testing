@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import StoreProvider from "./StoreProvider";
 
 export const metadata: Metadata = {
   title: "Forte Global",
@@ -13,15 +14,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <link rel="icon" href="/forte-logo.png" type="image/png" />
+      <link rel="icon" href="/favicon.png" sizes="32x32" type="image/png" />
       <head></head>
       <body>
-        <div>
-          <div className="bg-body-gradient w-screen h-screen fixed top-0 left-0 z-[-1]"></div>
-          <div className="p-4 md:px-[50px] xl:px-[66px] min-h-screen max-w-[1440px] mx-auto">
-            {children}
+        <StoreProvider>
+          <div>
+            <div className="bg-body-gradient w-screen h-screen fixed top-0 left-0 z-[-1]"></div>
+            <div className="p-4 md:px-[50px] xl:px-[66px] min-h-screen max-w-[1440px] mx-auto">
+              {children}
+            </div>
           </div>
-        </div>
+        </StoreProvider>
       </body>
     </html>
   );

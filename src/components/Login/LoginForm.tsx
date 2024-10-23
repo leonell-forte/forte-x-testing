@@ -10,8 +10,13 @@ import { z } from "zod";
 import { login } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useAppDispatch } from "@/lib/hooks";
+import { setEmail } from "@/lib/slice/auth";
+import { ILoginProps } from "./types";
 
-const LoginForm = () => {
+const LoginForm = ({ handleNext }: ILoginProps) => {
+  const dispatch = useAppDispatch();
+
   const {
     register,
     handleSubmit,
@@ -21,7 +26,10 @@ const LoginForm = () => {
     defaultValues: login.defaultValues,
   });
 
-  const onSubmit = async (values: z.infer<typeof login.schema>) => {};
+  const onSubmit = async (values: z.infer<typeof login.schema>) => {
+    handleNext!();
+    dispatch(setEmail(values.email));
+  };
 
   return (
     <div className="w-full">
@@ -35,11 +43,13 @@ const LoginForm = () => {
           <Input
             {...register("email")}
             error={!!errors.email?.message}
+            helperText={errors.email?.message}
             label="Email"
           />
           <Input
             {...register("password")}
             error={!!errors.password?.message}
+            helperText={errors.password?.message}
             label="Password"
             type="password"
           />

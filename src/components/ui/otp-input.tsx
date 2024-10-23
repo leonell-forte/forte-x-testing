@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
-import TextField from "@mui/material/TextField";
-import { Grid2 } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import classNames from "classnames";
 
-const OTPInput = () => {
+interface IOTPInputProps {
+  onChange: (value: string[]) => void;
+}
+
+const OTPInput = ({ onChange }: IOTPInputProps) => {
   const [otp, setOtp] = useState(Array(4).fill("")); // Change 4 to your desired OTP length
 
   const handleChange = (value: string, index: number) => {
@@ -30,6 +32,14 @@ const OTPInput = () => {
 
     setOtp(newOtp);
   };
+
+  useEffect(() => {
+    const debounce = setTimeout(() => {
+      onChange(otp);
+    }, 50);
+
+    return () => clearTimeout(debounce);
+  }, [otp]);
 
   return (
     <div className="flex gap-4 md:gap-[30px] w-fit mx-auto">
