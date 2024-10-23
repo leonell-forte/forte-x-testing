@@ -39,7 +39,7 @@ const OTPInput = ({ onChange }: IOTPInputProps) => {
     }, 50);
 
     return () => clearTimeout(debounce);
-  }, [otp]);
+  }, [otp, onChange]);
 
   return (
     <div className="flex gap-4 md:gap-[30px] w-fit mx-auto">

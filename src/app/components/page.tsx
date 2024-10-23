@@ -1,6 +1,5 @@
 import React from "react";
 import Buttons from "./Buttons";
-import Input from "@/components/ui/input";
 import InputFields from "./InputFields";
 
 const ComponentsPage = () => {

@@ -20,6 +20,7 @@ const ResetPasswordForm = ({ handleNext }: ILoginProps) => {
   });
 
   const onSubmit = async (values: z.infer<typeof password.schema>) => {
+    console.log(values);
     handleNext!();
   };
   return (

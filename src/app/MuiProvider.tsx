@@ -7,7 +7,7 @@ const theme = createTheme({
   components: {
     MuiTextField: {
       styleOverrides: {
-        root: ({ ownerState }: any) => ({
+        root: ({ ownerState }) => ({
           // Primary Variant (default)
           ...(ownerState.color === "primary" && {
             "& .MuiOutlinedInput-root": {

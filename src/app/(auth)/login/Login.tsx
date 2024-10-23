@@ -15,21 +15,18 @@ const Login = () => {
     setStep((prev) => prev + 1);
   };
 
-  const renderStep = useCallback(
-    (step: number) => {
-      switch (step) {
-        case 0:
-          return <LoginForm handleNext={handleNextStep} />;
-        case 1:
-          return <OTPForm handleNext={handleNextStep} />;
-        case 2:
-          return <ResetPasswordForm handleNext={handleNextStep} />;
-        case 3:
-          return <ResetSuccess />;
-      }
-    },
-    [step]
-  );
+  const renderStep = useCallback((step: number) => {
+    switch (step) {
+      case 0:
+        return <LoginForm handleNext={handleNextStep} />;
+      case 1:
+        return <OTPForm handleNext={handleNextStep} />;
+      case 2:
+        return <ResetPasswordForm handleNext={handleNextStep} />;
+      case 3:
+        return <ResetSuccess />;
+    }
+  }, []);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-[99px] items-center h-[95vh]">

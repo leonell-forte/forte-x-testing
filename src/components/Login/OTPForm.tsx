@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import OTPInput from "../ui/otp-input";
 import Button from "../ui/button";
 import { ILoginProps } from "./types";
