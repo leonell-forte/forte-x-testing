@@ -38,12 +38,14 @@ const ResetPasswordForm = ({ handleNext }: ILoginProps) => {
           placeholder="Reset new password"
           type="password"
           error={!!errors.new?.message}
+          helperText={errors.new?.message}
         />
         <Input
           {...register("confirm")}
           placeholder="Confirm new password"
           type="password"
           error={!!errors?.confirm?.message}
+          helperText={errors.confirm?.message}
         />
       </div>
 
