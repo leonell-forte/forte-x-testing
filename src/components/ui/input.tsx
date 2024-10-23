@@ -6,8 +6,9 @@ const Input = ({ ...props }: TextFieldProps) => {
 
   // Define style variants for different states
   const variants: Record<string, object> = {
-    default: {
+    primary: {
       "& .MuiOutlinedInput-root": {
+        borderRadius: "10px",
         color: "white",
         "& fieldset": {
           borderColor: "#fff",
@@ -16,7 +17,7 @@ const Input = ({ ...props }: TextFieldProps) => {
           borderColor: "#fff",
         },
         "&.Mui-focused fieldset": {
-          border: "1px solid",
+          border: "1.5px solid",
           borderColor: "#fff",
         },
       },
@@ -26,6 +27,7 @@ const Input = ({ ...props }: TextFieldProps) => {
     },
     success: {
       "& .MuiOutlinedInput-root": {
+        borderRadius: "10px",
         color: "white",
         "& fieldset": {
           borderColor: "#42ECA8",
@@ -34,7 +36,7 @@ const Input = ({ ...props }: TextFieldProps) => {
           borderColor: "#42ECA8",
         },
         "&.Mui-focused fieldset": {
-          border: "1px solid",
+          border: "1.5px solid",
           borderColor: "#42ECA8",
         },
       },
@@ -44,28 +46,24 @@ const Input = ({ ...props }: TextFieldProps) => {
     },
     error: {
       "& .MuiOutlinedInput-root": {
-        color: "white",
-        "& fieldset": {
-          borderColor: "#FF956B",
-        },
-        "&:hover fieldset": {
-          borderColor: "#FF956B",
-        },
+        borderRadius: "10px",
         "&.Mui-focused fieldset": {
-          border: "1px solid",
-          borderColor: "#FF956B",
+          border: "1.5px solid",
+          borderColor: "#E61A1A",
         },
-      },
-      "& .MuiInputLabel-root": {
-        color: "#FF956B",
       },
     },
     disabled: {
       "& .MuiOutlinedInput-root": {
-        color: "#fff",
-        "& fieldset": {
+        borderRadius: "10px",
+        color: "#787878",
+        "&.Mui-disabled fieldset": {
+          border: "1.5px solid",
           borderColor: "#787878",
         },
+      },
+      "& .MuiInputLabel-root": {
+        color: "#787878",
       },
     },
   };
@@ -77,7 +75,7 @@ const Input = ({ ...props }: TextFieldProps) => {
     ? variants["error"]
     : variants[color || "default"];
 
-  return <TextField sx={appliedVariant} {...props} />;
+  return <TextField sx={{ ...appliedVariant }} {...props} />;
 };
 
 export default Input;

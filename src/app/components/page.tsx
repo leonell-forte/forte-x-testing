@@ -1,19 +1,13 @@
 import React from "react";
 import Buttons from "./Buttons";
 import Input from "@/components/ui/input";
+import InputFields from "./InputFields";
 
 const ComponentsPage = () => {
   return (
-    <div className="p-10 bg-forest-green">
+    <div className="p-10 bg-black space-y-10">
       <Buttons />
-      <div>
-        <p className="text-2xl text-white font-semibold uppercase mb-2">
-          buttons
-        </p>
-        <div className="flex flex-wrap gap-4">
-          <Input error color="success" label="Label" />
-        </div>
-      </div>
+      <InputFields />
     </div>
   );
 };
