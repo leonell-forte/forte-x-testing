@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import {
   CheckboxProps,
   FormControlLabel,
@@ -6,7 +6,7 @@ import {
 } from "@mui/material";
 
 interface ICheckboxProps extends CheckboxProps {
-  label?: string;
+  label?: string | ReactNode;
 }
 
 const Checkbox = ({ label, ...props }: ICheckboxProps) => {

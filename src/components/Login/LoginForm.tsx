@@ -41,6 +41,7 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
         <div className="flex flex-col w-full gap-[15px]">
           <Input
             {...register("email")}
+            autoCapitalize="email"
             error={!!errors.email?.message}
             helperText={errors.email?.message}
             label="Email"

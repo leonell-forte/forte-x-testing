@@ -35,3 +35,7 @@
   font-family: "TWKLausanne", sans-serif;
   color: #fff;
 }
+
+a {
+  @apply underline underline-offset-4;
+}
