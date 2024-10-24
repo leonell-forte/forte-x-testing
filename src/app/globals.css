@@ -34,8 +34,16 @@
   @apply font-light;
   font-family: "TWKLausanne", sans-serif;
   color: #fff;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 a {
   @apply underline underline-offset-4;
+}
+
+.main-container {
+  @apply mx-auto px-5;
+  max-width: 1440px;
 }
