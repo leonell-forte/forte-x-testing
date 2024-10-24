@@ -60,7 +60,7 @@ const Login = () => {
             height={122}
             alt="logo"
             src="/logo.png"
-            className="w-auto h-auto mx-auto"
+            className="w-auto h-auto mx-auto max-w-[122px]"
           />
           {renderStep(step)}
         </div>
