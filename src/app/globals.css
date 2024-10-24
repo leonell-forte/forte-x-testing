@@ -39,7 +39,7 @@
   box-sizing: border-box;
 }
 
-a {
+.link {
   @apply underline underline-offset-4;
 }
 
