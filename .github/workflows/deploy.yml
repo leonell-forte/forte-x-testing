@@ -18,24 +18,14 @@ jobs:
         with:
           node-version: 18
 
-      # - name: Install dependencies
-      #   run: npm ci --legacy-peer-deps
-
-      # - name: Build project
-      #   run: npm run build
-
-      # - name: List directory contents
-      #   run: pwd; ls -l
-
       - name: Install dependencies
-        run: npm install
+        run: npm ci --legacy-peer-deps
 
       - name: Build project
         run: npm run build
 
       - name: List directory contents
-        run: cd out && ls -a
-
+        run: pwd; ls -l
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
