@@ -99,7 +99,7 @@ const theme = createTheme({
               color: "#787878 !important",
             },
             "& .MuiFormHelperText-root": {
-              color: "#787878",
+              color: "#787878 !important",
             },
           }),
         }),
