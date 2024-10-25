@@ -21,7 +21,7 @@ const Checkbox = ({ label, ...props }: ICheckboxProps) => {
       unchecked = "/images/icons/checkbox-disabled-unchecked.svg";
     } else {
       checked = "/images/icons/checkbox-checked.svg";
-      unchecked = "/images/icons/checkbox-unchecked.svg";
+      unchecked = "/images/icons/checkbox-disabled-unchecked.svg";
     }
 
     return { checked, unchecked };
