@@ -12,15 +12,16 @@ const Input = ({ ...props }: TextFieldProps) => {
       <TextField
         {...props}
         type={type === "password" ? (show ? "text" : "password") : type}
-        sx={
-          type === "password"
-            ? {
-                "& .MuiInputBase-input": {
-                  paddingRight: "50px",
-                },
-              }
-            : {}
-        }
+        sx={{
+          "& .MuiInputBase-input": {
+            ...(type === "password" && {
+              paddingRight: "50px",
+            }),
+            ...(type === "search" && {
+              paddingLeft: "40px !important", // adjust padding for input text if needed
+            }),
+          },
+        }}
         fullWidth
       />
 
