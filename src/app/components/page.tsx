@@ -4,6 +4,7 @@ import InputFields from "./InputFields";
 import Checkboxes from "./Checkboxes";
 import RadioButtons from "./RadioButtons";
 import SwitchButtons from "./SwitchButtons";
+import Tags from "./Tags";
 
 const ComponentsPage = () => {
   return (
@@ -15,6 +16,7 @@ const ComponentsPage = () => {
         <RadioButtons />
         <SwitchButtons />
       </div>
+      <Tags />
     </div>
   );
 };
