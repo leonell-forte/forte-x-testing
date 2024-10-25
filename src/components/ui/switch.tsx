@@ -1,7 +1,7 @@
 "use client";
 
 import classNames from "classnames";
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 
 interface ISwitchProps {

@@ -1,7 +1,6 @@
 import {
   FormControl,
   FormControlLabel,
-  FormLabel,
   Radio,
   RadioGroup as RadioButtons,
 } from "@mui/material";
@@ -15,10 +14,8 @@ interface IRadioGroupProps {
 
 const RadioGroup = ({ items, className }: IRadioGroupProps) => {
   const renderIcons = useCallback(() => {
-    let checked, unchecked;
-
-    checked = "/images/icons/radio-checked.svg";
-    unchecked = "/images/icons/radio-unchecked.svg";
+    const checked = "/images/icons/radio-checked.svg";
+    const unchecked = "/images/icons/radio-unchecked.svg";
 
     return { checked, unchecked };
   }, []);
