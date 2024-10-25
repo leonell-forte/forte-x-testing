@@ -15,8 +15,8 @@ const ComponentsPage = () => {
         <Checkboxes />
         <RadioButtons />
         <SwitchButtons />
+        <Tags />
       </div>
-      <Tags />
     </div>
   );
 };
