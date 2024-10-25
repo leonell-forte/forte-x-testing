@@ -73,8 +73,14 @@ const SignupForm = () => {
             <Checkbox
               label={
                 <p>
-                  I agree to all the <Link href="">Terms, Privacy</Link> and{" "}
-                  <Link href="/">Fees</Link>
+                  I agree to all the{" "}
+                  <Link href="/" className="link">
+                    Terms, Privacy
+                  </Link>{" "}
+                  and{" "}
+                  <Link href="/" className="link">
+                    Fees
+                  </Link>
                 </p>
               }
             />

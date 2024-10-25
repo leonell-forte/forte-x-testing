@@ -5,7 +5,7 @@ import React from "react";
 
 const Signup = () => {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-[99px] items-center h-[95vh]">
+    <div className="main-container grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-[99px] items-center h-[95vh] md:px-[86px]">
       <div className="hidden lg:block">
         <div className="max-w-[437px] w-auto h-auto mx-auto md:mx-0">
           <Image
@@ -35,7 +35,7 @@ const Signup = () => {
             height={122}
             alt="logo"
             src="/logo.png"
-            className="w-auto h-auto mx-auto"
+            className="w-auto h-auto mx-auto max-w-[122px]"
           />
 
           <SignupForm />
