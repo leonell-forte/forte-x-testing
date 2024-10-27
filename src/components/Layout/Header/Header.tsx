@@ -1,6 +1,5 @@
 import Image from "next/image";
 import React from "react";
-import Input from "../../ui/input";
 import UserDropdown from "./UserDropdown";
 import SearchInput from "@/components/ui/search-input";
 
