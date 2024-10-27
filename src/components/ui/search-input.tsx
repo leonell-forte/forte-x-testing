@@ -13,15 +13,7 @@ const SearchInput = ({ ...props }: TextFieldProps) => {
         src="/images/icons/search.svg"
         className="absolute left-4"
       />
-      <Input
-        {...props}
-        placeholder="Search"
-        sx={{
-          "& .MuiInputBase-input": {
-            paddingLeft: "40px", // adjust padding for input text if needed
-          },
-        }}
-      />
+      <Input {...props} placeholder="Search" type="search" />
     </div>
   );
 };
