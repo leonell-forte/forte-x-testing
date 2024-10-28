@@ -13,10 +13,9 @@ RUN npm ci --legacy-peer-deps
 # Copy the rest of the application code
 COPY . .
 
-# Build the Next.js application
+# Build the Next.js application with static export
 RUN npm run build
 
-RUN npm run export
 # Expose the port the app runs on
 EXPOSE 3000
 
