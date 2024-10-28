@@ -8,21 +8,25 @@ import Table from "@/components/ui/table";
 import Image from "next/image";
 import React, { useCallback, useState } from "react";
 
-interface IUser {
-  name: string;
-  email: string;
-  phone: string;
-  role: string;
-  organization: string;
-}
-
 const Users = () => {
   const [page, setPage] = useState(1);
 
   const slicedTableData = useCallback(() => {
     const start = (page - 1) * 10;
     const end = start + 10;
-    return TABLE_DATA.slice(start, end);
+    return TABLE_DATA.slice(start, end).map((item) => ({
+      ...item,
+      action: (
+        <button className="p-[3px]">
+          <Image
+            width={18}
+            height={18}
+            alt="pencil"
+            src="/images/icons/pencil.svg"
+          />
+        </button>
+      ),
+    }));
   }, [page]);
 
   return (
@@ -43,21 +47,7 @@ const Users = () => {
         </div>
       </div>
       <div className="space-y-[18px]">
-        <Table.Container>
-          <Table.Head>
-            <Table.Row>
-              {TABLE_HEADER.map((key, headerIndex) => {
-                return <Table.Header key={headerIndex}>{key}</Table.Header>;
-              })}
-              <Table.Header></Table.Header>
-            </Table.Row>
-          </Table.Head>
-          <Table.Body>
-            {slicedTableData().map((item, bodyIndex) => {
-              return <TableRow key={bodyIndex} user={item} />;
-            })}
-          </Table.Body>
-        </Table.Container>
+        <Table headers={TABLE_HEADER} data={slicedTableData()} />
 
         <div className="flex justify-end">
           <Pagination
@@ -73,29 +63,6 @@ const Users = () => {
 
 export default Users;
 
-const TableRow = ({ user }: { user: IUser }) => {
-  const { name, email, phone, role, organization } = user;
-  return (
-    <Table.Row>
-      <Table.Data>{name}</Table.Data>
-      <Table.Data>{email}</Table.Data>
-      <Table.Data>{phone}</Table.Data>
-      <Table.Data>{role}</Table.Data>
-      <Table.Data>{organization}</Table.Data>
-      <Table.Data>
-        <button className="p-[3px]">
-          <Image
-            width={18}
-            height={18}
-            alt="pencil"
-            src="/images/icons/pencil.svg"
-          />
-        </button>
-      </Table.Data>
-    </Table.Row>
-  );
-};
-
 const filters = [
   {
     label: "Test",
@@ -108,6 +75,7 @@ const TABLE_HEADER = [
   "Phone",
   "Role",
   "Organization",
+  "",
 ];
 
 const TABLE_DATA = [
