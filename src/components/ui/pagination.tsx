@@ -2,7 +2,7 @@
 
 import classNames from "classnames";
 import Image from "next/image";
-import React, { ChangeEvent, useMemo } from "react";
+import React, { useMemo } from "react";
 
 interface IPaginationProps {
   page: number;

@@ -12,7 +12,7 @@ const TableComponent = () => {
     const start = (page - 1) * 10;
     const end = start + 10;
     return TABLE_DATA.slice(start, end);
-  }, [TABLE_DATA, page]);
+  }, [page]);
   return (
     <div>
       <p className="text-2xl text-white font-semibold uppercase mb-2">
@@ -22,17 +22,17 @@ const TableComponent = () => {
         <Table.Container>
           <Table.Head>
             <Table.Row>
-              {TABLE_HEADER.map((key, index) => {
-                return <Table.Header key={index}>{key}</Table.Header>;
+              {TABLE_HEADER.map((key, headerIndex) => {
+                return <Table.Header key={headerIndex}>{key}</Table.Header>;
               })}
               <Table.Header></Table.Header>
             </Table.Row>
           </Table.Head>
           <Table.Body>
-            {slicedTableData().map((item, index) => {
+            {slicedTableData().map((item, bodyIndex) => {
               const { name, email, phone, role, organization } = item;
               return (
-                <Table.Row key={index}>
+                <Table.Row key={bodyIndex}>
                   <Table.Data>{name}</Table.Data>
                   <Table.Data>{email}</Table.Data>
                   <Table.Data>{phone}</Table.Data>

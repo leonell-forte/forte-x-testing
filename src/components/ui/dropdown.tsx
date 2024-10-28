@@ -12,9 +12,15 @@ interface IDropdownProp extends InputHTMLAttributes<HTMLInputElement> {
     label: string;
     value: string | number;
   }[];
+  handleSelect?: (value: string | number) => void;
 }
 
-const Dropdown = ({ className, options, ...props }: IDropdownProp) => {
+const Dropdown = ({
+  className,
+  options,
+  handleSelect,
+  ...props
+}: IDropdownProp) => {
   const [showList, setShowList] = useState(false);
 
   const dropdownRef = useRef(null);
@@ -53,7 +59,11 @@ const Dropdown = ({ className, options, ...props }: IDropdownProp) => {
         {options.map((item, index) => {
           const { label, value } = item;
           return (
-            <button key={index} className="w-full text-left">
+            <button
+              onClick={() => handleSelect!(value)}
+              key={index}
+              className="w-full text-left"
+            >
               <li className="text-black py-1.5 px-2.5 hover:bg-grey transition-all">
                 {label}
               </li>
