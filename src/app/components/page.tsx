@@ -5,6 +5,8 @@ import Checkboxes from "./Checkboxes";
 import RadioButtons from "./RadioButtons";
 import SwitchButtons from "./SwitchButtons";
 import Tags from "./Tags";
+import PaginationComponent from "./PaginationComponent";
+import TableComponent from "./TableComponent";
 
 const ComponentsPage = () => {
   return (
@@ -16,7 +18,9 @@ const ComponentsPage = () => {
         <RadioButtons />
         <SwitchButtons />
         <Tags />
+        <PaginationComponent />
       </div>
+      <TableComponent />
     </div>
   );
 };
