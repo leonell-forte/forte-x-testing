@@ -28,27 +28,26 @@ const Dropdown = ({
   useOutsideClick(dropdownRef, () => setShowList(false));
 
   return (
-    <button
+    <div
       ref={dropdownRef}
       className={classNames(
         "relative h-[56px] w-full rounded-[8px] border border-white px-4 flex items-center justify-between",
         className
       )}
-      onClick={() => setShowList((prev) => !prev)}
     >
       <input
         type="text"
         className="bg-transparent border-none outline-none w-[90%] placeholder:text-white/50"
         {...props}
       />
-      <div className="px-1.5">
+      <button onClick={() => setShowList((prev) => !prev)} className="px-1.5">
         <Image
           width={12}
           height={12}
           alt="arrow"
           src="/images/icons/arrow.svg"
         />
-      </div>
+      </button>
 
       <motion.ul
         initial={{ opacity: 0 }}
@@ -71,7 +70,7 @@ const Dropdown = ({
           );
         })}
       </motion.ul>
-    </button>
+    </div>
   );
 };
 
