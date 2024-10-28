@@ -51,13 +51,13 @@ const Dropdown = ({ className, options, ...props }: IDropdownProp) => {
         className="absolute top-16 left-0 rounded-[4px] bg-white w-full overflow-hidden"
       >
         {options.map((item, index) => {
+          const { label, value } = item;
           return (
-            <li
-              key={index}
-              className="text-black py-1.5 px-2.5 hover:bg-grey transition-all"
-            >
-              Profile
-            </li>
+            <button key={index} className="w-full text-left">
+              <li className="text-black py-1.5 px-2.5 hover:bg-grey transition-all">
+                {label}
+              </li>
+            </button>
           );
         })}
       </motion.ul>
