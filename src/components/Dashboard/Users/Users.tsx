@@ -47,7 +47,7 @@ const Users = () => {
         </div>
       </div>
       <div className="space-y-[18px]">
-        {/* <Table headers={TABLE_HEADER} data={slicedTableData()} /> */}
+        <Table headers={TABLE_HEADER} data={slicedTableData()} />
 
         <div className="flex justify-end">
           <Pagination
@@ -92,61 +92,5 @@ const TABLE_DATA = [
     phone: "+61 3456789012",
     role: "Admin",
     organization: "Dolor Sit Corp",
-  },
-  {
-    name: "Jane Smith",
-    email: "jane_smith@example.com",
-    phone: "+61 4567890123",
-    role: "User",
-    organization: "Amet Solutions",
-  },
-  {
-    name: "Mike Johnson",
-    email: "mike_j@example.com",
-    phone: "+61 5678901234",
-    role: "Readonly",
-    organization: "Consectetur Studio",
-  },
-  {
-    name: "Emily Davis",
-    email: "emily_davis@example.com",
-    phone: "+61 6789012345",
-    role: "Suspended",
-    organization: "Elit Innovators",
-  },
-  {
-    name: "Robert Brown",
-    email: "robert_brown@example.com",
-    phone: "+61 7890123456",
-    role: "User",
-    organization: "Vestibulum Inc",
-  },
-  {
-    name: "Sophia Green",
-    email: "sophia_green@example.com",
-    phone: "+61 8901234567",
-    role: "Admin",
-    organization: "Aliquam Corp",
-  },
-  {
-    name: "James Wilson",
-    email: "james_w@example.com",
-    phone: "+61 9012345678",
-    role: "Owner",
-    organization: "Pharetra LLC",
-  },
-  {
-    name: "Isabella Martinez",
-    email: "isabella_m@example.com",
-    phone: "+61 0123456789",
-    role: "Readonly",
-    organization: "Nunc Studios",
-  },
-  {
-    name: "Ethan Lewis",
-    email: "ethan_l@example.com",
-    phone: "+61 1234567890",
-    role: "Suspended",
-    organization: "Egestas Company",
   },
 ];
