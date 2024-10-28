@@ -13,19 +13,14 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+        run: yarn install
 
       - name: Build project
-        run: npm run build
+        run: yarn run build
 
       - name: Build project
-        run: npm run export
+        run: yarn run export
 
       - name: List directory contents
         run: pwd; ls -l
@@ -39,7 +34,7 @@ jobs:
 
       - name: Deploy to S3
         run: |
-          aws s3 sync out/ s3://${{ secrets.S3_BUCKET_NAME }} --region ${{ secrets.AWS_REGION }} --delete
+          aws s3 sync $GITHUB_WORKSPACE/out s3://${{ secrets.S3_BUCKET_NAME }} --region ${{ secrets.AWS_REGION }} --delete
 
       - name: Invalidate CloudFront Cache
         run: |
