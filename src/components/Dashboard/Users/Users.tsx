@@ -2,15 +2,24 @@
 
 import Button from "@/components/ui/button";
 import Dropdown from "@/components/ui/dropdown";
+import Pagination from "@/components/ui/pagination";
 import SearchInput from "@/components/ui/search-input";
 import Table from "@/components/ui/table";
 import Image from "next/image";
-import React from "react";
+import React, { useCallback, useState } from "react";
 
 const Users = () => {
+  const [page, setPage] = useState(1);
+
+  const slicedTableData = useCallback(() => {
+    const start = (page - 1) * 10;
+    const end = start + 10;
+    return TABLE_DATA.slice(start, end);
+  }, [TABLE_DATA, page]);
+
   return (
     <div className="space-y-1.5">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between w-full">
         <div className="flex items-center gap-[18px]">
           <p className="text-[20px]">Filter by</p>
           <Dropdown
@@ -25,7 +34,7 @@ const Users = () => {
           <Button onClick={() => {}}>Add User</Button>
         </div>
       </div>
-      <div>
+      <div className="space-y-[18px]">
         <Table.Container>
           <Table.Head>
             <Table.Row>
@@ -36,7 +45,7 @@ const Users = () => {
             </Table.Row>
           </Table.Head>
           <Table.Body>
-            {TABLE_DATA.map((item, index) => {
+            {slicedTableData().map((item, index) => {
               const { name, email, phone, role, organization } = item;
               return (
                 <Table.Row key={index}>
@@ -60,6 +69,14 @@ const Users = () => {
             })}
           </Table.Body>
         </Table.Container>
+
+        <div className="flex justify-end">
+          <Pagination
+            page={page}
+            onPageChange={(val) => setPage(val)}
+            total={TABLE_DATA.length}
+          />
+        </div>
       </div>
     </div>
   );

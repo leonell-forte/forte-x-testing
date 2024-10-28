@@ -21,7 +21,7 @@ const UserDropdown = () => {
   useOutsideClick(dropdownRef, () => setShowDropdown(false));
 
   return (
-    <div ref={dropdownRef} className="relative">
+    <div ref={dropdownRef} className="relative z-50">
       <div
         onClick={() => setShowDropdown((prev) => !prev)}
         className="w-[184px] h-[42px] rounded-[50px] bg-white bg-opacity-[30%] flex justify-between items-center pl-1.5 pr-4 cursor-pointer hover:brightness-[.8] transition-all"

@@ -22,7 +22,9 @@ export default function RootLayout({
           <StoreProvider>
             <div>
               <div className="bg-body-gradient w-screen h-screen fixed top-0 left-0 z-[-1]"></div>
-              <div className="min-h-screen">{children}</div>
+              <div className="min-h-screen w-screen overflow-hidden">
+                {children}
+              </div>
             </div>
           </StoreProvider>
         </MuiProvider>

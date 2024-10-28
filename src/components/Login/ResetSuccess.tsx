@@ -1,7 +1,10 @@
 import React from "react";
 import Button from "../ui/button";
+import { useRouter } from "next/navigation";
 
 const ResetSuccess = () => {
+  const router = useRouter();
+
   return (
     <div className="text-center space-y-10">
       <div>
@@ -11,7 +14,9 @@ const ResetSuccess = () => {
           magically.
         </p>
       </div>
-      <Button fullWidth>Continue</Button>
+      <Button onClick={() => router.push("/users")} fullWidth>
+        Continue
+      </Button>
     </div>
   );
 };
