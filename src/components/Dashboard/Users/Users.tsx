@@ -47,7 +47,7 @@ const Users = () => {
         </div>
       </div>
       <div className="space-y-[18px]">
-        <Table headers={TABLE_HEADER} data={slicedTableData()} />
+        {/* <Table headers={TABLE_HEADER} data={slicedTableData()} /> */}
 
         <div className="flex justify-end">
           <Pagination
