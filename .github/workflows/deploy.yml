@@ -22,7 +22,7 @@ jobs:
         run: npm ci --legacy-peer-deps
 
       - name: Build project
-        run: npm run export
+        run: npm run build
 
       - name: List directory contents
         run: pwd; ls -l
