@@ -8,6 +8,14 @@ import Table from "@/components/ui/table";
 import Image from "next/image";
 import React, { useCallback, useState } from "react";
 
+interface IUser {
+  name: string;
+  email: string;
+  phone: string;
+  role: string;
+  organization: string;
+}
+
 const Users = () => {
   const [page, setPage] = useState(1);
 
@@ -46,26 +54,7 @@ const Users = () => {
           </Table.Head>
           <Table.Body>
             {slicedTableData().map((item, bodyIndex) => {
-              const { name, email, phone, role, organization } = item;
-              return (
-                <Table.Row key={bodyIndex}>
-                  <Table.Data>{name}</Table.Data>
-                  <Table.Data>{email}</Table.Data>
-                  <Table.Data>{phone}</Table.Data>
-                  <Table.Data>{role}</Table.Data>
-                  <Table.Data>{organization}</Table.Data>
-                  <Table.Data>
-                    <button className="p-[3px]">
-                      <Image
-                        width={18}
-                        height={18}
-                        alt="pencil"
-                        src="/images/icons/pencil.svg"
-                      />
-                    </button>
-                  </Table.Data>
-                </Table.Row>
-              );
+              return <TableRow key={bodyIndex} user={item} />;
             })}
           </Table.Body>
         </Table.Container>
@@ -83,6 +72,29 @@ const Users = () => {
 };
 
 export default Users;
+
+const TableRow = ({ user }: { user: IUser }) => {
+  const { name, email, phone, role, organization } = user;
+  return (
+    <Table.Row>
+      <Table.Data>{name}</Table.Data>
+      <Table.Data>{email}</Table.Data>
+      <Table.Data>{phone}</Table.Data>
+      <Table.Data>{role}</Table.Data>
+      <Table.Data>{organization}</Table.Data>
+      <Table.Data>
+        <button className="p-[3px]">
+          <Image
+            width={18}
+            height={18}
+            alt="pencil"
+            src="/images/icons/pencil.svg"
+          />
+        </button>
+      </Table.Data>
+    </Table.Row>
+  );
+};
 
 const filters = [
   {
