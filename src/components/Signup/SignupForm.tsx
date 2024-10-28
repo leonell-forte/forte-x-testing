@@ -9,8 +9,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { signup } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 
 const SignupForm = () => {
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -22,6 +25,7 @@ const SignupForm = () => {
 
   const onSubmit = async (values: z.infer<typeof signup.schema>) => {
     console.log(values);
+    router.push("/login");
   };
   return (
     <div className="w-full">

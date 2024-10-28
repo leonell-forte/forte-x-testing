@@ -2,17 +2,11 @@
 
 import Pagination from "@/components/ui/pagination";
 import Table from "@/components/ui/table";
-import Image from "next/image";
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 
 const TableComponent = () => {
   const [page, setPage] = useState(1);
 
-  const slicedTableData = useCallback(() => {
-    const start = (page - 1) * 10;
-    const end = start + 10;
-    return TABLE_DATA.slice(start, end);
-  }, [page]);
   return (
     <div>
       <p className="text-2xl text-white font-semibold uppercase mb-2">
