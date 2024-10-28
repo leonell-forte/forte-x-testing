@@ -48,7 +48,7 @@ const Dropdown = ({ className, options, ...props }: IDropdownProp) => {
         initial={{ opacity: 0 }}
         animate={showList ? { opacity: 1 } : { opacity: 0 }}
         transition={{ type: "spring", duration: 0.2, bounce: 0 }}
-        className="absolute top-16 left-0 rounded-[4px] bg-white w-full overflow-hidden"
+        className="absolute top-16 left-0 rounded-[4px] bg-white w-full overflow-hidden shadow-md"
       >
         {options.map((item, index) => {
           const { label, value } = item;

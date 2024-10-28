@@ -41,3 +41,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - [React Hook Form](https://www.react-hook-form.com/)
 - [Zod](https://zod.dev/)
 - [Material UI](https://mui.com/material-ui/)
+- [Framer Motion](https://www.framer.com/motion/)

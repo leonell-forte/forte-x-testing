@@ -22,7 +22,7 @@ const UserDropdown = () => {
 
   return (
     <div ref={dropdownRef} className="relative z-50">
-      <div
+      <button
         onClick={() => setShowDropdown((prev) => !prev)}
         className="w-[184px] h-[42px] rounded-[50px] bg-white bg-opacity-[30%] flex justify-between items-center pl-1.5 pr-4 cursor-pointer hover:brightness-[.8] transition-all"
       >
@@ -32,15 +32,15 @@ const UserDropdown = () => {
             <p className="text-forest-green font-medium">Leonell</p>
           </div>
         </div>
-        <button className="px-1.5">
+        <div className="px-1.5 cursor-pointer">
           <Image
             width={12}
             height={12}
             alt="arrow"
             src="/images/icons/arrow.svg"
           />
-        </button>
-      </div>
+        </div>
+      </button>
       <motion.ul
         initial={{ height: 0 }}
         animate={
