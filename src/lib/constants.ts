@@ -1,22 +1,22 @@
 export const MENUS = [
   {
     name: "beneficiaries",
-    link: "",
+    link: "/beneficiaries",
   },
   {
     name: "contracts",
-    link: "",
+    link: "/contracts",
   },
   {
     name: "projects",
-    link: "",
+    link: "/projects",
   },
   {
     name: "providers",
-    link: "",
+    link: "/providers",
   },
   {
     name: "users",
-    link: "",
+    link: "/users",
   },
 ];

@@ -22,9 +22,9 @@ const UserDropdown = () => {
 
   return (
     <div ref={dropdownRef} className="relative">
-      <button
+      <div
         onClick={() => setShowDropdown((prev) => !prev)}
-        className="w-[184px] h-[42px] rounded-[50px] bg-white bg-opacity-[30%] flex justify-between items-center pl-1.5 pr-4"
+        className="w-[184px] h-[42px] rounded-[50px] bg-white bg-opacity-[30%] flex justify-between items-center pl-1.5 pr-4 cursor-pointer hover:brightness-[.8] transition-all"
       >
         <div className="flex gap-1.5">
           <div className="w-[28px] h-[28px] rounded-full bg-[#D9D9D9]"></div>
@@ -40,7 +40,7 @@ const UserDropdown = () => {
             src="/images/icons/arrow.svg"
           />
         </button>
-      </button>
+      </div>
       <motion.ul
         initial={{ height: 0 }}
         animate={
@@ -61,10 +61,7 @@ const UserDropdown = () => {
           onClick={handleLogout}
           className="w-full text-left"
         >
-          <li
-            onClick={handleLogout}
-            className="text-black py-1.5 px-2.5 hover:bg-grey transition-all"
-          >
+          <li className="text-black py-1.5 px-2.5 hover:bg-grey transition-all">
             Log out
           </li>
         </button>
