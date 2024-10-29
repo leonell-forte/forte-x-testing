@@ -1,25 +1,21 @@
-"use client";
-
-import React from "react";
 import Input from "../ui/input";
 import Checkbox from "../ui/checkbox";
-import Link from "next/link";
 import Button from "../ui/button";
 import { z } from "zod";
-import { login } from "@/lib/validators";
+import { login } from "../../lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useAppDispatch } from "@/lib/hooks";
-import { setEmail } from "@/lib/slice/auth";
+import { useAppDispatch } from "../../lib/hooks";
+import { setEmail } from "../../lib/slice/auth";
 import { ILoginProps } from "./types";
 
 const LoginForm = ({ handleNext }: ILoginProps) => {
   const dispatch = useAppDispatch();
 
   const {
-    register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<z.infer<typeof login.schema>>({
     resolver: zodResolver(login.schema),
     defaultValues: login.defaultValues,
@@ -40,7 +36,7 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
 
         <div className="flex flex-col w-full gap-[15px]">
           <Input
-            {...register("email")}
+            onChange={(e) => setValue("email", e.target.value)}
             autoCapitalize="email"
             error={!!errors.email?.message}
             helperText={errors.email?.message}
@@ -49,7 +45,7 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
             autoComplete="email"
           />
           <Input
-            {...register("password")}
+            onChange={(e) => setValue("password", e.target.value)}
             error={!!errors.password?.message}
             helperText={errors.password?.message}
             label="Password"
@@ -58,9 +54,9 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
 
           <div className="flex items-center justify-between">
             <Checkbox label="Remember password" />
-            <Link href="/" className="text-grey text-[12px]">
+            <a href="/" className="text-grey text-[12px]">
               Forgot Password
-            </Link>
+            </a>
           </div>
         </div>
 

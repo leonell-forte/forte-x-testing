@@ -4,7 +4,7 @@ import React, { useMemo, useState } from "react";
 import OTPInput from "../ui/otp-input";
 import Button from "../ui/button";
 import { ILoginProps } from "./types";
-import { useAppSelector } from "@/lib/hooks";
+import { useAppSelector } from "../../lib/hooks";
 
 const OTPForm = ({ handleNext }: ILoginProps) => {
   const { email } = useAppSelector((state) => state.auth);

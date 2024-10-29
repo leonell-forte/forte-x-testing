@@ -1,9 +1,9 @@
 import React from "react";
 import Button from "../ui/button";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 
 const ResetSuccess = () => {
-  const router = useRouter();
+  const navigate = useNavigate();
 
   return (
     <div className="text-center space-y-10">
@@ -14,7 +14,7 @@ const ResetSuccess = () => {
           magically.
         </p>
       </div>
-      <Button onClick={() => router.push("/users")} fullWidth>
+      <Button onClick={() => navigate("/users")} fullWidth>
         Continue
       </Button>
     </div>

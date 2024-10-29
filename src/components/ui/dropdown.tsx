@@ -1,10 +1,8 @@
-"use client";
-
 import classNames from "classnames";
-import Image from "next/image";
-import React, { InputHTMLAttributes, useRef, useState } from "react";
+import { InputHTMLAttributes, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { useOutsideClick } from "@/lib/hooks";
+import { useOutsideClick } from "../../lib/hooks";
+import arrow from "../../assets/images/icons/arrow.svg";
 
 interface IDropdownProp extends InputHTMLAttributes<HTMLInputElement> {
   className?: string;
@@ -45,12 +43,7 @@ const Dropdown = ({
         onClick={() => setShowList((prev) => !prev)}
         className="px-1.5"
       >
-        <Image
-          width={12}
-          height={12}
-          alt="arrow"
-          src="/images/icons/arrow.svg"
-        />
+        <img alt="arrow" src={arrow} />
       </button>
 
       <motion.ul

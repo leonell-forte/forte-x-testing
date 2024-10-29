@@ -1,17 +1,16 @@
 "use client";
 
-import React from "react";
 import Input from "../ui/input";
 import Button from "../ui/button";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { password } from "@/lib/validators";
+import { password } from "../../lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ILoginProps } from "./types";
 
 const ResetPasswordForm = ({ handleNext }: ILoginProps) => {
   const {
-    register,
+    setValue,
     handleSubmit,
     formState: { errors },
   } = useForm<z.infer<typeof password.schema>>({
@@ -35,14 +34,14 @@ const ResetPasswordForm = ({ handleNext }: ILoginProps) => {
 
       <div className="flex flex-col gap-[15px]">
         <Input
-          {...register("new")}
+          onChange={(e) => setValue("new", e.target.value)}
           placeholder="Reset new password"
           type="password"
           error={!!errors.new?.message}
           helperText={errors.new?.message}
         />
         <Input
-          {...register("confirm")}
+          onChange={(e) => setValue("confirm", e.target.value)}
           placeholder="Confirm new password"
           type="password"
           error={!!errors?.confirm?.message}

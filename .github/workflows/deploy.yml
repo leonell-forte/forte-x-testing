@@ -1,4 +1,4 @@
-name: Build and Deploy NextJS App to S3 and CloudFront
+name: Build and Deploy React App to S3 and CloudFront
 
 on:
   push:
@@ -19,8 +19,8 @@ jobs:
       - name: Build project
         run: npm run build
 
-      # - name: Build project
-      #   run: yarn export
+      - name: Export project to 'out' directory
+        run: npm run export
 
       - name: List directory contents
         run: pwd; ls -l

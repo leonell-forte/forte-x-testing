@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "TWKLausanne";
+  src: url("./assets/fonts//TWKLausanne-300.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "TWKLausanne";
+  src: url("./assets/fonts//TWKLausanne-450.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "TWKLausanne";
+  src: url("./assets/fonts//TWKLausanne-600.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "FAMAime";
+  src: url("./assets/fonts//FAMAime-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+* {
+  @apply font-light text-white;
+  font-family: "TWKLausanne", sans-serif;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.link {
+  @apply underline underline-offset-4;
+}
+
+.main-container {
+  @apply mx-auto px-5;
+  max-width: 1440px;
+}
+
+/* Hide the spinner in number input */
+input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none; /* Chrome, Safari, and newer versions of Edge */
+  margin: 0; /* Remove default margin */
+}

@@ -1,12 +1,10 @@
-import Image from "next/image";
-import React from "react";
 import UserDropdown from "./UserDropdown";
-import SearchInput from "@/components/ui/search-input";
+import SearchInput from "../../../components/ui/search-input";
 
 const Header = () => {
   return (
     <div className="h-[80px]  px-5 md:px-[30px] flex items-center justify-between">
-      <Image width={100} height={100} alt="logo" src="/logo.png" />
+      <img alt="logo" src="/logo.png" className="max-w-[98px]" />
       <div className="flex items-center gap-4">
         <SearchInput className="md:w-[286px]" />
         <UserDropdown />

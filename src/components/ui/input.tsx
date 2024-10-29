@@ -1,12 +1,14 @@
 "use client";
 
 import { TextField, TextFieldProps } from "@mui/material";
-import Image from "next/image";
-import React, { useState } from "react";
+import { forwardRef, useState } from "react";
+import eyeOpen from "../../assets/images/icons/eye-open.svg";
+import eyeClosed from "../../assets/images/icons/eye-closed.svg";
 
-const Input = ({ ...props }: TextFieldProps) => {
+const Input = forwardRef<HTMLDivElement, TextFieldProps>(({ ...props }) => {
   const [show, setShow] = useState(false);
   const { type } = props;
+
   return (
     <div className="relative w-full">
       <TextField
@@ -31,20 +33,11 @@ const Input = ({ ...props }: TextFieldProps) => {
           onClick={() => setShow((prev) => !prev)}
           className="absolute right-4 top-5"
         >
-          <Image
-            width={21}
-            height={21}
-            alt="eye"
-            src={
-              show
-                ? "/images/icons/eye-open.svg"
-                : "/images/icons/eye-closed.svg"
-            }
-          />
+          <img alt="eye" src={show ? eyeOpen : eyeClosed} />
         </button>
       )}
     </div>
   );
-};
+});
 
 export default Input;

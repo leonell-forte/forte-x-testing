@@ -3,19 +3,18 @@
 import React from "react";
 import Input from "../ui/input";
 import Checkbox from "../ui/checkbox";
-import Link from "next/link";
 import Button from "../ui/button";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { signup } from "@/lib/validators";
+import { signup } from "../../lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 
 const SignupForm = () => {
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const {
-    register,
+    setValue,
     handleSubmit,
     formState: { errors },
   } = useForm<z.infer<typeof signup.schema>>({
@@ -25,7 +24,7 @@ const SignupForm = () => {
 
   const onSubmit = async (values: z.infer<typeof signup.schema>) => {
     console.log(values);
-    router.push("/login");
+    navigate("/login");
   };
   return (
     <div className="w-full">
@@ -38,35 +37,35 @@ const SignupForm = () => {
 
         <div className="flex flex-col w-full gap-[15px]">
           <Input
-            {...register("fullname")}
+            onChange={(e) => setValue("fullname", e.target.value)}
             autoComplete="name"
             label="Your full name"
             error={!!errors.fullname?.message}
             helperText={errors.fullname?.message}
           />
           <Input
-            {...register("email")}
+            onChange={(e) => setValue("email", e.target.value)}
             type="email"
             label="Email"
             error={!!errors.email?.message}
             helperText={errors.email?.message}
           />
           <Input
-            {...register("phone_number")}
+            onChange={(e) => setValue("phone_number", e.target.value)}
             autoComplete="tel"
             label="Phone number"
             error={!!errors.phone_number?.message}
             helperText={errors.phone_number?.message}
           />
           <Input
-            {...register("password")}
+            onChange={(e) => setValue("password", e.target.value)}
             label="Password"
             type="password"
             error={!!errors.password?.message}
             helperText={errors.password?.message}
           />
           <Input
-            {...register("confirm_password")}
+            onChange={(e) => setValue("confirm_password", e.target.value)}
             label="Re-enter password"
             type="password"
             error={!!errors.confirm_password?.message}
@@ -78,13 +77,13 @@ const SignupForm = () => {
               label={
                 <p>
                   I agree to all the{" "}
-                  <Link href="/" className="link">
+                  <a href="/" className="link">
                     Terms, Privacy
-                  </Link>{" "}
+                  </a>{" "}
                   and{" "}
-                  <Link href="/" className="link">
+                  <a href="/" className="link">
                     Fees
-                  </Link>
+                  </a>
                 </p>
               }
             />
@@ -102,9 +101,9 @@ const SignupForm = () => {
         </div>
         <p className="text-center text-[14px]">
           Have an account?{" "}
-          <Link className="font-bold" href="/login">
+          <a className="font-bold" href="/login">
             Log in
-          </Link>
+          </a>
         </p>
       </form>
     </div>

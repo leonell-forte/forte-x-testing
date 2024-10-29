@@ -15,15 +15,10 @@ jobs:
   build:
     name: clone, build and push
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      # - name: Replace Variables in .env.production.template
-      #   run: |
-      #     cd $GITHUB_WORKSPACE
-      #     envsubst < .env.production.template > .env.production.local
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -47,14 +42,20 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
-      - name: create new revision and deploy to ECS
+      - name: Create new revision and deploy to ECS
         run: |
           sudo apt-get install jq -y
           jq --version
+          # Fetch the current task definition and modify it for the new image
           aws ecs describe-task-definition --task-definition ${{ env.TASKDEF_NAME }} > task-def.json
-          jq .taskDefinition task-def.json > taskdefinition.json
-          jq 'del(.taskDefinitionArn)' taskdefinition.json | jq 'del(.revision)' | jq 'del(.status)' | jq 'del(.requiresAttributes)' | jq 'del(.compatibilities)' | jq 'del(.registeredAt)' | jq 'del(.registeredBy)' > container-definition.json
-          aws ecs register-task-definition --cli-input-json file://container-definition.json
-          aws ecs update-service --cluster ${{ env.CLUSTER_NAME }} --service ${{ env.SERVICE_NAME }} --task-definition ${{ env.TASKDEF_NAME }}
+
+          # Prepare the new task definition with updated container image
+          jq --arg IMAGE "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" \
+            '.taskDefinition | del(.taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities, .registeredAt, .registeredBy) | .containerDefinitions[0].image = $IMAGE' task-def.json > new-task-def.json
+
+          # Register the new task definition
+          aws ecs register-task-definition --cli-input-json file://new-task-def.json
+
+          # Update the ECS service with the new task definition
+          aws ecs update-service --cluster ${{ env.CLUSTER_NAME }} --service ${{ env.SERVICE_NAME }} --force-new-deployment
         shell: bash
-      

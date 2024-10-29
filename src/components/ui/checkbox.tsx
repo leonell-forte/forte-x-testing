@@ -1,10 +1,13 @@
-import React, { ReactNode, useCallback } from "react";
+import { ReactNode, useCallback } from "react";
 import {
   CheckboxProps,
   FormControlLabel,
   Checkbox as MuiCheckbox,
 } from "@mui/material";
-import Image from "next/image";
+import checkedDisabled from "../../assets/images/icons/checkbox-disabled-checked.svg";
+import unCheckedDisabled from "../../assets/images/icons/checkbox-disabled-unchecked.svg";
+import check from "../../assets/images/icons/checkbox-checked.svg";
+import unChecked from "../../assets/images/icons/checkbox-unchecked.svg";
 
 interface ICheckboxProps extends CheckboxProps {
   label?: string | ReactNode;
@@ -17,11 +20,11 @@ const Checkbox = ({ label, ...props }: ICheckboxProps) => {
     let checked, unchecked;
 
     if (disabled) {
-      checked = "/images/icons/checkbox-disabled-checked.svg";
-      unchecked = "/images/icons/checkbox-disabled-unchecked.svg";
+      checked = checkedDisabled;
+      unchecked = unCheckedDisabled;
     } else {
-      checked = "/images/icons/checkbox-checked.svg";
-      unchecked = "/images/icons/checkbox-unchecked.svg";
+      checked = check;
+      unchecked = unChecked;
     }
 
     return { checked, unchecked };
@@ -37,22 +40,8 @@ const Checkbox = ({ label, ...props }: ICheckboxProps) => {
               color: "red !important",
             },
           }}
-          icon={
-            <Image
-              width={20}
-              height={20}
-              src={renderIcons().unchecked}
-              alt="unchecked"
-            />
-          }
-          checkedIcon={
-            <Image
-              width={20}
-              height={20}
-              src={renderIcons().checked}
-              alt="checked"
-            />
-          }
+          icon={<img src={renderIcons().unchecked} alt="unchecked" />}
+          checkedIcon={<img src={renderIcons().checked} alt="checked" />}
           {...props}
         />
       }

@@ -1,8 +1,8 @@
 "use client";
 
 import classNames from "classnames";
-import Image from "next/image";
-import React, { useMemo } from "react";
+import { useMemo } from "react";
+import arrow from "../../assets/images/icons/arrow.svg";
 
 interface IPaginationProps {
   page: number;
@@ -35,11 +35,9 @@ const Pagination = ({
         className="w-6 h-6 flex items-center justify-center"
         disabled={page <= 1}
       >
-        <Image
-          width={12}
-          height={12}
+        <img
           alt="prev"
-          src="/images/icons/arrow.svg"
+          src={arrow}
           className={classNames("rotate-[90deg]", page <= 1 && " opacity-[.2]")}
         />
       </button>
@@ -57,11 +55,9 @@ const Pagination = ({
         className="w-6 h-6 flex items-center justify-center"
         disabled={page >= pageCount}
       >
-        <Image
-          width={12}
-          height={12}
+        <img
           alt="prev"
-          src="/images/icons/arrow.svg"
+          src={arrow}
           className={classNames(
             "rotate-[-90deg]",
             page >= pageCount && "opacity-[.2]"

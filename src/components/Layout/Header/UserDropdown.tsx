@@ -1,19 +1,18 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { useOutsideClick } from "@/lib/hooks";
+import { useOutsideClick } from "../../../lib/hooks";
+import arrow from "../../../assets/images/icons/arrow.svg";
 
 const UserDropdown = () => {
   const [showDropdown, setShowDropdown] = useState(false);
 
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    router.push("/login");
+    navigate("/login");
   };
 
   const dropdownRef = useRef(null);
@@ -33,12 +32,7 @@ const UserDropdown = () => {
           </div>
         </div>
         <div className="px-1.5 cursor-pointer">
-          <Image
-            width={12}
-            height={12}
-            alt="arrow"
-            src="/images/icons/arrow.svg"
-          />
+          <img alt="arrow" src={arrow} />
         </div>
       </button>
       <motion.ul
@@ -51,11 +45,11 @@ const UserDropdown = () => {
         transition={{ type: "spring", duration: 0.4, bounce: 0 }}
         className="absolute top-12 left-0 rounded-[4px] bg-white w-full overflow-hidden"
       >
-        <Link href="">
+        <a href="">
           <li className="text-black py-1.5 px-2.5 hover:bg-grey transition-all">
             Profile
           </li>
-        </Link>
+        </a>
         <button
           type="button"
           onClick={handleLogout}

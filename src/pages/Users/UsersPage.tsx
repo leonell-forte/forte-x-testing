@@ -1,11 +1,12 @@
 "use client";
 
-import Button from "@/components/ui/button";
-import Dropdown from "@/components/ui/dropdown";
-import Pagination from "@/components/ui/pagination";
-import SearchInput from "@/components/ui/search-input";
-import Table from "@/components/ui/table";
-import React, { useCallback, useState } from "react";
+import Button from "../../components/ui/button";
+import Dropdown from "../../components/ui/dropdown";
+import Pagination from "../../components/ui/pagination";
+import SearchInput from "../../components/ui/search-input";
+import Table from "../../components/ui/table";
+import { useCallback, useState } from "react";
+import pencil from "../../assets/images/icons/pencil.svg";
 import UserDialogue from "./Dialogues/UserDialogue";
 
 export interface IUser {
@@ -16,7 +17,7 @@ export interface IUser {
   organization: string;
 }
 
-const Users = () => {
+const UsersPage = () => {
   const [page, setPage] = useState(1);
   const [modal, setModal] = useState<"user" | null>(null);
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
@@ -81,7 +82,7 @@ const Users = () => {
                         onClick={() => handleEditUser(item)}
                         className="p-[3px]"
                       >
-                        <img alt="pencil" src="/images/icons/pencil.svg" />
+                        <img alt="pencil" src={pencil} />
                       </button>
                     </Table.Data>
                   </Table.Row>
@@ -103,7 +104,7 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default UsersPage;
 
 const filters = [
   {

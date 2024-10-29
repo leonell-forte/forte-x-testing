@@ -4,8 +4,7 @@ import {
   Radio,
   RadioGroup as RadioButtons,
 } from "@mui/material";
-import Image from "next/image";
-import React, { useCallback } from "react";
+import { useCallback } from "react";
 
 interface IRadioGroupProps {
   items: string[];
@@ -33,21 +32,9 @@ const RadioGroup = ({ items, className }: IRadioGroupProps) => {
                 value={item}
                 control={
                   <Radio
-                    icon={
-                      <Image
-                        width={20}
-                        height={20}
-                        src={renderIcons().unchecked}
-                        alt="unchecked"
-                      />
-                    }
+                    icon={<img src={renderIcons().unchecked} alt="unchecked" />}
                     checkedIcon={
-                      <Image
-                        width={20}
-                        height={20}
-                        src={renderIcons().checked}
-                        alt="checked"
-                      />
+                      <img src={renderIcons().checked} alt="checked" />
                     }
                   />
                 }

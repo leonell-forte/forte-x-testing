@@ -1,4 +1,3 @@
-import React from "react";
 import { Button as ButtonComponent, ButtonProps } from "@mui/material";
 
 interface IButtonProp extends ButtonProps {
