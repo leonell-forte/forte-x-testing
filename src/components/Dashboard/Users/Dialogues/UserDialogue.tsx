@@ -4,10 +4,19 @@ import Dropdown from "@/components/ui/dropdown";
 import Input from "@/components/ui/input";
 import { ROLES } from "@/lib/constants";
 import React from "react";
+import { IUser } from "../Users";
 
-const AddUserDialogue = ({ isVisible, handleClose }: IDialogueProps) => {
+interface IUserDialogueProps extends IDialogueProps {
+  user?: IUser | null;
+}
+
+const UserDialogue = ({ isVisible, handleClose, user }: IUserDialogueProps) => {
   return (
-    <Dialogue isVisible={isVisible} handleClose={handleClose} title="Add user">
+    <Dialogue
+      isVisible={isVisible}
+      handleClose={handleClose}
+      title={user ? "Edit user" : "Add user"}
+    >
       <form action="" className="space-y-2.5">
         <p>USER ID: ##### (MODAL)</p>
         <div className="flex items-center">
@@ -15,6 +24,7 @@ const AddUserDialogue = ({ isVisible, handleClose }: IDialogueProps) => {
             Email
           </label>
           <Input
+            value={user?.email}
             type="email"
             autoComplete="email"
             placeholder="email@email.com"
@@ -24,25 +34,43 @@ const AddUserDialogue = ({ isVisible, handleClose }: IDialogueProps) => {
           <label htmlFor="" className="w-[140px]">
             Full name
           </label>
-          <Input autoComplete="name" placeholder="James Potter" />
+          <Input
+            value={user?.name}
+            autoComplete="name"
+            placeholder="James Potter"
+          />
         </div>
         <div className="flex items-center">
           <label htmlFor="" className="w-[140px]">
             Phone number
           </label>
-          <Input autoComplete="tel" placeholder="+61 4567323423" />
+          <Input
+            value={user?.phone}
+            autoComplete="tel"
+            placeholder="+61 4567323423"
+          />
         </div>
         <div className="flex items-center">
           <label htmlFor="" className="w-[140px]">
             Organization
           </label>
-          <Dropdown options={[]} placeholder="Select organization" />
+          <Dropdown
+            value={user?.organization}
+            onChange={() => {}}
+            options={[]}
+            placeholder="Select organization"
+          />
         </div>
         <div className="flex items-center">
           <label htmlFor="" className="w-[140px]">
             Role
           </label>
-          <Dropdown options={ROLES} placeholder="Select role" />
+          <Dropdown
+            value={user?.role}
+            onChange={() => {}}
+            options={ROLES}
+            placeholder="Select role"
+          />
         </div>
 
         <div className="flex justify-end gap-4 !mt-10">
@@ -56,4 +84,4 @@ const AddUserDialogue = ({ isVisible, handleClose }: IDialogueProps) => {
   );
 };
 
-export default AddUserDialogue;
+export default UserDialogue;

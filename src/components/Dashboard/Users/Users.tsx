@@ -1,18 +1,26 @@
 "use client";
 
 import Button from "@/components/ui/button";
-import Dialogue from "@/components/ui/dialogue/dialogue";
 import Dropdown from "@/components/ui/dropdown";
 import Pagination from "@/components/ui/pagination";
 import SearchInput from "@/components/ui/search-input";
 import Table from "@/components/ui/table";
 import Image from "next/image";
 import React, { useCallback, useState } from "react";
-import AddUserDialogue from "./Dialogues/AddUserDialogue";
+import UserDialogue from "./Dialogues/UserDialogue";
+
+export interface IUser {
+  name: string;
+  email: string;
+  phone: string;
+  role: string;
+  organization: string;
+}
 
 const Users = () => {
   const [page, setPage] = useState(1);
-  const [modal, setModal] = useState<"add user" | null>(null);
+  const [modal, setModal] = useState<"user" | null>(null);
+  const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
 
   const slicedTableData = useCallback(() => {
     const start = (page - 1) * 10;
@@ -20,10 +28,16 @@ const Users = () => {
     return TABLE_DATA.slice(start, end);
   }, [page]);
 
+  const handleEditUser = (user: IUser) => {
+    setSelectedUser(user);
+    setModal("user");
+  };
+
   return (
     <>
-      <AddUserDialogue
-        isVisible={modal === "add user"}
+      <UserDialogue
+        user={selectedUser}
+        isVisible={modal === "user"}
         handleClose={() => setModal(null)}
       />
       <div className="space-y-1.5">
@@ -39,7 +53,7 @@ const Users = () => {
 
           <div className="flex items-center gap-6">
             <SearchInput className="w-[286px]" />
-            <Button onClick={() => setModal("add user")}>Add User</Button>
+            <Button onClick={() => setModal("user")}>Add User</Button>
           </div>
         </div>
         <div className="space-y-[18px]">
@@ -63,7 +77,11 @@ const Users = () => {
                     <Table.Data>{role}</Table.Data>
                     <Table.Data>{organization}</Table.Data>
                     <Table.Data>
-                      <button className="p-[3px]">
+                      <button
+                        type="button"
+                        onClick={() => handleEditUser(item)}
+                        className="p-[3px]"
+                      >
                         <Image
                           width={18}
                           height={18}
@@ -99,6 +117,7 @@ const filters = [
     value: "test",
   },
 ];
+
 const TABLE_HEADER = [
   "User’s full name",
   "Email",
@@ -107,7 +126,7 @@ const TABLE_HEADER = [
   "Organization",
 ];
 
-const TABLE_DATA = [
+const TABLE_DATA: IUser[] = [
   {
     name: "Rosalyn Simon",
     email: "rosalyn_simon@gmail.com",
