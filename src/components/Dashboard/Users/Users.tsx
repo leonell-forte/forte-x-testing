@@ -1,15 +1,18 @@
 "use client";
 
 import Button from "@/components/ui/button";
+import Dialogue from "@/components/ui/dialogue/dialogue";
 import Dropdown from "@/components/ui/dropdown";
 import Pagination from "@/components/ui/pagination";
 import SearchInput from "@/components/ui/search-input";
 import Table from "@/components/ui/table";
 import Image from "next/image";
 import React, { useCallback, useState } from "react";
+import AddUserDialogue from "./Dialogues/AddUserDialogue";
 
 const Users = () => {
   const [page, setPage] = useState(1);
+  const [modal, setModal] = useState<"add user" | null>(null);
 
   const slicedTableData = useCallback(() => {
     const start = (page - 1) * 10;
@@ -18,67 +21,73 @@ const Users = () => {
   }, [page]);
 
   return (
-    <div className="space-y-1.5">
-      <div className="flex items-center justify-between w-full">
-        <div className="flex items-center gap-[18px]">
-          <p className="text-[20px]">Filter by</p>
-          <Dropdown
-            placeholder="Select filter"
-            className="max-w-[211px]"
-            options={filters}
-          />
-        </div>
+    <>
+      <AddUserDialogue
+        isVisible={modal === "add user"}
+        handleClose={() => setModal(null)}
+      />
+      <div className="space-y-1.5">
+        <div className="flex items-center justify-between w-full">
+          <div className="flex items-center gap-[18px]">
+            <p className="text-[20px]">Filter by</p>
+            <Dropdown
+              placeholder="Select filter"
+              className="max-w-[211px]"
+              options={filters}
+            />
+          </div>
 
-        <div className="flex items-center gap-6">
-          <SearchInput className="w-[286px]" />
-          <Button onClick={() => {}}>Add User</Button>
+          <div className="flex items-center gap-6">
+            <SearchInput className="w-[286px]" />
+            <Button onClick={() => setModal("add user")}>Add User</Button>
+          </div>
         </div>
-      </div>
-      <div className="space-y-[18px]">
-        <Table.Container>
-          <Table.Head>
-            <Table.Row>
-              {TABLE_HEADER.map((key, headerIndex) => {
-                return <Table.Header key={headerIndex}>{key}</Table.Header>;
+        <div className="space-y-[18px]">
+          <Table.Container>
+            <Table.Head>
+              <Table.Row>
+                {TABLE_HEADER.map((key, headerIndex) => {
+                  return <Table.Header key={headerIndex}>{key}</Table.Header>;
+                })}
+                <Table.Header></Table.Header>
+              </Table.Row>
+            </Table.Head>
+            <Table.Body>
+              {slicedTableData().map((item, bodyIndex) => {
+                const { name, email, phone, role, organization } = item;
+                return (
+                  <Table.Row key={bodyIndex}>
+                    <Table.Data>{name}</Table.Data>
+                    <Table.Data>{email}</Table.Data>
+                    <Table.Data>{phone}</Table.Data>
+                    <Table.Data>{role}</Table.Data>
+                    <Table.Data>{organization}</Table.Data>
+                    <Table.Data>
+                      <button className="p-[3px]">
+                        <Image
+                          width={18}
+                          height={18}
+                          alt="pencil"
+                          src="/images/icons/pencil.svg"
+                        />
+                      </button>
+                    </Table.Data>
+                  </Table.Row>
+                );
               })}
-              <Table.Header></Table.Header>
-            </Table.Row>
-          </Table.Head>
-          <Table.Body>
-            {slicedTableData().map((item, bodyIndex) => {
-              const { name, email, phone, role, organization } = item;
-              return (
-                <Table.Row key={bodyIndex}>
-                  <Table.Data>{name}</Table.Data>
-                  <Table.Data>{email}</Table.Data>
-                  <Table.Data>{phone}</Table.Data>
-                  <Table.Data>{role}</Table.Data>
-                  <Table.Data>{organization}</Table.Data>
-                  <Table.Data>
-                    <button className="p-[3px]">
-                      <Image
-                        width={18}
-                        height={18}
-                        alt="pencil"
-                        src="/images/icons/pencil.svg"
-                      />
-                    </button>
-                  </Table.Data>
-                </Table.Row>
-              );
-            })}
-          </Table.Body>
-        </Table.Container>
+            </Table.Body>
+          </Table.Container>
 
-        <div className="flex justify-end">
-          <Pagination
-            page={page}
-            onPageChange={(val) => setPage(val)}
-            total={TABLE_DATA.length}
-          />
+          <div className="flex justify-end">
+            <Pagination
+              page={page}
+              onPageChange={(val) => setPage(val)}
+              total={TABLE_DATA.length}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

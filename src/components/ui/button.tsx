@@ -11,6 +11,7 @@ const Button = ({
   children,
   active,
   disabled,
+  type,
   ...props
 }: IButtonProp) => {
   const variants: Record<string, object> = {
@@ -45,6 +46,7 @@ const Button = ({
 
   return (
     <ButtonComponent
+      type={type || "button"}
       sx={variants[(buttonType as keyof typeof variants) || "primary"]}
       {...props}
       className={"gap-[10px] !px-6 !normal-case h-11"}

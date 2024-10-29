@@ -20,3 +20,22 @@ export const MENUS = [
     link: "/users",
   },
 ];
+
+export const ROLES = [
+  {
+    label: "Owner",
+    value: "owner",
+  },
+  {
+    label: "Admin",
+    value: "admin",
+  },
+  {
+    label: "User",
+    value: "user",
+  },
+  {
+    label: "Readonly",
+    value: "readonly",
+  },
+];

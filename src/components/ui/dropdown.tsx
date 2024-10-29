@@ -40,7 +40,11 @@ const Dropdown = ({
         className="bg-transparent border-none outline-none w-[90%] placeholder:text-white/50"
         {...props}
       />
-      <button onClick={() => setShowList((prev) => !prev)} className="px-1.5">
+      <button
+        type="button"
+        onClick={() => setShowList((prev) => !prev)}
+        className="px-1.5"
+      >
         <Image
           width={12}
           height={12}
@@ -51,14 +55,15 @@ const Dropdown = ({
 
       <motion.ul
         initial={{ opacity: 0 }}
-        animate={showList ? { opacity: 1 } : { opacity: 0 }}
+        animate={showList ? { opacity: 1 } : { opacity: 0, display: "none" }}
         transition={{ type: "spring", duration: 0.2, bounce: 0 }}
-        className="absolute top-16 left-0 rounded-[4px] bg-white w-full overflow-hidden shadow-md"
+        className="absolute top-16 left-0 rounded-[4px] bg-white w-full overflow-hidden shadow-md z-10"
       >
         {options.map((item, index) => {
           const { label, value } = item;
           return (
             <button
+              type="button"
               onClick={() => handleSelect!(value)}
               key={index}
               className="w-full text-left"
