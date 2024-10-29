@@ -7,6 +7,7 @@ import SwitchButtons from "./SwitchButtons";
 import Tags from "./Tags";
 import PaginationComponent from "./PaginationComponent";
 import TableComponent from "./TableComponent";
+import DialogueComponent from "./DialogueComponent";
 
 const ComponentsPage = () => {
   return (
@@ -21,6 +22,7 @@ const ComponentsPage = () => {
         <PaginationComponent />
       </div>
       <TableComponent />
+      <DialogueComponent />
     </div>
   );
 };
