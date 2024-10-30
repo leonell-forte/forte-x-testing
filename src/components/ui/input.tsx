@@ -13,6 +13,7 @@ const Input = forwardRef<HTMLDivElement, TextFieldProps>(
     return (
       <div className="relative w-full">
         <TextField
+          ref={ref}
           {...props}
           type={type === "password" ? (show ? "text" : "password") : type}
           sx={{

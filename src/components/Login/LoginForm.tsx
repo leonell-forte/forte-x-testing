@@ -9,7 +9,6 @@ import { useAppDispatch } from "../../lib/hooks";
 import { setEmail } from "../../lib/slice/auth";
 import { ILoginProps } from "./types";
 import { Link } from "react-router-dom";
-import amplitude from "../../lib/amplitude";
 
 const LoginForm = ({ handleNext }: ILoginProps) => {
   const dispatch = useAppDispatch();
@@ -24,7 +23,6 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
   });
 
   const onSubmit = async (values: z.infer<typeof login.schema>) => {
-    amplitude.logEvent("Log In", { buttonName: "Login" });
     handleNext!();
     dispatch(setEmail(values.email));
   };
