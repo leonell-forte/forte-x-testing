@@ -7,15 +7,8 @@ import SearchInput from "../../components/ui/search-input";
 import Table from "../../components/ui/table";
 import { useCallback, useState } from "react";
 import pencil from "../../assets/images/icons/pencil.svg";
-import UserDialogue from "./Dialogues/UserDialogue";
-
-export interface IUser {
-  name: string;
-  email: string;
-  phone: string;
-  role: string;
-  organization: string;
-}
+import { IUser } from "./types";
+import UserDialogue from "../../components/Dashboard/Users/Dialogues/UserDialogue";
 
 const UsersPage = () => {
   const [page, setPage] = useState(1);

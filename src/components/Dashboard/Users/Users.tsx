@@ -5,7 +5,7 @@ import Dropdown from "@/components/ui/dropdown";
 import Pagination from "@/components/ui/pagination";
 import SearchInput from "@/components/ui/search-input";
 import Table from "@/components/ui/table";
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import UserDialogue from "./Dialogues/UserDialogue";
 
 export interface IUser {

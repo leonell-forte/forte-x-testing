@@ -1,10 +1,11 @@
-import Button from "@/components/ui/button";
-import Dialogue, { IDialogueProps } from "@/components/ui/dialogue/dialogue";
-import Dropdown from "@/components/ui/dropdown";
-import Input from "@/components/ui/input";
-import { ROLES } from "@/lib/constants";
-import React from "react";
-import { IUser } from "../Users";
+import Button from "../../../../components/ui/button";
+import Dialogue, {
+  IDialogueProps,
+} from "../../../../components/ui/dialogue/dialogue";
+import Dropdown from "../../../../components/ui/dropdown";
+import Input from "../../../../components/ui/input";
+import { ROLES } from "../../../../lib/constants";
+import { IUser } from "../../../../pages/Users/types";
 
 interface IUserDialogueProps extends IDialogueProps {
   user?: IUser | null;
