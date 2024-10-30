@@ -19,8 +19,8 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Export project to 'out' directory
-        run: npm run export
+      # - name: Export project to 'out' directory
+      #   run: npm run export
 
       - name: List directory contents
         run: pwd; ls -l

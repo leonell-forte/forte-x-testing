@@ -1,5 +1,3 @@
-"use client";
-
 import { useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
@@ -45,7 +43,7 @@ const UserDropdown = () => {
         transition={{ type: "spring", duration: 0.4, bounce: 0 }}
         className="absolute top-12 left-0 rounded-[4px] bg-white w-full overflow-hidden"
       >
-        <a href="">
+        <a href="/">
           <li className="text-black py-1.5 px-2.5 hover:bg-grey transition-all">
             Profile
           </li>
