@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { useAppDispatch } from "../../lib/hooks";
 import { setEmail } from "../../lib/slice/auth";
 import { ILoginProps } from "./types";
+import { Link, Navigate } from "react-router-dom";
 
 const LoginForm = ({ handleNext }: ILoginProps) => {
   const dispatch = useAppDispatch();
@@ -30,8 +31,7 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
     <div className="w-full">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-10 w-full">
         <div className="text-center">
-          <p>Welcome</p>
-          <p>Log in to your account to continue</p>
+          <p className="md:text-[24px]">Welcome</p>
         </div>
 
         <div className="flex flex-col w-full gap-[15px]">
@@ -54,20 +54,30 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
 
           <div className="flex items-center justify-between">
             <Checkbox label="Remember password" />
-            <a href="/" className="text-grey text-[12px]">
-              Forgot Password
-            </a>
+            <Link to="/forgot-password" className="text-grey text-[12px]">
+              Forgot Password?
+            </Link>
           </div>
         </div>
 
         <div className="w-full text-center space-y-[15px]">
           <Button type="submit" fullWidth>
-            Log in
+            Continue
           </Button>
-          <p className="text-[14px] md:ext-[18px]">OR</p>
+          <div className="flex items-center gap-4">
+            <hr className="w-full" />
+            <p className="text-[14px] md:ext-[18px]">OR</p>
+            <hr className="w-full" />
+          </div>
           <Button type="button" fullWidth buttonType="secondary">
-            Log in with google{" "}
+            Continue with google{" "}
           </Button>
+          <p className="text-center text-[14px]">
+            Don't have an account?{" "}
+            <Link className="font-bold" to="/signup">
+              Sign up
+            </Link>
+          </p>
         </div>
       </form>
     </div>

@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useOutsideClick } from "../../../lib/hooks";
@@ -43,11 +43,11 @@ const UserDropdown = () => {
         transition={{ type: "spring", duration: 0.4, bounce: 0 }}
         className="absolute top-12 left-0 rounded-[4px] bg-white w-full overflow-hidden"
       >
-        <a href="/">
+        <Link to="/">
           <li className="text-black py-1.5 px-2.5 hover:bg-grey transition-all">
             Profile
           </li>
-        </a>
+        </Link>
         <button
           type="button"
           onClick={handleLogout}

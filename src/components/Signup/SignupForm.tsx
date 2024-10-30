@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { signup } from "../../lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const SignupForm = () => {
   const navigate = useNavigate();
@@ -77,13 +77,13 @@ const SignupForm = () => {
               label={
                 <p>
                   I agree to all the{" "}
-                  <a href="/" className="link">
+                  <Link to="/" className="link">
                     Terms, Privacy
-                  </a>{" "}
+                  </Link>{" "}
                   and{" "}
-                  <a href="/" className="link">
+                  <Link to="/" className="link">
                     Fees
-                  </a>
+                  </Link>
                 </p>
               }
             />
@@ -101,9 +101,9 @@ const SignupForm = () => {
         </div>
         <p className="text-center text-[14px]">
           Have an account?{" "}
-          <a className="font-bold" href="/login">
+          <Link className="font-bold" to="/login">
             Log in
-          </a>
+          </Link>
         </p>
       </form>
     </div>

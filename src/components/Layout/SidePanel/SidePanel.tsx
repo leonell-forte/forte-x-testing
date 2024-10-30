@@ -2,7 +2,7 @@
 
 import { MENUS } from "../../../lib/constants";
 import classNames from "classnames";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const SidePanel = () => {
   const { pathname } = useLocation();
@@ -14,7 +14,7 @@ const SidePanel = () => {
           const { name, link } = item;
           const active = pathname === link;
           return (
-            <a key={index} href={link}>
+            <Link key={index} to={link}>
               <li
                 className={classNames(
                   "capitalize font-medium p-2.5 transition-all",
@@ -23,7 +23,7 @@ const SidePanel = () => {
               >
                 {name}
               </li>
-            </a>
+            </Link>
           );
         })}
       </ul>
