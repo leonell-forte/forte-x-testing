@@ -15,7 +15,7 @@ function App() {
         <MuiProvider>
           <Router>
             <Routes>
-              <Route element={<LoginPage />} path="/login" />
+              <Route element={<LoginPage />} path="/" />
               <Route element={<SignupPage />} path="/signup" />
               <Route element={<ForgotPasswordPage />} path="/forgot-password" />
 

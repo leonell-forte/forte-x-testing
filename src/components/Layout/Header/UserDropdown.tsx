@@ -10,7 +10,7 @@ const UserDropdown = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    navigate("/login");
+    navigate("/");
   };
 
   const dropdownRef = useRef(null);

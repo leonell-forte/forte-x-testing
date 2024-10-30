@@ -24,7 +24,7 @@ const SignupForm = () => {
 
   const onSubmit = async (values: z.infer<typeof signup.schema>) => {
     console.log(values);
-    navigate("/login");
+    navigate("/");
   };
   return (
     <div className="w-full">
@@ -101,7 +101,7 @@ const SignupForm = () => {
         </div>
         <p className="text-center text-[14px]">
           Have an account?{" "}
-          <Link className="font-bold" to="/login">
+          <Link className="font-bold" to="/">
             Log in
           </Link>
         </p>
