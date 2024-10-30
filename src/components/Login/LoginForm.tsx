@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { useAppDispatch } from "../../lib/hooks";
 import { setEmail } from "../../lib/slice/auth";
 import { ILoginProps } from "./types";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const LoginForm = ({ handleNext }: ILoginProps) => {
   const dispatch = useAppDispatch();
@@ -73,7 +73,7 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
             Continue with google{" "}
           </Button>
           <p className="text-center text-[14px]">
-            Don't have an account?{" "}
+            Don`&apos;t have an account?{" "}
             <Link className="font-bold" to="/signup">
               Sign up
             </Link>
