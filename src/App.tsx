@@ -7,14 +7,17 @@ import SignupPage from "./pages/Signup/SignupPage";
 import UsersPage from "./pages/Users/UsersPage";
 import DashboardLayout from "./components/Dashboard/Layout";
 import ForgotPasswordPage from "./pages/ForgotPassword/ForgotPasswordPage";
+import ComponentsPage from "./pages/Components/ComponentsPage";
 
 function App() {
   return (
-    <div className="bg-body-gradient w-screen h-screen fixed top-0 left-0 z-[-1]">
+    <div>
+      <div className="bg-body-gradient w-screen h-screen fixed top-0 left-0 z-[-1]"></div>
       <StoreProvider>
         <MuiProvider>
           <Router>
             <Routes>
+              <Route element={<ComponentsPage />} path="/components" />
               <Route element={<LoginPage />} path="/" />
               <Route element={<SignupPage />} path="/signup" />
               <Route element={<ForgotPasswordPage />} path="/forgot-password" />

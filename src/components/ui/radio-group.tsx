@@ -5,6 +5,8 @@ import {
   RadioGroup as RadioButtons,
 } from "@mui/material";
 import { useCallback } from "react";
+import radioChecked from "../../assets/images/icons/radio-checked.svg";
+import radioUnchecked from "../../assets/images/icons/radio-unchecked.svg";
 
 interface IRadioGroupProps {
   items: string[];
@@ -13,8 +15,8 @@ interface IRadioGroupProps {
 
 const RadioGroup = ({ items, className }: IRadioGroupProps) => {
   const renderIcons = useCallback(() => {
-    const checked = "/images/icons/radio-checked.svg";
-    const unchecked = "/images/icons/radio-unchecked.svg";
+    const checked = radioChecked;
+    const unchecked = radioUnchecked;
 
     return { checked, unchecked };
   }, []);
