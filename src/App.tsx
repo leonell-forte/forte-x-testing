@@ -8,6 +8,7 @@ import UsersPage from "./pages/Users/UsersPage";
 import DashboardLayout from "./components/Dashboard/Layout";
 import ForgotPasswordPage from "./pages/ForgotPassword/ForgotPasswordPage";
 import ComponentsPage from "./pages/Components/ComponentsPage";
+import ErrorPage from "./pages/404";
 
 function App() {
   return (
@@ -17,11 +18,11 @@ function App() {
         <MuiProvider>
           <Router>
             <Routes>
+              <Route element={<ErrorPage />} path="*" />
               <Route element={<ComponentsPage />} path="/components" />
               <Route element={<LoginPage />} path="/" />
               <Route element={<SignupPage />} path="/signup" />
               <Route element={<ForgotPasswordPage />} path="/forgot-password" />
-
               <Route
                 path="/users"
                 element={
