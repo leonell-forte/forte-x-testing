@@ -8,7 +8,10 @@ export default [
   {
     files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
     languageOptions: {
-      globals: globals.browser,
+      globals: {
+        ...globals.browser,
+        ...globals.node, // Add Node.js globals to avoid `process` errors
+      },
       parser: tseslintParser, // Use TypeScript parser
     },
     plugins: {
