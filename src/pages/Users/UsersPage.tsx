@@ -56,7 +56,9 @@ const UsersPage = () => {
               onChange={(e) => setSearch(e.target.value)}
               className="w-[286px]"
             />
-            <Button onClick={() => setModal("user")}>Add User</Button>
+            <Button eventName="Add User" onClick={() => setModal("user")}>
+              Add User
+            </Button>
           </div>
         </div>
         <div className="space-y-[18px]">
@@ -80,13 +82,16 @@ const UsersPage = () => {
                     <Table.Data>{role}</Table.Data>
                     <Table.Data>{organization}</Table.Data>
                     <Table.Data>
-                      <button
+                      <Button
+                        eventName="Edit User"
+                        id={name}
+                        buttonType="default"
                         type="button"
                         onClick={() => handleEditUser(item)}
                         className="p-[3px]"
                       >
                         <img alt="pencil" src={pencil} />
-                      </button>
+                      </Button>
                     </Table.Data>
                   </Table.Row>
                 );

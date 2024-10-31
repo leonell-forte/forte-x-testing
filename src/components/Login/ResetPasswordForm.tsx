@@ -7,6 +7,7 @@ import { z } from "zod";
 import { password } from "../../lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ILoginProps } from "./types";
+import * as amplitude from "@amplitude/analytics-browser";
 
 const ResetPasswordForm = ({ handleNext }: ILoginProps) => {
   const {
@@ -20,6 +21,8 @@ const ResetPasswordForm = ({ handleNext }: ILoginProps) => {
 
   const onSubmit = async (values: z.infer<typeof password.schema>) => {
     console.log(values);
+
+    amplitude.track("Reset Password Submission");
     handleNext!();
   };
   return (

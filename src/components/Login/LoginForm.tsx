@@ -9,6 +9,7 @@ import { useAppDispatch } from "../../lib/hooks";
 import { setEmail } from "../../lib/slice/auth";
 import { ILoginProps } from "./types";
 import { Link } from "react-router-dom";
+import * as amplitude from "@amplitude/analytics-browser";
 
 const LoginForm = ({ handleNext }: ILoginProps) => {
   const dispatch = useAppDispatch();
@@ -23,6 +24,7 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
   });
 
   const onSubmit = async (values: z.infer<typeof login.schema>) => {
+    amplitude.track("Login Form Submission");
     handleNext!();
     dispatch(setEmail(values.email));
   };

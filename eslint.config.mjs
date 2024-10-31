@@ -26,6 +26,7 @@ export default [
       "react/react-in-jsx-scope": "off",
       "react/display-name": "off",
       "no-irregular-whitespace": "off",
+      "@typescript-eslint/no-explicit-any": "off",
     },
     settings: {
       react: {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import OTPInput from "../ui/otp-input";
 import Button from "../ui/button";
 import { ILoginProps } from "./types";
@@ -27,6 +27,7 @@ const OTPForm = ({ handleNext }: ILoginProps) => {
       </div>
       <Button
         type="button"
+        eventName="OTP"
         onClick={handleNext}
         disabled={!isComplete}
         fullWidth
