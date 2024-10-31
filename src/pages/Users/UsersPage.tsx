@@ -5,21 +5,27 @@ import Dropdown from "../../components/ui/dropdown";
 import Pagination from "../../components/ui/pagination";
 import SearchInput from "../../components/ui/search-input";
 import Table from "../../components/ui/table";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import pencil from "../../assets/images/icons/pencil.svg";
 import { IUser } from "./types";
 import UserDialogue from "../../components/Dashboard/Users/Dialogues/UserDialogue";
+import { filterBySearch } from "../../lib/utils";
 
 const UsersPage = () => {
   const [page, setPage] = useState(1);
   const [modal, setModal] = useState<"user" | null>(null);
+  const [search, setSearch] = useState("");
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
+
+  const filteredList: IUser[] = useMemo(() => {
+    return filterBySearch(TABLE_DATA as any, search);
+  }, [search]);
 
   const slicedTableData = useCallback(() => {
     const start = (page - 1) * 10;
     const end = start + 10;
-    return TABLE_DATA.slice(start, end);
-  }, [page]);
+    return filteredList.slice(start, end);
+  }, [page, filteredList]);
 
   const handleEditUser = (user: IUser) => {
     setSelectedUser(user);
@@ -45,7 +51,11 @@ const UsersPage = () => {
           </div>
 
           <div className="flex items-center gap-6">
-            <SearchInput className="w-[286px]" />
+            <SearchInput
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-[286px]"
+            />
             <Button onClick={() => setModal("user")}>Add User</Button>
           </div>
         </div>

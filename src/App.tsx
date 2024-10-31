@@ -14,9 +14,12 @@ import { useEffect } from "react";
 
 function App() {
   useEffect(() => {
-    amplitude.init(process.env.REACT_APP_AMPLITUDE_API_KEY as string, {
-      autocapture: true,
-    });
+    if (window !== undefined) {
+      !window.location.origin.includes("localhost") &&
+        amplitude.init(process.env.REACT_APP_AMPLITUDE_API_KEY as string, {
+          autocapture: true,
+        });
+    }
   }, []);
 
   return (
