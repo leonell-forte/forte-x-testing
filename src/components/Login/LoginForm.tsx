@@ -5,15 +5,18 @@ import { z } from "zod";
 import { login } from "../../lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useAppDispatch } from "../../lib/hooks";
+import { cookie, useAppDispatch } from "../../lib/hooks";
 import { setEmail } from "../../lib/slice/auth";
 import { ILoginProps } from "./types";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as amplitude from "@amplitude/analytics-browser";
 import authService from "../../api/auth";
+import { useState } from "react";
 
 const LoginForm = ({ handleNext }: ILoginProps) => {
+  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const {
     handleSubmit,
@@ -25,14 +28,19 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
   });
 
   const onSubmit = async (values: z.infer<typeof login.schema>) => {
+    setLoading(true);
     try {
       const res = await authService.login(values);
       amplitude.track("Login Form Submission");
-      handleNext!();
-      dispatch(setEmail(values.email));
-      console.log(res);
+      cookie.set("access_token", res.data.token, { path: "/" });
+      navigate("users");
+      // handleNext!();
+      // dispatch(setEmail(values.email));
+      // console.log(res);
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -70,7 +78,7 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
         </div>
 
         <div className="w-full text-center space-y-[15px]">
-          <Button type="submit" fullWidth>
+          <Button type="submit" fullWidth loading={loading}>
             Continue
           </Button>
           <div className="flex items-center gap-4">

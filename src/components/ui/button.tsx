@@ -5,6 +5,7 @@ interface IButtonProp extends ButtonProps {
   buttonType?: "primary" | "secondary" | "tertiary" | "default";
   active?: boolean;
   eventName?: string;
+  loading?: boolean;
 }
 
 const Button = ({
@@ -15,6 +16,7 @@ const Button = ({
   eventName,
   onClick,
   type,
+  loading,
   ...props
 }: IButtonProp) => {
   const variants: Record<string, object> = {
@@ -62,7 +64,7 @@ const Button = ({
       sx={variants[(buttonType as keyof typeof variants) || "primary"]}
       {...props}
       className={"gap-[10px] !px-6 !normal-case h-11"}
-      disabled={disabled}
+      disabled={disabled || loading}
       onClick={(e) => {
         if (eventName) {
           amplitude.track(`${eventName} Button Click`, {
@@ -74,7 +76,7 @@ const Button = ({
         }
       }}
     >
-      {children}
+      {loading ? "loading..." : children}
     </ButtonComponent>
   );
 };
