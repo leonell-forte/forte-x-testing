@@ -15,14 +15,17 @@ const LoginPage = () => {
     setStep((prev) => prev + 1);
   };
 
-  const renderStep = useCallback((step: number) => {
-    switch (step) {
-      case 0:
-        return <LoginForm handleNext={handleNextStep} />;
-      case 1:
-        return <OTPForm handleNext={() => navigate("/users")} />;
-    }
-  }, []);
+  const renderStep = useCallback(
+    (step: number) => {
+      switch (step) {
+        case 0:
+          return <LoginForm handleNext={handleNextStep} />;
+        case 1:
+          return <OTPForm handleNext={() => navigate("/users")} />;
+      }
+    },
+    [navigate]
+  );
 
   return (
     <div className="main-container grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-[99px] items-center h-[95vh] md:px-[86px]">
