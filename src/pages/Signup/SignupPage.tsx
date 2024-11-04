@@ -1,8 +1,25 @@
 import SignupForm from "../../components/Signup/SignupForm";
 import Card from "../../components/ui/card";
 import skills from "../../assets/images/signup/spot-future-skills.png";
+import { useCallback, useState } from "react";
+import OTPForm from "../../components/Login/OTPForm";
+import { useNavigate } from "react-router-dom";
 
 const SignupPage = () => {
+  const navigate = useNavigate();
+  const [step, setStep] = useState(0);
+
+  const handleNextStep = () => {
+    setStep((prev) => prev + 1);
+  };
+  const renderStep = useCallback((step: number) => {
+    switch (step) {
+      case 0:
+        return <SignupForm handleNext={handleNextStep} />;
+      case 1:
+        return <OTPForm handleNext={() => navigate("/users")} />;
+    }
+  }, []);
   return (
     <div className="main-container grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-[99px] items-center h-[95vh] md:px-[86px]">
       <div className="hidden lg:block">
@@ -29,7 +46,7 @@ const SignupPage = () => {
             className="w-auto h-auto mx-auto max-w-[122px]"
           />
 
-          <SignupForm />
+          {renderStep(step)}
         </div>
       </Card>
     </div>

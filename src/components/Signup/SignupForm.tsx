@@ -11,8 +11,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
 import authService from "../../api/auth";
 import { cookie } from "../../lib/hooks";
+import { ILoginProps } from "../Login/types";
 
-const SignupForm = () => {
+const SignupForm = ({ handleNext }: ILoginProps) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -30,7 +31,7 @@ const SignupForm = () => {
     try {
       const res = await authService.signup(values);
       cookie.set("access_token", res.data.token, { path: "/" });
-      navigate("/users");
+      handleNext!();
     } catch (err) {
       console.log(err);
     } finally {
