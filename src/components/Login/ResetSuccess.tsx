@@ -13,7 +13,7 @@ const ResetSuccess = () => {
           magically.
         </p>
       </div>
-      <Button onClick={() => navigate("/users")} fullWidth>
+      <Button onClick={() => navigate("/")} fullWidth>
         Continue
       </Button>
     </div>

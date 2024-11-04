@@ -79,3 +79,12 @@ export const signup = {
       path: ["confirm_password"], // This will cause the error to appear under the confirm_password field
     }),
 };
+
+export const resetRequest = {
+  defaultValues: {
+    email: "",
+  },
+  schema: z.object({
+    email: z.string().email(),
+  }),
+};
