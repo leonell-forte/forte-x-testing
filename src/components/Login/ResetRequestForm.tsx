@@ -21,6 +21,8 @@ const ResetRequestForm = ({ handleNext }: ILoginProps) => {
   });
 
   const onSubmit = async (values: z.infer<typeof resetRequest.schema>) => {
+    console.log(values);
+
     handleNext!();
   };
   return (

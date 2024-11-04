@@ -2,8 +2,6 @@
 
 import LoginForm from "../../components/Login/LoginForm";
 import OTPForm from "../../components/Login/OTPForm";
-import ResetPasswordForm from "../../components/Login/ResetPasswordForm";
-import ResetSuccess from "../../components/Login/ResetSuccess";
 import Card from "../../components/ui/card";
 import { useCallback, useState } from "react";
 import jobs from "../../assets/images/login/spot-choiceofjobs.png";

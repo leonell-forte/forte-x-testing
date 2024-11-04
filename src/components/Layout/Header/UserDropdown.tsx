@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useOutsideClick } from "../../../lib/hooks";
@@ -7,8 +7,6 @@ import authService from "../../../api/auth";
 
 const UserDropdown = () => {
   const [showDropdown, setShowDropdown] = useState(false);
-
-  const navigate = useNavigate();
 
   const handleLogout = () => {
     authService.logout();

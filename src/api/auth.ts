@@ -1,15 +1,15 @@
 import { z } from "zod";
 import { login, signup } from "../lib/validators";
-import apiRequest from "./apiRequest";
 import { cookie } from "../lib/hooks";
+import { api } from "../lib/axios/interceptor";
 
 class AuthService {
   async login(body: z.infer<typeof login.schema>) {
-    const res = await apiRequest.post("/authentication/login", body);
+    const res = await api.post("/authentication/login", body);
     return res;
   }
   async signup(body: z.infer<typeof signup.schema>) {
-    const res = await apiRequest.post("/authentication/signup", body);
+    const res = await api.post("/authentication/signup", body);
     return res;
   }
   async logout() {

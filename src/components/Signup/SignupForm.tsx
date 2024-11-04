@@ -8,14 +8,13 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { signup } from "../../lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import authService from "../../api/auth";
 import { cookie } from "../../lib/hooks";
 import { ILoginProps } from "../Login/types";
 
 const SignupForm = ({ handleNext }: ILoginProps) => {
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const {
     setValue,
