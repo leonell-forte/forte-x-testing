@@ -7,8 +7,10 @@ import ResetSuccess from "../../components/Login/ResetSuccess";
 import Card from "../../components/ui/card";
 import { useCallback, useState } from "react";
 import jobs from "../../assets/images/login/spot-choiceofjobs.png";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const [step, setStep] = useState(0);
 
   const handleNextStep = () => {
@@ -20,11 +22,7 @@ const LoginPage = () => {
       case 0:
         return <LoginForm handleNext={handleNextStep} />;
       case 1:
-        return <OTPForm handleNext={handleNextStep} />;
-      case 2:
-        return <ResetPasswordForm handleNext={handleNextStep} />;
-      case 3:
-        return <ResetSuccess />;
+        return <OTPForm handleNext={() => navigate("/users")} />;
     }
   }, []);
 

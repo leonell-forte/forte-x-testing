@@ -33,10 +33,9 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
       const res = await authService.login(values);
       amplitude.track("Login Form Submission");
       cookie.set("access_token", res.data.token, { path: "/" });
-      navigate("users");
-      // handleNext!();
-      // dispatch(setEmail(values.email));
-      // console.log(res);
+      handleNext!();
+      dispatch(setEmail(values.email));
+      console.log(res);
     } catch (err) {
       console.log(err);
     } finally {
