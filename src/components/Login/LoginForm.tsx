@@ -57,7 +57,7 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
             helperText={errors.email?.message}
             label="Email"
             type="email"
-            autoComplete="email"
+            autoComplete="off"
           />
           <Input
             onChange={(e) => setValue("password", e.target.value)}
@@ -65,6 +65,7 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
             helperText={errors.password?.message}
             label="Password"
             type="password"
+            autoComplete="off"
           />
 
           <div className="flex items-center justify-between">

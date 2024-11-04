@@ -30,7 +30,6 @@ export const password = {
       new: z
         .string()
         .min(8, "Password must be at least 8 characters long")
-        .regex(/[a-z]/, "Password must contain at least one lowercase letter")
         .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
         .regex(/\d/, "Password must contain at least one number")
         .regex(
@@ -53,6 +52,7 @@ export const signup = {
     phoneNumber: "",
     password: "",
     confirmPassword: "",
+    agreeTerms: "",
   },
   schema: z
     .object({
@@ -73,6 +73,11 @@ export const signup = {
       confirmPassword: z
         .string()
         .min(8, "Password must be at least 8 characters long"),
+      agreeTerms: z
+        .string()
+        .min(1, {
+          message: "You must agree to the Privacy Policy to continue",
+        }),
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: "Passwords do not match",

@@ -11,9 +11,10 @@ import unChecked from "../../assets/images/icons/checkbox-unchecked.svg";
 
 interface ICheckboxProps extends CheckboxProps {
   label?: string | ReactNode;
+  helperText?: string | ReactNode;
 }
 
-const Checkbox = ({ label, ...props }: ICheckboxProps) => {
+const Checkbox = ({ label, helperText, ...props }: ICheckboxProps) => {
   const { disabled } = props;
 
   const renderIcons = useCallback(() => {
@@ -30,23 +31,24 @@ const Checkbox = ({ label, ...props }: ICheckboxProps) => {
     return { checked, unchecked };
   }, [disabled]);
   return (
-    <FormControlLabel
-      control={
-        <MuiCheckbox
-          sx={{
-            fontSize: "12px",
-            color: "red !important",
-            "&.Mui-checked": {
-              color: "red !important",
-            },
-          }}
-          icon={<img src={renderIcons().unchecked} alt="unchecked" />}
-          checkedIcon={<img src={renderIcons().checked} alt="checked" />}
-          {...props}
-        />
-      }
-      label={<span className="text-[12px] text-grey">{label}</span>}
-    />
+    <div className="relative">
+      <FormControlLabel
+        control={
+          <MuiCheckbox
+            sx={{
+              fontSize: "12px",
+            }}
+            icon={<img src={renderIcons().unchecked} alt="unchecked" />}
+            checkedIcon={<img src={renderIcons().checked} alt="checked" />}
+            {...props}
+          />
+        }
+        label={<span className="text-[12px] text-grey">{label}</span>}
+      />
+      <p className="absolute text-alert top-7 left-6 text-[10px] font-medium truncate">
+        {helperText}
+      </p>
+    </div>
   );
 };
 
