@@ -47,17 +47,19 @@ export const password = {
 
 export const signup = {
   defaultValues: {
-    fullname: "",
+    firstName: "",
+    lastName: "",
     email: "",
-    phone_number: "",
+    phoneNumber: "",
     password: "",
-    confirm_password: "",
+    confirmPassword: "",
   },
   schema: z
     .object({
-      fullname: z.string().min(1),
+      firstName: z.string().min(1),
+      lastName: z.string().min(1),
       email: z.string().email(),
-      phone_number: z.string().min(1),
+      phoneNumber: z.string().min(1),
       password: z
         .string()
         .min(8, "Password must be at least 8 characters long")
@@ -68,11 +70,11 @@ export const signup = {
           /[!@#$%^&*(),.?":{}|<>]/,
           "Password must contain at least one special character"
         ),
-      confirm_password: z
+      confirmPassword: z
         .string()
         .min(8, "Password must be at least 8 characters long"),
     })
-    .refine((data) => data.password === data.confirm_password, {
+    .refine((data) => data.password === data.confirmPassword, {
       message: "Passwords do not match",
       path: ["confirm_password"], // This will cause the error to appear under the confirm_password field
     }),

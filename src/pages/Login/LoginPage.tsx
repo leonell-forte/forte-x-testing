@@ -5,7 +5,7 @@ import OTPForm from "../../components/Login/OTPForm";
 import ResetPasswordForm from "../../components/Login/ResetPasswordForm";
 import ResetSuccess from "../../components/Login/ResetSuccess";
 import Card from "../../components/ui/card";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import jobs from "../../assets/images/login/spot-choiceofjobs.png";
 
 const LoginPage = () => {
@@ -27,8 +27,6 @@ const LoginPage = () => {
         return <ResetSuccess />;
     }
   }, []);
-
-  useEffect(() => {}, []);
 
   return (
     <div className="main-container grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-[99px] items-center h-[95vh] md:px-[86px]">

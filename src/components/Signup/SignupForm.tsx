@@ -9,6 +9,7 @@ import { z } from "zod";
 import { signup } from "../../lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
+import authService from "../../api/auth";
 
 const SignupForm = () => {
   const navigate = useNavigate();
@@ -23,6 +24,12 @@ const SignupForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof signup.schema>) => {
+    try {
+      const res = authService.signup(values);
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
     console.log(values);
     navigate("/");
   };
@@ -37,11 +44,18 @@ const SignupForm = () => {
 
         <div className="flex flex-col w-full gap-[15px]">
           <Input
-            onChange={(e) => setValue("fullname", e.target.value)}
+            onChange={(e) => setValue("firstName", e.target.value)}
             autoComplete="name"
             label="Your full name"
-            error={!!errors.fullname?.message}
-            helperText={errors.fullname?.message}
+            error={!!errors.firstName?.message}
+            helperText={errors.firstName?.message}
+          />
+          <Input
+            onChange={(e) => setValue("lastName", e.target.value)}
+            autoComplete="name"
+            label="Your full name"
+            error={!!errors.lastName?.message}
+            helperText={errors.lastName?.message}
           />
           <Input
             onChange={(e) => setValue("email", e.target.value)}
@@ -51,11 +65,11 @@ const SignupForm = () => {
             helperText={errors.email?.message}
           />
           <Input
-            onChange={(e) => setValue("phone_number", e.target.value)}
+            onChange={(e) => setValue("phoneNumber", e.target.value)}
             autoComplete="tel"
             label="Phone number"
-            error={!!errors.phone_number?.message}
-            helperText={errors.phone_number?.message}
+            error={!!errors.phoneNumber?.message}
+            helperText={errors.phoneNumber?.message}
           />
           <Input
             onChange={(e) => setValue("password", e.target.value)}
@@ -65,11 +79,11 @@ const SignupForm = () => {
             helperText={errors.password?.message}
           />
           <Input
-            onChange={(e) => setValue("confirm_password", e.target.value)}
+            onChange={(e) => setValue("confirmPassword", e.target.value)}
             label="Re-enter password"
             type="password"
-            error={!!errors.confirm_password?.message}
-            helperText={errors.confirm_password?.message}
+            error={!!errors.confirmPassword?.message}
+            helperText={errors.confirmPassword?.message}
           />
 
           <div className="flex items-center justify-between">
