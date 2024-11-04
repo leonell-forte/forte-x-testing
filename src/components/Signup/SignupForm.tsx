@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Input from "../ui/input";
 import Checkbox from "../ui/checkbox";
 import Button from "../ui/button";
@@ -10,8 +10,10 @@ import { signup } from "../../lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
 import authService from "../../api/auth";
+import { cookie } from "../../lib/hooks";
 
 const SignupForm = () => {
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const {
@@ -24,14 +26,16 @@ const SignupForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof signup.schema>) => {
+    setLoading(true);
     try {
-      const res = authService.signup(values);
-      console.log(res);
+      const res = await authService.signup(values);
+      cookie.set("access_token", res.data.token, { path: "/" });
+      navigate("/users");
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoading(false);
     }
-    console.log(values);
-    navigate("/");
   };
   return (
     <div className="w-full">
@@ -46,14 +50,14 @@ const SignupForm = () => {
           <Input
             onChange={(e) => setValue("firstName", e.target.value)}
             autoComplete="name"
-            label="Your full name"
+            label="Your first name"
             error={!!errors.firstName?.message}
             helperText={errors.firstName?.message}
           />
           <Input
             onChange={(e) => setValue("lastName", e.target.value)}
             autoComplete="name"
-            label="Your full name"
+            label="Your last name"
             error={!!errors.lastName?.message}
             helperText={errors.lastName?.message}
           />
@@ -105,7 +109,7 @@ const SignupForm = () => {
         </div>
 
         <div className="w-full text-center space-y-[15px]">
-          <Button type="submit" fullWidth>
+          <Button type="submit" fullWidth loading={loading}>
             Sign up
           </Button>
           <p className="text-[14px] md:ext-[18px]">OR</p>
