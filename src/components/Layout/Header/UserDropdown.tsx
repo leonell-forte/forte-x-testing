@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useOutsideClick } from "../../../lib/hooks";
 import arrow from "../../../assets/images/icons/arrow.svg";
+import authService from "../../../api/auth";
 
 const UserDropdown = () => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -10,7 +11,7 @@ const UserDropdown = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    navigate("/");
+    authService.logout();
   };
 
   const dropdownRef = useRef(null);
