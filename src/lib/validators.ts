@@ -4,6 +4,7 @@ export const login = {
   defaultValues: {
     email: "",
     password: "",
+    remember: false,
   },
   schema: z.object({
     email: z.string().email(),
@@ -17,6 +18,7 @@ export const login = {
         /[!@#$%^&*(),.?":{}|<>]/,
         "Password must contain at least one special character"
       ),
+    remember: z.boolean(),
   }),
 };
 
@@ -73,11 +75,9 @@ export const signup = {
       confirmPassword: z
         .string()
         .min(8, "Password must be at least 8 characters long"),
-      agreeTerms: z
-        .string()
-        .min(1, {
-          message: "You must agree to the Privacy Policy to continue",
-        }),
+      agreeTerms: z.string().min(1, {
+        message: "You must agree to the Privacy Policy to continue",
+      }),
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: "Passwords do not match",
