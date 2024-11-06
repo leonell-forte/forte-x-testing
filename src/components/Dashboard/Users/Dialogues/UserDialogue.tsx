@@ -33,11 +33,22 @@ const UserDialogue = ({ isVisible, handleClose, user }: IUserDialogueProps) => {
         </div>
         <div className="flex items-center">
           <label htmlFor="" className="w-[140px]">
-            Full name
+            First name
           </label>
           <Input
-            value={user?.name}
-            autoComplete="name"
+            value={user?.firstName}
+            autoComplete="given-name"
+            placeholder="James Potter"
+          />
+        </div>
+
+        <div className="flex items-center">
+          <label htmlFor="" className="w-[140px]">
+            Last name
+          </label>
+          <Input
+            value={user?.lastName}
+            autoComplete="family-name"
             placeholder="James Potter"
           />
         </div>
@@ -46,7 +57,7 @@ const UserDialogue = ({ isVisible, handleClose, user }: IUserDialogueProps) => {
             Phone number
           </label>
           <Input
-            value={user?.phone}
+            value={user?.phoneNumber}
             autoComplete="tel"
             placeholder="+61 4567323423"
           />

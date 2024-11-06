@@ -1,7 +1,9 @@
 export interface IUser {
-  name: string;
+  id: number;
+  firstName: string;
+  lastName: string;
   email: string;
-  phone: string;
   role: string;
+  phoneNumber: string;
   organization: string;
 }

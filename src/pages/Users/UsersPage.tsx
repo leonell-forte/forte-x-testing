@@ -1,5 +1,3 @@
-"use client";
-
 import Button from "../../components/ui/button";
 import Dropdown from "../../components/ui/dropdown";
 import Pagination from "../../components/ui/pagination";
@@ -10,27 +8,39 @@ import pencil from "../../assets/images/icons/pencil.svg";
 import { IUser } from "./types";
 import UserDialogue from "../../components/Dashboard/Users/Dialogues/UserDialogue";
 import { filterBySearch } from "../../lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import userService from "../../api/users";
+import Loader from "../../components/ui/Loader/loader";
 
 const UsersPage = () => {
   const [page, setPage] = useState(1);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["users", page],
+    queryFn: () => userService.list(page),
+  });
+
   const [modal, setModal] = useState<"user" | null>(null);
   const [search, setSearch] = useState("");
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
 
-  const filteredList: IUser[] = useMemo(() => {
-    return filterBySearch(TABLE_DATA as any, search);
-  }, [search]);
+  const users = useMemo(() => data?.data.items || [], [data]);
 
-  const slicedTableData = useCallback(() => {
-    const start = (page - 1) * 10;
-    const end = start + 10;
-    return filteredList.slice(start, end);
-  }, [page, filteredList]);
+  // const filteredList: IUser[] = useMemo(() => {
+  //   return filterBySearch(users as any, search);
+  // }, [search]);
 
   const handleEditUser = (user: IUser) => {
     setSelectedUser(user);
     setModal("user");
   };
+
+  if (isLoading)
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <Loader />
+      </div>
+    );
 
   return (
     <>
@@ -72,19 +82,27 @@ const UsersPage = () => {
               </Table.Row>
             </Table.Head>
             <Table.Body>
-              {slicedTableData().map((item, bodyIndex) => {
-                const { name, email, phone, role, organization } = item;
+              {users.map((item: IUser, bodyIndex: number) => {
+                const {
+                  id,
+                  firstName,
+                  lastName,
+                  email,
+                  phoneNumber,
+                  role,
+                  organization,
+                } = item;
                 return (
                   <Table.Row key={bodyIndex}>
-                    <Table.Data>{name}</Table.Data>
+                    <Table.Data>{`${firstName} ${lastName}`}</Table.Data>
                     <Table.Data>{email}</Table.Data>
-                    <Table.Data>{phone}</Table.Data>
+                    <Table.Data>{phoneNumber}</Table.Data>
                     <Table.Data>{role}</Table.Data>
                     <Table.Data>{organization}</Table.Data>
                     <Table.Data>
                       <Button
                         eventName="Edit User"
-                        id={name}
+                        id={id.toString()}
                         buttonType="default"
                         type="button"
                         onClick={() => handleEditUser(item)}
@@ -103,7 +121,7 @@ const UsersPage = () => {
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}
-              total={TABLE_DATA.length}
+              total={users.length}
             />
           </div>
         </div>
@@ -127,21 +145,4 @@ const TABLE_HEADER = [
   "Phone",
   "Role",
   "Organization",
-];
-
-const TABLE_DATA: IUser[] = [
-  {
-    name: "Rosalyn Simon",
-    email: "rosalyn_simon@gmail.com",
-    phone: "+61 2345678902",
-    role: "Owner",
-    organization: "Lorem Ipsum LLC",
-  },
-  {
-    name: "John Doe",
-    email: "john_doe@example.com",
-    phone: "+61 3456789012",
-    role: "Admin",
-    organization: "Dolor Sit Corp",
-  },
 ];
