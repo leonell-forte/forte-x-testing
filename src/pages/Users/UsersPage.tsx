@@ -40,7 +40,7 @@ const UsersPage = () => {
         handleClose={() => setModal(null)}
       />
       <div className="space-y-1.5">
-        <div className="flex items-center justify-between w-full">
+        <div className="flex items-center justify-between w-full gap-4">
           <div className="flex items-center gap-[18px]">
             <p className="text-[20px]">Filter by</p>
             <Dropdown
