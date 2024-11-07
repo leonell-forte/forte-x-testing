@@ -4,7 +4,7 @@ import Input from "../ui/input";
 import Button from "../ui/button";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { password } from "../../lib/validators";
+import { password } from "../../lib/validators/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ILoginProps } from "./types";
 import * as amplitude from "@amplitude/analytics-browser";

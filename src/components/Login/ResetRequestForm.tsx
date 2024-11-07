@@ -4,7 +4,7 @@ import Button from "../ui/button";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { resetRequest } from "../../lib/validators";
+import { resetRequest } from "../../lib/validators/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ILoginProps } from "./types";
 

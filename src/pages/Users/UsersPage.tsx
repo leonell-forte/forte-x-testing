@@ -32,7 +32,8 @@ const UsersPage = () => {
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
 
   const users = useMemo(() => userList?.data.items || [], [userList]);
-  const organiations = useMemo(
+
+  const organizations = useMemo(
     () => organizationList?.data.items || [],
     [organizationList]
   );
@@ -56,6 +57,7 @@ const UsersPage = () => {
   return (
     <>
       <UserDialogue
+        organizations={organizations}
         user={selectedUser}
         isVisible={modal === "user"}
         handleClose={() => setModal(null)}
@@ -82,15 +84,16 @@ const UsersPage = () => {
             options={filters}
           />
           <Dropdown
+            loading={orgLoading}
             value={organization}
             handleSelect={(val) => {
-              organization.includes(val)
-                ? setOrganization((prev) => prev.filter((item) => item !== val))
-                : setOrganization((prev) => [...prev, val]);
+              if (organization.includes(val))
+                setOrganization((prev) => prev.filter((item) => item !== val));
+              else setOrganization((prev) => [...prev, val]);
             }}
             placeholder="Organization"
             className="max-w-[166px]"
-            options={organiations.map((item: IOrganization) => ({
+            options={organizations.map((item: IOrganization) => ({
               label: item.registeredName,
               value: item.id,
             }))}

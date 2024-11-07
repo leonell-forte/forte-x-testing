@@ -1,5 +1,5 @@
 .container {
-  --uib-size: 47px;
+  --uib-size: 24px;
   --uib-color: white;
   --uib-speed: 1s;
   --uib-dot-size: calc(var(--uib-size) * 0.18);
@@ -8,6 +8,10 @@
   justify-content: space-between;
   height: calc(var(--uib-size) * 0.5);
   width: var(--uib-size);
+
+  &.-dark {
+    --uib-color: #0a312a;
+  }
 }
 
 .dot {

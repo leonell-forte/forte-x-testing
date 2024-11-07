@@ -9,7 +9,7 @@ export interface IUser {
 }
 
 export interface IOrganization {
-  id: number;
+  id: string;
   name: string;
   registeredName: string;
   region: string;

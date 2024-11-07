@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { login, signup } from "../lib/validators";
+import { login, signup } from "../lib/validators/auth";
 import { cookie } from "../lib/hooks";
 import { api } from "../lib/axios/interceptor";
 import axios from "axios";

@@ -7,7 +7,7 @@ class OrganizationService {
 
     params.append("pageNum", page.toString());
     params.append("pageSize", DEFAULT_PAGE_SIZE);
-    listAll && params.append("listAll", "true");
+    if (listAll) params.append("listAll", "true");
     const res = await api.get(`/organizations?${params}`);
 
     return res;

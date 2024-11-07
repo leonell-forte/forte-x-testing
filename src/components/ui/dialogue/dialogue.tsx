@@ -36,7 +36,7 @@ const Dialogue = ({
           <img alt="close" src={close} />
         </button>
         <p className="font-semibold text-[20px]">{title}</p>
-        <div className="mt-2.5">{children}</div>
+        <div className="mt-12">{children}</div>
       </div>
     </motion.div>
   ) : (

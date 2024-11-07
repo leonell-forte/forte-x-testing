@@ -6,7 +6,7 @@ import Checkbox from "../ui/checkbox";
 import Button from "../ui/button";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { signup } from "../../lib/validators";
+import { signup } from "../../lib/validators/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "react-router-dom";
 import authService from "../../api/auth";

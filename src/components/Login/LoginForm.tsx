@@ -2,7 +2,7 @@ import Input from "../ui/input";
 import Checkbox from "../ui/checkbox";
 import Button from "../ui/button";
 import { z } from "zod";
-import { login } from "../../lib/validators";
+import { login } from "../../lib/validators/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { cookie, useAppDispatch } from "../../lib/hooks";
