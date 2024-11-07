@@ -18,14 +18,11 @@ class AuthService {
     window.location.href = "/";
   }
   async check() {
-    const res = await axios.get(
-      `${process.env.REACT_APP_API_URL}/authentication/check`,
-      {
-        headers: {
-          Authorization: `Bearer ${cookie.get("access_token")}`,
-        },
-      }
-    );
+    await axios.get(`${process.env.REACT_APP_API_URL}/authentication/check`, {
+      headers: {
+        Authorization: `Bearer ${cookie.get("access_token")}`,
+      },
+    });
     window.location.href = "/users";
   }
 }
