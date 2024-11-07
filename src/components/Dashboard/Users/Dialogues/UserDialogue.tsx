@@ -40,10 +40,11 @@ const UserDialogue = ({
   const onSubmit = async (values: z.infer<typeof users.schema>) => {
     setLoading(true);
     try {
-      const res = await userService.add(values);
+      await userService.add(values);
       handleClose!();
       reset();
     } catch (err) {
+      console.log(err);
     } finally {
       setLoading(false);
     }
@@ -144,7 +145,7 @@ const UserDialogue = ({
           <Button onClick={handleClose} buttonType="secondary">
             Cancel
           </Button>
-          <Button loading={isLoading} type="submit">
+          <Button loading={loading} type="submit">
             Save
           </Button>
         </div>
