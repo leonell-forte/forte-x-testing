@@ -12,6 +12,8 @@ import { users } from "../../../../lib/validators/users";
 import { zodResolver } from "@hookform/resolvers/zod";
 import userService from "../../../../api/users";
 import { useState } from "react";
+import { useMutation, useMutationState } from "@tanstack/react-query";
+import { queryClient } from "../../../../components/QueryProvider";
 
 interface IUserDialogueProps extends IDialogueProps {
   user?: IUser | null;
@@ -26,6 +28,34 @@ const UserDialogue = ({
 }: IUserDialogueProps) => {
   const [loading, setLoading] = useState(false);
 
+  const { mutateAsync } = useMutation({
+    mutationFn: userService.add,
+    onMutate: async (newUser) => {
+      await queryClient.cancelQueries({ queryKey: ["users"] });
+
+      const previousUsers = queryClient.getQueryData(["users"]);
+      console.log(newUser);
+
+      queryClient.setQueryData(["users"], (old: any) => {
+        console.log(old);
+
+        return {
+          ...old,
+          items: [...old?.items, newUser],
+        };
+      });
+
+      return { previousUsers };
+    },
+
+    onError: (err, newTodo, context) => {
+      queryClient.setQueryData(["users"], context?.previousUsers);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+    },
+  });
+
   const {
     handleSubmit,
     formState: { errors },
@@ -39,15 +69,7 @@ const UserDialogue = ({
 
   const onSubmit = async (values: z.infer<typeof users.schema>) => {
     setLoading(true);
-    try {
-      await userService.add(values);
-      handleClose!();
-      reset();
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
-    }
+    await mutateAsync(values);
   };
 
   return (
@@ -113,8 +135,9 @@ const UserDialogue = ({
           </label>
           <Dropdown
             value={
-              organizations.find((item) => item.id == watch("organizationId"))
-                ?.registeredName
+              organizations.find(
+                (item) => item.id.toString() === watch("organizationId")
+              )?.registeredName
             }
             options={organizations.map((item: IOrganization) => ({
               label: item.registeredName,

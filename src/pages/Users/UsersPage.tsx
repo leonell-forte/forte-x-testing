@@ -25,13 +25,14 @@ const UsersPage = () => {
     queryKey: ["organizations"],
     queryFn: () => organizationService.list(page, true),
   });
+  console.log(userList);
 
   const [modal, setModal] = useState<"user" | null>(null);
   const [organization, setOrganization] = useState<string[]>([]);
   const [search, setSearch] = useState("");
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
 
-  const users = useMemo(() => userList?.data.items || [], [userList]);
+  const users = useMemo(() => userList?.items || [], [userList]);
 
   const organizations = useMemo(
     () => organizationList?.data.items || [],
@@ -46,13 +47,6 @@ const UsersPage = () => {
     setSelectedUser(user);
     setModal("user");
   };
-
-  if (userLoading)
-    return (
-      <div className="w-full h-full flex items-center justify-center">
-        <Loader />
-      </div>
-    );
 
   return (
     <>
@@ -102,56 +96,62 @@ const UsersPage = () => {
           />
         </div>
         <div className="space-y-[18px]">
-          <Table.Container>
-            <Table.Head>
-              <Table.Row>
-                {TABLE_HEADER.map((key, headerIndex) => {
-                  return <Table.Header key={headerIndex}>{key}</Table.Header>;
+          {userLoading ? (
+            <div className="w-full h-[500px] flex items-center justify-center">
+              <Loader />
+            </div>
+          ) : (
+            <Table.Container>
+              <Table.Head>
+                <Table.Row>
+                  {TABLE_HEADER.map((key, headerIndex) => {
+                    return <Table.Header key={headerIndex}>{key}</Table.Header>;
+                  })}
+                  <Table.Header></Table.Header>
+                </Table.Row>
+              </Table.Head>
+              <Table.Body>
+                {users.map((item: IUser, bodyIndex: number) => {
+                  const {
+                    // id,
+                    firstName,
+                    lastName,
+                    email,
+                    phoneNumber,
+                    role,
+                    organization,
+                  } = item;
+                  return (
+                    <Table.Row key={bodyIndex}>
+                      <Table.Data>{`${firstName} ${lastName}`}</Table.Data>
+                      <Table.Data>{email}</Table.Data>
+                      <Table.Data>{phoneNumber}</Table.Data>
+                      <Table.Data>{role}</Table.Data>
+                      <Table.Data>{organization}</Table.Data>
+                      <Table.Data>
+                        <Button
+                          eventName="Edit User"
+                          // id={id.toString()}
+                          buttonType="default"
+                          type="button"
+                          onClick={() => handleEditUser(item)}
+                          className="p-[3px]"
+                        >
+                          <img alt="pencil" src={pencil} />
+                        </Button>
+                      </Table.Data>
+                    </Table.Row>
+                  );
                 })}
-                <Table.Header></Table.Header>
-              </Table.Row>
-            </Table.Head>
-            <Table.Body>
-              {users.map((item: IUser, bodyIndex: number) => {
-                const {
-                  id,
-                  firstName,
-                  lastName,
-                  email,
-                  phoneNumber,
-                  role,
-                  organization,
-                } = item;
-                return (
-                  <Table.Row key={bodyIndex}>
-                    <Table.Data>{`${firstName} ${lastName}`}</Table.Data>
-                    <Table.Data>{email}</Table.Data>
-                    <Table.Data>{phoneNumber}</Table.Data>
-                    <Table.Data>{role}</Table.Data>
-                    <Table.Data>{organization}</Table.Data>
-                    <Table.Data>
-                      <Button
-                        eventName="Edit User"
-                        id={id.toString()}
-                        buttonType="default"
-                        type="button"
-                        onClick={() => handleEditUser(item)}
-                        className="p-[3px]"
-                      >
-                        <img alt="pencil" src={pencil} />
-                      </Button>
-                    </Table.Data>
-                  </Table.Row>
-                );
-              })}
-            </Table.Body>
-          </Table.Container>
+              </Table.Body>
+            </Table.Container>
+          )}
 
           <div className="flex justify-end">
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}
-              total={users.length}
+              total={users.totalSize}
             />
           </div>
         </div>

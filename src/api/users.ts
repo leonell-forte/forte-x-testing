@@ -7,15 +7,16 @@ class UserService {
   async list(page: number) {
     const params = new URLSearchParams();
 
-    params.append("pageSize", DEFAULT_PAGE_SIZE);
-    params.append("pageNum", page.toString());
+    params.append("$pageSize", DEFAULT_PAGE_SIZE);
+    params.append("$pageNum", page.toString());
 
-    const res = await api.get(`/users?${params.toString}`);
-    return res;
+    const res = await api.get(`/users?${params.toString()}`);
+    return res.data;
   }
 
   async add(user: z.infer<typeof users.schema>) {
     const res = await api.post("/users", user);
+    console.log(res);
 
     return res;
   }
