@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { cookie, useAppDispatch } from "../../lib/hooks";
 import { setEmail } from "../../lib/slice/auth";
 import { ILoginProps } from "./types";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import * as amplitude from "@amplitude/analytics-browser";
 import authService from "../../api/auth";
 import { useState } from "react";
@@ -16,7 +16,6 @@ import { useState } from "react";
 const LoginForm = ({ handleNext }: ILoginProps) => {
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   const {
     handleSubmit,
@@ -35,8 +34,7 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
       const res = await authService.login(values);
       amplitude.track("Login Form Submission");
       cookie.set("access_token", res.data.data.token, { path: "/" });
-      // handleNext!();
-      navigate("/users");
+      handleNext!();
       dispatch(setEmail(values.email));
     } catch (err) {
       console.log(err);

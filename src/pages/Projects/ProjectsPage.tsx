@@ -25,6 +25,11 @@ const ProjectsPage = () => {
     return filteredList.slice(start, end);
   }, [page, filteredList]);
 
+  const handleEditUser = (item: IProject) => {
+    setModal("project");
+    setSelectedProject(item);
+  };
+
   return (
     <>
       <ProjectDialogue
@@ -34,7 +39,11 @@ const ProjectsPage = () => {
       />
       <div className="space-y-1.5">
         <div className="flex justify-between items-center gap-4">
-          <SearchInput className="max-w-[286px]" />
+          <SearchInput
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="max-w-[286px]"
+          />
           <Button eventName="Add User" onClick={() => setModal("project")}>
             Add Project
           </Button>
@@ -67,7 +76,7 @@ const ProjectsPage = () => {
                         id={project}
                         buttonType="default"
                         type="button"
-                        //   onClick={() => handleEditUser(item)}
+                        onClick={() => handleEditUser(item)}
                         className="p-[3px]"
                       >
                         <img alt="pencil" src={pencil} />
