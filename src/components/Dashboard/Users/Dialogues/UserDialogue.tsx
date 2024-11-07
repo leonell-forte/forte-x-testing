@@ -12,7 +12,7 @@ import { users } from "../../../../lib/validators/users";
 import { zodResolver } from "@hookform/resolvers/zod";
 import userService from "../../../../api/users";
 import { useState } from "react";
-import { useMutation, useMutationState } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../../../../components/QueryProvider";
 
 interface IUserDialogueProps extends IDialogueProps {
@@ -41,7 +41,7 @@ const UserDialogue = ({
 
         return {
           ...old,
-          items: [...old?.items, newUser],
+          items: [...old.items, newUser],
         };
       });
 
@@ -61,7 +61,6 @@ const UserDialogue = ({
     formState: { errors },
     setValue,
     watch,
-    reset,
   } = useForm<z.infer<typeof users.schema>>({
     resolver: zodResolver(users.schema),
     defaultValues: users.defaultValues,
