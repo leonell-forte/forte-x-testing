@@ -8,6 +8,7 @@ import ForgotPasswordPage from "./pages/ForgotPassword/ForgotPasswordPage";
 import ComponentsPage from "./pages/Components/ComponentsPage";
 import ErrorPage from "./pages/404";
 import Providers from "./components/Providers";
+import ProjectsPage from "./pages/Projects/ProjectsPage";
 
 function App() {
   return (
@@ -26,6 +27,14 @@ function App() {
               element={
                 <DashboardLayout>
                   <UsersPage />
+                </DashboardLayout>
+              }
+            />
+            <Route
+              path="/projects"
+              element={
+                <DashboardLayout>
+                  <ProjectsPage />
                 </DashboardLayout>
               }
             />

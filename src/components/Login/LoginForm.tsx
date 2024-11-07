@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { cookie, useAppDispatch } from "../../lib/hooks";
 import { setEmail } from "../../lib/slice/auth";
 import { ILoginProps } from "./types";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as amplitude from "@amplitude/analytics-browser";
 import authService from "../../api/auth";
 import { useState } from "react";
@@ -16,11 +16,14 @@ import { useState } from "react";
 const LoginForm = ({ handleNext }: ILoginProps) => {
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const {
     handleSubmit,
+    getValues,
     formState: { errors },
     setValue,
+    setError,
   } = useForm<z.infer<typeof login.schema>>({
     resolver: zodResolver(login.schema),
     defaultValues: login.defaultValues,
@@ -31,12 +34,14 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
     try {
       const res = await authService.login(values);
       amplitude.track("Login Form Submission");
-      cookie.set("access_token", res.data.token, { path: "/" });
-      handleNext!();
+      cookie.set("access_token", res.data.data.token, { path: "/" });
+      // handleNext!();
+      navigate("/users");
       dispatch(setEmail(values.email));
-      console.log(res);
     } catch (err) {
       console.log(err);
+      setError("email", { message: "Please use correct email" });
+      setError("password", { message: "Please use correct password" });
     } finally {
       setLoading(false);
     }
@@ -69,7 +74,15 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
           />
 
           <div className="flex items-center justify-between">
-            <Checkbox label="Remember password" />
+            <Checkbox
+              value={getValues("remember")}
+              onChange={(e) => {
+                console.log(e.target.checked);
+
+                setValue("remember", e.target.checked);
+              }}
+              label="Remember password"
+            />
             <Link to="/forgot-password" className="text-grey text-[12px]">
               Forgot Password?
             </Link>
