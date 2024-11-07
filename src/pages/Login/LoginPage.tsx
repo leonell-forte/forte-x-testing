@@ -11,7 +11,7 @@ import authService from "../../api/auth";
 import Loader from "../../components/ui/Loader/loader";
 
 const LoginPage = () => {
-  const { isLoading, isError } = useQuery({
+  const { isLoading } = useQuery({
     queryKey: ["check"],
     queryFn: authService.check,
     retry: 1,
