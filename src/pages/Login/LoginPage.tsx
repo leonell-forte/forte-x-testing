@@ -6,8 +6,16 @@ import Card from "../../components/ui/card";
 import { useCallback, useState } from "react";
 import jobs from "../../assets/images/login/spot-choiceofjobs.png";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import authService from "../../api/auth";
+import Loader from "../../components/ui/Loader/loader";
 
 const LoginPage = () => {
+  const { isLoading, isError } = useQuery({
+    queryKey: ["check"],
+    queryFn: authService.check,
+    retry: 1,
+  });
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
 
@@ -26,6 +34,13 @@ const LoginPage = () => {
     },
     [navigate]
   );
+
+  if (isLoading)
+    return (
+      <div className="w-screen h-screen flex items-center justify-center">
+        <Loader />
+      </div>
+    );
 
   return (
     <div className="main-container grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-[99px] items-center h-[95vh] md:px-[86px]">
