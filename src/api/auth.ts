@@ -10,7 +10,9 @@ class AuthService {
     return res;
   }
   async signup(body: z.infer<typeof signup.schema>) {
-    const res = await api.post("/authentication/signup", body);
+    let data = { ...body, hasAgreedToTerms: body.agreeTerms ? true : false };
+    delete data.agreeTerms;
+    const res = await api.post("/authentication/signup", data);
     return res;
   }
   async logout() {

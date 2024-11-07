@@ -5,26 +5,37 @@ import SearchInput from "../../components/ui/search-input";
 import Table from "../../components/ui/table";
 import { useMemo, useState } from "react";
 import pencil from "../../assets/images/icons/pencil.svg";
-import { IUser } from "./types";
+import { IOrganization, IUser } from "./types";
 import UserDialogue from "../../components/Dashboard/Users/Dialogues/UserDialogue";
 // import { filterBySearch } from "../../lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import userService from "../../api/users";
 import Loader from "../../components/ui/Loader/loader";
+import organizationService from "../../api/organization";
 
 const UsersPage = () => {
   const [page, setPage] = useState(1);
 
-  const { data, isLoading } = useQuery({
+  const { data: userList, isLoading: userLoading } = useQuery({
     queryKey: ["users", page],
     queryFn: () => userService.list(page),
   });
 
+  const { data: organizationList, isLoading: orgLoading } = useQuery({
+    queryKey: ["organizations"],
+    queryFn: () => organizationService.list(page, true),
+  });
+
   const [modal, setModal] = useState<"user" | null>(null);
+  const [organization, setOrganization] = useState<string[]>([]);
   const [search, setSearch] = useState("");
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
 
-  const users = useMemo(() => data?.data.items || [], [data]);
+  const users = useMemo(() => userList?.data.items || [], [userList]);
+  const organiations = useMemo(
+    () => organizationList?.data.items || [],
+    [organizationList]
+  );
 
   // const filteredList: IUser[] = useMemo(() => {
   //   return filterBySearch(users as any, search);
@@ -35,7 +46,7 @@ const UsersPage = () => {
     setModal("user");
   };
 
-  if (isLoading)
+  if (userLoading)
     return (
       <div className="w-full h-full flex items-center justify-center">
         <Loader />
@@ -51,25 +62,41 @@ const UsersPage = () => {
       />
       <div className="space-y-1.5">
         <div className="flex items-center justify-between w-full gap-4">
-          <div className="flex items-center gap-[18px]">
-            <p className="text-[20px]">Filter by</p>
-            <Dropdown
-              placeholder="Select filter"
-              className="max-w-[211px]"
-              options={filters}
-            />
-          </div>
+          <SearchInput
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-[286px]"
+          />
 
           <div className="flex items-center gap-6">
-            <SearchInput
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-[286px]"
-            />
             <Button eventName="Add User" onClick={() => setModal("user")}>
               Add User
             </Button>
           </div>
+        </div>
+        <div className="flex items-center gap-[18px]">
+          <p className="text-[20px] font-medium">Filter by</p>
+          <Dropdown
+            placeholder="Role"
+            className="max-w-[166px]"
+            options={filters}
+          />
+          <Dropdown
+            value={organization}
+            handleSelect={(val) => {
+              organization.includes(val)
+                ? setOrganization((prev) => prev.filter((item) => item !== val))
+                : setOrganization((prev) => [...prev, val]);
+            }}
+            placeholder="Organization"
+            className="max-w-[166px]"
+            options={organiations.map((item: IOrganization) => ({
+              label: item.registeredName,
+              value: item.id,
+            }))}
+            readOnly
+            isArray
+          />
         </div>
         <div className="space-y-[18px]">
           <Table.Container>

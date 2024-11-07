@@ -3,20 +3,26 @@ import { InputHTMLAttributes, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useOutsideClick } from "../../lib/hooks";
 import arrow from "../../assets/images/icons/arrow.svg";
+import Checkbox from "./checkbox";
+
+interface IOption {
+  label: string;
+  value: string;
+}
 
 interface IDropdownProp extends InputHTMLAttributes<HTMLInputElement> {
   className?: string;
-  options: {
-    label: string;
-    value: string | number;
-  }[];
-  handleSelect?: (value: string | number) => void;
+  options: IOption[];
+  value?: string | string[];
+  handleSelect?: (value: string) => void;
+  isArray?: boolean;
 }
 
 const Dropdown = ({
   className,
   options,
   handleSelect,
+  isArray,
   ...props
 }: IDropdownProp) => {
   const [showList, setShowList] = useState(false);
@@ -37,6 +43,13 @@ const Dropdown = ({
         type="text"
         className="bg-transparent border-none outline-none w-[90%] placeholder:text-white/50"
         {...props}
+        value={
+          isArray
+            ? props.value?.length
+              ? `${props.value?.length} selected`
+              : props.placeholder
+            : props.value
+        }
       />
       <button
         type="button"
@@ -54,10 +67,24 @@ const Dropdown = ({
       >
         {options.map((item, index) => {
           const { label, value } = item;
-          return (
+          return isArray ? (
+            <div key={index} className="pl-2">
+              <Checkbox
+                checked={props?.value?.includes(value)}
+                onChange={() => {
+                  handleSelect!(value);
+                }}
+                dark
+                label={label}
+              />
+            </div>
+          ) : (
             <button
               type="button"
-              onClick={() => handleSelect!(value)}
+              onClick={() => {
+                handleSelect!(value);
+                setShowList(false);
+              }}
               key={index}
               className="w-full text-left"
             >

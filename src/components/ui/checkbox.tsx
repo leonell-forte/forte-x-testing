@@ -8,13 +8,15 @@ import checkedDisabled from "../../assets/images/icons/checkbox-disabled-checked
 import unCheckedDisabled from "../../assets/images/icons/checkbox-disabled-unchecked.svg";
 import check from "../../assets/images/icons/checkbox-checked.svg";
 import unChecked from "../../assets/images/icons/checkbox-unchecked.svg";
+import classNames from "classnames";
 
 interface ICheckboxProps extends CheckboxProps {
   label?: string | ReactNode;
   helperText?: string | ReactNode;
+  dark?: boolean;
 }
 
-const Checkbox = ({ label, helperText, ...props }: ICheckboxProps) => {
+const Checkbox = ({ label, helperText, dark, ...props }: ICheckboxProps) => {
   const { disabled } = props;
 
   const renderIcons = useCallback(() => {
@@ -43,11 +45,22 @@ const Checkbox = ({ label, helperText, ...props }: ICheckboxProps) => {
             {...props}
           />
         }
-        label={<span className="text-[12px] text-grey">{label}</span>}
+        label={
+          <span
+            className={classNames(
+              dark && "!text-black",
+              "text-[12px] text-grey"
+            )}
+          >
+            {label}
+          </span>
+        }
       />
-      <p className="absolute text-alert top-7 left-6 text-[10px] font-medium truncate">
-        {helperText}
-      </p>
+      {helperText && (
+        <p className="absolute text-alert top-7 left-6 text-[10px] font-medium truncate">
+          {helperText}
+        </p>
+      )}
     </div>
   );
 };

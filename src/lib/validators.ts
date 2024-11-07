@@ -75,9 +75,12 @@ export const signup = {
       confirmPassword: z
         .string()
         .min(8, "Password must be at least 8 characters long"),
-      agreeTerms: z.string().min(1, {
-        message: "You must agree to the Privacy Policy to continue",
-      }),
+      agreeTerms: z
+        .string()
+        .min(1, {
+          message: "You must agree to the Privacy Policy to continue",
+        })
+        .optional(),
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: "Passwords do not match",
