@@ -1,5 +1,3 @@
-"use client";
-
 import LoginForm from "../../components/Login/LoginForm";
 import OTPForm from "../../components/Login/OTPForm";
 import Card from "../../components/ui/card";

@@ -15,7 +15,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryClient } from "../../../../components/QueryProvider";
 import { useAlert } from "../../../../lib/hooks";
 import { useEffect } from "react";
-import Loader from "../../../../components/ui/loader/loader";
+import Loader from "../../../ui/loader/loader";
 
 interface IUserDialogueProps extends IDialogueProps {
   userId?: string;
