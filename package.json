@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@amplitude/analytics-browser": "^2.11.8",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@hookform/resolvers": "^3.9.1",
