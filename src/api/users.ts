@@ -16,8 +16,6 @@ class UserService {
 
   async add(user: z.infer<typeof users.schema>) {
     const res = await api.post("/users", user);
-    console.log(res);
-
     return res;
   }
 }
