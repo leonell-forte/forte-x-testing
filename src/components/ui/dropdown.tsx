@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useOutsideClick } from "../../lib/hooks";
 import arrow from "../../assets/images/icons/arrow.svg";
 import Checkbox from "./checkbox";
-import Loader from "./loader/loader";
+import Loader from "./spinner/spinner";
 
 interface IOption {
   label: string;

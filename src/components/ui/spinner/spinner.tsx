@@ -5,7 +5,7 @@ interface IProp {
   dark?: boolean;
 }
 
-const Loader = ({ dark }: IProp) => {
+const Spinner = ({ dark }: IProp) => {
   return (
     <div className={classNames(styles["container"], dark && styles["-dark"])}>
       <div className={styles["dot"]}></div>
@@ -16,4 +16,4 @@ const Loader = ({ dark }: IProp) => {
   );
 };
 
-export default Loader;
+export default Spinner;

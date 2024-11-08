@@ -15,7 +15,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryClient } from "../../../../components/QueryProvider";
 import { useAlert } from "../../../../lib/hooks";
 import { useEffect } from "react";
-import Loader from "../../../ui/loader/loader";
+import Spinner from "../../../ui/spinner/spinner";
 
 interface IUserDialogueProps extends IDialogueProps {
   userId?: string;
@@ -120,7 +120,7 @@ const UserDialogue = ({
     >
       {isLoading ? (
         <div className="w-full h-[470px] flex items-center justify-center">
-          <Loader />
+          <Spinner />
         </div>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-2.5">

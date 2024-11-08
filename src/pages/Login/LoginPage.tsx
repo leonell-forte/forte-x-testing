@@ -6,7 +6,7 @@ import jobs from "../../assets/images/login/spot-choiceofjobs.png";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import authService from "../../api/auth";
-import Loader from "../../components/ui/loader/loader";
+import Spinner from "../../components/ui/spinner/spinner";
 
 const LoginPage = () => {
   const { isLoading } = useQuery({
@@ -36,7 +36,7 @@ const LoginPage = () => {
   if (isLoading)
     return (
       <div className="w-screen h-screen flex items-center justify-center">
-        <Loader />
+        <Spinner />
       </div>
     );
 

@@ -10,7 +10,7 @@ import UserDialogue from "../../components/Dashboard/Users/Dialogues/UserDialogu
 // import { filterBySearch } from "../../lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import userService from "../../api/users";
-import Loader from "../../components/ui/loader/loader";
+import Spinner from "../../components/ui/spinner/spinner";
 import organizationService from "../../api/organization";
 
 const UsersPage = () => {
@@ -112,7 +112,7 @@ const UsersPage = () => {
         <div className="space-y-[18px]">
           {userLoading ? (
             <div className="w-full h-[500px] flex items-center justify-center">
-              <Loader />
+              <Spinner />
             </div>
           ) : (
             <Table.Container>
