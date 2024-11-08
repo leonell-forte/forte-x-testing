@@ -8,7 +8,7 @@ import jobs from "../../assets/images/login/spot-choiceofjobs.png";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import authService from "../../api/auth";
-import Loader from "../../components/ui/Loader/loader";
+import Loader from "../../components/ui/loader/loader";
 
 const LoginPage = () => {
   const { isLoading } = useQuery({

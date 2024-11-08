@@ -9,7 +9,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
       <div className="px-5 flex gap-4 min-h-[88vh] pb-4 overflow-scroll">
         <SidePanel />
 
-        <div className="w-full bg-white bg-opacity-[30%] rounded-[10px] pt-[7px] pb-4 px-[14px] min-w-[1280px]">
+        <div className="w-full relative bg-white bg-opacity-[30%] rounded-[10px] pt-[7px] pb-14 px-[14px] min-w-[1280px]">
           {children}
         </div>
       </div>

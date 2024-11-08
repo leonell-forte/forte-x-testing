@@ -11,13 +11,14 @@ import { z } from "zod";
 import { users } from "../../../../lib/validators/users";
 import { zodResolver } from "@hookform/resolvers/zod";
 import userService from "../../../../api/users";
-import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../../../../components/QueryProvider";
+import { useAlert } from "../../../../lib/hooks";
 
 interface IUserDialogueProps extends IDialogueProps {
   user?: IUser | null;
   organizations: IOrganization[];
+  page?: number;
 }
 
 const UserDialogue = ({
@@ -25,50 +26,65 @@ const UserDialogue = ({
   organizations,
   handleClose,
   user,
+  page,
 }: IUserDialogueProps) => {
-  const [loading, setLoading] = useState(false);
-
-  const { mutateAsync } = useMutation({
-    mutationFn: userService.add,
-    onMutate: async (newUser) => {
-      await queryClient.cancelQueries({ queryKey: ["users"] });
-
-      const previousUsers = queryClient.getQueryData(["users"]);
-      console.log(newUser);
-
-      queryClient.setQueryData(["users"], (old: any) => {
-        console.log(old);
-
-        return {
-          ...old,
-          items: [...old.items, newUser],
-        };
-      });
-
-      return { previousUsers };
-    },
-
-    onError: (err, newTodo, context) => {
-      queryClient.setQueryData(["users"], context?.previousUsers);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["users"] });
-    },
-  });
-
   const {
     handleSubmit,
     formState: { errors },
     setValue,
     watch,
+    reset,
   } = useForm<z.infer<typeof users.schema>>({
     resolver: zodResolver(users.schema),
     defaultValues: users.defaultValues,
   });
 
+  const { setAlert } = useAlert();
+
+  const { mutateAsync: addUser, isPending } = useMutation({
+    mutationFn: userService.add,
+
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ["users", page] });
+
+      const previousUsers = queryClient.getQueryData(["users", page]);
+
+      return { previousUsers };
+    },
+
+    onSuccess: (addedUser) => {
+      queryClient.setQueryData(["users", page], (old: any) => ({
+        ...old,
+        items: [...old.items, addedUser.data.data],
+      }));
+
+      handleClose!();
+
+      reset();
+
+      setAlert({
+        status: "success",
+        message: "User added successfully",
+        title: "Success!",
+      });
+    },
+
+    onError: (err: any, newTodo, context) => {
+      setAlert({
+        status: "error",
+        title: "Failed adding user",
+        message: err.response.data.message,
+      });
+
+      queryClient.setQueryData(["users", page], context?.previousUsers);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["users", page] });
+    },
+  });
+
   const onSubmit = async (values: z.infer<typeof users.schema>) => {
-    setLoading(true);
-    await mutateAsync(values);
+    await addUser(values);
   };
 
   return (
@@ -167,7 +183,7 @@ const UserDialogue = ({
           <Button onClick={handleClose} buttonType="secondary">
             Cancel
           </Button>
-          <Button loading={loading} type="submit">
+          <Button loading={isPending} type="submit">
             Save
           </Button>
         </div>

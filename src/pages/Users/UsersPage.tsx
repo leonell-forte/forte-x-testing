@@ -10,7 +10,7 @@ import UserDialogue from "../../components/Dashboard/Users/Dialogues/UserDialogu
 // import { filterBySearch } from "../../lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import userService from "../../api/users";
-import Loader from "../../components/ui/Loader/loader";
+import Loader from "../../components/ui/loader/loader";
 import organizationService from "../../api/organization";
 
 const UsersPage = () => {
@@ -25,7 +25,6 @@ const UsersPage = () => {
     queryKey: ["organizations"],
     queryFn: () => organizationService.list(page, true),
   });
-  console.log(userList);
 
   const [modal, setModal] = useState<"user" | null>(null);
   const [organization, setOrganization] = useState<string[]>([]);
@@ -55,6 +54,7 @@ const UsersPage = () => {
         user={selectedUser}
         isVisible={modal === "user"}
         handleClose={() => setModal(null)}
+        page={page}
       />
       <div className="space-y-1.5">
         <div className="flex items-center justify-between w-full gap-4">
@@ -65,7 +65,12 @@ const UsersPage = () => {
           />
 
           <div className="flex items-center gap-6">
-            <Button eventName="Add User" onClick={() => setModal("user")}>
+            <Button
+              eventName="Add User"
+              onClick={() => {
+                setModal("user");
+              }}
+            >
               Add User
             </Button>
           </div>
@@ -147,11 +152,11 @@ const UsersPage = () => {
             </Table.Container>
           )}
 
-          <div className="flex justify-end">
+          <div className="flex justify-end absolute bottom-4 right-2">
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}
-              total={users.totalSize}
+              total={userList?.totalSize}
             />
           </div>
         </div>

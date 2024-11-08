@@ -2,6 +2,7 @@ import { useDispatch, useSelector, useStore } from "react-redux";
 import type { RootState, AppDispatch, AppStore } from "./store";
 import { MutableRefObject, useCallback, useEffect } from "react";
 import Cookies from "universal-cookie";
+import { IAlert, setToast } from "./slice/alert";
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
@@ -42,4 +43,15 @@ export const useEscapeKey = (callback: () => void): void => {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [callback]);
+};
+
+export const useAlert = () => {
+  const dispatch = useAppDispatch();
+  const alert = useAppSelector((state) => state.alert);
+
+  const setAlert = (alert: IAlert) => {
+    dispatch(setToast(alert));
+  };
+
+  return { alert, setAlert };
 };
