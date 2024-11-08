@@ -22,7 +22,7 @@ const Alert = () => {
   };
 
   return (
-    <div className="absolute z-50 top-4 right-0 w-full max-w-[545px] px-4 hover:scale-[1.01] transition-all">
+    <div className="absolute z-50 top-4 right-0 w-full max-w-[545px] px-4 hover:scale-[1.01] transition-all pointer-events-none">
       <motion.div
         initial={variants(!!message)}
         animate={variants(!!message)}
