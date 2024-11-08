@@ -38,6 +38,10 @@
   box-sizing: border-box;
 }
 
+body {
+  @apply w-screen overflow-hidden;
+}
+
 .link {
   @apply underline underline-offset-4;
 }

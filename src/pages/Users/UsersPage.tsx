@@ -27,9 +27,12 @@ const UsersPage = () => {
   });
 
   const [modal, setModal] = useState<"user" | null>(null);
+
   const [organization, setOrganization] = useState<string[]>([]);
+
   const [search, setSearch] = useState("");
-  const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
+
+  const [selectedUser, setSelectedUser] = useState<string>("");
 
   const users = useMemo(() => userList?.items || [], [userList]);
 
@@ -43,19 +46,25 @@ const UsersPage = () => {
   // }, [search]);
 
   const handleEditUser = (user: IUser) => {
-    setSelectedUser(user);
+    setSelectedUser(user.id!.toString());
+
     setModal("user");
   };
 
   return (
     <>
-      <UserDialogue
-        organizations={organizations}
-        user={selectedUser}
-        isVisible={modal === "user"}
-        handleClose={() => setModal(null)}
-        page={page}
-      />
+      {modal && (
+        <UserDialogue
+          organizations={organizations}
+          userId={selectedUser}
+          isVisible={modal === "user"}
+          handleClose={() => {
+            setSelectedUser("");
+            setModal(null);
+          }}
+          page={page}
+        />
+      )}
       <div className="space-y-1.5">
         <div className="flex items-center justify-between w-full gap-4">
           <SearchInput

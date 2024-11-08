@@ -1,11 +1,14 @@
 export interface IUser {
-  id: number;
+  id?: string;
   firstName: string;
   lastName: string;
   email: string;
   role: string;
   phoneNumber: string;
-  organization: string;
+  organization?: string;
+  organizationId?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface IOrganization {
