@@ -4,6 +4,7 @@ import success from "../../../assets/images/icons/success.svg";
 import { motion } from "framer-motion";
 import { useAlert } from "../../../lib/hooks";
 import { IAlert } from "../../../lib/slice/alert";
+import classNames from "classnames";
 const Alert = () => {
   const { alert, setAlert } = useAlert();
   const { status, message, title }: IAlert = alert;
@@ -22,7 +23,12 @@ const Alert = () => {
   };
 
   return (
-    <div className="absolute z-50 top-4 right-0 w-full max-w-[545px] px-4 hover:scale-[1.01] transition-all pointer-events-none">
+    <div
+      className={classNames(
+        "absolute z-[999] top-4 right-0 w-full max-w-[545px] px-4 hover:scale-[1.01] transition-all",
+        !status && "pointer-events-none"
+      )}
+    >
       <motion.div
         initial={variants(!!message)}
         animate={variants(!!message)}

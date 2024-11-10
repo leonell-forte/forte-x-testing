@@ -16,6 +16,7 @@ import { queryClient } from "../../../../components/QueryProvider";
 import { useAlert } from "../../../../lib/hooks";
 import { useEffect } from "react";
 import Spinner from "../../../ui/spinner/spinner";
+import * as amplitude from "@amplitude/analytics-browser";
 
 interface IUserDialogueProps extends IDialogueProps {
   userId?: string;
@@ -90,6 +91,8 @@ const UserDialogue = ({
         message: `User ${userId ? "updated" : "added"} successfully`,
         title: "Success!",
       });
+
+      amplitude.track(`${userId ? "Update" : "Add"} User Form Submission`);
     },
 
     onError: (err: any, newTodo, context) => {
@@ -107,8 +110,6 @@ const UserDialogue = ({
   });
 
   const onSubmit = async (values: z.infer<typeof users.schema>) => {
-    console.log(values);
-
     await addUser(values);
   };
 
