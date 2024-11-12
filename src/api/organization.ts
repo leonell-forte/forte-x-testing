@@ -10,7 +10,7 @@ class OrganizationService {
     if (listAll) params.append("listAll", "true");
     const res = await api.get(`/organizations?${params}`);
 
-    return res;
+    return res.data;
   }
 }
 

@@ -6,7 +6,6 @@ import Dialogue, {
 import Dropdown from "../../../../components/ui/dropdown";
 import Input from "../../../../components/ui/input";
 import { ROLES } from "../../../../lib/constants";
-import { IOrganization } from "../../../../pages/Users/types";
 import { z } from "zod";
 import { users } from "../../../../lib/validators/users";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,11 +16,13 @@ import { useAlert } from "../../../../lib/hooks";
 import { useEffect } from "react";
 import Spinner from "../../../ui/spinner/spinner";
 import * as amplitude from "@amplitude/analytics-browser";
+import { IOrganization } from "../../../../pages/Organizations/types";
 
 interface IUserDialogueProps extends IDialogueProps {
   userId?: string;
   organizations: IOrganization[];
   page?: number;
+  profile?: boolean;
 }
 
 const UserDialogue = ({
@@ -30,6 +31,7 @@ const UserDialogue = ({
   handleClose,
   userId,
   page,
+  profile,
 }: IUserDialogueProps) => {
   const { data: userData, isLoading } = useQuery({
     queryKey: [userId],
@@ -77,10 +79,18 @@ const UserDialogue = ({
     },
 
     onSuccess: (addedUser) => {
-      queryClient.setQueryData(["users", page], (old: any) => ({
-        ...old,
-        items: [...old.items, addedUser.data.data],
-      }));
+      profile
+        ? queryClient.setQueryData(["profile"], (old: any) => {
+            return addedUser.data.data;
+          })
+        : queryClient.setQueryData(["users", page], (old: any) => {
+            console.log(old);
+
+            return {
+              ...old,
+              items: [...(old?.items || []), addedUser.data.data],
+            };
+          });
 
       close();
 
@@ -99,13 +109,15 @@ const UserDialogue = ({
       setAlert({
         status: "error",
         title: `Failed ${userId ? "updating" : "adding"} user`,
-        message: err.response.data.message,
+        message: err?.response?.data?.message,
       });
 
       queryClient.setQueryData(["users", page], context?.previousUsers);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["users", page] });
+      profile
+        ? queryClient.invalidateQueries({ queryKey: ["profile"] })
+        : queryClient.invalidateQueries({ queryKey: ["users", page] });
     },
   });
 
@@ -130,6 +142,7 @@ const UserDialogue = ({
               Email
             </label>
             <Input
+              disabled={profile}
               value={watch("email")}
               onChange={(e) => setValue("email", e.target.value)}
               error={!!errors.email?.message}
@@ -184,14 +197,15 @@ const UserDialogue = ({
               Organization
             </label>
             <Dropdown
+              disabled={profile}
               value={
                 organizations.find(
-                  (item) => item.id.toString() === watch("organizationId")
+                  (item) => item.id?.toString() === watch("organizationId")
                 )?.registeredName
               }
               options={organizations.map((item: IOrganization) => ({
                 label: item.registeredName,
-                value: item.id,
+                value: item.id!,
               }))}
               handleSelect={(val) => setValue("organizationId", val.toString())}
               placeholder="Select organization"
@@ -205,6 +219,7 @@ const UserDialogue = ({
               Role
             </label>
             <Dropdown
+              disabled={profile}
               value={ROLES.find((item) => item.value === watch("role"))?.label}
               handleSelect={(val) => setValue("role", val)}
               options={ROLES}

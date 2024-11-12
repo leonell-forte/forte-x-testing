@@ -27,6 +27,12 @@ class AuthService {
     });
     window.location.href = "/users";
   }
+
+  async getProfile() {
+    const response = await api.get(`/authentication/profile`);
+
+    return response.data.data;
+  }
 }
 
 const authService = new AuthService();

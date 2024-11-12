@@ -5,13 +5,14 @@ import SearchInput from "../../components/ui/search-input";
 import Table from "../../components/ui/table";
 import { useMemo, useState } from "react";
 import pencil from "../../assets/images/icons/pencil.svg";
-import { IOrganization, IUser } from "./types";
+import { IUser } from "./types";
 import UserDialogue from "../../components/Dashboard/Users/Dialogues/UserDialogue";
 // import { filterBySearch } from "../../lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import userService from "../../api/users";
 import Spinner from "../../components/ui/spinner/spinner";
 import organizationService from "../../api/organization";
+import { IOrganization } from "../Organizations/types";
 
 const UsersPage = () => {
   const [page, setPage] = useState(1);
@@ -37,7 +38,7 @@ const UsersPage = () => {
   const users = useMemo(() => userList?.items || [], [userList]);
 
   const organizations = useMemo(
-    () => organizationList?.data.items || [],
+    () => organizationList?.items || [],
     [organizationList]
   );
 
@@ -127,7 +128,7 @@ const UsersPage = () => {
               <Table.Body>
                 {users.map((item: IUser, bodyIndex: number) => {
                   const {
-                    // id,
+                    id,
                     firstName,
                     lastName,
                     email,
@@ -137,7 +138,9 @@ const UsersPage = () => {
                   } = item;
                   return (
                     <Table.Row key={bodyIndex}>
-                      <Table.Data>{`${firstName} ${lastName}`}</Table.Data>
+                      <Table.Data>
+                        {`${firstName} ${lastName}`} {id}
+                      </Table.Data>
                       <Table.Data>{email}</Table.Data>
                       <Table.Data>{phoneNumber}</Table.Data>
                       <Table.Data>{role}</Table.Data>
@@ -145,7 +148,7 @@ const UsersPage = () => {
                       <Table.Data>
                         <Button
                           eventName="Edit User"
-                          // id={id.toString()}
+                          id={id}
                           buttonType="default"
                           type="button"
                           onClick={() => handleEditUser(item)}

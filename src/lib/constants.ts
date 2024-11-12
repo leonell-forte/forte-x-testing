@@ -10,13 +10,14 @@ export const MENUS = [
     link: "/contracts",
   },
   {
+    name: "organizations",
+    link: "/organizations",
+  },
+  {
     name: "projects",
     link: "/projects",
   },
-  {
-    name: "providers",
-    link: "/providers",
-  },
+
   {
     name: "users",
     link: "/users",

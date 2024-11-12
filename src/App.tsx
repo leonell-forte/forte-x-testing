@@ -1,16 +1,13 @@
+import React, { Suspense } from "react";
 import "./App.css";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import LoginPage from "./pages/Login/LoginPage";
-import SignupPage from "./pages/Signup/SignupPage";
-import UsersPage from "./pages/Users/UsersPage";
 import DashboardLayout from "./components/Dashboard/Layout";
-import ForgotPasswordPage from "./pages/ForgotPassword/ForgotPasswordPage";
-import ComponentsPage from "./pages/Components/ComponentsPage";
-import ErrorPage from "./pages/404";
 import Providers from "./components/Providers";
-import ProjectsPage from "./pages/Projects/ProjectsPage";
 import QueryProvider from "./components/QueryProvider";
 import AlertProvider from "./components/AlertProvider";
+import { PROTECTED_ROUTES, PUBLIC_ROUTES } from "./lib/routes";
+
+// Lazy load components
 
 function App() {
   return (
@@ -20,32 +17,30 @@ function App() {
         <Router>
           <Providers>
             <AlertProvider>
-              <Routes>
-                <Route element={<ErrorPage />} path="*" />
-                <Route element={<ComponentsPage />} path="/components" />
-                <Route element={<LoginPage />} path="/" />
-                <Route element={<SignupPage />} path="/signup" />
-                <Route
-                  element={<ForgotPasswordPage />}
-                  path="/forgot-password"
-                />
-                <Route
-                  path="/users"
-                  element={
-                    <DashboardLayout>
-                      <UsersPage />
-                    </DashboardLayout>
-                  }
-                />
-                <Route
-                  path="/projects"
-                  element={
-                    <DashboardLayout>
-                      <ProjectsPage />
-                    </DashboardLayout>
-                  }
-                />
-              </Routes>
+              <Suspense fallback={<div>Loading...</div>}>
+                <Routes>
+                  {PUBLIC_ROUTES.map((item, index) => {
+                    const { link, Component } = item;
+                    return (
+                      <Route key={index} path={link} element={<Component />} />
+                    );
+                  })}
+                  {PROTECTED_ROUTES.map((item, index) => {
+                    const { link, Component } = item;
+                    return (
+                      <Route
+                        key={index}
+                        path={link}
+                        element={
+                          <DashboardLayout>
+                            <Component />
+                          </DashboardLayout>
+                        }
+                      />
+                    );
+                  })}
+                </Routes>
+              </Suspense>
             </AlertProvider>
           </Providers>
         </Router>

@@ -45,7 +45,8 @@ const Dropdown = ({
         className={classNames(
           "relative h-[56px] w-full rounded-[8px] border border-white px-4 flex items-center justify-between",
           className,
-          error && "border-[#e61a1a]"
+          error && "border-[#e61a1a]",
+          props.disabled && "border-[#787878] text-[#333c3d]"
         )}
       >
         <input
@@ -63,13 +64,16 @@ const Dropdown = ({
               : props.value
           }
         />
-        <button
-          type="button"
-          onClick={() => setShowList((prev) => !prev)}
-          className="px-1.5"
-        >
-          <img alt="arrow" src={arrow} />
-        </button>
+        {!props.disabled && (
+          <button
+            disabled={props.disabled}
+            type="button"
+            onClick={() => setShowList((prev) => !prev)}
+            className="px-1.5"
+          >
+            <img alt="arrow" src={arrow} />
+          </button>
+        )}
 
         <motion.ul
           initial={{ opacity: 0 }}
