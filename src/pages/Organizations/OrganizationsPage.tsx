@@ -1,7 +1,7 @@
 import Dropdown from "../../components/ui/dropdown";
 import Button from "../../components/ui/button";
 import SearchInput from "../../components/ui/search-input";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import organizationService from "../../api/organization";
 import Table from "../../components/ui/table";
