@@ -61,7 +61,7 @@ const UserDropdown = ({ user }: IProp) => {
           <div className="flex gap-1.5">
             <div className="w-[28px] h-[28px] rounded-full bg-[#D9D9D9]"></div>
             <div className="flex items-center px-2">
-              <p className="text-forest-green font-medium">Leonell</p>
+              <p className="text-forest-green font-medium">{user.firstName}</p>
             </div>
           </div>
           <div className="px-1.5 cursor-pointer">
