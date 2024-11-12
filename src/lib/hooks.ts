@@ -67,7 +67,7 @@ export const useDebounce = (
     }, time);
 
     return () => clearTimeout(debounce);
-  }, [dependency]);
+  }, [dependency, callback, time]);
 
   return null;
 };
