@@ -53,7 +53,7 @@ const OrganizationDialogue = ({
       queryClient.setQueryData(["organizations", page], (old: any) => {
         return {
           ...old,
-          items: [...old?.items, addedOrg.data.data],
+          items: [...(old?.items || []), addedOrg.data.data],
         };
       });
 
