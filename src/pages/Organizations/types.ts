@@ -15,3 +15,9 @@ export interface IOrganization {
   noOfUsers?: string;
   registrationNumber?: string;
 }
+
+export interface IFilters {
+  region: string;
+  status: string;
+  type: string;
+}

@@ -63,6 +63,7 @@ const Dropdown = ({
                 : props.placeholder
               : props.value
           }
+          readOnly
         />
         {!props.disabled && (
           <button

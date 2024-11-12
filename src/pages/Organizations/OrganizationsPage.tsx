@@ -7,18 +7,24 @@ import organizationService from "../../api/organization";
 import Table from "../../components/ui/table";
 import pencil from "../../assets/images/icons/pencil.svg";
 import Spinner from "../../components/ui/spinner/spinner";
-import { IOrganization } from "./types";
+import { IFilters, IOrganization } from "./types";
 import Pagination from "../../components/ui/pagination";
 import OrganizationDialogue from "../../components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
+import { REGIONS, STATUS, TYPES } from "../../lib/constants";
 
 const OrganizationsPage = () => {
   const [modal, setModal] = useState<"org" | null>(null);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [selectedOrg, setSelectedOrg] = useState("");
+  const [filters, setFilters] = useState<IFilters>({
+    region: "",
+    status: "",
+    type: "",
+  });
 
   const { data: organizationList, isLoading: orgLoading } = useQuery({
-    queryKey: ["organizations", page],
+    queryKey: ["organizations", page, search],
     queryFn: () => organizationService.list(page),
   });
 
@@ -35,6 +41,10 @@ const OrganizationsPage = () => {
   const handleEditOrg = (id: string) => {
     setModal("org");
     setSelectedOrg(id);
+  };
+
+  const handleSelectFilter = (key: keyof IFilters, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
   return (
@@ -71,16 +81,32 @@ const OrganizationsPage = () => {
         <div className="flex items-center gap-[18px]">
           <p className="text-[20px] font-medium">Filter by</p>
           <Dropdown
+            value={filters.region}
+            handleSelect={(val) => {
+              handleSelectFilter("region", val);
+            }}
             placeholder="Region"
             className="max-w-[166px]"
-            options={[]}
+            options={REGIONS}
           />
           <Dropdown
+            value={filters.status}
+            handleSelect={(val) => {
+              handleSelectFilter("status", val);
+            }}
             placeholder="Status"
             className="max-w-[166px]"
-            options={[]}
+            options={STATUS}
           />
-          <Dropdown placeholder="Type" className="max-w-[166px]" options={[]} />
+          <Dropdown
+            value={filters.type}
+            handleSelect={(val) => {
+              handleSelectFilter("type", val);
+            }}
+            placeholder="Type"
+            className="max-w-[166px]"
+            options={TYPES}
+          />
         </div>
 
         <div className="space-y-[18px]">
