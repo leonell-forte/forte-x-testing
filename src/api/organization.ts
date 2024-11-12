@@ -5,13 +5,16 @@ import { z } from "zod";
 import { organizations } from "../lib/validators/organizations";
 
 class OrganizationService {
-  async list(page: number = 1, listAll?: boolean) {
+  async list(page: number = 1, listAll?: boolean, search?: string) {
     const params = new URLSearchParams();
 
     params.append("$pageNum", page.toString());
 
     params.append("$pageSize", DEFAULT_PAGE_SIZE);
 
+    if (search) {
+      params.append("$filter", search);
+    }
     if (listAll) params.append("listAll", "true");
     const res = await api.get(`/organizations?${params}`);
 

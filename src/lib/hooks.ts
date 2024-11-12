@@ -55,3 +55,19 @@ export const useAlert = () => {
 
   return { alert, setAlert };
 };
+
+export const useDebounce = (
+  callback: () => void,
+  time: number,
+  dependency: any
+) => {
+  useEffect(() => {
+    const debounce = setTimeout(() => {
+      callback();
+    }, time);
+
+    return () => clearTimeout(debounce);
+  }, [dependency]);
+
+  return null;
+};

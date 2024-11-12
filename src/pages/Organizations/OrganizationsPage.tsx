@@ -1,7 +1,7 @@
 import Dropdown from "../../components/ui/dropdown";
 import Button from "../../components/ui/button";
 import SearchInput from "../../components/ui/search-input";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import organizationService from "../../api/organization";
 import Table from "../../components/ui/table";
@@ -11,21 +11,36 @@ import { IFilters, IOrganization } from "./types";
 import Pagination from "../../components/ui/pagination";
 import OrganizationDialogue from "../../components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
 import { REGIONS, STATUS, TYPES } from "../../lib/constants";
+import { useDebounce } from "../../lib/hooks";
 
 const OrganizationsPage = () => {
   const [modal, setModal] = useState<"org" | null>(null);
+
   const [page, setPage] = useState(1);
+
   const [search, setSearch] = useState("");
+
   const [selectedOrg, setSelectedOrg] = useState("");
+
   const [filters, setFilters] = useState<IFilters>({
     region: "",
     status: "",
     type: "",
   });
 
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  useDebounce(
+    () => {
+      setDebouncedSearch(search);
+    },
+    500,
+    search
+  );
+
   const { data: organizationList, isLoading: orgLoading } = useQuery({
-    queryKey: ["organizations", page, search],
-    queryFn: () => organizationService.list(page),
+    queryKey: ["organizations", page, debouncedSearch],
+    queryFn: () => organizationService.list(page, false, debouncedSearch),
   });
 
   const organizations = useMemo(
