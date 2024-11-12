@@ -52,7 +52,7 @@ const Dropdown = ({
         <input
           type="text"
           className={classNames(
-            "bg-transparent border-none outline-none w-[90%] placeholder:text-white/50",
+            "bg-transparent border-none outline-none w-[90%] placeholder:text-white/50 capitalize",
             error && "placeholder:!text-[#e61a1a]/50"
           )}
           {...props}
@@ -60,7 +60,7 @@ const Dropdown = ({
             isArray
               ? props.value?.length
                 ? `${props.value?.length} selected`
-                : props.placeholder
+                : ""
               : props.value
           }
           readOnly

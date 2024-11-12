@@ -13,6 +13,7 @@ import userService from "../../api/users";
 import Spinner from "../../components/ui/spinner/spinner";
 import organizationService from "../../api/organization";
 import { IOrganization } from "../Organizations/types";
+import { ROLES } from "../../lib/constants";
 
 const UsersPage = () => {
   const [page, setPage] = useState(1);
@@ -28,6 +29,8 @@ const UsersPage = () => {
   });
 
   const [modal, setModal] = useState<"user" | null>(null);
+
+  const [role, setRole] = useState("");
 
   const [organization, setOrganization] = useState<string[]>([]);
 
@@ -87,9 +90,11 @@ const UsersPage = () => {
         <div className="flex items-center gap-[18px]">
           <p className="text-[20px] font-medium">Filter by</p>
           <Dropdown
+            value={role}
+            handleSelect={(val) => setRole(val)}
             placeholder="Role"
             className="max-w-[166px]"
-            options={filters}
+            options={ROLES}
           />
           <Dropdown
             loading={orgLoading}
@@ -177,13 +182,6 @@ const UsersPage = () => {
 };
 
 export default UsersPage;
-
-const filters = [
-  {
-    label: "Test",
-    value: "test",
-  },
-];
 
 const TABLE_HEADER = [
   "User’s full name",
