@@ -4,26 +4,101 @@ import Dialogue, {
 } from "../../../../components/ui/dialogue/dialogue";
 import Dropdown from "../../../../components/ui/dropdown";
 import Button from "../../../../components/ui/button";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { organizations } from "../../../../lib/validators/organizations";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { REGIONS, STATUS, TYPES } from "../../../../lib/constants";
+import { useMutation } from "@tanstack/react-query";
+import organizationService from "../../../../api/organization";
+import { queryClient } from "../../../../components/QueryProvider";
+import { useAlert } from "../../../../lib/hooks";
 
-interface IOrganizationDialogueProps extends IDialogueProps {}
+interface IOrganizationDialogueProps extends IDialogueProps {
+  page?: number;
+}
 
 const OrganizationDialogue = ({
   handleClose,
   isVisible,
   title,
+  page,
 }: IOrganizationDialogueProps) => {
+  const {
+    handleSubmit,
+    watch,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm<z.infer<typeof organizations.schema>>({
+    resolver: zodResolver(organizations.schema),
+    defaultValues: organizations.defaultValues,
+  });
+
+  const { setAlert } = useAlert();
+
+  const { mutateAsync: addOrganization, isPending } = useMutation({
+    mutationFn: organizationService.add,
+    onMutate: async () => {
+      queryClient.cancelQueries({ queryKey: ["organizations", page] });
+
+      const prevOrganizations = queryClient.getQueryData([
+        "organizations",
+        page,
+      ]);
+
+      return { prevOrganizations };
+    },
+    onSuccess: (addedOrg) => {
+      queryClient.setQueryData(["organizations", page], (old: any) => {
+        return {
+          ...old,
+          items: [...old?.items, addedOrg.data.data],
+        };
+      });
+
+      setAlert({
+        status: "success",
+        message: `Organization added successfully`,
+        title: "Success!",
+      });
+
+      handleClose!();
+
+      reset();
+    },
+    onError: (err: any, newOrg, context) => {
+      queryClient.setQueryData(
+        ["organizations", page],
+        context?.prevOrganizations
+      );
+      setAlert({
+        status: "error",
+        title: `Failed adding organization`,
+        message: err?.response?.data?.message,
+      });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["organizations", page] });
+    },
+  });
+
+  const onSubmit = async (values: z.infer<typeof organizations.schema>) => {
+    await addOrganization(values);
+  };
+
   return (
     <Dialogue isVisible={isVisible} handleClose={handleClose} title={title}>
-      <form action="" className="space-y-[22px]">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-[22px]">
         <div className="flex items-center gap-4">
           <label htmlFor="" className="w-[200px]">
             Organization
           </label>
           <Input
-            // value={watch("email")}
-            // onChange={(e) => setValue("email", e.target.value)}
-            // error={!!errors.email?.message}
-            // helperText={errors.email?.message}
+            value={watch("name")}
+            onChange={(e) => setValue("name", e.target.value)}
+            error={!!errors.name?.message}
+            helperText={errors.name?.message}
             placeholder="Organization name"
           />
         </div>
@@ -32,10 +107,10 @@ const OrganizationDialogue = ({
             Registered name
           </label>
           <Input
-            // value={watch("email")}
-            // onChange={(e) => setValue("email", e.target.value)}
-            // error={!!errors.email?.message}
-            // helperText={errors.email?.message}
+            value={watch("registeredName")}
+            onChange={(e) => setValue("registeredName", e.target.value)}
+            error={!!errors.registeredName?.message}
+            helperText={errors.registeredName?.message}
             placeholder="Registered name"
           />
         </div>
@@ -44,10 +119,10 @@ const OrganizationDialogue = ({
             Registration #
           </label>
           <Input
-            // value={watch("email")}
-            // onChange={(e) => setValue("email", e.target.value)}
-            // error={!!errors.email?.message}
-            // helperText={errors.email?.message}
+            value={watch("registrationNumber")}
+            onChange={(e) => setValue("registrationNumber", e.target.value)}
+            error={!!errors.registrationNumber?.message}
+            helperText={errors.registrationNumber?.message}
             placeholder="Registration number"
           />
         </div>
@@ -57,32 +132,32 @@ const OrganizationDialogue = ({
           </label>
           <div className="w-full space-y-[22px]">
             <Input
-              // value={watch("email")}
-              // onChange={(e) => setValue("email", e.target.value)}
-              // error={!!errors.email?.message}
-              // helperText={errors.email?.message}
+              value={watch("registeredAddress")}
+              onChange={(e) => setValue("registeredAddress", e.target.value)}
+              error={!!errors.registeredAddress?.message}
+              helperText={errors.registeredAddress?.message}
               placeholder="Registered address"
             />
             <div className="flex flex-col md:flex-row w-full gap-[22px] md:gap-2">
               <Input
-                // value={watch("email")}
-                // onChange={(e) => setValue("email", e.target.value)}
-                // error={!!errors.email?.message}
-                // helperText={errors.email?.message}
+                value={watch("state")}
+                onChange={(e) => setValue("state", e.target.value)}
+                error={!!errors.state?.message}
+                helperText={errors.state?.message}
                 placeholder="State"
               />
               <Input
-                // value={watch("email")}
-                // onChange={(e) => setValue("email", e.target.value)}
-                // error={!!errors.email?.message}
-                // helperText={errors.email?.message}
+                value={watch("postalCode")}
+                onChange={(e) => setValue("postalCode", e.target.value)}
+                error={!!errors.postalCode?.message}
+                helperText={errors.postalCode?.message}
                 placeholder="Postal Code"
               />
               <Input
-                // value={watch("email")}
-                // onChange={(e) => setValue("email", e.target.value)}
-                // error={!!errors.email?.message}
-                // helperText={errors.email?.message}
+                value={watch("country")}
+                onChange={(e) => setValue("country", e.target.value)}
+                error={!!errors.country?.message}
+                helperText={errors.country?.message}
                 placeholder="Country"
               />
             </div>
@@ -93,38 +168,40 @@ const OrganizationDialogue = ({
             Role
           </label>
           <Dropdown
-            //   value={ROLES.find((item) => item.value === watch("role"))?.label}
-            //   handleSelect={(val) => setValue("role", val)}
-            options={[]}
+            value={
+              REGIONS.find((item) => item.value === watch("region"))?.label
+            }
+            handleSelect={(val) => setValue("region", val)}
+            options={REGIONS}
             placeholder="Select region"
-            //   error={!!errors.role?.message}
-            //   helperText={errors.role?.message}
+            error={!!errors.region?.message}
+            helperText={errors.region?.message}
           />
         </div>
         <div className="flex items-center gap-4">
           <label htmlFor="" className="w-[200px]">
-            Role
+            Type
           </label>
           <Dropdown
-            //   value={ROLES.find((item) => item.value === watch("role"))?.label}
-            //   handleSelect={(val) => setValue("role", val)}
-            options={[]}
+            value={TYPES.find((item) => item.value === watch("type"))?.label}
+            handleSelect={(val) => setValue("type", val)}
+            options={TYPES}
             placeholder="Select type"
-            //   error={!!errors.role?.message}
-            //   helperText={errors.role?.message}
+            error={!!errors.type?.message}
+            helperText={errors.type?.message}
           />
         </div>
         <div className="flex items-center gap-4">
           <label htmlFor="" className="w-[200px]">
-            Role
+            Status
           </label>
           <Dropdown
-            //   value={ROLES.find((item) => item.value === watch("role"))?.label}
-            //   handleSelect={(val) => setValue("role", val)}
-            options={[]}
+            value={STATUS.find((item) => item.value === watch("status"))?.label}
+            handleSelect={(val) => setValue("status", val)}
+            options={STATUS}
             placeholder="Select status"
-            //   error={!!errors.role?.message}
-            //   helperText={errors.role?.message}
+            error={!!errors.status?.message}
+            helperText={errors.status?.message}
           />
         </div>
 
@@ -132,7 +209,7 @@ const OrganizationDialogue = ({
           <Button onClick={handleClose} buttonType="secondary">
             Cancel
           </Button>
-          <Button loading={false} type="submit">
+          <Button loading={isPending} type="submit">
             Save
           </Button>
         </div>

@@ -1,5 +1,6 @@
 import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import { api } from "../lib/axios/interceptor";
+import { IOrganization } from "@/pages/Organizations/types";
 
 class OrganizationService {
   async list(page: number = 1, listAll?: boolean) {
@@ -11,6 +12,11 @@ class OrganizationService {
     const res = await api.get(`/organizations?${params}`);
 
     return res.data;
+  }
+
+  async add(data: IOrganization) {
+    const response = await api.post("/organizations", data);
+    return response;
   }
 }
 

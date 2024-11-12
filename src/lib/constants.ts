@@ -42,3 +42,56 @@ export const ROLES = [
     value: "readonly",
   },
 ];
+
+export const TYPES = [
+  {
+    label: "Funder",
+    value: "funder",
+  },
+  {
+    label: "Provider",
+    value: "provider",
+  },
+];
+
+export const STATUS = [
+  {
+    label: "Active",
+    value: "active",
+  },
+  {
+    label: "Inactive",
+    value: "inactive",
+  },
+];
+
+export const REGIONS = [
+  {
+    label: "Asia",
+    value: "Asia",
+  },
+  {
+    label: "North America",
+    value: "North America",
+  },
+  {
+    label: "Latin America",
+    value: "Latin America",
+  },
+  {
+    label: "Oceania",
+    value: "Oceania",
+  },
+  {
+    label: "Europe",
+    value: "Europe",
+  },
+  {
+    label: "Middle East and North Africa",
+    value: "Middle East and North Africa",
+  },
+  {
+    label: "Africa",
+    value: "Africa",
+  },
+];

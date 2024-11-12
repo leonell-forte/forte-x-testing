@@ -37,6 +37,7 @@ const OrganizationsPage = () => {
           isVisible={modal === "org"}
           handleClose={close}
           title="Add organization"
+          page={page}
         />
       )}
       <div className="space-y-1.5">

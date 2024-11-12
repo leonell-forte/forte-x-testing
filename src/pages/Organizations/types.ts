@@ -5,6 +5,12 @@ export interface IOrganization {
   region: string;
   type: string;
   status: string;
-  updatedAt?: string;
-  createdAt?: string;
+  registeredAddress: string;
+  state: string;
+  country: string;
+  postalCode: string;
+  createdAt?: string; // ISO date string
+  updatedAt?: string; // ISO date string
+  noOfProjects?: string;
+  noOfUsers?: string;
 }

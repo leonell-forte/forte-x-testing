@@ -85,8 +85,6 @@ const UserDialogue = ({
         });
       } else
         queryClient.setQueryData(["users", page], (old: any) => {
-          console.log(old);
-
           return {
             ...old,
             items: [...(old?.items || []), addedUser.data.data],
@@ -106,7 +104,7 @@ const UserDialogue = ({
       amplitude.track(`${userId ? "Update" : "Add"} User Form Submission`);
     },
 
-    onError: (err: any, newTodo, context) => {
+    onError: (err: any, newUser, context) => {
       setAlert({
         status: "error",
         title: `Failed ${userId ? "updating" : "adding"} user`,
