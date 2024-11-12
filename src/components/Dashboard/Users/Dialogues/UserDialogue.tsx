@@ -79,18 +79,19 @@ const UserDialogue = ({
     },
 
     onSuccess: (addedUser) => {
-      profile
-        ? queryClient.setQueryData(["profile"], (old: any) => {
-            return addedUser.data.data;
-          })
-        : queryClient.setQueryData(["users", page], (old: any) => {
-            console.log(old);
+      if (profile) {
+        queryClient.setQueryData(["profile"], () => {
+          return addedUser.data.data;
+        });
+      } else
+        queryClient.setQueryData(["users", page], (old: any) => {
+          console.log(old);
 
-            return {
-              ...old,
-              items: [...(old?.items || []), addedUser.data.data],
-            };
-          });
+          return {
+            ...old,
+            items: [...(old?.items || []), addedUser.data.data],
+          };
+        });
 
       close();
 
@@ -115,9 +116,8 @@ const UserDialogue = ({
       queryClient.setQueryData(["users", page], context?.previousUsers);
     },
     onSettled: () => {
-      profile
-        ? queryClient.invalidateQueries({ queryKey: ["profile"] })
-        : queryClient.invalidateQueries({ queryKey: ["users", page] });
+      if (profile) queryClient.invalidateQueries({ queryKey: ["profile"] });
+      else queryClient.invalidateQueries({ queryKey: ["users", page] });
     },
   });
 

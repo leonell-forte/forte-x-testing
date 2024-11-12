@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useOutsideClick } from "../../../lib/hooks";
@@ -14,7 +13,7 @@ interface IProp {
 }
 
 const UserDropdown = ({ user }: IProp) => {
-  const { data: organizationList, isLoading: orgLoading } = useQuery({
+  const { data: organizationList } = useQuery({
     queryKey: ["organizations"],
     queryFn: () => organizationService.list(1, true),
   });
