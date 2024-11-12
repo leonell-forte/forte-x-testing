@@ -46,7 +46,7 @@ const Dropdown = ({
           "relative h-[56px] w-full rounded-[8px] border border-white px-4 flex items-center justify-between",
           className,
           error && "!border-[#e61a1a]",
-          props.disabled && "border-[#787878] text-[#333c3d]"
+          props.disabled && "!border-[#787878] text-[#333c3d]"
         )}
       >
         <input

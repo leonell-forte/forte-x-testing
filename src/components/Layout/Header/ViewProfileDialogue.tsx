@@ -1,22 +1,22 @@
 import { useForm } from "react-hook-form";
-import Button from "../../../../components/ui/button";
+import Button from "../../../components/ui/button";
 import Dialogue, {
   IDialogueProps,
-} from "../../../../components/ui/dialogue/dialogue";
-import Dropdown from "../../../../components/ui/dropdown";
-import Input from "../../../../components/ui/input";
-import { ROLES } from "../../../../lib/constants";
+} from "../../../components/ui/dialogue/dialogue";
+import Dropdown from "../../../components/ui/dropdown";
+import Input from "../../../components/ui/input";
+import { ROLES } from "../../../lib/constants";
 import { z } from "zod";
-import { users } from "../../../../lib/validators/users";
+import { users } from "../../../lib/validators/users";
 import { zodResolver } from "@hookform/resolvers/zod";
-import userService from "../../../../api/users";
+import userService from "../../../api/users";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { queryClient } from "../../../../components/QueryProvider";
-import { useAlert } from "../../../../lib/hooks";
-import { useEffect } from "react";
-import Spinner from "../../../ui/spinner/spinner";
+import { queryClient } from "../../../components/QueryProvider";
+import { useAlert } from "../../../lib/hooks";
+import { useEffect, useState } from "react";
+import Spinner from "../../ui/spinner/spinner";
 import * as amplitude from "@amplitude/analytics-browser";
-import { IOrganization } from "../../../../pages/Organizations/types";
+import { IOrganization } from "../../../pages/Organizations/types";
 
 interface IUserDialogueProps extends IDialogueProps {
   userId?: string;
@@ -24,13 +24,15 @@ interface IUserDialogueProps extends IDialogueProps {
   page?: number;
 }
 
-const UserDialogue = ({
+const ViewProfileDialogue = ({
   isVisible,
   organizations,
   handleClose,
   userId,
   page,
 }: IUserDialogueProps) => {
+  const [onEdit, setOnEdit] = useState(false);
+
   const { data: userData, isLoading } = useQuery({
     queryKey: ["specific user", userId],
     queryFn: () => userService.getOne(userId!),
@@ -64,9 +66,7 @@ const UserDialogue = ({
   };
 
   const { mutateAsync: addUser, isPending } = useMutation({
-    mutationFn: userId
-      ? () => userService.update(getValues())
-      : userService.add,
+    mutationFn: () => userService.update(getValues()),
 
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: ["users", page] });
@@ -90,17 +90,17 @@ const UserDialogue = ({
 
       setAlert({
         status: "success",
-        message: `User ${userId ? "updated" : "added"} successfully`,
+        message: `Profile updated successfully`,
         title: "Success!",
       });
 
-      amplitude.track(`${userId ? "Update" : "Add"} User Form Submission`);
+      amplitude.track(`Update Profile Form Submission`, { id: userId });
     },
 
     onError: (err: any, newUser, context) => {
       setAlert({
         status: "error",
-        title: `Failed ${userId ? "updating" : "adding"} user`,
+        title: `Failed updating profile`,
         message: err?.response?.data?.message,
       });
 
@@ -111,15 +111,15 @@ const UserDialogue = ({
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof users.schema>) => {
-    await addUser(values);
+  const onSubmit = async () => {
+    await addUser();
   };
 
   return (
     <Dialogue
       isVisible={isVisible}
       handleClose={close}
-      title={userId ? "Edit user" : "Add user"}
+      title={onEdit ? "Edit profile" : "View profile"}
     >
       {isLoading ? (
         <div className="w-full h-[470px] flex items-center justify-center">
@@ -132,6 +132,7 @@ const UserDialogue = ({
               Email
             </label>
             <Input
+              disabled
               value={watch("email")}
               onChange={(e) => setValue("email", e.target.value)}
               error={!!errors.email?.message}
@@ -146,6 +147,7 @@ const UserDialogue = ({
               First name
             </label>
             <Input
+              disabled={!onEdit}
               value={watch("firstName")}
               onChange={(e) => setValue("firstName", e.target.value)}
               error={!!errors.firstName?.message}
@@ -160,6 +162,7 @@ const UserDialogue = ({
               Last name
             </label>
             <Input
+              disabled={!onEdit}
               value={watch("lastName")}
               onChange={(e) => setValue("lastName", e.target.value)}
               error={!!errors.lastName?.message}
@@ -173,6 +176,7 @@ const UserDialogue = ({
               Phone number
             </label>
             <Input
+              disabled={!onEdit}
               value={watch("phoneNumber")}
               onChange={(e) => setValue("phoneNumber", e.target.value)}
               error={!!errors.phoneNumber?.message}
@@ -186,6 +190,7 @@ const UserDialogue = ({
               Organization
             </label>
             <Dropdown
+              disabled
               value={
                 organizations.find(
                   (item) => item.id?.toString() === watch("organizationId")
@@ -207,6 +212,7 @@ const UserDialogue = ({
               Role
             </label>
             <Dropdown
+              disabled
               value={ROLES.find((item) => item.value === watch("role"))?.label}
               handleSelect={(val) => setValue("role", val)}
               options={ROLES}
@@ -217,12 +223,18 @@ const UserDialogue = ({
           </div>
 
           <div className="flex justify-end gap-4 !mt-10">
-            <Button onClick={close} buttonType="secondary">
-              Cancel
-            </Button>
-            <Button loading={isPending} type="submit">
-              Save
-            </Button>
+            {!onEdit ? (
+              <Button onClick={() => setOnEdit(true)}>Edit</Button>
+            ) : (
+              <>
+                <Button onClick={() => setOnEdit(false)} buttonType="secondary">
+                  Cancel
+                </Button>
+                <Button loading={isPending} type="submit">
+                  Save
+                </Button>
+              </>
+            )}
           </div>
         </form>
       )}
@@ -230,4 +242,4 @@ const UserDialogue = ({
   );
 };
 
-export default UserDialogue;
+export default ViewProfileDialogue;

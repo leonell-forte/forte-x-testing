@@ -4,9 +4,9 @@ import { useOutsideClick } from "../../../lib/hooks";
 import arrow from "../../../assets/images/icons/arrow.svg";
 import authService from "../../../api/auth";
 import { IUser } from "../../../pages/Users/types";
-import UserDialogue from "../../../components/Dashboard/Users/Dialogues/UserDialogue";
 import organizationService from "../../../api/organization";
 import { useQuery } from "@tanstack/react-query";
+import ViewProfileDialogue from "./ViewProfileDialogue";
 
 interface IProp {
   user: IUser;
@@ -41,15 +41,13 @@ const UserDropdown = ({ user }: IProp) => {
   return (
     <>
       {user && (
-        <UserDialogue
-          profile
+        <ViewProfileDialogue
           organizations={organizations}
           userId={user.id}
           isVisible={showModal}
           handleClose={() => {
             setShowModal(false);
           }}
-          page={1}
         />
       )}
 

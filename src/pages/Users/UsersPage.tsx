@@ -142,9 +142,7 @@ const UsersPage = () => {
                   } = item;
                   return (
                     <Table.Row key={bodyIndex}>
-                      <Table.Data>
-                        {`${firstName} ${lastName}`} {id}
-                      </Table.Data>
+                      <Table.Data>{`${firstName} ${lastName}`}</Table.Data>
                       <Table.Data>{email}</Table.Data>
                       <Table.Data>{phoneNumber}</Table.Data>
                       <Table.Data>{role}</Table.Data>
