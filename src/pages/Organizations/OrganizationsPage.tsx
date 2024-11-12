@@ -54,7 +54,6 @@ const OrganizationsPage = () => {
           orgId={selectedOrg}
           isVisible={modal === "org"}
           handleClose={close}
-          title="Add organization"
           page={page}
         />
       )}

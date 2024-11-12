@@ -25,7 +25,6 @@ interface IOrganizationDialogueProps extends IDialogueProps {
 const OrganizationDialogue = ({
   handleClose,
   isVisible,
-  title,
   page,
   orgId,
 }: IOrganizationDialogueProps) => {
@@ -118,7 +117,11 @@ const OrganizationDialogue = ({
   };
 
   return (
-    <Dialogue isVisible={isVisible} handleClose={onClose} title={title}>
+    <Dialogue
+      isVisible={isVisible}
+      handleClose={onClose}
+      title={orgId ? "Edit organization" : "Add organization"}
+    >
       {isLoading ? (
         <div className="w-full h-[470px] flex items-center justify-center">
           <Spinner />
