@@ -9,8 +9,10 @@ import pencil from "../../assets/images/icons/pencil.svg";
 import Spinner from "../../components/ui/spinner/spinner";
 import { IOrganization } from "./types";
 import Pagination from "../../components/ui/pagination";
+import OrganizationDialogue from "../../components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
 
 const OrganizationsPage = () => {
+  const [modal, setModal] = useState<"org" | null>(null);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
 
@@ -24,8 +26,19 @@ const OrganizationsPage = () => {
     [organizationList]
   );
 
+  const close = () => {
+    setModal(null);
+  };
+
   return (
     <>
+      {modal === "org" && (
+        <OrganizationDialogue
+          isVisible={modal === "org"}
+          handleClose={close}
+          title="Add organization"
+        />
+      )}
       <div className="space-y-1.5">
         <div className="flex items-center justify-between w-full gap-4">
           <SearchInput
@@ -39,7 +52,7 @@ const OrganizationsPage = () => {
             <Button
               eventName="Add User"
               onClick={() => {
-                // setModal("user");
+                setModal("org");
               }}
             >
               Add Organization

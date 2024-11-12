@@ -54,7 +54,7 @@ const UsersPage = () => {
 
   return (
     <>
-      {modal && (
+      {modal === "user" && (
         <UserDialogue
           organizations={organizations}
           userId={selectedUser}
