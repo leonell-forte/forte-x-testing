@@ -119,7 +119,7 @@ const ViewProfileDialogue = ({
     <Dialogue
       isVisible={isVisible}
       handleClose={close}
-      title={onEdit ? "Edit profile" : "View profile"}
+      title={onEdit ? "Edit profile" : "Profile"}
     >
       {isLoading ? (
         <div className="w-full h-[470px] flex items-center justify-center">
