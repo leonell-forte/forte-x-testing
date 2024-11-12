@@ -15,6 +15,7 @@ const OrganizationsPage = () => {
   const [modal, setModal] = useState<"org" | null>(null);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [selectedOrg, setSelectedOrg] = useState("");
 
   const { data: organizationList, isLoading: orgLoading } = useQuery({
     queryKey: ["organizations", page],
@@ -27,13 +28,20 @@ const OrganizationsPage = () => {
   );
 
   const close = () => {
+    setSelectedOrg("");
     setModal(null);
+  };
+
+  const handleEditOrg = (id: string) => {
+    setModal("org");
+    setSelectedOrg(id);
   };
 
   return (
     <>
       {modal === "org" && (
         <OrganizationDialogue
+          orgId={selectedOrg}
           isVisible={modal === "org"}
           handleClose={close}
           title="Add organization"
@@ -92,19 +100,29 @@ const OrganizationsPage = () => {
               </Table.Head>
               <Table.Body>
                 {organizations.map((item: IOrganization, bodyIndex: number) => {
-                  const { id, name, registeredName, region, type, status } =
-                    item;
+                  const {
+                    id,
+                    name,
+                    registeredName,
+                    region,
+                    type,
+                    status,
+                    registeredAddress,
+                    registrationNumber,
+                    noOfProjects,
+                    noOfUsers,
+                  } = item;
                   return (
                     <Table.Row key={bodyIndex}>
                       <Table.Data>{name}</Table.Data>
                       <Table.Data>{registeredName}</Table.Data>
-                      <Table.Data>-</Table.Data>
-                      <Table.Data>-</Table.Data>
+                      <Table.Data>{registeredAddress}</Table.Data>
+                      <Table.Data>{registrationNumber}</Table.Data>
                       <Table.Data>{region}</Table.Data>
                       <Table.Data>{type}</Table.Data>
                       <Table.Data>{status}</Table.Data>
-                      <Table.Data>-</Table.Data>
-                      <Table.Data>-</Table.Data>
+                      <Table.Data>{noOfUsers}</Table.Data>
+                      <Table.Data>{noOfProjects}</Table.Data>
                       <Table.Data>-</Table.Data>
 
                       <Table.Data>
@@ -113,7 +131,7 @@ const OrganizationsPage = () => {
                           id={id}
                           buttonType="default"
                           type="button"
-                          // onClick={() => handleEditUser(item)}
+                          onClick={() => handleEditOrg(id!)}
                           className="p-[3px]"
                         >
                           <img alt="pencil" src={pencil} />

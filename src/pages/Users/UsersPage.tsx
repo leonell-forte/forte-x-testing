@@ -48,7 +48,6 @@ const UsersPage = () => {
 
   const handleEditUser = (user: IUser) => {
     setSelectedUser(user.id!.toString());
-
     setModal("user");
   };
 

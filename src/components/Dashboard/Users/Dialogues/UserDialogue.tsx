@@ -34,7 +34,7 @@ const UserDialogue = ({
   profile,
 }: IUserDialogueProps) => {
   const { data: userData, isLoading } = useQuery({
-    queryKey: [userId],
+    queryKey: ["specific user", userId],
     queryFn: () => userService.getOne(userId!),
     enabled: !!userId,
   });
@@ -203,7 +203,7 @@ const UserDialogue = ({
               }
               options={organizations.map((item: IOrganization) => ({
                 label: item.registeredName,
-                value: item.id!,
+                value: item.id!.toString(),
               }))}
               handleSelect={(val) => setValue("organizationId", val.toString())}
               placeholder="Select organization"

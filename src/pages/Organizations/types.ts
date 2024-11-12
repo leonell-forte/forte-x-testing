@@ -13,4 +13,5 @@ export interface IOrganization {
   updatedAt?: string; // ISO date string
   noOfProjects?: string;
   noOfUsers?: string;
+  registrationNumber?: string;
 }

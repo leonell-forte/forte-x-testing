@@ -9,13 +9,17 @@ import { z } from "zod";
 import { organizations } from "../../../../lib/validators/organizations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { REGIONS, STATUS, TYPES } from "../../../../lib/constants";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import organizationService from "../../../../api/organization";
 import { queryClient } from "../../../../components/QueryProvider";
 import { useAlert } from "../../../../lib/hooks";
+import { useEffect } from "react";
+import Spinner from "../../../../components/ui/spinner/spinner";
+import * as amplitude from "@amplitude/analytics-browser";
 
 interface IOrganizationDialogueProps extends IDialogueProps {
   page?: number;
+  orgId?: string;
 }
 
 const OrganizationDialogue = ({
@@ -23,22 +27,44 @@ const OrganizationDialogue = ({
   isVisible,
   title,
   page,
+  orgId,
 }: IOrganizationDialogueProps) => {
+  const { data: orgData, isLoading } = useQuery({
+    queryKey: ["specific org", orgId],
+    queryFn: () => organizationService.getOne(orgId!),
+    enabled: !!orgId,
+  });
+
   const {
     handleSubmit,
     watch,
     setValue,
     reset,
+    getValues,
     formState: { errors },
   } = useForm<z.infer<typeof organizations.schema>>({
     resolver: zodResolver(organizations.schema),
-    defaultValues: organizations.defaultValues,
+    defaultValues: organizations.defaultValues(),
   });
+
+  useEffect(() => {
+    if (orgData) {
+      reset(organizations.defaultValues(orgData));
+    }
+  }, [orgData, reset]);
 
   const { setAlert } = useAlert();
 
+  const onClose = () => {
+    reset();
+    handleClose!();
+  };
+
   const { mutateAsync: addOrganization, isPending } = useMutation({
-    mutationFn: organizationService.add,
+    mutationFn: orgId
+      ? () => organizationService.update(getValues())
+      : organizationService.add,
+
     onMutate: async () => {
       queryClient.cancelQueries({ queryKey: ["organizations", page] });
 
@@ -59,13 +85,17 @@ const OrganizationDialogue = ({
 
       setAlert({
         status: "success",
-        message: `Organization added successfully`,
+        message: `Organization ${orgId ? "updated" : "added"} successfully`,
         title: "Success!",
       });
 
-      handleClose!();
+      onClose();
 
       reset();
+
+      amplitude.track(
+        `${orgId ? "Update" : "Add"} Organization Form Submission`
+      );
     },
     onError: (err: any, newOrg, context) => {
       queryClient.setQueryData(
@@ -74,7 +104,7 @@ const OrganizationDialogue = ({
       );
       setAlert({
         status: "error",
-        title: `Failed adding organization`,
+        title: `Failed ${orgId ? "updating" : "adding"} organization`,
         message: err?.response?.data?.message,
       });
     },
@@ -88,132 +118,140 @@ const OrganizationDialogue = ({
   };
 
   return (
-    <Dialogue isVisible={isVisible} handleClose={handleClose} title={title}>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-[22px]">
-        <div className="flex items-center gap-4">
-          <label htmlFor="" className="w-[200px]">
-            Organization
-          </label>
-          <Input
-            value={watch("name")}
-            onChange={(e) => setValue("name", e.target.value)}
-            error={!!errors.name?.message}
-            helperText={errors.name?.message}
-            placeholder="Organization name"
-          />
+    <Dialogue isVisible={isVisible} handleClose={onClose} title={title}>
+      {isLoading ? (
+        <div className="w-full h-[470px] flex items-center justify-center">
+          <Spinner />
         </div>
-        <div className="flex items-center gap-4">
-          <label htmlFor="" className="w-[200px]">
-            Registered name
-          </label>
-          <Input
-            value={watch("registeredName")}
-            onChange={(e) => setValue("registeredName", e.target.value)}
-            error={!!errors.registeredName?.message}
-            helperText={errors.registeredName?.message}
-            placeholder="Registered name"
-          />
-        </div>
-        <div className="flex items-center gap-4">
-          <label htmlFor="" className="w-[200px]">
-            Registration #
-          </label>
-          <Input
-            value={watch("registrationNumber")}
-            onChange={(e) => setValue("registrationNumber", e.target.value)}
-            error={!!errors.registrationNumber?.message}
-            helperText={errors.registrationNumber?.message}
-            placeholder="Registration number"
-          />
-        </div>
-        <div className="flex items-start gap-4">
-          <label htmlFor="" className="w-[200px] pt-3.5">
-            Registered address
-          </label>
-          <div className="w-full space-y-[22px]">
+      ) : (
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-[22px]">
+          <div className="flex items-center gap-4">
+            <label htmlFor="" className="w-[200px]">
+              Organization
+            </label>
             <Input
-              value={watch("registeredAddress")}
-              onChange={(e) => setValue("registeredAddress", e.target.value)}
-              error={!!errors.registeredAddress?.message}
-              helperText={errors.registeredAddress?.message}
-              placeholder="Registered address"
+              value={watch("name")}
+              onChange={(e) => setValue("name", e.target.value)}
+              error={!!errors.name?.message}
+              helperText={errors.name?.message}
+              placeholder="Organization name"
             />
-            <div className="flex flex-col md:flex-row w-full gap-[22px] md:gap-2">
+          </div>
+          <div className="flex items-center gap-4">
+            <label htmlFor="" className="w-[200px]">
+              Registered name
+            </label>
+            <Input
+              value={watch("registeredName")}
+              onChange={(e) => setValue("registeredName", e.target.value)}
+              error={!!errors.registeredName?.message}
+              helperText={errors.registeredName?.message}
+              placeholder="Registered name"
+            />
+          </div>
+          <div className="flex items-center gap-4">
+            <label htmlFor="" className="w-[200px]">
+              Registration #
+            </label>
+            <Input
+              value={watch("registrationNumber")}
+              onChange={(e) => setValue("registrationNumber", e.target.value)}
+              error={!!errors.registrationNumber?.message}
+              helperText={errors.registrationNumber?.message}
+              placeholder="Registration number"
+            />
+          </div>
+          <div className="flex items-start gap-4">
+            <label htmlFor="" className="w-[200px] pt-3.5">
+              Registered address
+            </label>
+            <div className="w-full space-y-[22px]">
               <Input
-                value={watch("state")}
-                onChange={(e) => setValue("state", e.target.value)}
-                error={!!errors.state?.message}
-                helperText={errors.state?.message}
-                placeholder="State"
+                value={watch("registeredAddress")}
+                onChange={(e) => setValue("registeredAddress", e.target.value)}
+                error={!!errors.registeredAddress?.message}
+                helperText={errors.registeredAddress?.message}
+                placeholder="Registered address"
               />
-              <Input
-                value={watch("postalCode")}
-                onChange={(e) => setValue("postalCode", e.target.value)}
-                error={!!errors.postalCode?.message}
-                helperText={errors.postalCode?.message}
-                placeholder="Postal Code"
-              />
-              <Input
-                value={watch("country")}
-                onChange={(e) => setValue("country", e.target.value)}
-                error={!!errors.country?.message}
-                helperText={errors.country?.message}
-                placeholder="Country"
-              />
+              <div className="flex flex-col md:flex-row w-full gap-[22px] md:gap-2">
+                <Input
+                  value={watch("state")}
+                  onChange={(e) => setValue("state", e.target.value)}
+                  error={!!errors.state?.message}
+                  helperText={errors.state?.message}
+                  placeholder="State"
+                />
+                <Input
+                  value={watch("postalCode")}
+                  onChange={(e) => setValue("postalCode", e.target.value)}
+                  error={!!errors.postalCode?.message}
+                  helperText={errors.postalCode?.message}
+                  placeholder="Postal Code"
+                />
+                <Input
+                  value={watch("country")}
+                  onChange={(e) => setValue("country", e.target.value)}
+                  error={!!errors.country?.message}
+                  helperText={errors.country?.message}
+                  placeholder="Country"
+                />
+              </div>
             </div>
           </div>
-        </div>
-        <div className="flex items-center gap-4">
-          <label htmlFor="" className="w-[200px]">
-            Role
-          </label>
-          <Dropdown
-            value={
-              REGIONS.find((item) => item.value === watch("region"))?.label
-            }
-            handleSelect={(val) => setValue("region", val)}
-            options={REGIONS}
-            placeholder="Select region"
-            error={!!errors.region?.message}
-            helperText={errors.region?.message}
-          />
-        </div>
-        <div className="flex items-center gap-4">
-          <label htmlFor="" className="w-[200px]">
-            Type
-          </label>
-          <Dropdown
-            value={TYPES.find((item) => item.value === watch("type"))?.label}
-            handleSelect={(val) => setValue("type", val)}
-            options={TYPES}
-            placeholder="Select type"
-            error={!!errors.type?.message}
-            helperText={errors.type?.message}
-          />
-        </div>
-        <div className="flex items-center gap-4">
-          <label htmlFor="" className="w-[200px]">
-            Status
-          </label>
-          <Dropdown
-            value={STATUS.find((item) => item.value === watch("status"))?.label}
-            handleSelect={(val) => setValue("status", val)}
-            options={STATUS}
-            placeholder="Select status"
-            error={!!errors.status?.message}
-            helperText={errors.status?.message}
-          />
-        </div>
+          <div className="flex items-center gap-4">
+            <label htmlFor="" className="w-[200px]">
+              Role
+            </label>
+            <Dropdown
+              value={
+                REGIONS.find((item) => item.value === watch("region"))?.label
+              }
+              handleSelect={(val) => setValue("region", val)}
+              options={REGIONS}
+              placeholder="Select region"
+              error={!!errors.region?.message}
+              helperText={errors.region?.message}
+            />
+          </div>
+          <div className="flex items-center gap-4">
+            <label htmlFor="" className="w-[200px]">
+              Type
+            </label>
+            <Dropdown
+              value={TYPES.find((item) => item.value === watch("type"))?.label}
+              handleSelect={(val) => setValue("type", val)}
+              options={TYPES}
+              placeholder="Select type"
+              error={!!errors.type?.message}
+              helperText={errors.type?.message}
+            />
+          </div>
+          <div className="flex items-center gap-4">
+            <label htmlFor="" className="w-[200px]">
+              Status
+            </label>
+            <Dropdown
+              value={
+                STATUS.find((item) => item.value === watch("status"))?.label
+              }
+              handleSelect={(val) => setValue("status", val)}
+              options={STATUS}
+              placeholder="Select status"
+              error={!!errors.status?.message}
+              helperText={errors.status?.message}
+            />
+          </div>
 
-        <div className="flex justify-end gap-4 !mt-10">
-          <Button onClick={handleClose} buttonType="secondary">
-            Cancel
-          </Button>
-          <Button loading={isPending} type="submit">
-            Save
-          </Button>
-        </div>
-      </form>
+          <div className="flex justify-end gap-4 !mt-10">
+            <Button onClick={onClose} buttonType="secondary">
+              Cancel
+            </Button>
+            <Button loading={isPending} type="submit">
+              Save
+            </Button>
+          </div>
+        </form>
+      )}
     </Dialogue>
   );
 };

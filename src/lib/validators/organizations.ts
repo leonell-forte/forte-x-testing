@@ -1,17 +1,26 @@
+import { IOrganization } from "@/pages/Organizations/types";
 import { z } from "zod";
 
 export const organizations = {
-  defaultValues: {
-    name: "",
-    registeredName: "",
-    registeredAddress: "",
-    registrationNumber: "",
-    state: "",
-    country: "",
-    postalCode: "",
-    region: "",
-    type: "",
-    status: "",
+  defaultValues: (org?: IOrganization) => {
+    let data: IOrganization = {
+      name: org?.name || "",
+      registeredName: org?.registeredName || "",
+      registeredAddress: org?.registeredAddress || "",
+      registrationNumber: org?.registrationNumber || "",
+      state: org?.state || "",
+      country: org?.country || "",
+      postalCode: org?.postalCode || "",
+      region: org?.region || "",
+      type: org?.type || "",
+      status: org?.status || "",
+    };
+
+    if (org) {
+      data.id = org.id;
+    }
+
+    return data;
   },
   schema: z.object({
     name: z.string().min(1),
