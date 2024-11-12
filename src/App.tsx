@@ -6,6 +6,7 @@ import Providers from "./components/Providers";
 import QueryProvider from "./components/QueryProvider";
 import AlertProvider from "./components/AlertProvider";
 import { PROTECTED_ROUTES, PUBLIC_ROUTES } from "./lib/routes";
+import Spinner from "./components/ui/spinner/spinner";
 
 // Lazy load components
 
@@ -17,7 +18,15 @@ function App() {
         <Router>
           <Providers>
             <AlertProvider>
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense
+                fallback={
+                  <DashboardLayout>
+                    <div className="w-full h-full flex items-center justify-center">
+                      <Spinner />
+                    </div>
+                  </DashboardLayout>
+                }
+              >
                 <Routes>
                   {PUBLIC_ROUTES.map((item, index) => {
                     const { link, Component } = item;

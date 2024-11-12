@@ -36,7 +36,7 @@ api.interceptors.response.use(
   },
   function (error) {
     if (error.status === 401) {
-      window.location.href = "/";
+      // window.location.href = "/";
     }
 
     // Any status codes that falls outside the range of 2xx cause this function to trigger
