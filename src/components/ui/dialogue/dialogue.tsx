@@ -25,7 +25,7 @@ const Dialogue = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ type: "spring", duration: 0.4 }}
-      className="w-screen h-screen flex items-center justify-center bg-[#011217] fixed bg-opacity-[90%] top-0 left-0 z-50"
+      className="w-screen overflow-scroll py-12 px-4 h-screen flex items-start justify-center bg-[#011217] fixed bg-opacity-[90%] top-0 left-0 z-50"
     >
       <div className={styles["dialogue-content"]}>
         <button

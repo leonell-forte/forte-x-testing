@@ -16,6 +16,7 @@ import { useAlert } from "../../../../lib/hooks";
 import { useEffect } from "react";
 import Spinner from "../../../../components/ui/spinner/spinner";
 import * as amplitude from "@amplitude/analytics-browser";
+import { OrgTypes } from "@/pages/Organizations/types";
 
 interface IOrganizationDialogueProps extends IDialogueProps {
   page?: number;
@@ -222,7 +223,7 @@ const OrganizationDialogue = ({
             </label>
             <Dropdown
               value={TYPES.find((item) => item.value === watch("type"))?.label}
-              handleSelect={(val) => setValue("type", val)}
+              handleSelect={(val) => setValue("type", val as OrgTypes)}
               options={TYPES}
               placeholder="Select type"
               error={!!errors.type?.message}

@@ -42,6 +42,7 @@ const OrganizationsPage = () => {
     queryKey: ["organizations", page, debouncedSearch],
     queryFn: () => organizationService.list(page, false, debouncedSearch),
   });
+  console.log(organizationList);
 
   const organizations = useMemo(
     () => organizationList?.items || [],

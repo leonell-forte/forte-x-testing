@@ -16,7 +16,7 @@ interface IDropdownProp extends InputHTMLAttributes<HTMLInputElement> {
   options: IOption[];
   value?: string | string[];
   handleSelect?: (value: string) => void;
-  isArray?: boolean;
+  isMultiSelect?: boolean;
   loading?: boolean;
   error?: boolean;
   helperText?: string;
@@ -26,7 +26,7 @@ const Dropdown = ({
   className,
   options,
   handleSelect,
-  isArray,
+  isMultiSelect,
   loading,
   error,
   helperText,
@@ -37,6 +37,11 @@ const Dropdown = ({
   const dropdownRef = useRef(null);
 
   useOutsideClick(dropdownRef, () => setShowList(false));
+
+  const displayValue =
+    isMultiSelect && Array.isArray(props.value)
+      ? `${props.value.length} selected`
+      : (props.value as string);
 
   return (
     <div className={classNames("w-full", className)}>
@@ -52,17 +57,11 @@ const Dropdown = ({
         <input
           type="text"
           className={classNames(
-            "bg-transparent border-none outline-none w-[90%] placeholder:text-white/50 capitalize",
+            "bg-transparent border-none outline-none w-[90%] placeholder:text-white/50",
             error && "placeholder:!text-[#e61a1a]/50"
           )}
           {...props}
-          value={
-            isArray
-              ? props.value?.length
-                ? `${props.value?.length} selected`
-                : ""
-              : props.value
-          }
+          value={displayValue}
           readOnly
         />
         {!props.disabled && (
@@ -89,7 +88,7 @@ const Dropdown = ({
           ) : (
             options.map((item, index) => {
               const { label, value } = item;
-              return isArray ? (
+              return isMultiSelect ? (
                 <div key={index} className="pl-2">
                   <Checkbox
                     checked={props?.value?.includes(value)}

@@ -1,5 +1,6 @@
 import { Button as ButtonComponent, ButtonProps } from "@mui/material";
 import * as amplitude from "@amplitude/analytics-browser";
+import classNames from "classnames";
 
 interface IButtonProp extends ButtonProps {
   buttonType?: "primary" | "secondary" | "tertiary" | "default";
@@ -63,7 +64,10 @@ const Button = ({
       type={type || "button"}
       sx={variants[(buttonType as keyof typeof variants) || "primary"]}
       {...props}
-      className={"gap-[10px] !px-6 !normal-case h-11"}
+      className={classNames(
+        "gap-[10px] !px-6 !normal-case h-11",
+        props.className
+      )}
       disabled={disabled || loading}
       onClick={(e) => {
         if (eventName) {

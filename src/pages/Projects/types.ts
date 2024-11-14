@@ -1,7 +1,19 @@
+import { IOrganization } from "../../pages/Organizations/types";
+
+interface IOutcome {
+  id: number;
+  name: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface IProject {
-  project: string;
-  partner: string;
-  outcome: string;
-  contract: string;
-  beneficiary: string;
+  id: number;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  provider: IOrganization;
+  funder: IOrganization;
+  outcomes: IOutcome[];
 }

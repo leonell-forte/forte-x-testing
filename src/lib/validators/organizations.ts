@@ -31,7 +31,7 @@ export const organizations = {
     country: z.string().min(1),
     postalCode: z.string().min(1),
     region: z.string().min(1),
-    type: z.string().min(1),
+    type: z.enum(["", "funder", "provider"]),
     status: z.string().min(1),
   }),
 };

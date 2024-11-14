@@ -86,8 +86,6 @@ const UserDialogue = ({
 
       close();
 
-      reset();
-
       setAlert({
         status: "success",
         message: `User ${userId ? "updated" : "added"} successfully`,

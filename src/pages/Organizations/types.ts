@@ -3,7 +3,7 @@ export interface IOrganization {
   name: string;
   registeredName: string;
   region: string;
-  type: string;
+  type: OrgTypes;
   status: string;
   registeredAddress: string;
   state: string;
@@ -15,6 +15,8 @@ export interface IOrganization {
   noOfUsers?: string;
   registrationNumber?: string;
 }
+
+export type OrgTypes = "funder" | "provider" | "";
 
 export interface IFilters {
   region: string;

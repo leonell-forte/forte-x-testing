@@ -102,6 +102,11 @@ const theme = createTheme({
               color: "#787878 !important",
             },
           }),
+          ...(ownerState.multiline && {
+            "& .MuiInputBase-inputMultiline": {
+              minHeight: "119px", // Set desired min height here
+            },
+          }),
         }),
       },
     },

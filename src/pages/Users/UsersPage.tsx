@@ -111,7 +111,7 @@ const UsersPage = () => {
               value: item.id,
             }))}
             readOnly
-            isArray
+            isMultiSelect
           />
         </div>
         <div className="space-y-[18px]">
