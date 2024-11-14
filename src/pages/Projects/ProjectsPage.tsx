@@ -21,7 +21,7 @@ const ProjectsPage = () => {
     queryFn: () => projectService.list(page),
   });
 
-  const { data: organizationList, isLoading: orgLoading } = useQuery({
+  const { data: organizationList } = useQuery({
     queryKey: ["organizations"],
     queryFn: () => organizationService.list(page, true),
   });
@@ -69,7 +69,7 @@ const ProjectsPage = () => {
           />
         );
     }
-  }, [modal]);
+  }, [modal, organizations, selectedProject, page]);
 
   return (
     <>

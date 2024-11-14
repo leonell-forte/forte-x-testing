@@ -116,7 +116,7 @@ const ProjectDialogue = ({
     if (errors?.outcomes?.type === "too_small") {
       append({ name: "", description: "" });
     }
-  }, [errors]);
+  }, [errors, append]);
 
   return (
     <Dialogue

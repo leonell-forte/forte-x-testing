@@ -4,7 +4,6 @@ import Dialogue, {
 } from "../../../../components/ui/dialogue/dialogue";
 import Button from "../../../../components/ui/button";
 import projectService from "../../../../api/projects";
-import { useState } from "react";
 import { useAlert } from "../../../../lib/hooks";
 import * as amplitude from "@amplitude/analytics-browser";
 import { useMutation } from "@tanstack/react-query";
@@ -21,7 +20,6 @@ const DeleteDialogue = ({
   isVisible,
   page,
 }: IDeleteDialogueProp) => {
-  const [loading, setLoading] = useState(false);
   const { id } = project;
   const { setAlert } = useAlert();
 
@@ -93,7 +91,7 @@ const DeleteDialogue = ({
           <Button onClick={handleClose} buttonType="secondary">
             Cancel
           </Button>
-          <Button loading={loading} onClick={handleDelete}>
+          <Button loading={isPending} onClick={handleDelete}>
             Delete
           </Button>
         </div>
