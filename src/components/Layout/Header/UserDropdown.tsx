@@ -51,14 +51,14 @@ const UserDropdown = ({ user }: IProp) => {
         />
       )}
 
-      <div ref={dropdownRef} className="relative z-50">
+      <div ref={dropdownRef} className="relative z-40">
         <button
           onClick={() => setShowDropdown((prev) => !prev)}
-          className="w-[184px] h-[42px] rounded-[50px] bg-white bg-opacity-[30%] flex justify-between items-center pl-1.5 pr-4 cursor-pointer hover:brightness-[.8] transition-all"
+          className="w-[80px] sm:w-[184px] h-[42px] rounded-[50px] bg-white bg-opacity-[30%] flex justify-between items-center pl-1.5 pr-4 cursor-pointer hover:brightness-[.8] transition-all"
         >
           <div className="flex gap-1.5">
             <div className="w-[28px] h-[28px] rounded-full bg-[#D9D9D9]"></div>
-            <div className="flex items-center px-2">
+            <div className="sm:flex items-center px-2 hidden">
               <p className="text-forest-green font-medium">{user?.firstName}</p>
             </div>
           </div>

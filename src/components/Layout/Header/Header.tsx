@@ -9,12 +9,12 @@ interface IProp {
 
 const Header = ({ user }: IProp) => {
   return (
-    <div className="h-[80px]  px-5 md:px-[30px] flex items-center justify-between">
+    <div className="h-[80px] px-5 md:px-[30px] flex items-center justify-between">
       <Link to="/users">
         <img alt="logo" src="/logo.png" className="max-w-[98px]" />
       </Link>
       <div className="flex items-center gap-4">
-        <SearchInput className="md:w-[286px]" />
+        <SearchInput className="!hidden sm:!block md:w-[286px]" />
         <UserDropdown user={user} />
       </div>
     </div>

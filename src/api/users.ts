@@ -5,11 +5,12 @@ import { users } from "../lib/validators/users";
 import { IUser } from "@/pages/Users/types";
 
 class UserService {
-  async list(page: number) {
+  async list(page: number, search?: string) {
     const params = new URLSearchParams();
 
     params.append("$pageSize", DEFAULT_PAGE_SIZE);
     params.append("$pageNum", page.toString());
+    // params.append("$filter", "contains('organizations.name', 'forte')");
 
     const res = await api.get(`/users?${params.toString()}`);
 

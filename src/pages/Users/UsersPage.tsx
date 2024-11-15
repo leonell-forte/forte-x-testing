@@ -7,7 +7,6 @@ import { useMemo, useState } from "react";
 import pencil from "../../assets/images/icons/pencil.svg";
 import { IUser } from "./types";
 import UserDialogue from "../../components/Dashboard/Users/Dialogues/UserDialogue";
-// import { filterBySearch } from "../../lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import userService from "../../api/users";
 import Spinner from "../../components/ui/spinner/spinner";
@@ -18,9 +17,11 @@ import { ROLES } from "../../lib/constants";
 const UsersPage = () => {
   const [page, setPage] = useState(1);
 
+  const [search, setSearch] = useState("");
+
   const { data: userList, isLoading: userLoading } = useQuery({
-    queryKey: ["users", page],
-    queryFn: () => userService.list(page),
+    queryKey: ["users", page, search],
+    queryFn: () => userService.list(page, search),
   });
 
   const { data: organizationList, isLoading: orgLoading } = useQuery({
@@ -34,8 +35,6 @@ const UsersPage = () => {
 
   const [organization, setOrganization] = useState<string[]>([]);
 
-  const [search, setSearch] = useState("");
-
   const [selectedUser, setSelectedUser] = useState<string>("");
 
   const users = useMemo(() => userList?.items || [], [userList]);
@@ -44,10 +43,6 @@ const UsersPage = () => {
     () => organizationList?.items || [],
     [organizationList]
   );
-
-  // const filteredList: IUser[] = useMemo(() => {
-  //   return filterBySearch(users as any, search);
-  // }, [search]);
 
   const handleEditUser = (user: IUser) => {
     setSelectedUser(user.id!.toString());

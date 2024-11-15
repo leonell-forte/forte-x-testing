@@ -11,7 +11,7 @@ const Table = {
 
   Head: ({ children }: TableHTMLAttributes<HTMLTableElement>) => {
     return (
-      <thead className="text-left bg-white text-[14px] font-medium ">
+      <thead className="text-left bg-white text-[14px] font-medium truncate">
         {children}
       </thead>
     );

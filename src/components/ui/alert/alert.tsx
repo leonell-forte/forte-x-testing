@@ -25,7 +25,7 @@ const Alert = () => {
   return (
     <div
       className={classNames(
-        "absolute z-[999] top-4 right-0 w-full max-w-[545px] px-4 hover:scale-[1.01] transition-all",
+        "absolute z-[999] top-4 right-0 w-full max-w-[545px] overflow-hidden px-4 hover:scale-[1.01] transition-all",
         !status && "pointer-events-none"
       )}
     >
