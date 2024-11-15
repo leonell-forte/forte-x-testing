@@ -20,18 +20,24 @@ export const filterBySearch = (
 export type IODataObject = Record<string, { value: string; exact: boolean }>;
 
 export const generateODataQuery = (obj: IODataObject) => {
-  const queryParts = Object.keys(obj).map((key) => {
-    const { value, exact } = obj[key]; // Destructure to get value and exact
+  const queryParts = Object.keys(obj)
+    .map((key) => {
+      const { value, exact } = obj[key]; // Destructure to get value and exact
 
-    // If 'exact' is true, use 'eq'; if false, use 'contains'
-    if (exact) {
-      return `'${key}' eq '${value}'`;
-    } else {
-      const fieldName = key.replace(/\./g, "."); // Adjust the format if necessary
+      // Skip this key if the value is empty (null, undefined, or empty string)
+      if (value == null || value === "") {
+        return null;
+      }
 
-      return `contains('${fieldName}', '${value}')`;
-    }
-  });
+      // If 'exact' is true, use 'eq'; if false, use 'contains'
+      if (exact) {
+        return `'${key}' eq '${value}'`;
+      } else {
+        const fieldName = key.replace(/\./g, "."); // Adjust the format if necessary
+        return `contains('${fieldName}', '${value}')`;
+      }
+    })
+    .filter((part) => part !== null); // Filter out null entries
 
-  return queryParts.join(" and "); // Combine all parts with 'and'
+  return queryParts.join(" or "); // Combine all parts with 'and'
 };

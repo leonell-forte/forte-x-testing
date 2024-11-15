@@ -15,6 +15,11 @@ class UserService {
         exact: false,
       },
 
+      "user.lastName": {
+        value: search!,
+        exact: false,
+      },
+
       "user.role": {
         value: role!,
         exact: true,

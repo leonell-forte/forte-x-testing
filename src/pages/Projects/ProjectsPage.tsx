@@ -12,14 +12,27 @@ import organizationService from "../../api/organization";
 import { IProject } from "./types";
 import Spinner from "../../components/ui/spinner/spinner";
 import DeleteDialogue from "../../components/Dashboard/Projects/Dialogues/DeleteDialogue";
+import { useDebounce } from "../../lib/hooks";
 
 const ProjectsPage = () => {
   const [page, setPage] = useState(1);
 
-  const { data: projectsList, isLoading: projectLoading } = useQuery({
-    queryKey: ["projects", page],
+  const [search, setSearch] = useState("");
 
-    queryFn: () => projectService.list(page),
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  useDebounce(
+    () => {
+      setDebouncedSearch(search);
+    },
+    500,
+    [search]
+  );
+
+  const { data: projectsList, isLoading: projectLoading } = useQuery({
+    queryKey: ["projects", page, debouncedSearch],
+
+    queryFn: () => projectService.list(page, debouncedSearch),
   });
 
   const { data: organizationList } = useQuery({
@@ -35,10 +48,9 @@ const ProjectsPage = () => {
   );
 
   const projects = useMemo(() => projectsList?.items || [], [projectsList]);
+  console.log(projects);
 
   const [modal, setModal] = useState<"project" | "delete" | null>(null);
-
-  const [search, setSearch] = useState("");
 
   const [selectedProject, setSelectedProject] = useState<IProject | null>(null);
 

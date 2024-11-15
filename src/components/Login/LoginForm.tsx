@@ -48,6 +48,8 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
 
       dispatch(setEmail(values.email));
     } catch (err) {
+      console.log(err);
+
       setError("email", { message: "Please use correct email" });
 
       setError("password", { message: "Please use correct password" });

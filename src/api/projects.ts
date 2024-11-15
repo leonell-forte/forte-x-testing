@@ -2,14 +2,26 @@ import { z } from "zod";
 import { api } from "../lib/axios/interceptor";
 import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import { projects } from "../lib/validators/projects";
+import { generateODataQuery, IODataObject } from "../lib/utils";
 
 class ProjectsService {
-  async list(page: number = 1) {
+  async list(page: number = 1, search?: string) {
     const params = new URLSearchParams();
+
+    const filters: IODataObject = {
+      "projects.name": {
+        value: search!,
+        exact: false,
+      },
+    };
+
+    console.log(generateODataQuery(filters));
 
     params.append("$pageNum", page.toString());
 
     params.append("$pageSize", DEFAULT_PAGE_SIZE);
+
+    // params.append("$filter", generateODataQuery(filters));
 
     const res = await api.get(`/projects?${params}`);
 
