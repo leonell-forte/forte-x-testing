@@ -16,3 +16,22 @@ export const filterBySearch = (
 
   return filteredList;
 };
+
+export type IODataObject = Record<string, { value: string; exact: boolean }>;
+
+export const generateODataQuery = (obj: IODataObject) => {
+  const queryParts = Object.keys(obj).map((key) => {
+    const { value, exact } = obj[key]; // Destructure to get value and exact
+
+    // If 'exact' is true, use 'eq'; if false, use 'contains'
+    if (exact) {
+      return `'${key}' eq '${value}'`;
+    } else {
+      const fieldName = key.replace(/\./g, "."); // Adjust the format if necessary
+
+      return `contains('${fieldName}', '${value}')`;
+    }
+  });
+
+  return queryParts.join(" and "); // Combine all parts with 'and'
+};

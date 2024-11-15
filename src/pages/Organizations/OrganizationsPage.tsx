@@ -38,8 +38,7 @@ const OrganizationsPage = () => {
     },
 
     500,
-
-    search
+    [search]
   );
 
   const { data: organizationList, isLoading: orgLoading } = useQuery({

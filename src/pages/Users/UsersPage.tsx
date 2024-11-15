@@ -13,16 +13,29 @@ import Spinner from "../../components/ui/spinner/spinner";
 import organizationService from "../../api/organization";
 import { IOrganization } from "../Organizations/types";
 import { ROLES } from "../../lib/constants";
+import { useDebounce } from "../../lib/hooks";
 
 const UsersPage = () => {
   const [page, setPage] = useState(1);
 
   const [search, setSearch] = useState("");
 
-  const { data: userList, isLoading: userLoading } = useQuery({
-    queryKey: ["users", page, search],
+  const [role, setRole] = useState("");
 
-    queryFn: () => userService.list(page, search),
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  useDebounce(
+    () => {
+      setDebouncedSearch(search);
+    },
+    500,
+    [search]
+  );
+
+  const { data: userList, isLoading: userLoading } = useQuery({
+    queryKey: ["users", page, debouncedSearch, role],
+
+    queryFn: () => userService.list(page, debouncedSearch, role),
   });
 
   const { data: organizationList, isLoading: orgLoading } = useQuery({
@@ -32,8 +45,6 @@ const UsersPage = () => {
   });
 
   const [modal, setModal] = useState<"user" | null>(null);
-
-  const [role, setRole] = useState("");
 
   const [organization, setOrganization] = useState<string[]>([]);
 

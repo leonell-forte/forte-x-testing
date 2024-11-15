@@ -2,17 +2,30 @@ import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import { api } from "../lib/axios/interceptor";
 import { z } from "zod";
 import { users } from "../lib/validators/users";
-import { IUser } from "@/pages/Users/types";
+import { IUser } from "../pages/Users/types";
+import { generateODataQuery, IODataObject } from "../lib/utils";
 
 class UserService {
-  async list(page: number, search?: string) {
+  async list(page: number, search?: string, role?: string) {
     const params = new URLSearchParams();
+
+    const filter: IODataObject = {
+      "user.firstName": {
+        value: search!,
+        exact: false,
+      },
+
+      "user.role": {
+        value: role!,
+        exact: true,
+      },
+    };
 
     params.append("$pageSize", DEFAULT_PAGE_SIZE);
 
     params.append("$pageNum", page.toString());
 
-    // params.append("$filter", "contains('user.firstName', 'leonell')");
+    params.append("$filter", generateODataQuery(filter));
 
     const res = await api.get(`/users?${params.toString()}`);
 
