@@ -1,10 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import auth from "./slice/auth";
 import alert from "./slice/alert";
+import layout from "./slice/layout";
 
 export const makeStore = () => {
   return configureStore({
-    reducer: { auth, alert },
+    reducer: { auth, alert, layout },
   });
 };
 

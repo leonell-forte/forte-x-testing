@@ -1,6 +1,6 @@
 import { useDispatch, useSelector, useStore } from "react-redux";
 import type { RootState, AppDispatch, AppStore } from "./store";
-import { MutableRefObject, useCallback, useEffect } from "react";
+import { MutableRefObject, useCallback, useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 import { IAlert, setToast } from "./slice/alert";
 
@@ -70,4 +70,37 @@ export const useDebounce = (
   }, [dependency, callback, time]);
 
   return null;
+};
+
+const BREAKPOINTS = {
+  mobile: 768, // Anything less than 768px is considered mobile
+  tablet: 1024, // Anything between 768px and 1024px is considered tablet
+};
+
+export const useScreenSize = () => {
+  // Initialize the screen width state
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    // Function to update the screen width on resize
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+    };
+
+    // Add event listener for window resize
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  // Determine the screen size categories
+  const isMobile = screenWidth <= BREAKPOINTS.mobile;
+  const isTablet =
+    screenWidth > BREAKPOINTS.mobile && screenWidth <= BREAKPOINTS.tablet;
+  const isDesktop = screenWidth > BREAKPOINTS.tablet;
+
+  return { isMobile, isTablet, isDesktop };
 };
