@@ -20,7 +20,7 @@ const Header = ({ user }: IProp) => {
   return (
     <div className="h-[80px] px-5 md:px-[30px] flex items-center justify-between">
       <div className="flex items-center gap-4">
-        <button onClick={handleClick} className="w-7 h-7">
+        <button onClick={handleClick} className="w-7 h-7 md:hidden">
           <img src={menu} alt="menu" />
         </button>
         <Link to="/users">
