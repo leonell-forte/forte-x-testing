@@ -77,13 +77,14 @@ const UserDialogue = ({
     },
 
     onSuccess: (addedUser) => {
-      !userId &&
+      if (!userId) {
         queryClient.setQueryData(["users", page], (old: any) => {
           return {
             ...old,
             items: [...(old?.items || []), addedUser.data.data],
           };
         });
+      }
 
       close();
 

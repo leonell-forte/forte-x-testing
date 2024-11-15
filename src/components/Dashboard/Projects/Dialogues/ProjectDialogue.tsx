@@ -1,4 +1,3 @@
-import { IProject } from "../../../../pages/Projects/types";
 import Dialogue, {
   IDialogueProps,
 } from "../../../../components/ui/dialogue/dialogue";
@@ -67,7 +66,7 @@ const ProjectDialogue = ({
     if (project) {
       reset(projects.defaultValues(project));
     }
-  }, [project]);
+  }, [project, reset]);
 
   useEffect(() => {
     if (errors?.outcomes?.type === "too_small") {
@@ -100,13 +99,14 @@ const ProjectDialogue = ({
     },
 
     onSuccess: (addedProject) => {
-      !projectId &&
+      if (!projectId) {
         queryClient.setQueryData(["projects", page], (old: any) => {
           return {
             ...old,
             items: [...(old?.items || []), addedProject.data.data],
           };
         });
+      }
 
       close();
 
