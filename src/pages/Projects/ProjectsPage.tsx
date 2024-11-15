@@ -48,7 +48,6 @@ const ProjectsPage = () => {
   );
 
   const projects = useMemo(() => projectsList?.items || [], [projectsList]);
-  console.log(projects);
 
   const [modal, setModal] = useState<"project" | "delete" | null>(null);
 

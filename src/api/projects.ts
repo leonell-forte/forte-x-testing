@@ -9,19 +9,23 @@ class ProjectsService {
     const params = new URLSearchParams();
 
     const filters: IODataObject = {
-      "projects.name": {
+      "project.name": {
         value: search!,
+
+        exact: false,
+      },
+      "project.provider.name": {
+        value: search!,
+
         exact: false,
       },
     };
-
-    console.log(generateODataQuery(filters));
 
     params.append("$pageNum", page.toString());
 
     params.append("$pageSize", DEFAULT_PAGE_SIZE);
 
-    // params.append("$filter", generateODataQuery(filters));
+    params.append("$filter", generateODataQuery(filters));
 
     const res = await api.get(`/projects?${params}`);
 

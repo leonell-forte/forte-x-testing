@@ -234,7 +234,7 @@ const OrganizationDialogue = ({
           </div>
           <div className="flex items-center gap-4">
             <label htmlFor="" className="w-[200px]">
-              Role
+              Region
             </label>
 
             <Dropdown
