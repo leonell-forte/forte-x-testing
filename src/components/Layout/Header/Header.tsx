@@ -23,12 +23,15 @@ const Header = ({ user }: IProp) => {
         <button onClick={handleClick} className="w-7 h-7 md:hidden">
           <img src={menu} alt="menu" />
         </button>
+
         <Link to="/users">
           <img alt="logo" src="/logo.png" className="max-w-[98px]" />
         </Link>
       </div>
+
       <div className="flex items-center gap-4">
         <SearchInput className="!hidden sm:!block md:w-[286px]" />
+
         <UserDropdown user={user} />
       </div>
     </div>

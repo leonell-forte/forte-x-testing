@@ -9,7 +9,9 @@ class UserService {
     const params = new URLSearchParams();
 
     params.append("$pageSize", DEFAULT_PAGE_SIZE);
+
     params.append("$pageNum", page.toString());
+
     // params.append("$filter", "contains('user.firstName', 'leonell')");
 
     const res = await api.get(`/users?${params.toString()}`);
@@ -31,6 +33,7 @@ class UserService {
 
   async update(user: z.infer<typeof users.schema>) {
     const res = await api.put(`/users`, user);
+
     return res;
   }
 }

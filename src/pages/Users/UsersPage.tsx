@@ -21,11 +21,13 @@ const UsersPage = () => {
 
   const { data: userList, isLoading: userLoading } = useQuery({
     queryKey: ["users", page, search],
+
     queryFn: () => userService.list(page, search),
   });
 
   const { data: organizationList, isLoading: orgLoading } = useQuery({
     queryKey: ["organizations"],
+
     queryFn: () => organizationService.list(page, true),
   });
 
@@ -41,11 +43,13 @@ const UsersPage = () => {
 
   const organizations = useMemo(
     () => organizationList?.items || [],
+
     [organizationList]
   );
 
   const handleEditUser = (user: IUser) => {
     setSelectedUser(user.id!.toString());
+
     setModal("user");
   };
 
@@ -63,6 +67,7 @@ const UsersPage = () => {
           page={page}
         />
       )}
+
       <div className="space-y-1.5">
         <div className="flex items-center justify-between w-full gap-4">
           <SearchInput
@@ -82,8 +87,10 @@ const UsersPage = () => {
             </Button>
           </div>
         </div>
+
         <div className="flex items-center gap-[18px]">
           <p className="text-[20px] font-medium">Filter by</p>
+
           <Dropdown
             value={role}
             handleSelect={(val) => setRole(val)}
@@ -91,6 +98,7 @@ const UsersPage = () => {
             className="max-w-[166px]"
             options={ROLES}
           />
+
           <Dropdown
             loading={orgLoading}
             value={organization}
@@ -109,6 +117,7 @@ const UsersPage = () => {
             isMultiSelect
           />
         </div>
+
         <div className="space-y-[18px]">
           {userLoading ? (
             <div className="w-full h-[500px] flex items-center justify-center">
@@ -121,6 +130,7 @@ const UsersPage = () => {
                   {TABLE_HEADER.map((key, headerIndex) => {
                     return <Table.Header key={headerIndex}>{key}</Table.Header>;
                   })}
+
                   <Table.Header></Table.Header>
                 </Table.Row>
               </Table.Head>
@@ -135,13 +145,19 @@ const UsersPage = () => {
                     role,
                     organization,
                   } = item;
+
                   return (
                     <Table.Row key={bodyIndex}>
                       <Table.Data>{`${firstName} ${lastName}`}</Table.Data>
+
                       <Table.Data>{email}</Table.Data>
+
                       <Table.Data>{phoneNumber}</Table.Data>
+
                       <Table.Data>{role}</Table.Data>
+
                       <Table.Data>{organization}</Table.Data>
+
                       <Table.Data>
                         <Button
                           eventName="Edit User"

@@ -3,11 +3,15 @@ import { z } from "zod";
 export const login = {
   defaultValues: {
     email: "",
+
     password: "",
+
     remember: false,
   },
+
   schema: z.object({
     email: z.string().email(),
+
     password: z
       .string()
       .min(8, "Password must be at least 8 characters long")
@@ -25,6 +29,7 @@ export const login = {
 export const password = {
   defaultValues: {
     new: "",
+
     confirm: "",
   },
   schema: z
@@ -49,19 +54,29 @@ export const password = {
 export const signup = {
   defaultValues: {
     firstName: "",
+
     lastName: "",
+
     email: "",
+
     phoneNumber: "",
+
     password: "",
+
     confirmPassword: "",
+
     agreeTerms: "",
   },
   schema: z
     .object({
       firstName: z.string().min(1),
+
       lastName: z.string().min(1),
+
       email: z.string().email(),
+
       phoneNumber: z.string().min(1),
+
       password: z
         .string()
         .min(8, "Password must be at least 8 characters long")
@@ -72,9 +87,11 @@ export const signup = {
           /[!@#$%^&*(),.?":{}|<>]/,
           "Password must contain at least one special character"
         ),
+
       confirmPassword: z
         .string()
         .min(8, "Password must be at least 8 characters long"),
+
       agreeTerms: z
         .string()
         .min(1, {
@@ -92,6 +109,7 @@ export const resetRequest = {
   defaultValues: {
     email: "",
   },
+
   schema: z.object({
     email: z.string().email(),
   }),

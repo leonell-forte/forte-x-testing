@@ -15,7 +15,9 @@ class OrganizationService {
     if (search) {
       params.append("$filter", search);
     }
+
     if (listAll) params.append("listAll", "true");
+
     const res = await api.get(`/organizations?${params}`);
 
     return res.data;
@@ -23,16 +25,19 @@ class OrganizationService {
 
   async add(data: IOrganization) {
     const response = await api.post("/organizations", data);
+
     return response;
   }
 
   async getOne(id: string) {
     const response = await api.get(`/organizations/${id}`);
+
     return response.data.data;
   }
 
   async update(org: z.infer<typeof organizations.schema>) {
     const response = await api.put("/organizations", org);
+
     return response;
   }
 }

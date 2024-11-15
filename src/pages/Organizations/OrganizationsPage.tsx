@@ -24,7 +24,9 @@ const OrganizationsPage = () => {
 
   const [filters, setFilters] = useState<IFilters>({
     region: "",
+
     status: "",
+
     type: "",
   });
 
@@ -34,28 +36,33 @@ const OrganizationsPage = () => {
     () => {
       setDebouncedSearch(search);
     },
+
     500,
+
     search
   );
 
   const { data: organizationList, isLoading: orgLoading } = useQuery({
     queryKey: ["organizations", page, debouncedSearch],
+
     queryFn: () => organizationService.list(page, false, debouncedSearch),
   });
-  console.log(organizationList);
 
   const organizations = useMemo(
     () => organizationList?.items || [],
+
     [organizationList]
   );
 
   const close = () => {
     setSelectedOrg("");
+
     setModal(null);
   };
 
   const handleEditOrg = (id: string) => {
     setModal("org");
+
     setSelectedOrg(id);
   };
 
@@ -73,6 +80,7 @@ const OrganizationsPage = () => {
           page={page}
         />
       )}
+
       <div className="space-y-1.5">
         <div className="flex items-center justify-between w-full gap-4">
           <SearchInput
@@ -95,6 +103,7 @@ const OrganizationsPage = () => {
         </div>
         <div className="flex items-center gap-[18px]">
           <p className="text-[20px] font-medium">Filter by</p>
+
           <Dropdown
             value={filters.region}
             handleSelect={(val) => {
@@ -104,6 +113,7 @@ const OrganizationsPage = () => {
             className="max-w-[166px]"
             options={REGIONS}
           />
+
           <Dropdown
             value={filters.status}
             handleSelect={(val) => {
@@ -113,6 +123,7 @@ const OrganizationsPage = () => {
             className="max-w-[166px]"
             options={STATUS}
           />
+
           <Dropdown
             value={filters.type}
             handleSelect={(val) => {
@@ -136,6 +147,7 @@ const OrganizationsPage = () => {
                   {TABLE_HEADER.map((key, headerIndex) => {
                     return <Table.Header key={headerIndex}>{key}</Table.Header>;
                   })}
+
                   <Table.Header></Table.Header>
                 </Table.Row>
               </Table.Head>
@@ -156,14 +168,23 @@ const OrganizationsPage = () => {
                   return (
                     <Table.Row key={bodyIndex}>
                       <Table.Data>{name}</Table.Data>
+
                       <Table.Data>{registeredName}</Table.Data>
+
                       <Table.Data>{registeredAddress}</Table.Data>
+
                       <Table.Data>{registrationNumber}</Table.Data>
+
                       <Table.Data>{region}</Table.Data>
+
                       <Table.Data>{type}</Table.Data>
+
                       <Table.Data>{status}</Table.Data>
+
                       <Table.Data>{noOfUsers}</Table.Data>
+
                       <Table.Data>{noOfProjects}</Table.Data>
+
                       <Table.Data>-</Table.Data>
 
                       <Table.Data>

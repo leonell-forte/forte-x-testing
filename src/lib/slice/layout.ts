@@ -6,7 +6,9 @@ const initialState = {
 
 export const layoutSlice = createSlice({
   name: "layout",
+
   initialState,
+
   reducers: {
     setShowSidePanel: (state, action) => {
       state.showSidePanel = action.payload;
@@ -15,4 +17,5 @@ export const layoutSlice = createSlice({
 });
 
 export const { setShowSidePanel } = layoutSlice.actions;
+
 export default layoutSlice.reducer;

@@ -6,7 +6,9 @@ const initialState = {
 
 export const authSlice = createSlice({
   name: "auth",
+
   initialState,
+
   reducers: {
     setEmail: (state, action) => {
       state.email = action.payload;
@@ -15,4 +17,5 @@ export const authSlice = createSlice({
 });
 
 export const { setEmail } = authSlice.actions;
+
 export default authSlice.reducer;

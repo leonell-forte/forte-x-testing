@@ -15,9 +15,12 @@ interface IProp {
 const UserDropdown = ({ user }: IProp) => {
   const { data: organizationList } = useQuery({
     queryKey: ["organizations"],
+
     queryFn: () => organizationService.list(1, true),
   });
+
   const [showDropdown, setShowDropdown] = useState(false);
+
   const [showModal, setShowModal] = useState(false);
 
   const handleLogout = () => {
@@ -28,6 +31,7 @@ const UserDropdown = ({ user }: IProp) => {
 
   const organizations = useMemo(
     () => organizationList?.items || [],
+
     [organizationList]
   );
 
@@ -35,6 +39,7 @@ const UserDropdown = ({ user }: IProp) => {
 
   const handleViewProfile = () => {
     setShowModal(true);
+
     setShowDropdown(false);
   };
 
@@ -58,14 +63,17 @@ const UserDropdown = ({ user }: IProp) => {
         >
           <div className="flex gap-1.5">
             <div className="w-[28px] h-[28px] rounded-full bg-[#D9D9D9]"></div>
+
             <div className="sm:flex items-center px-2 hidden">
               <p className="text-forest-green font-medium">{user?.firstName}</p>
             </div>
           </div>
+
           <div className="px-1.5 cursor-pointer">
             <img alt="arrow" src={arrow} />
           </div>
         </button>
+
         <motion.ul
           initial={{ height: 0 }}
           animate={
@@ -81,6 +89,7 @@ const UserDropdown = ({ user }: IProp) => {
               Profile
             </li>
           </button>
+
           <button
             type="button"
             onClick={handleLogout}

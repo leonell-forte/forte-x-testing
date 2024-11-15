@@ -17,14 +17,18 @@ const OTPForm = ({ handleNext }: ILoginProps) => {
     <div>
       <div className="text-center">
         <p className="text-[24px] md:text-[32px]">Enter confirmation code</p>
+
         <div className="text-[14px] md:text-[18px]">
           <p>We set a code at </p>
+
           <p>{email}</p>
         </div>
       </div>
+
       <div className="my-10">
         <OTPInput onChange={(value) => setOtp(value)} />
       </div>
+
       <Button
         type="button"
         eventName="OTP"

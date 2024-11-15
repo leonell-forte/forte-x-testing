@@ -20,30 +20,42 @@ import { OrgTypes } from "@/pages/Organizations/types";
 
 interface IOrganizationDialogueProps extends IDialogueProps {
   page?: number;
+
   orgId?: string;
 }
 
 const OrganizationDialogue = ({
   handleClose,
+
   isVisible,
+
   page,
+
   orgId,
 }: IOrganizationDialogueProps) => {
   const { data: orgData, isLoading } = useQuery({
     queryKey: ["specific org", orgId],
+
     queryFn: () => organizationService.getOne(orgId!),
+
     enabled: !!orgId,
   });
 
   const {
     handleSubmit,
+
     watch,
+
     setValue,
+
     reset,
+
     getValues,
+
     formState: { errors },
   } = useForm<z.infer<typeof organizations.schema>>({
     resolver: zodResolver(organizations.schema),
+
     defaultValues: organizations.defaultValues(),
   });
 
@@ -57,6 +69,7 @@ const OrganizationDialogue = ({
 
   const onClose = () => {
     reset();
+
     handleClose!();
   };
 
@@ -71,6 +84,7 @@ const OrganizationDialogue = ({
 
       const prevOrganizations = queryClient.getQueryData([
         "organizations",
+
         page,
       ]);
 
@@ -81,6 +95,7 @@ const OrganizationDialogue = ({
         queryClient.setQueryData(["organizations", page], (old: any) => {
           return {
             ...old,
+
             items: [...(old?.items || []), addedOrg.data.data],
           };
         });
@@ -88,7 +103,9 @@ const OrganizationDialogue = ({
 
       setAlert({
         status: "success",
+
         message: `Organization ${orgId ? "updated" : "added"} successfully`,
+
         title: "Success!",
       });
 
@@ -103,11 +120,15 @@ const OrganizationDialogue = ({
     onError: (err: any, newOrg, context) => {
       queryClient.setQueryData(
         ["organizations", page],
+
         context?.prevOrganizations
       );
+
       setAlert({
         status: "error",
+
         title: `Failed ${orgId ? "updating" : "adding"} organization`,
+
         message: err?.response?.data?.message,
       });
     },
@@ -136,6 +157,7 @@ const OrganizationDialogue = ({
             <label htmlFor="" className="w-[200px]">
               Organization
             </label>
+
             <Input
               value={watch("name")}
               onChange={(e) => setValue("name", e.target.value)}
@@ -148,6 +170,7 @@ const OrganizationDialogue = ({
             <label htmlFor="" className="w-[200px]">
               Registered name
             </label>
+
             <Input
               value={watch("registeredName")}
               onChange={(e) => setValue("registeredName", e.target.value)}
@@ -160,6 +183,7 @@ const OrganizationDialogue = ({
             <label htmlFor="" className="w-[200px]">
               Registration #
             </label>
+
             <Input
               value={watch("registrationNumber")}
               onChange={(e) => setValue("registrationNumber", e.target.value)}
@@ -172,6 +196,7 @@ const OrganizationDialogue = ({
             <label htmlFor="" className="w-[200px] pt-3.5">
               Registered address
             </label>
+
             <div className="w-full space-y-[22px]">
               <Input
                 value={watch("registeredAddress")}
@@ -188,6 +213,7 @@ const OrganizationDialogue = ({
                   helperText={errors.state?.message}
                   placeholder="State"
                 />
+
                 <Input
                   value={watch("postalCode")}
                   onChange={(e) => setValue("postalCode", e.target.value)}
@@ -195,6 +221,7 @@ const OrganizationDialogue = ({
                   helperText={errors.postalCode?.message}
                   placeholder="Postal Code"
                 />
+
                 <Input
                   value={watch("country")}
                   onChange={(e) => setValue("country", e.target.value)}
@@ -209,6 +236,7 @@ const OrganizationDialogue = ({
             <label htmlFor="" className="w-[200px]">
               Role
             </label>
+
             <Dropdown
               value={
                 REGIONS.find((item) => item.value === watch("region"))?.label
@@ -220,10 +248,12 @@ const OrganizationDialogue = ({
               helperText={errors.region?.message}
             />
           </div>
+
           <div className="flex items-center gap-4">
             <label htmlFor="" className="w-[200px]">
               Type
             </label>
+
             <Dropdown
               value={TYPES.find((item) => item.value === watch("type"))?.label}
               handleSelect={(val) => setValue("type", val as OrgTypes)}
@@ -233,10 +263,12 @@ const OrganizationDialogue = ({
               helperText={errors.type?.message}
             />
           </div>
+
           <div className="flex items-center gap-4">
             <label htmlFor="" className="w-[200px]">
               Status
             </label>
+
             <Dropdown
               value={
                 STATUS.find((item) => item.value === watch("status"))?.label
@@ -253,6 +285,7 @@ const OrganizationDialogue = ({
             <Button onClick={onClose} buttonType="secondary">
               Cancel
             </Button>
+
             <Button loading={isPending} type="submit">
               Save
             </Button>

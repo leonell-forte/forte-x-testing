@@ -18,32 +18,39 @@ const ProjectsPage = () => {
 
   const { data: projectsList, isLoading: projectLoading } = useQuery({
     queryKey: ["projects", page],
+
     queryFn: () => projectService.list(page),
   });
 
   const { data: organizationList } = useQuery({
     queryKey: ["organizations"],
+
     queryFn: () => organizationService.list(page, true),
   });
 
   const organizations = useMemo(
     () => organizationList?.items || [],
+
     [organizationList]
   );
 
   const projects = useMemo(() => projectsList?.items || [], [projectsList]);
 
   const [modal, setModal] = useState<"project" | "delete" | null>(null);
+
   const [search, setSearch] = useState("");
+
   const [selectedProject, setSelectedProject] = useState<IProject | null>(null);
 
   const handleEditUser = (item: IProject) => {
     setModal("project");
+
     setSelectedProject(item);
   };
 
   const handleCloseModal = () => {
     setModal(null);
+
     setSelectedProject(null);
   };
 
@@ -59,6 +66,7 @@ const ProjectsPage = () => {
             handleClose={handleCloseModal}
           />
         );
+
       case "delete":
         return (
           <DeleteDialogue
@@ -74,6 +82,7 @@ const ProjectsPage = () => {
   return (
     <>
       {renderModal()}
+
       <div className="space-y-1.5">
         <div className="flex justify-between items-center gap-4">
           <SearchInput
@@ -81,6 +90,7 @@ const ProjectsPage = () => {
             onChange={(e) => setSearch(e.target.value)}
             className="max-w-[286px]"
           />
+
           <Button eventName="Add User" onClick={() => setModal("project")}>
             Add Project
           </Button>
@@ -98,6 +108,7 @@ const ProjectsPage = () => {
                   {TABLE_HEADER.map((key, headerIndex) => {
                     return <Table.Header key={headerIndex}>{key}</Table.Header>;
                   })}
+
                   <Table.Header></Table.Header>
                 </Table.Row>
               </Table.Head>
@@ -107,12 +118,17 @@ const ProjectsPage = () => {
                   return (
                     <Table.Row key={bodyIndex}>
                       <Table.Data>{name}</Table.Data>
+
                       <Table.Data>{provider.name}</Table.Data>
+
                       <Table.Data>
                         {outcomes?.map((item) => item.name).join(", ")}
                       </Table.Data>
+
                       <Table.Data>-</Table.Data>
+
                       <Table.Data>-</Table.Data>
+
                       <Table.Data>
                         <Button
                           eventName="Edit User"
@@ -124,6 +140,7 @@ const ProjectsPage = () => {
                         >
                           <img alt="pencil" src={pencil} />
                         </Button>
+
                         <Button
                           eventName="Edit User"
                           id={id.toString()}

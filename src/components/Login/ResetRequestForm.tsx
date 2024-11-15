@@ -13,10 +13,13 @@ const ResetRequestForm = ({ handleNext }: ILoginProps) => {
 
   const {
     handleSubmit,
+
     formState: { errors },
+
     setValue,
   } = useForm<z.infer<typeof resetRequest.schema>>({
     resolver: zodResolver(resetRequest.schema),
+
     defaultValues: resetRequest.defaultValues,
   });
 
@@ -32,6 +35,7 @@ const ResetRequestForm = ({ handleNext }: ILoginProps) => {
           <p className="text-[24px] md:text-[32px] font-medium">
             Reset password
           </p>
+
           <p className="text-[18px]">
             Forgot your password? Enter your email and we’ll send you a 4-digit
             code.
@@ -48,6 +52,7 @@ const ResetRequestForm = ({ handleNext }: ILoginProps) => {
 
       <div className="flex flex-col gap-4">
         <Button type="submit">Get 4-digit code</Button>
+
         <Button buttonType="tertiary" onClick={() => navigate("/")}>
           Go back
         </Button>

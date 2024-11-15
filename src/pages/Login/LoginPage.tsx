@@ -26,6 +26,7 @@ const LoginPage = () => {
       switch (step) {
         case 0:
           return <LoginForm handleNext={handleNextStep} />;
+
         case 1:
           return <OTPForm handleNext={() => navigate("/users")} />;
       }
@@ -46,10 +47,12 @@ const LoginPage = () => {
         <div className="max-w-[437px] w-auto h-auto mx-auto md:mx-0">
           <img alt="jobs" src={jobs} />
         </div>
+
         <div className="space-y-6 text-center md:text-left">
           <p className="text-[40px] md:text-[52px] font-famaime leading-[110%]">
             Providing the world’s talent with opportunity
           </p>
+
           <p className="text-[18px] md:text-[24px] leading-[110%]">
             We believe connecting talent with opportunity reduces hardship.
             We’re working towards a world free from financial stress, and where
@@ -66,6 +69,7 @@ const LoginPage = () => {
             src="/logo.png"
             className="w-auto h-auto mx-auto max-w-[122px]"
           />
+
           {renderStep(step)}
         </div>
       </Card>

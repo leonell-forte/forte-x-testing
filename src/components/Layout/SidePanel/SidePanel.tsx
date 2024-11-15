@@ -27,6 +27,7 @@ const SidePanel = () => {
 
   const variants = {
     true: { left: 0 },
+
     false: { left: !isMobile ? 0 : "-100%" },
   };
 
@@ -44,9 +45,12 @@ const SidePanel = () => {
         >
           <img src={close} alt="" />
         </button>
+
         {MENUS.map((item, index) => {
           const { name, link } = item;
+
           const active = pathname === link;
+
           return (
             <Link key={index} to={link}>
               <li

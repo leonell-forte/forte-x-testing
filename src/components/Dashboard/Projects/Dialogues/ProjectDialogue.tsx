@@ -21,36 +21,52 @@ import Spinner from "../../../../components/ui/spinner/spinner";
 
 interface IProjectDialogueProps extends IDialogueProps {
   projectId?: string;
+
   organizations: IOrganization[];
+
   page: number;
 }
 
 const ProjectDialogue = ({
   isVisible,
+
   handleClose,
+
   projectId,
+
   organizations,
+
   page,
 }: IProjectDialogueProps) => {
   const { data: project, isLoading: projectLoading } = useQuery({
     queryKey: ["specific-project", projectId],
+
     queryFn: () => projectService.getOne(projectId!),
+
     enabled: !!projectId,
   });
 
   const form = useForm<z.infer<typeof projects.schema>>({
     resolver: zodResolver(projects.schema),
+
     defaultValues: projects.defaultValues(),
   });
 
   const {
     watch,
+
     setValue,
+
     setError,
+
     getValues,
+
     formState: { errors },
+
     handleSubmit,
+
     reset,
+
     control,
   } = form;
 
@@ -80,6 +96,7 @@ const ProjectDialogue = ({
 
   const close = () => {
     reset();
+
     handleClose!();
   };
 
@@ -102,6 +119,7 @@ const ProjectDialogue = ({
         queryClient.setQueryData(["projects", page], (old: any) => {
           return {
             ...old,
+
             items: [...(old?.items || []), addedProject.data.data],
           };
         });
@@ -111,7 +129,9 @@ const ProjectDialogue = ({
 
       setAlert({
         status: "success",
+
         message: `Project ${projectId ? "updated" : "added"} successfully`,
+
         title: "Success!",
       });
 
@@ -123,7 +143,9 @@ const ProjectDialogue = ({
     onError: (err: any, newProject, context) => {
       setAlert({
         status: "error",
+
         title: `Faild ${projectId ? "updating" : "adding"} project`,
+
         message: err?.response?.data?.message,
       });
 
@@ -155,6 +177,7 @@ const ProjectDialogue = ({
             <label htmlFor="" className="w-[180px]">
               Project name
             </label>
+
             <Controller
               name="name"
               control={control}
@@ -173,6 +196,7 @@ const ProjectDialogue = ({
             <label htmlFor="" className="w-[180px]">
               Provider
             </label>
+
             <Dropdown
               name="providerId"
               value={
@@ -200,6 +224,7 @@ const ProjectDialogue = ({
             <label htmlFor="" className="w-[180px]">
               Funder
             </label>
+
             <Dropdown
               name="funderId"
               value={
@@ -225,7 +250,9 @@ const ProjectDialogue = ({
 
           <div className="flex w-full items-center gap-4">
             <p className="w-[190px]">Outcome</p>
+
             <hr className="w-full" />
+
             <button
               type="button"
               onClick={handleAddOutcome}
@@ -261,6 +288,7 @@ const ProjectDialogue = ({
             <Button onClick={close} buttonType="secondary">
               Cancel
             </Button>
+
             <Button loading={isPending} type="submit">
               Save
             </Button>

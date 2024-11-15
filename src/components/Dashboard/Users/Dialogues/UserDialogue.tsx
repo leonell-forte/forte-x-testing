@@ -33,7 +33,9 @@ const UserDialogue = ({
 }: IUserDialogueProps) => {
   const { data: userData, isLoading } = useQuery({
     queryKey: ["specific user", userId],
+
     queryFn: () => userService.getOne(userId!),
+
     enabled: !!userId,
   });
 
@@ -60,6 +62,7 @@ const UserDialogue = ({
 
   const close = () => {
     reset();
+
     handleClose!();
   };
 
@@ -82,6 +85,7 @@ const UserDialogue = ({
         queryClient.setQueryData(["users", page], (old: any) => {
           return {
             ...old,
+
             items: [...(old?.items || []), addedUser.data.data],
           };
         });
@@ -91,7 +95,9 @@ const UserDialogue = ({
 
       setAlert({
         status: "success",
+
         message: `User ${userId ? "updated" : "added"} successfully`,
+
         title: "Success!",
       });
 
@@ -101,7 +107,9 @@ const UserDialogue = ({
     onError: (err: any, newUser, context) => {
       setAlert({
         status: "error",
+
         title: `Failed ${userId ? "updating" : "adding"} user`,
+
         message: err?.response?.data?.message,
       });
 
@@ -132,6 +140,7 @@ const UserDialogue = ({
             <label htmlFor="" className="w-[140px]">
               Email
             </label>
+
             <Input
               value={watch("email")}
               onChange={(e) => setValue("email", e.target.value)}
@@ -146,6 +155,7 @@ const UserDialogue = ({
             <label htmlFor="" className="w-[140px]">
               First name
             </label>
+
             <Input
               value={watch("firstName")}
               onChange={(e) => setValue("firstName", e.target.value)}
@@ -160,6 +170,7 @@ const UserDialogue = ({
             <label htmlFor="" className="w-[140px]">
               Last name
             </label>
+
             <Input
               value={watch("lastName")}
               onChange={(e) => setValue("lastName", e.target.value)}
@@ -173,6 +184,7 @@ const UserDialogue = ({
             <label htmlFor="" className="w-[140px]">
               Phone number
             </label>
+
             <Input
               value={watch("phoneNumber")}
               onChange={(e) => setValue("phoneNumber", e.target.value)}
@@ -186,6 +198,7 @@ const UserDialogue = ({
             <label htmlFor="" className="w-[140px]">
               Organization
             </label>
+
             <Dropdown
               value={
                 organizations.find(
@@ -207,6 +220,7 @@ const UserDialogue = ({
             <label htmlFor="" className="w-[140px]">
               Role
             </label>
+
             <Dropdown
               value={ROLES.find((item) => item.value === watch("role"))?.label}
               handleSelect={(val) => setValue("role", val)}
@@ -221,6 +235,7 @@ const UserDialogue = ({
             <Button onClick={close} buttonType="secondary">
               Cancel
             </Button>
+
             <Button loading={isPending} type="submit">
               Save
             </Button>

@@ -3,6 +3,7 @@ export const filterBySearch = (
   search: string
 ): any => {
   let filteredList: Record<string, string>[] = [];
+
   list.forEach((item) => {
     const isMatch = Object.values(item).some((item) =>
       item.toLowerCase().includes(search.toLowerCase())

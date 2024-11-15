@@ -20,39 +20,54 @@ import { IOrganization } from "../../../pages/Organizations/types";
 
 interface IUserDialogueProps extends IDialogueProps {
   userId?: string;
+
   organizations: IOrganization[];
+
   page?: number;
 }
 
 const ViewProfileDialogue = ({
   isVisible,
+
   organizations,
+
   handleClose,
+
   userId,
+
   page,
 }: IUserDialogueProps) => {
   const [onEdit, setOnEdit] = useState(false);
 
   const { data: userData, isLoading } = useQuery({
     queryKey: ["specific user", userId],
+
     queryFn: () => userService.getOne(userId!),
+
     enabled: !!userId,
   });
 
   const {
     handleSubmit,
+
     formState: { errors },
+
     setValue,
+
     getValues,
+
     watch,
+
     reset,
   } = useForm<z.infer<typeof users.schema>>({
     resolver: zodResolver(users.schema),
+
     defaultValues: users.defaultValues(),
   });
 
   useEffect(() => {
     // sets default value of the form
+
     if (userData) {
       reset(users.defaultValues(userData));
     }
@@ -62,6 +77,7 @@ const ViewProfileDialogue = ({
 
   const close = () => {
     reset();
+
     handleClose!();
   };
 
@@ -80,6 +96,7 @@ const ViewProfileDialogue = ({
       queryClient.setQueryData(["users", page], (old: any) => {
         return {
           ...old,
+
           items: [...(old?.items || []), addedUser.data.data],
         };
       });
@@ -90,7 +107,9 @@ const ViewProfileDialogue = ({
 
       setAlert({
         status: "success",
+
         message: `Profile updated successfully`,
+
         title: "Success!",
       });
 
@@ -100,12 +119,15 @@ const ViewProfileDialogue = ({
     onError: (err: any, newUser, context) => {
       setAlert({
         status: "error",
+
         title: `Failed updating profile`,
+
         message: err?.response?.data?.message,
       });
 
       queryClient.setQueryData(["users", page], context?.previousUsers);
     },
+
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["users", page] });
     },
@@ -131,6 +153,7 @@ const ViewProfileDialogue = ({
             <label htmlFor="" className="w-[140px]">
               Email
             </label>
+
             <Input
               disabled
               value={watch("email")}
@@ -146,6 +169,7 @@ const ViewProfileDialogue = ({
             <label htmlFor="" className="w-[140px]">
               First name
             </label>
+
             <Input
               disabled={!onEdit}
               value={watch("firstName")}
@@ -161,6 +185,7 @@ const ViewProfileDialogue = ({
             <label htmlFor="" className="w-[140px]">
               Last name
             </label>
+
             <Input
               disabled={!onEdit}
               value={watch("lastName")}
@@ -175,6 +200,7 @@ const ViewProfileDialogue = ({
             <label htmlFor="" className="w-[140px]">
               Phone number
             </label>
+
             <Input
               disabled={!onEdit}
               value={watch("phoneNumber")}
@@ -189,6 +215,7 @@ const ViewProfileDialogue = ({
             <label htmlFor="" className="w-[140px]">
               Organization
             </label>
+
             <Dropdown
               disabled
               value={
@@ -207,10 +234,12 @@ const ViewProfileDialogue = ({
               readOnly
             />
           </div>
+
           <div className="flex items-center">
             <label htmlFor="" className="w-[140px]">
               Role
             </label>
+
             <Dropdown
               disabled
               value={ROLES.find((item) => item.value === watch("role"))?.label}
@@ -230,6 +259,7 @@ const ViewProfileDialogue = ({
                 <Button onClick={() => setOnEdit(false)} buttonType="secondary">
                   Cancel
                 </Button>
+
                 <Button loading={isPending} type="submit">
                   Save
                 </Button>

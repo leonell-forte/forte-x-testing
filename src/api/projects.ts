@@ -12,32 +12,38 @@ class ProjectsService {
     params.append("$pageSize", DEFAULT_PAGE_SIZE);
 
     const res = await api.get(`/projects?${params}`);
+
     return res.data;
   }
 
   async add(project: z.infer<typeof projects.schema>) {
     const res = await api.post("/projects", project);
+
     return res;
   }
 
   async delete(id: string) {
     const res = await api.delete(`/projects/${id}`);
+
     return res;
   }
+
   async getOne(id: string) {
     const response = await api.get(`/projects/${id}`);
+
     return response.data.data;
   }
 
   async update(project: z.infer<typeof projects.schema>) {
-    console.log(project);
-
     const data = {
       ...project,
+
       outcomes: [
         ...project.outcomes.map((item) => ({
           id: item.id,
+
           name: item.name,
+
           description: item.description,
         })),
       ],

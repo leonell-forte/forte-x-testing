@@ -6,6 +6,7 @@ import * as amplitude from "@amplitude/analytics-browser";
 
 const Providers = ({ children }: { children: ReactNode }) => {
   const location = useLocation();
+
   useEffect(() => {
     if (window !== undefined) {
       amplitude.init(process.env.REACT_APP_AMPLITUDE_API_KEY as string, {
@@ -18,6 +19,7 @@ const Providers = ({ children }: { children: ReactNode }) => {
     const path = location.pathname.split("/").join(" ").toUpperCase();
 
     // Track page views on route change
+
     amplitude.track(`${path || "LOGIN"} Page View`);
   }, [location]);
   return (

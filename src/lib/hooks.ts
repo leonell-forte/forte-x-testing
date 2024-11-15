@@ -6,11 +6,16 @@ import { IAlert, setToast } from "./slice/alert";
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
+
 export const useAppSelector = useSelector.withTypes<RootState>();
+
 export const useAppStore = useStore.withTypes<AppStore>();
+
 export const cookie = new Cookies();
+
 export const useOutsideClick = (
   ref: MutableRefObject<HTMLElement | null>,
+
   callBack: () => void
 ) => {
   const handleClick = useCallback(
@@ -19,11 +24,13 @@ export const useOutsideClick = (
         callBack();
       }
     },
+
     [ref, callBack] // Depend on ref and callBack to ensure stability
   );
 
   useEffect(() => {
     document.addEventListener("click", handleClick);
+
     return () => document.removeEventListener("click", handleClick);
   }, [handleClick]);
 
@@ -39,6 +46,7 @@ export const useEscapeKey = (callback: () => void): void => {
     };
 
     document.addEventListener("keydown", handleKeyDown);
+
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
@@ -47,6 +55,7 @@ export const useEscapeKey = (callback: () => void): void => {
 
 export const useAlert = () => {
   const dispatch = useAppDispatch();
+
   const alert = useAppSelector((state) => state.alert);
 
   const setAlert = (alert: IAlert) => {
@@ -58,7 +67,9 @@ export const useAlert = () => {
 
 export const useDebounce = (
   callback: () => void,
+
   time: number,
+
   dependency: any
 ) => {
   useEffect(() => {
@@ -74,6 +85,7 @@ export const useDebounce = (
 
 const BREAKPOINTS = {
   mobile: 768, // Anything less than 768px is considered mobile
+
   tablet: 1024, // Anything between 768px and 1024px is considered tablet
 };
 
@@ -98,8 +110,10 @@ export const useScreenSize = () => {
 
   // Determine the screen size categories
   const isMobile = screenWidth <= BREAKPOINTS.mobile;
+
   const isTablet =
     screenWidth > BREAKPOINTS.mobile && screenWidth <= BREAKPOINTS.tablet;
+
   const isDesktop = screenWidth > BREAKPOINTS.tablet;
 
   return { isMobile, isTablet, isDesktop };

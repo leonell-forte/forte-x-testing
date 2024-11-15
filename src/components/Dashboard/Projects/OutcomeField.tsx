@@ -4,19 +4,29 @@ import { Controller } from "react-hook-form";
 
 interface IOutcomeFieldProps {
   count: number;
+
   handleDelete?: () => void;
+
   nameError?: string;
+
   descriptionError?: string;
+
   index: number;
+
   control: any;
 }
 
 const OutcomeField = ({
   handleDelete,
+
   count,
+
   nameError,
+
   descriptionError,
+
   index,
+
   control,
 }: IOutcomeFieldProps) => {
   return (
@@ -25,6 +35,7 @@ const OutcomeField = ({
         <label htmlFor="" className="w-[180px]">
           Outcome {count} name
         </label>
+
         <div className=" flex w-full items-center gap-[17px]">
           <Controller
             name={`outcomes.${index}.name`}
@@ -38,6 +49,7 @@ const OutcomeField = ({
               />
             )}
           />
+
           {handleDelete && (
             <button
               type="button"
@@ -54,6 +66,7 @@ const OutcomeField = ({
         <label htmlFor="" className="w-[180px] mt-3">
           Description
         </label>
+
         <Controller
           name={`outcomes.${index}.description`}
           control={control}

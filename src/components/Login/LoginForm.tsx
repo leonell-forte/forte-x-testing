@@ -15,30 +15,41 @@ import { useState } from "react";
 
 const LoginForm = ({ handleNext }: ILoginProps) => {
   const [loading, setLoading] = useState(false);
+
   const dispatch = useAppDispatch();
 
   const {
     handleSubmit,
+
     getValues,
+
     formState: { errors },
+
     setValue,
+
     setError,
   } = useForm<z.infer<typeof login.schema>>({
     resolver: zodResolver(login.schema),
+
     defaultValues: login.defaultValues,
   });
 
   const onSubmit = async (values: z.infer<typeof login.schema>) => {
     setLoading(true);
+
     try {
       const res = await authService.login(values);
+
       amplitude.track("Login Form Submission");
+
       cookie.set("access_token", res.data.data.token, { path: "/" });
+
       handleNext!();
+
       dispatch(setEmail(values.email));
     } catch (err) {
-      console.log(err);
       setError("email", { message: "Please use correct email" });
+
       setError("password", { message: "Please use correct password" });
     } finally {
       setLoading(false);
@@ -62,6 +73,7 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
             type="email"
             autoComplete="off"
           />
+
           <Input
             onChange={(e) => setValue("password", e.target.value)}
             error={!!errors.password?.message}
@@ -91,14 +103,19 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
           <Button type="submit" fullWidth loading={loading}>
             Continue
           </Button>
+
           <div className="flex items-center gap-4">
             <hr className="w-full" />
+
             <p className="text-[14px] md:ext-[18px]">OR</p>
+
             <hr className="w-full" />
           </div>
+
           <Button type="button" fullWidth buttonType="secondary">
             Continue with google{" "}
           </Button>
+
           <p className="text-center text-[14px]">
             Don`&apos;t have an account?{" "}
             <Link className="font-bold" to="/signup">

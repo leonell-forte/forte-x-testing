@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import Input from "../ui/input";
 import Checkbox from "../ui/checkbox";
 import Button from "../ui/button";
@@ -18,18 +18,24 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
 
   const {
     setValue,
+
     handleSubmit,
+
     formState: { errors },
   } = useForm<z.infer<typeof signup.schema>>({
     resolver: zodResolver(signup.schema),
+
     defaultValues: signup.defaultValues,
   });
 
   const onSubmit = async (values: z.infer<typeof signup.schema>) => {
     setLoading(true);
+
     try {
       const res = await authService.signup(values);
+
       cookie.set("access_token", res.data.token, { path: "/" });
+
       handleNext!();
     } catch (err) {
       console.log(err);
@@ -43,47 +49,51 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
         <div className="flex flex-col w-full gap-[15px]">
           <Input
             onChange={(e) => setValue("firstName", e.target.value)}
-            autoComplete="off"
+            autoComplete="given-name"
             label="First name"
             error={!!errors.firstName?.message}
             helperText={errors.firstName?.message}
           />
+
           <Input
             onChange={(e) => setValue("lastName", e.target.value)}
-            autoComplete="off"
+            autoComplete="family-name"
             label="Last name"
             error={!!errors.lastName?.message}
             helperText={errors.lastName?.message}
           />
+
           <Input
             onChange={(e) => setValue("email", e.target.value)}
+            autoComplete="email"
             type="email"
             label="Email"
             error={!!errors.email?.message}
             helperText={errors.email?.message}
           />
+
           <Input
             onChange={(e) => setValue("phoneNumber", e.target.value)}
-            autoComplete="off"
+            autoComplete="tel"
             label="Phone number"
             error={!!errors.phoneNumber?.message}
             helperText={errors.phoneNumber?.message}
           />
+
           <Input
             onChange={(e) => setValue("password", e.target.value)}
             label="Password"
             type="password"
             error={!!errors.password?.message}
             helperText={errors.password?.message}
-            autoComplete="off"
           />
+
           <Input
             onChange={(e) => setValue("confirmPassword", e.target.value)}
             label="Re-enter password"
             type="password"
             error={!!errors.confirmPassword?.message}
             helperText={errors.confirmPassword?.message}
-            autoComplete="off"
           />
 
           <div className="flex items-center justify-between">
@@ -127,13 +137,16 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
           </Button>
           <div className="flex items-center gap-4">
             <hr className="w-full" />
+
             <p className="text-[14px] md:ext-[18px]">OR</p>
+
             <hr className="w-full" />
           </div>{" "}
           <Button type="button" fullWidth buttonType="secondary">
             CONTINUE WITH GOOGLE{" "}
           </Button>
         </div>
+
         <p className="text-center text-[14px]">
           Have an account?{" "}
           <Link className="font-bold" to="/">
