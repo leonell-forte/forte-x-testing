@@ -76,12 +76,13 @@ const OrganizationDialogue = ({
       return { prevOrganizations };
     },
     onSuccess: (addedOrg) => {
-      queryClient.setQueryData(["organizations", page], (old: any) => {
-        return {
-          ...old,
-          items: [...(old?.items || []), addedOrg.data.data],
-        };
-      });
+      !orgId &&
+        queryClient.setQueryData(["organizations", page], (old: any) => {
+          return {
+            ...old,
+            items: [...(old?.items || []), addedOrg.data.data],
+          };
+        });
 
       setAlert({
         status: "success",

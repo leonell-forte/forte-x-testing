@@ -24,6 +24,28 @@ class ProjectsService {
     const res = await api.delete(`/projects/${id}`);
     return res;
   }
+  async getOne(id: string) {
+    const response = await api.get(`/projects/${id}`);
+    return response.data.data;
+  }
+
+  async update(project: z.infer<typeof projects.schema>) {
+    console.log(project);
+
+    const data = {
+      ...project,
+      outcomes: [
+        ...project.outcomes.map((item) => ({
+          id: item.id,
+          name: item.name,
+          description: item.description,
+        })),
+      ],
+    };
+    const response = await api.put("/projects", data);
+
+    return response;
+  }
 }
 
 const projectService = new ProjectsService();

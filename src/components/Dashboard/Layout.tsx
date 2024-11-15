@@ -11,12 +11,12 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
   });
 
   return (
-    <div className="space-y-5 min-h-screen">
+    <div className="space-y-5 h-screen overflow-scroll">
       <Header user={user} />
-      <div className="px-5 flex gap-4 min-h-[88vh] pb-4 overflow-scroll">
+      <div className="px-5 flex gap-4 min-h-[88vh] pb-4">
         <SidePanel />
 
-        <div className="w-full relative bg-white bg-opacity-[30%] rounded-[10px] pt-[7px] pb-14 px-[14px] min-w-[1280px]">
+        <div className="w-full relative bg-white bg-opacity-[30%] rounded-[10px] pt-[7px] pb-24 px-[14px] min-w-[1280px]">
           {children}
         </div>
       </div>

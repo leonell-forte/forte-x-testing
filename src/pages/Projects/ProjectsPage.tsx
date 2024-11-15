@@ -54,7 +54,7 @@ const ProjectsPage = () => {
           <ProjectDialogue
             page={page}
             organizations={organizations}
-            project={selectedProject}
+            projectId={(selectedProject?.id || "") as string}
             isVisible={modal === "project"}
             handleClose={handleCloseModal}
           />
@@ -109,7 +109,7 @@ const ProjectsPage = () => {
                       <Table.Data>{name}</Table.Data>
                       <Table.Data>{provider.name}</Table.Data>
                       <Table.Data>
-                        {outcomes.map((item) => item.name).join(", ")}
+                        {outcomes?.map((item) => item.name).join(", ")}
                       </Table.Data>
                       <Table.Data>-</Table.Data>
                       <Table.Data>-</Table.Data>
@@ -145,11 +145,11 @@ const ProjectsPage = () => {
             </Table.Container>
           )}
 
-          <div className="flex justify-end">
+          <div className="flex justify-end absolute bottom-4 right-2">
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}
-              total={projects.length}
+              total={projectsList?.totalSize}
             />
           </div>
         </div>
