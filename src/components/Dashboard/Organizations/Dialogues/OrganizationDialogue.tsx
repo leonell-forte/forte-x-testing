@@ -60,6 +60,7 @@ const OrganizationDialogue = ({
     handleClose!();
   };
 
+  // implements optimistic update after adding or updating organization
   const { mutateAsync: addOrganization, isPending } = useMutation({
     mutationFn: orgId
       ? () => organizationService.update(getValues())

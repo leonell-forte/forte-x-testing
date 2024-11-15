@@ -38,8 +38,6 @@ const ProjectDialogue = ({
     enabled: !!projectId,
   });
 
-  console.log(project);
-
   const form = useForm<z.infer<typeof projects.schema>>({
     resolver: zodResolver(projects.schema),
     defaultValues: projects.defaultValues(),
@@ -85,6 +83,7 @@ const ProjectDialogue = ({
     handleClose!();
   };
 
+  // implements optimistic update after adding or editing project
   const { mutateAsync: addProject, isPending } = useMutation({
     mutationFn: projectId
       ? () => projectService.update(getValues())

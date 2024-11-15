@@ -63,6 +63,7 @@ const UserDialogue = ({
     handleClose!();
   };
 
+  // implements optimistic update after adding user
   const { mutateAsync: addUser, isPending } = useMutation({
     mutationFn: userId
       ? () => userService.update(getValues())

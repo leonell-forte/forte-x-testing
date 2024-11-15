@@ -10,7 +10,7 @@ class UserService {
 
     params.append("$pageSize", DEFAULT_PAGE_SIZE);
     params.append("$pageNum", page.toString());
-    // params.append("$filter", "contains('organizations.name', 'forte')");
+    // params.append("$filter", "contains('user.firstName', 'leonell')");
 
     const res = await api.get(`/users?${params.toString()}`);
 
