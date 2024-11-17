@@ -10,7 +10,6 @@ import { useQuery } from "@tanstack/react-query";
 import projectService from "../../api/projects";
 import organizationService from "../../api/organization";
 import { IProject } from "./types";
-import Spinner from "../../components/ui/spinner/spinner";
 import DeleteDialogue from "../../components/Dashboard/Projects/Dialogues/DeleteDialogue";
 import { useDebounce } from "../../lib/hooks";
 
@@ -47,7 +46,10 @@ const ProjectsPage = () => {
     [organizationList]
   );
 
-  const projects = useMemo(() => projectsList?.items || [], [projectsList]);
+  const projects: IProject[] = useMemo(
+    () => projectsList?.items || [],
+    [projectsList]
+  );
 
   const [modal, setModal] = useState<"project" | "delete" | null>(null);
 
@@ -108,70 +110,67 @@ const ProjectsPage = () => {
         </div>
 
         <div className="space-y-[18px]">
-          {projectLoading ? (
-            <div className="w-full h-[500px] flex items-center justify-center">
-              <Spinner />
-            </div>
-          ) : (
-            <Table.Container>
-              <Table.Head>
-                <Table.Row>
-                  {TABLE_HEADER.map((key, headerIndex) => {
-                    return <Table.Header key={headerIndex}>{key}</Table.Header>;
-                  })}
-
-                  <Table.Header></Table.Header>
-                </Table.Row>
-              </Table.Head>
-              <Table.Body>
-                {projects.map((item: IProject, bodyIndex: number) => {
-                  const { id, name, provider, outcomes } = item;
-                  return (
-                    <Table.Row key={bodyIndex}>
-                      <Table.Data>{name}</Table.Data>
-
-                      <Table.Data>{provider.name}</Table.Data>
-
-                      <Table.Data>
-                        {outcomes?.map((item) => item.name).join(", ")}
-                      </Table.Data>
-
-                      <Table.Data>-</Table.Data>
-
-                      <Table.Data>-</Table.Data>
-
-                      <Table.Data>
-                        <Button
-                          eventName="Edit User"
-                          // id={project}
-                          buttonType="default"
-                          type="button"
-                          onClick={() => handleEditUser(item)}
-                          className="p-[3px]"
-                        >
-                          <img alt="pencil" src={pencil} />
-                        </Button>
-
-                        <Button
-                          eventName="Edit User"
-                          id={id.toString()}
-                          buttonType="default"
-                          type="button"
-                          onClick={() => {
-                            setModal("delete");
-                            setSelectedProject(item);
-                          }}
-                          className="p-[3px]"
-                        >
-                          <img alt="pencil" src={bin} />
-                        </Button>
-                      </Table.Data>
-                    </Table.Row>
-                  );
+          <Table.Container
+            isEmpty={!projects.length}
+            isLoading={projectLoading}
+          >
+            <Table.Head>
+              <Table.Row>
+                {TABLE_HEADER.map((key, headerIndex) => {
+                  return <Table.Header key={headerIndex}>{key}</Table.Header>;
                 })}
-              </Table.Body>
-            </Table.Container>
-          )}
+
+                <Table.Header></Table.Header>
+              </Table.Row>
+            </Table.Head>
+            <Table.Body>
+              {projects.map((item: IProject, bodyIndex: number) => {
+                const { id, name, provider, outcomes } = item;
+                return (
+                  <Table.Row key={bodyIndex}>
+                    <Table.Data>{name}</Table.Data>
+
+                    <Table.Data>{provider.name}</Table.Data>
+
+                    <Table.Data>
+                      {outcomes?.map((item) => item.name).join(", ")}
+                    </Table.Data>
+
+                    <Table.Data>-</Table.Data>
+
+                    <Table.Data>-</Table.Data>
+
+                    <Table.Data>
+                      <Button
+                        eventName="Edit User"
+                        // id={project}
+                        buttonType="default"
+                        type="button"
+                        onClick={() => handleEditUser(item)}
+                        className="p-[3px]"
+                      >
+                        <img alt="pencil" src={pencil} />
+                      </Button>
+
+                      <Button
+                        eventName="Edit User"
+                        id={id.toString()}
+                        buttonType="default"
+                        type="button"
+                        onClick={() => {
+                          setModal("delete");
+                          setSelectedProject(item);
+                        }}
+                        className="p-[3px]"
+                      >
+                        <img alt="pencil" src={bin} />
+                      </Button>
+                    </Table.Data>
+                  </Table.Row>
+                );
+              })}
+            </Table.Body>
+          </Table.Container>
 
           <div className="flex justify-end absolute bottom-4 right-2">
             <Pagination

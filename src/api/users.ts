@@ -30,7 +30,7 @@ class UserService {
         exact: true,
       },
 
-      "organization.name": {
+      "organization.id": {
         value: organization!,
         exact: false,
       },

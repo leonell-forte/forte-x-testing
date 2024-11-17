@@ -9,7 +9,6 @@ import { IUser } from "./types";
 import UserDialogue from "../../components/Dashboard/Users/Dialogues/UserDialogue";
 import { useQuery } from "@tanstack/react-query";
 import userService from "../../api/users";
-import Spinner from "../../components/ui/spinner/spinner";
 import organizationService from "../../api/organization";
 import { IOrganization } from "../Organizations/types";
 import { ROLES } from "../../lib/constants";
@@ -43,14 +42,14 @@ const UsersPage = () => {
   const { data: organizationList, isLoading: orgLoading } = useQuery({
     queryKey: ["organizations"],
 
-    queryFn: () => organizationService.list(page, true),
+    queryFn: () => organizationService.list(1, true),
   });
 
   const [modal, setModal] = useState<"user" | null>(null);
 
   const [selectedUser, setSelectedUser] = useState<string>("");
 
-  const users = useMemo(() => userList?.items || [], [userList]);
+  const users: IUser[] = useMemo(() => userList?.items || [], [userList]);
 
   const organizations = useMemo(
     () => organizationList?.items || [],
@@ -122,7 +121,7 @@ const UsersPage = () => {
             className="max-w-[166px]"
             options={organizations.map((item: IOrganization) => ({
               label: item.registeredName,
-              value: item.registeredName,
+              value: item.id,
             }))}
             readOnly
             isMultiSelect
@@ -130,63 +129,57 @@ const UsersPage = () => {
         </div>
 
         <div className="space-y-[18px]">
-          {userLoading ? (
-            <div className="w-full h-[500px] flex items-center justify-center">
-              <Spinner />
-            </div>
-          ) : (
-            <Table.Container>
-              <Table.Head>
-                <Table.Row>
-                  {TABLE_HEADER.map((key, headerIndex) => {
-                    return <Table.Header key={headerIndex}>{key}</Table.Header>;
-                  })}
-
-                  <Table.Header></Table.Header>
-                </Table.Row>
-              </Table.Head>
-              <Table.Body>
-                {users.map((item: IUser, bodyIndex: number) => {
-                  const {
-                    id,
-                    firstName,
-                    lastName,
-                    email,
-                    phoneNumber,
-                    role,
-                    organization,
-                  } = item;
-
-                  return (
-                    <Table.Row key={bodyIndex}>
-                      <Table.Data>{`${firstName} ${lastName}`}</Table.Data>
-
-                      <Table.Data>{email}</Table.Data>
-
-                      <Table.Data>{phoneNumber}</Table.Data>
-
-                      <Table.Data>{role}</Table.Data>
-
-                      <Table.Data>{organization}</Table.Data>
-
-                      <Table.Data>
-                        <Button
-                          eventName="Edit User"
-                          id={id}
-                          buttonType="default"
-                          type="button"
-                          onClick={() => handleEditUser(item)}
-                          className="p-[3px]"
-                        >
-                          <img alt="pencil" src={pencil} />
-                        </Button>
-                      </Table.Data>
-                    </Table.Row>
-                  );
+          <Table.Container isEmpty={!users.length} isLoading={userLoading}>
+            <Table.Head>
+              <Table.Row>
+                {TABLE_HEADER.map((key, headerIndex) => {
+                  return <Table.Header key={headerIndex}>{key}</Table.Header>;
                 })}
-              </Table.Body>
-            </Table.Container>
-          )}
+
+                <Table.Header></Table.Header>
+              </Table.Row>
+            </Table.Head>
+            <Table.Body>
+              {users.map((item: IUser, bodyIndex: number) => {
+                const {
+                  id,
+                  firstName,
+                  lastName,
+                  email,
+                  phoneNumber,
+                  role,
+                  organization,
+                } = item;
+
+                return (
+                  <Table.Row key={bodyIndex}>
+                    <Table.Data>{`${firstName} ${lastName}`}</Table.Data>
+
+                    <Table.Data>{email}</Table.Data>
+
+                    <Table.Data>{phoneNumber}</Table.Data>
+
+                    <Table.Data>{role}</Table.Data>
+
+                    <Table.Data>{organization}</Table.Data>
+
+                    <Table.Data>
+                      <Button
+                        eventName="Edit User"
+                        id={id}
+                        buttonType="default"
+                        type="button"
+                        onClick={() => handleEditUser(item)}
+                        className="p-[3px]"
+                      >
+                        <img alt="pencil" src={pencil} />
+                      </Button>
+                    </Table.Data>
+                  </Table.Row>
+                );
+              })}
+            </Table.Body>
+          </Table.Container>
 
           <div className="flex justify-end absolute bottom-4 right-2">
             <Pagination

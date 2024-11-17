@@ -48,7 +48,7 @@ const OrganizationsPage = () => {
       organizationService.list(page, false, debouncedSearch, filters),
   });
 
-  const organizations = useMemo(
+  const organizations: IOrganization[] = useMemo(
     () => organizationList?.items || [],
 
     [organizationList]
@@ -141,7 +141,7 @@ const OrganizationsPage = () => {
               <Spinner />
             </div>
           ) : (
-            <Table.Container>
+            <Table.Container isEmpty={!organizations.length}>
               <Table.Head>
                 <Table.Row>
                   {TABLE_HEADER.map((key, headerIndex) => {

@@ -13,7 +13,7 @@ class OrganizationService {
 
     search?: string,
 
-    filters?: IFilters
+    filters?: IFilters | null
   ) {
     const params = new URLSearchParams();
 
@@ -48,11 +48,13 @@ class OrganizationService {
       },
     };
 
-    if (search || Object.values(filters!).some((item) => item)) {
+    if (generateODataQuery(searchFilter)) {
       params.append("$filter", generateODataQuery(searchFilter));
     }
 
-    if (listAll) params.append("listAll", "true");
+    if (listAll) {
+      params.append("$listAll", "true");
+    }
 
     const res = await api.get(`/organizations?${params}`);
 
