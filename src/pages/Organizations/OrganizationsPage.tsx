@@ -136,75 +136,72 @@ const OrganizationsPage = () => {
         </div>
 
         <div className="space-y-[18px]">
-          {orgLoading ? (
-            <div className="w-full h-[500px] flex items-center justify-center">
-              <Spinner />
-            </div>
-          ) : (
-            <Table.Container isEmpty={!organizations.length}>
-              <Table.Head>
-                <Table.Row>
-                  {TABLE_HEADER.map((key, headerIndex) => {
-                    return <Table.Header key={headerIndex}>{key}</Table.Header>;
-                  })}
-
-                  <Table.Header></Table.Header>
-                </Table.Row>
-              </Table.Head>
-              <Table.Body>
-                {organizations.map((item: IOrganization, bodyIndex: number) => {
-                  const {
-                    id,
-                    name,
-                    registeredName,
-                    region,
-                    type,
-                    status,
-                    registeredAddress,
-                    registrationNumber,
-                    noOfProjects,
-                    noOfUsers,
-                  } = item;
-                  return (
-                    <Table.Row key={bodyIndex}>
-                      <Table.Data>{name}</Table.Data>
-
-                      <Table.Data>{registeredName}</Table.Data>
-
-                      <Table.Data>{registeredAddress}</Table.Data>
-
-                      <Table.Data>{registrationNumber}</Table.Data>
-
-                      <Table.Data>{region}</Table.Data>
-
-                      <Table.Data>{type}</Table.Data>
-
-                      <Table.Data>{status}</Table.Data>
-
-                      <Table.Data>{noOfUsers}</Table.Data>
-
-                      <Table.Data>{noOfProjects}</Table.Data>
-
-                      <Table.Data>-</Table.Data>
-
-                      <Table.Data>
-                        <Button
-                          eventName="Edit User"
-                          id={id}
-                          buttonType="default"
-                          type="button"
-                          onClick={() => handleEditOrg(id!)}
-                          className="p-[3px]"
-                        >
-                          <img alt="pencil" src={pencil} />
-                        </Button>
-                      </Table.Data>
-                    </Table.Row>
-                  );
+          <Table.Container
+            isEmpty={!organizations.length}
+            isLoading={orgLoading}
+          >
+            <Table.Head>
+              <Table.Row>
+                {TABLE_HEADER.map((key, headerIndex) => {
+                  return <Table.Header key={headerIndex}>{key}</Table.Header>;
                 })}
-              </Table.Body>
-            </Table.Container>
-          )}
+
+                <Table.Header></Table.Header>
+              </Table.Row>
+            </Table.Head>
+            <Table.Body>
+              {organizations.map((item: IOrganization, bodyIndex: number) => {
+                const {
+                  id,
+                  name,
+                  registeredName,
+                  region,
+                  type,
+                  status,
+                  registeredAddress,
+                  registrationNumber,
+                  noOfProjects,
+                  noOfUsers,
+                } = item;
+                return (
+                  <Table.Row key={bodyIndex}>
+                    <Table.Data>{name}</Table.Data>
+
+                    <Table.Data>{registeredName}</Table.Data>
+
+                    <Table.Data>{registeredAddress}</Table.Data>
+
+                    <Table.Data>{registrationNumber}</Table.Data>
+
+                    <Table.Data>{region}</Table.Data>
+
+                    <Table.Data>{type}</Table.Data>
+
+                    <Table.Data>{status}</Table.Data>
+
+                    <Table.Data>{noOfUsers}</Table.Data>
+
+                    <Table.Data>{noOfProjects}</Table.Data>
+
+                    <Table.Data>-</Table.Data>
+
+                    <Table.Data>
+                      <Button
+                        eventName="Edit User"
+                        id={id}
+                        buttonType="default"
+                        type="button"
+                        onClick={() => handleEditOrg(id!)}
+                        className="p-[3px]"
+                      >
+                        <img alt="pencil" src={pencil} />
+                      </Button>
+                    </Table.Data>
+                  </Table.Row>
+                );
+              })}
+            </Table.Body>
+          </Table.Container>
 
           <div className="flex justify-end absolute bottom-4 right-2">
             <Pagination
