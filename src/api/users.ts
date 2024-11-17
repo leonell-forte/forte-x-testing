@@ -40,7 +40,9 @@ class UserService {
 
     params.append("$pageNum", page.toString());
 
-    params.append("$filter", generateODataQuery(filter));
+    if (generateODataQuery(filter)) {
+      params.append("$filter", generateODataQuery(filter));
+    }
 
     const res = await api.get(`/users?${params.toString()}`);
 

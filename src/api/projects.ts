@@ -25,7 +25,9 @@ class ProjectsService {
 
     params.append("$pageSize", DEFAULT_PAGE_SIZE);
 
-    params.append("$filter", generateODataQuery(filters));
+    if (generateODataQuery(filters)) {
+      params.append("$filter", generateODataQuery(filters));
+    }
 
     const res = await api.get(`/projects?${params}`);
 
