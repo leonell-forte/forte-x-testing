@@ -17,9 +17,6 @@ class OrganizationService {
   ) {
     const params = new URLSearchParams();
 
-    // inprogress not yet working on be
-    console.log(filters);
-
     params.append("$pageNum", page.toString());
 
     params.append("$pageSize", DEFAULT_PAGE_SIZE);
@@ -27,12 +24,31 @@ class OrganizationService {
     const searchFilter: IODataObject = {
       "organizations.name": {
         value: search!,
-
+        exact: false,
+      },
+      "organizations.registeredName": {
+        value: search!,
+        exact: false,
+      },
+      "organizations.registrationNumber": {
+        value: search!,
+        exact: false,
+      },
+      "organizations.region": {
+        value: filters?.region.toLowerCase()!,
+        exact: false,
+      },
+      "organizations.type": {
+        value: filters?.type.toLowerCase()!,
+        exact: false,
+      },
+      "organizations.status": {
+        value: filters?.status.toLowerCase()!,
         exact: false,
       },
     };
 
-    if (search) {
+    if (search || Object.values(filters!).some((item) => item)) {
       params.append("$filter", generateODataQuery(searchFilter));
     }
 
