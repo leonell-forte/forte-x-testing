@@ -6,7 +6,12 @@ import { IUser } from "../pages/Users/types";
 import { generateODataQuery, IODataObject } from "../lib/utils";
 
 class UserService {
-  async list(page: number, search?: string, role?: string) {
+  async list(
+    page: number,
+    search?: string,
+    role?: string,
+    organization?: string[]
+  ) {
     const params = new URLSearchParams();
 
     const filter: IODataObject = {
@@ -23,6 +28,11 @@ class UserService {
       "user.role": {
         value: role!,
         exact: true,
+      },
+
+      "organization.name": {
+        value: organization!,
+        exact: false,
       },
     };
 

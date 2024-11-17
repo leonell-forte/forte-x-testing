@@ -43,6 +43,7 @@ const Checkbox = ({ label, helperText, dark, ...props }: ICheckboxProps) => {
             icon={<img src={renderIcons().unchecked} alt="unchecked" />}
             checkedIcon={<img src={renderIcons().checked} alt="checked" />}
             {...props}
+            className="flex-shrink-0"
           />
         }
         label={

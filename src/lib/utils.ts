@@ -17,27 +17,44 @@ export const filterBySearch = (
   return filteredList;
 };
 
-export type IODataObject = Record<string, { value: string; exact: boolean }>;
+export type IODataObject = Record<
+  string,
+  { value: string | string[]; exact: boolean }
+>;
 
-export const generateODataQuery = (obj: IODataObject) => {
+export const generateODataQuery = (obj: IODataObject): string => {
   const queryParts = Object.keys(obj)
     .map((key) => {
-      const { value, exact } = obj[key]; // Destructure to get value and exact
+      const { value, exact } = obj[key];
 
-      // Skip this key if the value is empty (null, undefined, or empty string)
-      if (value == null || value === "") {
+      // Skip this key if the value is empty (null, undefined, or empty string/array)
+      if (
+        value == null ||
+        (Array.isArray(value) && value.length === 0) ||
+        value === ""
+      ) {
         return null;
       }
 
-      // If 'exact' is true, use 'eq'; if false, use 'contains'
+      // Handle array values
+      if (Array.isArray(value)) {
+        if (exact) {
+          // Generate 'or' conditions for exact matching
+          return value.map((v) => `'${key}' eq '${v}'`).join(" or ");
+        } else {
+          // Generate 'or' conditions for partial matching
+          return value.map((v) => `contains('${key}', '${v}')`).join(" or ");
+        }
+      }
+
+      // Handle single string values
       if (exact) {
         return `'${key}' eq '${value}'`;
       } else {
-        const fieldName = key.replace(/\./g, "."); // Adjust the format if necessary
-        return `contains('${fieldName}', '${value}')`;
+        return `contains('${key}', '${value}')`;
       }
     })
     .filter((part) => part !== null); // Filter out null entries
 
-  return queryParts.join(" or "); // Combine all parts with 'and'
+  return queryParts.join(" or "); // Combine all parts with 'or'
 };

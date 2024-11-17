@@ -20,16 +20,6 @@ const OrganizationsPage = () => {
 
   const [search, setSearch] = useState("");
 
-  const [selectedOrg, setSelectedOrg] = useState("");
-
-  const [filters, setFilters] = useState<IFilters>({
-    region: "",
-
-    status: "",
-
-    type: "",
-  });
-
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
   useDebounce(
@@ -41,10 +31,21 @@ const OrganizationsPage = () => {
     [search]
   );
 
-  const { data: organizationList, isLoading: orgLoading } = useQuery({
-    queryKey: ["organizations", page, debouncedSearch],
+  const [selectedOrg, setSelectedOrg] = useState("");
 
-    queryFn: () => organizationService.list(page, false, debouncedSearch),
+  const [filters, setFilters] = useState<IFilters>({
+    region: "",
+
+    status: "",
+
+    type: "",
+  });
+
+  const { data: organizationList, isLoading: orgLoading } = useQuery({
+    queryKey: ["organizations", page, debouncedSearch, filters],
+
+    queryFn: () =>
+      organizationService.list(page, false, debouncedSearch, filters),
   });
 
   const organizations = useMemo(

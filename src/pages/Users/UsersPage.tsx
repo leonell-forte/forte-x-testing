@@ -24,6 +24,8 @@ const UsersPage = () => {
 
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
+  const [organization, setOrganization] = useState<string[]>([]);
+
   useDebounce(
     () => {
       setDebouncedSearch(search);
@@ -33,9 +35,9 @@ const UsersPage = () => {
   );
 
   const { data: userList, isLoading: userLoading } = useQuery({
-    queryKey: ["users", page, debouncedSearch, role],
+    queryKey: ["users", page, debouncedSearch, role, organization],
 
-    queryFn: () => userService.list(page, debouncedSearch, role),
+    queryFn: () => userService.list(page, debouncedSearch, role, organization),
   });
 
   const { data: organizationList, isLoading: orgLoading } = useQuery({
@@ -45,8 +47,6 @@ const UsersPage = () => {
   });
 
   const [modal, setModal] = useState<"user" | null>(null);
-
-  const [organization, setOrganization] = useState<string[]>([]);
 
   const [selectedUser, setSelectedUser] = useState<string>("");
 
@@ -122,7 +122,7 @@ const UsersPage = () => {
             className="max-w-[166px]"
             options={organizations.map((item: IOrganization) => ({
               label: item.registeredName,
-              value: item.id,
+              value: item.registeredName,
             }))}
             readOnly
             isMultiSelect
