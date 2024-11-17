@@ -13,7 +13,7 @@ class OrganizationService {
 
     search?: string,
 
-    filters?: IFilters | null
+    filters?: IFilters
   ) {
     const params = new URLSearchParams();
 
@@ -35,15 +35,15 @@ class OrganizationService {
         exact: false,
       },
       "organizations.region": {
-        value: filters?.region.toLowerCase()!,
+        value: filters?.region.toLowerCase() || "",
         exact: false,
       },
       "organizations.type": {
-        value: filters?.type.toLowerCase()!,
+        value: filters?.type.toLowerCase() || "",
         exact: false,
       },
       "organizations.status": {
-        value: filters?.status.toLowerCase()!,
+        value: filters?.status.toLowerCase() || "",
         exact: false,
       },
     };
