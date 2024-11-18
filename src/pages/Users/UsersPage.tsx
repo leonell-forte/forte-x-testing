@@ -121,7 +121,7 @@ const UsersPage = () => {
             className="max-w-[166px]"
             options={organizations.map((item: IOrganization) => ({
               label: item.registeredName,
-              value: item.id,
+              value: item.registeredName,
             }))}
             readOnly
             isMultiSelect
