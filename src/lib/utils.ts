@@ -56,5 +56,7 @@ export const generateODataQuery = (obj: IODataObject): string => {
     })
     .filter((part) => part !== null); // Filter out null entries
 
-  return queryParts.join(" or "); // Combine all parts with 'or'
+  const parts = queryParts.join(" or ");
+
+  return parts; // Combine all parts with 'or'
 };
