@@ -6,7 +6,6 @@ import { useQuery } from "@tanstack/react-query";
 import organizationService from "../../api/organization";
 import Table from "../../components/ui/table";
 import pencil from "../../assets/images/icons/pencil.svg";
-import Spinner from "../../components/ui/spinner/spinner";
 import { IFilters, IOrganization } from "./types";
 import Pagination from "../../components/ui/pagination";
 import OrganizationDialogue from "../../components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
