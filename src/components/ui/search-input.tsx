@@ -1,6 +1,7 @@
 import Input from "./input";
 import { TextFieldProps } from "@mui/material";
 import search from "../../assets/images/icons/search.svg";
+import close from "../../assets/images/icons/close.svg";
 import darkSearch from "../../assets/images/icons/dark-search.svg";
 
 type IProps = TextFieldProps & {
@@ -21,6 +22,13 @@ const SearchInput = ({ dark, ...props }: IProps) => {
         placeholder={props.placeholder || "Search"}
         type="search"
       />
+      {!!props.value && (
+        <img
+          alt="search"
+          src={close}
+          className="absolute right-[15px] top-[22px] pointer-events-none"
+        />
+      )}
     </div>
   );
 };
