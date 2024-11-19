@@ -57,7 +57,9 @@ const Dropdown = ({
   );
 
   return (
-    <div className={classNames("w-full relative pb-5", className)}>
+    <div
+      className={classNames("w-full relative", className, helperText && "pb-5")}
+    >
       <div
         ref={dropdownRef}
         className={classNames(

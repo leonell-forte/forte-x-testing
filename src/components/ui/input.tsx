@@ -4,6 +4,7 @@ import { TextField, TextFieldProps } from "@mui/material";
 import { forwardRef, useState } from "react";
 import eyeOpen from "../../assets/images/icons/eye-open.svg";
 import eyeClosed from "../../assets/images/icons/eye-closed.svg";
+import classNames from "classnames";
 
 type PropTypes = TextFieldProps & {
   dark?: boolean;
@@ -16,7 +17,9 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
     const { type } = props;
 
     return (
-      <div className="relative w-full pb-5">
+      <div
+        className={classNames("relative w-full", props.helperText && "pb-5")}
+      >
         <TextField
           ref={ref}
           {...props}

@@ -13,6 +13,7 @@ import organizationService from "../../api/organization";
 import { IOrganization } from "../Organizations/types";
 import { ROLES } from "../../lib/constants";
 import { useDebounce } from "../../lib/hooks";
+import closeFilter from "../../assets/images/icons/close-filter.svg";
 
 const UsersPage = () => {
   const [page, setPage] = useState(1);
@@ -56,6 +57,12 @@ const UsersPage = () => {
 
     [organizationList]
   );
+
+  const handleRemoveFilters = () => {
+    setRole("");
+
+    setOrganization([]);
+  };
 
   const handleEditUser = (user: IUser) => {
     setSelectedUser(user.id!.toString());
@@ -126,6 +133,10 @@ const UsersPage = () => {
             readOnly
             isMultiSelect
           />
+
+          <button onClick={handleRemoveFilters}>
+            <img src={closeFilter} alt="close-filter" />
+          </button>
         </div>
 
         <div className="space-y-[18px]">
