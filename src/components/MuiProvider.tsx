@@ -28,6 +28,8 @@ const theme = createTheme({
               color: "#ffffff !important",
             },
             "& .MuiFormHelperText-root": {
+              position: "absolute",
+              bottom: -25,
               color: "#ffffff",
             },
           }),
@@ -51,6 +53,8 @@ const theme = createTheme({
               color: "#42ECA8",
             },
             "& .MuiFormHelperText-root": {
+              position: "absolute",
+              bottom: -25,
               color: "#42ECA8",
             },
             "& .MuiInputBase-input": {
@@ -79,6 +83,8 @@ const theme = createTheme({
               color: "#e61a1a",
             },
             "& .MuiFormHelperText-root": {
+              position: "absolute",
+              bottom: -25,
               color: "#e61a1a !important",
             },
             "& .MuiInputBase-input": {
@@ -99,6 +105,8 @@ const theme = createTheme({
               color: "#787878 !important",
             },
             "& .MuiFormHelperText-root": {
+              position: "absolute",
+              bottom: -25,
               color: "#787878 !important",
             },
           }),

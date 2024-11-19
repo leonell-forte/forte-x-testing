@@ -55,7 +55,7 @@ const Dropdown = ({
   );
 
   return (
-    <div className={classNames("w-full", className)}>
+    <div className={classNames("w-full relative pb-5", className)}>
       <div
         ref={dropdownRef}
         className={classNames(
@@ -146,7 +146,7 @@ const Dropdown = ({
       </div>
 
       {helperText && (
-        <div className="pl-4 pt-1">
+        <div className="pl-4 pt-1 absolute">
           <p className="text-[#e61a1a] text-[12px]">{helperText}</p>
         </div>
       )}

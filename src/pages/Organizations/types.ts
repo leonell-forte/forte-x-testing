@@ -30,7 +30,7 @@ export interface IOrganization {
   registrationNumber?: string;
 }
 
-export type OrgTypes = "funder" | "provider" | "";
+export type OrgTypes = "funder" | "provider";
 
 export interface IFilters {
   region: string;

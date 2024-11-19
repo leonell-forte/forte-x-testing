@@ -20,7 +20,7 @@ export const organizations = {
 
       region: org?.region || "",
 
-      type: org?.type || "",
+      type: org?.type! || "",
 
       status: org?.status || "",
     };
@@ -41,15 +41,15 @@ export const organizations = {
 
     registrationNumber: z.string().min(1),
 
-    state: z.string().min(1),
+    state: z.string().min(1, "Required"),
 
-    country: z.string().min(1),
+    country: z.string().min(1, "Required"),
 
-    postalCode: z.string().min(1),
+    postalCode: z.string().min(1, "Required"),
 
     region: z.string().min(1),
 
-    type: z.enum(["", "funder", "provider"]),
+    type: z.enum(["funder", "provider"], { message: "Please select type" }),
 
     status: z.string().min(1),
   }),

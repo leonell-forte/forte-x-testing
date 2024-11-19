@@ -153,8 +153,8 @@ const OrganizationDialogue = ({
         </div>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-[22px]">
-          <div className="flex items-center gap-4">
-            <label htmlFor="" className="w-[200px]">
+          <div className="flex items-start gap-4">
+            <label htmlFor="" className="pt-4 w-[200px]">
               Organization
             </label>
 
@@ -166,8 +166,8 @@ const OrganizationDialogue = ({
               placeholder="Organization name"
             />
           </div>
-          <div className="flex items-center gap-4">
-            <label htmlFor="" className="w-[200px]">
+          <div className="flex items-start gap-4">
+            <label htmlFor="" className="pt-4 w-[200px]">
               Registered name
             </label>
 
@@ -179,8 +179,8 @@ const OrganizationDialogue = ({
               placeholder="Registered name"
             />
           </div>
-          <div className="flex items-center gap-4">
-            <label htmlFor="" className="w-[200px]">
+          <div className="flex items-start gap-4">
+            <label htmlFor="" className="pt-4 w-[200px]">
               Registration #
             </label>
 
@@ -232,8 +232,8 @@ const OrganizationDialogue = ({
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            <label htmlFor="" className="w-[200px]">
+          <div className="flex items-start gap-4">
+            <label htmlFor="" className="pt-4 w-[200px]">
               Region
             </label>
 
@@ -249,8 +249,8 @@ const OrganizationDialogue = ({
             />
           </div>
 
-          <div className="flex items-center gap-4">
-            <label htmlFor="" className="w-[200px]">
+          <div className="flex items-start gap-4">
+            <label htmlFor="" className="pt-4 w-[200px]">
               Type
             </label>
 
@@ -264,8 +264,8 @@ const OrganizationDialogue = ({
             />
           </div>
 
-          <div className="flex items-center gap-4">
-            <label htmlFor="" className="w-[200px]">
+          <div className="flex items-start gap-4">
+            <label htmlFor="" className="pt-4 w-[200px]">
               Status
             </label>
 

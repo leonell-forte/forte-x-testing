@@ -136,8 +136,8 @@ const UserDialogue = ({
         </div>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-2.5">
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[140px]">
+          <div className="flex items-start">
+            <label htmlFor="" className="w-[140px] pt-4">
               Email
             </label>
 
@@ -148,11 +148,11 @@ const UserDialogue = ({
               helperText={errors.email?.message}
               type="email"
               autoComplete="email"
-              placeholder="email@email.com"
+              placeholder="Email"
             />
           </div>
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[140px]">
+          <div className="flex items-start">
+            <label htmlFor="" className="w-[140px] pt-4">
               First name
             </label>
 
@@ -162,12 +162,12 @@ const UserDialogue = ({
               error={!!errors.firstName?.message}
               helperText={errors.firstName?.message}
               autoComplete="given-name"
-              placeholder="James"
+              placeholder="First name"
             />
           </div>
 
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[140px]">
+          <div className="flex items-start">
+            <label htmlFor="" className="w-[140px] pt-4">
               Last name
             </label>
 
@@ -177,11 +177,11 @@ const UserDialogue = ({
               error={!!errors.lastName?.message}
               helperText={errors.lastName?.message}
               autoComplete="family-name"
-              placeholder="Potter"
+              placeholder="Last name"
             />
           </div>
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[140px]">
+          <div className="flex items-start">
+            <label htmlFor="" className="w-[140px] pt-4">
               Phone number
             </label>
 
@@ -191,11 +191,11 @@ const UserDialogue = ({
               error={!!errors.phoneNumber?.message}
               helperText={errors.phoneNumber?.message}
               autoComplete="tel"
-              placeholder="+61 4567323423"
+              placeholder="Phone number"
             />
           </div>
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[140px]">
+          <div className="flex items-start">
+            <label htmlFor="" className="w-[140px] pt-4">
               Organization
             </label>
 
@@ -210,14 +210,14 @@ const UserDialogue = ({
                 value: item.id!.toString(),
               }))}
               handleSelect={(val) => setValue("organizationId", val.toString())}
-              placeholder="Select organization"
+              placeholder="Organization"
               error={!!errors.organizationId?.message}
               helperText={errors.organizationId?.message}
               readOnly
             />
           </div>
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[140px]">
+          <div className="flex items-start">
+            <label htmlFor="" className="w-[140px] pt-4">
               Role
             </label>
 
@@ -225,7 +225,7 @@ const UserDialogue = ({
               value={ROLES.find((item) => item.value === watch("role"))?.label}
               handleSelect={(val) => setValue("role", val)}
               options={ROLES}
-              placeholder="Select role"
+              placeholder="Role"
               error={!!errors.role?.message}
               helperText={errors.role?.message}
             />

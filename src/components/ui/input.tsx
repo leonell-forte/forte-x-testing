@@ -16,7 +16,7 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
     const { type } = props;
 
     return (
-      <div className="relative w-full">
+      <div className="relative w-full pb-5">
         <TextField
           ref={ref}
           {...props}
