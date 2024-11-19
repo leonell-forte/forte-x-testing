@@ -5,9 +5,14 @@ import { forwardRef, useState } from "react";
 import eyeOpen from "../../assets/images/icons/eye-open.svg";
 import eyeClosed from "../../assets/images/icons/eye-closed.svg";
 
-const Input = forwardRef<HTMLDivElement, TextFieldProps>(
-  ({ ...props }, ref) => {
+type PropTypes = TextFieldProps & {
+  dark?: boolean;
+};
+
+const Input = forwardRef<HTMLDivElement, PropTypes>(
+  ({ dark, ...props }, ref) => {
     const [show, setShow] = useState(false);
+
     const { type } = props;
 
     return (
@@ -21,9 +26,37 @@ const Input = forwardRef<HTMLDivElement, TextFieldProps>(
               ...(type === "password" && {
                 paddingRight: "50px",
               }),
+
               ...(type === "search" && {
                 paddingLeft: "40px !important", // adjust padding for input text if needed
               }),
+            },
+            "& .MuiOutlinedInput-root": {
+              borderRadius: "10px",
+
+              color: dark ? "black" : "auto",
+
+              "& fieldset": {
+                borderColor: dark ? "black" : "auto", // Border color
+              },
+
+              "&:hover fieldset": {
+                borderColor: dark ? "black" : "auto", // Hover border color
+              },
+
+              "&.Mui-focused fieldset": {
+                border: "1.5px solid",
+
+                borderColor: dark ? "black" : "auto", // Focused border color
+              },
+            },
+
+            "& .MuiInputLabel-root": {
+              color: dark ? "black" : "auto", // Label color
+            },
+
+            "& .MuiFormHelperText-root": {
+              color: dark ? "black" : "auto", // Helper text color
             },
           }}
           fullWidth

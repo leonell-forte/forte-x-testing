@@ -1,10 +1,11 @@
 import classNames from "classnames";
-import { InputHTMLAttributes, useRef, useState } from "react";
+import { InputHTMLAttributes, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useOutsideClick } from "../../lib/hooks";
 import arrow from "../../assets/images/icons/arrow.svg";
 import Checkbox from "./checkbox";
 import Loader from "./spinner/spinner";
+import SearchInput from "./search-input";
 
 interface IOption {
   label: string;
@@ -34,6 +35,8 @@ const Dropdown = ({
 }: IDropdownProp) => {
   const [showList, setShowList] = useState(false);
 
+  const [search, setSearch] = useState("");
+
   const dropdownRef = useRef(null);
 
   useOutsideClick(dropdownRef, () => setShowList(false));
@@ -42,6 +45,14 @@ const Dropdown = ({
     isMultiSelect && Array.isArray(props.value)
       ? `${props.value.length} selected`
       : (props.value as string);
+
+  const optionList = useMemo(
+    () =>
+      options.filter((item) =>
+        item.label.toLowerCase().includes(search.toLowerCase())
+      ),
+    [search, options]
+  );
 
   return (
     <div className={classNames("w-full", className)}>
@@ -64,6 +75,7 @@ const Dropdown = ({
           value={displayValue}
           readOnly
         />
+
         {!props.disabled && (
           <button
             disabled={props.disabled}
@@ -79,45 +91,55 @@ const Dropdown = ({
           initial={{ opacity: 0 }}
           animate={showList ? { opacity: 1 } : { opacity: 0, display: "none" }}
           transition={{ type: "spring", duration: 0.2, bounce: 0 }}
-          className="absolute top-16 left-0 rounded-[4px] bg-white w-full overflow-hidden shadow-md z-10"
+          className="absolute space-y-2 top-16 left-0 rounded-[4px] min-w-[200px] bg-white/90 p-2.5 w-full overflow-hidden shadow-md z-10 h-[400px] hide-scroll overflow-y-scroll"
         >
-          {loading ? (
-            <div className="w-full h-[100px] flex items-center justify-center">
-              <Loader dark />
-            </div>
-          ) : (
-            options.map((item, index) => {
-              const { label, value } = item;
-              return isMultiSelect ? (
-                <div key={index} className="pl-2">
-                  <Checkbox
-                    checked={props?.value?.includes(value)}
-                    onChange={() => {
+          <SearchInput
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            dark
+          />
+
+          <div>
+            {loading ? (
+              <div className="w-full h-[100px] flex items-center justify-center">
+                <Loader dark />
+              </div>
+            ) : (
+              optionList.map((item, index) => {
+                const { label, value } = item;
+
+                return isMultiSelect ? (
+                  <div key={index} className="py-1.5 px-2.5">
+                    <Checkbox
+                      checked={props?.value?.includes(value)}
+                      onChange={() => {
+                        handleSelect!(value);
+                      }}
+                      dark
+                      label={label}
+                    />
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
                       handleSelect!(value);
+                      setShowList(false);
                     }}
-                    dark
-                    label={label}
-                  />
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => {
-                    handleSelect!(value);
-                    setShowList(false);
-                  }}
-                  key={index}
-                  className="w-full text-left"
-                >
-                  <li className="text-black py-1.5 px-2.5 hover:bg-grey transition-all">
-                    {label}
-                  </li>
-                </button>
-              );
-            })
-          )}
+                    key={index}
+                    className="w-full text-left"
+                  >
+                    <li className="text-black font-medium py-3 px-4 hover:bg-mint rounded-[8px] transition-all">
+                      {label}
+                    </li>
+                  </button>
+                );
+              })
+            )}
+          </div>
         </motion.ul>
       </div>
+
       {helperText && (
         <div className="pl-4 pt-1">
           <p className="text-[#e61a1a] text-[12px]">{helperText}</p>
