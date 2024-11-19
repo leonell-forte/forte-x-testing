@@ -57,9 +57,10 @@ const Dropdown = ({
   return (
     <div className={classNames("w-full", className)}>
       <div
+        onClick={() => setShowList((prev) => !prev)}
         ref={dropdownRef}
         className={classNames(
-          "relative h-[56px] w-full rounded-[8px] border border-white px-4 flex items-center justify-between",
+          "relative h-[56px] w-full cursor-pointer rounded-[8px] border border-white px-4 flex items-center justify-between",
           className,
           error && "!border-[#e61a1a]",
           props.disabled && "!border-[#787878] text-[#333c3d]"
@@ -68,7 +69,7 @@ const Dropdown = ({
         <input
           type="text"
           className={classNames(
-            "bg-transparent border-none outline-none w-[90%] placeholder:text-white/50",
+            "bg-transparent border-none outline-none w-[90%] placeholder:text-white/50 pointer-events-none",
             error && "placeholder:!text-[#e61a1a]/50"
           )}
           {...props}
