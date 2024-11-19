@@ -182,6 +182,9 @@ const OrganizationsPage = () => {
                   registrationNumber,
                   noOfProjects,
                   noOfUsers,
+                  state,
+                  postalCode,
+                  country,
                 } = item;
                 return (
                   <Table.Row key={bodyIndex}>
@@ -189,7 +192,7 @@ const OrganizationsPage = () => {
 
                     <Table.Data>{registeredName}</Table.Data>
 
-                    <Table.Data>{registeredAddress}</Table.Data>
+                    <Table.Data>{`${registeredAddress}, ${state} ${postalCode} ${country}`}</Table.Data>
 
                     <Table.Data>{registrationNumber}</Table.Data>
 
