@@ -66,7 +66,7 @@ const Dropdown = ({
         )}
       >
         <div
-          onClick={() => setShowList((prev) => !prev)}
+          onClick={() => !props.disabled && setShowList((prev) => !prev)}
           className="px-4 flex items-center justify-between relative h-full"
         >
           <input
@@ -81,14 +81,9 @@ const Dropdown = ({
           />
 
           {!props.disabled && (
-            <button
-              disabled={props.disabled}
-              type="button"
-              onClick={() => setShowList((prev) => !prev)}
-              className="px-1.5"
-            >
+            <div className="px-1.5">
               <img alt="arrow" src={arrow} />
-            </button>
+            </div>
           )}
         </div>
 

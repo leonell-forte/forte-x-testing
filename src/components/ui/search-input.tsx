@@ -13,7 +13,7 @@ const SearchInput = ({ dark, ...props }: IProps) => {
       <img
         alt="search"
         src={dark ? darkSearch : search}
-        className="absolute left-4"
+        className="absolute left-4 top-5"
       />
       <Input
         dark={dark}
