@@ -34,7 +34,7 @@ const OrganizationsPage = () => {
   const [selectedOrg, setSelectedOrg] = useState("");
 
   const initialFilters = {
-    region: "",
+    region: [],
 
     status: "",
 
@@ -76,6 +76,15 @@ const OrganizationsPage = () => {
     setFilters(initialFilters);
   };
 
+  const handleSelectRegion = (val: string) => {
+    setFilters((prev) => {
+      const newRegions = prev.region.includes(val)
+        ? prev.region.filter((item) => item !== val)
+        : [...prev.region, val];
+      return { ...prev, region: newRegions };
+    });
+  };
+
   return (
     <>
       {modal === "org" && (
@@ -111,9 +120,10 @@ const OrganizationsPage = () => {
           <p className="text-[20px] font-medium">Filter by</p>
 
           <Dropdown
+            isMultiSelect
             value={filters.region}
             handleSelect={(val) => {
-              handleSelectFilter("region", val);
+              handleSelectRegion(val);
             }}
             placeholder="Region"
             className="max-w-[166px]"

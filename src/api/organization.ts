@@ -35,7 +35,7 @@ class OrganizationService {
         exact: false,
       },
       "organizations.region": {
-        value: filters?.region.toLowerCase() || "",
+        value: filters?.region || "",
         exact: false,
       },
       "organizations.type": {
