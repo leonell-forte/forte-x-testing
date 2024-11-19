@@ -1,4 +1,4 @@
-name: Build and Deploy React App to S3 and CloudFront for testing
+name: PRODUCTION  Deploy React App to CloudFront
 
 on:
   push:
