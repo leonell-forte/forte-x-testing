@@ -17,21 +17,29 @@ class UserService {
     const filter: IODataObject = {
       "user.firstName": {
         value: search!,
+
         exact: false,
+
+        isSearch: true,
       },
 
       "user.lastName": {
         value: search!,
+
         exact: false,
+
+        isSearch: true,
       },
 
       "user.role": {
         value: role!,
+
         exact: true,
       },
 
       "organization.registeredName": {
         value: organization!,
+
         exact: false,
       },
     };

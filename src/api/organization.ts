@@ -24,26 +24,43 @@ class OrganizationService {
     const searchFilter: IODataObject = {
       "organizations.name": {
         value: search!,
+
         exact: false,
+
+        isSearch: true,
       },
+
       "organizations.registeredName": {
         value: search!,
+
         exact: false,
+
+        isSearch: true,
       },
+
       "organizations.registrationNumber": {
         value: search!,
+
         exact: false,
+
+        isSearch: true,
       },
+
       "organizations.region": {
         value: filters?.region || "",
+
         exact: false,
       },
+
       "organizations.type": {
         value: filters?.type.toLowerCase() || "",
+
         exact: false,
       },
+
       "organizations.status": {
         value: filters?.status.toLowerCase() || "",
+
         exact: false,
       },
     };

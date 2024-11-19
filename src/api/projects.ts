@@ -13,11 +13,15 @@ class ProjectsService {
         value: search!,
 
         exact: false,
+
+        isSearch: true,
       },
       "project.provider.name": {
         value: search!,
 
         exact: false,
+
+        isSearch: true,
       },
     };
 

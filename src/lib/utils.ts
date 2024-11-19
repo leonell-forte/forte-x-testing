@@ -19,44 +19,77 @@ export const filterBySearch = (
 
 export type IODataObject = Record<
   string,
-  { value: string | string[]; exact: boolean }
+  { value: string | string[]; exact: boolean; isSearch?: boolean }
 >;
 
 export const generateODataQuery = (obj: IODataObject): string => {
-  const queryParts = Object.keys(obj)
-    .map((key) => {
-      const { value, exact } = obj[key];
+  // Separate search and non-search fields
 
-      // Skip this key if the value is empty (null, undefined, or empty string/array)
-      if (
-        value == null ||
-        (Array.isArray(value) && value.length === 0) ||
-        value === ""
-      ) {
-        return null;
-      }
+  const searchParts: string[] = [];
 
-      // Handle array values
-      if (Array.isArray(value)) {
-        if (exact) {
-          // Generate 'or' conditions for exact matching
-          return value.map((v) => `'${key}' eq '${v}'`).join(" or ");
-        } else {
-          // Generate 'or' conditions for partial matching
-          return value.map((v) => `contains('${key}', '${v}')`).join(" or ");
-        }
-      }
+  const nonSearchParts: string[] = [];
 
+  Object.keys(obj).forEach((key) => {
+    const { value, exact, isSearch } = obj[key];
+
+    // Skip if the value is empty (null, undefined, or empty string/array)
+
+    if (
+      value == null ||
+      (Array.isArray(value) && value.length === 0) ||
+      value === ""
+    ) {
+      return;
+    }
+
+    let condition: string | null = null;
+
+    // Handle array values
+
+    if (Array.isArray(value)) {
+      const orCondition = value
+        .map(
+          (v) =>
+            exact
+              ? `'${key}' eq '${v}'` // Exact matching
+              : `contains('${key}', '${v}')` // Partial matching
+        )
+        .join(" or ");
+
+      condition = `(${orCondition})`; // Enclose 'or' conditions in brackets
+    } else {
       // Handle single string values
+
       if (exact) {
-        return `'${key}' eq '${value}'`;
+        condition = `'${key}' eq '${value}'`;
       } else {
-        return `contains('${key}', '${value}')`;
+        condition = `contains('${key}', '${value}')`;
       }
-    })
-    .filter((part) => part !== null); // Filter out null entries
+    }
 
-  const parts = queryParts.join(" or ");
+    // Add condition to the appropriate group
 
-  return parts; // Combine all parts with 'or'
+    if (isSearch) {
+      searchParts.push(condition);
+    } else {
+      nonSearchParts.push(condition);
+    }
+  });
+
+  // Combine search parts with 'or' and non-search parts with 'and'
+
+  const searchQuery =
+    searchParts.length > 0 ? `(${searchParts.join(" or ")})` : "";
+
+  const nonSearchQuery = nonSearchParts.join(" and ");
+
+  // Combine both groups with 'and' if both exist
+
+  if (searchQuery && nonSearchQuery) {
+    return `${searchQuery} and ${nonSearchQuery}`;
+  }
+
+  // Return the appropriate query part
+
+  return searchQuery || nonSearchQuery || "";
 };
