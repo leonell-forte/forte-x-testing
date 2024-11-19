@@ -172,7 +172,9 @@ const UsersPage = () => {
 
                     <Table.Data>{phoneNumber}</Table.Data>
 
-                    <Table.Data>{role}</Table.Data>
+                    <Table.Data>
+                      <p className="capitalize">{role}</p>
+                    </Table.Data>
 
                     <Table.Data>{organization}</Table.Data>
 
