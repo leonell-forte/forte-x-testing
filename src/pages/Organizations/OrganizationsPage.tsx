@@ -103,7 +103,7 @@ const OrganizationsPage = () => {
                 setModal("org");
               }}
             >
-              Add Organization
+              Add organization
             </Button>
           </div>
         </div>

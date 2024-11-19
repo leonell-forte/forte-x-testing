@@ -105,7 +105,7 @@ const ProjectsPage = () => {
           />
 
           <Button eventName="Add User" onClick={() => setModal("project")}>
-            Add Project
+            Add project
           </Button>
         </div>
 

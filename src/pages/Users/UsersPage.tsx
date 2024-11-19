@@ -100,7 +100,7 @@ const UsersPage = () => {
                 setModal("user");
               }}
             >
-              Add User
+              Add user
             </Button>
           </div>
         </div>
