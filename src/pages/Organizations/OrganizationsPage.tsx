@@ -11,6 +11,7 @@ import Pagination from "../../components/ui/pagination";
 import OrganizationDialogue from "../../components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
 import { REGIONS, STATUS, TYPES } from "../../lib/constants";
 import { useDebounce } from "../../lib/hooks";
+import closeFilter from "../../assets/images/icons/close-filter.svg";
 
 const OrganizationsPage = () => {
   const [modal, setModal] = useState<"org" | null>(null);
@@ -32,13 +33,15 @@ const OrganizationsPage = () => {
 
   const [selectedOrg, setSelectedOrg] = useState("");
 
-  const [filters, setFilters] = useState<IFilters>({
+  const initialFilters = {
     region: "",
 
     status: "",
 
     type: "",
-  });
+  };
+
+  const [filters, setFilters] = useState<IFilters>(initialFilters);
 
   const { data: organizationList, isLoading: orgLoading } = useQuery({
     queryKey: ["organizations", page, debouncedSearch, filters],
@@ -67,6 +70,10 @@ const OrganizationsPage = () => {
 
   const handleSelectFilter = (key: keyof IFilters, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleRemoveFilters = () => {
+    setFilters(initialFilters);
   };
 
   return (
@@ -132,6 +139,10 @@ const OrganizationsPage = () => {
             className="max-w-[166px]"
             options={TYPES}
           />
+
+          <button onClick={handleRemoveFilters}>
+            <img src={closeFilter} alt="close-filter" />
+          </button>
         </div>
 
         <div className="space-y-[18px]">
