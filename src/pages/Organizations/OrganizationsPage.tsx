@@ -195,9 +195,13 @@ const OrganizationsPage = () => {
 
                     <Table.Data>{region}</Table.Data>
 
-                    <Table.Data>{type}</Table.Data>
+                    <Table.Data>
+                      <p className="capitalize">{type}</p>
+                    </Table.Data>
 
-                    <Table.Data>{status}</Table.Data>
+                    <Table.Data>
+                      <p className="capitalize">{status}</p>
+                    </Table.Data>
 
                     <Table.Data>{noOfUsers}</Table.Data>
 

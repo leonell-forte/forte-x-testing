@@ -24,7 +24,9 @@ const ProjectsPage = () => {
     () => {
       setDebouncedSearch(search);
     },
+
     500,
+
     [search]
   );
 
