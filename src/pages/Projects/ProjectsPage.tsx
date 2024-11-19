@@ -141,30 +141,32 @@ const ProjectsPage = () => {
                     <Table.Data>-</Table.Data>
 
                     <Table.Data>
-                      <Button
-                        eventName="Edit User"
-                        // id={project}
-                        buttonType="default"
-                        type="button"
-                        onClick={() => handleEditUser(item)}
-                        className="p-[3px]"
-                      >
-                        <img alt="pencil" src={pencil} />
-                      </Button>
+                      <div className="flex justify-end">
+                        <Button
+                          eventName="Edit User"
+                          // id={project}
+                          buttonType="default"
+                          type="button"
+                          onClick={() => handleEditUser(item)}
+                          className="p-[3px]"
+                        >
+                          <img alt="pencil" src={pencil} />
+                        </Button>
 
-                      <Button
-                        eventName="Edit User"
-                        id={id.toString()}
-                        buttonType="default"
-                        type="button"
-                        onClick={() => {
-                          setModal("delete");
-                          setSelectedProject(item);
-                        }}
-                        className="p-[3px]"
-                      >
-                        <img alt="pencil" src={bin} />
-                      </Button>
+                        <Button
+                          eventName="Edit User"
+                          id={id.toString()}
+                          buttonType="default"
+                          type="button"
+                          onClick={() => {
+                            setModal("delete");
+                            setSelectedProject(item);
+                          }}
+                          className="p-[3px]"
+                        >
+                          <img alt="pencil" src={bin} />
+                        </Button>
+                      </div>
                     </Table.Data>
                   </Table.Row>
                 );

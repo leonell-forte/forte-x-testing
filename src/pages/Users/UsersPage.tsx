@@ -179,16 +179,18 @@ const UsersPage = () => {
                     <Table.Data>{organization}</Table.Data>
 
                     <Table.Data>
-                      <Button
-                        eventName="Edit User"
-                        id={id}
-                        buttonType="default"
-                        type="button"
-                        onClick={() => handleEditUser(item)}
-                        className="p-[3px]"
-                      >
-                        <img alt="pencil" src={pencil} />
-                      </Button>
+                      <div className="flex justify-end">
+                        <Button
+                          eventName="Edit User"
+                          id={id}
+                          buttonType="default"
+                          type="button"
+                          onClick={() => handleEditUser(item)}
+                          className="p-[3px]"
+                        >
+                          <img alt="pencil" src={pencil} />
+                        </Button>
+                      </div>
                     </Table.Data>
                   </Table.Row>
                 );
