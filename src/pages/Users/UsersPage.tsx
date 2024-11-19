@@ -164,7 +164,9 @@ const UsersPage = () => {
 
                 return (
                   <Table.Row key={bodyIndex}>
-                    <Table.Data>{`${firstName} ${lastName}`}</Table.Data>
+                    <Table.Data>{firstName}</Table.Data>
+
+                    <Table.Data>{lastName}</Table.Data>
 
                     <Table.Data>{email}</Table.Data>
 
@@ -208,7 +210,8 @@ const UsersPage = () => {
 export default UsersPage;
 
 const TABLE_HEADER = [
-  "User’s full name",
+  "First name",
+  "Last name",
   "Email",
   "Phone",
   "Role",
