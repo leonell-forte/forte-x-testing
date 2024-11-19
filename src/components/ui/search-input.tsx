@@ -16,12 +16,14 @@ const SearchInput = ({ dark, ...props }: IProps) => {
         src={dark ? darkSearch : search}
         className="absolute left-4 top-5"
       />
+
       <Input
         dark={dark}
         {...props}
         placeholder={props.placeholder || "Search"}
         type="search"
       />
+
       {!!props.value && (
         <img
           alt="search"

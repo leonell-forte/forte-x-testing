@@ -43,7 +43,9 @@ const Dropdown = ({
 
   const displayValue =
     isMultiSelect && Array.isArray(props.value)
-      ? `${props.value.length} selected`
+      ? props.value.length
+        ? `${props.value.length} selected`
+        : ""
       : (props.value as string);
 
   const optionList = useMemo(
@@ -91,7 +93,7 @@ const Dropdown = ({
           initial={{ opacity: 0 }}
           animate={showList ? { opacity: 1 } : { opacity: 0, display: "none" }}
           transition={{ type: "spring", duration: 0.2, bounce: 0 }}
-          className="absolute space-y-2 top-16 left-0 rounded-[4px] min-w-[200px] bg-white/90 p-2.5 w-full overflow-hidden shadow-md z-10 h-[400px] hide-scroll overflow-y-scroll"
+          className="absolute space-y-2 top-16 left-0 rounded-[4px] min-w-[300px] bg-white/90 p-2.5 w-full overflow-hidden shadow-md z-10 h-[400px] hide-scroll overflow-y-scroll"
         >
           <SearchInput
             value={search}
