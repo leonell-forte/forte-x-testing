@@ -173,8 +173,8 @@ const ProjectDialogue = ({
         </div>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-[22px]">
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[180px]">
+          <div className="flex items-start">
+            <label htmlFor="" className="w-[180px] pt-4">
               Project name
             </label>
 
@@ -192,8 +192,8 @@ const ProjectDialogue = ({
             />
           </div>
 
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[180px]">
+          <div className="flex items-start">
+            <label htmlFor="" className="w-[180px] pt-4">
               Provider
             </label>
 
@@ -220,8 +220,8 @@ const ProjectDialogue = ({
             />
           </div>
 
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[180px]">
+          <div className="flex items-start">
+            <label htmlFor="" className="w-[180px] pt-4">
               Funder
             </label>
 
