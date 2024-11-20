@@ -149,8 +149,8 @@ const ViewProfileDialogue = ({
         </div>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-2.5">
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[140px]">
+          <div className="flex items-start">
+            <label htmlFor="" className="w-[140px] pt-4">
               Email
             </label>
 
@@ -165,8 +165,8 @@ const ViewProfileDialogue = ({
               placeholder="email@email.com"
             />
           </div>
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[140px]">
+          <div className="flex items-start">
+            <label htmlFor="" className="w-[140px] pt-4">
               First name
             </label>
 
@@ -181,8 +181,8 @@ const ViewProfileDialogue = ({
             />
           </div>
 
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[140px]">
+          <div className="flex items-start">
+            <label htmlFor="" className="w-[140px] pt-4">
               Last name
             </label>
 
@@ -196,8 +196,8 @@ const ViewProfileDialogue = ({
               placeholder="Potter"
             />
           </div>
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[140px]">
+          <div className="flex items-start">
+            <label htmlFor="" className="w-[140px] pt-4">
               Phone number
             </label>
 
@@ -211,8 +211,8 @@ const ViewProfileDialogue = ({
               placeholder="+61 4567323423"
             />
           </div>
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[140px]">
+          <div className="flex items-start">
+            <label htmlFor="" className="w-[140px] pt-4">
               Organization
             </label>
 
@@ -235,8 +235,8 @@ const ViewProfileDialogue = ({
             />
           </div>
 
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[140px]">
+          <div className="flex items-start">
+            <label htmlFor="" className="w-[140px] pt-4">
               Role
             </label>
 
