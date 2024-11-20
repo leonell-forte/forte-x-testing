@@ -42,6 +42,12 @@ class AuthService {
 
     return response.data.data;
   }
+
+  async requestPasswordReset() {
+    const response = await api.post("/authentication/reset-password");
+
+    return response;
+  }
 }
 
 const authService = new AuthService();

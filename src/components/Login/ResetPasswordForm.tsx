@@ -30,7 +30,10 @@ const ResetPasswordForm = ({ handleNext }: ILoginProps) => {
     handleNext!();
   };
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="space-y-10"
+    >
       <div className="text-center">
         <p className="text-[24px] md:text-[32px]">Create a new password</p>
 
@@ -58,7 +61,10 @@ const ResetPasswordForm = ({ handleNext }: ILoginProps) => {
         />
       </div>
 
-      <Button type="submit" fullWidth>
+      <Button
+        type="submit"
+        fullWidth
+      >
         Reset password
       </Button>
     </form>

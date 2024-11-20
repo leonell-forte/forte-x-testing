@@ -1,22 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import Input from "../ui/input";
 import Button from "../ui/button";
 import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { resetRequest } from "../../lib/validators/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ILoginProps } from "./types";
+import authService from "../../api/auth";
 
 const ResetRequestForm = ({ handleNext }: ILoginProps) => {
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const {
+    control,
+
     handleSubmit,
 
     formState: { errors },
-
-    setValue,
   } = useForm<z.infer<typeof resetRequest.schema>>({
     resolver: zodResolver(resetRequest.schema),
 
@@ -24,12 +27,21 @@ const ResetRequestForm = ({ handleNext }: ILoginProps) => {
   });
 
   const onSubmit = async (values: z.infer<typeof resetRequest.schema>) => {
-    console.log(values);
+    setLoading(true);
 
-    handleNext!();
+    try {
+      await authService.requestPasswordReset();
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
   };
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="text-center space-y-12">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="text-center space-y-12"
+    >
       <div className="space-y-4">
         <div>
           <p className="text-[24px] md:text-[32px] font-medium">
@@ -42,18 +54,29 @@ const ResetRequestForm = ({ handleNext }: ILoginProps) => {
           </p>
         </div>
 
-        <Input
-          onChange={(e) => setValue("email", e.target.value)}
-          helperText={errors.email?.message}
-          error={!!errors.email?.message}
-          label="Enter your email"
+        <Controller
+          name="email"
+          control={control}
+          render={({ field }) => {
+            return (
+              <Input
+                {...field}
+                helperText={errors.email?.message}
+                error={!!errors.email?.message}
+                label="Enter your email"
+              />
+            );
+          }}
         />
       </div>
 
       <div className="flex flex-col gap-4">
         <Button type="submit">Get 4-digit code</Button>
 
-        <Button buttonType="tertiary" onClick={() => navigate("/")}>
+        <Button
+          buttonType="tertiary"
+          onClick={() => navigate("/")}
+        >
           Go back
         </Button>
       </div>
