@@ -6,6 +6,7 @@ import arrow from "../../assets/images/icons/arrow.svg";
 import Checkbox from "./checkbox";
 import Loader from "./spinner/spinner";
 import SearchInput from "./search-input";
+import Tag from "./tag";
 
 interface IOption {
   label: string;
@@ -31,6 +32,10 @@ interface IDropdownProp extends InputHTMLAttributes<HTMLInputElement> {
   helperText?: string;
 
   noHelperText?: boolean;
+
+  showAsTags?: boolean;
+
+  handleRemoveTag?: (item: string, index: number) => void;
 }
 
 const Dropdown = ({
@@ -49,6 +54,10 @@ const Dropdown = ({
   helperText,
 
   noHelperText,
+
+  showAsTags,
+
+  handleRemoveTag,
 
   ...props
 }: IDropdownProp) => {
@@ -70,9 +79,9 @@ const Dropdown = ({
   const optionList = useMemo(
     () =>
       options.filter((item) =>
-        item.label.toLowerCase().includes(search.toLowerCase())
+        item.label.toLowerCase().includes(search.toLowerCase()),
       ),
-    [search, options]
+    [search, options],
   );
 
   return (
@@ -80,7 +89,7 @@ const Dropdown = ({
       className={classNames(
         "w-full relative",
         className,
-        !noHelperText && "pb-5"
+        !noHelperText && "pb-5",
       )}
     >
       <div
@@ -89,36 +98,70 @@ const Dropdown = ({
           "relative h-[56px] w-full cursor-pointer rounded-[8px] border border-white",
           className,
           error && "!border-[#e61a1a]",
-          props.disabled && "!border-[#787878] text-[#333c3d]"
+          props.disabled && "!border-[#787878] text-[#333c3d]",
+          showAsTags && "h-fit",
         )}
       >
-        <div
-          onClick={() => !props.disabled && setShowList((prev) => !prev)}
-          className="px-4 flex items-center justify-between relative h-full"
+        <button
+          disabled={props.disabled}
+          type="button"
+          onClick={() => setShowList((prev) => !prev)}
+          className={classNames(
+            "w-full px-4 flex items-center justify-between relative h-full min-h-[56px]",
+            showAsTags && "!items-start py-[15px]",
+          )}
         >
-          <input
-            type="text"
-            className={classNames(
-              "bg-transparent border-none outline-none w-[90%] placeholder:text-white/50 pointer-events-none",
-              error && "placeholder:!text-[#fff]/50"
-            )}
-            {...props}
-            value={displayValue}
-            readOnly
-          />
+          {showAsTags && isMultiSelect ? (
+            <div className="flex flex-wrap gap-2">
+              {props.value?.length ? (
+                (props.value as string[]).map((item, index) => {
+                  return (
+                    <Tag
+                      handleRemove={(e) => {
+                        e.stopPropagation();
+                        handleRemoveTag!(item, index);
+                      }}
+                      key={index}
+                      label={item}
+                    />
+                  );
+                })
+              ) : (
+                <input
+                  className="bg-transparent border-none outline-none w-[90%] placeholder:text-white/50 pointer-events-none"
+                  type="text"
+                  {...props}
+                />
+              )}
+            </div>
+          ) : (
+            <input
+              type="text"
+              className={classNames(
+                "bg-transparent border-none outline-none w-[90%] placeholder:text-white/50 pointer-events-none",
+                error && "placeholder:!text-[#fff]/50",
+              )}
+              {...props}
+              value={displayValue}
+              readOnly
+            />
+          )}
 
           {!props.disabled && (
-            <div className="px-1.5">
-              <img alt="arrow" src={arrow} />
+            <div className="px-1.5 absolute top-[24px] right-2">
+              <img
+                alt="arrow"
+                src={arrow}
+              />
             </div>
           )}
-        </div>
+        </button>
 
         <motion.ul
           initial={{ opacity: 0 }}
           animate={showList ? { opacity: 1 } : { opacity: 0, display: "none" }}
           transition={{ type: "spring", duration: 0.2, bounce: 0 }}
-          className="absolute space-y-2 top-[55px] left-0 rounded-[4px] min-w-[300px] bg-white/90 p-2.5 w-full overflow-hidden shadow-md z-10 h-[400px] hide-scroll overflow-y-scroll"
+          className="absolute space-y-2 bottom-[-400px] left-0 rounded-[4px] min-w-[300px] bg-white/90 p-2.5 w-full overflow-hidden shadow-md z-10 h-[400px] hide-scroll overflow-y-scroll"
         >
           <SearchInput
             value={search}
@@ -136,7 +179,10 @@ const Dropdown = ({
                 const { label, value } = item;
 
                 return isMultiSelect ? (
-                  <div key={index} className="py-1.5 px-2.5">
+                  <div
+                    key={index}
+                    className="py-1.5 px-2.5"
+                  >
                     <Checkbox
                       checked={props?.value?.includes(value)}
                       onChange={() => {
