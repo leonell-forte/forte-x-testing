@@ -165,7 +165,7 @@ const ProjectDialogue = ({
     <Dialogue
       isVisible={isVisible}
       handleClose={close}
-      title={project ? "Edit project" : "Add new project"}
+      title={project ? "Edit project" : "Add project"}
     >
       {projectLoading ? (
         <div className="w-full h-[470px] flex items-center justify-center">
@@ -184,7 +184,7 @@ const ProjectDialogue = ({
               render={({ field }) => (
                 <Input
                   {...field}
-                  placeholder="Enter project name"
+                  placeholder="Project name"
                   error={!!errors.name?.message}
                   helperText={errors.name?.message}
                 />
