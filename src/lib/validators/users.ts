@@ -26,16 +26,16 @@ export const users = {
   schema: z.object({
     id: z.string().optional(),
 
-    firstName: z.string().min(1),
+    firstName: z.string().min(1, "First name is requied"),
 
-    lastName: z.string().min(1),
+    lastName: z.string().min(1, "Last name is required"),
 
     email: z.string().email(),
 
-    phoneNumber: z.string().min(1),
+    phoneNumber: z.string().min(1, "Invalid phone number"),
 
-    organizationId: z.string().min(1),
+    organizationId: z.string().min(1, "Organization is required"),
 
-    role: z.string().min(1),
+    role: z.string().min(1, "Role is required"),
   }),
 };

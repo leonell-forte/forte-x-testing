@@ -32,13 +32,9 @@ export const projects = {
 
     name: z.string().min(1, "Project name is required"),
 
-    funderId: z
-      .number()
-      .min(1, { message: "Please select funder organizastion" }),
+    funderId: z.number().optional(),
 
-    providerId: z
-      .number()
-      .min(1, { message: "Please select provider organization" }),
+    providerId: z.number().optional(),
 
     outcomes: z.array(OutcomeSchema).min(1, "At least one outcome is required"),
   }),

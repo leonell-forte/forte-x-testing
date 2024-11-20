@@ -63,6 +63,8 @@ const OrganizationDialogue = ({
     defaultValues: organizations.defaultValues(),
   });
 
+  // prefill initial value from selected org
+
   useEffect(() => {
     if (orgData) {
       reset(organizations.defaultValues(orgData));
