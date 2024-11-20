@@ -52,22 +52,22 @@ const ContractsPage = () => {
           <Dropdown
             noHelperText
             isMultiSelect
-            placeholder="Region"
-            className="max-w-[166px]"
-            options={[]}
-          />
-
-          <Dropdown
-            noHelperText
-            options={[]}
             placeholder="Status"
             className="max-w-[166px]"
+            options={[]}
           />
 
           <Dropdown
             noHelperText
             options={[]}
-            placeholder="Type"
+            placeholder="Project"
+            className="max-w-[166px]"
+          />
+
+          <Dropdown
+            noHelperText
+            options={[]}
+            placeholder="Start Date"
             className="max-w-[166px]"
           />
 

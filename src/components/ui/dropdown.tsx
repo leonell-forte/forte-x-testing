@@ -107,7 +107,7 @@ const Dropdown = ({
           type="button"
           onClick={() => setShowList((prev) => !prev)}
           className={classNames(
-            "w-full px-4 flex items-center justify-between relative h-full min-h-[56px]",
+            "w-full px-4 flex items-center justify-between relative h-full min-h-[56px] outline-none",
             showAsTags && "!items-start py-[15px]",
           )}
         >

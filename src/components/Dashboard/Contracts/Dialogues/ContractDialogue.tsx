@@ -58,7 +58,10 @@ const ContractDialogue = ({
             Status
           </label>
 
-          <Input placeholder="Select" />
+          <Dropdown
+            options={TESTDATA}
+            placeholder="Status"
+          />
         </div>
 
         <div className="flex items-start gap-4">
@@ -66,21 +69,27 @@ const ContractDialogue = ({
             htmlFor=""
             className="pt-4 min-w-[120px]"
           >
-            Parties
+            Project
           </label>
 
-          <Input placeholder="Organization name" />
+          <Dropdown
+            options={TESTDATA}
+            placeholder="Project"
+          />
         </div>
 
         <div className="flex items-start gap-4">
           <label
             htmlFor=""
-            className="pt-4 min-w-[120px]"
+            className="pt-1 flex-shrink-0 w-[120px]"
           >
-            Parties
+            Target number of beneficiaries
           </label>
 
-          <Input placeholder="Organization name" />
+          <Input
+            placeholder="Number of beneficiaries"
+            type="number"
+          />
         </div>
 
         <div className="flex items-start gap-4">
@@ -88,7 +97,7 @@ const ContractDialogue = ({
             htmlFor=""
             className="pt-4 min-w-[120px]"
           >
-            Parties
+            Document
           </label>
 
           <Input placeholder="Organization name" />
@@ -100,20 +109,20 @@ const ContractDialogue = ({
               htmlFor=""
               className="pt-4 min-w-[120px]"
             >
-              Parties
+              Start date
             </label>
 
-            <Input placeholder="Organization name" />
+            <Input placeholder="Start date" />
           </div>
           <div className="flex items-start gap-4">
             <label
               htmlFor=""
               className="pt-4 min-w-[120px]"
             >
-              Parties
+              End date
             </label>
 
-            <Input placeholder="Organization name" />
+            <Input placeholder="End date" />
           </div>
         </div>
 
@@ -122,10 +131,13 @@ const ContractDialogue = ({
             htmlFor=""
             className="pt-4 min-w-[120px]"
           >
-            Parties
+            Outcome
           </label>
 
-          <Input placeholder="Organization name" />
+          <Dropdown
+            options={TESTDATA}
+            placeholder="Outcome"
+          />
 
           <button
             type="button"
@@ -143,7 +155,7 @@ const ContractDialogue = ({
             htmlFor=""
             className="pt-4 min-w-[120px]"
           >
-            Parties
+            Rate
           </label>
 
           <div className="w-full">
@@ -163,7 +175,7 @@ const ContractDialogue = ({
 
         <div className="flex justify-end gap-4 !mt-10">
           <Button
-            onClick={() => {}}
+            onClick={handleClose}
             buttonType="secondary"
           >
             Cancel
