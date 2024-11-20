@@ -5,6 +5,9 @@ const ProjectsPage = React.lazy(() => import("../pages/Projects/ProjectsPage"));
 const OrganizationsPage = React.lazy(
   () => import("../pages/Organizations/OrganizationsPage")
 );
+const ContractsPage = React.lazy(
+  () => import("../pages/Contracts/ContractsPage")
+);
 
 export const PROTECTED_ROUTES = [
   {
@@ -18,6 +21,10 @@ export const PROTECTED_ROUTES = [
   {
     link: "/organizations",
     Component: OrganizationsPage,
+  },
+  {
+    link: "/contracts",
+    Component: ContractsPage,
   },
 ];
 
