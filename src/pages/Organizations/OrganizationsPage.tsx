@@ -178,7 +178,7 @@ const OrganizationsPage = () => {
                   id,
                   name,
                   registeredName,
-                  region,
+                  regions,
                   type,
                   status,
                   registeredAddress,
@@ -199,7 +199,7 @@ const OrganizationsPage = () => {
 
                     <Table.Data>{registrationNumber}</Table.Data>
 
-                    <Table.Data>{region}</Table.Data>
+                    <Table.Data>{regions}</Table.Data>
 
                     <Table.Data>
                       <p className="capitalize">{type}</p>

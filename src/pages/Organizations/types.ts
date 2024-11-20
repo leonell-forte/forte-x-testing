@@ -5,7 +5,7 @@ export interface IOrganization {
 
   registeredName: string;
 
-  region: string;
+  regions: string[];
 
   type: OrgTypes;
 
