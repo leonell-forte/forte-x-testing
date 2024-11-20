@@ -88,7 +88,7 @@ const theme = createTheme({
               color: "#e61a1a !important",
             },
             "& .MuiInputBase-input": {
-              color: "#e61a1a !important",
+              color: "#fff !important",
             },
           }),
           // Disabled Variant

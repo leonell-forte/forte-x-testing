@@ -114,6 +114,7 @@ const UsersPage = () => {
             placeholder="Role"
             className="max-w-[166px]"
             options={ROLES}
+            noHelperText
           />
 
           <Dropdown
@@ -132,6 +133,7 @@ const UsersPage = () => {
             }))}
             readOnly
             isMultiSelect
+            noHelperText
           />
 
           <button onClick={handleRemoveFilters}>

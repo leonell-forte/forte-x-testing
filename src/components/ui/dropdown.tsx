@@ -9,28 +9,47 @@ import SearchInput from "./search-input";
 
 interface IOption {
   label: string;
+
   value: string;
 }
 
 interface IDropdownProp extends InputHTMLAttributes<HTMLInputElement> {
   className?: string;
+
   options: IOption[];
+
   value?: string | string[];
+
   handleSelect?: (value: string) => void;
+
   isMultiSelect?: boolean;
+
   loading?: boolean;
+
   error?: boolean;
+
   helperText?: string;
+
+  noHelperText?: boolean;
 }
 
 const Dropdown = ({
   className,
+
   options,
+
   handleSelect,
+
   isMultiSelect,
+
   loading,
+
   error,
+
   helperText,
+
+  noHelperText,
+
   ...props
 }: IDropdownProp) => {
   const [showList, setShowList] = useState(false);
@@ -58,7 +77,11 @@ const Dropdown = ({
 
   return (
     <div
-      className={classNames("w-full relative", className, helperText && "pb-5")}
+      className={classNames(
+        "w-full relative",
+        className,
+        !noHelperText && "pb-5"
+      )}
     >
       <div
         ref={dropdownRef}
@@ -77,7 +100,7 @@ const Dropdown = ({
             type="text"
             className={classNames(
               "bg-transparent border-none outline-none w-[90%] placeholder:text-white/50 pointer-events-none",
-              error && "placeholder:!text-[#e61a1a]/50"
+              error && "placeholder:!text-[#fff]/50"
             )}
             {...props}
             value={displayValue}

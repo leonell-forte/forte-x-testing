@@ -120,6 +120,7 @@ const OrganizationsPage = () => {
           <p className="text-[20px] font-medium">Filter by</p>
 
           <Dropdown
+            noHelperText
             isMultiSelect
             value={filters.region}
             handleSelect={(val) => {
@@ -131,6 +132,7 @@ const OrganizationsPage = () => {
           />
 
           <Dropdown
+            noHelperText
             value={filters.status}
             handleSelect={(val) => {
               handleSelectFilter("status", val);
@@ -141,6 +143,7 @@ const OrganizationsPage = () => {
           />
 
           <Dropdown
+            noHelperText
             value={filters.type}
             handleSelect={(val) => {
               handleSelectFilter("type", val);

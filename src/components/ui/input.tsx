@@ -8,18 +8,17 @@ import classNames from "classnames";
 
 type PropTypes = TextFieldProps & {
   dark?: boolean;
+  noHelperText?: boolean;
 };
 
 const Input = forwardRef<HTMLDivElement, PropTypes>(
-  ({ dark, ...props }, ref) => {
+  ({ dark, noHelperText, ...props }, ref) => {
     const [show, setShow] = useState(false);
 
     const { type } = props;
 
     return (
-      <div
-        className={classNames("relative w-full", props.helperText && "pb-5")}
-      >
+      <div className={classNames("relative w-full", !noHelperText && "pb-5")}>
         <TextField
           ref={ref}
           {...props}

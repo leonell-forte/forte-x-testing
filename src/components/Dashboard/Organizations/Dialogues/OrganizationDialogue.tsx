@@ -4,7 +4,7 @@ import Dialogue, {
 } from "../../../../components/ui/dialogue/dialogue";
 import Dropdown from "../../../../components/ui/dropdown";
 import Button from "../../../../components/ui/button";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { organizations } from "../../../../lib/validators/organizations";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -48,9 +48,13 @@ const OrganizationDialogue = ({
 
     setValue,
 
+    setError,
+
     reset,
 
     getValues,
+
+    control,
 
     formState: { errors },
   } = useForm<z.infer<typeof organizations.schema>>({
@@ -158,12 +162,19 @@ const OrganizationDialogue = ({
               Organization
             </label>
 
-            <Input
-              value={watch("name")}
-              onChange={(e) => setValue("name", e.target.value)}
-              error={!!errors.name?.message}
-              helperText={errors.name?.message}
-              placeholder="Organization name"
+            <Controller
+              name="name"
+              control={control}
+              render={({ field }) => {
+                return (
+                  <Input
+                    {...field}
+                    error={!!errors.name?.message}
+                    helperText={errors.name?.message}
+                    placeholder="Organization name"
+                  />
+                );
+              }}
             />
           </div>
           <div className="flex items-start gap-4">
@@ -171,12 +182,19 @@ const OrganizationDialogue = ({
               Registered name
             </label>
 
-            <Input
-              value={watch("registeredName")}
-              onChange={(e) => setValue("registeredName", e.target.value)}
-              error={!!errors.registeredName?.message}
-              helperText={errors.registeredName?.message}
-              placeholder="Registered name"
+            <Controller
+              name="registeredName"
+              control={control}
+              render={({ field }) => {
+                return (
+                  <Input
+                    {...field}
+                    error={!!errors.registeredName?.message}
+                    helperText={errors.registeredName?.message}
+                    placeholder="Registered name"
+                  />
+                );
+              }}
             />
           </div>
           <div className="flex items-start gap-4">
@@ -184,12 +202,19 @@ const OrganizationDialogue = ({
               Registration #
             </label>
 
-            <Input
-              value={watch("registrationNumber")}
-              onChange={(e) => setValue("registrationNumber", e.target.value)}
-              error={!!errors.registrationNumber?.message}
-              helperText={errors.registrationNumber?.message}
-              placeholder="Registration number"
+            <Controller
+              name="registrationNumber"
+              control={control}
+              render={({ field }) => {
+                return (
+                  <Input
+                    {...field}
+                    error={!!errors.registrationNumber?.message}
+                    helperText={errors.registrationNumber?.message}
+                    placeholder="Registration number"
+                  />
+                );
+              }}
             />
           </div>
           <div className="flex items-start gap-4">
@@ -198,36 +223,65 @@ const OrganizationDialogue = ({
             </label>
 
             <div className="w-full space-y-[22px]">
-              <Input
-                value={watch("registeredAddress")}
-                onChange={(e) => setValue("registeredAddress", e.target.value)}
-                error={!!errors.registeredAddress?.message}
-                helperText={errors.registeredAddress?.message}
-                placeholder="Registered address"
+              <Controller
+                name="registeredAddress"
+                control={control}
+                render={({ field }) => {
+                  return (
+                    <Input
+                      {...field}
+                      error={!!errors.registeredAddress?.message}
+                      helperText={errors.registeredAddress?.message}
+                      placeholder="Registered address"
+                    />
+                  );
+                }}
               />
+
               <div className="flex flex-col md:flex-row w-full gap-[22px] md:gap-2">
-                <Input
-                  value={watch("state")}
-                  onChange={(e) => setValue("state", e.target.value)}
-                  error={!!errors.state?.message}
-                  helperText={errors.state?.message}
-                  placeholder="State"
+                <Controller
+                  name="state"
+                  control={control}
+                  render={({ field }) => {
+                    return (
+                      <Input
+                        {...field}
+                        error={!!errors.state?.message}
+                        helperText={errors.state?.message}
+                        placeholder="State"
+                      />
+                    );
+                  }}
                 />
 
-                <Input
-                  value={watch("postalCode")}
-                  onChange={(e) => setValue("postalCode", e.target.value)}
-                  error={!!errors.postalCode?.message}
-                  helperText={errors.postalCode?.message}
-                  placeholder="Postal Code"
+                <Controller
+                  name="postalCode"
+                  control={control}
+                  render={({ field }) => {
+                    return (
+                      <Input
+                        {...field}
+                        error={!!errors.postalCode?.message}
+                        helperText={errors.postalCode?.message}
+                        placeholder="Postal code"
+                      />
+                    );
+                  }}
                 />
 
-                <Input
-                  value={watch("country")}
-                  onChange={(e) => setValue("country", e.target.value)}
-                  error={!!errors.country?.message}
-                  helperText={errors.country?.message}
-                  placeholder="Country"
+                <Controller
+                  name="country"
+                  control={control}
+                  render={({ field }) => {
+                    return (
+                      <Input
+                        {...field}
+                        error={!!errors.country?.message}
+                        helperText={errors.country?.message}
+                        placeholder="Country"
+                      />
+                    );
+                  }}
                 />
               </div>
             </div>
@@ -241,7 +295,10 @@ const OrganizationDialogue = ({
               value={
                 REGIONS.find((item) => item.value === watch("region"))?.label
               }
-              handleSelect={(val) => setValue("region", val)}
+              handleSelect={(val) => {
+                setValue("region", val);
+                setError("region", { message: "" });
+              }}
               options={REGIONS}
               placeholder="Select region"
               error={!!errors.region?.message}
@@ -256,7 +313,10 @@ const OrganizationDialogue = ({
 
             <Dropdown
               value={TYPES.find((item) => item.value === watch("type"))?.label}
-              handleSelect={(val) => setValue("type", val as OrgTypes)}
+              handleSelect={(val) => {
+                setError("type", { message: "" });
+                setValue("type", val as OrgTypes);
+              }}
               options={TYPES}
               placeholder="Select type"
               error={!!errors.type?.message}
@@ -273,7 +333,10 @@ const OrganizationDialogue = ({
               value={
                 STATUS.find((item) => item.value === watch("status"))?.label
               }
-              handleSelect={(val) => setValue("status", val)}
+              handleSelect={(val) => {
+                setError("status", { message: "" });
+                setValue("status", val);
+              }}
               options={STATUS}
               placeholder="Select status"
               error={!!errors.status?.message}

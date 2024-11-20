@@ -33,24 +33,24 @@ export const organizations = {
   },
 
   schema: z.object({
-    name: z.string().min(1),
+    name: z.string().min(1, "Organization name is required."),
 
-    registeredName: z.string().min(1),
+    registeredName: z.string().min(1, "Registered name is required."),
 
-    registeredAddress: z.string().min(1),
+    registeredAddress: z.string().min(1, "Registered address is required."),
 
-    registrationNumber: z.string().min(1),
+    registrationNumber: z.string().min(1, "Registration number is required"),
 
-    state: z.string().min(1, "Required"),
+    state: z.string().min(1, "State is required"),
 
-    country: z.string().min(1, "Required"),
+    country: z.string().min(1, "Country is required"),
 
-    postalCode: z.string().min(1, "Required"),
+    postalCode: z.string().min(1, "Postal code is required"),
 
-    region: z.string().min(1),
+    region: z.string().min(1, "Region is required"),
 
-    type: z.enum(["funder", "provider"], { message: "Please select type" }),
+    type: z.enum(["funder", "provider"], { message: "Type is required" }),
 
-    status: z.string().min(1),
+    status: z.string().min(1, "Status is required"),
   }),
 };

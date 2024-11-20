@@ -18,6 +18,7 @@ const SearchInput = ({ dark, ...props }: IProps) => {
       />
 
       <Input
+        noHelperText
         dark={dark}
         {...props}
         placeholder={props.placeholder || "Search"}
