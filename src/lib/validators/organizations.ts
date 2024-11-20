@@ -20,6 +20,7 @@ export const organizations = {
 
       region: org?.region || "",
 
+      // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
       type: org?.type! || "",
 
       status: org?.status || "",

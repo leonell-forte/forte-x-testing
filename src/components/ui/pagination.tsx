@@ -1,7 +1,7 @@
 "use client";
 
 import classNames from "classnames";
-import { useMemo, useState } from "react";
+import { ChangeEvent, useMemo, useState } from "react";
 import arrow from "../../assets/images/icons/arrow.svg";
 
 interface IPaginationProps {
@@ -31,7 +31,7 @@ const Pagination = ({
 
   const pageCount = useMemo(() => Math.ceil(total / limit), [total, limit]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     if (/^\d*$/.test(value)) {
       // Allow only numeric input
