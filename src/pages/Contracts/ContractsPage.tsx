@@ -6,17 +6,42 @@ import Table from "../../components/ui/table";
 import pencil from "../../assets/images/icons/pencil.svg";
 import bin from "../../assets/images/icons/bin.svg";
 import ContractDialogue from "../../components/Dashboard/Contracts/Dialogues/ContractDialogue";
+import { useCallback, useState } from "react";
 
 const ContractsPage = () => {
+  const [modal, setModal] = useState<"contract" | null>(null);
+
+  const close = () => {
+    setModal(null);
+  };
+
+  const renderModal = useCallback(() => {
+    switch (modal) {
+      case "contract":
+        return (
+          <ContractDialogue
+            isVisible={modal === "contract"}
+            handleClose={close}
+          />
+        );
+    }
+  }, [modal]);
+
   return (
     <>
-      <ContractDialogue />
+      {renderModal()}
       <div className="space-y-1.5">
         <div className="flex items-center justify-between w-full gap-4">
-          <SearchInput className="!w-[286px]" placeholder="Search contract" />
+          <SearchInput
+            className="!w-[286px]"
+            placeholder="Search contract"
+          />
 
           <div className="flex items-center gap-6">
-            <Button eventName="Add User" onClick={() => {}}>
+            <Button
+              eventName="Add User"
+              onClick={() => setModal("contract")}
+            >
               Add contract
             </Button>
           </div>
@@ -47,7 +72,10 @@ const ContractsPage = () => {
           />
 
           <button onClick={() => {}}>
-            <img src={closeFilter} alt="close-filter" />
+            <img
+              src={closeFilter}
+              alt="close-filter"
+            />
           </button>
         </div>
 
@@ -61,17 +89,27 @@ const ContractsPage = () => {
               <Table.Header></Table.Header>
             </Table.Row>
           </Table.Head>
+
           <Table.Body>
             <Table.Row>
               <Table.Data>-</Table.Data>
+
               <Table.Data>-</Table.Data>
+
               <Table.Data>-</Table.Data>
+
               <Table.Data>-</Table.Data>
+
               <Table.Data>-</Table.Data>
+
               <Table.Data>-</Table.Data>
+
               <Table.Data>-</Table.Data>
+
               <Table.Data>-</Table.Data>
+
               <Table.Data>-</Table.Data>
+
               <Table.Data>
                 <div className="flex justify-end">
                   <Button
@@ -82,7 +120,10 @@ const ContractsPage = () => {
                     // onClick={() => handleEditUser(item)}
                     className="p-[3px]"
                   >
-                    <img alt="pencil" src={pencil} />
+                    <img
+                      alt="pencil"
+                      src={pencil}
+                    />
                   </Button>
 
                   <Button
@@ -93,7 +134,10 @@ const ContractsPage = () => {
                     onClick={() => {}}
                     className="p-[3px]"
                   >
-                    <img alt="pencil" src={bin} />
+                    <img
+                      alt="pencil"
+                      src={bin}
+                    />
                   </Button>
                 </div>
               </Table.Data>

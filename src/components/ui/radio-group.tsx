@@ -34,9 +34,17 @@ const RadioGroup = ({ items, className }: IRadioGroupProps) => {
                 value={item}
                 control={
                   <Radio
-                    icon={<img src={renderIcons().unchecked} alt="unchecked" />}
+                    icon={
+                      <img
+                        src={renderIcons().unchecked}
+                        alt="unchecked"
+                      />
+                    }
                     checkedIcon={
-                      <img src={renderIcons().checked} alt="checked" />
+                      <img
+                        src={renderIcons().checked}
+                        alt="checked"
+                      />
                     }
                   />
                 }
