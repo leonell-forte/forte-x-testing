@@ -36,15 +36,8 @@ const ContractDialogue = ({
             value={datas}
             options={TESTDATA}
             handleSelect={(val) => {
-              setDatas((prev: string[]) => {
-                return prev.includes(val)
-                  ? prev.filter((item) => item !== val)
-                  : [...prev, val];
-              });
+              setDatas(val as string[]);
             }}
-            handleRemoveTag={(val, index) =>
-              setDatas((prev) => prev.filter((item) => item !== val))
-            }
             isMultiSelect
             placeholder="Parties"
           />

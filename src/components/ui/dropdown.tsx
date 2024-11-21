@@ -21,7 +21,7 @@ interface IDropdownProp extends InputHTMLAttributes<HTMLInputElement> {
 
   value?: string | string[];
 
-  handleSelect?: (value: string) => void;
+  handleSelect?: (value: string | string[]) => void;
 
   isMultiSelect?: boolean;
 
@@ -34,8 +34,6 @@ interface IDropdownProp extends InputHTMLAttributes<HTMLInputElement> {
   noHelperText?: boolean;
 
   showAsTags?: boolean;
-
-  handleRemoveTag?: (item: string, index: number) => void;
 }
 
 const Dropdown = ({
@@ -56,8 +54,6 @@ const Dropdown = ({
   noHelperText,
 
   showAsTags,
-
-  handleRemoveTag,
 
   ...props
 }: IDropdownProp) => {
@@ -112,14 +108,19 @@ const Dropdown = ({
           )}
         >
           {showAsTags && isMultiSelect ? (
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 max-w-[95%]">
               {props.value?.length ? (
                 (props.value as string[]).map((item, index) => {
                   return (
                     <Tag
                       handleRemove={(e) => {
                         e.stopPropagation();
-                        handleRemoveTag!(item, index);
+
+                        handleSelect!(
+                          (props.value as string[]).filter(
+                            (val) => val !== item,
+                          ),
+                        );
                       }}
                       key={index}
                       label={item}
@@ -148,7 +149,7 @@ const Dropdown = ({
           )}
 
           {!props.disabled && (
-            <div className="px-1.5 absolute top-[24px] right-2">
+            <div className="absolute right-3 top-[24px]">
               <img
                 alt="arrow"
                 src={arrow}
@@ -186,7 +187,15 @@ const Dropdown = ({
                     <Checkbox
                       checked={props?.value?.includes(value)}
                       onChange={() => {
-                        handleSelect!(value);
+                        let newValue;
+                        if (props.value?.includes(value)) {
+                          newValue = (props.value as string[]).filter(
+                            (item) => item !== value,
+                          );
+                        } else {
+                          newValue = [...(props.value as string[]), value];
+                        }
+                        handleSelect!(newValue);
                       }}
                       dark
                       label={label}
