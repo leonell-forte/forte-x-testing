@@ -37,17 +37,21 @@ const ResetRequestForm = ({ handleNext }: ILoginProps) => {
 
       setAlert({
         message: res.data.message,
+
         title: "OTP Sent!",
+
         status: "success",
       });
+
       handleNext!();
     } catch (err: any) {
       setAlert({
         message: err.response.data.message,
+
         title: "Error",
+
         status: "error",
       });
-      console.log(err);
     } finally {
       setLoading(false);
     }
@@ -78,7 +82,7 @@ const ResetRequestForm = ({ handleNext }: ILoginProps) => {
                 {...field}
                 helperText={errors.email?.message}
                 error={!!errors.email?.message}
-                label="Enter your email"
+                label="Email"
               />
             );
           }}
