@@ -101,8 +101,7 @@ const theme = createTheme({
             "& .MuiOutlinedInput-root": {
               borderRadius: "10px",
               "&.Mui-disabled fieldset": {
-                border: "1.5px solid",
-                borderColor: "#787878",
+                borderColor: "#fff",
               },
             },
             "& .MuiFormHelperText-root": {

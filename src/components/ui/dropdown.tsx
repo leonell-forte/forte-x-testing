@@ -94,7 +94,6 @@ const Dropdown = ({
           "relative h-[56px] w-full cursor-pointer rounded-[8px] border border-white",
           className,
           error && "!border-[#e61a1a]",
-          props.disabled && "!border-[#787878] text-[#333c3d]",
           showAsTags && "h-fit",
         )}
       >
@@ -148,14 +147,12 @@ const Dropdown = ({
             />
           )}
 
-          {!props.disabled && (
-            <div className="absolute right-3 top-[24px]">
-              <img
-                alt="arrow"
-                src={arrow}
-              />
-            </div>
-          )}
+          <div className="absolute right-3 top-[24px]">
+            <img
+              alt="arrow"
+              src={arrow}
+            />
+          </div>
         </button>
 
         <motion.ul
