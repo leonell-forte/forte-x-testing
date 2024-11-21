@@ -20,7 +20,7 @@ interface IDropdownProp extends InputHTMLAttributes<HTMLInputElement> {
 
   value?: string | string[];
 
-  handleSelect?: (value: string) => void;
+  handleSelect?: (value: string | string[]) => void;
 
   isMultiSelect?: boolean;
 
@@ -70,9 +70,9 @@ const Dropdown = ({
   const optionList = useMemo(
     () =>
       options.filter((item) =>
-        item.label.toLowerCase().includes(search.toLowerCase())
+        item.label.toLowerCase().includes(search.toLowerCase()),
       ),
-    [search, options]
+    [search, options],
   );
 
   return (
@@ -80,7 +80,7 @@ const Dropdown = ({
       className={classNames(
         "w-full relative",
         className,
-        !noHelperText && "pb-5"
+        !noHelperText && "pb-5",
       )}
     >
       <div
@@ -89,7 +89,7 @@ const Dropdown = ({
           "relative h-[56px] w-full cursor-pointer rounded-[8px] border border-white",
           className,
           error && "!border-[#e61a1a]",
-          props.disabled && "!border-[#787878] text-[#333c3d]"
+          props.disabled && "!border-[#787878] text-[#333c3d]",
         )}
       >
         <div
@@ -100,7 +100,7 @@ const Dropdown = ({
             type="text"
             className={classNames(
               "bg-transparent border-none outline-none w-[90%] placeholder:text-white/50 pointer-events-none",
-              error && "placeholder:!text-[#fff]/50"
+              error && "placeholder:!text-[#fff]/50",
             )}
             {...props}
             value={displayValue}
@@ -109,7 +109,10 @@ const Dropdown = ({
 
           {!props.disabled && (
             <div className="px-1.5">
-              <img alt="arrow" src={arrow} />
+              <img
+                alt="arrow"
+                src={arrow}
+              />
             </div>
           )}
         </div>
@@ -136,11 +139,24 @@ const Dropdown = ({
                 const { label, value } = item;
 
                 return isMultiSelect ? (
-                  <div key={index} className="py-1.5 px-2.5">
+                  <div
+                    key={index}
+                    className="py-1.5 px-2.5"
+                  >
                     <Checkbox
                       checked={props?.value?.includes(value)}
                       onChange={() => {
-                        handleSelect!(value);
+                        if (isMultiSelect) {
+                          let newValue;
+                          if (props.value?.includes(value)) {
+                            newValue = (props.value as string[]).filter(
+                              (item) => item !== value,
+                            );
+                          } else {
+                            newValue = [...(props.value as string[]), value];
+                          }
+                          handleSelect!(newValue);
+                        } else handleSelect!(value);
                       }}
                       dark
                       label={label}

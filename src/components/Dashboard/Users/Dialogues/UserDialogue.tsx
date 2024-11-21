@@ -135,9 +135,15 @@ const UserDialogue = ({
           <Spinner />
         </div>
       ) : (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-2.5">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-2.5"
+        >
           <div className="flex items-start">
-            <label htmlFor="" className="w-[140px] pt-4">
+            <label
+              htmlFor=""
+              className="w-[140px] pt-4"
+            >
               Email
             </label>
 
@@ -152,7 +158,10 @@ const UserDialogue = ({
             />
           </div>
           <div className="flex items-start">
-            <label htmlFor="" className="w-[140px] pt-4">
+            <label
+              htmlFor=""
+              className="w-[140px] pt-4"
+            >
               First name
             </label>
 
@@ -167,7 +176,10 @@ const UserDialogue = ({
           </div>
 
           <div className="flex items-start">
-            <label htmlFor="" className="w-[140px] pt-4">
+            <label
+              htmlFor=""
+              className="w-[140px] pt-4"
+            >
               Last name
             </label>
 
@@ -181,7 +193,10 @@ const UserDialogue = ({
             />
           </div>
           <div className="flex items-start">
-            <label htmlFor="" className="w-[140px] pt-4">
+            <label
+              htmlFor=""
+              className="w-[140px] pt-4"
+            >
               Phone number
             </label>
 
@@ -195,14 +210,17 @@ const UserDialogue = ({
             />
           </div>
           <div className="flex items-start">
-            <label htmlFor="" className="w-[140px] pt-4">
+            <label
+              htmlFor=""
+              className="w-[140px] pt-4"
+            >
               Organization
             </label>
 
             <Dropdown
               value={
                 organizations.find(
-                  (item) => item.id?.toString() === watch("organizationId")
+                  (item) => item.id?.toString() === watch("organizationId"),
                 )?.registeredName
               }
               options={organizations.map((item: IOrganization) => ({
@@ -217,13 +235,16 @@ const UserDialogue = ({
             />
           </div>
           <div className="flex items-start">
-            <label htmlFor="" className="w-[140px] pt-4">
+            <label
+              htmlFor=""
+              className="w-[140px] pt-4"
+            >
               Role
             </label>
 
             <Dropdown
               value={ROLES.find((item) => item.value === watch("role"))?.label}
-              handleSelect={(val) => setValue("role", val)}
+              handleSelect={(val) => setValue("role", val as string)}
               options={ROLES}
               placeholder="Role"
               error={!!errors.role?.message}
@@ -232,11 +253,17 @@ const UserDialogue = ({
           </div>
 
           <div className="flex justify-end gap-4 !mt-10">
-            <Button onClick={close} buttonType="secondary">
+            <Button
+              onClick={close}
+              buttonType="secondary"
+            >
               Cancel
             </Button>
 
-            <Button loading={isPending} type="submit">
+            <Button
+              loading={isPending}
+              type="submit"
+            >
               Save
             </Button>
           </div>
