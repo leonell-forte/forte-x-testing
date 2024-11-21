@@ -8,7 +8,6 @@ import bin from "../../assets/images/icons/bin.svg";
 import ProjectDialogue from "../../components/Dashboard/Projects/Dialogues/ProjectDialogue";
 import { useQuery } from "@tanstack/react-query";
 import projectService from "../../api/projects";
-import organizationService from "../../api/organization";
 import { IProject } from "./types";
 import DeleteDialogue from "../../components/Dashboard/Projects/Dialogues/DeleteDialogue";
 import { useDebounce } from "../../lib/hooks";
@@ -27,7 +26,7 @@ const ProjectsPage = () => {
 
     500,
 
-    [search]
+    [search],
   );
 
   const { data: projectsList, isLoading: projectLoading } = useQuery({
@@ -36,21 +35,10 @@ const ProjectsPage = () => {
     queryFn: () => projectService.list(page, debouncedSearch),
   });
 
-  const { data: organizationList } = useQuery({
-    queryKey: ["organizations"],
-
-    queryFn: () => organizationService.list(page, true),
-  });
-
-  const organizations = useMemo(
-    () => organizationList?.items || [],
-
-    [organizationList]
-  );
-
   const projects: IProject[] = useMemo(
     () => projectsList?.items || [],
-    [projectsList]
+
+    [projectsList],
   );
 
   const [modal, setModal] = useState<"project" | "delete" | null>(null);
@@ -75,7 +63,6 @@ const ProjectsPage = () => {
         return (
           <ProjectDialogue
             page={page}
-            organizations={organizations}
             projectId={(selectedProject?.id || "") as string}
             isVisible={modal === "project"}
             handleClose={handleCloseModal}
@@ -92,7 +79,7 @@ const ProjectsPage = () => {
           />
         );
     }
-  }, [modal, organizations, selectedProject, page]);
+  }, [modal, selectedProject, page]);
 
   return (
     <>
@@ -106,7 +93,10 @@ const ProjectsPage = () => {
             className="max-w-[286px]"
           />
 
-          <Button eventName="Add User" onClick={() => setModal("project")}>
+          <Button
+            eventName="Add User"
+            onClick={() => setModal("project")}
+          >
             Add project
           </Button>
         </div>
@@ -132,7 +122,9 @@ const ProjectsPage = () => {
                   <Table.Row key={bodyIndex}>
                     <Table.Data>{name}</Table.Data>
 
-                    <Table.Data>{provider.name}</Table.Data>
+                    <Table.Data>
+                      {provider?.map((item) => item.name).join(", ") || "-"}
+                    </Table.Data>
 
                     <Table.Data>
                       {outcomes?.map((item) => item.name).join(", ")}
@@ -152,7 +144,10 @@ const ProjectsPage = () => {
                           onClick={() => handleEditUser(item)}
                           className="p-[3px]"
                         >
-                          <img alt="pencil" src={pencil} />
+                          <img
+                            alt="pencil"
+                            src={pencil}
+                          />
                         </Button>
 
                         <Button
@@ -166,7 +161,10 @@ const ProjectsPage = () => {
                           }}
                           className="p-[3px]"
                         >
-                          <img alt="pencil" src={bin} />
+                          <img
+                            alt="pencil"
+                            src={bin}
+                          />
                         </Button>
                       </div>
                     </Table.Data>
