@@ -33,34 +33,33 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
                 paddingLeft: "40px !important", // adjust padding for input text if needed
               }),
             },
+
             "& .MuiOutlinedInput-root": {
               borderRadius: "10px",
 
               ...(dark && {
-                color: "black", // adjust padding for input text if needed
+                color: "black",
+
+                "& fieldset": {
+                  borderColor: "black",
+                },
+
+                "&:hover fieldset": {
+                  borderColor: "black",
+                },
+
+                "&.Mui-focused fieldset": {
+                  borderColor: "black",
+                },
+
+                "& .MuiInputLabel-root": {
+                  color: "black",
+                },
+
+                "& .MuiFormHelperText-root": {
+                  color: "black",
+                },
               }),
-
-              "& fieldset": {
-                borderColor: dark ? "black" : "auto", // Border color
-              },
-
-              "&:hover fieldset": {
-                borderColor: dark ? "black" : "auto", // Hover border color
-              },
-
-              "&.Mui-focused fieldset": {
-                border: "1.5px solid",
-
-                borderColor: dark ? "black" : "auto", // Focused border color
-              },
-            },
-
-            "& .MuiInputLabel-root": {
-              color: dark ? "black" : "auto", // Label color
-            },
-
-            "& .MuiFormHelperText-root": {
-              color: dark ? "black" : "auto", // Helper text color
             },
           }}
           fullWidth
