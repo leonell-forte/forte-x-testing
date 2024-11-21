@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Input from "../ui/input";
 import Button from "../ui/button";
 import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { resetRequest } from "../../lib/validators/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,18 +11,18 @@ import authService from "../../api/auth";
 import { useAlert } from "../../lib/hooks";
 
 const ResetRequestForm = ({ handleNext }: ILoginProps) => {
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const { setAlert } = useAlert();
 
-  const [loading, setLoading] = useState(false);
-
   const {
+    control,
+
     handleSubmit,
 
     formState: { errors },
-
-    setValue,
   } = useForm<z.infer<typeof resetRequest.schema>>({
     resolver: zodResolver(resetRequest.schema),
 
@@ -69,11 +69,19 @@ const ResetRequestForm = ({ handleNext }: ILoginProps) => {
           </p>
         </div>
 
-        <Input
-          onChange={(e) => setValue("email", e.target.value)}
-          helperText={errors.email?.message}
-          error={!!errors.email?.message}
-          label="Enter your email"
+        <Controller
+          name="email"
+          control={control}
+          render={({ field }) => {
+            return (
+              <Input
+                {...field}
+                helperText={errors.email?.message}
+                error={!!errors.email?.message}
+                label="Enter your email"
+              />
+            );
+          }}
         />
       </div>
 
