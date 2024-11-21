@@ -34,8 +34,6 @@ interface IDropdownProp extends InputHTMLAttributes<HTMLInputElement> {
   noHelperText?: boolean;
 
   showAsTags?: boolean;
-
-  handleRemoveTag?: (item: string, index: number) => void;
 }
 
 const Dropdown = ({
@@ -56,8 +54,6 @@ const Dropdown = ({
   noHelperText,
 
   showAsTags,
-
-  handleRemoveTag,
 
   ...props
 }: IDropdownProp) => {
@@ -99,21 +95,32 @@ const Dropdown = ({
           className,
           error && "!border-[#e61a1a]",
           props.disabled && "!border-[#787878] text-[#333c3d]",
+          showAsTags && "h-fit",
         )}
       >
-        <div
-          onClick={() => !props.disabled && setShowList((prev) => !prev)}
-          className="px-4 flex items-center justify-between relative h-full"
+        <button
+          disabled={props.disabled}
+          type="button"
+          onClick={() => setShowList((prev) => !prev)}
+          className={classNames(
+            "w-full px-4 flex items-center justify-between relative h-full min-h-[56px] outline-none",
+            showAsTags && "!items-start py-[15px]",
+          )}
         >
           {showAsTags && isMultiSelect ? (
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 max-w-[95%]">
               {props.value?.length ? (
                 (props.value as string[]).map((item, index) => {
                   return (
                     <Tag
                       handleRemove={(e) => {
                         e.stopPropagation();
-                        handleRemoveTag!(item, index);
+
+                        handleSelect!(
+                          (props.value as string[]).filter(
+                            (val) => val !== item,
+                          ),
+                        );
                       }}
                       key={index}
                       label={item}
@@ -142,14 +149,14 @@ const Dropdown = ({
           )}
 
           {!props.disabled && (
-            <div className="px-1.5">
+            <div className="absolute right-3 top-[24px]">
               <img
                 alt="arrow"
                 src={arrow}
               />
             </div>
           )}
-        </div>
+        </button>
 
         <motion.ul
           initial={{ opacity: 0 }}

@@ -13,6 +13,7 @@ const DropdownFields = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Dropdown
+          placeholder="Single dropdown"
           value={single}
           handleSelect={(val) => setSingle(val as string)}
           options={OPTIONS}
@@ -20,6 +21,7 @@ const DropdownFields = () => {
 
         <Dropdown
           isMultiSelect
+          placeholder="Multiple select"
           value={multiple}
           handleSelect={(val) => setMultiple(val as string[])}
           options={OPTIONS}
@@ -27,6 +29,7 @@ const DropdownFields = () => {
 
         <Dropdown
           showAsTags
+          placeholder="Multiple tags"
           isMultiSelect
           value={multiple}
           handleSelect={(val) => setMultiple(val as string[])}
