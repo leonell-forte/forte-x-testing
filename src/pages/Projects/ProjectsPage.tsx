@@ -191,7 +191,7 @@ export default ProjectsPage;
 
 const TABLE_HEADER = [
   "Projects",
-  "Partner",
+  "Partners",
   "Outcomes",
   "Contracts",
   "Beneficiaries",
