@@ -28,7 +28,7 @@ const OrganizationsPage = () => {
     },
 
     500,
-    [search]
+    [search],
   );
 
   const [selectedOrg, setSelectedOrg] = useState("");
@@ -53,7 +53,7 @@ const OrganizationsPage = () => {
   const organizations: IOrganization[] = useMemo(
     () => organizationList?.items || [],
 
-    [organizationList]
+    [organizationList],
   );
 
   const close = () => {
@@ -68,21 +68,15 @@ const OrganizationsPage = () => {
     setSelectedOrg(id);
   };
 
-  const handleSelectFilter = (key: keyof IFilters, value: string) => {
+  const handleSelectFilter = (
+    key: keyof IFilters,
+    value: string | string[],
+  ) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleRemoveFilters = () => {
     setFilters(initialFilters);
-  };
-
-  const handleSelectRegion = (val: string) => {
-    setFilters((prev) => {
-      const newRegions = prev.region.includes(val)
-        ? prev.region.filter((item) => item !== val)
-        : [...prev.region, val];
-      return { ...prev, region: newRegions };
-    });
   };
 
   return (
@@ -124,7 +118,7 @@ const OrganizationsPage = () => {
             isMultiSelect
             value={filters.region}
             handleSelect={(val) => {
-              handleSelectRegion(val);
+              handleSelectFilter("region", val);
             }}
             placeholder="Region"
             className="max-w-[166px]"
@@ -154,7 +148,10 @@ const OrganizationsPage = () => {
           />
 
           <button onClick={handleRemoveFilters}>
-            <img src={closeFilter} alt="close-filter" />
+            <img
+              src={closeFilter}
+              alt="close-filter"
+            />
           </button>
         </div>
 
@@ -199,7 +196,7 @@ const OrganizationsPage = () => {
 
                     <Table.Data>{registrationNumber}</Table.Data>
 
-                    <Table.Data>{regions}</Table.Data>
+                    <Table.Data>{regions.join(", ")}</Table.Data>
 
                     <Table.Data>
                       <p className="capitalize">{type}</p>
@@ -224,7 +221,10 @@ const OrganizationsPage = () => {
                         onClick={() => handleEditOrg(id!)}
                         className="p-[3px]"
                       >
-                        <img alt="pencil" src={pencil} />
+                        <img
+                          alt="pencil"
+                          src={pencil}
+                        />
                       </Button>
                     </Table.Data>
                   </Table.Row>

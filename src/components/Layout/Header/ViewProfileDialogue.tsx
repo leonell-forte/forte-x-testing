@@ -148,9 +148,15 @@ const ViewProfileDialogue = ({
           <Spinner />
         </div>
       ) : (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-2.5">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-2.5"
+        >
           <div className="flex items-start">
-            <label htmlFor="" className="w-[140px] pt-4">
+            <label
+              htmlFor=""
+              className="w-[140px] pt-4"
+            >
               Email
             </label>
 
@@ -165,8 +171,12 @@ const ViewProfileDialogue = ({
               placeholder="email@email.com"
             />
           </div>
+
           <div className="flex items-start">
-            <label htmlFor="" className="w-[140px] pt-4">
+            <label
+              htmlFor=""
+              className="w-[140px] pt-4"
+            >
               First name
             </label>
 
@@ -182,7 +192,10 @@ const ViewProfileDialogue = ({
           </div>
 
           <div className="flex items-start">
-            <label htmlFor="" className="w-[140px] pt-4">
+            <label
+              htmlFor=""
+              className="w-[140px] pt-4"
+            >
               Last name
             </label>
 
@@ -196,8 +209,12 @@ const ViewProfileDialogue = ({
               placeholder="Potter"
             />
           </div>
+
           <div className="flex items-start">
-            <label htmlFor="" className="w-[140px] pt-4">
+            <label
+              htmlFor=""
+              className="w-[140px] pt-4"
+            >
               Phone number
             </label>
 
@@ -211,8 +228,12 @@ const ViewProfileDialogue = ({
               placeholder="+61 4567323423"
             />
           </div>
+
           <div className="flex items-start">
-            <label htmlFor="" className="w-[140px] pt-4">
+            <label
+              htmlFor=""
+              className="w-[140px] pt-4"
+            >
               Organization
             </label>
 
@@ -220,7 +241,7 @@ const ViewProfileDialogue = ({
               disabled
               value={
                 organizations.find(
-                  (item) => item.id?.toString() === watch("organizationId")
+                  (item) => item.id?.toString() === watch("organizationId"),
                 )?.registeredName
               }
               options={organizations.map((item: IOrganization) => ({
@@ -236,14 +257,17 @@ const ViewProfileDialogue = ({
           </div>
 
           <div className="flex items-start">
-            <label htmlFor="" className="w-[140px] pt-4">
+            <label
+              htmlFor=""
+              className="w-[140px] pt-4"
+            >
               Role
             </label>
 
             <Dropdown
               disabled
               value={ROLES.find((item) => item.value === watch("role"))?.label}
-              handleSelect={(val) => setValue("role", val)}
+              handleSelect={(val) => setValue("role", val as string)}
               options={ROLES}
               placeholder="Select role"
               error={!!errors.role?.message}
@@ -256,11 +280,17 @@ const ViewProfileDialogue = ({
               <Button onClick={() => setOnEdit(true)}>Edit</Button>
             ) : (
               <>
-                <Button onClick={() => setOnEdit(false)} buttonType="secondary">
+                <Button
+                  onClick={() => setOnEdit(false)}
+                  buttonType="secondary"
+                >
                   Cancel
                 </Button>
 
-                <Button loading={isPending} type="submit">
+                <Button
+                  loading={isPending}
+                  type="submit"
+                >
                   Save
                 </Button>
               </>

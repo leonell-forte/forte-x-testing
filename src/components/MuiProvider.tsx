@@ -93,16 +93,16 @@ const theme = createTheme({
           }),
           // Disabled Variant
           ...(ownerState.disabled && {
-            "& .MuiOutlinedInput-root": {
-              borderRadius: "10px",
-              color: "#787878",
-              "&.Mui-disabled fieldset": {
-                border: "1.5px solid",
-                borderColor: "#787878",
+            "& .MuiOutlinedInput-root.Mui-disabled": {
+              "& .MuiInputBase-input": {
+                "-webkit-text-fill-color": "#fff !important", // Override text fill color
               },
             },
-            "& .MuiInputLabel-root": {
-              color: "#787878 !important",
+            "& .MuiOutlinedInput-root": {
+              borderRadius: "10px",
+              "&.Mui-disabled fieldset": {
+                borderColor: "#fff",
+              },
             },
             "& .MuiFormHelperText-root": {
               position: "absolute",

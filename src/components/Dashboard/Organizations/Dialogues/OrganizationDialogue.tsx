@@ -120,14 +120,14 @@ const OrganizationDialogue = ({
       reset();
 
       amplitude.track(
-        `${orgId ? "Update" : "Add"} Organization Form Submission`
+        `${orgId ? "Update" : "Add"} Organization Form Submission`,
       );
     },
     onError: (err: any, newOrg, context) => {
       queryClient.setQueryData(
         ["organizations", page],
 
-        context?.prevOrganizations
+        context?.prevOrganizations,
       );
 
       setAlert({
@@ -158,9 +158,15 @@ const OrganizationDialogue = ({
           <Spinner />
         </div>
       ) : (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-[22px]">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-[22px]"
+        >
           <div className="flex items-start gap-4">
-            <label htmlFor="" className="pt-4 w-[200px]">
+            <label
+              htmlFor=""
+              className="pt-4 w-[200px]"
+            >
               Organization
             </label>
 
@@ -180,7 +186,10 @@ const OrganizationDialogue = ({
             />
           </div>
           <div className="flex items-start gap-4">
-            <label htmlFor="" className="pt-4 w-[200px]">
+            <label
+              htmlFor=""
+              className="pt-4 w-[200px]"
+            >
               Registered name
             </label>
 
@@ -200,7 +209,10 @@ const OrganizationDialogue = ({
             />
           </div>
           <div className="flex items-start gap-4">
-            <label htmlFor="" className="pt-4 w-[200px]">
+            <label
+              htmlFor=""
+              className="pt-4 w-[200px]"
+            >
               Registration #
             </label>
 
@@ -220,7 +232,10 @@ const OrganizationDialogue = ({
             />
           </div>
           <div className="flex items-start gap-4">
-            <label htmlFor="" className="w-[200px] pt-3.5">
+            <label
+              htmlFor=""
+              className="w-[200px] pt-3.5"
+            >
               Registered address
             </label>
 
@@ -289,7 +304,10 @@ const OrganizationDialogue = ({
             </div>
           </div>
           <div className="flex items-start gap-4">
-            <label htmlFor="" className="pt-4 w-[200px]">
+            <label
+              htmlFor=""
+              className="pt-4 w-[200px]"
+            >
               Region
             </label>
 
@@ -302,10 +320,7 @@ const OrganizationDialogue = ({
                     isMultiSelect
                     value={field.value}
                     handleSelect={(val) => {
-                      const newValue = field.value.includes(val)
-                        ? field.value.filter((item) => item !== val)
-                        : [...field.value, val];
-                      setValue("regions", newValue);
+                      setValue("regions", val as string[]);
                       setError("regions", { message: "" });
                     }}
                     options={REGIONS}
@@ -319,7 +334,10 @@ const OrganizationDialogue = ({
           </div>
 
           <div className="flex items-start gap-4">
-            <label htmlFor="" className="pt-4 w-[200px]">
+            <label
+              htmlFor=""
+              className="pt-4 w-[200px]"
+            >
               Type
             </label>
 
@@ -337,7 +355,10 @@ const OrganizationDialogue = ({
           </div>
 
           <div className="flex items-start gap-4">
-            <label htmlFor="" className="pt-4 w-[200px]">
+            <label
+              htmlFor=""
+              className="pt-4 w-[200px]"
+            >
               Status
             </label>
 
@@ -347,7 +368,7 @@ const OrganizationDialogue = ({
               }
               handleSelect={(val) => {
                 setError("status", { message: "" });
-                setValue("status", val);
+                setValue("status", val as string);
               }}
               options={STATUS}
               placeholder="Select status"
@@ -357,11 +378,17 @@ const OrganizationDialogue = ({
           </div>
 
           <div className="flex justify-end gap-4 !mt-10">
-            <Button onClick={onClose} buttonType="secondary">
+            <Button
+              onClick={onClose}
+              buttonType="secondary"
+            >
               Cancel
             </Button>
 
-            <Button loading={isPending} type="submit">
+            <Button
+              loading={isPending}
+              type="submit"
+            >
               Save
             </Button>
           </div>
