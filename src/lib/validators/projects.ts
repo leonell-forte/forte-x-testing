@@ -14,10 +14,6 @@ export const projects = {
     const data: any = {
       name: project?.name || "",
 
-      providerId: Number(project?.provider.id) || 0,
-
-      funderId: Number(project?.funder.id) || 0,
-
       outcomes: project?.outcomes || [],
     };
 
@@ -31,10 +27,6 @@ export const projects = {
     id: z.number().optional(),
 
     name: z.string().min(1, "Project name is required"),
-
-    funderId: z.number().optional(),
-
-    providerId: z.number().optional(),
 
     outcomes: z.array(OutcomeSchema).min(1, "At least one outcome is required"),
   }),
