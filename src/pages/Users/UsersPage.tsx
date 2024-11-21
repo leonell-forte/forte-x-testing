@@ -31,7 +31,7 @@ const UsersPage = () => {
       setDebouncedSearch(search);
     },
     500,
-    [search]
+    [search],
   );
 
   const { data: userList, isLoading: userLoading } = useQuery({
@@ -55,7 +55,7 @@ const UsersPage = () => {
   const organizations = useMemo(
     () => organizationList?.items || [],
 
-    [organizationList]
+    [organizationList],
   );
 
   const handleRemoveFilters = () => {
@@ -110,7 +110,7 @@ const UsersPage = () => {
 
           <Dropdown
             value={role}
-            handleSelect={(val) => setRole(val)}
+            handleSelect={(val) => setRole(val as string)}
             placeholder="Role"
             className="max-w-[166px]"
             options={ROLES}
@@ -121,9 +121,7 @@ const UsersPage = () => {
             loading={orgLoading}
             value={organization}
             handleSelect={(val) => {
-              if (organization.includes(val))
-                setOrganization((prev) => prev.filter((item) => item !== val));
-              else setOrganization((prev) => [...prev, val]);
+              setOrganization(val as string[]);
             }}
             placeholder="Organization"
             className="max-w-[166px]"
@@ -137,12 +135,18 @@ const UsersPage = () => {
           />
 
           <button onClick={handleRemoveFilters}>
-            <img src={closeFilter} alt="close-filter" />
+            <img
+              src={closeFilter}
+              alt="close-filter"
+            />
           </button>
         </div>
 
         <div className="space-y-[18px]">
-          <Table.Container isEmpty={!users.length} isLoading={userLoading}>
+          <Table.Container
+            isEmpty={!users.length}
+            isLoading={userLoading}
+          >
             <Table.Head>
               <Table.Row>
                 {TABLE_HEADER.map((key, headerIndex) => {
@@ -190,7 +194,10 @@ const UsersPage = () => {
                           onClick={() => handleEditUser(item)}
                           className="p-[3px]"
                         >
-                          <img alt="pencil" src={pencil} />
+                          <img
+                            alt="pencil"
+                            src={pencil}
+                          />
                         </Button>
                       </div>
                     </Table.Data>

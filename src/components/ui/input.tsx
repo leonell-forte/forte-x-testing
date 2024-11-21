@@ -33,32 +33,33 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
                 paddingLeft: "40px !important", // adjust padding for input text if needed
               }),
             },
+
             "& .MuiOutlinedInput-root": {
               borderRadius: "10px",
 
-              color: dark ? "black" : "auto",
+              ...(dark && {
+                color: "black",
 
-              "& fieldset": {
-                borderColor: dark ? "black" : "auto", // Border color
-              },
+                "& fieldset": {
+                  borderColor: "black",
+                },
 
-              "&:hover fieldset": {
-                borderColor: dark ? "black" : "auto", // Hover border color
-              },
+                "&:hover fieldset": {
+                  borderColor: "black",
+                },
 
-              "&.Mui-focused fieldset": {
-                border: "1.5px solid",
+                "&.Mui-focused fieldset": {
+                  borderColor: "black",
+                },
 
-                borderColor: dark ? "black" : "auto", // Focused border color
-              },
-            },
+                "& .MuiInputLabel-root": {
+                  color: "black",
+                },
 
-            "& .MuiInputLabel-root": {
-              color: dark ? "black" : "auto", // Label color
-            },
-
-            "& .MuiFormHelperText-root": {
-              color: dark ? "black" : "auto", // Helper text color
+                "& .MuiFormHelperText-root": {
+                  color: "black",
+                },
+              }),
             },
           }}
           fullWidth
@@ -70,12 +71,15 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
             onClick={() => setShow((prev) => !prev)}
             className="absolute right-4 top-5"
           >
-            <img alt="eye" src={show ? eyeOpen : eyeClosed} />
+            <img
+              alt="eye"
+              src={show ? eyeOpen : eyeClosed}
+            />
           </button>
         )}
       </div>
     );
-  }
+  },
 );
 
 export default Input;
