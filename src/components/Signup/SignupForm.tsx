@@ -8,13 +8,19 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { signup } from "../../lib/validators/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import authService from "../../api/auth";
-import { cookie } from "../../lib/hooks";
+import { cookie, useAlert } from "../../lib/hooks";
 import { ILoginProps } from "../Login/types";
 
 const SignupForm = ({ handleNext }: ILoginProps) => {
   const [loading, setLoading] = useState(false);
+
+  const [params] = useSearchParams();
+
+  const code = params.get("code") as string;
+
+  const { setAlert } = useAlert();
 
   const {
     setValue,
@@ -32,20 +38,33 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
     setLoading(true);
 
     try {
-      const res = await authService.signup(values);
+      const res = await authService.signup(values, code);
 
-      cookie.set("access_token", res.data.token, { path: "/" });
+      cookie.set("access_token", res.data.data.token, { path: "/" });
 
       handleNext!();
-    } catch (err) {
+    } catch (err: any) {
       console.log(err);
+
+      setAlert({
+        status: "error",
+
+        message:
+          err.response.data.data ||
+          "An error has occurred. Please check if you used correct invitation link.",
+
+        title: "Sign up failed",
+      });
     } finally {
       setLoading(false);
     }
   };
   return (
     <div className="w-full">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 w-full">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="space-y-5 w-full"
+      >
         <div className="flex flex-col w-full gap-[15px]">
           <Input
             onChange={(e) => setValue("firstName", e.target.value)}
@@ -132,7 +151,11 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
         </div>
 
         <div className="w-full text-center space-y-[15px]">
-          <Button type="submit" fullWidth loading={loading}>
+          <Button
+            type="submit"
+            fullWidth
+            loading={loading}
+          >
             Continue
           </Button>
           <div className="flex items-center gap-4">
@@ -142,14 +165,21 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
 
             <hr className="w-full" />
           </div>{" "}
-          <Button type="button" fullWidth buttonType="secondary">
+          <Button
+            type="button"
+            fullWidth
+            buttonType="secondary"
+          >
             CONTINUE WITH GOOGLE{" "}
           </Button>
         </div>
 
         <p className="text-center text-[14px]">
           Have an account?{" "}
-          <Link className="font-bold" to="/">
+          <Link
+            className="font-bold"
+            to="/"
+          >
             Log in
           </Link>
         </p>
