@@ -139,7 +139,7 @@ const Dropdown = ({
             <input
               type="text"
               className={classNames(
-                "bg-transparent border-none outline-none w-[90%] placeholder:text-white/50 pointer-events-none",
+                "bg-transparent border-none outline-none w-[90%] placeholder:text-white/50 pointer-events-none disabled:text-white",
                 error && "placeholder:!text-[#fff]/50",
               )}
               {...props}

@@ -171,6 +171,7 @@ const ViewProfileDialogue = ({
               placeholder="email@email.com"
             />
           </div>
+
           <div className="flex items-start">
             <label
               htmlFor=""
@@ -208,6 +209,7 @@ const ViewProfileDialogue = ({
               placeholder="Potter"
             />
           </div>
+
           <div className="flex items-start">
             <label
               htmlFor=""
@@ -226,6 +228,7 @@ const ViewProfileDialogue = ({
               placeholder="+61 4567323423"
             />
           </div>
+
           <div className="flex items-start">
             <label
               htmlFor=""

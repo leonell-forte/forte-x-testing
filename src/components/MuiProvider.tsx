@@ -93,16 +93,17 @@ const theme = createTheme({
           }),
           // Disabled Variant
           ...(ownerState.disabled && {
+            "& .MuiOutlinedInput-root.Mui-disabled": {
+              "& .MuiInputBase-input": {
+                "-webkit-text-fill-color": "#fff !important", // Override text fill color
+              },
+            },
             "& .MuiOutlinedInput-root": {
               borderRadius: "10px",
-              color: "#787878",
               "&.Mui-disabled fieldset": {
                 border: "1.5px solid",
                 borderColor: "#787878",
               },
-            },
-            "& .MuiInputLabel-root": {
-              color: "#787878 !important",
             },
             "& .MuiFormHelperText-root": {
               position: "absolute",
