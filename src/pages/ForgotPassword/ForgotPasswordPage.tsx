@@ -22,7 +22,12 @@ const ForgotPasswordPage = () => {
         return <OTPForm handleNext={handleNextStep} />;
 
       case 2:
-        return <ResetPasswordForm handleNext={handleNextStep} />;
+        return (
+          <ResetPasswordForm
+            handleNext={handleNextStep}
+            handleBack={() => setStep((prev) => prev - 1)}
+          />
+        );
 
       case 3:
         return <ResetSuccess />;
@@ -33,7 +38,10 @@ const ForgotPasswordPage = () => {
     <div className="main-container grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-[99px] items-center h-[95vh] md:px-[86px]">
       <div className="hidden lg:block">
         <div className="max-w-[437px] w-auto h-auto mx-auto md:mx-0">
-          <img alt="jobs" src={jobs} />
+          <img
+            alt="jobs"
+            src={jobs}
+          />
         </div>
 
         <div className="space-y-6 text-center md:text-left">

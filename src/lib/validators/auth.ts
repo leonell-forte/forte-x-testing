@@ -20,7 +20,7 @@ export const login = {
       .regex(/\d/, "Password must contain at least one number")
       .regex(
         /[!@#$%^&*(),.?":{}|<>]/,
-        "Password must contain at least one special character"
+        "Password must contain at least one special character",
       ),
     remember: z.boolean(),
   }),
@@ -28,24 +28,26 @@ export const login = {
 
 export const password = {
   defaultValues: {
-    new: "",
+    password: "",
 
-    confirm: "",
+    confirmPassword: "",
   },
   schema: z
     .object({
-      new: z
+      password: z
         .string()
         .min(8, "Password must be at least 8 characters long")
         .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
         .regex(/\d/, "Password must contain at least one number")
         .regex(
           /[!@#$%^&*(),.?":{}|<>]/,
-          "Password must contain at least one special character"
+          "Password must contain at least one special character",
         ),
-      confirm: z.string().min(8, "Password must be at least 8 characters long"),
+      confirmPassword: z
+        .string()
+        .min(8, "Password must be at least 8 characters long"),
     })
-    .refine((data) => data.new === data.confirm, {
+    .refine((data) => data.password === data.confirmPassword, {
       message: "Passwords do not match",
       path: ["confirm"], // Error will appear on `confirm` field
     }),
@@ -85,7 +87,7 @@ export const signup = {
         .regex(/\d/, "Password must contain at least one number")
         .regex(
           /[!@#$%^&*(),.?":{}|<>]/,
-          "Password must contain at least one special character"
+          "Password must contain at least one special character",
         ),
 
       confirmPassword: z

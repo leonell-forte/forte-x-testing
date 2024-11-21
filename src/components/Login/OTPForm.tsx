@@ -13,6 +13,12 @@ const OTPForm = ({ handleNext }: ILoginProps) => {
 
   const isComplete = useMemo(() => !otp.some((item) => !item), [otp]);
 
+  const handleContinue = () => {
+    sessionStorage.setItem("otp", otp.join(""));
+
+    handleNext!();
+  };
+
   return (
     <div>
       <div className="text-center">
@@ -32,7 +38,7 @@ const OTPForm = ({ handleNext }: ILoginProps) => {
       <Button
         type="button"
         eventName="OTP"
-        onClick={handleNext}
+        onClick={handleContinue}
         disabled={!isComplete}
         fullWidth
       >
