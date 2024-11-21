@@ -23,8 +23,9 @@ jobs:
       - name: Set up .env file with secrets
         run: |
             echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" >> .env
-            echo "REACT_APP_SECRET_KEY=${{ secrets.REACT_APP_SECRET_KEY }}" >> .env
+            cat.env
 
+            echo "REACT_APP_SECRET_KEY=${{ secrets.REACT_APP_SECRET_KEY }}" >> .env
             cat .env 
    
             
