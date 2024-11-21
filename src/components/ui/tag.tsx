@@ -1,8 +1,9 @@
+import { MouseEvent } from "react";
 import close from "../../assets/images/icons/close.svg";
 
 interface ITagProps {
   label?: string;
-  handleRemove?: () => void;
+  handleRemove?: (e: MouseEvent<HTMLButtonElement>) => void;
 }
 
 const Tag = ({ label, handleRemove }: ITagProps) => {
@@ -10,7 +11,10 @@ const Tag = ({ label, handleRemove }: ITagProps) => {
     <div className="rounded-[4px] bg-white bg-opacity-[30%] h-8 px-2.5 flex items-center w-fit gap-2.5">
       <span>{label}</span>
       <button onClick={handleRemove}>
-        <img alt="close" src={close} />
+        <img
+          alt="close"
+          src={close}
+        />
       </button>
     </div>
   );

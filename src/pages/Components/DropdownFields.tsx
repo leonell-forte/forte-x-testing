@@ -26,6 +26,7 @@ const DropdownFields = () => {
         />
 
         <Dropdown
+          showAsTags
           isMultiSelect
           value={multiple}
           handleSelect={(val) => setMultiple(val as string[])}
