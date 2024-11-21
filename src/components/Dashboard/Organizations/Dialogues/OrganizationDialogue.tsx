@@ -311,18 +311,25 @@ const OrganizationDialogue = ({
               Region
             </label>
 
-            <Dropdown
-              value={
-                REGIONS.find((item) => item.value === watch("region"))?.label
-              }
-              handleSelect={(val) => {
-                setValue("region", val as string);
-                setError("region", { message: "" });
+            <Controller
+              name="regions"
+              control={control}
+              render={({ field }) => {
+                return (
+                  <Dropdown
+                    isMultiSelect
+                    value={field.value}
+                    handleSelect={(val) => {
+                      setValue("regions", val as string[]);
+                      setError("regions", { message: "" });
+                    }}
+                    options={REGIONS}
+                    placeholder="Select region"
+                    error={!!errors.regions?.message}
+                    helperText={errors.regions?.message}
+                  />
+                );
               }}
-              options={REGIONS}
-              placeholder="Select region"
-              error={!!errors.region?.message}
-              helperText={errors.region?.message}
             />
           </div>
 

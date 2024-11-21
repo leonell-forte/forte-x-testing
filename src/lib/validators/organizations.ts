@@ -18,7 +18,7 @@ export const organizations = {
 
       postalCode: org?.postalCode || "",
 
-      region: org?.region || "",
+      regions: org?.regions || [],
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
       type: org?.type! || "",
@@ -48,7 +48,7 @@ export const organizations = {
 
     postalCode: z.string().min(1, "Postal code is required"),
 
-    region: z.string().min(1, "Region is required"),
+    regions: z.array(z.string()).min(1, "Region is required"),
 
     type: z.enum(["funder", "provider"], { message: "Type is required" }),
 
