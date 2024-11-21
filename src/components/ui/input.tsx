@@ -36,7 +36,9 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
             "& .MuiOutlinedInput-root": {
               borderRadius: "10px",
 
-              color: dark ? "black" : "auto",
+              ...(dark && {
+                color: "black", // adjust padding for input text if needed
+              }),
 
               "& fieldset": {
                 borderColor: dark ? "black" : "auto", // Border color
@@ -70,12 +72,15 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
             onClick={() => setShow((prev) => !prev)}
             className="absolute right-4 top-5"
           >
-            <img alt="eye" src={show ? eyeOpen : eyeClosed} />
+            <img
+              alt="eye"
+              src={show ? eyeOpen : eyeClosed}
+            />
           </button>
         )}
       </div>
     );
-  }
+  },
 );
 
 export default Input;

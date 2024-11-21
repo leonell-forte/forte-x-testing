@@ -2,6 +2,7 @@ import Input from "./input";
 import { TextFieldProps } from "@mui/material";
 import search from "../../assets/images/icons/search.svg";
 import close from "../../assets/images/icons/close.svg";
+import darkClose from "../../assets/images/icons/dark-close.svg";
 import darkSearch from "../../assets/images/icons/dark-search.svg";
 
 type IProps = TextFieldProps & {
@@ -28,8 +29,8 @@ const SearchInput = ({ dark, ...props }: IProps) => {
       {!!props.value && (
         <img
           alt="search"
-          src={close}
-          className="absolute right-[15px] top-[22px] pointer-events-none"
+          src={dark ? darkClose : close}
+          className="absolute right-[15.33px] top-[21.8px] pointer-events-none"
         />
       )}
     </div>
