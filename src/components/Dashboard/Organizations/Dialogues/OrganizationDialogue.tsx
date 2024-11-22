@@ -29,7 +29,7 @@ const OrganizationDialogue = ({
 
   isVisible,
 
-  page,
+  page = 1,
 
   orgId,
 }: IOrganizationDialogueProps) => {

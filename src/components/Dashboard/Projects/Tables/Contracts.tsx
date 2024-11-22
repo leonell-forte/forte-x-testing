@@ -26,12 +26,14 @@ const Contracts = () => {
             handleClose={close}
           />
         );
+
       case "tag":
         return (
           <TagExistingDialogue
             isVisible={modal === "tag"}
             handleClose={close}
             title="Add contracts to project"
+            handleAdd={() => {}}
           />
         );
     }
