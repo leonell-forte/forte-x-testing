@@ -142,7 +142,7 @@ const UserDialogue = ({
           <div className="flex items-start">
             <label
               htmlFor=""
-              className="w-[140px] pt-4"
+              className="w-[140px] pt-3"
             >
               Email
             </label>
@@ -160,7 +160,7 @@ const UserDialogue = ({
           <div className="flex items-start">
             <label
               htmlFor=""
-              className="w-[140px] pt-4"
+              className="w-[140px] pt-3"
             >
               First name
             </label>
@@ -178,7 +178,7 @@ const UserDialogue = ({
           <div className="flex items-start">
             <label
               htmlFor=""
-              className="w-[140px] pt-4"
+              className="w-[140px] pt-3"
             >
               Last name
             </label>
@@ -195,7 +195,7 @@ const UserDialogue = ({
           <div className="flex items-start">
             <label
               htmlFor=""
-              className="w-[140px] pt-4"
+              className="w-[140px] pt-3"
             >
               Phone number
             </label>
@@ -212,7 +212,7 @@ const UserDialogue = ({
           <div className="flex items-start">
             <label
               htmlFor=""
-              className="w-[140px] pt-4"
+              className="w-[140px] pt-3"
             >
               Organization
             </label>
@@ -237,7 +237,7 @@ const UserDialogue = ({
           <div className="flex items-start">
             <label
               htmlFor=""
-              className="w-[140px] pt-4"
+              className="w-[140px] pt-3"
             >
               Role
             </label>

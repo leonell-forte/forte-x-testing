@@ -167,7 +167,7 @@ const ProjectDialogue = ({
           <div className="flex items-start">
             <label
               htmlFor=""
-              className="w-[180px] pt-4"
+              className="w-[180px] pt-3"
             >
               Project name
             </label>
