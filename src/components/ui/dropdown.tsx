@@ -147,7 +147,7 @@ const Dropdown = ({
                 error && "placeholder:!text-[#fff]/50",
               )}
               {...props}
-              value={capitalize(displayValue)}
+              value={capitalize(displayValue || "")}
               readOnly
             />
           )}
