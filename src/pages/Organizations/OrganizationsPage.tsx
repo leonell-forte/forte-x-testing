@@ -114,6 +114,7 @@ const OrganizationsPage = () => {
           <p className="text-[20px] font-medium">Filter by</p>
 
           <Dropdown
+            enableSearch
             noHelperText
             isMultiSelect
             value={filters.region}

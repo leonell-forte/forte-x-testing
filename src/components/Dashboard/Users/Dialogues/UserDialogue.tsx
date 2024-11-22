@@ -218,6 +218,7 @@ const UserDialogue = ({
             </label>
 
             <Dropdown
+              enableSearch
               value={
                 organizations.find(
                   (item) => item.id?.toString() === watch("organizationId"),
