@@ -24,7 +24,7 @@ const Table = {
     ...props
   }: ITableContainerProp) => {
     return (
-      <>
+      <div className="w-full overflow-scroll hide-scroll">
         <table
           {...props}
           className="w-full rounded-t-[8px] overflow-hidden"
@@ -41,7 +41,7 @@ const Table = {
             <Spinner />
           </div>
         )}
-      </>
+      </div>
     );
   },
 
@@ -69,7 +69,7 @@ const Table = {
       <td
         {...props}
         className={classNames(
-          "px-4 py-[19px] border-b max-w-[200px] truncate text-[14px]",
+          "px-4 py-[19px] border-b max-w-[300px] truncate text-[14px]",
           className,
         )}
       >
