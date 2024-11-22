@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import Outcomes from "../../../components/Dashboard/Projects/Tables/Outcomes";
 import arrow from "../../../assets/images/icons/arrow.svg";
 import Contracts from "../../../components/Dashboard/Projects/Tables/Contracts";
+import Partners from "../../../components/Dashboard/Projects/Tables/Partners";
+import Beneficiaries from "../../../components/Dashboard/Projects/Tables/Beneficiaries";
 
 const IndividualProjectsPage = () => {
   return (
@@ -21,6 +23,10 @@ const IndividualProjectsPage = () => {
       <Outcomes />
 
       <Contracts />
+
+      <Partners />
+
+      <Beneficiaries />
     </div>
   );
 };

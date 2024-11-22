@@ -4,18 +4,18 @@ import { useState } from "react";
 import Input from "../../../../components/ui/input";
 import Button from "../../../../components/ui/button";
 
-const Contracts = () => {
+const Partners = () => {
   const [editIndex, setEditIndex] = useState<number | null>(null);
 
   return (
     <div className="space-y-2.5">
       <div className="flex justify-between items-center">
-        <p className="font-semibold text-[24px]">Contracts</p>
+        <p className="font-semibold text-[24px]">Partners</p>
 
         <div className="flex gap-2.5">
-          <Button buttonType="secondary">Tag existing contract</Button>
+          <Button buttonType="secondary">Tag existing partner</Button>
 
-          <Button>Add new contract</Button>
+          <Button>Add new partner</Button>
         </div>
       </div>
 
@@ -46,6 +46,10 @@ const Contracts = () => {
                 <Table.Data className="h-[56px] py-1">{`Outcome ${
                   index + 1
                 }`}</Table.Data>
+
+                <Table.Data className="h-[56px] py-1">
+                  {onEdit ? <Input noHelperText /> : <p>test</p>}
+                </Table.Data>
 
                 <Table.Data className="h-[56px] py-1">
                   {onEdit ? <Input noHelperText /> : <p>test</p>}
@@ -106,14 +110,16 @@ const Contracts = () => {
   );
 };
 
-export default Contracts;
+export default Partners;
 
 const HEADERS = [
-  "Parties",
-  "Outcome(s)",
-  "Beneficiaries",
+  "Organization",
+  "Registered Name",
+  "Registered Address",
+  "Registration",
+  "Region",
   "Status",
-  "Start date",
-  "End date",
-  "Contract",
+  "Users",
+  "Projects",
+  "Contracts",
 ];
