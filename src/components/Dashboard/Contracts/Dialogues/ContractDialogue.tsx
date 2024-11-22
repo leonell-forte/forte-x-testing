@@ -16,6 +16,7 @@ const ContractDialogue = ({
   handleClose,
 }: IContractDialogueProps) => {
   const [datas, setDatas] = useState<string[]>([]);
+
   return (
     <Dialogue
       isVisible={isVisible}
@@ -154,11 +155,13 @@ const ContractDialogue = ({
 
           <div className="w-full">
             <Input placeholder="Organization name" />
+
             <div className="flex flex-col gap-2 md:flex-row md:items-end">
               <RadioGroup
                 className="flex flex-col gap-4 md:w-[280px]"
                 items={["Per outcome", "If threshold reached"]}
               />
+
               <Input
                 small
                 noHelperText
