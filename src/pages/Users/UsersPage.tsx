@@ -118,6 +118,7 @@ const UsersPage = () => {
           />
 
           <Dropdown
+            enableSearch
             loading={orgLoading}
             value={organization}
             handleSelect={(val) => {

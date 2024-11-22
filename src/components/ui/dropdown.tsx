@@ -34,6 +34,8 @@ interface IDropdownProp extends InputHTMLAttributes<HTMLInputElement> {
   noHelperText?: boolean;
 
   showAsTags?: boolean;
+
+  enableSearch?: boolean;
 }
 
 const Dropdown = ({
@@ -54,6 +56,8 @@ const Dropdown = ({
   noHelperText,
 
   showAsTags,
+
+  enableSearch,
 
   ...props
 }: IDropdownProp) => {
@@ -159,13 +163,15 @@ const Dropdown = ({
           initial={{ opacity: 0 }}
           animate={showList ? { opacity: 1 } : { opacity: 0, display: "none" }}
           transition={{ type: "spring", duration: 0.2, bounce: 0 }}
-          className="absolute space-y-2 bottom-[-400px] left-0 rounded-[4px] min-w-[300px] bg-white/90 p-2.5 w-full overflow-hidden shadow-md z-10 h-[400px] hide-scroll overflow-y-scroll"
+          className="absolute space-y-2 top-[50px] left-0 rounded-[4px] min-w-[300px] bg-white/90 p-2.5 w-full overflow-hidden shadow-md z-10 max-h-[400px] hide-scroll overflow-y-scroll"
         >
-          <SearchInput
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            dark
-          />
+          {enableSearch && (
+            <SearchInput
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              dark
+            />
+          )}
 
           <div>
             {loading ? (

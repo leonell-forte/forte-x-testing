@@ -189,6 +189,7 @@ const OrganizationDialogue = ({
               }}
             />
           </div>
+
           <div className="flex items-start gap-4">
             <label
               htmlFor=""
@@ -212,6 +213,7 @@ const OrganizationDialogue = ({
               }}
             />
           </div>
+
           <div className="flex items-start gap-4">
             <label
               htmlFor=""
@@ -235,6 +237,7 @@ const OrganizationDialogue = ({
               }}
             />
           </div>
+
           <div className="flex items-start gap-4">
             <label
               htmlFor=""
@@ -307,6 +310,7 @@ const OrganizationDialogue = ({
               </div>
             </div>
           </div>
+
           <div className="flex items-start gap-4">
             <label
               htmlFor=""
@@ -321,6 +325,7 @@ const OrganizationDialogue = ({
               render={({ field }) => {
                 return (
                   <Dropdown
+                    enableSearch
                     isMultiSelect
                     value={field.value}
                     handleSelect={(val) => {
