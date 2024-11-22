@@ -75,7 +75,7 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
           <button
             type="button"
             onClick={() => setShow((prev) => !prev)}
-            className="absolute right-4 top-5"
+            className="absolute right-4 top-4"
           >
             <img
               alt="eye"
