@@ -128,7 +128,7 @@ const Dropdown = ({
                 })
               ) : (
                 <input
-                  className="bg-transparent border-none outline-none w-[90%] placeholder:text-white/50 pointer-events-none"
+                  className="bg-transparent border-none outline-none w-[90%] placeholder:text-white/50 pointer-events-none mt-1"
                   type="text"
                   {...props}
                 />

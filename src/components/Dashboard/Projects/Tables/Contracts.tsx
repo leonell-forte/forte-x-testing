@@ -3,7 +3,7 @@ import pencil from "../../../../assets/images/icons/pencil.svg";
 import { useState } from "react";
 import Input from "../../../../components/ui/input";
 import Button from "../../../../components/ui/button";
-import ContractDialogue from "../Dialogues/ContractDialogue";
+import ContractDialogue from "../../Contracts/Dialogues/ContractDialogue";
 
 type ModalLabelType = "contract" | "";
 
