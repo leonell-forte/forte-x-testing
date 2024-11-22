@@ -57,7 +57,7 @@ const OutcomeField = ({
             <button
               type="button"
               onClick={handleDelete}
-              className="!w-8 !h-8 bg-white rounded-full flex-shrink-0 text-forest-green flex items-center justify-center hover:scale-[1.05] transition-all hover:opacity-80 mt-3"
+              className="!w-8 !h-8 bg-white rounded-full flex-shrink-0 text-forest-green flex items-center justify-center hover:scale-[1.05] transition-all hover:opacity-80 mt-2"
             >
               <img
                 src={minus}
