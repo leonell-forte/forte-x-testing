@@ -4,8 +4,9 @@ import { useState } from "react";
 import Input from "../../../../components/ui/input";
 import Button from "../../../../components/ui/button";
 import ContractDialogue from "../../Contracts/Dialogues/ContractDialogue";
+import TagExistingDialogue from "../Dialogues/TagExistingDialogue";
 
-type ModalLabelType = "contract" | "";
+type ModalLabelType = "contract" | "tag" | "";
 
 const Contracts = () => {
   const [editIndex, setEditIndex] = useState<number | null>(null);
@@ -25,6 +26,14 @@ const Contracts = () => {
             handleClose={close}
           />
         );
+      case "tag":
+        return (
+          <TagExistingDialogue
+            isVisible={modal === "tag"}
+            handleClose={close}
+            title="Add contracts to project"
+          />
+        );
     }
   };
 
@@ -37,7 +46,12 @@ const Contracts = () => {
           <p className="font-semibold text-[24px]">Contracts</p>
 
           <div className="flex gap-2.5">
-            <Button buttonType="secondary">Tag existing contract</Button>
+            <Button
+              onClick={() => setModal("tag")}
+              buttonType="secondary"
+            >
+              Tag existing contract
+            </Button>
 
             <Button onClick={() => setModal("contract")}>
               Add new contract
