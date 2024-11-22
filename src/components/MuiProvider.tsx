@@ -9,6 +9,9 @@ const theme = createTheme({
       styleOverrides: {
         root: ({ ownerState }) => ({
           // Primary Variant (default)
+          "& .MuiInputBase-input": {
+            height: 17,
+          },
           ...(ownerState.color === "primary" && {
             "& .MuiOutlinedInput-root": {
               borderRadius: "10px",

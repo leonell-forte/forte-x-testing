@@ -43,20 +43,26 @@ const SidePanel = () => {
           onClick={handleClose}
           className="block md:hidden absolute top-4 right-4"
         >
-          <img src={close} alt="" />
+          <img
+            src={close}
+            alt=""
+          />
         </button>
 
         {MENUS.map((item, index) => {
           const { name, link } = item;
 
-          const active = pathname === link;
+          const active = pathname.includes(link);
 
           return (
-            <Link key={index} to={link}>
+            <Link
+              key={index}
+              to={link}
+            >
               <li
                 className={classNames(
                   "capitalize font-medium p-2.5 transition-all",
-                  active && "text-mint"
+                  active && "text-mint",
                 )}
               >
                 {name}

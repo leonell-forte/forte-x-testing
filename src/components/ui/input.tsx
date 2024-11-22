@@ -8,6 +8,7 @@ import classNames from "classnames";
 
 type PropTypes = TextFieldProps & {
   dark?: boolean;
+
   noHelperText?: boolean;
 };
 

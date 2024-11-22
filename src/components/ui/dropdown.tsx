@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { InputHTMLAttributes, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useOutsideClick } from "../../lib/hooks";
-import arrow from "../../assets/images/icons/arrow.svg";
+import arrow from "../../assets/images/icons/chevron.svg";
 import Checkbox from "./checkbox";
 import Loader from "./spinner/spinner";
 import SearchInput from "./search-input";
@@ -91,10 +91,10 @@ const Dropdown = ({
       <div
         ref={dropdownRef}
         className={classNames(
-          "relative h-[56px] w-full cursor-pointer rounded-[8px] border border-white",
+          "relative h-[50px] w-full cursor-pointer rounded-[8px] border border-white",
           className,
           error && "!border-[#e61a1a]",
-          showAsTags && "h-fit",
+          showAsTags && "!h-fit",
         )}
       >
         <button
@@ -102,8 +102,8 @@ const Dropdown = ({
           type="button"
           onClick={() => setShowList((prev) => !prev)}
           className={classNames(
-            "w-full px-4 flex items-center justify-between relative h-full min-h-[56px] outline-none",
-            showAsTags && "!items-start py-[15px]",
+            "w-full px-4 flex items-center justify-between relative h-full min-h-[50px] outline-none",
+            showAsTags && "!items-start py-[9px]",
           )}
         >
           {showAsTags && isMultiSelect ? (
@@ -147,7 +147,7 @@ const Dropdown = ({
             />
           )}
 
-          <div className="absolute right-3 top-[24px]">
+          <div className="absolute right-3 top-[20px]">
             <img
               alt="arrow"
               src={arrow}
