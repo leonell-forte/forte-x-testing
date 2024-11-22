@@ -3,8 +3,9 @@ import Button from "../../../ui/button";
 import { useState } from "react";
 import TagExistingDialogue from "../Dialogues/TagExistingDialogue";
 import BeneficiariesDialogue from "../../Beneficiaries/Dialogues/BeneficiariesDialogue";
+import ImportDialogue from "../../Beneficiaries/Dialogues/ImportDialogue";
 
-type ModalLabelType = "beneficiaries" | "tag" | "";
+type ModalLabelType = "beneficiaries" | "tag" | "import" | "";
 
 const Beneficiaries = () => {
   const [modal, setModal] = useState<ModalLabelType>("");
@@ -32,6 +33,13 @@ const Beneficiaries = () => {
             handleAdd={() => {}}
           />
         );
+      case "import":
+        return (
+          <ImportDialogue
+            isVisible={modal === "import"}
+            handleClose={close}
+          />
+        );
     }
   };
   return (
@@ -43,7 +51,12 @@ const Beneficiaries = () => {
           <p className="font-semibold text-[24px]">Beneficiaries</p>
 
           <div className="flex gap-2.5">
-            <Button buttonType="secondary">Import beneficiaries</Button>
+            <Button
+              onClick={() => setModal("import")}
+              buttonType="secondary"
+            >
+              Import beneficiaries
+            </Button>
 
             <Button
               onClick={() => setModal("tag")}

@@ -116,6 +116,10 @@ const Partners = () => {
                   </Table.Data>
 
                   <Table.Data className="h-[56px] py-1">
+                    {onEdit ? <Input noHelperText /> : <p>test</p>}
+                  </Table.Data>
+
+                  <Table.Data className="h-[56px] py-1">
                     <div className="flex justify-end gap-1.5">
                       {onEdit ? (
                         <>

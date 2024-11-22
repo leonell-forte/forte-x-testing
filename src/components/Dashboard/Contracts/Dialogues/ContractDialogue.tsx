@@ -96,7 +96,7 @@ const ContractDialogue = ({
           <Input placeholder="Organization name" />
         </div>
 
-        <div className="flex items-center gap-[38.75px]">
+        <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6">
           <div className="flex items-start gap-4">
             <label
               htmlFor=""
@@ -107,6 +107,7 @@ const ContractDialogue = ({
 
             <Input placeholder="Start date" />
           </div>
+
           <div className="flex items-start gap-4">
             <label
               htmlFor=""
@@ -153,9 +154,9 @@ const ContractDialogue = ({
 
           <div className="w-full">
             <Input placeholder="Organization name" />
-            <div className="flex items-end w-full">
+            <div className="flex flex-col gap-2 md:flex-row md:items-end">
               <RadioGroup
-                className="flex flex-col gap-4 w-[280px]"
+                className="flex flex-col gap-4 md:w-[280px]"
                 items={["Per outcome", "If threshold reached"]}
               />
               <Input
