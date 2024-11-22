@@ -12,7 +12,6 @@ import OrganizationDialogue from "../../components/Dashboard/Organizations/Dialo
 import { REGIONS, STATUS, TYPES } from "../../lib/constants";
 import { useDebounce } from "../../lib/hooks";
 import closeFilter from "../../assets/images/icons/close-filter.svg";
-import { capitalize } from "@mui/material";
 
 const OrganizationsPage = () => {
   const [modal, setModal] = useState<"org" | null>(null);
@@ -129,7 +128,7 @@ const OrganizationsPage = () => {
 
           <Dropdown
             noHelperText
-            value={capitalize(filters.status)}
+            value={filters.status}
             handleSelect={(val) => {
               handleSelectFilter("status", val);
             }}
@@ -140,7 +139,7 @@ const OrganizationsPage = () => {
 
           <Dropdown
             noHelperText
-            value={capitalize(filters.type)}
+            value={filters.type}
             handleSelect={(val) => {
               handleSelectFilter("type", val);
             }}
