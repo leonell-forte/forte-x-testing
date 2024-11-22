@@ -7,6 +7,7 @@ import Checkbox from "./checkbox";
 import Loader from "./spinner/spinner";
 import SearchInput from "./search-input";
 import Tag from "./tag";
+import { capitalize } from "@mui/material";
 
 interface IOption {
   label: string;
@@ -146,7 +147,7 @@ const Dropdown = ({
                 error && "placeholder:!text-[#fff]/50",
               )}
               {...props}
-              value={displayValue}
+              value={capitalize(displayValue)}
               readOnly
             />
           )}

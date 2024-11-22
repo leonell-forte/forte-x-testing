@@ -13,7 +13,7 @@ class OrganizationService {
 
     search?: string,
 
-    filters?: IFilters
+    filters?: IFilters,
   ) {
     const params = new URLSearchParams();
 
