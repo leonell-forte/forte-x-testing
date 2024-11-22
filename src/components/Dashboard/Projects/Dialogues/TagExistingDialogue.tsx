@@ -25,7 +25,12 @@ const TagExistingDialogue = ({ ...props }: IProp) => {
         />
 
         <div className="flex justify-end gap-2.5">
-          <Button buttonType="secondary">Cancel</Button>
+          <Button
+            onClick={props.handleClose}
+            buttonType="secondary"
+          >
+            Cancel
+          </Button>
 
           <Button>Add</Button>
         </div>
