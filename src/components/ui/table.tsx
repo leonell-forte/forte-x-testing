@@ -1,18 +1,34 @@
 import React, { TableHTMLAttributes } from "react";
 import Spinner from "./spinner/spinner";
+import classNames from "classnames";
 
 interface ITableProp extends TableHTMLAttributes<HTMLTableElement> {}
 
+interface ITableHeadProps extends TableHTMLAttributes<HTMLHeadElement> {}
+
 interface ITableContainerProp extends ITableProp {
   isEmpty?: boolean;
+
   isLoading?: boolean;
 }
 
+interface ITableCellProps extends TableHTMLAttributes<HTMLTableCellElement> {
+  small?: boolean;
+}
+
 const Table = {
-  Container: ({ children, isEmpty, isLoading }: ITableContainerProp) => {
+  Container: ({
+    children,
+    isEmpty,
+    isLoading,
+    ...props
+  }: ITableContainerProp) => {
     return (
       <>
-        <table className="w-full rounded-t-[8px] overflow-hidden">
+        <table
+          {...props}
+          className="w-full rounded-t-[8px] overflow-hidden"
+        >
           {children}
         </table>
         {isEmpty && !isLoading && (
@@ -29,9 +45,12 @@ const Table = {
     );
   },
 
-  Head: ({ children }: ITableProp) => {
+  Head: ({ children, ...props }: ITableHeadProps) => {
     return (
-      <thead className="text-left bg-white text-[14px] font-medium truncate">
+      <thead
+        {...props}
+        className="text-left bg-white text-[14px] font-medium truncate"
+      >
         {children}
       </thead>
     );
@@ -45,16 +64,29 @@ const Table = {
     return <tr className="w-full">{children}</tr>;
   },
 
-  Data: ({ children }: ITableProp) => {
+  Data: ({ children, className, ...props }: ITableCellProps) => {
     return (
-      <td className="px-4 py-[19px] border-b max-w-[200px] truncate text-[14px]">
+      <td
+        {...props}
+        className={classNames(
+          "px-4 py-[19px] border-b max-w-[200px] truncate text-[14px]",
+          className,
+        )}
+      >
         {children}
       </td>
     );
   },
 
-  Header: ({ children }: ITableProp) => {
-    return <th className="text-black px-4 py-6">{children}</th>;
+  Header: ({ children, small, ...props }: ITableCellProps) => {
+    return (
+      <th
+        {...props}
+        className={classNames("text-black px-4 py-5", small && "!py-3")}
+      >
+        {children}
+      </th>
+    );
   },
 };
 

@@ -29,7 +29,7 @@ const OrganizationDialogue = ({
 
   isVisible,
 
-  page,
+  page = 1,
 
   orgId,
 }: IOrganizationDialogueProps) => {
@@ -80,6 +80,7 @@ const OrganizationDialogue = ({
   };
 
   // implements optimistic update after adding or updating organization
+
   const { mutateAsync: addOrganization, isPending } = useMutation({
     mutationFn: orgId
       ? () => organizationService.update(getValues())
@@ -96,6 +97,7 @@ const OrganizationDialogue = ({
 
       return { prevOrganizations };
     },
+
     onSuccess: (addedOrg) => {
       if (!orgId) {
         queryClient.setQueryData(["organizations", page], (old: any) => {
@@ -123,6 +125,7 @@ const OrganizationDialogue = ({
         `${orgId ? "Update" : "Add"} Organization Form Submission`,
       );
     },
+
     onError: (err: any, newOrg, context) => {
       queryClient.setQueryData(
         ["organizations", page],
@@ -138,6 +141,7 @@ const OrganizationDialogue = ({
         message: err?.response?.data?.message,
       });
     },
+
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["organizations", page] });
     },
@@ -165,7 +169,7 @@ const OrganizationDialogue = ({
           <div className="flex items-start gap-4">
             <label
               htmlFor=""
-              className="pt-4 w-[200px]"
+              className="pt-3 w-[200px]"
             >
               Organization
             </label>
@@ -188,7 +192,7 @@ const OrganizationDialogue = ({
           <div className="flex items-start gap-4">
             <label
               htmlFor=""
-              className="pt-4 w-[200px]"
+              className="pt-3 w-[200px]"
             >
               Registered name
             </label>
@@ -211,7 +215,7 @@ const OrganizationDialogue = ({
           <div className="flex items-start gap-4">
             <label
               htmlFor=""
-              className="pt-4 w-[200px]"
+              className="pt-3 w-[200px]"
             >
               Registration #
             </label>
@@ -306,7 +310,7 @@ const OrganizationDialogue = ({
           <div className="flex items-start gap-4">
             <label
               htmlFor=""
-              className="pt-4 w-[200px]"
+              className="pt-3 w-[200px]"
             >
               Region
             </label>
@@ -336,7 +340,7 @@ const OrganizationDialogue = ({
           <div className="flex items-start gap-4">
             <label
               htmlFor=""
-              className="pt-4 w-[200px]"
+              className="pt-3 w-[200px]"
             >
               Type
             </label>
@@ -357,7 +361,7 @@ const OrganizationDialogue = ({
           <div className="flex items-start gap-4">
             <label
               htmlFor=""
-              className="pt-4 w-[200px]"
+              className="pt-3 w-[200px]"
             >
               Status
             </label>

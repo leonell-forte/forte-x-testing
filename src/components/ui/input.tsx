@@ -8,11 +8,13 @@ import classNames from "classnames";
 
 type PropTypes = TextFieldProps & {
   dark?: boolean;
+
   noHelperText?: boolean;
+  small?: boolean;
 };
 
 const Input = forwardRef<HTMLDivElement, PropTypes>(
-  ({ dark, noHelperText, ...props }, ref) => {
+  ({ dark, small, noHelperText, ...props }, ref) => {
     const [show, setShow] = useState(false);
 
     const { type } = props;
@@ -31,6 +33,10 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
 
               ...(type === "search" && {
                 paddingLeft: "40px !important", // adjust padding for input text if needed
+              }),
+
+              ...(small && {
+                height: "10px",
               }),
             },
 

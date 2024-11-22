@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { InputHTMLAttributes, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useOutsideClick } from "../../lib/hooks";
-import arrow from "../../assets/images/icons/arrow.svg";
+import arrow from "../../assets/images/icons/chevron.svg";
 import Checkbox from "./checkbox";
 import Loader from "./spinner/spinner";
 import SearchInput from "./search-input";
@@ -91,10 +91,10 @@ const Dropdown = ({
       <div
         ref={dropdownRef}
         className={classNames(
-          "relative h-[56px] w-full cursor-pointer rounded-[8px] border border-white",
+          "relative h-[50px] w-full cursor-pointer rounded-[8px] border border-white",
           className,
           error && "!border-[#e61a1a]",
-          showAsTags && "h-fit",
+          showAsTags && "!h-fit",
         )}
       >
         <button
@@ -102,8 +102,8 @@ const Dropdown = ({
           type="button"
           onClick={() => setShowList((prev) => !prev)}
           className={classNames(
-            "w-full px-4 flex items-center justify-between relative h-full min-h-[56px] outline-none",
-            showAsTags && "!items-start py-[15px]",
+            "w-full px-4 flex items-center justify-between relative h-full min-h-[50px] outline-none",
+            showAsTags && "!items-start py-[9px]",
           )}
         >
           {showAsTags && isMultiSelect ? (
@@ -128,7 +128,7 @@ const Dropdown = ({
                 })
               ) : (
                 <input
-                  className="bg-transparent border-none outline-none w-[90%] placeholder:text-white/50 pointer-events-none"
+                  className="bg-transparent border-none outline-none w-[90%] placeholder:text-white/50 pointer-events-none mt-1"
                   type="text"
                   {...props}
                 />
@@ -147,7 +147,7 @@ const Dropdown = ({
             />
           )}
 
-          <div className="absolute right-3 top-[24px]">
+          <div className="absolute right-3 top-[20px]">
             <img
               alt="arrow"
               src={arrow}
@@ -159,7 +159,7 @@ const Dropdown = ({
           initial={{ opacity: 0 }}
           animate={showList ? { opacity: 1 } : { opacity: 0, display: "none" }}
           transition={{ type: "spring", duration: 0.2, bounce: 0 }}
-          className="absolute space-y-2 top-[55px] left-0 rounded-[4px] min-w-[300px] bg-white/90 p-2.5 w-full overflow-hidden shadow-md z-10 h-[400px] hide-scroll overflow-y-scroll"
+          className="absolute space-y-2 bottom-[-400px] left-0 rounded-[4px] min-w-[300px] bg-white/90 p-2.5 w-full overflow-hidden shadow-md z-10 h-[400px] hide-scroll overflow-y-scroll"
         >
           <SearchInput
             value={search}

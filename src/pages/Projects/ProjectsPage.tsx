@@ -11,6 +11,7 @@ import projectService from "../../api/projects";
 import { IProject } from "./types";
 import DeleteDialogue from "../../components/Dashboard/Projects/Dialogues/DeleteDialogue";
 import { useDebounce } from "../../lib/hooks";
+import { Link } from "react-router-dom";
 
 const ProjectsPage = () => {
   const [page, setPage] = useState(1);
@@ -120,7 +121,9 @@ const ProjectsPage = () => {
                 const { id, name, provider, outcomes } = item;
                 return (
                   <Table.Row key={bodyIndex}>
-                    <Table.Data>{name}</Table.Data>
+                    <Table.Data>
+                      <Link to={`/projects/${id}`}>{name}</Link>
+                    </Table.Data>
 
                     <Table.Data>
                       {provider?.map((item) => item.name).join(", ") || "-"}
