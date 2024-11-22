@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useOutsideClick } from "../../../lib/hooks";
-import arrow from "../../../assets/images/icons/arrow.svg";
+import arrow from "../../../assets/images/icons/chevron.svg";
 import authService from "../../../api/auth";
 import { IUser } from "../../../pages/Users/types";
 import organizationService from "../../../api/organization";
@@ -32,7 +32,7 @@ const UserDropdown = ({ user }: IProp) => {
   const organizations = useMemo(
     () => organizationList?.items || [],
 
-    [organizationList]
+    [organizationList],
   );
 
   useOutsideClick(dropdownRef, () => setShowDropdown(false));
@@ -56,7 +56,10 @@ const UserDropdown = ({ user }: IProp) => {
         />
       )}
 
-      <div ref={dropdownRef} className="relative z-40">
+      <div
+        ref={dropdownRef}
+        className="relative z-40"
+      >
         <button
           onClick={() => setShowDropdown((prev) => !prev)}
           className="w-[80px] sm:w-[184px] h-[42px] rounded-[50px] bg-white bg-opacity-[30%] flex justify-between items-center pl-1.5 pr-4 cursor-pointer hover:brightness-[.8] transition-all"
@@ -70,7 +73,10 @@ const UserDropdown = ({ user }: IProp) => {
           </div>
 
           <div className="px-1.5 cursor-pointer">
-            <img alt="arrow" src={arrow} />
+            <img
+              alt="arrow"
+              src={arrow}
+            />
           </div>
         </button>
 
@@ -84,7 +90,10 @@ const UserDropdown = ({ user }: IProp) => {
           transition={{ type: "spring", duration: 0.4, bounce: 0 }}
           className="absolute top-12 left-0 rounded-[4px] bg-white w-full overflow-hidden"
         >
-          <button onClick={handleViewProfile} className="w-full text-left">
+          <button
+            onClick={handleViewProfile}
+            className="w-full text-left"
+          >
             <li className="text-black py-1.5 px-2.5 hover:bg-grey transition-all">
               Profile
             </li>

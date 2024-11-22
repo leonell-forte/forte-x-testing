@@ -2,7 +2,7 @@
 
 import classNames from "classnames";
 import { ChangeEvent, useMemo, useState } from "react";
-import arrow from "../../assets/images/icons/arrow.svg";
+import arrow from "../../assets/images/icons/chevron.svg";
 
 interface IPaginationProps {
   page: number;
@@ -83,7 +83,7 @@ const Pagination = ({
           src={arrow}
           className={classNames(
             "rotate-[-90deg]",
-            page >= pageCount && "opacity-[.2]"
+            page >= pageCount && "opacity-[.2]",
           )}
         />
       </button>

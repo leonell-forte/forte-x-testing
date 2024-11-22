@@ -9,16 +9,28 @@ const theme = createTheme({
       styleOverrides: {
         root: ({ ownerState }) => ({
           // Primary Variant (default)
+          "& input[type='search']::-webkit-search-cancel-button": {
+            display: "none",
+          },
+
+          "& .MuiInputBase-input": {
+            height: 17,
+          },
+
           ...(ownerState.color === "primary" && {
             "& .MuiOutlinedInput-root": {
               borderRadius: "10px",
+
               color: "white",
+
               "& fieldset": {
                 borderColor: "#ffffff",
               },
+
               "&:hover fieldset": {
                 borderColor: "#ffffff",
               },
+
               "&.Mui-focused fieldset": {
                 border: "1.5px solid",
                 borderColor: "#ffffff",
@@ -27,9 +39,12 @@ const theme = createTheme({
             "& .MuiInputLabel-root": {
               color: "#ffffff !important",
             },
+
             "& .MuiFormHelperText-root": {
               position: "absolute",
+
               bottom: -25,
+
               color: "#ffffff",
             },
           }),
@@ -37,60 +52,83 @@ const theme = createTheme({
           ...(ownerState.color === "success" && {
             "& .MuiOutlinedInput-root": {
               borderRadius: "10px",
+
               color: "white",
+
               "& fieldset": {
                 borderColor: "#42ECA8",
               },
+
               "&:hover fieldset": {
                 borderColor: "#42ECA8",
               },
+
               "&.Mui-focused fieldset": {
                 border: "1.5px solid",
+
                 borderColor: "#42ECA8",
               },
             },
             "& .MuiInputLabel-root": {
               color: "#42ECA8",
             },
+
             "& .MuiFormHelperText-root": {
               position: "absolute",
+
               bottom: -25,
+
               color: "#42ECA8",
             },
+
             "& .MuiInputBase-input": {
               color: "#42ECA8",
             },
           }),
+
           // Error Variant
           ...(ownerState.error && {
             "& .MuiOutlinedInput-root": {
               borderRadius: "10px !important",
+
               color: "#e61a1a !important",
+
               "& fieldset": {
                 borderColor: "#e61a1a !important",
               },
+
               "&:hover fieldset": {
                 borderColor: "#e61a1a !important",
+
                 color: "#e61a1a !important",
               },
+
               "&.Mui-focused fieldset": {
                 border: "1.5px solid",
+
                 borderColor: "#e61a1a",
+
                 color: "#e61a1a !important",
               },
             },
+
             "& .MuiInputLabel-root": {
               color: "#e61a1a",
             },
+
             "& .MuiFormHelperText-root": {
               position: "absolute",
+
               bottom: -25,
+
               color: "#e61a1a !important",
             },
+
             "& .MuiInputBase-input": {
               color: "#fff !important",
             },
           }),
+
           // Disabled Variant
           ...(ownerState.disabled && {
             "& .MuiOutlinedInput-root.Mui-disabled": {
@@ -110,6 +148,7 @@ const theme = createTheme({
               color: "#787878 !important",
             },
           }),
+
           ...(ownerState.multiline && {
             "& .MuiInputBase-inputMultiline": {
               minHeight: "119px", // Set desired min height here

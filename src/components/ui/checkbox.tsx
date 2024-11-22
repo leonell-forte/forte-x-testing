@@ -14,9 +14,16 @@ interface ICheckboxProps extends CheckboxProps {
   label?: string | ReactNode;
   helperText?: string | ReactNode;
   dark?: boolean;
+  labelClass?: string;
 }
 
-const Checkbox = ({ label, helperText, dark, ...props }: ICheckboxProps) => {
+const Checkbox = ({
+  label,
+  helperText,
+  dark,
+  labelClass,
+  ...props
+}: ICheckboxProps) => {
   const { disabled } = props;
 
   const renderIcons = useCallback(() => {
@@ -40,21 +47,32 @@ const Checkbox = ({ label, helperText, dark, ...props }: ICheckboxProps) => {
             sx={{
               fontSize: "12px",
             }}
-            icon={<img src={renderIcons().unchecked} alt="unchecked" />}
-            checkedIcon={<img src={renderIcons().checked} alt="checked" />}
+            icon={
+              <img
+                src={renderIcons().unchecked}
+                alt="unchecked"
+              />
+            }
+            checkedIcon={
+              <img
+                src={renderIcons().checked}
+                alt="checked"
+              />
+            }
             {...props}
             className="flex-shrink-0"
           />
         }
         label={
-          <span
+          <p
             className={classNames(
               dark && "!text-black",
-              "text-[12px] text-grey"
+              "text-[12px] text-grey",
+              labelClass,
             )}
           >
             {label}
-          </span>
+          </p>
         }
       />
       {helperText && (

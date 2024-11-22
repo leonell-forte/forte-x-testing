@@ -73,3 +73,7 @@ input:-webkit-autofill:active {
 .hide-scroll::-webkit-scrollbar {
   display: none;
 }
+
+.MuiStack-root {
+  padding: 0 !important;
+}
