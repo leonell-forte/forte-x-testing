@@ -256,8 +256,7 @@ const OrganizationsPage = () => {
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}
-              // total={organizationList?.totalSize}
-              total={20}
+              total={organizationList?.totalSize}
             />
           </div>
         </div>
