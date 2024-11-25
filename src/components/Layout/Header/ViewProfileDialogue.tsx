@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import Spinner from "../../ui/spinner/spinner";
 import * as amplitude from "@amplitude/analytics-browser";
 import { IOrganization } from "../../../pages/Organizations/types";
+import { IUser } from "@/pages/Users/types";
 
 interface IUserDialogueProps extends IDialogueProps {
   userId?: string;
@@ -85,20 +86,26 @@ const ViewProfileDialogue = ({
     mutationFn: () => userService.update(getValues()),
 
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ["users", page] });
+      await queryClient.cancelQueries({ queryKey: ["specific user", userId] });
 
-      const previousUsers = queryClient.getQueryData(["users", page]);
+      const previousData = queryClient.getQueryData(["specific user", userId]);
 
-      return { previousUsers };
+      const previousUsers = queryClient.getQueryData(["users", 1]);
+
+      return { previousData, previousUsers };
     },
 
     onSuccess: (addedUser) => {
-      queryClient.setQueryData(["users", page], (old: any) => {
-        return {
-          ...old,
+      queryClient.setQueryData(["specific user", userId], (old: any) => {
+        return addedUser.data.data;
+      });
 
-          items: [...(old?.items || []), addedUser.data.data],
-        };
+      queryClient.setQueryData(["profile"], () => {
+        return addedUser.data.data;
+      });
+
+      queryClient.setQueryData(["users", 1], (old: { items: IUser[] }) => {
+        return [...(old?.items || []), addedUser.data.data];
       });
 
       close();
@@ -125,11 +132,19 @@ const ViewProfileDialogue = ({
         message: err?.response?.data?.message,
       });
 
-      queryClient.setQueryData(["users", page], context?.previousUsers);
+      queryClient.setQueryData(["specific user", page], context?.previousData);
+
+      queryClient.setQueryData(["profile"], context?.previousData);
+
+      queryClient.setQueryData(["users", 1], context?.previousUsers);
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["users", page] });
+      queryClient.invalidateQueries({ queryKey: ["specific user", userId] });
+
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+
+      queryClient.invalidateQueries({ queryKey: ["users", 1] });
     },
   });
 
