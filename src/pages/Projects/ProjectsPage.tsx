@@ -103,85 +103,87 @@ const ProjectsPage = () => {
         </div>
 
         <div className="space-y-[18px]">
-          <Table.Container
-            isEmpty={!projects.length}
-            isLoading={projectLoading}
-          >
-            <Table.Head>
-              <Table.Row>
-                {TABLE_HEADER.map((key, headerIndex) => {
-                  return <Table.Header key={headerIndex}>{key}</Table.Header>;
+          <div className="h-[74vh] overflow-scroll pr-4">
+            <Table.Container
+              isEmpty={!projects.length}
+              isLoading={projectLoading}
+            >
+              <Table.Head>
+                <Table.Row>
+                  {TABLE_HEADER.map((key, headerIndex) => {
+                    return <Table.Header key={headerIndex}>{key}</Table.Header>;
+                  })}
+
+                  <Table.Header></Table.Header>
+                </Table.Row>
+              </Table.Head>
+              <Table.Body>
+                {projects.map((item: IProject, bodyIndex: number) => {
+                  const { id, name, provider, outcomes } = item;
+                  return (
+                    <Table.Row key={bodyIndex}>
+                      <Table.Data>
+                        <Link to={`/projects/${id}`}>
+                          <p className="w-[140px] truncate">{name}</p>
+                        </Link>
+                      </Table.Data>
+
+                      <Table.Data>
+                        <p className="w-[140px] truncate">
+                          {provider?.map((item) => item.name).join(", ") || "-"}
+                        </p>
+                      </Table.Data>
+
+                      <Table.Data>
+                        <p className="w-[220px] truncate">
+                          {outcomes?.map((item) => item.name).join(", ")}
+                        </p>
+                      </Table.Data>
+
+                      <Table.Data>-</Table.Data>
+
+                      <Table.Data>-</Table.Data>
+
+                      <Table.Data>
+                        <div className="flex justify-end">
+                          <Button
+                            eventName="Edit User"
+                            // id={project}
+                            buttonType="default"
+                            type="button"
+                            onClick={() => handleEditUser(item)}
+                            className="p-[3px]"
+                          >
+                            <img
+                              alt="pencil"
+                              src={pencil}
+                            />
+                          </Button>
+
+                          <Button
+                            eventName="Edit User"
+                            id={id.toString()}
+                            buttonType="default"
+                            type="button"
+                            onClick={() => {
+                              setModal("delete");
+                              setSelectedProject(item);
+                            }}
+                            className="p-[3px]"
+                          >
+                            <img
+                              alt="pencil"
+                              src={bin}
+                            />
+                          </Button>
+                        </div>
+                      </Table.Data>
+                    </Table.Row>
+                  );
                 })}
-
-                <Table.Header></Table.Header>
-              </Table.Row>
-            </Table.Head>
-            <Table.Body>
-              {projects.map((item: IProject, bodyIndex: number) => {
-                const { id, name, provider, outcomes } = item;
-                return (
-                  <Table.Row key={bodyIndex}>
-                    <Table.Data>
-                      <Link to={`/projects/${id}`}>
-                        <p className="w-[140px] truncate">{name}</p>
-                      </Link>
-                    </Table.Data>
-
-                    <Table.Data>
-                      <p className="w-[140px] truncate">
-                        {provider?.map((item) => item.name).join(", ") || "-"}
-                      </p>
-                    </Table.Data>
-
-                    <Table.Data>
-                      <p className="w-[220px] truncate">
-                        {outcomes?.map((item) => item.name).join(", ")}
-                      </p>
-                    </Table.Data>
-
-                    <Table.Data>-</Table.Data>
-
-                    <Table.Data>-</Table.Data>
-
-                    <Table.Data>
-                      <div className="flex justify-end">
-                        <Button
-                          eventName="Edit User"
-                          // id={project}
-                          buttonType="default"
-                          type="button"
-                          onClick={() => handleEditUser(item)}
-                          className="p-[3px]"
-                        >
-                          <img
-                            alt="pencil"
-                            src={pencil}
-                          />
-                        </Button>
-
-                        <Button
-                          eventName="Edit User"
-                          id={id.toString()}
-                          buttonType="default"
-                          type="button"
-                          onClick={() => {
-                            setModal("delete");
-                            setSelectedProject(item);
-                          }}
-                          className="p-[3px]"
-                        >
-                          <img
-                            alt="pencil"
-                            src={bin}
-                          />
-                        </Button>
-                      </div>
-                    </Table.Data>
-                  </Table.Row>
-                );
-              })}
-            </Table.Body>
-          </Table.Container>
+              </Table.Body>
+            </Table.Container>
+          </div>
 
           <div className="flex justify-end absolute bottom-4 right-2">
             <Pagination

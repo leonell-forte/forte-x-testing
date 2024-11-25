@@ -157,100 +157,106 @@ const OrganizationsPage = () => {
         </div>
 
         <div className="space-y-[18px]">
-          <Table.Container
-            isEmpty={!organizations.length}
-            isLoading={orgLoading}
-          >
-            <Table.Head>
-              <Table.Row>
-                {TABLE_HEADER.map((key, headerIndex) => {
-                  return <Table.Header key={headerIndex}>{key}</Table.Header>;
+          <div className="h-[70vh] overflow-scroll pr-4">
+            <Table.Container
+              isEmpty={!organizations.length}
+              isLoading={orgLoading}
+            >
+              <Table.Head>
+                <Table.Row>
+                  {TABLE_HEADER.map((key, headerIndex) => {
+                    return <Table.Header key={headerIndex}>{key}</Table.Header>;
+                  })}
+
+                  <Table.Header></Table.Header>
+                </Table.Row>
+              </Table.Head>
+              <Table.Body>
+                {organizations.map((item: IOrganization, bodyIndex: number) => {
+                  const {
+                    id,
+                    name,
+                    registeredName,
+                    regions,
+                    type,
+                    status,
+                    registeredAddress,
+                    registrationNumber,
+                    noOfProjects,
+                    noOfUsers,
+                    state,
+                    postalCode,
+                    country,
+                  } = item;
+                  return (
+                    <Table.Row key={bodyIndex}>
+                      <Table.Data>
+                        <p className="truncate w-[200px]">{name}</p>
+                      </Table.Data>
+
+                      <Table.Data>
+                        <p className="truncate w-[200px]">{registeredName}</p>
+                      </Table.Data>
+
+                      <Table.Data>
+                        <p className="truncate w-[250px]">
+                          {`${registeredAddress}, ${state} ${postalCode} ${country}`}
+                        </p>
+                      </Table.Data>
+
+                      <Table.Data>
+                        <p className="truncate w-[100px]">
+                          {registrationNumber}
+                        </p>
+                      </Table.Data>
+
+                      <Table.Data>
+                        <p className="truncate w-[120px]">
+                          {regions.join(", ")}
+                        </p>
+                      </Table.Data>
+
+                      <Table.Data>
+                        <p className="truncate w-[60px] capitalize">{type}</p>
+                      </Table.Data>
+
+                      <Table.Data>
+                        <p className="truncate w-[55px] capitalize">{status}</p>
+                      </Table.Data>
+
+                      <Table.Data>
+                        <p className="truncate w-[35px]">{noOfUsers}</p>
+                      </Table.Data>
+
+                      <Table.Data>
+                        <p className="truncate w-[35px]">{noOfProjects}</p>
+                      </Table.Data>
+
+                      <Table.Data>
+                        <p className="truncate w-[35px]">-</p>
+                      </Table.Data>
+
+                      <Table.Data>
+                        <Button
+                          eventName="Edit User"
+                          id={id}
+                          buttonType="default"
+                          type="button"
+                          onClick={() => handleEditOrg(id!)}
+                          className="p-[3px]"
+                        >
+                          <img
+                            alt="pencil"
+                            src={pencil}
+                          />
+                        </Button>
+                      </Table.Data>
+                    </Table.Row>
+                  );
                 })}
-
-                <Table.Header></Table.Header>
-              </Table.Row>
-            </Table.Head>
-            <Table.Body>
-              {organizations.map((item: IOrganization, bodyIndex: number) => {
-                const {
-                  id,
-                  name,
-                  registeredName,
-                  regions,
-                  type,
-                  status,
-                  registeredAddress,
-                  registrationNumber,
-                  noOfProjects,
-                  noOfUsers,
-                  state,
-                  postalCode,
-                  country,
-                } = item;
-                return (
-                  <Table.Row key={bodyIndex}>
-                    <Table.Data>
-                      <p className="truncate w-[200px]">{name}</p>
-                    </Table.Data>
-
-                    <Table.Data>
-                      <p className="truncate w-[200px]">{registeredName}</p>
-                    </Table.Data>
-
-                    <Table.Data>
-                      <p className="truncate w-[250px]">
-                        {`${registeredAddress}, ${state} ${postalCode} ${country}`}
-                      </p>
-                    </Table.Data>
-
-                    <Table.Data>
-                      <p className="truncate w-[100px]">{registrationNumber}</p>
-                    </Table.Data>
-
-                    <Table.Data>
-                      <p className="truncate w-[120px]">{regions.join(", ")}</p>
-                    </Table.Data>
-
-                    <Table.Data>
-                      <p className="truncate w-[60px] capitalize">{type}</p>
-                    </Table.Data>
-
-                    <Table.Data>
-                      <p className="truncate w-[55px] capitalize">{status}</p>
-                    </Table.Data>
-
-                    <Table.Data>
-                      <p className="truncate w-[35px]">{noOfUsers}</p>
-                    </Table.Data>
-
-                    <Table.Data>
-                      <p className="truncate w-[35px]">{noOfProjects}</p>
-                    </Table.Data>
-
-                    <Table.Data>
-                      <p className="truncate w-[35px]">-</p>
-                    </Table.Data>
-
-                    <Table.Data>
-                      <Button
-                        eventName="Edit User"
-                        id={id}
-                        buttonType="default"
-                        type="button"
-                        onClick={() => handleEditOrg(id!)}
-                        className="p-[3px]"
-                      >
-                        <img
-                          alt="pencil"
-                          src={pencil}
-                        />
-                      </Button>
-                    </Table.Data>
-                  </Table.Row>
-                );
-              })}
-            </Table.Body>
-          </Table.Container>
+              </Table.Body>
+            </Table.Container>
+          </div>
 
           <div className="flex justify-end absolute bottom-4 right-2">
             <Pagination

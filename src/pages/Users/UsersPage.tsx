@@ -144,81 +144,83 @@ const UsersPage = () => {
         </div>
 
         <div className="space-y-[18px]">
-          <Table.Container
-            isEmpty={!users.length}
-            isLoading={userLoading}
-          >
-            <Table.Head>
-              <Table.Row>
-                {TABLE_HEADER.map((key, headerIndex) => {
-                  return <Table.Header key={headerIndex}>{key}</Table.Header>;
+          <div className="h-[70vh] overflow-scroll pr-4">
+            <Table.Container
+              isEmpty={!users.length}
+              isLoading={userLoading}
+            >
+              <Table.Head>
+                <Table.Row>
+                  {TABLE_HEADER.map((key, headerIndex) => {
+                    return <Table.Header key={headerIndex}>{key}</Table.Header>;
+                  })}
+
+                  <Table.Header></Table.Header>
+                </Table.Row>
+              </Table.Head>
+              <Table.Body>
+                {users.map((item: IUser, bodyIndex: number) => {
+                  const {
+                    id,
+                    firstName,
+                    lastName,
+                    email,
+                    phoneNumber,
+                    role,
+                    organization,
+                  } = item;
+
+                  return (
+                    <Table.Row key={bodyIndex}>
+                      <Table.Data>
+                        <p className="w-[120px] truncate">{firstName}</p>
+                      </Table.Data>
+
+                      <Table.Data>
+                        <p className="w-[120px] truncate">{lastName}</p>
+                      </Table.Data>
+
+                      <Table.Data>
+                        <p className="w-[190px] truncate">{email}</p>
+                      </Table.Data>
+
+                      <Table.Data>
+                        <p className="w-[150px] truncate">{phoneNumber}</p>
+                      </Table.Data>
+
+                      <Table.Data>
+                        <p className="w-[80px] truncate capitalize">{role}</p>
+                      </Table.Data>
+
+                      <Table.Data>
+                        <p className="w-[150px] truncate">{organization}</p>
+                      </Table.Data>
+
+                      <Table.Data>
+                        <div className="flex justify-end">
+                          <Button
+                            eventName="Edit User"
+                            id={id}
+                            buttonType="default"
+                            type="button"
+                            onClick={() => handleEditUser(item)}
+                            className="p-[3px]"
+                          >
+                            <img
+                              alt="pencil"
+                              src={pencil}
+                            />
+                          </Button>
+                        </div>
+                      </Table.Data>
+                    </Table.Row>
+                  );
                 })}
+              </Table.Body>
+            </Table.Container>
+          </div>
 
-                <Table.Header></Table.Header>
-              </Table.Row>
-            </Table.Head>
-            <Table.Body>
-              {users.map((item: IUser, bodyIndex: number) => {
-                const {
-                  id,
-                  firstName,
-                  lastName,
-                  email,
-                  phoneNumber,
-                  role,
-                  organization,
-                } = item;
-
-                return (
-                  <Table.Row key={bodyIndex}>
-                    <Table.Data>
-                      <p className="w-[120px] truncate">{firstName}</p>
-                    </Table.Data>
-
-                    <Table.Data>
-                      <p className="w-[120px] truncate">{lastName}</p>
-                    </Table.Data>
-
-                    <Table.Data>
-                      <p className="w-[190px] truncate">{email}</p>
-                    </Table.Data>
-
-                    <Table.Data>
-                      <p className="w-[150px] truncate">{phoneNumber}</p>
-                    </Table.Data>
-
-                    <Table.Data>
-                      <p className="w-[80px] truncate capitalize">{role}</p>
-                    </Table.Data>
-
-                    <Table.Data>
-                      <p className="w-[150px] truncate">{organization}</p>
-                    </Table.Data>
-
-                    <Table.Data>
-                      <div className="flex justify-end">
-                        <Button
-                          eventName="Edit User"
-                          id={id}
-                          buttonType="default"
-                          type="button"
-                          onClick={() => handleEditUser(item)}
-                          className="p-[3px]"
-                        >
-                          <img
-                            alt="pencil"
-                            src={pencil}
-                          />
-                        </Button>
-                      </div>
-                    </Table.Data>
-                  </Table.Row>
-                );
-              })}
-            </Table.Body>
-          </Table.Container>
-
-          <div className="flex justify-end absolute bottom-4 right-2">
+          <div className="flex justify-end">
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}
