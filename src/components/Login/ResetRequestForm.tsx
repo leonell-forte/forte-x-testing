@@ -8,10 +8,13 @@ import { resetRequest } from "../../lib/validators/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ILoginProps } from "./types";
 import authService from "../../api/auth";
-import { useAlert } from "../../lib/hooks";
+import { useAlert, useAppDispatch } from "../../lib/hooks";
+import { setEmail } from "../../lib/slice/auth";
 
 const ResetRequestForm = ({ handleNext }: ILoginProps) => {
   const [loading, setLoading] = useState(false);
+
+  const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
 
@@ -42,6 +45,8 @@ const ResetRequestForm = ({ handleNext }: ILoginProps) => {
 
         status: "success",
       });
+
+      dispatch(setEmail(values.email));
 
       handleNext!();
     } catch (err: any) {

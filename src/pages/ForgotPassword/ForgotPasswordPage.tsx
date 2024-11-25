@@ -49,7 +49,7 @@ const ForgotPasswordPage = () => {
             Providing the world’s talent with opportunity
           </p>
 
-          <p className="text-[18px] md:text-[24px] leading-[110%]">
+          <p className="text-[18px] md:text-[20px] leading-[110%]">
             We believe connecting talent with opportunity reduces hardship.
             We’re working towards a world free from financial stress, and where
             everyone has dignity and the freedom to choose their own path in
