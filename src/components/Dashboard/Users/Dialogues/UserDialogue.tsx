@@ -17,18 +17,25 @@ import { useEffect } from "react";
 import Spinner from "../../../ui/spinner/spinner";
 import * as amplitude from "@amplitude/analytics-browser";
 import { IOrganization } from "../../../../pages/Organizations/types";
+import { IUser } from "@/pages/Users/types";
 
 interface IUserDialogueProps extends IDialogueProps {
   userId?: string;
+
   organizations: IOrganization[];
+
   page?: number;
 }
 
 const UserDialogue = ({
   isVisible,
+
   organizations,
+
   handleClose,
+
   userId,
+
   page,
 }: IUserDialogueProps) => {
   const { data: userData, isLoading } = useQuery({
@@ -41,13 +48,19 @@ const UserDialogue = ({
 
   const {
     handleSubmit,
+
     formState: { errors },
+
     setValue,
+
     getValues,
+
     watch,
+
     reset,
   } = useForm<z.infer<typeof users.schema>>({
     resolver: zodResolver(users.schema),
+
     defaultValues: users.defaultValues(),
   });
 
@@ -82,7 +95,7 @@ const UserDialogue = ({
 
     onSuccess: (addedUser) => {
       if (!userId) {
-        queryClient.setQueryData(["users", page], (old: any) => {
+        queryClient.setQueryData(["users", page], (old: { items: IUser[] }) => {
           return {
             ...old,
 
@@ -157,6 +170,7 @@ const UserDialogue = ({
               placeholder="Email"
             />
           </div>
+
           <div className="flex items-start">
             <label
               htmlFor=""
@@ -192,6 +206,7 @@ const UserDialogue = ({
               placeholder="Last name"
             />
           </div>
+
           <div className="flex items-start">
             <label
               htmlFor=""
@@ -209,6 +224,7 @@ const UserDialogue = ({
               placeholder="Phone number"
             />
           </div>
+
           <div className="flex items-start">
             <label
               htmlFor=""
@@ -235,6 +251,7 @@ const UserDialogue = ({
               readOnly
             />
           </div>
+
           <div className="flex items-start">
             <label
               htmlFor=""
