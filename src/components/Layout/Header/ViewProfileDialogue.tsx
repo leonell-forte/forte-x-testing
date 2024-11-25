@@ -96,7 +96,7 @@ const ViewProfileDialogue = ({
     },
 
     onSuccess: (addedUser) => {
-      queryClient.setQueryData(["specific user", userId], (old: any) => {
+      queryClient.setQueryData(["specific user", userId], () => {
         return addedUser.data.data;
       });
 
