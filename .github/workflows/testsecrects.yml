@@ -3,7 +3,7 @@ name: DEVELOPMENT Deploy React App to CloudFront
 on:
   push:
     branches:
-      - development
+      - 
 
 jobs:
   build_and_deploy:
