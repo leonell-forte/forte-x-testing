@@ -65,7 +65,7 @@ const ResetPasswordForm = ({ handleNext, handleBack }: IProps) => {
         <p className="text-[14px] md:text-[18px]">
           Please choose a password with at least 8 characters, including one
           uppercase letter, one number, and one special character. Choose
-          something you haven't used before.
+          something you haven&apos;t used before.
         </p>
       </div>
 
