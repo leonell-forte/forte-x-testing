@@ -63,8 +63,9 @@ const ResetPasswordForm = ({ handleNext, handleBack }: IProps) => {
         <p className="text-[24px] md:text-[32px]">Create a new password</p>
 
         <p className="text-[14px] md:text-[18px]">
-          Please choose a password that hasn’t been used before. Must be at
-          least 8 characters.
+          Please choose a password with at least 8 characters, including one
+          uppercase letter, one number, and one special character. Choose
+          something you haven&apos;t used before.
         </p>
       </div>
 
@@ -76,7 +77,7 @@ const ResetPasswordForm = ({ handleNext, handleBack }: IProps) => {
             return (
               <Input
                 {...field}
-                placeholder="Password"
+                placeholder="New password"
                 type="password"
                 error={!!errors.password?.message}
                 helperText={errors.password?.message}
@@ -93,7 +94,7 @@ const ResetPasswordForm = ({ handleNext, handleBack }: IProps) => {
               <Input
                 {...field}
                 type="password"
-                placeholder="Confirm password"
+                placeholder="Confirm new password"
                 error={!!errors?.confirmPassword?.message}
                 helperText={errors.confirmPassword?.message}
               />
