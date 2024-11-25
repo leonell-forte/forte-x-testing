@@ -187,7 +187,7 @@ const ProjectDialogue = ({
           </div>
 
           <div className="flex w-full items-center gap-4">
-            <p className="w-[190px]">Outcome</p>
+            <p className="w-[190px]">Outcomes</p>
 
             <hr className="w-full" />
 
