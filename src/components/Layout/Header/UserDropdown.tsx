@@ -13,6 +13,8 @@ interface IProp {
 }
 
 const UserDropdown = ({ user }: IProp) => {
+  const [showModal, setShowModal] = useState(false);
+
   const { data: organizationList } = useQuery({
     queryKey: ["organizations"],
 
@@ -20,8 +22,6 @@ const UserDropdown = ({ user }: IProp) => {
   });
 
   const [showDropdown, setShowDropdown] = useState(false);
-
-  const [showModal, setShowModal] = useState(false);
 
   const handleLogout = () => {
     authService.logout();

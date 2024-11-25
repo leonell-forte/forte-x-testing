@@ -122,15 +122,21 @@ const ProjectsPage = () => {
                 return (
                   <Table.Row key={bodyIndex}>
                     <Table.Data>
-                      <Link to={`/projects/${id}`}>{name}</Link>
+                      <Link to={`/projects/${id}`}>
+                        <p className="w-[140px] truncate">{name}</p>
+                      </Link>
                     </Table.Data>
 
                     <Table.Data>
-                      {provider?.map((item) => item.name).join(", ") || "-"}
+                      <p className="w-[140px] truncate">
+                        {provider?.map((item) => item.name).join(", ") || "-"}
+                      </p>
                     </Table.Data>
 
                     <Table.Data>
-                      {outcomes?.map((item) => item.name).join(", ")}
+                      <p className="w-[220px] truncate">
+                        {outcomes?.map((item) => item.name).join(", ")}
+                      </p>
                     </Table.Data>
 
                     <Table.Data>-</Table.Data>
