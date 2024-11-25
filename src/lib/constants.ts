@@ -38,7 +38,7 @@ export const ROLES = [
     value: "user",
   },
   {
-    label: "Readonly",
+    label: "Read only",
     value: "readonly",
   },
 ];

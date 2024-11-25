@@ -189,29 +189,47 @@ const OrganizationsPage = () => {
                 } = item;
                 return (
                   <Table.Row key={bodyIndex}>
-                    <Table.Data>{name}</Table.Data>
-
-                    <Table.Data>{registeredName}</Table.Data>
-
-                    <Table.Data>{`${registeredAddress}, ${state} ${postalCode} ${country}`}</Table.Data>
-
-                    <Table.Data>{registrationNumber}</Table.Data>
-
-                    <Table.Data>{regions.join(", ")}</Table.Data>
-
                     <Table.Data>
-                      <p className="capitalize">{type}</p>
+                      <p className="truncate w-[200px]">{name}</p>
                     </Table.Data>
 
                     <Table.Data>
-                      <p className="capitalize">{status}</p>
+                      <p className="truncate w-[200px]">{registeredName}</p>
                     </Table.Data>
 
-                    <Table.Data>{noOfUsers}</Table.Data>
+                    <Table.Data>
+                      <p className="truncate w-[250px]">
+                        {`${registeredAddress}, ${state} ${postalCode} ${country}`}
+                      </p>
+                    </Table.Data>
 
-                    <Table.Data>{noOfProjects}</Table.Data>
+                    <Table.Data>
+                      <p className="truncate w-[100px]">{registrationNumber}</p>
+                    </Table.Data>
 
-                    <Table.Data>-</Table.Data>
+                    <Table.Data>
+                      <p className="truncate w-[120px]">{regions.join(", ")}</p>
+                    </Table.Data>
+
+                    <Table.Data>
+                      <p className="truncate w-[60px] capitalize">{type}</p>
+                    </Table.Data>
+
+                    <Table.Data>
+                      <p className="truncate w-[55px] capitalize">{status}</p>
+                    </Table.Data>
+
+                    <Table.Data>
+                      <p className="truncate w-[35px]">{noOfUsers}</p>
+                    </Table.Data>
+
+                    <Table.Data>
+                      <p className="truncate w-[35px]">{noOfProjects}</p>
+                    </Table.Data>
+
+                    <Table.Data>
+                      <p className="truncate w-[35px]">-</p>
+                    </Table.Data>
 
                     <Table.Data>
                       <Button
@@ -238,7 +256,8 @@ const OrganizationsPage = () => {
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}
-              total={organizationList?.totalSize}
+              // total={organizationList?.totalSize}
+              total={20}
             />
           </div>
         </div>

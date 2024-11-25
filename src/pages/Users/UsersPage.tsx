@@ -171,19 +171,29 @@ const UsersPage = () => {
 
                 return (
                   <Table.Row key={bodyIndex}>
-                    <Table.Data>{firstName}</Table.Data>
-
-                    <Table.Data>{lastName}</Table.Data>
-
-                    <Table.Data>{email}</Table.Data>
-
-                    <Table.Data>{phoneNumber}</Table.Data>
-
                     <Table.Data>
-                      <p className="capitalize">{role}</p>
+                      <p className="w-[120px] truncate">{firstName}</p>
                     </Table.Data>
 
-                    <Table.Data>{organization}</Table.Data>
+                    <Table.Data>
+                      <p className="w-[120px] truncate">{lastName}</p>
+                    </Table.Data>
+
+                    <Table.Data>
+                      <p className="w-[190px] truncate">{email}</p>
+                    </Table.Data>
+
+                    <Table.Data>
+                      <p className="w-[150px] truncate">{phoneNumber}</p>
+                    </Table.Data>
+
+                    <Table.Data>
+                      <p className="w-[80px] truncate capitalize">{role}</p>
+                    </Table.Data>
+
+                    <Table.Data>
+                      <p className="w-[150px] truncate">{organization}</p>
+                    </Table.Data>
 
                     <Table.Data>
                       <div className="flex justify-end">

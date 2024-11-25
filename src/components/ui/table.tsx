@@ -24,7 +24,7 @@ const Table = {
     ...props
   }: ITableContainerProp) => {
     return (
-      <div className="w-full overflow-scroll hide-scroll">
+      <div className="w-full overflow-scroll pb-8">
         <table
           {...props}
           className="w-full rounded-t-[8px] overflow-hidden"
