@@ -36,7 +36,7 @@ const SidePanel = () => {
       initial={variants[showSidePanel.toString() as "true" | "false"]}
       animate={variants[showSidePanel.toString() as "true" | "false"]}
       transition={{ type: "spring", duration: 0.7, bounce: 0 }}
-      className="absolute h-full md:h-auto left-0 top-0 md:relative w-[90vw] md:w-[172px] rounded-r-[8px] bg-white bg-opacity-[30%] backdrop-blur-md md:backdrop-blur-0 backdrop-brightness-[60%] md:backdrop-brightness-100 p-5 z-50"
+      className="absolute h-full md:h-auto left-0 top-0 md:relative w-[90vw] md:w-[172px] rounded-r-[8px] bg-white bg-opacity-[30%] backdrop-blur-md md:backdrop-blur-0 backdrop-brightness-[60%] md:backdrop-brightness-100 p-5 z-40"
     >
       <ul className="space-y-2.5">
         <button
