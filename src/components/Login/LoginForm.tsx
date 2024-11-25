@@ -50,7 +50,7 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
     } catch (err) {
       console.log(err);
 
-      setError("password", { message: "Wrong username or password" });
+      setError("password", { message: "Incorrect email or password" });
     } finally {
       setLoading(false);
     }
@@ -66,8 +66,6 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
           <Input
             onChange={(e) => setValue("email", e.target.value)}
             autoCapitalize="email"
-            error={!!errors.email?.message}
-            helperText={errors.email?.message}
             label="Email"
             type="email"
             autoComplete="off"
@@ -75,8 +73,8 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
 
           <Input
             onChange={(e) => setValue("password", e.target.value)}
-            error={!!errors.password?.message}
-            helperText={errors.password?.message}
+            error={!!errors.email?.message || !!errors.password?.message}
+            helperText={errors.email?.message || errors.password?.message}
             label="Password"
             type="password"
             autoComplete="off"
@@ -90,7 +88,7 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
 
                 setValue("remember", e.target.checked);
               }}
-              label="Remember password"
+              label="Remember me"
             />
             <Link
               to="/forgot-password"
