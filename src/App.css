@@ -39,7 +39,7 @@
 }
 
 body {
-  @apply w-screen overflow-hidden;
+  @apply w-screen overflow-x-hidden overflow-y-scroll;
 }
 
 .link {

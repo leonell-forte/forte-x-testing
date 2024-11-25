@@ -11,7 +11,7 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="main-container grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-[99px] items-center h-[95vh] md:px-[86px]">
+    <div className="main-container grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-[99px] items-center h-[95vh] md:px-[86px] py-10">
       <div className="hidden lg:block">
         <div className="max-w-[437px] w-auto h-auto mx-auto md:mx-0">
           <img
