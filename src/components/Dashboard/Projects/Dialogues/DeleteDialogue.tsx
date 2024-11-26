@@ -11,16 +11,21 @@ import { queryClient } from "../../../../components/QueryProvider";
 
 interface IDeleteDialogueProp extends IDialogueProps {
   project: IProject;
+
   page: number;
 }
 
 const DeleteDialogue = ({
   handleClose,
+
   project,
+
   isVisible,
+
   page,
 }: IDeleteDialogueProp) => {
   const { id } = project;
+
   const { setAlert } = useAlert();
 
   const { mutateAsync: deletProject, isPending } = useMutation({
@@ -40,9 +45,11 @@ const DeleteDialogue = ({
     onSuccess: () => {
       queryClient.setQueryData(
         ["projects", page, ""],
+
         (old: { items: IProject[] }) => {
           return {
             ...old,
+
             items: old.items.filter((item) => item.id !== id),
           };
         },
@@ -52,7 +59,9 @@ const DeleteDialogue = ({
 
       setAlert({
         status: "success",
+
         message: `Project deleted successfully`,
+
         title: "Project Deleted!",
       });
 
@@ -64,7 +73,9 @@ const DeleteDialogue = ({
     onError: (err: any, newProject, context) => {
       setAlert({
         status: "error",
+
         title: `Faild deleting project`,
+
         message: err?.response?.data?.message,
       });
 
@@ -97,6 +108,7 @@ const DeleteDialogue = ({
           >
             Cancel
           </Button>
+
           <Button
             loading={isPending}
             onClick={handleDelete}

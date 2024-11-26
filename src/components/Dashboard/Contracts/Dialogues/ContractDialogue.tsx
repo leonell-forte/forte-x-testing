@@ -154,7 +154,10 @@ const ContractDialogue = ({
           </label>
 
           <div className="w-full">
-            <Input placeholder="Organization name" />
+            <Input
+              placeholder="Mention here"
+              type="number"
+            />
 
             <div className="flex flex-col gap-2 md:flex-row md:items-end">
               <RadioGroup
