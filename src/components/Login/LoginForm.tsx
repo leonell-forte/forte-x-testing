@@ -65,6 +65,7 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
         <div className="flex flex-col w-full gap-[15px] mt-10">
           <Input
             onChange={(e) => setValue("email", e.target.value)}
+            error={!!errors.email?.message || !!errors.password?.message}
             autoCapitalize="email"
             label="Email"
             type="email"
