@@ -34,7 +34,7 @@ const SignupPage = () => {
       </div>
 
       <Card className="px-10 py-12 md:py-[74px] h-fit flex items-center">
-        <div className="max-w-[400px] mx-auto space-y-5 w-full">
+        <div className="max-w-[400px] mx-auto space-y-12 w-full">
           <img
             alt="logo"
             src="/logo.png"

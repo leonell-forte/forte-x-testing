@@ -69,6 +69,7 @@ const Checkbox = ({
               dark && "!text-black",
               "text-[12px] text-grey",
               labelClass,
+              helperText && "!text-alert",
             )}
           >
             {label}
