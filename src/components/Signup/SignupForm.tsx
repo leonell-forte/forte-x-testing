@@ -65,7 +65,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
         onSubmit={handleSubmit(onSubmit)}
         className="space-y-5 w-full"
       >
-        <div className="flex flex-col w-full gap-[15px]">
+        <div className="flex flex-col w-full gap-1">
           <Input
             onChange={(e) => setValue("firstName", e.target.value)}
             autoComplete="given-name"
@@ -126,7 +126,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
                 }
               }}
               label={
-                <p>
+                <>
                   I agree to
                   <Link
                     to="https://forteglobal.com/privacy-policy"
@@ -144,7 +144,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
                   >
                     Terms
                   </Link>
-                </p>
+                </>
               }
             />
           </div>

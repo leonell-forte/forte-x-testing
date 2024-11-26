@@ -96,7 +96,7 @@ const Dropdown = ({
       <div
         ref={dropdownRef}
         className={classNames(
-          "relative h-[50px] w-full cursor-pointer rounded-[8px] border border-white",
+          "relative h-[54px] w-full cursor-pointer rounded-[8px] border border-white",
           className,
           error && "!border-[#e61a1a]",
           showAsTags && "!h-fit",
@@ -152,7 +152,7 @@ const Dropdown = ({
             />
           )}
 
-          <div className="absolute right-3 top-[20px]">
+          <div className="absolute right-3 top-[22px]">
             <img
               alt="arrow"
               src={arrow}
