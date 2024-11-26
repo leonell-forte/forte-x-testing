@@ -11,7 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import contractService from "../../api/contract";
 
 const ContractsPage = () => {
-  const { data: contracts, isLoading } = useQuery({
+  const { data: contracts } = useQuery({
     queryKey: ["contracts"],
     queryFn: contractService.get,
   });
