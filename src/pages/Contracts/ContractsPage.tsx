@@ -7,8 +7,17 @@ import pencil from "../../assets/images/icons/pencil.svg";
 import bin from "../../assets/images/icons/bin.svg";
 import ContractDialogue from "../../components/Dashboard/Contracts/Dialogues/ContractDialogue";
 import { useCallback, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import contractService from "../../api/contract";
 
 const ContractsPage = () => {
+  const { data: contracts, isLoading } = useQuery({
+    queryKey: ["contracts"],
+    queryFn: contractService.get,
+  });
+
+  console.log(contracts);
+
   const [modal, setModal] = useState<"contract" | null>(null);
 
   const close = () => {
