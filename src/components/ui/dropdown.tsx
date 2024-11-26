@@ -189,6 +189,7 @@ const Dropdown = ({
                     className="py-1.5 px-2.5"
                   >
                     <Checkbox
+                      labelClass="text-[16px] font-medium"
                       checked={props?.value?.includes(value)}
                       onChange={() => {
                         let newValue;
