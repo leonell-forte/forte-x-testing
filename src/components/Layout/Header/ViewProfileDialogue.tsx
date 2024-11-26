@@ -77,6 +77,8 @@ const ViewProfileDialogue = ({
   const { setAlert } = useAlert();
 
   const close = () => {
+    setOnEdit(false);
+
     reset();
 
     handleClose!();
