@@ -39,6 +39,7 @@ const ContractsPage = () => {
   return (
     <>
       {renderModal()}
+
       <div className="space-y-1.5">
         <div className="flex items-center justify-between w-full gap-4">
           <SearchInput
@@ -55,6 +56,7 @@ const ContractsPage = () => {
             </Button>
           </div>
         </div>
+
         <div className="flex items-center gap-[18px]">
           <p className="text-[20px] font-medium">Filter by</p>
 

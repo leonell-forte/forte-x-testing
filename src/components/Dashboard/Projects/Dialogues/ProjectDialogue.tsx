@@ -60,6 +60,7 @@ const ProjectDialogue = ({
 
   const { fields, append, remove } = useFieldArray({
     control,
+
     name: "outcomes",
   });
 

@@ -330,6 +330,7 @@ const OrganizationDialogue = ({
                     value={field.value}
                     handleSelect={(val) => {
                       setValue("regions", val as string[]);
+
                       setError("regions", { message: "" });
                     }}
                     options={REGIONS}

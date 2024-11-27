@@ -1,6 +1,6 @@
 import { IOrganization } from "../../pages/Organizations/types";
 
-interface IOutcome {
+export interface IOutcome {
   id: number;
 
   name: string;

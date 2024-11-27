@@ -9,7 +9,7 @@ import SearchInput from "./search-input";
 import Tag from "./tag";
 import { capitalize } from "@mui/material";
 
-interface IOption {
+export interface IOption {
   label: string;
 
   value: string;
@@ -115,6 +115,9 @@ const Dropdown = ({
             <div className="flex flex-wrap gap-2 max-w-[95%]">
               {props.value?.length ? (
                 (props.value as string[]).map((item, index) => {
+                  const label = options?.find(
+                    (option) => option.value === item,
+                  )?.label;
                   return (
                     <Tag
                       handleRemove={(e) => {
@@ -127,7 +130,7 @@ const Dropdown = ({
                         );
                       }}
                       key={index}
-                      label={item}
+                      label={label}
                     />
                   );
                 })
@@ -216,7 +219,7 @@ const Dropdown = ({
                     key={index}
                     className="w-full text-left"
                   >
-                    <li className="text-black font-medium py-3 px-4 hover:bg-mint rounded-[8px] transition-all">
+                    <li className="text-black font-medium py-3 px-4 hover:bg-mint rounded-[8px] transition-all truncate">
                       {label}
                     </li>
                   </button>

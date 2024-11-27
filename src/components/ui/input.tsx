@@ -10,6 +10,7 @@ type PropTypes = TextFieldProps & {
   dark?: boolean;
 
   noHelperText?: boolean;
+
   small?: boolean;
 };
 
