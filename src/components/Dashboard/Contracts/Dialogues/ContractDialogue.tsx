@@ -43,7 +43,7 @@ const ContractDialogue = ({
     {
       queryKey: ["specific-contract", id],
 
-      queryFn: () => contractService.getOne(id?.toString()!),
+      queryFn: () => contractService.getOne(id!.toString()!),
 
       enabled: !!id,
     },

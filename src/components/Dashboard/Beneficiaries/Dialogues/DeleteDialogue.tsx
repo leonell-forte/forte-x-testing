@@ -1,13 +1,8 @@
-import { IProject } from "../../../../pages/Projects/types";
 import Dialogue, {
   IDialogueProps,
 } from "../../../../components/ui/dialogue/dialogue";
 import Button from "../../../../components/ui/button";
-import projectService from "../../../../api/projects";
-import { useAlert } from "../../../../lib/hooks";
-import * as amplitude from "@amplitude/analytics-browser";
-import { useMutation } from "@tanstack/react-query";
-import { queryClient } from "../../../../components/QueryProvider";
+// import { useAlert } from "../../../../lib/hooks";
 
 interface IDeleteDialogueProp extends IDialogueProps {}
 
@@ -16,7 +11,7 @@ const DeleteDialogue = ({
 
   isVisible,
 }: IDeleteDialogueProp) => {
-  const { setAlert } = useAlert();
+  // const { setAlert } = useAlert();
 
   const handleDelete = async () => {};
 

@@ -97,6 +97,6 @@ export const generateODataQuery = (obj: IODataObject): string => {
 };
 
 export const formatDate = (date: string, dateFormat: string) => {
-  if (!date) return;
+  if (!date) return "";
   return format(new Date(date), dateFormat);
 };
