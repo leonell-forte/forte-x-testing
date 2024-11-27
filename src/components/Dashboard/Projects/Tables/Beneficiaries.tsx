@@ -33,6 +33,7 @@ const Beneficiaries = () => {
             handleAdd={() => {}}
           />
         );
+
       case "import":
         return (
           <ImportDialogue

@@ -49,7 +49,10 @@ const Table = {
     return (
       <thead
         {...props}
-        className="text-left bg-white text-[14px] font-medium truncate"
+        className={classNames(
+          "text-left bg-white text-[14px] font-medium truncate",
+          props.className,
+        )}
       >
         {children}
       </thead>
@@ -82,7 +85,7 @@ const Table = {
     return (
       <th
         {...props}
-        className={classNames("text-black px-4 py-5", small && "!py-3")}
+        className={classNames("!text-black px-4 py-5", small && "!py-3")}
       >
         {children}
       </th>
