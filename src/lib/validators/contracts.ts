@@ -1,5 +1,6 @@
 import { IContract } from "@/pages/Contracts/types";
 import { z } from "zod";
+import { formatDate } from "../utils";
 
 const contractPartiesSchema = z.object({
   organizationId: z.number(),
@@ -13,32 +14,32 @@ const contractOutcomeSchema = z
 
     perOutcome: z.boolean(),
 
-    threshold: z.string().optional(),
+    threshold: z.number().optional(),
   })
-  .refine((data) => data.perOutcome || data.threshold !== "", {
+  .refine((data) => data.perOutcome || !!data.threshold, {
     message: "Threshold cannot be empty",
 
     path: ["threshold"],
   });
 
 export const contracts = {
-  defaultValues: () => {
+  defaultValues: (contract?: IContract) => {
     let data: IContract = {
-      projectId: 0,
+      projectId: contract?.projectId || 0,
 
-      targetNoOfBenefeciaries: "",
+      targetNoOfBenefeciaries: contract?.targetNoOfBenefeciaries || "",
 
-      document: "",
+      document: contract?.document || "",
 
-      status: "INACTIVE",
+      status: contract?.status || "active",
 
-      startDate: "",
+      startDate: formatDate(contract?.startDate!, "LL-dd-yyyy") || "",
 
-      endDate: "",
+      endDate: formatDate(contract?.endDate!, "LL-dd-yyyy") || "",
 
-      contractParties: [],
+      contractParties: contract?.contractParties || [],
 
-      contractOutcomeRates: [
+      contractOutcomeRates: contract?.contractOutcomeRates || [
         {
           projectOutcomeId: 0,
 
@@ -46,7 +47,7 @@ export const contracts = {
 
           perOutcome: false,
 
-          threshold: "",
+          threshold: 0,
         },
       ],
     };
@@ -61,9 +62,7 @@ export const contracts = {
 
     document: z.string().min(1),
 
-    status: z
-      .enum(["ACTIVE", "INACTIVE", ""])
-      .refine((val) => val !== "", { message: "Status cannot be empty" }),
+    status: z.enum(["active", "inactive", ""]),
 
     startDate: z.string().min(1, "Required"),
 

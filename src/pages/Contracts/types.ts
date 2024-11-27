@@ -1,7 +1,7 @@
 import { contracts } from "../../lib/validators/contracts";
 import { z } from "zod";
 
-export type StatusType = "ACTIVE" | "INACTIVE";
+export type StatusType = "active" | "inactive" | "";
 
 export type RateEnum = "Per outcome" | "If threshold reached";
 
@@ -16,7 +16,7 @@ export interface IContractOutcomeRates {
 
   perOutcome: boolean;
 
-  threshold: string;
+  threshold: number;
 }
 
 export interface IContract {
@@ -35,6 +35,32 @@ export interface IContract {
   contractParties: IContractParties[];
 
   contractOutcomeRates: IContractOutcomeRates[];
+}
+
+export interface IContractDetails {
+  id: number;
+
+  projectId: number;
+
+  targetNoOfBenefeciaries: number;
+
+  document: string;
+
+  status: string;
+
+  startDate: string;
+
+  endDate: string;
+
+  createdAt: string;
+
+  updatedAt: string;
+
+  parties: string;
+
+  project: string;
+
+  outcomes: string; // Specify the type better if outcomes can have different types (e.g., number, boolean).
 }
 
 export type ContractFieldValues = z.infer<typeof contracts.schema>;

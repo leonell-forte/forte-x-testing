@@ -1,17 +1,59 @@
 import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import { api } from "../lib/axios/interceptor";
+import { ContractFieldValues, StatusType } from "../pages/Contracts/types";
+import { generateODataQuery, IODataObject } from "../lib/utils";
 
 class ContractService {
-  async get() {
+  async list(page: number, search: string, status: StatusType) {
     const params = new URLSearchParams();
+
+    const filters: IODataObject = {
+      parties: {
+        value: search,
+
+        exact: false,
+
+        isSearch: true,
+      },
+
+      "contracts.project.name": {
+        value: search,
+
+        exact: false,
+
+        isSearch: true,
+      },
+
+      "contracts.status": {
+        value: status.toUpperCase(),
+
+        exact: false,
+      },
+    };
 
     params.append("$pageSize", DEFAULT_PAGE_SIZE);
 
-    params.append("$pageNum", "1");
+    params.append("$pageNum", page.toString());
 
-    const response = api.get(`/contracts?${params}`);
+    if (generateODataQuery(filters)) {
+      params.append("$filter", generateODataQuery(filters));
+    }
 
-    return response;
+    const res = await api.get(`/contracts?${params}`);
+
+    return res.data;
+  }
+
+  async add(data: ContractFieldValues): Promise<ContractFieldValues> {
+    const response = await api.post("/contracts", data);
+
+    return response.data.data;
+  }
+
+  async getOne(id: string) {
+    const response = await api.get(`/contracts/${id}`);
+
+    return response.data.data;
   }
 }
 

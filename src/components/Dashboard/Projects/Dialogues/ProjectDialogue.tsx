@@ -133,7 +133,7 @@ const ProjectDialogue = ({
       setAlert({
         status: "error",
 
-        title: `Faild ${projectId ? "updating" : "adding"} project`,
+        title: `Failed ${projectId ? "updating" : "adding"} project`,
 
         message: err?.response?.data?.message,
       });

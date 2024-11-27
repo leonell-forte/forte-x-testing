@@ -6,21 +6,54 @@ import Table from "../../components/ui/table";
 import pencil from "../../assets/images/icons/pencil.svg";
 import bin from "../../assets/images/icons/bin.svg";
 import ContractDialogue from "../../components/Dashboard/Contracts/Dialogues/ContractDialogue";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import contractService from "../../api/contract";
+import { IContractDetails, StatusType } from "./types";
+import { formatDate } from "../../lib/utils";
+import Pagination from "../../components/ui/pagination";
+import { useDebounce } from "../../lib/hooks";
+import { STATUS } from "../../lib/constants";
+import { capitalize } from "@mui/material";
 
 const ContractsPage = () => {
-  const { data: contracts } = useQuery({
-    queryKey: ["contracts"],
-    queryFn: contractService.get,
+  const [page, setPage] = useState(1);
+
+  const [search, setSearch] = useState("");
+
+  const [status, setStatus] = useState<StatusType>("");
+
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  const [contractId, setContractId] = useState<number | null>(null);
+
+  useDebounce(
+    () => {
+      setDebouncedSearch(search);
+    },
+
+    500,
+
+    [search],
+  );
+
+  const { data: contractList, isLoading } = useQuery({
+    queryKey: ["contracts", page, debouncedSearch, status],
+
+    queryFn: () => contractService.list(page, debouncedSearch, status),
   });
 
-  console.log(contracts);
+  const contracts: IContractDetails[] = useMemo(
+    () => contractList?.items || [],
+
+    [contractList],
+  );
 
   const [modal, setModal] = useState<"contract" | null>(null);
 
   const close = () => {
+    setContractId(null);
+
     setModal(null);
   };
 
@@ -29,12 +62,19 @@ const ContractsPage = () => {
       case "contract":
         return (
           <ContractDialogue
+            id={contractId!}
             isVisible={modal === "contract"}
             handleClose={close}
           />
         );
     }
   }, [modal]);
+
+  const handleEditContract = (id: number) => {
+    setModal("contract");
+
+    setContractId(id);
+  };
 
   return (
     <>
@@ -43,6 +83,8 @@ const ContractsPage = () => {
       <div className="space-y-1.5">
         <div className="flex items-center justify-between w-full gap-4">
           <SearchInput
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             className="!w-[286px]"
             placeholder="Search contract"
           />
@@ -62,10 +104,11 @@ const ContractsPage = () => {
 
           <Dropdown
             noHelperText
-            isMultiSelect
             placeholder="Status"
             className="max-w-[166px]"
-            options={[]}
+            options={STATUS}
+            value={status}
+            handleSelect={(val) => setStatus(val as StatusType)}
           />
 
           <Dropdown
@@ -90,71 +133,121 @@ const ContractsPage = () => {
           </button>
         </div>
 
-        <Table.Container>
-          <Table.Head>
-            <Table.Row>
-              {TABLE_HEADER.map((key, headerIndex) => {
-                return <Table.Header key={headerIndex}>{key}</Table.Header>;
-              })}
+        <div className="space-y-[18px]">
+          <div className="h-[70vh] overflow-scroll pr-4">
+            <Table.Container
+              isEmpty={!contracts.length}
+              isLoading={isLoading}
+            >
+              <Table.Head>
+                <Table.Row>
+                  {TABLE_HEADER.map((key, headerIndex) => {
+                    return <Table.Header key={headerIndex}>{key}</Table.Header>;
+                  })}
 
-              <Table.Header></Table.Header>
-            </Table.Row>
-          </Table.Head>
+                  <Table.Header></Table.Header>
+                </Table.Row>
+              </Table.Head>
 
-          <Table.Body>
-            <Table.Row>
-              <Table.Data>-</Table.Data>
+              <Table.Body>
+                {contracts?.map((item, index) => {
+                  const {
+                    id,
 
-              <Table.Data>-</Table.Data>
+                    parties,
 
-              <Table.Data>-</Table.Data>
+                    project,
 
-              <Table.Data>-</Table.Data>
+                    status,
 
-              <Table.Data>-</Table.Data>
+                    outcomes,
 
-              <Table.Data>-</Table.Data>
+                    targetNoOfBenefeciaries,
 
-              <Table.Data>-</Table.Data>
+                    startDate,
 
-              <Table.Data>-</Table.Data>
+                    endDate,
 
-              <Table.Data>-</Table.Data>
+                    document,
+                  } = item;
+                  return (
+                    <Table.Row key={index}>
+                      <Table.Data>
+                        <p className="w-[150px] truncate">{parties}</p>
+                      </Table.Data>
 
-              <Table.Data>
-                <div className="flex justify-end">
-                  <Button
-                    eventName="Edit User"
-                    // id={project}
-                    buttonType="default"
-                    type="button"
-                    // onClick={() => handleEditUser(item)}
-                    className="p-[3px]"
-                  >
-                    <img
-                      alt="pencil"
-                      src={pencil}
-                    />
-                  </Button>
+                      <Table.Data>
+                        <p className="w-[50px] truncate">
+                          {capitalize(status)}
+                        </p>
+                      </Table.Data>
 
-                  <Button
-                    eventName="Edit User"
-                    // id={id.toString()}
-                    buttonType="default"
-                    type="button"
-                    onClick={() => {}}
-                    className="p-[3px]"
-                  >
-                    <img
-                      alt="pencil"
-                      src={bin}
-                    />
-                  </Button>
-                </div>
-              </Table.Data>
-            </Table.Row>
-          </Table.Body>
-        </Table.Container>
+                      <Table.Data>
+                        <p className="w-[140px] truncate">{project}</p>
+                      </Table.Data>
+
+                      <Table.Data>{outcomes}</Table.Data>
+
+                      <Table.Data>{targetNoOfBenefeciaries}</Table.Data>
+
+                      <Table.Data>{targetNoOfBenefeciaries}</Table.Data>
+
+                      <Table.Data>
+                        {formatDate(startDate, "LL-dd-yyyy")}
+                      </Table.Data>
+
+                      <Table.Data>
+                        {formatDate(endDate, "LL-dd-yyyy")}
+                      </Table.Data>
+
+                      <Table.Data>{document}</Table.Data>
+
+                      <Table.Data>
+                        <div className="flex justify-end">
+                          <Button
+                            eventName="Edit Contract"
+                            id={id.toString()}
+                            buttonType="default"
+                            type="button"
+                            onClick={() => handleEditContract(id)}
+                            className="p-[3px]"
+                          >
+                            <img
+                              alt="pencil"
+                              src={pencil}
+                            />
+                          </Button>
+
+                          <Button
+                            eventName="Edit User"
+                            // id={id.toString()}
+                            buttonType="default"
+                            type="button"
+                            onClick={() => {}}
+                            className="p-[3px]"
+                          >
+                            <img
+                              alt="pencil"
+                              src={bin}
+                            />
+                          </Button>
+                        </div>
+                      </Table.Data>
+                    </Table.Row>
+                  );
+                })}
+              </Table.Body>
+            </Table.Container>
+          </div>
+
+          <div className="flex justify-end absolute bottom-4 right-2">
+            <Pagination
+              page={page}
+              onPageChange={(val) => setPage(val)}
+              total={contractList?.totalSize}
+            />
+          </div>
+        </div>
       </div>
     </>
   );
