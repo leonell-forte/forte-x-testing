@@ -2,11 +2,23 @@ import Input from "../../../../components/ui/input";
 import Dialogue, {
   IDialogueProps,
 } from "../../../../components/ui/dialogue/dialogue";
-import add from "../../../../assets/images/icons/add.svg";
-import RadioGroup from "../../../../components/ui/radio-group";
 import Button from "../../../../components/ui/button";
-import Dropdown from "../../../../components/ui/dropdown";
-import { useState } from "react";
+import Dropdown, { IOption } from "../../../../components/ui/dropdown";
+import { useMemo } from "react";
+import ContractOutcomeField from "../ContractOutcomeField";
+import organizationService from "../../../../api/organization";
+import { useQuery } from "@tanstack/react-query";
+import { IOrganization } from "@/pages/Organizations/types";
+import { STATUS } from "../../../../lib/constants";
+import projectService from "../../../../api/projects";
+import { IProject } from "../../../../pages/Projects/types";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { contracts } from "../../../../lib/validators/contracts";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  ContractFieldValues,
+  StatusType,
+} from "../../../../pages/Contracts/types";
 
 interface IContractDialogueProps extends IDialogueProps {}
 
@@ -15,7 +27,67 @@ const ContractDialogue = ({
 
   handleClose,
 }: IContractDialogueProps) => {
-  const [datas, setDatas] = useState<string[]>([]);
+  const {
+    watch,
+
+    control,
+
+    setValue,
+
+    setError,
+
+    handleSubmit,
+
+    formState: { errors },
+  } = useForm<ContractFieldValues>({
+    resolver: zodResolver(contracts.schema),
+
+    defaultValues: contracts.defaultValues(),
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+
+    name: "contractOutcomeRates",
+  });
+
+  const { data: organizationList, isLoading: orgLoading } = useQuery({
+    queryKey: ["organizations"],
+
+    queryFn: () => organizationService.list(1, true),
+  });
+
+  const { data: projectsList, isLoading: projectLoading } = useQuery({
+    queryKey: ["projects"],
+
+    queryFn: () => projectService.list(),
+  });
+
+  const organizations: IOption[] = useMemo(
+    () =>
+      organizationList?.items?.map((item: IOrganization) => ({
+        label: item.name,
+
+        value: item.id?.toString(),
+      })) || [],
+
+    [organizationList],
+  );
+
+  const projects = useMemo(
+    () =>
+      projectsList?.items.map((item: IProject) => ({
+        label: item.name,
+
+        value: item.id,
+      })) || [],
+
+    [projectsList],
+  );
+
+  const onSubmit = async (values: ContractFieldValues) => {
+    console.log(values);
+  };
 
   return (
     <Dialogue
@@ -23,7 +95,10 @@ const ContractDialogue = ({
       handleClose={handleClose}
       title="Add contract"
     >
-      <form action="">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="space-y-1"
+      >
         <div className="flex items-start gap-4">
           <label
             htmlFor=""
@@ -32,15 +107,36 @@ const ContractDialogue = ({
             Parties
           </label>
 
-          <Dropdown
-            showAsTags
-            value={datas}
-            options={TESTDATA}
-            handleSelect={(val) => {
-              setDatas(val as string[]);
+          <Controller
+            name="contractParties"
+            control={control}
+            render={({ field }) => {
+              return (
+                <Dropdown
+                  enableSearch
+                  loading={orgLoading}
+                  showAsTags
+                  value={field.value.map((item) =>
+                    item.organizationId.toString(),
+                  )}
+                  options={organizations}
+                  handleSelect={(val) => {
+                    setValue(
+                      "contractParties",
+                      (val as string[]).map((item) => ({
+                        organizationId: Number(item),
+                      })),
+                    );
+
+                    setError("contractParties", { message: "" });
+                  }}
+                  error={!!errors.contractParties?.message}
+                  helperText={errors.contractParties?.message}
+                  isMultiSelect
+                  placeholder="Parties"
+                />
+              );
             }}
-            isMultiSelect
-            placeholder="Parties"
           />
         </div>
 
@@ -52,9 +148,25 @@ const ContractDialogue = ({
             Status
           </label>
 
-          <Dropdown
-            options={TESTDATA}
-            placeholder="Status"
+          <Controller
+            name="status"
+            control={control}
+            render={({ field }) => {
+              return (
+                <Dropdown
+                  value={field.value.toLowerCase()}
+                  handleSelect={(val) => {
+                    setValue("status", val as StatusType);
+
+                    setError("status", { message: "" });
+                  }}
+                  options={STATUS}
+                  placeholder="Status"
+                  error={!!errors.status?.message}
+                  helperText={errors.status?.message}
+                />
+              );
+            }}
           />
         </div>
 
@@ -66,9 +178,31 @@ const ContractDialogue = ({
             Project
           </label>
 
-          <Dropdown
-            options={TESTDATA}
-            placeholder="Project"
+          <Controller
+            name="projectId"
+            control={control}
+            render={({ field }) => {
+              return (
+                <Dropdown
+                  loading={projectLoading}
+                  enableSearch
+                  value={
+                    projects.find(
+                      (item: IOption) => item.value == field.value.toString(), //eslint-disable-line eqeqeq,
+                    )?.label
+                  }
+                  options={projects}
+                  handleSelect={(val) => {
+                    setValue("projectId", Number(val));
+
+                    setError("projectId", { message: "" });
+                  }}
+                  placeholder="Project"
+                  error={!!errors.projectId?.message}
+                  helperText={errors.projectId?.message}
+                />
+              );
+            }}
           />
         </div>
 
@@ -80,9 +214,18 @@ const ContractDialogue = ({
             Target number of beneficiaries
           </label>
 
-          <Input
-            placeholder="Number of beneficiaries"
-            type="number"
+          <Controller
+            name="targetNoOfBenefeciaries"
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                placeholder="Number of beneficiaries"
+                type="number"
+                error={!!errors.targetNoOfBenefeciaries?.message}
+                helperText={errors.targetNoOfBenefeciaries?.message}
+              />
+            )}
           />
         </div>
 
@@ -94,7 +237,18 @@ const ContractDialogue = ({
             Document
           </label>
 
-          <Input placeholder="Organization name" />
+          <Controller
+            name="document"
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                placeholder="Upload here"
+                error={!!errors.document?.message}
+                helperText={errors.document?.message}
+              />
+            )}
+          />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6">
@@ -106,7 +260,18 @@ const ContractDialogue = ({
               Start date
             </label>
 
-            <Input placeholder="Start date" />
+            <Controller
+              name="startDate"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  placeholder="Start date"
+                  error={!!errors.startDate?.message}
+                  helperText={errors.startDate?.message}
+                />
+              )}
+            />
           </div>
 
           <div className="flex items-start gap-4">
@@ -117,60 +282,63 @@ const ContractDialogue = ({
               End date
             </label>
 
-            <Input placeholder="End date" />
+            <Controller
+              name="endDate"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  placeholder="End date"
+                  error={!!errors.endDate?.message}
+                  helperText={errors.endDate?.message}
+                />
+              )}
+            />
           </div>
         </div>
 
-        <div className="flex gap-4">
-          <label
-            htmlFor=""
-            className="pt-4 min-w-[120px]"
-          >
-            Outcome
-          </label>
+        <div className="space-y-10">
+          {fields.map((item, index) => {
+            return (
+              <ContractOutcomeField
+                isLast={index === fields.length - 1}
+                key={index}
+                projectId={watch("projectId")}
+                control={control}
+                perOutcome={watch(`contractOutcomeRates.${index}.perOutcome`)}
+                index={index}
+                handleDelete={() => remove(index)}
+                handleSelectOutcome={(val) => {
+                  setValue(
+                    `contractOutcomeRates.${index}.projectOutcomeId`,
+                    Number(val),
+                  );
+                }}
+                handleRadioSelect={(value) => {
+                  setValue(`contractOutcomeRates.${index}.threshold`, "");
+                  setError(`contractOutcomeRates.${index}.threshold`, {
+                    message: "",
+                  });
+                  if (value === "Per outcome") {
+                    setValue(`contractOutcomeRates.${index}.perOutcome`, true);
+                  } else {
+                    setValue(`contractOutcomeRates.${index}.perOutcome`, false);
+                  }
+                }}
+                handleAdd={() =>
+                  append({
+                    projectOutcomeId: 0,
 
-          <Dropdown
-            options={TESTDATA}
-            placeholder="Outcome"
-          />
+                    rate: "",
 
-          <button
-            type="button"
-            className="!w-8 !h-8 bg-white rounded-full flex-shrink-0 text-forest-green flex items-center justify-center hover:scale-[1.05] transition-all hover:opacity-80 mt-3"
-          >
-            <img
-              src={add}
-              alt=""
-            />
-          </button>
-        </div>
+                    perOutcome: false,
 
-        <div className="flex items-start gap-4">
-          <label
-            htmlFor=""
-            className="pt-4 min-w-[120px]"
-          >
-            Rate
-          </label>
-
-          <div className="w-full">
-            <Input
-              placeholder="Mention here"
-              type="number"
-            />
-
-            <div className="flex flex-col gap-2 md:flex-row md:items-end">
-              <RadioGroup
-                className="flex flex-col gap-4 md:w-[280px]"
-                items={["Per outcome", "If threshold reached"]}
+                    threshold: "",
+                  })
+                }
               />
-
-              <Input
-                small
-                noHelperText
-              />
-            </div>
-          </div>
+            );
+          })}
         </div>
 
         <div className="flex justify-end gap-4 !mt-10">
@@ -189,66 +357,3 @@ const ContractDialogue = ({
 };
 
 export default ContractDialogue;
-
-const TESTDATA = [
-  {
-    label: "1",
-    value: "1",
-  },
-  {
-    label: "2",
-    value: "2",
-  },
-  {
-    label: "3",
-    value: "3",
-  },
-  {
-    label: "4",
-    value: "4",
-  },
-  {
-    label: "5",
-    value: "5",
-  },
-  {
-    label: "6",
-    value: "6",
-  },
-  {
-    label: "7",
-    value: "7",
-  },
-  {
-    label: "8",
-    value: "8",
-  },
-  {
-    label: "9",
-    value: "9",
-  },
-  {
-    label: "10",
-    value: "10",
-  },
-  {
-    label: "11",
-    value: "11",
-  },
-  {
-    label: "12",
-    value: "12",
-  },
-  {
-    label: "1",
-    value: "1",
-  },
-  {
-    label: "2",
-    value: "2",
-  },
-  {
-    label: "3",
-    value: "3",
-  },
-];
