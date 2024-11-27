@@ -120,6 +120,7 @@ const Dropdown = ({
                   )?.label;
                   return (
                     <Tag
+                      dark
                       handleRemove={(e) => {
                         e.stopPropagation();
 
