@@ -93,6 +93,7 @@ const DeleteDialogue = ({
 
   return (
     <Dialogue
+      center
       isVisible={isVisible}
       handleClose={handleClose}
     >

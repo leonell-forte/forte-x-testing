@@ -1,12 +1,14 @@
+import { format } from "date-fns";
+
 export const filterBySearch = (
   list: Record<string, string>[],
-  search: string
+  search: string,
 ): any => {
   let filteredList: Record<string, string>[] = [];
 
   list.forEach((item) => {
     const isMatch = Object.values(item).some((item) =>
-      item.toLowerCase().includes(search.toLowerCase())
+      item.toLowerCase().includes(search.toLowerCase()),
     );
 
     if (isMatch) {
@@ -52,7 +54,7 @@ export const generateODataQuery = (obj: IODataObject): string => {
           (v) =>
             exact
               ? `'${key}' eq '${v}'` // Exact matching
-              : `contains('${key}', '${v}')` // Partial matching
+              : `contains('${key}', '${v}')`, // Partial matching
         )
         .join(" or ");
 
@@ -92,4 +94,9 @@ export const generateODataQuery = (obj: IODataObject): string => {
   // Return the appropriate query part
 
   return searchQuery || nonSearchQuery || "";
+};
+
+export const formatDate = (date: string, dateFormat: string) => {
+  if (!date) return "";
+  return format(new Date(date), dateFormat);
 };
