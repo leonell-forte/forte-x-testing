@@ -33,9 +33,13 @@ export const contracts = {
 
       status: contract?.status || "active",
 
-      startDate: formatDate(contract!.startDate, "LL-dd-yyyy") || "",
+      startDate: contract?.startDate
+        ? formatDate(contract.startDate, "LL-dd-yyyy")
+        : "",
 
-      endDate: formatDate(contract!.endDate, "LL-dd-yyyy") || "",
+      endDate: contract?.startDate
+        ? formatDate(contract.endDate, "LL-dd-yyyy")
+        : "",
 
       contractParties: contract?.contractParties || [],
 
