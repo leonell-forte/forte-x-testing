@@ -68,7 +68,7 @@ const ContractsPage = () => {
           />
         );
     }
-  }, [modal]);
+  }, [modal, contractId]);
 
   const handleEditContract = (id: number) => {
     setModal("contract");

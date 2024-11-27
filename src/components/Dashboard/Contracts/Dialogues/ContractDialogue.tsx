@@ -49,12 +49,6 @@ const ContractDialogue = ({
     },
   );
 
-  useEffect(() => {
-    if (contractDetails) {
-      reset(contracts.defaultValues(contractDetails));
-    }
-  }, [contractDetails]);
-
   const {
     watch,
 
@@ -74,6 +68,12 @@ const ContractDialogue = ({
 
     defaultValues: contracts.defaultValues(),
   });
+
+  useEffect(() => {
+    if (contractDetails) {
+      reset(contracts.defaultValues(contractDetails));
+    }
+  }, [contractDetails, reset]);
 
   const { fields, append, remove } = useFieldArray({
     control,
