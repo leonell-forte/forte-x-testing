@@ -48,7 +48,7 @@ const UsersPage = () => {
 
   const [modal, setModal] = useState<"user" | null>(null);
 
-  const [selectedUser, setSelectedUser] = useState<string>("");
+  const [selectedUser, setSelectedUser] = useState<string | null>(null);
 
   const users: IUser[] = useMemo(() => userList?.items || [], [userList]);
 
@@ -75,13 +75,12 @@ const UsersPage = () => {
       {modal === "user" && (
         <UserDialogue
           organizations={organizations}
-          userId={selectedUser}
+          userId={selectedUser!}
           isVisible={modal === "user"}
           handleClose={() => {
-            setSelectedUser("");
+            setSelectedUser(null);
             setModal(null);
           }}
-          page={page}
         />
       )}
 
@@ -91,6 +90,7 @@ const UsersPage = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-[286px]"
+            onClear={() => setSearch("")}
           />
 
           <div className="flex items-center gap-6">

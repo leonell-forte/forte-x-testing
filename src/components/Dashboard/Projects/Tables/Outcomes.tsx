@@ -3,15 +3,41 @@ import pencil from "../../../../assets/images/icons/pencil.svg";
 import { useState } from "react";
 import Input from "../../../../components/ui/input";
 import Button from "../../../../components/ui/button";
+import { IOutcome, ProjectFieldValues } from "@/pages/Projects/types";
+import { Control, Controller, FormState } from "react-hook-form";
 
-const Outcomes = () => {
+interface IProps {
+  outcomes?: IOutcome[];
+
+  isLoading?: boolean;
+
+  control: Control<ProjectFieldValues>;
+
+  formState: FormState<ProjectFieldValues>;
+
+  onSubmit: () => void;
+}
+
+const Outcomes = ({
+  outcomes = [],
+  isLoading,
+  control,
+  formState,
+  onSubmit,
+}: IProps) => {
+  const { errors } = formState;
+
   const [editIndex, setEditIndex] = useState<number | null>(null);
+
+  const closeEdit = () => {
+    setEditIndex(null);
+  };
 
   return (
     <div className="space-y-2.5">
       <p className="font-semibold text-[24px]">Outcomes</p>
 
-      <Table.Container>
+      <Table.Container isLoading={isLoading}>
         <Table.Head>
           <Table.Row>
             {HEADERS.map((item, index) => {
@@ -30,7 +56,9 @@ const Outcomes = () => {
         </Table.Head>
 
         <Table.Body>
-          {Array.from({ length: 3 }).map((item, index) => {
+          {outcomes.map((item, index) => {
+            const { name, description } = item;
+
             const onEdit = index === editIndex;
 
             return (
@@ -40,11 +68,45 @@ const Outcomes = () => {
                 }`}</Table.Data>
 
                 <Table.Data className="h-[56px] py-1">
-                  {onEdit ? <Input noHelperText /> : <p>test</p>}
+                  {onEdit ? (
+                    <Controller
+                      name={`outcomes.${index}.name`}
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          noHelperText
+                          error={!!errors.outcomes?.[index]?.name?.message}
+                          helperText={errors.outcomes?.[index]?.name?.message}
+                        />
+                      )}
+                    />
+                  ) : (
+                    <p>{name}</p>
+                  )}
                 </Table.Data>
 
                 <Table.Data className="h-[56px] py-1">
-                  {onEdit ? <Input noHelperText /> : <p>test</p>}
+                  {onEdit ? (
+                    <Controller
+                      name={`outcomes.${index}.description`}
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          noHelperText
+                          error={
+                            !!errors.outcomes?.[index]?.description?.message
+                          }
+                          helperText={
+                            errors.outcomes?.[index]?.description?.message
+                          }
+                        />
+                      )}
+                    />
+                  ) : (
+                    <p>{description}</p>
+                  )}
                 </Table.Data>
 
                 <Table.Data className="h-[56px] py-1">
@@ -52,13 +114,20 @@ const Outcomes = () => {
                     {onEdit ? (
                       <>
                         <Button
-                          onClick={() => setEditIndex(null)}
+                          onClick={closeEdit}
                           buttonType="tertiary"
                         >
                           Cancel
                         </Button>
 
-                        <Button>Save</Button>
+                        <Button
+                          onClick={() => {
+                            onSubmit();
+                            closeEdit();
+                          }}
+                        >
+                          Save
+                        </Button>
                       </>
                     ) : (
                       <button

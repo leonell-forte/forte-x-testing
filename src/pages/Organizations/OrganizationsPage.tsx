@@ -86,7 +86,6 @@ const OrganizationsPage = () => {
           orgId={selectedOrg}
           isVisible={modal === "org"}
           handleClose={close}
-          page={page}
         />
       )}
 
@@ -97,6 +96,7 @@ const OrganizationsPage = () => {
             onChange={(e) => setSearch(e.target.value)}
             className="!w-[286px]"
             placeholder="Search organizations"
+            onClear={() => setSearch("")}
           />
 
           <div className="flex items-center gap-6">

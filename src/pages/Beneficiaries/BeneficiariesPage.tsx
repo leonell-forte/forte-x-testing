@@ -11,6 +11,7 @@ import bin from "../../assets/images/icons/bin.svg";
 import BeneficiariesDialogue from "../../components/Dashboard/Beneficiaries/Dialogues/BeneficiariesDialogue";
 import DeleteDialogue from "../../components/Dashboard/Beneficiaries/Dialogues/DeleteDialogue";
 import ImportDialogue from "../../components/Dashboard/Beneficiaries/Dialogues/ImportDialogue";
+import DatePicker from "../../components/ui/date-picker";
 
 const BeneficiariesPage = () => {
   const [search, setSearch] = useState("");
@@ -64,6 +65,7 @@ const BeneficiariesPage = () => {
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search beneficiaries"
             className="max-w-[286px]"
+            onClear={() => setSearch("")}
           />
 
           <div className="space-x-2.5">
@@ -122,11 +124,9 @@ const BeneficiariesPage = () => {
               className="max-w-[166px]"
             />
 
-            <Dropdown
-              noHelperText
-              options={[]}
-              placeholder="Start date"
+            <DatePicker
               className="max-w-[166px]"
+              noHelperText
             />
 
             <button

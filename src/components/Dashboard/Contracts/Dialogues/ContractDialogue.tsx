@@ -7,7 +7,7 @@ import Dropdown, { IOption } from "../../../../components/ui/dropdown";
 import { useEffect, useMemo } from "react";
 import ContractOutcomeField from "../ContractOutcomeField";
 import organizationService from "../../../../api/organization";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { IOrganization } from "@/pages/Organizations/types";
 import { STATUS } from "../../../../lib/constants";
 import projectService from "../../../../api/projects";
@@ -17,14 +17,13 @@ import { contracts } from "../../../../lib/validators/contracts";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ContractFieldValues,
-  IContractDetails,
   StatusType,
 } from "../../../../pages/Contracts/types";
 import contractService from "../../../../api/contract";
-import { queryClient } from "../../../../components/QueryProvider";
-import { useAlert } from "../../../../lib/hooks";
-import * as amplitude from "@amplitude/analytics-browser";
 import Spinner from "../../../../components/ui/spinner/spinner";
+import DatePicker from "../../../../components/ui/date-picker";
+import { formatDate } from "../../../../lib/utils";
+import useContractMutation from "../../../../lib/mutations/contracts";
 
 interface IContractDialogueProps extends IDialogueProps {
   id?: number;
@@ -37,8 +36,6 @@ const ContractDialogue = ({
 
   handleClose,
 }: IContractDialogueProps) => {
-  const { setAlert } = useAlert();
-
   const { data: contractDetails, isLoading: contractDetailsLoading } = useQuery(
     {
       queryKey: ["specific-contract", id],
@@ -121,62 +118,8 @@ const ContractDialogue = ({
     reset();
   };
 
-  const { mutateAsync: addContract, isPending } = useMutation({
-    mutationFn: contractService.add,
-
-    onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ["contracts"] });
-
-      const previousContracts = queryClient.getQueryData(["projects"]);
-
-      return { previousContracts };
-    },
-
-    onSuccess: (addedContract: ContractFieldValues) => {
-      queryClient.setQueryData(
-        ["contracts", 1, "", ""],
-
-        (old: { items: IContractDetails[] }) => {
-          return {
-            ...old,
-
-            items: [...(old?.items || []), addedContract],
-          };
-        },
-      );
-
-      close();
-
-      setAlert({
-        title: "Success!",
-
-        status: "success",
-
-        message: "Contract has been added successfully",
-      });
-
-      amplitude.track(`$Add Contract Form Submission`);
-    },
-
-    onError: (err: any, newContract, context) => {
-      setAlert({
-        status: "error",
-
-        title: "Failed adding new contract",
-
-        message: err?.response?.data?.message,
-      });
-
-      queryClient.setQueryData(
-        ["contracts", 1, "", ""],
-
-        context?.previousContracts,
-      );
-    },
-
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["contracts", 1, "", ""] });
-    },
+  const { addContract, isPending } = useContractMutation({
+    successCallback: close,
   });
 
   const onSubmit = async (values: ContractFieldValues) => {
@@ -350,7 +293,7 @@ const ContractDialogue = ({
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6 gap-1">
             <div className="flex items-start gap-4">
               <label
                 htmlFor=""
@@ -363,9 +306,11 @@ const ContractDialogue = ({
                 name="startDate"
                 control={control}
                 render={({ field }) => (
-                  <Input
-                    {...field}
-                    placeholder="Start date"
+                  <DatePicker
+                    value={new Date(field.value)}
+                    onChange={(date) => {
+                      setValue("startDate", formatDate(date!, "LL-dd-yyyy"));
+                    }}
                     error={!!errors.startDate?.message}
                     helperText={errors.startDate?.message}
                   />
@@ -385,9 +330,11 @@ const ContractDialogue = ({
                 name="endDate"
                 control={control}
                 render={({ field }) => (
-                  <Input
-                    {...field}
-                    placeholder="End date"
+                  <DatePicker
+                    value={new Date(field.value)}
+                    onChange={(date) => {
+                      setValue("endDate", formatDate(date!, "LL-dd-yyyy"));
+                    }}
                     error={!!errors.endDate?.message}
                     helperText={errors.endDate?.message}
                   />

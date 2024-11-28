@@ -4,6 +4,7 @@ import Dialogue, {
 } from "../../../../components/ui/dialogue/dialogue";
 import Dropdown from "../../../../components/ui/dropdown";
 import Button from "../../../../components/ui/button";
+import DatePicker from "../../../../components/ui/date-picker";
 
 interface IBeneficiariesDialogueProps extends IDialogueProps {}
 
@@ -137,7 +138,7 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
                 Start date
               </label>
 
-              <Input placeholder="Select date" />
+              <DatePicker />
             </div>
 
             <div className="flex items-start">
@@ -148,7 +149,7 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
                 End date
               </label>
 
-              <Input placeholder="Select date" />
+              <DatePicker />
             </div>
           </div>
 
@@ -223,7 +224,7 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
                 Date of birth
               </label>
 
-              <Input placeholder="Select date" />
+              <DatePicker />
             </div>
 
             <div className="flex items-start">

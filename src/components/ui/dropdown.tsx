@@ -120,6 +120,7 @@ const Dropdown = ({
                   )?.label;
                   return (
                     <Tag
+                      dark
                       handleRemove={(e) => {
                         e.stopPropagation();
 
@@ -232,7 +233,9 @@ const Dropdown = ({
 
       {helperText && (
         <div className="pl-4 pt-1 absolute">
-          <p className="text-[#e61a1a] text-[12px]">{helperText}</p>
+          <p className="text-[#e61a1a] text-[12px] line-clamp-1">
+            {helperText}
+          </p>
         </div>
       )}
     </div>

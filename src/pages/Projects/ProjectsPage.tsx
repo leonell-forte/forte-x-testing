@@ -63,7 +63,6 @@ const ProjectsPage = () => {
       case "project":
         return (
           <ProjectDialogue
-            page={page}
             projectId={(selectedProject?.id || "") as string}
             isVisible={modal === "project"}
             handleClose={handleCloseModal}
@@ -92,6 +91,7 @@ const ProjectsPage = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="max-w-[286px]"
+            onClear={() => setSearch("")}
           />
 
           <Button
@@ -119,7 +119,7 @@ const ProjectsPage = () => {
               </Table.Head>
               <Table.Body>
                 {projects.map((item: IProject, bodyIndex: number) => {
-                  const { id, name, provider, outcomes } = item;
+                  const { id, name, outcomes } = item;
                   return (
                     <Table.Row key={bodyIndex}>
                       <Table.Data>
@@ -128,11 +128,7 @@ const ProjectsPage = () => {
                         </Link>
                       </Table.Data>
 
-                      <Table.Data>
-                        <p className="w-[140px] truncate">
-                          {provider?.map((item) => item.name).join(", ") || "-"}
-                        </p>
-                      </Table.Data>
+                      <Table.Data>-</Table.Data>
 
                       <Table.Data>
                         <p className="w-[220px] truncate">

@@ -126,6 +126,15 @@ const theme = createTheme({
               left: 0,
 
               color: "#e61a1a !important",
+
+              whiteSpace: "nowrap" /* Prevents wrapping */,
+
+              overflow: "hidden" /* Hides any overflow */,
+
+              textOverflow:
+                "ellipsis" /* Adds ellipsis if the text is too long */,
+
+              width: "100%" /* Make sure the width is set, adjust as needed */,
             },
 
             "& .MuiInputBase-input": {

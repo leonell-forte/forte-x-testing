@@ -1,4 +1,3 @@
-import React from "react";
 import Buttons from "./Buttons";
 import InputFields from "./InputFields";
 import Checkboxes from "./Checkboxes";
@@ -14,16 +13,25 @@ const ComponentsPage = () => {
   return (
     <div className="p-10 space-y-10 overflow-scroll h-screen">
       <Buttons />
+
       <InputFields />
+
       <DropdownFields />
+
       <div className="flex flex-wrap gap-10">
         <Checkboxes />
+
         <RadioButtons />
+
         <SwitchButtons />
+
         <Tags />
+
         <PaginationComponent />
       </div>
+
       <TableComponent />
+
       <DialogueComponent />
     </div>
   );
