@@ -5,7 +5,6 @@ import Dialogue, {
 import Dropdown from "../../../../components/ui/dropdown";
 import Button from "../../../../components/ui/button";
 import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
 import { organizations } from "../../../../lib/validators/organizations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { REGIONS, STATUS, TYPES } from "../../../../lib/constants";
@@ -14,7 +13,10 @@ import organizationService from "../../../../api/organization";
 import { useEffect } from "react";
 import Spinner from "../../../../components/ui/spinner/spinner";
 import useOrganizationMutation from "../../../../lib/mutations/organizations";
-import { OrgTypes } from "../../../../lib/types/organizations";
+import {
+  OrganizationFieldTypes,
+  OrgTypes,
+} from "../../../../lib/types/organizations";
 
 interface IOrganizationDialogueProps extends IDialogueProps {
   orgId?: string;
@@ -49,7 +51,7 @@ const OrganizationDialogue = ({
     control,
 
     formState: { errors },
-  } = useForm<z.infer<typeof organizations.schema>>({
+  } = useForm<OrganizationFieldTypes>({
     resolver: zodResolver(organizations.schema),
 
     defaultValues: organizations.defaultValues(),
@@ -76,7 +78,7 @@ const OrganizationDialogue = ({
     successCallback: onClose,
   });
 
-  const onSubmit = async (values: z.infer<typeof organizations.schema>) => {
+  const onSubmit = async (values: OrganizationFieldTypes) => {
     await addOrganization(values);
   };
 

@@ -79,7 +79,7 @@ const Checkbox = ({
         }
       />
       {helperText && (
-        <p className="absolute text-alert top-7 left-6 text-[10px] font-medium truncate">
+        <p className="absolute text-alert top-7 left-6 text-[12px] font-medium truncate">
           {helperText}
         </p>
       )}

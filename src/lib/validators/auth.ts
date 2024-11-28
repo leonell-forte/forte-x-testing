@@ -68,13 +68,13 @@ export const signup = {
   },
   schema: z
     .object({
-      firstName: z.string().min(1),
+      firstName: z.string().min(1, "First name is a required field"),
 
-      lastName: z.string().min(1),
+      lastName: z.string().min(1, "Last name is a required field"),
 
-      email: z.string().email(),
+      email: z.string().email({ message: "Invalid email address" }),
 
-      phoneNumber: z.string().min(1),
+      phoneNumber: z.string().min(1, "Invalid phone number"),
 
       password: z
         .string()
@@ -87,9 +87,7 @@ export const signup = {
           "Password must contain at least one special character",
         ),
 
-      confirmPassword: z
-        .string()
-        .min(8, "Password must be at least 8 characters long"),
+      confirmPassword: z.string().min(1, "Passwords do not match"),
 
       agreeTerms: z
         .string()

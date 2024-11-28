@@ -4,7 +4,7 @@ import { useState } from "react";
 import Input from "../ui/input";
 import Checkbox from "../ui/checkbox";
 import Button from "../ui/button";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { signup } from "../../lib/validators/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,6 +28,8 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
     handleSubmit,
 
     formState: { errors },
+
+    control,
   } = useForm<z.infer<typeof signup.schema>>({
     resolver: zodResolver(signup.schema),
 
@@ -66,57 +68,94 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
         className="space-y-5 w-full"
       >
         <div className="flex flex-col w-full gap-1">
-          <Input
-            onChange={(e) => setValue("firstName", e.target.value)}
-            autoComplete="given-name"
-            label="First name"
-            error={!!errors.firstName?.message}
-            helperText={errors.firstName?.message}
+          <Controller
+            name="firstName"
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                autoComplete="given-name"
+                label="First name"
+                error={!!errors.firstName?.message}
+                helperText={errors.firstName?.message}
+              />
+            )}
           />
 
-          <Input
-            onChange={(e) => setValue("lastName", e.target.value)}
-            autoComplete="family-name"
-            label="Last name"
-            error={!!errors.lastName?.message}
-            helperText={errors.lastName?.message}
+          <Controller
+            name="lastName"
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                autoComplete="family-name"
+                label="Last name"
+                error={!!errors.lastName?.message}
+                helperText={errors.lastName?.message}
+              />
+            )}
           />
 
-          <Input
-            onChange={(e) => setValue("email", e.target.value)}
-            autoComplete="email"
-            type="email"
-            label="Email"
-            error={!!errors.email?.message}
-            helperText={errors.email?.message}
+          <Controller
+            name="email"
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                autoComplete="off"
+                type="email"
+                label="Email"
+                error={!!errors.email?.message}
+                helperText={errors.email?.message}
+              />
+            )}
           />
 
-          <Input
-            onChange={(e) => setValue("phoneNumber", e.target.value)}
-            autoComplete="tel"
-            label="Phone number"
-            error={!!errors.phoneNumber?.message}
-            helperText={errors.phoneNumber?.message}
+          <Controller
+            name="phoneNumber"
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                autoComplete="tel"
+                label="Phone number"
+                error={!!errors.phoneNumber?.message}
+                helperText={errors.phoneNumber?.message}
+              />
+            )}
           />
 
-          <Input
-            onChange={(e) => setValue("password", e.target.value)}
-            label="Password"
-            type="password"
-            error={!!errors.password?.message}
-            helperText={errors.password?.message}
+          <Controller
+            name="password"
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                label="Password"
+                type="password"
+                error={!!errors.password?.message}
+                helperText={errors.password?.message}
+              />
+            )}
           />
 
-          <Input
-            onChange={(e) => setValue("confirmPassword", e.target.value)}
-            label="Re-enter password"
-            type="password"
-            error={!!errors.confirmPassword?.message}
-            helperText={errors.confirmPassword?.message}
+          <Controller
+            name="confirmPassword"
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                label="Re-enter password"
+                type="password"
+                error={!!errors.confirmPassword?.message}
+                helperText={errors.confirmPassword?.message}
+              />
+            )}
           />
 
           <div className="flex items-center justify-between">
             <Checkbox
+              labelClass="font-medium"
               helperText={errors.agreeTerms?.message}
               onChange={(e) => {
                 if (e.target.checked) {
@@ -136,14 +175,6 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
                     {" "}
                     Privacy Policy
                   </Link>{" "}
-                  and{" "}
-                  <Link
-                    to="https://forteglobal.com/privacy-policy"
-                    className="link"
-                    target="_blank"
-                  >
-                    Terms
-                  </Link>
                 </>
               }
             />

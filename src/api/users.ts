@@ -1,9 +1,7 @@
 import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import { api } from "../lib/axios/interceptor";
-import { z } from "zod";
-import { users } from "../lib/validators/users";
 import { generateODataQuery, IODataObject } from "../lib/utils";
-import { IUser } from "../lib/types/users";
+import { IUser, UserFieldTypes } from "../lib/types/users";
 
 class UserService {
   async list(
@@ -63,13 +61,13 @@ class UserService {
     return res.data.data;
   }
 
-  async add(user: z.infer<typeof users.schema>) {
+  async add(user: UserFieldTypes) {
     const res = await api.post("/users", user);
 
     return res;
   }
 
-  async update(user: z.infer<typeof users.schema>) {
+  async update(user: UserFieldTypes) {
     const res = await api.put(`/users`, user);
 
     return res;
