@@ -27,13 +27,15 @@ export const organizations = {
     };
 
     if (org) {
-      data.id = org.id;
+      data.id = org.id?.toString();
     }
 
     return data;
   },
 
   schema: z.object({
+    id: z.string().optional(),
+
     name: z.string().min(1, "Organization name is required."),
 
     registeredName: z.string().min(1, "Registered name is required."),

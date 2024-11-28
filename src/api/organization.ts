@@ -1,8 +1,10 @@
 import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import { api } from "../lib/axios/interceptor";
-import { IFilters, IOrganization } from "../pages/Organizations/types";
-import { z } from "zod";
-import { organizations } from "../lib/validators/organizations";
+import {
+  IFilters,
+  IOrganization,
+  OrganizationFieldTypes,
+} from "../pages/Organizations/types";
 import { generateODataQuery, IODataObject } from "../lib/utils";
 
 class OrganizationService {
@@ -90,7 +92,7 @@ class OrganizationService {
     return response.data.data;
   }
 
-  async update(org: z.infer<typeof organizations.schema>) {
+  async update(org: OrganizationFieldTypes) {
     const response = await api.put("/organizations", org);
 
     return response;
