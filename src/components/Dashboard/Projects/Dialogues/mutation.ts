@@ -6,7 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
 import * as amplitude from "@amplitude/analytics-browser";
 
-const useProjectMutation = (projectId: string, close: () => void) => {
+const useProjectMutation = (projectId: string, succesCallback?: () => void) => {
   const { setAlert } = useAlert();
 
   const { mutateAsync: addProject, isPending } = useMutation({
@@ -18,9 +18,18 @@ const useProjectMutation = (projectId: string, close: () => void) => {
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: ["projects", 1] });
 
-      const previousProject = queryClient.getQueryData(["projects", 1]);
+      await queryClient.cancelQueries({
+        queryKey: ["specific-project", projectId],
+      });
 
-      return { previousProject };
+      const previousProjects = queryClient.getQueryData(["projects", 1]);
+
+      const previousProject = queryClient.getQueryData([
+        "specific-project",
+        projectId,
+      ]);
+
+      return { previousProjects, previousProject };
     },
 
     onSuccess: (addedProject) => {
@@ -32,9 +41,13 @@ const useProjectMutation = (projectId: string, close: () => void) => {
             items: [...(old?.items || []), addedProject.data.data],
           };
         });
+
+        queryClient.setQueryData(["specific-project", projectId], () => {
+          return addedProject;
+        });
       }
 
-      close();
+      succesCallback?.();
 
       setAlert({
         status: "success",
@@ -58,11 +71,20 @@ const useProjectMutation = (projectId: string, close: () => void) => {
         message: err?.response?.data?.message,
       });
 
-      queryClient.setQueryData(["projects", 1], context?.previousProject);
+      queryClient.setQueryData(["projects", 1], context?.previousProjects);
+
+      queryClient.setQueryData(
+        ["specific-project", projectId],
+        context?.previousProject,
+      );
     },
 
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["projects", 1] });
+
+      queryClient.invalidateQueries({
+        queryKey: ["specific-project", projectId],
+      });
     },
   });
 

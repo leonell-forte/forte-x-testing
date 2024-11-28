@@ -7,18 +7,16 @@ import Button from "../../../../components/ui/button";
 import OutcomeField from "../OutcomeField";
 import add from "../../../../assets/images/icons/add.svg";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { z } from "zod";
 import { projects } from "../../../../lib/validators/projects";
 import { zodResolver } from "@hookform/resolvers/zod";
 import projectService from "../../../../api/projects";
 import { useQuery } from "@tanstack/react-query";
 import Spinner from "../../../../components/ui/spinner/spinner";
 import useProjectMutation from "./mutation";
+import { ProjectFieldValues } from "@/pages/Projects/types";
 
 interface IProjectDialogueProps extends IDialogueProps {
   projectId?: string;
-
-  page: number;
 }
 
 const ProjectDialogue = ({
@@ -27,8 +25,6 @@ const ProjectDialogue = ({
   handleClose,
 
   projectId,
-
-  page,
 }: IProjectDialogueProps) => {
   const { data: project, isLoading: projectLoading } = useQuery({
     queryKey: ["specific-project", projectId],
@@ -46,7 +42,7 @@ const ProjectDialogue = ({
     reset,
 
     control,
-  } = useForm<z.infer<typeof projects.schema>>({
+  } = useForm<ProjectFieldValues>({
     resolver: zodResolver(projects.schema),
 
     defaultValues: projects.defaultValues(),
@@ -84,7 +80,7 @@ const ProjectDialogue = ({
   // implements optimistic update after adding or editing project
   const { addProject, isPending } = useProjectMutation(projectId!, close);
 
-  const onSubmit = async (values: z.infer<typeof projects.schema>) => {
+  const onSubmit = async (values: ProjectFieldValues) => {
     await addProject(values);
   };
 

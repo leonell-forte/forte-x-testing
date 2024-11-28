@@ -63,7 +63,6 @@ const ProjectsPage = () => {
       case "project":
         return (
           <ProjectDialogue
-            page={page}
             projectId={(selectedProject?.id || "") as string}
             isVisible={modal === "project"}
             handleClose={handleCloseModal}

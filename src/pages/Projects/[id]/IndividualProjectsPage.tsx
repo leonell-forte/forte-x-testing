@@ -6,6 +6,12 @@ import Partners from "../../../components/Dashboard/Projects/Tables/Partners";
 import Beneficiaries from "../../../components/Dashboard/Projects/Tables/Beneficiaries";
 import { useQuery } from "@tanstack/react-query";
 import projectService from "../../../api/projects";
+import { ProjectFieldValues } from "../types";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { projects } from "../../../lib/validators/projects";
+import { useEffect } from "react";
+import useProjectMutation from "../../../components/Dashboard/Projects/Dialogues/mutation";
 
 const IndividualProjectsPage = () => {
   const { id } = useParams();
@@ -18,7 +24,32 @@ const IndividualProjectsPage = () => {
     enabled: !!id,
   });
 
-  console.log(project);
+  const {
+    formState,
+
+    handleSubmit,
+
+    reset,
+
+    control,
+  } = useForm<ProjectFieldValues>({
+    resolver: zodResolver(projects.schema),
+
+    defaultValues: projects.defaultValues(),
+  });
+
+  useEffect(() => {
+    // sets default value of project form
+    if (project) {
+      reset(projects.defaultValues(project));
+    }
+  }, [project, reset]);
+
+  const { addProject } = useProjectMutation(id!);
+
+  const onSubmit = async (values: ProjectFieldValues) => {
+    await addProject(values);
+  };
 
   return (
     <div className="space-y-2.5 py-3">
@@ -35,8 +66,11 @@ const IndividualProjectsPage = () => {
       </Link>
 
       <Outcomes
-        outcomes={project?.outcomes!}
+        control={control}
+        formState={formState}
+        outcomes={project!.outcomes}
         isLoading={isLoading}
+        onSubmit={handleSubmit(onSubmit)}
       />
 
       <Contracts />
