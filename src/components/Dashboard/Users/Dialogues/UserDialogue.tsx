@@ -10,21 +10,16 @@ import { z } from "zod";
 import { users } from "../../../../lib/validators/users";
 import { zodResolver } from "@hookform/resolvers/zod";
 import userService from "../../../../api/users";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { queryClient } from "../../../../components/QueryProvider";
-import { useAlert } from "../../../../lib/hooks";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import Spinner from "../../../ui/spinner/spinner";
-import * as amplitude from "@amplitude/analytics-browser";
 import { IOrganization } from "../../../../pages/Organizations/types";
-import { IUser } from "@/pages/Users/types";
+import useUserMutation from "../../../../lib/mutations/users";
 
 interface IUserDialogueProps extends IDialogueProps {
   userId?: string;
 
   organizations: IOrganization[];
-
-  page?: number;
 }
 
 const UserDialogue = ({
@@ -35,8 +30,6 @@ const UserDialogue = ({
   handleClose,
 
   userId,
-
-  page,
 }: IUserDialogueProps) => {
   const { data: userData, isLoading } = useQuery({
     queryKey: ["specific user", userId],
@@ -52,8 +45,6 @@ const UserDialogue = ({
     formState: { errors },
 
     setValue,
-
-    getValues,
 
     watch,
 
@@ -71,8 +62,6 @@ const UserDialogue = ({
     }
   }, [userData, reset]);
 
-  const { setAlert } = useAlert();
-
   const close = () => {
     reset();
 
@@ -80,58 +69,8 @@ const UserDialogue = ({
   };
 
   // implements optimistic update after adding user
-  const { mutateAsync: addUser, isPending } = useMutation({
-    mutationFn: userId
-      ? () => userService.update(getValues())
-      : userService.add,
 
-    onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ["users", page] });
-
-      const previousUsers = queryClient.getQueryData(["users", page]);
-
-      return { previousUsers };
-    },
-
-    onSuccess: (addedUser) => {
-      if (!userId) {
-        queryClient.setQueryData(["users", page], (old: { items: IUser[] }) => {
-          return {
-            ...old,
-
-            items: [...(old?.items || []), addedUser.data.data],
-          };
-        });
-      }
-
-      close();
-
-      setAlert({
-        status: "success",
-
-        message: `User ${userId ? "updated" : "added"} successfully`,
-
-        title: "Success!",
-      });
-
-      amplitude.track(`${userId ? "Update" : "Add"} User Form Submission`);
-    },
-
-    onError: (err: any, newUser, context) => {
-      setAlert({
-        status: "error",
-
-        title: `Failed ${userId ? "updating" : "adding"} user`,
-
-        message: err?.response?.data?.message,
-      });
-
-      queryClient.setQueryData(["users", page], context?.previousUsers);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["users", page] });
-    },
-  });
+  const { addUser, isPending } = useUserMutation(userId!, close);
 
   const onSubmit = async (values: z.infer<typeof users.schema>) => {
     await addUser(values);

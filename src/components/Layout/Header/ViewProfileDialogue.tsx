@@ -10,14 +10,12 @@ import { z } from "zod";
 import { users } from "../../../lib/validators/users";
 import { zodResolver } from "@hookform/resolvers/zod";
 import userService from "../../../api/users";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { queryClient } from "../../../components/QueryProvider";
-import { useAlert } from "../../../lib/hooks";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import Spinner from "../../ui/spinner/spinner";
-import * as amplitude from "@amplitude/analytics-browser";
 import { IOrganization } from "../../../pages/Organizations/types";
-import { IUser } from "@/pages/Users/types";
+import { UserFieldTypes } from "@/pages/Users/types";
+import useUserMutation from "../../../lib/mutations/users";
 
 interface IUserDialogueProps extends IDialogueProps {
   userId?: string;
@@ -55,8 +53,6 @@ const ViewProfileDialogue = ({
 
     setValue,
 
-    getValues,
-
     watch,
 
     reset,
@@ -74,8 +70,6 @@ const ViewProfileDialogue = ({
     }
   }, [userData, reset]);
 
-  const { setAlert } = useAlert();
-
   const close = () => {
     setOnEdit(false);
 
@@ -84,74 +78,10 @@ const ViewProfileDialogue = ({
     handleClose!();
   };
 
-  const { mutateAsync: addUser, isPending } = useMutation({
-    mutationFn: () => userService.update(getValues()),
+  const { addUser, isPending } = useUserMutation(userId!, close);
 
-    onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ["specific user", userId] });
-
-      const previousData = queryClient.getQueryData(["specific user", userId]);
-
-      const previousUsers = queryClient.getQueryData(["users", 1]);
-
-      return { previousData, previousUsers };
-    },
-
-    onSuccess: (addedUser) => {
-      queryClient.setQueryData(["specific user", userId], () => {
-        return addedUser.data.data;
-      });
-
-      queryClient.setQueryData(["profile"], () => {
-        return addedUser.data.data;
-      });
-
-      queryClient.setQueryData(["users", 1], (old: { items: IUser[] }) => {
-        return [...(old?.items || []), addedUser.data.data];
-      });
-
-      close();
-
-      reset();
-
-      setAlert({
-        status: "success",
-
-        message: `Profile updated successfully`,
-
-        title: "Success!",
-      });
-
-      amplitude.track(`Update Profile Form Submission`, { id: userId });
-    },
-
-    onError: (err: any, newUser, context) => {
-      setAlert({
-        status: "error",
-
-        title: `Failed updating profile`,
-
-        message: err?.response?.data?.message,
-      });
-
-      queryClient.setQueryData(["specific user", page], context?.previousData);
-
-      queryClient.setQueryData(["profile"], context?.previousData);
-
-      queryClient.setQueryData(["users", 1], context?.previousUsers);
-    },
-
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["specific user", userId] });
-
-      queryClient.invalidateQueries({ queryKey: ["profile"] });
-
-      queryClient.invalidateQueries({ queryKey: ["users", 1] });
-    },
-  });
-
-  const onSubmit = async () => {
-    await addUser();
+  const onSubmit = async (values: UserFieldTypes) => {
+    await addUser(values);
   };
 
   return (

@@ -1,7 +1,7 @@
-import projectService from "../../../../api/projects";
-import { queryClient } from "../../../../components/QueryProvider";
-import { useAlert } from "../../../../lib/hooks";
-import { projects } from "../../../../lib/validators/projects";
+import projectService from "../../api/projects";
+import { queryClient } from "../../components/QueryProvider";
+import { useAlert } from "../../lib/hooks";
+import { projects } from "../../lib/validators/projects";
 import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
 import * as amplitude from "@amplitude/analytics-browser";

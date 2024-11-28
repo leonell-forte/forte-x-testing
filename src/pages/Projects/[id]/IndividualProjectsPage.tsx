@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { projects } from "../../../lib/validators/projects";
 import { useEffect } from "react";
-import useProjectMutation from "../../../components/Dashboard/Projects/Dialogues/mutation";
+import useProjectMutation from "../../../lib/mutations/projects";
 
 const IndividualProjectsPage = () => {
   const { id } = useParams();

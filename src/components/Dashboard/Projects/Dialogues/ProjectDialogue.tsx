@@ -12,8 +12,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import projectService from "../../../../api/projects";
 import { useQuery } from "@tanstack/react-query";
 import Spinner from "../../../../components/ui/spinner/spinner";
-import useProjectMutation from "./mutation";
 import { ProjectFieldValues } from "@/pages/Projects/types";
+import useProjectMutation from "../../../../lib/mutations/projects";
 
 interface IProjectDialogueProps extends IDialogueProps {
   projectId?: string;

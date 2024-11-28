@@ -81,7 +81,6 @@ const UsersPage = () => {
             setSelectedUser("");
             setModal(null);
           }}
-          page={page}
         />
       )}
 
