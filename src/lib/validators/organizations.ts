@@ -1,5 +1,5 @@
-import { IOrganization } from "@/pages/Organizations/types";
 import { z } from "zod";
+import { IOrganization } from "../types/organizations";
 
 export const organizations = {
   defaultValues: (org?: IOrganization) => {

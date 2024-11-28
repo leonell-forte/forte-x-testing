@@ -3,7 +3,7 @@ import { queryClient } from "../../components/QueryProvider";
 import {
   ContractFieldValues,
   IContractDetails,
-} from "../../pages/Contracts/types";
+} from "../../lib/types/contracts";
 import { useMutation } from "@tanstack/react-query";
 import { useAlert } from "../hooks";
 import * as amplitude from "@amplitude/analytics-browser";

@@ -13,8 +13,8 @@ import { useQuery } from "@tanstack/react-query";
 import organizationService from "../../../../api/organization";
 import { useEffect } from "react";
 import Spinner from "../../../../components/ui/spinner/spinner";
-import { OrgTypes } from "../../../../pages/Organizations/types";
 import useOrganizationMutation from "../../../../lib/mutations/organizations";
+import { OrgTypes } from "../../../../lib/types/organizations";
 
 interface IOrganizationDialogueProps extends IDialogueProps {
   orgId?: string;
@@ -93,7 +93,7 @@ const OrganizationDialogue = ({
       ) : (
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="space-y-[22px]"
+          className="space-y-1"
         >
           <div className="flex items-start gap-4">
             <label
@@ -175,7 +175,7 @@ const OrganizationDialogue = ({
               Registered address
             </label>
 
-            <div className="w-full space-y-[22px]">
+            <div className="w-full space-y-1">
               <Controller
                 name="registeredAddress"
                 control={control}

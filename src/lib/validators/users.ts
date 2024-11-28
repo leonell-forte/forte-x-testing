@@ -1,5 +1,5 @@
-import { IUser } from "@/pages/Users/types";
 import { z } from "zod";
+import { IUser } from "../types/users";
 
 export const users = {
   defaultValues: (user?: IUser) => {

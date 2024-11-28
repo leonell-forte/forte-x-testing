@@ -1,5 +1,5 @@
 import { useAlert } from "../hooks";
-import { IUser, UserFieldTypes } from "../../pages/Users/types";
+import { IUser, UserFieldTypes } from "../../lib/types/users";
 import userService from "../../api/users";
 import { queryClient } from "../../components/QueryProvider";
 import { useMutation } from "@tanstack/react-query";

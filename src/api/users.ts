@@ -2,15 +2,15 @@ import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import { api } from "../lib/axios/interceptor";
 import { z } from "zod";
 import { users } from "../lib/validators/users";
-import { IUser } from "../pages/Users/types";
 import { generateODataQuery, IODataObject } from "../lib/utils";
+import { IUser } from "../lib/types/users";
 
 class UserService {
   async list(
     page: number,
     search?: string,
     role?: string,
-    organization?: string[]
+    organization?: string[],
   ) {
     const params = new URLSearchParams();
 

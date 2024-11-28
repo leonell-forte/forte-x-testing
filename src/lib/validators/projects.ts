@@ -1,5 +1,5 @@
-import { IProject } from "../../pages/Projects/types";
 import { z } from "zod";
+import { IProject } from "../types/projects";
 
 const OutcomeSchema = z.object({
   id: z.number().optional(),

@@ -9,7 +9,7 @@ import ContractDialogue from "../../components/Dashboard/Contracts/Dialogues/Con
 import { useCallback, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import contractService from "../../api/contract";
-import { IContractDetails, StatusType } from "./types";
+import { IContractDetails, StatusType } from "../../lib/types/contracts";
 import { formatDate } from "../../lib/utils";
 import Pagination from "../../components/ui/pagination";
 import { useDebounce } from "../../lib/hooks";

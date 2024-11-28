@@ -6,12 +6,12 @@ import { useQuery } from "@tanstack/react-query";
 import organizationService from "../../api/organization";
 import Table from "../../components/ui/table";
 import pencil from "../../assets/images/icons/pencil.svg";
-import { IFilters, IOrganization } from "./types";
 import Pagination from "../../components/ui/pagination";
 import OrganizationDialogue from "../../components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
 import { REGIONS, STATUS, TYPES } from "../../lib/constants";
 import { useDebounce } from "../../lib/hooks";
 import closeFilter from "../../assets/images/icons/close-filter.svg";
+import { IFilters, IOrganization } from "../../lib/types/organizations";
 
 const OrganizationsPage = () => {
   const [modal, setModal] = useState<"org" | null>(null);

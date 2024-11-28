@@ -1,9 +1,9 @@
 import organizationService from "../../api/organization";
 import { queryClient } from "../../components/QueryProvider";
-import { OrganizationFieldTypes } from "../../pages/Organizations/types";
 import { useMutation } from "@tanstack/react-query";
 import { useAlert } from "../hooks";
 import * as amplitude from "@amplitude/analytics-browser";
+import { OrganizationFieldTypes } from "../types/organizations";
 
 interface IOrganizationMutation {
   orgId?: string;

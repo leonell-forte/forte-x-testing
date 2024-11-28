@@ -1,7 +1,7 @@
 import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import { api } from "../lib/axios/interceptor";
-import { ContractFieldValues, StatusType } from "../pages/Contracts/types";
 import { generateODataQuery, IODataObject } from "../lib/utils";
+import { ContractFieldValues, StatusType } from "../lib/types/contracts";
 
 class ContractService {
   async list(page: number, search: string, status: StatusType) {

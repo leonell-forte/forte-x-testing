@@ -4,7 +4,7 @@ import {
   IFilters,
   IOrganization,
   OrganizationFieldTypes,
-} from "../pages/Organizations/types";
+} from "../lib/types/organizations";
 import { generateODataQuery, IODataObject } from "../lib/utils";
 
 class OrganizationService {

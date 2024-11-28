@@ -13,8 +13,8 @@ import userService from "../../../../api/users";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import Spinner from "../../../ui/spinner/spinner";
-import { IOrganization } from "../../../../pages/Organizations/types";
 import useUserMutation from "../../../../lib/mutations/users";
+import { IOrganization } from "../../../../lib/types/organizations";
 
 interface IUserDialogueProps extends IDialogueProps {
   userId?: string;

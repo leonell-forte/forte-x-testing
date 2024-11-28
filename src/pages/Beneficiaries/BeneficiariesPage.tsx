@@ -124,10 +124,9 @@ const BeneficiariesPage = () => {
               className="max-w-[166px]"
             />
 
-            <DatePicker
-              className="max-w-[166px]"
-              noHelperText
-            />
+            <div className="max-w-[166px]">
+              <DatePicker noHelperText />
+            </div>
 
             <button
               onClick={() => {}}

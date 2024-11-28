@@ -1,4 +1,4 @@
-import { IContract } from "@/pages/Contracts/types";
+import { IContract } from "../../lib/types/contracts";
 import { z } from "zod";
 import { formatDate } from "../utils";
 
