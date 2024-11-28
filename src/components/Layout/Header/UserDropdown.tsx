@@ -45,7 +45,7 @@ const UserDropdown = ({ user }: IProp) => {
 
   return (
     <>
-      {user && (
+      {showModal && user && (
         <ViewProfileDialogue
           organizations={organizations}
           userId={user.id}

@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import Button from "../../../../components/ui/button";
 import Dialogue, {
   IDialogueProps,
@@ -32,7 +32,7 @@ const UserDialogue = ({
   userId,
 }: IUserDialogueProps) => {
   const { data: userData, isLoading } = useQuery({
-    queryKey: ["specific user", userId],
+    queryKey: ["specific-user", userId],
 
     queryFn: () => userService.getOne(userId!),
 
@@ -42,13 +42,11 @@ const UserDialogue = ({
   const {
     handleSubmit,
 
-    formState: { errors },
-
     setValue,
 
-    watch,
-
     reset,
+
+    control,
   } = useForm<z.infer<typeof users.schema>>({
     resolver: zodResolver(users.schema),
 
@@ -57,6 +55,7 @@ const UserDialogue = ({
 
   useEffect(() => {
     // sets default value of the form
+
     if (userData) {
       reset(users.defaultValues(userData));
     }
@@ -65,12 +64,18 @@ const UserDialogue = ({
   const close = () => {
     reset();
 
-    handleClose!();
+    handleClose?.();
   };
 
   // implements optimistic update after adding user
 
-  const { addUser, isPending } = useUserMutation(userId!, close);
+  const { addUser, isPending } = useUserMutation({
+    userId: userId!,
+
+    isProfile: false,
+
+    successCallback: close,
+  });
 
   const onSubmit = async (values: z.infer<typeof users.schema>) => {
     await addUser(values);
@@ -99,14 +104,23 @@ const UserDialogue = ({
               Email
             </label>
 
-            <Input
-              value={watch("email")}
-              onChange={(e) => setValue("email", e.target.value)}
-              error={!!errors.email?.message}
-              helperText={errors.email?.message}
-              type="email"
-              autoComplete="email"
-              placeholder="Email"
+            <Controller
+              name="email"
+              control={control}
+              render={({ field, fieldState }) => {
+                const { error } = fieldState;
+
+                return (
+                  <Input
+                    {...field}
+                    error={!!error?.message}
+                    helperText={error?.message}
+                    type="email"
+                    autoComplete="email"
+                    placeholder="Email"
+                  />
+                );
+              }}
             />
           </div>
 
@@ -118,13 +132,22 @@ const UserDialogue = ({
               First name
             </label>
 
-            <Input
-              value={watch("firstName")}
-              onChange={(e) => setValue("firstName", e.target.value)}
-              error={!!errors.firstName?.message}
-              helperText={errors.firstName?.message}
-              autoComplete="given-name"
-              placeholder="First name"
+            <Controller
+              name="firstName"
+              control={control}
+              render={({ field, fieldState }) => {
+                const { error } = fieldState;
+
+                return (
+                  <Input
+                    {...field}
+                    error={!!error?.message}
+                    helperText={error?.message}
+                    autoComplete="given-name"
+                    placeholder="First name"
+                  />
+                );
+              }}
             />
           </div>
 
@@ -136,13 +159,22 @@ const UserDialogue = ({
               Last name
             </label>
 
-            <Input
-              value={watch("lastName")}
-              onChange={(e) => setValue("lastName", e.target.value)}
-              error={!!errors.lastName?.message}
-              helperText={errors.lastName?.message}
-              autoComplete="family-name"
-              placeholder="Last name"
+            <Controller
+              name="lastName"
+              control={control}
+              render={({ field, fieldState }) => {
+                const { error } = fieldState;
+
+                return (
+                  <Input
+                    {...field}
+                    error={!!error?.message}
+                    helperText={error?.message}
+                    autoComplete="family-name"
+                    placeholder="Last name"
+                  />
+                );
+              }}
             />
           </div>
 
@@ -154,13 +186,22 @@ const UserDialogue = ({
               Phone number
             </label>
 
-            <Input
-              value={watch("phoneNumber")}
-              onChange={(e) => setValue("phoneNumber", e.target.value)}
-              error={!!errors.phoneNumber?.message}
-              helperText={errors.phoneNumber?.message}
-              autoComplete="tel"
-              placeholder="Phone number"
+            <Controller
+              name="phoneNumber"
+              control={control}
+              render={({ field, fieldState }) => {
+                const { error } = fieldState;
+
+                return (
+                  <Input
+                    {...field}
+                    error={!!error?.message}
+                    helperText={error?.message}
+                    autoComplete="tel"
+                    placeholder="Phone number"
+                  />
+                );
+              }}
             />
           </div>
 
@@ -172,22 +213,34 @@ const UserDialogue = ({
               Organization
             </label>
 
-            <Dropdown
-              enableSearch
-              value={
-                organizations.find(
-                  (item) => item.id?.toString() === watch("organizationId"),
-                )?.registeredName
-              }
-              options={organizations.map((item: IOrganization) => ({
-                label: item.registeredName,
-                value: item.id!.toString(),
-              }))}
-              handleSelect={(val) => setValue("organizationId", val.toString())}
-              placeholder="Organization"
-              error={!!errors.organizationId?.message}
-              helperText={errors.organizationId?.message}
-              readOnly
+            <Controller
+              name="organizationId"
+              control={control}
+              render={({ field, fieldState }) => {
+                const { error } = fieldState;
+
+                return (
+                  <Dropdown
+                    enableSearch
+                    value={
+                      organizations.find(
+                        (item) => item.id?.toString() === field.value,
+                      )?.registeredName
+                    }
+                    options={organizations.map((item: IOrganization) => ({
+                      label: item.registeredName,
+                      value: item.id!.toString(),
+                    }))}
+                    handleSelect={(val) =>
+                      setValue("organizationId", val.toString())
+                    }
+                    placeholder="Organization"
+                    error={!!error?.message}
+                    helperText={error?.message}
+                    readOnly
+                  />
+                );
+              }}
             />
           </div>
 
@@ -199,13 +252,25 @@ const UserDialogue = ({
               Role
             </label>
 
-            <Dropdown
-              value={ROLES.find((item) => item.value === watch("role"))?.label}
-              handleSelect={(val) => setValue("role", val as string)}
-              options={ROLES}
-              placeholder="Role"
-              error={!!errors.role?.message}
-              helperText={errors.role?.message}
+            <Controller
+              name="role"
+              control={control}
+              render={({ field, fieldState }) => {
+                const { error } = fieldState;
+
+                return (
+                  <Dropdown
+                    value={
+                      ROLES.find((item) => item.value === field.value)?.label
+                    }
+                    handleSelect={(val) => setValue("role", val as string)}
+                    options={ROLES}
+                    placeholder="Role"
+                    error={!!error?.message}
+                    helperText={error?.message}
+                  />
+                );
+              }}
             />
           </div>
 

@@ -65,6 +65,7 @@ const BeneficiariesPage = () => {
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search beneficiaries"
             className="max-w-[286px]"
+            onClear={() => setSearch("")}
           />
 
           <div className="space-x-2.5">

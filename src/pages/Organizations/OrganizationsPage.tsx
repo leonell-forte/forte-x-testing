@@ -97,6 +97,7 @@ const OrganizationsPage = () => {
             onChange={(e) => setSearch(e.target.value)}
             className="!w-[286px]"
             placeholder="Search organizations"
+            onClear={() => setSearch("")}
           />
 
           <div className="flex items-center gap-6">

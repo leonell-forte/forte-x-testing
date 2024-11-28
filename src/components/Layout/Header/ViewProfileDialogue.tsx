@@ -78,7 +78,13 @@ const ViewProfileDialogue = ({
     handleClose!();
   };
 
-  const { addUser, isPending } = useUserMutation(userId!, close);
+  const { addUser, isPending } = useUserMutation({
+    userId: userId!,
+
+    isProfile: true,
+
+    successCallback: close,
+  });
 
   const onSubmit = async (values: UserFieldTypes) => {
     await addUser(values);

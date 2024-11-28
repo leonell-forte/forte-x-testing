@@ -5,7 +5,21 @@ import { queryClient } from "../../components/QueryProvider";
 import { useMutation } from "@tanstack/react-query";
 import * as amplitude from "@amplitude/analytics-browser";
 
-const useUserMutation = (userId: string, successCallback?: () => void) => {
+interface IUserMutation {
+  userId: string;
+
+  isProfile?: boolean;
+
+  successCallback?: () => void;
+}
+
+const useUserMutation = ({
+  userId,
+
+  isProfile,
+
+  successCallback,
+}: IUserMutation) => {
   const { setAlert } = useAlert();
 
   const { mutateAsync: addUser, isPending } = useMutation({
@@ -14,9 +28,9 @@ const useUserMutation = (userId: string, successCallback?: () => void) => {
       : userService.add,
 
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ["specific user", userId] });
+      await queryClient.cancelQueries({ queryKey: ["specific-user", userId] });
 
-      const previousData = queryClient.getQueryData(["specific user", userId]);
+      const previousData = queryClient.getQueryData(["specific-user", userId]);
 
       const previousUsers = queryClient.getQueryData(["users", 1]);
 
@@ -24,7 +38,7 @@ const useUserMutation = (userId: string, successCallback?: () => void) => {
     },
 
     onSuccess: (addedUser) => {
-      queryClient.setQueryData(["specific user", userId], () => {
+      queryClient.setQueryData(["specific-user", userId], () => {
         return addedUser.data.data;
       });
 
@@ -41,12 +55,14 @@ const useUserMutation = (userId: string, successCallback?: () => void) => {
       setAlert({
         status: "success",
 
-        message: `Profile updated successfully`,
+        message: isProfile
+          ? `Profile updated successfully`
+          : `User ${userId ? "updated" : "added"} successfully`,
 
         title: "Success!",
       });
 
-      amplitude.track(`Update Profile Form Submission`, { id: userId });
+      amplitude.track(`${userId ? "Update" : "Add"} User Form Submission`);
     },
 
     onError: (err: any, newUser, context) => {
@@ -59,7 +75,7 @@ const useUserMutation = (userId: string, successCallback?: () => void) => {
       });
 
       queryClient.setQueryData(
-        ["specific user", userId],
+        ["specific-user", userId],
         context?.previousData,
       );
 
@@ -69,7 +85,7 @@ const useUserMutation = (userId: string, successCallback?: () => void) => {
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["specific user", userId] });
+      queryClient.invalidateQueries({ queryKey: ["specific-user", userId] });
 
       queryClient.invalidateQueries({ queryKey: ["profile"] });
 

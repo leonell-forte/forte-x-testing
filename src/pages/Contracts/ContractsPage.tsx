@@ -88,6 +88,7 @@ const ContractsPage = () => {
             onChange={(e) => setSearch(e.target.value)}
             className="!w-[286px]"
             placeholder="Search contract"
+            onClear={() => setSearch("")}
           />
 
           <div className="flex items-center gap-6">

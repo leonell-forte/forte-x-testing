@@ -1,18 +1,16 @@
 import projectService from "../../api/projects";
 import { queryClient } from "../../components/QueryProvider";
 import { useAlert } from "../../lib/hooks";
-import { projects } from "../../lib/validators/projects";
 import { useMutation } from "@tanstack/react-query";
-import { z } from "zod";
 import * as amplitude from "@amplitude/analytics-browser";
+import { ProjectFieldValues } from "@/pages/Projects/types";
 
 const useProjectMutation = (projectId: string, succesCallback?: () => void) => {
   const { setAlert } = useAlert();
 
   const { mutateAsync: addProject, isPending } = useMutation({
     mutationFn: projectId
-      ? (values: z.infer<typeof projects.schema>) =>
-          projectService.update(values)
+      ? (values: ProjectFieldValues) => projectService.update(values)
       : projectService.add,
 
     onMutate: async () => {
@@ -26,6 +24,7 @@ const useProjectMutation = (projectId: string, succesCallback?: () => void) => {
 
       const previousProject = queryClient.getQueryData([
         "specific-project",
+
         projectId,
       ]);
 

@@ -91,6 +91,7 @@ const ProjectsPage = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="max-w-[286px]"
+            onClear={() => setSearch("")}
           />
 
           <Button
