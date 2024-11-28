@@ -2,18 +2,29 @@
 
 import Input from "../ui/input";
 import Button from "../ui/button";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { password } from "../../lib/validators/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ILoginProps } from "./types";
 import * as amplitude from "@amplitude/analytics-browser";
+import { useState } from "react";
+import authService from "../../api/auth";
+import { useAlert } from "../../lib/hooks";
 
-const ResetPasswordForm = ({ handleNext }: ILoginProps) => {
+interface IProps extends ILoginProps {
+  handleBack?: () => void;
+}
+
+const ResetPasswordForm = ({ handleNext, handleBack }: IProps) => {
+  const [loading, setLoading] = useState(false);
+
+  const { setAlert } = useAlert();
+
   const {
-    setValue,
-
     handleSubmit,
+
+    control,
 
     formState: { errors },
   } = useForm<z.infer<typeof password.schema>>({
@@ -23,44 +34,92 @@ const ResetPasswordForm = ({ handleNext }: ILoginProps) => {
   });
 
   const onSubmit = async (values: z.infer<typeof password.schema>) => {
-    console.log(values);
+    setLoading(true);
 
-    amplitude.track("Reset Password Submission");
+    try {
+      await authService.resetPassword(values);
 
-    handleNext!();
+      handleNext!();
+
+      amplitude.track("Reset Password Submission");
+    } catch (err: any) {
+      setAlert({
+        status: "error",
+
+        message: err.response.data.message,
+
+        title: "Reset Password Failed",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="space-y-10"
+    >
       <div className="text-center">
         <p className="text-[24px] md:text-[32px]">Create a new password</p>
 
         <p className="text-[14px] md:text-[18px]">
-          Please choose a password that hasn’t been used before. Must be at
-          least 8 characters.
+          Please choose a password with at least 8 characters, including one
+          uppercase letter, one number, and one special character. Choose
+          something you haven&apos;t used before.
         </p>
       </div>
 
       <div className="flex flex-col gap-[15px]">
-        <Input
-          onChange={(e) => setValue("new", e.target.value)}
-          placeholder="Reset new password"
-          type="password"
-          error={!!errors.new?.message}
-          helperText={errors.new?.message}
+        <Controller
+          name="password"
+          control={control}
+          render={({ field }) => {
+            return (
+              <Input
+                {...field}
+                placeholder="New password"
+                type="password"
+                error={!!errors.password?.message}
+                helperText={errors.password?.message}
+              />
+            );
+          }}
         />
 
-        <Input
-          onChange={(e) => setValue("confirm", e.target.value)}
-          placeholder="Confirm new password"
-          type="password"
-          error={!!errors?.confirm?.message}
-          helperText={errors.confirm?.message}
+        <Controller
+          name="confirmPassword"
+          control={control}
+          render={({ field }) => {
+            return (
+              <Input
+                {...field}
+                type="password"
+                placeholder="Confirm new password"
+                error={!!errors?.confirmPassword?.message}
+                helperText={errors.confirmPassword?.message}
+              />
+            );
+          }}
         />
       </div>
 
-      <Button type="submit" fullWidth>
-        Reset password
-      </Button>
+      <div className="space-y-4">
+        <Button
+          type="submit"
+          fullWidth
+          loading={loading}
+        >
+          Reset password
+        </Button>
+
+        <Button
+          onClick={handleBack}
+          buttonType="secondary"
+          fullWidth
+        >
+          Back
+        </Button>
+      </div>
     </form>
   );
 };

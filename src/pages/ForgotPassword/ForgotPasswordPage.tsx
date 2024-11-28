@@ -22,7 +22,12 @@ const ForgotPasswordPage = () => {
         return <OTPForm handleNext={handleNextStep} />;
 
       case 2:
-        return <ResetPasswordForm handleNext={handleNextStep} />;
+        return (
+          <ResetPasswordForm
+            handleNext={handleNextStep}
+            handleBack={() => setStep((prev) => prev - 1)}
+          />
+        );
 
       case 3:
         return <ResetSuccess />;
@@ -30,10 +35,13 @@ const ForgotPasswordPage = () => {
   }, []);
 
   return (
-    <div className="main-container grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-[99px] items-center h-[95vh] md:px-[86px]">
+    <div className="main-container grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-[99px] items-center h-[95vh] md:px-[86px] py-10">
       <div className="hidden lg:block">
         <div className="max-w-[437px] w-auto h-auto mx-auto md:mx-0">
-          <img alt="jobs" src={jobs} />
+          <img
+            alt="jobs"
+            src={jobs}
+          />
         </div>
 
         <div className="space-y-6 text-center md:text-left">
@@ -41,7 +49,7 @@ const ForgotPasswordPage = () => {
             Providing the world’s talent with opportunity
           </p>
 
-          <p className="text-[18px] md:text-[24px] leading-[110%]">
+          <p className="text-[18px] md:text-[20px] leading-[110%]">
             We believe connecting talent with opportunity reduces hardship.
             We’re working towards a world free from financial stress, and where
             everyone has dignity and the freedom to choose their own path in

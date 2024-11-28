@@ -17,18 +17,25 @@ import { useEffect } from "react";
 import Spinner from "../../../ui/spinner/spinner";
 import * as amplitude from "@amplitude/analytics-browser";
 import { IOrganization } from "../../../../pages/Organizations/types";
+import { IUser } from "@/pages/Users/types";
 
 interface IUserDialogueProps extends IDialogueProps {
   userId?: string;
+
   organizations: IOrganization[];
+
   page?: number;
 }
 
 const UserDialogue = ({
   isVisible,
+
   organizations,
+
   handleClose,
+
   userId,
+
   page,
 }: IUserDialogueProps) => {
   const { data: userData, isLoading } = useQuery({
@@ -41,13 +48,19 @@ const UserDialogue = ({
 
   const {
     handleSubmit,
+
     formState: { errors },
+
     setValue,
+
     getValues,
+
     watch,
+
     reset,
   } = useForm<z.infer<typeof users.schema>>({
     resolver: zodResolver(users.schema),
+
     defaultValues: users.defaultValues(),
   });
 
@@ -82,7 +95,7 @@ const UserDialogue = ({
 
     onSuccess: (addedUser) => {
       if (!userId) {
-        queryClient.setQueryData(["users", page], (old: any) => {
+        queryClient.setQueryData(["users", page], (old: { items: IUser[] }) => {
           return {
             ...old,
 
@@ -135,9 +148,15 @@ const UserDialogue = ({
           <Spinner />
         </div>
       ) : (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-2.5">
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[140px]">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-2.5"
+        >
+          <div className="flex items-start">
+            <label
+              htmlFor=""
+              className="w-[140px] pt-3"
+            >
               Email
             </label>
 
@@ -148,11 +167,15 @@ const UserDialogue = ({
               helperText={errors.email?.message}
               type="email"
               autoComplete="email"
-              placeholder="email@email.com"
+              placeholder="Email"
             />
           </div>
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[140px]">
+
+          <div className="flex items-start">
+            <label
+              htmlFor=""
+              className="w-[140px] pt-3"
+            >
               First name
             </label>
 
@@ -162,12 +185,15 @@ const UserDialogue = ({
               error={!!errors.firstName?.message}
               helperText={errors.firstName?.message}
               autoComplete="given-name"
-              placeholder="James"
+              placeholder="First name"
             />
           </div>
 
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[140px]">
+          <div className="flex items-start">
+            <label
+              htmlFor=""
+              className="w-[140px] pt-3"
+            >
               Last name
             </label>
 
@@ -177,11 +203,15 @@ const UserDialogue = ({
               error={!!errors.lastName?.message}
               helperText={errors.lastName?.message}
               autoComplete="family-name"
-              placeholder="Potter"
+              placeholder="Last name"
             />
           </div>
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[140px]">
+
+          <div className="flex items-start">
+            <label
+              htmlFor=""
+              className="w-[140px] pt-3"
+            >
               Phone number
             </label>
 
@@ -191,18 +221,23 @@ const UserDialogue = ({
               error={!!errors.phoneNumber?.message}
               helperText={errors.phoneNumber?.message}
               autoComplete="tel"
-              placeholder="+61 4567323423"
+              placeholder="Phone number"
             />
           </div>
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[140px]">
+
+          <div className="flex items-start">
+            <label
+              htmlFor=""
+              className="w-[140px] pt-3"
+            >
               Organization
             </label>
 
             <Dropdown
+              enableSearch
               value={
                 organizations.find(
-                  (item) => item.id?.toString() === watch("organizationId")
+                  (item) => item.id?.toString() === watch("organizationId"),
                 )?.registeredName
               }
               options={organizations.map((item: IOrganization) => ({
@@ -210,33 +245,43 @@ const UserDialogue = ({
                 value: item.id!.toString(),
               }))}
               handleSelect={(val) => setValue("organizationId", val.toString())}
-              placeholder="Select organization"
+              placeholder="Organization"
               error={!!errors.organizationId?.message}
               helperText={errors.organizationId?.message}
               readOnly
             />
           </div>
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[140px]">
+
+          <div className="flex items-start">
+            <label
+              htmlFor=""
+              className="w-[140px] pt-3"
+            >
               Role
             </label>
 
             <Dropdown
               value={ROLES.find((item) => item.value === watch("role"))?.label}
-              handleSelect={(val) => setValue("role", val)}
+              handleSelect={(val) => setValue("role", val as string)}
               options={ROLES}
-              placeholder="Select role"
+              placeholder="Role"
               error={!!errors.role?.message}
               helperText={errors.role?.message}
             />
           </div>
 
           <div className="flex justify-end gap-4 !mt-10">
-            <Button onClick={close} buttonType="secondary">
+            <Button
+              onClick={close}
+              buttonType="secondary"
+            >
               Cancel
             </Button>
 
-            <Button loading={isPending} type="submit">
+            <Button
+              loading={isPending}
+              type="submit"
+            >
               Save
             </Button>
           </div>

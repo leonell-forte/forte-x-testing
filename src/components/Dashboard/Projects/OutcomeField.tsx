@@ -31,12 +31,15 @@ const OutcomeField = ({
 }: IOutcomeFieldProps) => {
   return (
     <div className="space-y-[22px]">
-      <div className="flex items-center">
-        <label htmlFor="" className="w-[180px]">
+      <div className="flex">
+        <label
+          htmlFor=""
+          className="w-[180px] pt-3"
+        >
           Outcome {count} name
         </label>
 
-        <div className=" flex w-full items-center gap-[17px]">
+        <div className=" flex w-full gap-[17px]">
           <Controller
             name={`outcomes.${index}.name`}
             control={control}
@@ -54,16 +57,22 @@ const OutcomeField = ({
             <button
               type="button"
               onClick={handleDelete}
-              className="!w-8 !h-8 bg-white rounded-full flex-shrink-0 text-forest-green flex items-center justify-center hover:scale-[1.05] transition-all hover:opacity-80"
+              className="!w-8 !h-8 bg-white rounded-full flex-shrink-0 text-forest-green flex items-center justify-center hover:scale-[1.05] transition-all hover:opacity-80 mt-2"
             >
-              <img src={minus} alt="" />
+              <img
+                src={minus}
+                alt=""
+              />
             </button>
           )}
         </div>
       </div>
 
       <div className="flex">
-        <label htmlFor="" className="w-[180px] mt-3">
+        <label
+          htmlFor=""
+          className="w-[180px] mt-3.5"
+        >
           Description
         </label>
 

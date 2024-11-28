@@ -32,14 +32,14 @@
 
 * {
   @apply font-light text-white;
-  font-family: "TWKLausanne", sans-serif;
+  font-family: "TWKLausanne", sans-serif !important;
   padding: 0;
   margin: 0;
   box-sizing: border-box;
 }
 
 body {
-  @apply w-screen overflow-hidden;
+  @apply w-screen overflow-x-hidden overflow-y-scroll;
 }
 
 .link {
@@ -68,4 +68,12 @@ input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   -webkit-text-fill-color: #ffffff;
   transition: background-color 5000s ease-in-out 0s;
+}
+
+.hide-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.MuiStack-root {
+  padding: 0 !important;
 }

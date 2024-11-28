@@ -1,38 +1,70 @@
 import classNames from "classnames";
-import { InputHTMLAttributes, useRef, useState } from "react";
+import { InputHTMLAttributes, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useOutsideClick } from "../../lib/hooks";
-import arrow from "../../assets/images/icons/arrow.svg";
+import arrow from "../../assets/images/icons/chevron.svg";
 import Checkbox from "./checkbox";
 import Loader from "./spinner/spinner";
+import SearchInput from "./search-input";
+import Tag from "./tag";
+import { capitalize } from "@mui/material";
 
-interface IOption {
+export interface IOption {
   label: string;
+
   value: string;
 }
 
 interface IDropdownProp extends InputHTMLAttributes<HTMLInputElement> {
   className?: string;
+
   options: IOption[];
+
   value?: string | string[];
-  handleSelect?: (value: string) => void;
+
+  handleSelect?: (value: string | string[]) => void;
+
   isMultiSelect?: boolean;
+
   loading?: boolean;
+
   error?: boolean;
+
   helperText?: string;
+
+  noHelperText?: boolean;
+
+  showAsTags?: boolean;
+
+  enableSearch?: boolean;
 }
 
 const Dropdown = ({
   className,
+
   options,
+
   handleSelect,
+
   isMultiSelect,
+
   loading,
+
   error,
+
   helperText,
+
+  noHelperText,
+
+  showAsTags,
+
+  enableSearch,
+
   ...props
 }: IDropdownProp) => {
   const [showList, setShowList] = useState(false);
+
+  const [search, setSearch] = useState("");
 
   const dropdownRef = useRef(null);
 
@@ -40,87 +72,170 @@ const Dropdown = ({
 
   const displayValue =
     isMultiSelect && Array.isArray(props.value)
-      ? `${props.value.length} selected`
+      ? props.value.length
+        ? `${props.value.length} selected`
+        : ""
       : (props.value as string);
 
+  const optionList = useMemo(
+    () =>
+      options.filter((item) =>
+        item.label.toLowerCase().includes(search.toLowerCase()),
+      ),
+    [search, options],
+  );
+
   return (
-    <div className={classNames("w-full", className)}>
+    <div
+      className={classNames(
+        "w-full relative",
+        className,
+        !noHelperText && "pb-5",
+      )}
+    >
       <div
         ref={dropdownRef}
         className={classNames(
-          "relative h-[56px] w-full rounded-[8px] border border-white px-4 flex items-center justify-between",
+          "relative h-[54px] w-full cursor-pointer rounded-[8px] border border-white",
           className,
           error && "!border-[#e61a1a]",
-          props.disabled && "!border-[#787878] text-[#333c3d]"
+          showAsTags && "!h-fit",
         )}
       >
-        <input
-          type="text"
+        <button
+          disabled={props.disabled}
+          type="button"
+          onClick={() => setShowList((prev) => !prev)}
           className={classNames(
-            "bg-transparent border-none outline-none w-[90%] placeholder:text-white/50",
-            error && "placeholder:!text-[#e61a1a]/50"
+            "w-full px-4 flex items-center justify-between relative h-full min-h-[50px] outline-none",
+            showAsTags && "!items-start py-[9px]",
           )}
-          {...props}
-          value={displayValue}
-          readOnly
-        />
-        {!props.disabled && (
-          <button
-            disabled={props.disabled}
-            type="button"
-            onClick={() => setShowList((prev) => !prev)}
-            className="px-1.5"
-          >
-            <img alt="arrow" src={arrow} />
-          </button>
-        )}
+        >
+          {showAsTags && isMultiSelect ? (
+            <div className="flex flex-wrap gap-2 max-w-[95%]">
+              {props.value?.length ? (
+                (props.value as string[]).map((item, index) => {
+                  const label = options?.find(
+                    (option) => option.value === item,
+                  )?.label;
+                  return (
+                    <Tag
+                      dark
+                      handleRemove={(e) => {
+                        e.stopPropagation();
+
+                        handleSelect!(
+                          (props.value as string[]).filter(
+                            (val) => val !== item,
+                          ),
+                        );
+                      }}
+                      key={index}
+                      label={label}
+                    />
+                  );
+                })
+              ) : (
+                <input
+                  className="bg-transparent border-none outline-none w-[90%] placeholder:text-white/50 pointer-events-none mt-1"
+                  type="text"
+                  {...props}
+                />
+              )}
+            </div>
+          ) : (
+            <input
+              type="text"
+              className={classNames(
+                "bg-transparent border-none outline-none w-[90%] placeholder:text-white/50 pointer-events-none disabled:text-white",
+                error && "placeholder:!text-[#fff]/50",
+              )}
+              {...props}
+              value={capitalize(displayValue || "")}
+              readOnly
+            />
+          )}
+
+          <div className="absolute right-3 top-[22px]">
+            <img
+              alt="arrow"
+              src={arrow}
+            />
+          </div>
+        </button>
 
         <motion.ul
           initial={{ opacity: 0 }}
           animate={showList ? { opacity: 1 } : { opacity: 0, display: "none" }}
           transition={{ type: "spring", duration: 0.2, bounce: 0 }}
-          className="absolute top-16 left-0 rounded-[4px] bg-white w-full overflow-hidden shadow-md z-10"
+          className="absolute space-y-2 top-[50px] left-0 rounded-[4px] min-w-[300px] bg-white/90 p-2.5 w-full overflow-hidden shadow-md z-10 max-h-[400px] hide-scroll overflow-y-scroll"
         >
-          {loading ? (
-            <div className="w-full h-[100px] flex items-center justify-center">
-              <Loader dark />
-            </div>
-          ) : (
-            options.map((item, index) => {
-              const { label, value } = item;
-              return isMultiSelect ? (
-                <div key={index} className="pl-2">
-                  <Checkbox
-                    checked={props?.value?.includes(value)}
-                    onChange={() => {
-                      handleSelect!(value);
-                    }}
-                    dark
-                    label={label}
-                  />
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => {
-                    handleSelect!(value);
-                    setShowList(false);
-                  }}
-                  key={index}
-                  className="w-full text-left"
-                >
-                  <li className="text-black py-1.5 px-2.5 hover:bg-grey transition-all">
-                    {label}
-                  </li>
-                </button>
-              );
-            })
+          {enableSearch && (
+            <SearchInput
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              dark
+            />
           )}
+
+          <div>
+            {loading ? (
+              <div className="w-full h-[100px] flex items-center justify-center">
+                <Loader dark />
+              </div>
+            ) : (
+              optionList.map((item, index) => {
+                const { label, value } = item;
+
+                return isMultiSelect ? (
+                  <div
+                    key={index}
+                    className="py-1.5 px-2.5"
+                  >
+                    <Checkbox
+                      labelClass="text-[16px] font-medium"
+                      checked={props?.value?.includes(value)}
+                      onChange={() => {
+                        let newValue;
+                        if (props.value?.includes(value)) {
+                          newValue = (props.value as string[]).filter(
+                            (item) => item !== value,
+                          );
+                        } else {
+                          newValue = [...(props.value as string[]), value];
+                        }
+                        handleSelect!(newValue);
+                      }}
+                      dark
+                      label={label}
+                    />
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleSelect!(value);
+                      setShowList(false);
+                    }}
+                    key={index}
+                    className="w-full text-left"
+                  >
+                    <li className="text-black font-medium py-3 px-4 hover:bg-mint rounded-[8px] transition-all truncate">
+                      {label}
+                    </li>
+                  </button>
+                );
+              })
+            )}
+          </div>
         </motion.ul>
       </div>
+
       {helperText && (
-        <div className="pl-4 pt-1">
-          <p className="text-[#e61a1a] text-[12px]">{helperText}</p>
+        <div className="pl-4 pt-1 absolute">
+          <p className="text-[#e61a1a] text-[12px] line-clamp-1">
+            {helperText}
+          </p>
         </div>
       )}
     </div>

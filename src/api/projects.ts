@@ -13,11 +13,15 @@ class ProjectsService {
         value: search!,
 
         exact: false,
+
+        isSearch: true,
       },
       "project.provider.name": {
         value: search!,
 
         exact: false,
+
+        isSearch: true,
       },
     };
 
@@ -25,7 +29,9 @@ class ProjectsService {
 
     params.append("$pageSize", DEFAULT_PAGE_SIZE);
 
-    params.append("$filter", generateODataQuery(filters));
+    if (generateODataQuery(filters)) {
+      params.append("$filter", generateODataQuery(filters));
+    }
 
     const res = await api.get(`/projects?${params}`);
 

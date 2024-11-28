@@ -18,9 +18,10 @@ export const organizations = {
 
       postalCode: org?.postalCode || "",
 
-      region: org?.region || "",
+      regions: org?.regions || [],
 
-      type: org?.type || "",
+      // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+      type: org?.type! || "",
 
       status: org?.status || "",
     };
@@ -33,24 +34,24 @@ export const organizations = {
   },
 
   schema: z.object({
-    name: z.string().min(1),
+    name: z.string().min(1, "Organization name is required."),
 
-    registeredName: z.string().min(1),
+    registeredName: z.string().min(1, "Registered name is required."),
 
-    registeredAddress: z.string().min(1),
+    registeredAddress: z.string().min(1, "Registered address is required."),
 
-    registrationNumber: z.string().min(1),
+    registrationNumber: z.string().min(1, "Registration number is required"),
 
-    state: z.string().min(1),
+    state: z.string().min(1, "State is required"),
 
-    country: z.string().min(1),
+    country: z.string().min(1, "Country is required"),
 
-    postalCode: z.string().min(1),
+    postalCode: z.string().min(1, "Postal code is required"),
 
-    region: z.string().min(1),
+    regions: z.array(z.string()).min(1, "Region is required"),
 
-    type: z.enum(["", "funder", "provider"]),
+    type: z.enum(["funder", "provider"], { message: "Type is required" }),
 
-    status: z.string().min(1),
+    status: z.string().min(1, "Status is required"),
   }),
 };

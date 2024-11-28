@@ -10,44 +10,43 @@ export const login = {
   },
 
   schema: z.object({
-    email: z.string().email(),
+    email: z.string().email("Incorrect email or password"),
 
     password: z
       .string()
-      .min(8, "Password must be at least 8 characters long")
-      .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-      .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-      .regex(/\d/, "Password must contain at least one number")
-      .regex(
-        /[!@#$%^&*(),.?":{}|<>]/,
-        "Password must contain at least one special character"
-      ),
+      .min(8, "Incorrect email or password")
+      .regex(/[a-z]/, "Incorrect email or password")
+      .regex(/[A-Z]/, "Incorrect email or password")
+      .regex(/\d/, "Incorrect email or password")
+      .regex(/[!@#$%^&*(),.?":{}|<>]/, "Incorrect email or password"),
     remember: z.boolean(),
   }),
 };
 
 export const password = {
   defaultValues: {
-    new: "",
+    password: "",
 
-    confirm: "",
+    confirmPassword: "",
   },
   schema: z
     .object({
-      new: z
+      password: z
         .string()
         .min(8, "Password must be at least 8 characters long")
-        .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-        .regex(/\d/, "Password must contain at least one number")
+        .regex(/[A-Z]/, "Password must include at least one uppercase letter")
+        .regex(/\d/, "Password must inlcude at least one number")
         .regex(
           /[!@#$%^&*(),.?":{}|<>]/,
-          "Password must contain at least one special character"
+          "Password must include at least one special character",
         ),
-      confirm: z.string().min(8, "Password must be at least 8 characters long"),
+      confirmPassword: z
+        .string()
+        .min(8, "Password must be at least 8 characters long"),
     })
-    .refine((data) => data.new === data.confirm, {
+    .refine((data) => data.password === data.confirmPassword, {
       message: "Passwords do not match",
-      path: ["confirm"], // Error will appear on `confirm` field
+      path: ["confirmPassword"],
     }),
 };
 
@@ -85,7 +84,7 @@ export const signup = {
         .regex(/\d/, "Password must contain at least one number")
         .regex(
           /[!@#$%^&*(),.?":{}|<>]/,
-          "Password must contain at least one special character"
+          "Password must contain at least one special character",
         ),
 
       confirmPassword: z

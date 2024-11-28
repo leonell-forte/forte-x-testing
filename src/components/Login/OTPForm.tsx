@@ -13,15 +13,21 @@ const OTPForm = ({ handleNext }: ILoginProps) => {
 
   const isComplete = useMemo(() => !otp.some((item) => !item), [otp]);
 
+  const handleContinue = () => {
+    sessionStorage.setItem("otp", otp.join(""));
+
+    handleNext!();
+  };
+
   return (
     <div>
       <div className="text-center">
-        <p className="text-[24px] md:text-[32px]">Enter confirmation code</p>
+        <p className="text-[24px] md:text-[32px]">Enter code</p>
 
         <div className="text-[14px] md:text-[18px]">
-          <p>We set a code at </p>
+          <p>A code has been sent to </p>
 
-          <p>{email}</p>
+          <p>{email}.</p>
         </div>
       </div>
 
@@ -32,15 +38,15 @@ const OTPForm = ({ handleNext }: ILoginProps) => {
       <Button
         type="button"
         eventName="OTP"
-        onClick={handleNext}
+        onClick={handleContinue}
         disabled={!isComplete}
         fullWidth
       >
-        Continue
+        Log in
       </Button>
 
       <p className="text-center text-[14px] mt-[15px]">
-        Didn’t receive the email?{" "}
+        Didn&apos;t receive the email?{" "}
         <button className="font-bold">Resend code</button>
       </p>
     </div>

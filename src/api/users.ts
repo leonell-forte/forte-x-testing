@@ -6,23 +6,41 @@ import { IUser } from "../pages/Users/types";
 import { generateODataQuery, IODataObject } from "../lib/utils";
 
 class UserService {
-  async list(page: number, search?: string, role?: string) {
+  async list(
+    page: number,
+    search?: string,
+    role?: string,
+    organization?: string[]
+  ) {
     const params = new URLSearchParams();
 
     const filter: IODataObject = {
       "user.firstName": {
         value: search!,
+
         exact: false,
+
+        isSearch: true,
       },
 
       "user.lastName": {
         value: search!,
+
         exact: false,
+
+        isSearch: true,
       },
 
       "user.role": {
         value: role!,
+
         exact: true,
+      },
+
+      "organization.registeredName": {
+        value: organization!,
+
+        exact: false,
       },
     };
 
@@ -30,7 +48,9 @@ class UserService {
 
     params.append("$pageNum", page.toString());
 
-    params.append("$filter", generateODataQuery(filter));
+    if (generateODataQuery(filter)) {
+      params.append("$filter", generateODataQuery(filter));
+    }
 
     const res = await api.get(`/users?${params.toString()}`);
 

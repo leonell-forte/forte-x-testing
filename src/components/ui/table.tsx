@@ -1,40 +1,95 @@
 import React, { TableHTMLAttributes } from "react";
+import Spinner from "./spinner/spinner";
+import classNames from "classnames";
+
+interface ITableProp extends TableHTMLAttributes<HTMLTableElement> {}
+
+interface ITableHeadProps extends TableHTMLAttributes<HTMLHeadElement> {}
+
+interface ITableContainerProp extends ITableProp {
+  isEmpty?: boolean;
+
+  isLoading?: boolean;
+}
+
+interface ITableCellProps extends TableHTMLAttributes<HTMLTableCellElement> {
+  small?: boolean;
+}
 
 const Table = {
-  Container: ({ children }: TableHTMLAttributes<HTMLTableElement>) => {
+  Container: ({
+    children,
+    isEmpty,
+    isLoading,
+    ...props
+  }: ITableContainerProp) => {
     return (
-      <table className="w-full rounded-t-[8px] overflow-hidden">
-        {children}
-      </table>
+      <div className="w-full overflow-scroll pb-8">
+        <table
+          {...props}
+          className="w-full rounded-t-[8px] overflow-hidden"
+        >
+          {children}
+        </table>
+        {isEmpty && !isLoading && (
+          <div className="min-w-full flex items-center justify-center h-40 mx-auto">
+            <p>No data</p>
+          </div>
+        )}
+        {isLoading && (
+          <div className="w-full h-40 flex items-center justify-center">
+            <Spinner />
+          </div>
+        )}
+      </div>
     );
   },
 
-  Head: ({ children }: TableHTMLAttributes<HTMLTableElement>) => {
+  Head: ({ children, ...props }: ITableHeadProps) => {
     return (
-      <thead className="text-left bg-white text-[14px] font-medium truncate">
+      <thead
+        {...props}
+        className={classNames(
+          "text-left bg-white text-[14px] font-medium truncate",
+          props.className,
+        )}
+      >
         {children}
       </thead>
     );
   },
 
-  Body: ({ children }: TableHTMLAttributes<HTMLTableElement>) => {
+  Body: ({ children }: ITableProp) => {
     return <tbody>{children}</tbody>;
   },
 
-  Row: ({ children }: TableHTMLAttributes<HTMLTableElement>) => {
+  Row: ({ children }: ITableProp) => {
     return <tr className="w-full">{children}</tr>;
   },
 
-  Data: ({ children }: TableHTMLAttributes<HTMLTableElement>) => {
+  Data: ({ children, className, ...props }: ITableCellProps) => {
     return (
-      <td className="px-4 py-[19px] border-b max-w-[200px] truncate text-[14px]">
+      <td
+        {...props}
+        className={classNames(
+          "px-4 py-[19px] border-b max-w-[300px] truncate text-[14px]",
+          className,
+        )}
+      >
         {children}
       </td>
     );
   },
 
-  Header: ({ children }: TableHTMLAttributes<HTMLTableElement>) => {
-    return <th className="text-black px-4 py-6">{children}</th>;
+  Header: ({ children, small, ...props }: ITableCellProps) => {
+    return (
+      <th
+        {...props}
+        className={classNames("!text-black px-4 py-5", small && "!py-3")}
+      >
+        {children}
+      </th>
+    );
   },
 };
 

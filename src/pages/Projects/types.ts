@@ -1,6 +1,6 @@
 import { IOrganization } from "../../pages/Organizations/types";
 
-interface IOutcome {
+export interface IOutcome {
   id: number;
 
   name: string;
@@ -17,13 +17,13 @@ export interface IProject {
 
   name: string;
 
-  createdAt: string;
+  createdAt?: string;
 
-  updatedAt: string;
+  updatedAt?: string;
 
-  provider: IOrganization;
+  provider?: IOrganization[];
 
-  funder: IOrganization;
+  funder?: IOrganization;
 
   outcomes: IOutcome[];
 }

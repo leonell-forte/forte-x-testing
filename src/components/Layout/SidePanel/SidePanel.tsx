@@ -36,27 +36,33 @@ const SidePanel = () => {
       initial={variants[showSidePanel.toString() as "true" | "false"]}
       animate={variants[showSidePanel.toString() as "true" | "false"]}
       transition={{ type: "spring", duration: 0.7, bounce: 0 }}
-      className="absolute h-full md:h-auto left-0 top-0 md:relative w-[90vw] md:w-[172px] rounded-r-[8px] bg-white bg-opacity-[30%] backdrop-blur-md md:backdrop-blur-0 backdrop-brightness-[60%] md:backdrop-brightness-100 p-5 z-50"
+      className="absolute h-full md:h-auto left-0 top-0 md:relative w-[90vw] md:w-[172px] rounded-r-[8px] bg-white bg-opacity-[30%] backdrop-blur-md md:backdrop-blur-0 backdrop-brightness-[60%] md:backdrop-brightness-100 p-5 z-40"
     >
       <ul className="space-y-2.5">
         <button
           onClick={handleClose}
           className="block md:hidden absolute top-4 right-4"
         >
-          <img src={close} alt="" />
+          <img
+            src={close}
+            alt=""
+          />
         </button>
 
         {MENUS.map((item, index) => {
           const { name, link } = item;
 
-          const active = pathname === link;
+          const active = pathname.includes(link);
 
           return (
-            <Link key={index} to={link}>
+            <Link
+              key={index}
+              to={link}
+            >
               <li
                 className={classNames(
                   "capitalize font-medium p-2.5 transition-all",
-                  active && "text-mint"
+                  active && "text-mint",
                 )}
               >
                 {name}

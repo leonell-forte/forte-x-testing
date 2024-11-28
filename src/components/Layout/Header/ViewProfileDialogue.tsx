@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import Spinner from "../../ui/spinner/spinner";
 import * as amplitude from "@amplitude/analytics-browser";
 import { IOrganization } from "../../../pages/Organizations/types";
+import { IUser } from "@/pages/Users/types";
 
 interface IUserDialogueProps extends IDialogueProps {
   userId?: string;
@@ -76,6 +77,8 @@ const ViewProfileDialogue = ({
   const { setAlert } = useAlert();
 
   const close = () => {
+    setOnEdit(false);
+
     reset();
 
     handleClose!();
@@ -85,20 +88,26 @@ const ViewProfileDialogue = ({
     mutationFn: () => userService.update(getValues()),
 
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ["users", page] });
+      await queryClient.cancelQueries({ queryKey: ["specific user", userId] });
 
-      const previousUsers = queryClient.getQueryData(["users", page]);
+      const previousData = queryClient.getQueryData(["specific user", userId]);
 
-      return { previousUsers };
+      const previousUsers = queryClient.getQueryData(["users", 1]);
+
+      return { previousData, previousUsers };
     },
 
     onSuccess: (addedUser) => {
-      queryClient.setQueryData(["users", page], (old: any) => {
-        return {
-          ...old,
+      queryClient.setQueryData(["specific user", userId], () => {
+        return addedUser.data.data;
+      });
 
-          items: [...(old?.items || []), addedUser.data.data],
-        };
+      queryClient.setQueryData(["profile"], () => {
+        return addedUser.data.data;
+      });
+
+      queryClient.setQueryData(["users", 1], (old: { items: IUser[] }) => {
+        return [...(old?.items || []), addedUser.data.data];
       });
 
       close();
@@ -125,11 +134,19 @@ const ViewProfileDialogue = ({
         message: err?.response?.data?.message,
       });
 
-      queryClient.setQueryData(["users", page], context?.previousUsers);
+      queryClient.setQueryData(["specific user", page], context?.previousData);
+
+      queryClient.setQueryData(["profile"], context?.previousData);
+
+      queryClient.setQueryData(["users", 1], context?.previousUsers);
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["users", page] });
+      queryClient.invalidateQueries({ queryKey: ["specific user", userId] });
+
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+
+      queryClient.invalidateQueries({ queryKey: ["users", 1] });
     },
   });
 
@@ -148,9 +165,15 @@ const ViewProfileDialogue = ({
           <Spinner />
         </div>
       ) : (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-2.5">
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[140px]">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-2.5"
+        >
+          <div className="flex items-start">
+            <label
+              htmlFor=""
+              className="w-[140px] pt-4"
+            >
               Email
             </label>
 
@@ -165,8 +188,12 @@ const ViewProfileDialogue = ({
               placeholder="email@email.com"
             />
           </div>
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[140px]">
+
+          <div className="flex items-start">
+            <label
+              htmlFor=""
+              className="w-[140px] pt-4"
+            >
               First name
             </label>
 
@@ -181,8 +208,11 @@ const ViewProfileDialogue = ({
             />
           </div>
 
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[140px]">
+          <div className="flex items-start">
+            <label
+              htmlFor=""
+              className="w-[140px] pt-4"
+            >
               Last name
             </label>
 
@@ -196,8 +226,12 @@ const ViewProfileDialogue = ({
               placeholder="Potter"
             />
           </div>
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[140px]">
+
+          <div className="flex items-start">
+            <label
+              htmlFor=""
+              className="w-[140px] pt-4"
+            >
               Phone number
             </label>
 
@@ -211,8 +245,12 @@ const ViewProfileDialogue = ({
               placeholder="+61 4567323423"
             />
           </div>
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[140px]">
+
+          <div className="flex items-start">
+            <label
+              htmlFor=""
+              className="w-[140px] pt-4"
+            >
               Organization
             </label>
 
@@ -220,7 +258,7 @@ const ViewProfileDialogue = ({
               disabled
               value={
                 organizations.find(
-                  (item) => item.id?.toString() === watch("organizationId")
+                  (item) => item.id?.toString() === watch("organizationId"),
                 )?.registeredName
               }
               options={organizations.map((item: IOrganization) => ({
@@ -235,15 +273,18 @@ const ViewProfileDialogue = ({
             />
           </div>
 
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[140px]">
+          <div className="flex items-start">
+            <label
+              htmlFor=""
+              className="w-[140px] pt-4"
+            >
               Role
             </label>
 
             <Dropdown
               disabled
               value={ROLES.find((item) => item.value === watch("role"))?.label}
-              handleSelect={(val) => setValue("role", val)}
+              handleSelect={(val) => setValue("role", val as string)}
               options={ROLES}
               placeholder="Select role"
               error={!!errors.role?.message}
@@ -256,11 +297,17 @@ const ViewProfileDialogue = ({
               <Button onClick={() => setOnEdit(true)}>Edit</Button>
             ) : (
               <>
-                <Button onClick={() => setOnEdit(false)} buttonType="secondary">
+                <Button
+                  onClick={() => setOnEdit(false)}
+                  buttonType="secondary"
+                >
                   Cancel
                 </Button>
 
-                <Button loading={isPending} type="submit">
+                <Button
+                  loading={isPending}
+                  type="submit"
+                >
                   Save
                 </Button>
               </>

@@ -6,12 +6,12 @@ import { useQuery } from "@tanstack/react-query";
 import organizationService from "../../api/organization";
 import Table from "../../components/ui/table";
 import pencil from "../../assets/images/icons/pencil.svg";
-import Spinner from "../../components/ui/spinner/spinner";
 import { IFilters, IOrganization } from "./types";
 import Pagination from "../../components/ui/pagination";
 import OrganizationDialogue from "../../components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
 import { REGIONS, STATUS, TYPES } from "../../lib/constants";
 import { useDebounce } from "../../lib/hooks";
+import closeFilter from "../../assets/images/icons/close-filter.svg";
 
 const OrganizationsPage = () => {
   const [modal, setModal] = useState<"org" | null>(null);
@@ -19,16 +19,6 @@ const OrganizationsPage = () => {
   const [page, setPage] = useState(1);
 
   const [search, setSearch] = useState("");
-
-  const [selectedOrg, setSelectedOrg] = useState("");
-
-  const [filters, setFilters] = useState<IFilters>({
-    region: "",
-
-    status: "",
-
-    type: "",
-  });
 
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
@@ -38,19 +28,32 @@ const OrganizationsPage = () => {
     },
 
     500,
-    [search]
+    [search],
   );
 
-  const { data: organizationList, isLoading: orgLoading } = useQuery({
-    queryKey: ["organizations", page, debouncedSearch],
+  const [selectedOrg, setSelectedOrg] = useState("");
 
-    queryFn: () => organizationService.list(page, false, debouncedSearch),
+  const initialFilters = {
+    region: [],
+
+    status: "",
+
+    type: "",
+  };
+
+  const [filters, setFilters] = useState<IFilters>(initialFilters);
+
+  const { data: organizationList, isLoading: orgLoading } = useQuery({
+    queryKey: ["organizations", page, debouncedSearch, filters],
+
+    queryFn: () =>
+      organizationService.list(page, false, debouncedSearch, filters),
   });
 
-  const organizations = useMemo(
+  const organizations: IOrganization[] = useMemo(
     () => organizationList?.items || [],
 
-    [organizationList]
+    [organizationList],
   );
 
   const close = () => {
@@ -65,8 +68,15 @@ const OrganizationsPage = () => {
     setSelectedOrg(id);
   };
 
-  const handleSelectFilter = (key: keyof IFilters, value: string) => {
+  const handleSelectFilter = (
+    key: keyof IFilters,
+    value: string | string[],
+  ) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleRemoveFilters = () => {
+    setFilters(initialFilters);
   };
 
   return (
@@ -96,7 +106,7 @@ const OrganizationsPage = () => {
                 setModal("org");
               }}
             >
-              Add Organization
+              Add organization
             </Button>
           </div>
         </div>
@@ -104,6 +114,9 @@ const OrganizationsPage = () => {
           <p className="text-[20px] font-medium">Filter by</p>
 
           <Dropdown
+            enableSearch
+            noHelperText
+            isMultiSelect
             value={filters.region}
             handleSelect={(val) => {
               handleSelectFilter("region", val);
@@ -114,6 +127,7 @@ const OrganizationsPage = () => {
           />
 
           <Dropdown
+            noHelperText
             value={filters.status}
             handleSelect={(val) => {
               handleSelectFilter("status", val);
@@ -124,6 +138,7 @@ const OrganizationsPage = () => {
           />
 
           <Dropdown
+            noHelperText
             value={filters.type}
             handleSelect={(val) => {
               handleSelectFilter("type", val);
@@ -132,15 +147,21 @@ const OrganizationsPage = () => {
             className="max-w-[166px]"
             options={TYPES}
           />
+
+          <button onClick={handleRemoveFilters}>
+            <img
+              src={closeFilter}
+              alt="close-filter"
+            />
+          </button>
         </div>
 
         <div className="space-y-[18px]">
-          {orgLoading ? (
-            <div className="w-full h-[500px] flex items-center justify-center">
-              <Spinner />
-            </div>
-          ) : (
-            <Table.Container>
+          <div className="h-[70vh] overflow-scroll pr-4">
+            <Table.Container
+              isEmpty={!organizations.length}
+              isLoading={orgLoading}
+            >
               <Table.Head>
                 <Table.Row>
                   {TABLE_HEADER.map((key, headerIndex) => {
@@ -156,35 +177,64 @@ const OrganizationsPage = () => {
                     id,
                     name,
                     registeredName,
-                    region,
+                    regions,
                     type,
                     status,
                     registeredAddress,
                     registrationNumber,
                     noOfProjects,
                     noOfUsers,
+                    state,
+                    postalCode,
+                    country,
                   } = item;
                   return (
                     <Table.Row key={bodyIndex}>
-                      <Table.Data>{name}</Table.Data>
+                      <Table.Data>
+                        <p className="truncate w-[200px]">{name}</p>
+                      </Table.Data>
 
-                      <Table.Data>{registeredName}</Table.Data>
+                      <Table.Data>
+                        <p className="truncate w-[200px]">{registeredName}</p>
+                      </Table.Data>
 
-                      <Table.Data>{registeredAddress}</Table.Data>
+                      <Table.Data>
+                        <p className="truncate w-[250px]">
+                          {`${registeredAddress}, ${state} ${postalCode} ${country}`}
+                        </p>
+                      </Table.Data>
 
-                      <Table.Data>{registrationNumber}</Table.Data>
+                      <Table.Data>
+                        <p className="truncate w-[100px]">
+                          {registrationNumber}
+                        </p>
+                      </Table.Data>
 
-                      <Table.Data>{region}</Table.Data>
+                      <Table.Data>
+                        <p className="truncate w-[120px]">
+                          {regions.join(", ")}
+                        </p>
+                      </Table.Data>
 
-                      <Table.Data>{type}</Table.Data>
+                      <Table.Data>
+                        <p className="truncate w-[60px] capitalize">{type}</p>
+                      </Table.Data>
 
-                      <Table.Data>{status}</Table.Data>
+                      <Table.Data>
+                        <p className="truncate w-[55px] capitalize">{status}</p>
+                      </Table.Data>
 
-                      <Table.Data>{noOfUsers}</Table.Data>
+                      <Table.Data>
+                        <p className="truncate w-[35px]">{noOfUsers}</p>
+                      </Table.Data>
 
-                      <Table.Data>{noOfProjects}</Table.Data>
+                      <Table.Data>
+                        <p className="truncate w-[35px]">{noOfProjects}</p>
+                      </Table.Data>
 
-                      <Table.Data>-</Table.Data>
+                      <Table.Data>
+                        <p className="truncate w-[35px]">-</p>
+                      </Table.Data>
 
                       <Table.Data>
                         <Button
@@ -195,7 +245,10 @@ const OrganizationsPage = () => {
                           onClick={() => handleEditOrg(id!)}
                           className="p-[3px]"
                         >
-                          <img alt="pencil" src={pencil} />
+                          <img
+                            alt="pencil"
+                            src={pencil}
+                          />
                         </Button>
                       </Table.Data>
                     </Table.Row>
@@ -203,7 +256,7 @@ const OrganizationsPage = () => {
                 })}
               </Table.Body>
             </Table.Container>
-          )}
+          </div>
 
           <div className="flex justify-end absolute bottom-4 right-2">
             <Pagination

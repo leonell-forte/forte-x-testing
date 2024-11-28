@@ -6,8 +6,6 @@ import Input from "../../../../components/ui/input";
 import Button from "../../../../components/ui/button";
 import OutcomeField from "../OutcomeField";
 import add from "../../../../assets/images/icons/add.svg";
-import { IOrganization } from "../../../../pages/Organizations/types";
-import Dropdown from "../../../../components/ui/dropdown";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { projects } from "../../../../lib/validators/projects";
@@ -22,8 +20,6 @@ import Spinner from "../../../../components/ui/spinner/spinner";
 interface IProjectDialogueProps extends IDialogueProps {
   projectId?: string;
 
-  organizations: IOrganization[];
-
   page: number;
 }
 
@@ -33,8 +29,6 @@ const ProjectDialogue = ({
   handleClose,
 
   projectId,
-
-  organizations,
 
   page,
 }: IProjectDialogueProps) => {
@@ -53,12 +47,6 @@ const ProjectDialogue = ({
   });
 
   const {
-    watch,
-
-    setValue,
-
-    setError,
-
     getValues,
 
     formState: { errors },
@@ -72,6 +60,7 @@ const ProjectDialogue = ({
 
   const { fields, append, remove } = useFieldArray({
     control,
+
     name: "outcomes",
   });
 
@@ -136,7 +125,7 @@ const ProjectDialogue = ({
       });
 
       amplitude.track(
-        `${projectId ? "Update" : "Add"} Project Form Submission`
+        `${projectId ? "Update" : "Add"} Project Form Submission`,
       );
     },
 
@@ -144,7 +133,7 @@ const ProjectDialogue = ({
       setAlert({
         status: "error",
 
-        title: `Faild ${projectId ? "updating" : "adding"} project`,
+        title: `Failed ${projectId ? "updating" : "adding"} project`,
 
         message: err?.response?.data?.message,
       });
@@ -165,16 +154,22 @@ const ProjectDialogue = ({
     <Dialogue
       isVisible={isVisible}
       handleClose={close}
-      title={project ? "Edit project" : "Add new project"}
+      title={project ? "Edit project" : "Add project"}
     >
       {projectLoading ? (
         <div className="w-full h-[470px] flex items-center justify-center">
           <Spinner />
         </div>
       ) : (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-[22px]">
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[180px]">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-[22px]"
+        >
+          <div className="flex items-start">
+            <label
+              htmlFor=""
+              className="w-[180px] pt-3"
+            >
               Project name
             </label>
 
@@ -184,7 +179,7 @@ const ProjectDialogue = ({
               render={({ field }) => (
                 <Input
                   {...field}
-                  placeholder="Enter project name"
+                  placeholder="Project name"
                   error={!!errors.name?.message}
                   helperText={errors.name?.message}
                 />
@@ -192,64 +187,8 @@ const ProjectDialogue = ({
             />
           </div>
 
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[180px]">
-              Provider
-            </label>
-
-            <Dropdown
-              name="providerId"
-              value={
-                organizations.find(
-                  (item) => Number(item.id) === watch("providerId")
-                )?.registeredName
-              }
-              options={organizations
-                .filter((org) => org.type === "provider")
-                .map((item: IOrganization) => ({
-                  label: item.registeredName,
-                  value: item.id!.toString(),
-                }))}
-              handleSelect={(val) => {
-                setValue("providerId", Number(val));
-                setError("providerId", { message: "" });
-              }}
-              placeholder="Select provider"
-              error={!!errors.providerId?.message}
-              helperText={errors.providerId?.message}
-            />
-          </div>
-
-          <div className="flex items-center">
-            <label htmlFor="" className="w-[180px]">
-              Funder
-            </label>
-
-            <Dropdown
-              name="funderId"
-              value={
-                organizations.find(
-                  (item) => Number(item.id) === watch("funderId")
-                )?.registeredName
-              }
-              options={organizations
-                .filter((org) => org.type === "funder")
-                .map((item: IOrganization) => ({
-                  label: item.registeredName,
-                  value: item.id!.toString(),
-                }))}
-              handleSelect={(val) => {
-                setValue("funderId", Number(val));
-                setError("funderId", { message: "" });
-              }}
-              placeholder="Select funder"
-              error={!!errors.funderId?.message}
-              helperText={errors.funderId?.message}
-            />
-          </div>
-
           <div className="flex w-full items-center gap-4">
-            <p className="w-[190px]">Outcome</p>
+            <p className="w-[190px]">Outcomes</p>
 
             <hr className="w-full" />
 
@@ -258,38 +197,45 @@ const ProjectDialogue = ({
               onClick={handleAddOutcome}
               className="!w-8 !h-8 bg-white rounded-full flex-shrink-0 text-forest-green flex items-center justify-center hover:scale-[1.05] transition-all hover:opacity-80"
             >
-              <img src={add} alt="" />
+              <img
+                src={add}
+                alt=""
+              />
             </button>
           </div>
 
           <div className="space-y-[22px]">
-            {fields
-              .map((item, index) => {
-                return (
-                  <OutcomeField
-                    control={control}
-                    index={index}
-                    count={index + 1}
-                    key={item.id}
-                    nameError={errors.outcomes?.[index]?.name?.message}
-                    descriptionError={
-                      errors.outcomes?.[index]?.description?.message
-                    }
-                    handleDelete={() => {
-                      remove(index);
-                    }}
-                  />
-                );
-              })
-              .reverse()}
+            {fields.map((item, index) => {
+              return (
+                <OutcomeField
+                  control={control}
+                  index={index}
+                  count={index + 1}
+                  key={item.id}
+                  nameError={errors.outcomes?.[index]?.name?.message}
+                  descriptionError={
+                    errors.outcomes?.[index]?.description?.message
+                  }
+                  handleDelete={() => {
+                    remove(index);
+                  }}
+                />
+              );
+            })}
           </div>
 
           <div className="flex justify-end gap-4 !mt-10">
-            <Button onClick={close} buttonType="secondary">
+            <Button
+              onClick={close}
+              buttonType="secondary"
+            >
               Cancel
             </Button>
 
-            <Button loading={isPending} type="submit">
+            <Button
+              loading={isPending}
+              type="submit"
+            >
               Save
             </Button>
           </div>

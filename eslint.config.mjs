@@ -27,6 +27,7 @@ export default [
       "react/display-name": "off",
       "no-irregular-whitespace": "off",
       "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-empty-object-type": "off",
     },
     settings: {
       react: {

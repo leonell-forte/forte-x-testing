@@ -1,22 +1,77 @@
 import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import { api } from "../lib/axios/interceptor";
-import { IOrganization } from "../pages/Organizations/types";
+import { IFilters, IOrganization } from "../pages/Organizations/types";
 import { z } from "zod";
 import { organizations } from "../lib/validators/organizations";
+import { generateODataQuery, IODataObject } from "../lib/utils";
 
 class OrganizationService {
-  async list(page: number = 1, listAll?: boolean, search?: string) {
+  async list(
+    page: number = 1,
+
+    listAll?: boolean,
+
+    search?: string,
+
+    filters?: IFilters,
+  ) {
     const params = new URLSearchParams();
 
     params.append("$pageNum", page.toString());
 
     params.append("$pageSize", DEFAULT_PAGE_SIZE);
 
-    if (search) {
-      params.append("$filter", search);
+    const searchFilter: IODataObject = {
+      "organizations.name": {
+        value: search!,
+
+        exact: false,
+
+        isSearch: true,
+      },
+
+      "organizations.registeredName": {
+        value: search!,
+
+        exact: false,
+
+        isSearch: true,
+      },
+
+      "organizations.registrationNumber": {
+        value: search!,
+
+        exact: false,
+
+        isSearch: true,
+      },
+
+      "organizations.region": {
+        value: filters?.region || "",
+
+        exact: false,
+      },
+
+      "organizations.type": {
+        value: filters?.type.toLowerCase() || "",
+
+        exact: false,
+      },
+
+      "organizations.status": {
+        value: filters?.status.toLowerCase() || "",
+
+        exact: false,
+      },
+    };
+
+    if (generateODataQuery(searchFilter)) {
+      params.append("$filter", generateODataQuery(searchFilter));
     }
 
-    if (listAll) params.append("listAll", "true");
+    if (listAll) {
+      params.append("$listAll", "true");
+    }
 
     const res = await api.get(`/organizations?${params}`);
 

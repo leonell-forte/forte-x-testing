@@ -11,23 +11,28 @@ import { queryClient } from "../../../../components/QueryProvider";
 
 interface IDeleteDialogueProp extends IDialogueProps {
   project: IProject;
+
   page: number;
 }
 
 const DeleteDialogue = ({
   handleClose,
+
   project,
+
   isVisible,
+
   page,
 }: IDeleteDialogueProp) => {
   const { id } = project;
+
   const { setAlert } = useAlert();
 
   const { mutateAsync: deletProject, isPending } = useMutation({
     mutationFn: projectService.delete,
 
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ["projects", page] });
+      await queryClient.cancelQueries({ queryKey: ["projects", page, ""] });
 
       const previousProject = queryClient.getQueryData<IProject[]>([
         "projects",
@@ -39,20 +44,24 @@ const DeleteDialogue = ({
 
     onSuccess: () => {
       queryClient.setQueryData(
-        ["projects", page],
+        ["projects", page, ""],
+
         (old: { items: IProject[] }) => {
           return {
             ...old,
+
             items: old.items.filter((item) => item.id !== id),
           };
-        }
+        },
       );
 
       handleClose!();
 
       setAlert({
         status: "success",
+
         message: `Project deleted successfully`,
+
         title: "Project Deleted!",
       });
 
@@ -64,7 +73,9 @@ const DeleteDialogue = ({
     onError: (err: any, newProject, context) => {
       setAlert({
         status: "error",
+
         title: `Faild deleting project`,
+
         message: err?.response?.data?.message,
       });
 
@@ -72,7 +83,7 @@ const DeleteDialogue = ({
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["projects", page] });
+      queryClient.invalidateQueries({ queryKey: ["projects", page, ""] });
     },
   });
 
@@ -81,17 +92,28 @@ const DeleteDialogue = ({
   };
 
   return (
-    <Dialogue isVisible={isVisible} handleClose={handleClose}>
+    <Dialogue
+      center
+      isVisible={isVisible}
+      handleClose={handleClose}
+    >
       <div className="text-center">
         <p className="text-[24px] font-semibold">
           Are you sure you want to delete this project?
         </p>
 
         <div className="flex justify-end gap-2 mt-10">
-          <Button onClick={handleClose} buttonType="secondary">
+          <Button
+            onClick={handleClose}
+            buttonType="secondary"
+          >
             Cancel
           </Button>
-          <Button loading={isPending} onClick={handleDelete}>
+
+          <Button
+            loading={isPending}
+            onClick={handleDelete}
+          >
             Delete
           </Button>
         </div>

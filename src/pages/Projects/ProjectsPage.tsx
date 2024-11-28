@@ -8,11 +8,10 @@ import bin from "../../assets/images/icons/bin.svg";
 import ProjectDialogue from "../../components/Dashboard/Projects/Dialogues/ProjectDialogue";
 import { useQuery } from "@tanstack/react-query";
 import projectService from "../../api/projects";
-import organizationService from "../../api/organization";
 import { IProject } from "./types";
-import Spinner from "../../components/ui/spinner/spinner";
 import DeleteDialogue from "../../components/Dashboard/Projects/Dialogues/DeleteDialogue";
 import { useDebounce } from "../../lib/hooks";
+import { Link } from "react-router-dom";
 
 const ProjectsPage = () => {
   const [page, setPage] = useState(1);
@@ -25,8 +24,10 @@ const ProjectsPage = () => {
     () => {
       setDebouncedSearch(search);
     },
+
     500,
-    [search]
+
+    [search],
   );
 
   const { data: projectsList, isLoading: projectLoading } = useQuery({
@@ -35,19 +36,11 @@ const ProjectsPage = () => {
     queryFn: () => projectService.list(page, debouncedSearch),
   });
 
-  const { data: organizationList } = useQuery({
-    queryKey: ["organizations"],
+  const projects: IProject[] = useMemo(
+    () => projectsList?.items || [],
 
-    queryFn: () => organizationService.list(page, true),
-  });
-
-  const organizations = useMemo(
-    () => organizationList?.items || [],
-
-    [organizationList]
+    [projectsList],
   );
-
-  const projects = useMemo(() => projectsList?.items || [], [projectsList]);
 
   const [modal, setModal] = useState<"project" | "delete" | null>(null);
 
@@ -71,7 +64,6 @@ const ProjectsPage = () => {
         return (
           <ProjectDialogue
             page={page}
-            organizations={organizations}
             projectId={(selectedProject?.id || "") as string}
             isVisible={modal === "project"}
             handleClose={handleCloseModal}
@@ -88,7 +80,7 @@ const ProjectsPage = () => {
           />
         );
     }
-  }, [modal, organizations, selectedProject, page]);
+  }, [modal, selectedProject, page]);
 
   return (
     <>
@@ -102,18 +94,20 @@ const ProjectsPage = () => {
             className="max-w-[286px]"
           />
 
-          <Button eventName="Add User" onClick={() => setModal("project")}>
-            Add Project
+          <Button
+            eventName="Add User"
+            onClick={() => setModal("project")}
+          >
+            Add project
           </Button>
         </div>
 
         <div className="space-y-[18px]">
-          {projectLoading ? (
-            <div className="w-full h-[500px] flex items-center justify-center">
-              <Spinner />
-            </div>
-          ) : (
-            <Table.Container>
+          <div className="h-[74vh] overflow-scroll pr-4">
+            <Table.Container
+              isEmpty={!projects.length}
+              isLoading={projectLoading}
+            >
               <Table.Head>
                 <Table.Row>
                   {TABLE_HEADER.map((key, headerIndex) => {
@@ -128,12 +122,22 @@ const ProjectsPage = () => {
                   const { id, name, provider, outcomes } = item;
                   return (
                     <Table.Row key={bodyIndex}>
-                      <Table.Data>{name}</Table.Data>
-
-                      <Table.Data>{provider.name}</Table.Data>
+                      <Table.Data>
+                        <Link to={`/projects/${id}`}>
+                          <p className="w-[140px] truncate">{name}</p>
+                        </Link>
+                      </Table.Data>
 
                       <Table.Data>
-                        {outcomes?.map((item) => item.name).join(", ")}
+                        <p className="w-[140px] truncate">
+                          {provider?.map((item) => item.name).join(", ") || "-"}
+                        </p>
+                      </Table.Data>
+
+                      <Table.Data>
+                        <p className="w-[220px] truncate">
+                          {outcomes?.map((item) => item.name).join(", ")}
+                        </p>
                       </Table.Data>
 
                       <Table.Data>-</Table.Data>
@@ -141,37 +145,45 @@ const ProjectsPage = () => {
                       <Table.Data>-</Table.Data>
 
                       <Table.Data>
-                        <Button
-                          eventName="Edit User"
-                          // id={project}
-                          buttonType="default"
-                          type="button"
-                          onClick={() => handleEditUser(item)}
-                          className="p-[3px]"
-                        >
-                          <img alt="pencil" src={pencil} />
-                        </Button>
+                        <div className="flex justify-end">
+                          <Button
+                            eventName="Edit User"
+                            // id={project}
+                            buttonType="default"
+                            type="button"
+                            onClick={() => handleEditUser(item)}
+                            className="p-[3px]"
+                          >
+                            <img
+                              alt="pencil"
+                              src={pencil}
+                            />
+                          </Button>
 
-                        <Button
-                          eventName="Edit User"
-                          id={id.toString()}
-                          buttonType="default"
-                          type="button"
-                          onClick={() => {
-                            setModal("delete");
-                            setSelectedProject(item);
-                          }}
-                          className="p-[3px]"
-                        >
-                          <img alt="pencil" src={bin} />
-                        </Button>
+                          <Button
+                            eventName="Edit User"
+                            id={id.toString()}
+                            buttonType="default"
+                            type="button"
+                            onClick={() => {
+                              setModal("delete");
+                              setSelectedProject(item);
+                            }}
+                            className="p-[3px]"
+                          >
+                            <img
+                              alt="pencil"
+                              src={bin}
+                            />
+                          </Button>
+                        </div>
                       </Table.Data>
                     </Table.Row>
                   );
                 })}
               </Table.Body>
             </Table.Container>
-          )}
+          </div>
 
           <div className="flex justify-end absolute bottom-4 right-2">
             <Pagination
@@ -190,7 +202,7 @@ export default ProjectsPage;
 
 const TABLE_HEADER = [
   "Projects",
-  "Partner",
+  "Partners",
   "Outcomes",
   "Contracts",
   "Beneficiaries",

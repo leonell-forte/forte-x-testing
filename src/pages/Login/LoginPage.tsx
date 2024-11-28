@@ -11,10 +11,16 @@ import Spinner from "../../components/ui/spinner/spinner";
 const LoginPage = () => {
   const { isLoading } = useQuery({
     queryKey: ["check"],
+
     queryFn: authService.check,
+
     retry: 1,
+
+    refetchOnWindowFocus: false,
   });
+
   const navigate = useNavigate();
+
   const [step, setStep] = useState(0);
 
   const handleNextStep = () => {
@@ -31,7 +37,7 @@ const LoginPage = () => {
           return <OTPForm handleNext={() => navigate("/users")} />;
       }
     },
-    [navigate]
+    [navigate],
   );
 
   if (isLoading)
@@ -42,10 +48,13 @@ const LoginPage = () => {
     );
 
   return (
-    <div className="main-container grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-[99px] items-center h-[95vh] md:px-[86px]">
+    <div className="main-container grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-[99px] items-start lg:items-center py-10 h-[95vh] md:px-[86px]">
       <div className="hidden lg:block">
         <div className="max-w-[437px] w-auto h-auto mx-auto md:mx-0">
-          <img alt="jobs" src={jobs} />
+          <img
+            alt="jobs"
+            src={jobs}
+          />
         </div>
 
         <div className="space-y-6 text-center md:text-left">
@@ -53,7 +62,7 @@ const LoginPage = () => {
             Providing the world’s talent with opportunity
           </p>
 
-          <p className="text-[18px] md:text-[24px] leading-[110%]">
+          <p className="text-[18px] md:text-[20px] leading-[110%]">
             We believe connecting talent with opportunity reduces hardship.
             We’re working towards a world free from financial stress, and where
             everyone has dignity and the freedom to choose their own path in
@@ -62,8 +71,8 @@ const LoginPage = () => {
         </div>
       </div>
 
-      <Card className="px-10 py-24 max-h-[838px] h-full flex items-center">
-        <div className="max-w-[400px] mx-auto space-y-5 w-full">
+      <Card className="px-10 py-24 max-h-fit lg:max-h-[838px] h-full flex items-center w-fit lg:w-full mx-auto min-w-[300px] sm:min-w-[500px]">
+        <div className="max-w-[450px] mx-auto space-y-5 w-full">
           <img
             alt="logo"
             src="/logo.png"

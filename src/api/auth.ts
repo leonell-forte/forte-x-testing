@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { login, signup } from "../lib/validators/auth";
+import { login, password, signup } from "../lib/validators/auth";
 import { cookie } from "../lib/hooks";
 import { api } from "../lib/axios/interceptor";
 import axios from "axios";
@@ -11,8 +11,14 @@ class AuthService {
     return res;
   }
 
-  async signup(body: z.infer<typeof signup.schema>) {
-    let data = { ...body, hasAgreedToTerms: body.agreeTerms ? true : false };
+  async signup(body: z.infer<typeof signup.schema>, code: string = "") {
+    let data = {
+      ...body,
+
+      hasAgreedToTerms: body.agreeTerms ? true : false,
+
+      invitationCode: code,
+    };
 
     delete data.agreeTerms;
 
@@ -41,6 +47,26 @@ class AuthService {
     const response = await api.get(`/authentication/profile`);
 
     return response.data.data;
+  }
+
+  async forgotPassword(email: string) {
+    const response = await api.post("/authentication/forget-password", {
+      email,
+    });
+
+    return response;
+  }
+
+  async resetPassword(values: z.infer<typeof password.schema>) {
+    const otp = sessionStorage.getItem("otp");
+
+    const response = await api.put("/authentication/forget-password", {
+      ...values,
+
+      otp,
+    });
+
+    return response;
   }
 }
 

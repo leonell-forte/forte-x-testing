@@ -9,11 +9,11 @@ import { IUser } from "./types";
 import UserDialogue from "../../components/Dashboard/Users/Dialogues/UserDialogue";
 import { useQuery } from "@tanstack/react-query";
 import userService from "../../api/users";
-import Spinner from "../../components/ui/spinner/spinner";
 import organizationService from "../../api/organization";
 import { IOrganization } from "../Organizations/types";
 import { ROLES } from "../../lib/constants";
 import { useDebounce } from "../../lib/hooks";
+import closeFilter from "../../assets/images/icons/close-filter.svg";
 
 const UsersPage = () => {
   const [page, setPage] = useState(1);
@@ -24,39 +24,45 @@ const UsersPage = () => {
 
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
+  const [organization, setOrganization] = useState<string[]>([]);
+
   useDebounce(
     () => {
       setDebouncedSearch(search);
     },
     500,
-    [search]
+    [search],
   );
 
   const { data: userList, isLoading: userLoading } = useQuery({
-    queryKey: ["users", page, debouncedSearch, role],
+    queryKey: ["users", page, debouncedSearch, role, organization],
 
-    queryFn: () => userService.list(page, debouncedSearch, role),
+    queryFn: () => userService.list(page, debouncedSearch, role, organization),
   });
 
   const { data: organizationList, isLoading: orgLoading } = useQuery({
     queryKey: ["organizations"],
 
-    queryFn: () => organizationService.list(page, true),
+    queryFn: () => organizationService.list(1, true),
   });
 
   const [modal, setModal] = useState<"user" | null>(null);
 
-  const [organization, setOrganization] = useState<string[]>([]);
-
   const [selectedUser, setSelectedUser] = useState<string>("");
 
-  const users = useMemo(() => userList?.items || [], [userList]);
+  const users: IUser[] = useMemo(() => userList?.items || [], [userList]);
 
   const organizations = useMemo(
     () => organizationList?.items || [],
 
-    [organizationList]
+    [organizationList],
   );
+
+  const handleRemoveFilters = () => {
+    setRole("");
+
+    setOrganization([]);
+  };
 
   const handleEditUser = (user: IUser) => {
     setSelectedUser(user.id!.toString());
@@ -94,7 +100,7 @@ const UsersPage = () => {
                 setModal("user");
               }}
             >
-              Add User
+              Add user
             </Button>
           </div>
         </div>
@@ -104,38 +110,45 @@ const UsersPage = () => {
 
           <Dropdown
             value={role}
-            handleSelect={(val) => setRole(val)}
+            handleSelect={(val) => setRole(val as string)}
             placeholder="Role"
             className="max-w-[166px]"
             options={ROLES}
+            noHelperText
           />
 
           <Dropdown
+            enableSearch
             loading={orgLoading}
             value={organization}
             handleSelect={(val) => {
-              if (organization.includes(val))
-                setOrganization((prev) => prev.filter((item) => item !== val));
-              else setOrganization((prev) => [...prev, val]);
+              setOrganization(val as string[]);
             }}
             placeholder="Organization"
             className="max-w-[166px]"
             options={organizations.map((item: IOrganization) => ({
               label: item.registeredName,
-              value: item.id,
+              value: item.registeredName,
             }))}
             readOnly
             isMultiSelect
+            noHelperText
           />
+
+          <button onClick={handleRemoveFilters}>
+            <img
+              src={closeFilter}
+              alt="close-filter"
+            />
+          </button>
         </div>
 
         <div className="space-y-[18px]">
-          {userLoading ? (
-            <div className="w-full h-[500px] flex items-center justify-center">
-              <Spinner />
-            </div>
-          ) : (
-            <Table.Container>
+          <div className="h-[70vh] overflow-scroll pr-4">
+            <Table.Container
+              isEmpty={!users.length}
+              isLoading={userLoading}
+            >
               <Table.Head>
                 <Table.Row>
                   {TABLE_HEADER.map((key, headerIndex) => {
@@ -159,36 +172,55 @@ const UsersPage = () => {
 
                   return (
                     <Table.Row key={bodyIndex}>
-                      <Table.Data>{`${firstName} ${lastName}`}</Table.Data>
-
-                      <Table.Data>{email}</Table.Data>
-
-                      <Table.Data>{phoneNumber}</Table.Data>
-
-                      <Table.Data>{role}</Table.Data>
-
-                      <Table.Data>{organization}</Table.Data>
+                      <Table.Data>
+                        <p className="w-[120px] truncate">{firstName}</p>
+                      </Table.Data>
 
                       <Table.Data>
-                        <Button
-                          eventName="Edit User"
-                          id={id}
-                          buttonType="default"
-                          type="button"
-                          onClick={() => handleEditUser(item)}
-                          className="p-[3px]"
-                        >
-                          <img alt="pencil" src={pencil} />
-                        </Button>
+                        <p className="w-[120px] truncate">{lastName}</p>
+                      </Table.Data>
+
+                      <Table.Data>
+                        <p className="w-[190px] truncate">{email}</p>
+                      </Table.Data>
+
+                      <Table.Data>
+                        <p className="w-[150px] truncate">{phoneNumber}</p>
+                      </Table.Data>
+
+                      <Table.Data>
+                        <p className="w-[80px] truncate capitalize">{role}</p>
+                      </Table.Data>
+
+                      <Table.Data>
+                        <p className="w-[150px] truncate">{organization}</p>
+                      </Table.Data>
+
+                      <Table.Data>
+                        <div className="flex justify-end">
+                          <Button
+                            eventName="Edit User"
+                            id={id}
+                            buttonType="default"
+                            type="button"
+                            onClick={() => handleEditUser(item)}
+                            className="p-[3px]"
+                          >
+                            <img
+                              alt="pencil"
+                              src={pencil}
+                            />
+                          </Button>
+                        </div>
                       </Table.Data>
                     </Table.Row>
                   );
                 })}
               </Table.Body>
             </Table.Container>
-          )}
+          </div>
 
-          <div className="flex justify-end absolute bottom-4 right-2">
+          <div className="flex justify-end">
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}
@@ -204,7 +236,8 @@ const UsersPage = () => {
 export default UsersPage;
 
 const TABLE_HEADER = [
-  "User’s full name",
+  "First name",
+  "Last name",
   "Email",
   "Phone",
   "Role",
