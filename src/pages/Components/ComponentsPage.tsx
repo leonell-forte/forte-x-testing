@@ -25,6 +25,7 @@ const ComponentsPage = () => {
       </div>
       <TableComponent />
       <DialogueComponent />
+      <div>test</div>
     </div>
   );
 };
