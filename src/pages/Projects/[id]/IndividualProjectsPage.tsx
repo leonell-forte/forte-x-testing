@@ -51,6 +51,8 @@ const IndividualProjectsPage = () => {
     await addProject(values);
   };
 
+  console.log(project);
+
   return (
     <div className="space-y-2.5 py-3">
       <Link
@@ -68,7 +70,7 @@ const IndividualProjectsPage = () => {
       <Outcomes
         control={control}
         formState={formState}
-        outcomes={project!.outcomes}
+        outcomes={project?.outcomes}
         isLoading={isLoading}
         onSubmit={handleSubmit(onSubmit)}
       />

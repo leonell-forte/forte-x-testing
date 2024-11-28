@@ -7,7 +7,7 @@ import { IOutcome, ProjectFieldValues } from "@/pages/Projects/types";
 import { Control, Controller, FormState } from "react-hook-form";
 
 interface IProps {
-  outcomes: IOutcome[];
+  outcomes?: IOutcome[];
 
   isLoading?: boolean;
 
