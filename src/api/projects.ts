@@ -1,9 +1,7 @@
-import { z } from "zod";
 import { api } from "../lib/axios/interceptor";
 import { DEFAULT_PAGE_SIZE } from "../lib/constants";
-import { projects } from "../lib/validators/projects";
 import { generateODataQuery, IODataObject } from "../lib/utils";
-import { IProject } from "../lib/types/projects";
+import { IProject, ProjectFieldValues } from "../lib/types/projects";
 
 class ProjectsService {
   async list(page: number = 1, search?: string) {
@@ -39,7 +37,7 @@ class ProjectsService {
     return res.data;
   }
 
-  async add(project: z.infer<typeof projects.schema>) {
+  async add(project: ProjectFieldValues) {
     const res = await api.post("/projects", project);
 
     return res;
@@ -57,7 +55,7 @@ class ProjectsService {
     return response.data.data;
   }
 
-  async update(project: z.infer<typeof projects.schema>) {
+  async update(project: ProjectFieldValues) {
     const data = {
       ...project,
 

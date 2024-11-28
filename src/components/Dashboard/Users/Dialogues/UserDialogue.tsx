@@ -6,7 +6,6 @@ import Dialogue, {
 import Dropdown from "../../../../components/ui/dropdown";
 import Input from "../../../../components/ui/input";
 import { ROLES } from "../../../../lib/constants";
-import { z } from "zod";
 import { users } from "../../../../lib/validators/users";
 import { zodResolver } from "@hookform/resolvers/zod";
 import userService from "../../../../api/users";
@@ -15,6 +14,7 @@ import { useEffect } from "react";
 import Spinner from "../../../ui/spinner/spinner";
 import useUserMutation from "../../../../lib/mutations/users";
 import { IOrganization } from "../../../../lib/types/organizations";
+import { UserFieldTypes } from "@/lib/types/users";
 
 interface IUserDialogueProps extends IDialogueProps {
   userId?: string;
@@ -47,7 +47,7 @@ const UserDialogue = ({
     reset,
 
     control,
-  } = useForm<z.infer<typeof users.schema>>({
+  } = useForm<UserFieldTypes>({
     resolver: zodResolver(users.schema),
 
     defaultValues: users.defaultValues(),
@@ -77,7 +77,7 @@ const UserDialogue = ({
     successCallback: close,
   });
 
-  const onSubmit = async (values: z.infer<typeof users.schema>) => {
+  const onSubmit = async (values: UserFieldTypes) => {
     await addUser(values);
   };
 

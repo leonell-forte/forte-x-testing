@@ -6,7 +6,6 @@ import Dialogue, {
 import Dropdown from "../../../components/ui/dropdown";
 import Input from "../../../components/ui/input";
 import { ROLES } from "../../../lib/constants";
-import { z } from "zod";
 import { users } from "../../../lib/validators/users";
 import { zodResolver } from "@hookform/resolvers/zod";
 import userService from "../../../api/users";
@@ -52,7 +51,7 @@ const ViewProfileDialogue = ({
     watch,
 
     reset,
-  } = useForm<z.infer<typeof users.schema>>({
+  } = useForm<UserFieldTypes>({
     resolver: zodResolver(users.schema),
 
     defaultValues: users.defaultValues(),
