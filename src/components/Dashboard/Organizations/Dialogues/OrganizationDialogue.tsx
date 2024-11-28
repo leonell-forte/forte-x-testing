@@ -17,8 +17,6 @@ import { OrgTypes } from "../../../../pages/Organizations/types";
 import useOrganizationMutation from "../../../../lib/mutations/organizations";
 
 interface IOrganizationDialogueProps extends IDialogueProps {
-  page?: number;
-
   orgId?: string;
 }
 
@@ -26,8 +24,6 @@ const OrganizationDialogue = ({
   handleClose,
 
   isVisible,
-
-  page = 1,
 
   orgId,
 }: IOrganizationDialogueProps) => {

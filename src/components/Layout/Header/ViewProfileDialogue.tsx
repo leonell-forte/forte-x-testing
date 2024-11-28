@@ -21,8 +21,6 @@ interface IUserDialogueProps extends IDialogueProps {
   userId?: string;
 
   organizations: IOrganization[];
-
-  page?: number;
 }
 
 const ViewProfileDialogue = ({
@@ -33,8 +31,6 @@ const ViewProfileDialogue = ({
   handleClose,
 
   userId,
-
-  page,
 }: IUserDialogueProps) => {
   const [onEdit, setOnEdit] = useState(false);
 
