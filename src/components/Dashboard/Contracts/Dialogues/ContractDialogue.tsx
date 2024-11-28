@@ -25,6 +25,8 @@ import { queryClient } from "../../../../components/QueryProvider";
 import { useAlert } from "../../../../lib/hooks";
 import * as amplitude from "@amplitude/analytics-browser";
 import Spinner from "../../../../components/ui/spinner/spinner";
+import DatePicker from "../../../../components/ui/date-picker";
+import { formatDate } from "../../../../lib/utils";
 
 interface IContractDialogueProps extends IDialogueProps {
   id?: number;
@@ -350,7 +352,7 @@ const ContractDialogue = ({
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6 gap-1">
             <div className="flex items-start gap-4">
               <label
                 htmlFor=""
@@ -363,9 +365,11 @@ const ContractDialogue = ({
                 name="startDate"
                 control={control}
                 render={({ field }) => (
-                  <Input
-                    {...field}
-                    placeholder="Start date"
+                  <DatePicker
+                    value={new Date(field.value)}
+                    onChange={(date) => {
+                      setValue("startDate", formatDate(date!, "LL-dd-yyyy"));
+                    }}
                     error={!!errors.startDate?.message}
                     helperText={errors.startDate?.message}
                   />
@@ -385,9 +389,11 @@ const ContractDialogue = ({
                 name="endDate"
                 control={control}
                 render={({ field }) => (
-                  <Input
-                    {...field}
-                    placeholder="End date"
+                  <DatePicker
+                    value={new Date(field.value)}
+                    onChange={(date) => {
+                      setValue("endDate", formatDate(date!, "LL-dd-yyyy"));
+                    }}
                     error={!!errors.endDate?.message}
                     helperText={errors.endDate?.message}
                   />

@@ -15,6 +15,7 @@ import Pagination from "../../components/ui/pagination";
 import { useDebounce } from "../../lib/hooks";
 import { STATUS } from "../../lib/constants";
 import { capitalize } from "@mui/material";
+import DatePicker from "../../components/ui/date-picker";
 
 const ContractsPage = () => {
   const [page, setPage] = useState(1);
@@ -100,7 +101,7 @@ const ContractsPage = () => {
         </div>
 
         <div className="flex items-center gap-[18px]">
-          <p className="text-[20px] font-medium">Filter by</p>
+          <p className="text-[20px] font-medium flex-shrink-0">Filter by</p>
 
           <Dropdown
             noHelperText
@@ -118,12 +119,12 @@ const ContractsPage = () => {
             className="max-w-[166px]"
           />
 
-          <Dropdown
-            noHelperText
-            options={[]}
-            placeholder="Start Date"
-            className="max-w-[166px]"
-          />
+          <div className="max-w-[166px]">
+            <DatePicker
+              noHelperText
+              onChange={(date) => console.log(date)}
+            />
+          </div>
 
           <button onClick={() => {}}>
             <img

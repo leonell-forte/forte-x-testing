@@ -96,7 +96,12 @@ export const generateODataQuery = (obj: IODataObject): string => {
   return searchQuery || nonSearchQuery || "";
 };
 
-export const formatDate = (date: string, dateFormat: string) => {
-  if (!date) return "";
-  return format(new Date(date), dateFormat);
+export const formatDate = (date: string | Date, dateFormat: string) => {
+  const parsedDate = new Date(date);
+
+  if (isNaN(parsedDate.getTime())) {
+    // Return an empty string if the date is invalid
+    return "";
+  }
+  return format(parsedDate, dateFormat);
 };

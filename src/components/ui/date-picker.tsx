@@ -11,11 +11,13 @@ interface IProps extends DatePickerProps<Date> {
   helperText?: string | ReactNode;
 
   error?: boolean;
+
+  noHelperText?: boolean;
 }
 
-const DatePicker = ({ helperText, error, ...props }: IProps) => {
+const DatePicker = ({ helperText, error, noHelperText, ...props }: IProps) => {
   return (
-    <div>
+    <div className={classNames("relative w-full", !noHelperText && "pb-5")}>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Picker
           {...props}
@@ -26,23 +28,23 @@ const DatePicker = ({ helperText, error, ...props }: IProps) => {
                   borderRadius: "10px",
 
                   "& fieldset": {
-                    borderColor: error ? "#DE4841" : "#ffffff",
+                    borderColor: error ? "#DE4841" : "#ffffff !important",
                   },
 
                   "&:hover fieldset": {
-                    borderColor: error ? "#DE4841" : "#ffffff",
+                    borderColor: error ? "#DE4841" : "#ffffff !important",
                   },
 
                   "&.Mui-focused fieldset": {
                     border: "1.5px solid",
 
-                    borderColor: error ? "#DE4841" : "#ffffff",
+                    borderColor: error ? "#DE4841" : "#ffffff !important",
 
-                    color: error ? "#DE4841" : "#ffffff",
+                    color: error ? "#DE4841" : "#ffffff !important",
                   },
 
                   "& input::placeholder": {
-                    color: error ? "#DE4841" : "white",
+                    color: error ? "#DE4841" : "white !important",
 
                     opacity: error ? 1 : 0.5,
                   },
@@ -53,11 +55,15 @@ const DatePicker = ({ helperText, error, ...props }: IProps) => {
                 },
 
                 "& .MuiInputLabel-root": {
-                  color: error ? "#DE4841" : "#ffffff",
+                  color: error ? "#DE4841" : "#ffffff !important",
+
+                  "&.Mui-focused": {
+                    color: error ? "#DE4841" : "white !important",
+                  },
                 },
 
                 "& .MuiSvgIcon-root": {
-                  fill: error ? "#DE4841" : "#ffffff",
+                  fill: error ? "#DE4841" : "#ffffff !important",
                 },
               },
             },
@@ -80,6 +86,14 @@ const DatePicker = ({ helperText, error, ...props }: IProps) => {
                   color: "#fff !important", // Text color inside the calendar
 
                   border: "1px solid white !important",
+                },
+
+                "& .MuiPickersYear-yearButton": {
+                  "&.Mui-selected": {
+                    backgroundColor: "#0A312A !important", // Background color for selected day
+
+                    color: "#fff", // Text color for selected day
+                  },
                 },
               },
             },
