@@ -128,6 +128,8 @@ const ProjectsPage = () => {
                         </Link>
                       </Table.Data>
 
+                      <Table.Data>-</Table.Data>
+
                       <Table.Data>
                         <p className="w-[220px] truncate">
                           {outcomes?.map((item) => item.name).join(", ")}
