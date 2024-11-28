@@ -1,4 +1,3 @@
-import { IProject } from "../../../../pages/Projects/types";
 import Dialogue, {
   IDialogueProps,
 } from "../../../../components/ui/dialogue/dialogue";
@@ -8,6 +7,7 @@ import { useAlert } from "../../../../lib/hooks";
 import * as amplitude from "@amplitude/analytics-browser";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../../../../components/QueryProvider";
+import { IProject } from "../../../../lib/types/projects";
 
 interface IDeleteDialogueProp extends IDialogueProps {
   project: IProject;

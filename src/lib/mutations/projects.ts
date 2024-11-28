@@ -3,7 +3,7 @@ import { queryClient } from "../../components/QueryProvider";
 import { useAlert } from "../../lib/hooks";
 import { useMutation } from "@tanstack/react-query";
 import * as amplitude from "@amplitude/analytics-browser";
-import { ProjectFieldValues } from "@/pages/Projects/types";
+import { ProjectFieldValues } from "../types/projects";
 
 const useProjectMutation = (projectId: string, succesCallback?: () => void) => {
   const { setAlert } = useAlert();

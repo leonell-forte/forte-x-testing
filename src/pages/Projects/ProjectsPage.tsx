@@ -8,10 +8,10 @@ import bin from "../../assets/images/icons/bin.svg";
 import ProjectDialogue from "../../components/Dashboard/Projects/Dialogues/ProjectDialogue";
 import { useQuery } from "@tanstack/react-query";
 import projectService from "../../api/projects";
-import { IProject } from "./types";
 import DeleteDialogue from "../../components/Dashboard/Projects/Dialogues/DeleteDialogue";
 import { useDebounce } from "../../lib/hooks";
 import { Link } from "react-router-dom";
+import { IProject } from "../../lib/types/projects";
 
 const ProjectsPage = () => {
   const [page, setPage] = useState(1);

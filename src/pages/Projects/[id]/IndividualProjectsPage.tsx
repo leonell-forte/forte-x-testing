@@ -6,12 +6,12 @@ import Partners from "../../../components/Dashboard/Projects/Tables/Partners";
 import Beneficiaries from "../../../components/Dashboard/Projects/Tables/Beneficiaries";
 import { useQuery } from "@tanstack/react-query";
 import projectService from "../../../api/projects";
-import { ProjectFieldValues } from "../types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { projects } from "../../../lib/validators/projects";
 import { useEffect } from "react";
 import useProjectMutation from "../../../lib/mutations/projects";
+import { ProjectFieldValues } from "../../../lib/types/projects";
 
 const IndividualProjectsPage = () => {
   const { id } = useParams();

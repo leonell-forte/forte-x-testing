@@ -5,15 +5,15 @@ import SearchInput from "../../components/ui/search-input";
 import Table from "../../components/ui/table";
 import { useMemo, useState } from "react";
 import pencil from "../../assets/images/icons/pencil.svg";
-import { IUser } from "./types";
 import UserDialogue from "../../components/Dashboard/Users/Dialogues/UserDialogue";
 import { useQuery } from "@tanstack/react-query";
 import userService from "../../api/users";
 import organizationService from "../../api/organization";
-import { IOrganization } from "../Organizations/types";
 import { ROLES } from "../../lib/constants";
 import { useDebounce } from "../../lib/hooks";
 import closeFilter from "../../assets/images/icons/close-filter.svg";
+import { IUser } from "../../lib/types/users";
+import { IOrganization } from "../../lib/types/organizations";
 
 const UsersPage = () => {
   const [page, setPage] = useState(1);

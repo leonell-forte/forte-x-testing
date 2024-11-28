@@ -3,7 +3,7 @@ import pencil from "../../../../assets/images/icons/pencil.svg";
 import { useState } from "react";
 import Input from "../../../../components/ui/input";
 import Button from "../../../../components/ui/button";
-import { IOutcome, ProjectFieldValues } from "@/pages/Projects/types";
+import { IOutcome, ProjectFieldValues } from "../../../../lib/types/projects";
 import { Control, Controller, FormState } from "react-hook-form";
 
 interface IProps {
@@ -63,17 +63,18 @@ const Outcomes = ({
 
             return (
               <Table.Row key={index}>
-                <Table.Data className="h-[56px] py-1">{`Outcome ${
+                <Table.Data className=" py-1">{`Outcome ${
                   index + 1
                 }`}</Table.Data>
 
-                <Table.Data className="h-[56px] py-1">
+                <Table.Data className=" py-1">
                   {onEdit ? (
                     <Controller
                       name={`outcomes.${index}.name`}
                       control={control}
                       render={({ field }) => (
                         <Input
+                          small
                           {...field}
                           noHelperText
                           error={!!errors.outcomes?.[index]?.name?.message}
@@ -86,13 +87,14 @@ const Outcomes = ({
                   )}
                 </Table.Data>
 
-                <Table.Data className="h-[56px] py-1">
+                <Table.Data className=" py-1">
                   {onEdit ? (
                     <Controller
                       name={`outcomes.${index}.description`}
                       control={control}
                       render={({ field }) => (
                         <Input
+                          small
                           {...field}
                           noHelperText
                           error={
@@ -109,7 +111,7 @@ const Outcomes = ({
                   )}
                 </Table.Data>
 
-                <Table.Data className="h-[56px] py-1">
+                <Table.Data className=" py-1">
                   <div className="flex justify-end gap-1.5">
                     {onEdit ? (
                       <>

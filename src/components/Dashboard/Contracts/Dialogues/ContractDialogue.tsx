@@ -8,22 +8,22 @@ import { useEffect, useMemo } from "react";
 import ContractOutcomeField from "../ContractOutcomeField";
 import organizationService from "../../../../api/organization";
 import { useQuery } from "@tanstack/react-query";
-import { IOrganization } from "@/pages/Organizations/types";
 import { STATUS } from "../../../../lib/constants";
 import projectService from "../../../../api/projects";
-import { IProject } from "../../../../pages/Projects/types";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { contracts } from "../../../../lib/validators/contracts";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ContractFieldValues,
   StatusType,
-} from "../../../../pages/Contracts/types";
+} from "../../../../lib/types/contracts";
 import contractService from "../../../../api/contract";
 import Spinner from "../../../../components/ui/spinner/spinner";
 import DatePicker from "../../../../components/ui/date-picker";
 import { formatDate } from "../../../../lib/utils";
 import useContractMutation from "../../../../lib/mutations/contracts";
+import { IProject } from "../../../../lib/types/projects";
+import { IOrganization } from "../../../../lib/types/organizations";
 
 interface IContractDialogueProps extends IDialogueProps {
   id?: number;

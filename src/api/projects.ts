@@ -3,7 +3,7 @@ import { api } from "../lib/axios/interceptor";
 import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import { projects } from "../lib/validators/projects";
 import { generateODataQuery, IODataObject } from "../lib/utils";
-import { IProject } from "../pages/Projects/types";
+import { IProject } from "../lib/types/projects";
 
 class ProjectsService {
   async list(page: number = 1, search?: string) {
