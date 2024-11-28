@@ -1,81 +1,82 @@
-// import organizationService from "@/api/organization";
-// import { queryClient } from "@/components/QueryProvider";
-// import { OrganizationFieldTypes } from "@/pages/Organizations/types";
-// import { useMutation } from "@tanstack/react-query";
-// import React from "react";
-// import { useAlert } from "../hooks";
+import organizationService from "../../api/organization";
+import { queryClient } from "../../components/QueryProvider";
+import { OrganizationFieldTypes } from "../../pages/Organizations/types";
+import { useMutation } from "@tanstack/react-query";
+import { useAlert } from "../hooks";
+import * as amplitude from "@amplitude/analytics-browser";
 
-// const useOrganizationMutation = (orgId?: string) => {
-//     const { setAlert } = useAlert();
+interface IOrganizationMutation {
+  orgId?: string;
 
-//     const { mutateAsync: addOrganization, isPending } = useMutation({
-//         mutationFn: orgId
-//           ? (values: OrganizationFieldTypes) => organizationService.update(values)
-//           : organizationService.add,
+  successCallback?: () => void;
+}
 
-//         onMutate: async () => {
-//           queryClient.cancelQueries({ queryKey: ["organizations", 1] });
+const useOrganizationMutation = ({
+  orgId,
+  successCallback,
+}: IOrganizationMutation) => {
+  const { setAlert } = useAlert();
 
-//           const prevOrganizations = queryClient.getQueryData([
-//             "organizations",
+  const { mutateAsync: addOrganization, isPending } = useMutation({
+    mutationFn: orgId
+      ? (values: OrganizationFieldTypes) => organizationService.update(values)
+      : organizationService.add,
 
-//             1,
-//           ]);
+    onMutate: async () => {
+      queryClient.cancelQueries({ queryKey: ["organizations", 1] });
 
-//           return { prevOrganizations };
-//         },
+      const prevOrganizations = queryClient.getQueryData(["organizations", 1]);
 
-//         onSuccess: (addedOrg) => {
-//           if (!orgId) {
-//             queryClient.setQueryData(["organizations", 1], (old: any) => {
-//               return {
-//                 ...old,
+      return { prevOrganizations };
+    },
 
-//                 items: [...(old?.items || []), addedOrg.data.data],
-//               };
-//             });
-//           }
+    onSuccess: (addedOrg) => {
+      if (!orgId) {
+        queryClient.setQueryData(["organizations", 1], (old: any) => {
+          return {
+            ...old,
 
-//           setAlert({
-//             status: "success",
+            items: [...(old?.items || []), addedOrg.data.data],
+          };
+        });
+      }
 
-//             message: `Organization ${orgId ? "updated" : "added"} successfully`,
+      setAlert({
+        status: "success",
 
-//             title: "Success!",
-//           });
+        message: `Organization ${orgId ? "updated" : "added"} successfully`,
 
-//           onClose();
+        title: "Success!",
+      });
 
-//           reset();
+      successCallback?.();
 
-//           amplitude.track(
-//             `${orgId ? "Update" : "Add"} Organization Form Submission`,
-//           );
-//         },
+      amplitude.track(
+        `${orgId ? "Update" : "Add"} Organization Form Submission`,
+      );
+    },
 
-//         onError: (err: any, newOrg, context) => {
-//           queryClient.setQueryData(
-//             ["organizations", page],
+    onError: (err: any, newOrg, context) => {
+      queryClient.setQueryData(
+        ["organizations", 1],
 
-//             context?.prevOrganizations,
-//           );
+        context?.prevOrganizations,
+      );
 
-//           setAlert({
-//             status: "error",
+      setAlert({
+        status: "error",
 
-//             title: `Failed ${orgId ? "updating" : "adding"} organization`,
+        title: `Failed ${orgId ? "updating" : "adding"} organization`,
 
-//             message: err?.response?.data?.message,
-//           });
-//         },
+        message: err?.response?.data?.message,
+      });
+    },
 
-//         onSettled: () => {
-//           queryClient.invalidateQueries({ queryKey: ["organizations", page] });
-//         },
-//       });
-//   return {};
-// };
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["organizations", 1] });
+    },
+  });
+  return { addOrganization, isPending };
+};
 
-// export default useOrganizationMutation;
-
-export const wer = "";
+export default useOrganizationMutation;

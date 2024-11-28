@@ -9,14 +9,12 @@ import { z } from "zod";
 import { organizations } from "../../../../lib/validators/organizations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { REGIONS, STATUS, TYPES } from "../../../../lib/constants";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import organizationService from "../../../../api/organization";
-import { queryClient } from "../../../../components/QueryProvider";
-import { useAlert } from "../../../../lib/hooks";
 import { useEffect } from "react";
 import Spinner from "../../../../components/ui/spinner/spinner";
-import * as amplitude from "@amplitude/analytics-browser";
-import { OrgTypes } from "@/pages/Organizations/types";
+import { OrgTypes } from "../../../../pages/Organizations/types";
+import useOrganizationMutation from "../../../../lib/mutations/organizations";
 
 interface IOrganizationDialogueProps extends IDialogueProps {
   page?: number;
@@ -52,8 +50,6 @@ const OrganizationDialogue = ({
 
     reset,
 
-    getValues,
-
     control,
 
     formState: { errors },
@@ -71,8 +67,6 @@ const OrganizationDialogue = ({
     }
   }, [orgData, reset]);
 
-  const { setAlert } = useAlert();
-
   const onClose = () => {
     reset();
 
@@ -81,70 +75,9 @@ const OrganizationDialogue = ({
 
   // implements optimistic update after adding or updating organization
 
-  const { mutateAsync: addOrganization, isPending } = useMutation({
-    mutationFn: orgId
-      ? () => organizationService.update(getValues())
-      : organizationService.add,
-
-    onMutate: async () => {
-      queryClient.cancelQueries({ queryKey: ["organizations", page] });
-
-      const prevOrganizations = queryClient.getQueryData([
-        "organizations",
-
-        page,
-      ]);
-
-      return { prevOrganizations };
-    },
-
-    onSuccess: (addedOrg) => {
-      if (!orgId) {
-        queryClient.setQueryData(["organizations", page], (old: any) => {
-          return {
-            ...old,
-
-            items: [...(old?.items || []), addedOrg.data.data],
-          };
-        });
-      }
-
-      setAlert({
-        status: "success",
-
-        message: `Organization ${orgId ? "updated" : "added"} successfully`,
-
-        title: "Success!",
-      });
-
-      onClose();
-
-      reset();
-
-      amplitude.track(
-        `${orgId ? "Update" : "Add"} Organization Form Submission`,
-      );
-    },
-
-    onError: (err: any, newOrg, context) => {
-      queryClient.setQueryData(
-        ["organizations", page],
-
-        context?.prevOrganizations,
-      );
-
-      setAlert({
-        status: "error",
-
-        title: `Failed ${orgId ? "updating" : "adding"} organization`,
-
-        message: err?.response?.data?.message,
-      });
-    },
-
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["organizations", page] });
-    },
+  const { addOrganization, isPending } = useOrganizationMutation({
+    orgId,
+    successCallback: onClose,
   });
 
   const onSubmit = async (values: z.infer<typeof organizations.schema>) => {
