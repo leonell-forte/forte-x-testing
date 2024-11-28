@@ -119,19 +119,13 @@ const ProjectsPage = () => {
               </Table.Head>
               <Table.Body>
                 {projects.map((item: IProject, bodyIndex: number) => {
-                  const { id, name, provider, outcomes } = item;
+                  const { id, name, outcomes } = item;
                   return (
                     <Table.Row key={bodyIndex}>
                       <Table.Data>
                         <Link to={`/projects/${id}`}>
                           <p className="w-[140px] truncate">{name}</p>
                         </Link>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="w-[140px] truncate">
-                          {provider?.map((item) => item.name).join(", ") || "-"}
-                        </p>
                       </Table.Data>
 
                       <Table.Data>

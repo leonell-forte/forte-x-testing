@@ -3,15 +3,22 @@ import pencil from "../../../../assets/images/icons/pencil.svg";
 import { useState } from "react";
 import Input from "../../../../components/ui/input";
 import Button from "../../../../components/ui/button";
+import { IOutcome } from "@/pages/Projects/types";
 
-const Outcomes = () => {
+interface IProps {
+  outcomes: IOutcome[];
+
+  isLoading?: boolean;
+}
+
+const Outcomes = ({ outcomes = [], isLoading }: IProps) => {
   const [editIndex, setEditIndex] = useState<number | null>(null);
 
   return (
     <div className="space-y-2.5">
       <p className="font-semibold text-[24px]">Outcomes</p>
 
-      <Table.Container>
+      <Table.Container isLoading={isLoading}>
         <Table.Head>
           <Table.Row>
             {HEADERS.map((item, index) => {
@@ -30,7 +37,9 @@ const Outcomes = () => {
         </Table.Head>
 
         <Table.Body>
-          {Array.from({ length: 3 }).map((item, index) => {
+          {outcomes.map((item, index) => {
+            const { name, description } = item;
+
             const onEdit = index === editIndex;
 
             return (
@@ -40,11 +49,11 @@ const Outcomes = () => {
                 }`}</Table.Data>
 
                 <Table.Data className="h-[56px] py-1">
-                  {onEdit ? <Input noHelperText /> : <p>test</p>}
+                  {onEdit ? <Input noHelperText /> : <p>{name}</p>}
                 </Table.Data>
 
                 <Table.Data className="h-[56px] py-1">
-                  {onEdit ? <Input noHelperText /> : <p>test</p>}
+                  {onEdit ? <Input noHelperText /> : <p>{description}</p>}
                 </Table.Data>
 
                 <Table.Data className="h-[56px] py-1">

@@ -3,6 +3,7 @@ import { api } from "../lib/axios/interceptor";
 import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import { projects } from "../lib/validators/projects";
 import { generateODataQuery, IODataObject } from "../lib/utils";
+import { IProject } from "../pages/Projects/types";
 
 class ProjectsService {
   async list(page: number = 1, search?: string) {
@@ -50,7 +51,7 @@ class ProjectsService {
     return res;
   }
 
-  async getOne(id: string) {
+  async getOne(id: string): Promise<IProject> {
     const response = await api.get(`/projects/${id}`);
 
     return response.data.data;

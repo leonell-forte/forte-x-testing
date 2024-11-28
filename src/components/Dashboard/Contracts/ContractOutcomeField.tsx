@@ -6,7 +6,6 @@ import Input from "../../../components/ui/input";
 import { useQuery } from "@tanstack/react-query";
 import projectService from "../../../api/projects";
 import { useMemo } from "react";
-import { IOutcome } from "../../../pages/Projects/types";
 import { Control, Controller } from "react-hook-form";
 import { ContractFieldValues, RateEnum } from "../../../pages/Contracts/types";
 
@@ -57,12 +56,12 @@ const ContractOutcomeField = ({
     enabled: !!projectId,
   });
 
-  const outcomes = useMemo(
+  const outcomes: IOption[] = useMemo(
     () =>
-      project?.outcomes.map((item: IOutcome) => ({
+      project?.outcomes.map((item) => ({
         label: item.name,
 
-        value: item.id,
+        value: item.id.toString(),
       })) || [],
     [project],
   );
