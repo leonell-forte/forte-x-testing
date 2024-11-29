@@ -198,7 +198,10 @@ const ContractDialogue = ({
                   <Dropdown
                     value={field.value.toLowerCase()}
                     handleSelect={(val) => {
-                      setValue("status", val as StatusType);
+                      setValue(
+                        "status",
+                        val.toString().toUpperCase() as StatusType,
+                      );
 
                       setError("status", { message: "" });
                     }}

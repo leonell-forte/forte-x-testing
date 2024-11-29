@@ -16,6 +16,7 @@ import { useDebounce } from "../../lib/hooks";
 import { STATUS } from "../../lib/constants";
 import { capitalize } from "@mui/material";
 import DatePicker from "../../components/ui/date-picker";
+import DeleteDialogue from "../../components/Dashboard/Contracts/Dialogues/DeleteDialogue";
 
 const ContractsPage = () => {
   const [page, setPage] = useState(1);
@@ -50,7 +51,7 @@ const ContractsPage = () => {
     [contractList],
   );
 
-  const [modal, setModal] = useState<"contract" | null>(null);
+  const [modal, setModal] = useState<"contract" | "delete" | null>(null);
 
   const close = () => {
     setContractId(null);
@@ -68,11 +69,26 @@ const ContractsPage = () => {
             handleClose={close}
           />
         );
+
+      case "delete":
+        return (
+          <DeleteDialogue
+            id={contractId!.toString()}
+            isVisible={modal === "delete"}
+            handleClose={close}
+          />
+        );
     }
   }, [modal, contractId]);
 
   const handleEditContract = (id: number) => {
     setModal("contract");
+
+    setContractId(id);
+  };
+
+  const handleDeleteContract = (id: number) => {
+    setModal("delete");
 
     setContractId(id);
   };
@@ -179,7 +195,7 @@ const ContractsPage = () => {
                       </Table.Data>
 
                       <Table.Data>
-                        <p className="w-[50px] truncate">
+                        <p className="w-[100px] truncate">
                           {capitalize(status)}
                         </p>
                       </Table.Data>
@@ -221,15 +237,15 @@ const ContractsPage = () => {
                           </Button>
 
                           <Button
-                            eventName="Edit User"
-                            // id={id.toString()}
+                            eventName="Delete Contract"
+                            id={id.toString()}
                             buttonType="default"
                             type="button"
-                            onClick={() => {}}
+                            onClick={() => handleDeleteContract(id)}
                             className="p-[3px]"
                           >
                             <img
-                              alt="pencil"
+                              alt="bin"
                               src={bin}
                             />
                           </Button>

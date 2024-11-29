@@ -76,4 +76,73 @@ const useContractMutation = ({ successCallback }: IContractMutation) => {
   return { addContract, isPending };
 };
 
+export const useDeleteContractMutation = (
+  id: string,
+  succesCallback?: () => void,
+) => {
+  const { setAlert } = useAlert();
+
+  const { mutateAsync: deleteContract, isPending } = useMutation({
+    mutationFn: (id: string) => contractService.delete(id),
+
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ["contracts"] });
+
+      const previousContracts = queryClient.getQueryData<IContractDetails[]>([
+        "contracts",
+      ]);
+
+      return { previousContracts };
+    },
+
+    onSuccess: () => {
+      queryClient.setQueryData(
+        ["contracts"],
+
+        (old: { items: IContractDetails[] }) => {
+          return {
+            ...old,
+
+            items: [...(old?.items || [])].filter(
+              (item) => item.id !== Number(id),
+            ),
+          };
+        },
+      );
+
+      succesCallback?.();
+
+      setAlert({
+        status: "success",
+
+        message: `Contract deleted successfully`,
+
+        title: "Contract Deleted!",
+      });
+
+      amplitude.track(`Delete Contract Performed`, {
+        id: id,
+      });
+    },
+
+    onError: (err: any, _, context) => {
+      setAlert({
+        status: "error",
+
+        title: `Failed deleting contract`,
+
+        message: err?.response?.data?.message,
+      });
+
+      queryClient.setQueryData(["contracts"], context?.previousContracts);
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["contracts"] });
+    },
+  });
+
+  return { deleteContract, isPending };
+};
+
 export default useContractMutation;

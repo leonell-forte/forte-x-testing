@@ -145,7 +145,7 @@ export const useDeleteProjectMutation = (
       setAlert({
         status: "error",
 
-        title: `Faild deleting project`,
+        title: `Failed deleting project`,
 
         message: err?.response?.data?.message,
       });

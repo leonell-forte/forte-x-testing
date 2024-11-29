@@ -38,7 +38,6 @@ class ContractService {
     if (generateODataQuery(filters)) {
       params.append("$filter", generateODataQuery(filters));
     }
-    console.log(generateODataQuery(filters));
 
     const res = await api.get(`/contracts?${params}`);
 
@@ -58,9 +57,9 @@ class ContractService {
   }
 
   async delete(id: string) {
-    const response = await api.post(`/contracts/${id}`);
+    const response = await api.delete(`/contracts/${id}`);
 
-    return response;
+    return response.data;
   }
 }
 
