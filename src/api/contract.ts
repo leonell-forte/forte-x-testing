@@ -8,7 +8,7 @@ class ContractService {
     const params = new URLSearchParams();
 
     const filters: IODataObject = {
-      parties: {
+      "organizations.name": {
         value: search,
 
         exact: false,
@@ -27,7 +27,7 @@ class ContractService {
       "contracts.status": {
         value: status.toUpperCase(),
 
-        exact: false,
+        exact: true,
       },
     };
 
@@ -54,6 +54,12 @@ class ContractService {
     const response = await api.get(`/contracts/${id}`);
 
     return response.data.data;
+  }
+
+  async delete(id: string) {
+    const response = await api.delete(`/contracts/${id}`);
+
+    return response.data;
   }
 }
 

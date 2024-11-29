@@ -14,7 +14,7 @@ const contractOutcomeSchema = z
 
     perOutcome: z.boolean(),
 
-    threshold: z.number().optional(),
+    threshold: z.string().optional(),
   })
   .refine((data) => data.perOutcome || !!data.threshold, {
     message: "Threshold cannot be empty",
@@ -31,7 +31,7 @@ export const contracts = {
 
       document: contract?.document || "",
 
-      status: contract?.status || "active",
+      status: contract?.status || "ACTIVE",
 
       startDate: contract?.startDate
         ? formatDate(contract.startDate, "LL-dd-yyyy")
@@ -51,7 +51,7 @@ export const contracts = {
 
           perOutcome: false,
 
-          threshold: 0,
+          threshold: "0",
         },
       ],
     };
@@ -66,7 +66,7 @@ export const contracts = {
 
     document: z.string().min(1),
 
-    status: z.enum(["active", "inactive", ""]),
+    status: z.enum(["ACTIVE", "INACTIVE", ""]),
 
     startDate: z.string().min(1, "Required"),
 

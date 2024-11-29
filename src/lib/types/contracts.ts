@@ -1,7 +1,7 @@
 import { contracts } from "../../lib/validators/contracts";
 import { z } from "zod";
 
-export type StatusType = "active" | "inactive" | "";
+export type StatusType = "ACTIVE" | "INACTIVE" | "";
 
 export type RateEnum = "Per outcome" | "If threshold reached";
 
@@ -16,7 +16,7 @@ export interface IContractOutcomeRates {
 
   perOutcome: boolean;
 
-  threshold: number;
+  threshold: string;
 }
 
 export interface IContract {

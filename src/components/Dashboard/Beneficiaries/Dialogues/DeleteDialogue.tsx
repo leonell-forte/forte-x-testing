@@ -20,7 +20,6 @@ const DeleteDialogue = ({
       center
       isVisible={isVisible}
       handleClose={handleClose}
-      title=""
     >
       <div className="text-left">
         <p className="text-[20px] font-semibold">

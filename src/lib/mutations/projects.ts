@@ -3,9 +3,12 @@ import { queryClient } from "../../components/QueryProvider";
 import { useAlert } from "../../lib/hooks";
 import { useMutation } from "@tanstack/react-query";
 import * as amplitude from "@amplitude/analytics-browser";
-import { ProjectFieldValues } from "../types/projects";
+import { IProject, ProjectFieldValues } from "../types/projects";
 
-const useProjectMutation = (projectId: string, succesCallback?: () => void) => {
+export const useProjectMutation = (
+  projectId: string,
+  succesCallback?: () => void,
+) => {
   const { setAlert } = useAlert();
 
   const { mutateAsync: addProject, isPending } = useMutation({
@@ -90,4 +93,70 @@ const useProjectMutation = (projectId: string, succesCallback?: () => void) => {
   return { addProject, isPending };
 };
 
-export default useProjectMutation;
+export const useDeleteProjectMutation = (
+  id: number,
+  successCallback?: () => void,
+) => {
+  const { setAlert } = useAlert();
+
+  const { mutateAsync: deletProject, isPending } = useMutation({
+    mutationFn: projectService.delete,
+
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ["projects", 1, ""] });
+
+      const previousProject = queryClient.getQueryData<IProject[]>([
+        "projects",
+        1,
+      ]);
+
+      return { previousProject };
+    },
+
+    onSuccess: () => {
+      queryClient.setQueryData(
+        ["projects", 1, ""],
+
+        (old: { items: IProject[] }) => {
+          return {
+            ...old,
+
+            items: old.items.filter((item) => item.id !== id),
+          };
+        },
+      );
+
+      successCallback?.();
+
+      setAlert({
+        status: "success",
+
+        message: `Project deleted successfully`,
+
+        title: "Project Deleted!",
+      });
+
+      amplitude.track(`Delete Project Performed`, {
+        id: id,
+      });
+    },
+
+    onError: (err: any, newProject, context) => {
+      setAlert({
+        status: "error",
+
+        title: `Failed deleting project`,
+
+        message: err?.response?.data?.message,
+      });
+
+      queryClient.setQueryData(["projects", 1], context?.previousProject);
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["projects", 1, ""] });
+    },
+  });
+
+  return { deletProject, isPending };
+};

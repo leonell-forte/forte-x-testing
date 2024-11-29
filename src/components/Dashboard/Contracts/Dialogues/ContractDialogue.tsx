@@ -198,7 +198,10 @@ const ContractDialogue = ({
                   <Dropdown
                     value={field.value.toLowerCase()}
                     handleSelect={(val) => {
-                      setValue("status", val as StatusType);
+                      setValue(
+                        "status",
+                        val.toString().toUpperCase() as StatusType,
+                      );
 
                       setError("status", { message: "" });
                     }}
@@ -361,7 +364,7 @@ const ContractDialogue = ({
                     );
                   }}
                   handleRadioSelect={(value) => {
-                    setValue(`contractOutcomeRates.${index}.threshold`, 0);
+                    setValue(`contractOutcomeRates.${index}.threshold`, "0");
                     setError(`contractOutcomeRates.${index}.threshold`, {
                       message: "",
                     });
@@ -385,7 +388,7 @@ const ContractDialogue = ({
 
                       perOutcome: false,
 
-                      threshold: 0,
+                      threshold: "0",
                     })
                   }
                 />
