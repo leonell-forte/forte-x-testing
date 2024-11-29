@@ -72,14 +72,13 @@ const ProjectsPage = () => {
       case "delete":
         return (
           <DeleteDialogue
-            page={page}
             isVisible={modal === "delete"}
             project={selectedProject!}
             handleClose={handleCloseModal}
           />
         );
     }
-  }, [modal, selectedProject, page]);
+  }, [modal, selectedProject]);
 
   return (
     <>

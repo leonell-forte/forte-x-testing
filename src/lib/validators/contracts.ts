@@ -14,7 +14,7 @@ const contractOutcomeSchema = z
 
     perOutcome: z.boolean(),
 
-    threshold: z.number().optional(),
+    threshold: z.string().optional(),
   })
   .refine((data) => data.perOutcome || !!data.threshold, {
     message: "Threshold cannot be empty",
@@ -51,7 +51,7 @@ export const contracts = {
 
           perOutcome: false,
 
-          threshold: 0,
+          threshold: "0",
         },
       ],
     };

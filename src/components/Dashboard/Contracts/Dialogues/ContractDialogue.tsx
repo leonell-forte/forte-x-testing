@@ -361,7 +361,7 @@ const ContractDialogue = ({
                     );
                   }}
                   handleRadioSelect={(value) => {
-                    setValue(`contractOutcomeRates.${index}.threshold`, 0);
+                    setValue(`contractOutcomeRates.${index}.threshold`, "0");
                     setError(`contractOutcomeRates.${index}.threshold`, {
                       message: "",
                     });
@@ -385,7 +385,7 @@ const ContractDialogue = ({
 
                       perOutcome: false,
 
-                      threshold: 0,
+                      threshold: "0",
                     })
                   }
                 />

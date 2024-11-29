@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { projects } from "../../../lib/validators/projects";
 import { useEffect } from "react";
-import useProjectMutation from "../../../lib/mutations/projects";
+import { useProjectMutation } from "../../../lib/mutations/projects";
 import { ProjectFieldValues } from "../../../lib/types/projects";
 
 const IndividualProjectsPage = () => {

@@ -16,7 +16,7 @@ export interface IContractOutcomeRates {
 
   perOutcome: boolean;
 
-  threshold: number;
+  threshold: string;
 }
 
 export interface IContract {
