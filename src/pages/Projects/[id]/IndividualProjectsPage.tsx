@@ -52,7 +52,7 @@ const IndividualProjectsPage = () => {
   };
 
   return (
-    <div className="space-y-2.5 py-3">
+    <div className="space-y-2.5 py-3 overflow-y-scroll h-full hide-scroll">
       <Link
         to="/projects"
         className="flex items-center gap-2.5"

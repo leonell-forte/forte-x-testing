@@ -27,7 +27,8 @@ export const contracts = {
     let data: IContract = {
       projectId: contract?.projectId || 0,
 
-      targetNoOfBenefeciaries: contract?.targetNoOfBenefeciaries || "",
+      targetNoOfBenefeciaries:
+        contract?.targetNoOfBenefeciaries.toString() || "",
 
       document: contract?.document || "",
 
@@ -43,7 +44,11 @@ export const contracts = {
 
       contractParties: contract?.contractParties || [],
 
-      contractOutcomeRates: contract?.contractOutcomeRates || [
+      contractOutcomeRates: contract?.contractOutcomeRates.map((item) => ({
+        ...item,
+
+        threshold: item.rate.toString(),
+      })) || [
         {
           projectOutcomeId: 0,
 
@@ -56,10 +61,16 @@ export const contracts = {
       ],
     };
 
+    if (contract) {
+      data.id = contract.id;
+    }
+
     return data;
   },
 
   schema: z.object({
+    id: z.number().optional(),
+
     projectId: z.number().min(1),
 
     targetNoOfBenefeciaries: z.string().min(1),

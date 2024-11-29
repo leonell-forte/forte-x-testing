@@ -1,42 +1,58 @@
 import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import { api } from "../lib/axios/interceptor";
 import { generateODataQuery, IODataObject } from "../lib/utils";
-import { ContractFieldValues, StatusType } from "../lib/types/contracts";
+import { ContractFieldValues, IContractFilters } from "../lib/types/contracts";
 
 class ContractService {
-  async list(page: number, search: string, status: StatusType) {
+  async list(
+    page: number,
+
+    filters: IContractFilters,
+
+    search?: string,
+
+    listAll?: boolean,
+  ) {
     const params = new URLSearchParams();
 
-    const filters: IODataObject = {
+    const filtersData: IODataObject = {
       "organizations.name": {
-        value: search,
+        value: search!,
 
         exact: false,
 
         isSearch: true,
       },
 
-      "contracts.project.name": {
-        value: search,
+      "projects.name": {
+        value: filters.project,
 
-        exact: false,
-
-        isSearch: true,
+        exact: true,
       },
 
       "contracts.status": {
-        value: status.toUpperCase(),
+        value: filters.status!.toUpperCase(),
 
         exact: true,
+      },
+
+      "contracts.startDate": {
+        value: filters.date,
+
+        exact: false,
+
+        isDate: true,
       },
     };
 
     params.append("$pageSize", DEFAULT_PAGE_SIZE);
 
+    params.append("$listAll", listAll ? "true" : "false");
+
     params.append("$pageNum", page.toString());
 
-    if (generateODataQuery(filters)) {
-      params.append("$filter", generateODataQuery(filters));
+    if (generateODataQuery(filtersData)) {
+      params.append("$filter", generateODataQuery(filtersData));
     }
 
     const res = await api.get(`/contracts?${params}`);
@@ -46,6 +62,12 @@ class ContractService {
 
   async add(data: ContractFieldValues): Promise<ContractFieldValues> {
     const response = await api.post("/contracts", data);
+
+    return response.data.data;
+  }
+
+  async update(values: ContractFieldValues) {
+    const response = await api.put("/contracts", values);
 
     return response.data.data;
   }

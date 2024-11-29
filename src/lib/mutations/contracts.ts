@@ -9,14 +9,18 @@ import { useAlert } from "../hooks";
 import * as amplitude from "@amplitude/analytics-browser";
 
 interface IContractMutation {
+  id?: number;
+
   successCallback?: () => void;
 }
 
-const useContractMutation = ({ successCallback }: IContractMutation) => {
+const useContractMutation = ({ id, successCallback }: IContractMutation) => {
   const { setAlert } = useAlert();
 
   const { mutateAsync: addContract, isPending } = useMutation({
-    mutationFn: contractService.add,
+    mutationFn: id
+      ? (values: ContractFieldValues) => contractService.update(values)
+      : contractService.add,
 
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: ["contracts"] });
@@ -28,7 +32,7 @@ const useContractMutation = ({ successCallback }: IContractMutation) => {
 
     onSuccess: (addedContract: ContractFieldValues) => {
       queryClient.setQueryData(
-        ["contracts", 1, "", ""],
+        ["contracts", 1, ""],
 
         (old: { items: IContractDetails[] }) => {
           return {
@@ -62,14 +66,14 @@ const useContractMutation = ({ successCallback }: IContractMutation) => {
       });
 
       queryClient.setQueryData(
-        ["contracts", 1, "", ""],
+        ["contracts", 1, ""],
 
         context?.previousContracts,
       );
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["contracts", 1, "", ""] });
+      queryClient.invalidateQueries({ queryKey: ["contracts", 1, ""] });
     },
   });
 

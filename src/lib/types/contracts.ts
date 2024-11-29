@@ -20,6 +20,8 @@ export interface IContractOutcomeRates {
 }
 
 export interface IContract {
+  id?: number;
+
   projectId: number;
 
   targetNoOfBenefeciaries: string;
@@ -61,6 +63,14 @@ export interface IContractDetails {
   project: string;
 
   outcomes: string; // Specify the type better if outcomes can have different types (e.g., number, boolean).
+}
+
+export interface IContractFilters {
+  status: StatusType;
+
+  project: string;
+
+  date: string;
 }
 
 export type ContractFieldValues = z.infer<typeof contracts.schema>;

@@ -119,6 +119,7 @@ const ContractDialogue = ({
   };
 
   const { addContract, isPending } = useContractMutation({
+    id,
     successCallback: close,
   });
 
