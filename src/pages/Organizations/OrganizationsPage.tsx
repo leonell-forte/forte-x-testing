@@ -12,6 +12,7 @@ import { REGIONS, STATUS, TYPES } from "../../lib/constants";
 import { useDebounce } from "../../lib/hooks";
 import closeFilter from "../../assets/images/icons/close-filter.svg";
 import { IFilters, IOrganization } from "../../lib/types/organizations";
+import HorizontalScroller from "../../components/ui/horizontal-scroller";
 
 const OrganizationsPage = () => {
   const [modal, setModal] = useState<"org" | null>(null);
@@ -157,7 +158,7 @@ const OrganizationsPage = () => {
         </div>
 
         <div className="space-y-[18px]">
-          <div className="h-[70vh] overflow-scroll pr-4">
+          <div className="h-[70vh] overflow-hidden hide-scroll pr-4">
             <Table.Container
               isEmpty={!organizations.length}
               isLoading={orgLoading}
@@ -258,7 +259,10 @@ const OrganizationsPage = () => {
             </Table.Container>
           </div>
 
-          <div className="flex justify-end absolute bottom-4 right-2">
+          <div className="flex justify-end items-center absolute bottom-4 right-2 w-full">
+            <div className="px-12 w-full">
+              <HorizontalScroller />
+            </div>
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}
