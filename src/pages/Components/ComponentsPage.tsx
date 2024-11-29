@@ -8,6 +8,7 @@ import PaginationComponent from "./PaginationComponent";
 import TableComponent from "./TableComponent";
 import DialogueComponent from "./DialogueComponent";
 import DropdownFields from "./DropdownFields";
+import HorizontalScroller from "../../components/ui/horizontal-scroller";
 
 const ComponentsPage = () => {
   return (
@@ -33,6 +34,8 @@ const ComponentsPage = () => {
       <TableComponent />
 
       <DialogueComponent />
+
+      <HorizontalScroller />
     </div>
   );
 };

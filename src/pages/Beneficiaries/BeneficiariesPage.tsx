@@ -241,7 +241,7 @@ const BeneficiariesPage = () => {
             </Table.Container>
           </div>
 
-          <div className="flex justify-end absolute bottom-4 right-2">
+          <div className="flex justify-end items-center absolute bottom-4 right-2 w-full">
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}
