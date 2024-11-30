@@ -56,7 +56,7 @@ const UserDialogue = ({
   useEffect(() => {
     // sets default value of the form
 
-    if (userData) {
+    if (userId) {
       reset(users.defaultValues(userData));
     }
   }, [userData, reset]);
@@ -80,6 +80,8 @@ const UserDialogue = ({
   const onSubmit = async (values: UserFieldTypes) => {
     await addUser(values);
   };
+
+  console.log(userId);
 
   return (
     <Dialogue

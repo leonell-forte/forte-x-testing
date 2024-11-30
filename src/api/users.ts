@@ -35,7 +35,7 @@ class UserService {
         exact: true,
       },
 
-      "organization.registeredName": {
+      '"organization"."name"': {
         value: organization!,
 
         exact: false,
@@ -49,6 +49,8 @@ class UserService {
     if (generateODataQuery(filter)) {
       params.append("$filter", generateODataQuery(filter));
     }
+
+    console.log(generateODataQuery(filter));
 
     const res = await api.get(`/users?${params.toString()}`);
 

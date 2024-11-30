@@ -127,8 +127,8 @@ const UsersPage = () => {
             placeholder="Organization"
             className="max-w-[166px]"
             options={organizations.map((item: IOrganization) => ({
-              label: item.registeredName,
-              value: item.registeredName,
+              label: item.name,
+              value: item.name,
             }))}
             readOnly
             isMultiSelect

@@ -75,8 +75,6 @@ class OrganizationService {
       params.append("$listAll", "true");
     }
 
-    console.log(generateODataQuery(searchFilter));
-
     const res = await api.get(`/organizations?${params}`);
 
     return res.data;
