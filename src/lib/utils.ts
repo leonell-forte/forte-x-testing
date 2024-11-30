@@ -58,16 +58,11 @@ export const generateODataQuery = (obj: IODataObject): string => {
       }
     } else if (Array.isArray(value)) {
       // Handle array values
-      const orCondition = value
-        .map(
-          (v) =>
-            exact
-              ? `'${key}' eq '${v}'` // Exact matching
-              : `contains('${key}', '${v}')`, // Partial matching
-        )
-        .join(" or ");
+      const formattedValues = value
+        .map((v) => `'${v}'`) // Wrap each value in quotes
+        .join(", "); // Join values with commas
 
-      condition = `(${orCondition})`; // Enclose 'or' conditions in brackets
+      condition = `${key} in (${formattedValues})`;
     } else {
       // Handle single string values
       if (exact) {

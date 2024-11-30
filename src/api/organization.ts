@@ -48,7 +48,7 @@ class OrganizationService {
         isSearch: true,
       },
 
-      "organizations.region": {
+      '"regions"."name"': {
         value: filters?.region || "",
 
         exact: false,
@@ -74,6 +74,8 @@ class OrganizationService {
     if (listAll) {
       params.append("$listAll", "true");
     }
+
+    console.log(generateODataQuery(searchFilter));
 
     const res = await api.get(`/organizations?${params}`);
 
