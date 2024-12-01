@@ -326,7 +326,7 @@ const ContractsPage = () => {
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}
-              total={contractList?.totalSize!}
+              total={contractList?.totalSize as number}
             />
           </div>
         </div>
