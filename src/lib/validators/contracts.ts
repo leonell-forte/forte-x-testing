@@ -1,4 +1,4 @@
-import { IContract } from "../../lib/types/contracts";
+import { IContract, IContractDefaultValues } from "../../lib/types/contracts";
 import { z } from "zod";
 import { formatDate } from "../utils";
 
@@ -23,9 +23,9 @@ const contractOutcomeSchema = z
   });
 
 export const contracts = {
-  defaultValues: (contract?: IContract) => {
+  defaultValues: ({ contract, projectId }: IContractDefaultValues) => {
     let data: IContract = {
-      projectId: contract?.projectId || 0,
+      projectId: contract?.projectId || projectId || 0,
 
       targetNoOfBenefeciaries:
         contract?.targetNoOfBenefeciaries.toString() || "",
@@ -44,21 +44,23 @@ export const contracts = {
 
       contractParties: contract?.contractParties || [],
 
-      contractOutcomeRates: contract?.contractOutcomeRates.map((item) => ({
-        ...item,
+      contractOutcomeRates: contract
+        ? contract?.contractOutcomeRates.map((item) => ({
+            ...item,
 
-        threshold: item.rate.toString(),
-      })) || [
-        {
-          projectOutcomeId: 0,
+            threshold: item.threshold.toString(),
+          }))
+        : [
+            {
+              projectOutcomeId: 0,
 
-          rate: "",
+              rate: "",
 
-          perOutcome: false,
+              perOutcome: false,
 
-          threshold: "0",
-        },
-      ],
+              threshold: "0",
+            },
+          ],
     };
 
     if (contract) {

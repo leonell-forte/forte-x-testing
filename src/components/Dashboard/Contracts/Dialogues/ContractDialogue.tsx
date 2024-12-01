@@ -27,12 +27,16 @@ import { IOrganization } from "../../../../lib/types/organizations";
 
 interface IContractDialogueProps extends IDialogueProps {
   id?: number;
+
+  projectId?: number;
 }
 
 const ContractDialogue = ({
   isVisible,
 
   id,
+
+  projectId,
 
   handleClose,
 }: IContractDialogueProps) => {
@@ -63,12 +67,13 @@ const ContractDialogue = ({
   } = useForm<ContractFieldValues>({
     resolver: zodResolver(contracts.schema),
 
-    defaultValues: contracts.defaultValues(),
+    defaultValues: contracts.defaultValues({ projectId }),
   });
 
+  // sets contract form default values
   useEffect(() => {
     if (contractDetails) {
-      reset(contracts.defaultValues(contractDetails));
+      reset(contracts.defaultValues({ contract: contractDetails }));
     }
   }, [contractDetails, reset]);
 
@@ -230,6 +235,7 @@ const ContractDialogue = ({
               render={({ field }) => {
                 return (
                   <Dropdown
+                    disabled
                     loading={projectLoading}
                     enableSearch
                     value={

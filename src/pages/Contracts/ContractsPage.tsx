@@ -10,7 +10,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import contractService from "../../api/contract";
 import {
-  IContractDetails,
+  IContract,
   IContractFilters,
   StatusType,
 } from "../../lib/types/contracts";
@@ -55,7 +55,13 @@ const ContractsPage = () => {
   const { data: contractList, isLoading } = useQuery({
     queryKey: ["contracts", page, debouncedSearch, filters],
 
-    queryFn: () => contractService.list(page, filters, debouncedSearch),
+    queryFn: () =>
+      contractService.list({
+        page,
+        filters,
+        search: debouncedSearch,
+        listAll: false,
+      }),
   });
 
   const { data: projecrList, isLoading: isProjectLoading } = useQuery({
@@ -64,7 +70,7 @@ const ContractsPage = () => {
     queryFn: () => projectService.list(page, "", true),
   });
 
-  const contracts: IContractDetails[] = useMemo(
+  const contracts: IContract[] = useMemo(
     () => contractList?.items || [],
 
     [contractList],
@@ -277,10 +283,10 @@ const ContractsPage = () => {
                         <div className="flex justify-end">
                           <Button
                             eventName="Edit Contract"
-                            id={id.toString()}
+                            id={id!.toString()}
                             buttonType="default"
                             type="button"
-                            onClick={() => handleEditContract(id)}
+                            onClick={() => handleEditContract(id!)}
                             className="p-[3px]"
                           >
                             <img
@@ -291,10 +297,10 @@ const ContractsPage = () => {
 
                           <Button
                             eventName="Delete Contract"
-                            id={id.toString()}
+                            id={id!.toString()}
                             buttonType="default"
                             type="button"
-                            onClick={() => handleDeleteContract(id)}
+                            onClick={() => handleDeleteContract(id!)}
                             className="p-[3px]"
                           >
                             <img
@@ -318,7 +324,7 @@ const ContractsPage = () => {
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}
-              total={contractList?.totalSize}
+              total={contractList?.totalSize!}
             />
           </div>
         </div>

@@ -51,7 +51,7 @@ export const generateODataQuery = (obj: IODataObject): string => {
     if (isDate) {
       // Handle date values
       if (typeof value === "string") {
-        condition = `'${key}' gte '${value}'`;
+        condition = `'${key}' ge '${value}'`;
       } else {
         console.warn(`Invalid date value for key: ${key}`);
         return;

@@ -48,12 +48,12 @@ const Partners = () => {
           <p className="font-semibold text-[24px]">Partners</p>
 
           <div className="flex gap-2.5">
-            <Button
+            {/* <Button
               onClick={() => setModal("tag")}
               buttonType="secondary"
             >
               Tag existing partner
-            </Button>
+            </Button> */}
 
             <Button onClick={() => setModal("partner")}>Add new partner</Button>
           </div>

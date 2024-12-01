@@ -59,7 +59,7 @@ const UserDialogue = ({
     if (userId) {
       reset(users.defaultValues(userData));
     }
-  }, [userData, reset]);
+  }, [userData, reset, userId]);
 
   const close = () => {
     reset();

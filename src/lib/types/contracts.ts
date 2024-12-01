@@ -37,32 +37,16 @@ export interface IContract {
   contractParties: IContractParties[];
 
   contractOutcomeRates: IContractOutcomeRates[];
-}
 
-export interface IContractDetails {
-  id: number;
+  createdAt?: string;
 
-  projectId: number;
+  updatedAt?: string;
 
-  targetNoOfBenefeciaries: number;
+  parties?: string;
 
-  document: string;
+  project?: string;
 
-  status: string;
-
-  startDate: string;
-
-  endDate: string;
-
-  createdAt: string;
-
-  updatedAt: string;
-
-  parties: string;
-
-  project: string;
-
-  outcomes: string; // Specify the type better if outcomes can have different types (e.g., number, boolean).
+  outcomes?: string; // Specify the type better if outcomes can have different types (e.g., number, boolean).
 }
 
 export interface IContractFilters {
@@ -71,6 +55,12 @@ export interface IContractFilters {
   project: string;
 
   date: string;
+}
+
+export interface IContractDefaultValues {
+  contract?: IContract;
+
+  projectId?: number;
 }
 
 export type ContractFieldValues = z.infer<typeof contracts.schema>;

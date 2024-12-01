@@ -1,21 +1,39 @@
 import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import { api } from "../lib/axios/interceptor";
 import { generateODataQuery, IODataObject } from "../lib/utils";
-import { ContractFieldValues, IContractFilters } from "../lib/types/contracts";
+import {
+  ContractFieldValues,
+  IContract,
+  IContractFilters,
+} from "../lib/types/contracts";
+
+interface IContractListProps {
+  page?: number;
+
+  filters?: IContractFilters | null;
+
+  search?: string;
+
+  listAll?: boolean;
+
+  projectId?: number;
+}
 
 class ContractService {
-  async list(
-    page: number,
+  async list({
+    page = 1,
 
-    filters: IContractFilters,
+    filters,
 
-    search?: string,
+    search,
 
-    listAll?: boolean,
-  ) {
+    listAll,
+
+    projectId,
+  }: IContractListProps): Promise<{ items: IContract[]; totalSize: number }> {
     const params = new URLSearchParams();
 
-    const filtersData: IODataObject = {
+    let filtersData: IODataObject = {
       "organizations.name": {
         value: search!,
 
@@ -25,23 +43,29 @@ class ContractService {
       },
 
       "projects.name": {
-        value: filters.project,
+        value: filters?.project || "",
 
         exact: true,
       },
 
       "contracts.status": {
-        value: filters.status!.toUpperCase(),
+        value: filters?.status.toUpperCase() || "",
 
         exact: true,
       },
 
       "contracts.startDate": {
-        value: filters.date,
+        value: filters?.date || "",
 
         exact: false,
 
         isDate: true,
+      },
+
+      "projects.id": {
+        value: projectId ? projectId.toString() : "",
+
+        exact: true,
       },
     };
 
@@ -49,7 +73,7 @@ class ContractService {
 
     params.append("$listAll", listAll ? "true" : "false");
 
-    params.append("$pageNum", page.toString());
+    params.append("$pageNum", (page || 1).toString());
 
     if (generateODataQuery(filtersData)) {
       params.append("$filter", generateODataQuery(filtersData));
