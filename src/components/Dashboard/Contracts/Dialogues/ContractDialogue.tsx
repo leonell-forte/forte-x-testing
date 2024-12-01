@@ -117,6 +117,8 @@ const ContractDialogue = ({
     [projectsList],
   );
 
+  console.log(projectsList);
+
   const close = () => {
     handleClose!();
 

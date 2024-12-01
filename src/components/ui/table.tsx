@@ -1,4 +1,4 @@
-import { RefObject, TableHTMLAttributes } from "react";
+import { RefObject, TableHTMLAttributes, useRef } from "react";
 import Spinner from "./spinner/spinner";
 import classNames from "classnames";
 import useScroll from "./horizontal-scroller/useScroll";
@@ -31,15 +31,14 @@ const Table = {
 
     ...props
   }: ITableContainerProp) => {
-    const { scrollValue } = useScroll();
+    const tableRef = useRef<HTMLDivElement>(null);
+
+    useScroll({ container: tableRef });
 
     return (
       <div
-        style={{
-          transform: `translateX(-${scrollValue}%)`,
-        }}
-        ref={ref}
-        className="w-full pb-8 relative"
+        ref={tableRef}
+        className="w-full pb-8 relative overflow-scroll hide-scroll"
       >
         <table
           {...props}

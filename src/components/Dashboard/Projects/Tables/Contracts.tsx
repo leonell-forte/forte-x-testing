@@ -136,7 +136,7 @@ const Contracts = ({ projectId }: IProps) => {
                   </Table.Data>
 
                   <Table.Data className="h-[56px] py-1 w-[120px]">
-                    <p className="capitalize">{status.toLowerCase()}</p>
+                    <p className="capitalize">{status?.toLowerCase()}</p>
                   </Table.Data>
 
                   <Table.Data className="h-[56px] py-1 w-[120px]">
