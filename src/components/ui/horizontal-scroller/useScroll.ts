@@ -22,10 +22,11 @@ const useScroll = ({ container }: IProp) => {
 
       return () => {
         unsubscribe();
+
         dispatch(setValue(0));
       };
     }
-  }, [scrollXProgress, dispatch]);
+  }, [scrollXProgress, dispatch, container]);
 
   const setScrollValue = (value: number) => {
     dispatch(setValue(value));

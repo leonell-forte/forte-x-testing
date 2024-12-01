@@ -1,4 +1,4 @@
-import { RefObject, TableHTMLAttributes, useRef } from "react";
+import { TableHTMLAttributes, useRef } from "react";
 import Spinner from "./spinner/spinner";
 import classNames from "classnames";
 import useScroll from "./horizontal-scroller/useScroll";
@@ -11,8 +11,6 @@ interface ITableContainerProp extends ITableProp {
   isEmpty?: boolean;
 
   isLoading?: boolean;
-
-  ref?: RefObject<HTMLDivElement>;
 }
 
 interface ITableCellProps extends TableHTMLAttributes<HTMLTableCellElement> {
@@ -26,8 +24,6 @@ const Table = {
     isEmpty,
 
     isLoading,
-
-    ref,
 
     ...props
   }: ITableContainerProp) => {
