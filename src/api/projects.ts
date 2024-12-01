@@ -71,6 +71,7 @@ class ProjectsService {
         })),
       ],
     };
+
     const response = await api.put("/projects", data);
 
     return response;

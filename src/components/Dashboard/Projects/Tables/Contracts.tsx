@@ -7,8 +7,6 @@ import TagExistingDialogue from "../Dialogues/TagExistingDialogue";
 import { useQuery } from "@tanstack/react-query";
 import contractService from "../../../../api/contract";
 import { formatDate } from "../../../../lib/utils";
-import { IContract } from "@/lib/types/contracts";
-import { contracts } from "../../../../lib/validators/contracts";
 
 type ModalLabelType = "contract" | "tag" | "";
 
@@ -125,21 +123,23 @@ const Contracts = ({ projectId }: IProps) => {
 
               return (
                 <Table.Row key={index}>
-                  <Table.Data className="h-[56px] py-1">{parties}</Table.Data>
+                  <Table.Data className="h-[56px] py-1 w-[150px]">
+                    {parties}
+                  </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">
+                  <Table.Data className="h-[56px] py-1 w-[300px]">
                     <p>{outcomes}</p>
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">
+                  <Table.Data className="h-[56px] py-1 w-[80px]">
                     <p>{targetNoOfBenefeciaries}</p>
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">
+                  <Table.Data className="h-[56px] py-1 w-[120px]">
                     <p className="capitalize">{status.toLowerCase()}</p>
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">
+                  <Table.Data className="h-[56px] py-1 w-[120px]">
                     <p>{formatDate(startDate, "LL-dd-yyyy")}</p>
                   </Table.Data>
 

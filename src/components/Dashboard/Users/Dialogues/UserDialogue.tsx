@@ -81,8 +81,6 @@ const UserDialogue = ({
     await addUser(values);
   };
 
-  console.log(userId);
-
   return (
     <Dialogue
       isVisible={isVisible}

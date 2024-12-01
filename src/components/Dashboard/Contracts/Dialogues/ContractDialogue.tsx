@@ -235,7 +235,7 @@ const ContractDialogue = ({
               render={({ field }) => {
                 return (
                   <Dropdown
-                    disabled
+                    disabled={!!projectId}
                     loading={projectLoading}
                     enableSearch
                     value={

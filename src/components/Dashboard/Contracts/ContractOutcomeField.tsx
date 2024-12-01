@@ -5,7 +5,7 @@ import RadioGroup from "../../../components/ui/radio-group";
 import Input from "../../../components/ui/input";
 import { useQuery } from "@tanstack/react-query";
 import projectService from "../../../api/projects";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Control, Controller } from "react-hook-form";
 import { ContractFieldValues, RateEnum } from "../../../lib/types/contracts";
 
@@ -56,6 +56,8 @@ const ContractOutcomeField = ({
     enabled: !!projectId,
   });
 
+  const [selectedValue, setSelectedValue] = useState("Per outcome");
+
   const outcomes: IOption[] = useMemo(
     () =>
       project?.outcomes.map((item) => ({
@@ -91,7 +93,9 @@ const ContractOutcomeField = ({
                     (item: IOption) => item.value == field.value.toString(), //eslint-disable-line eqeqeq,
                   )?.label
                 }
-                handleSelect={(val) => handleSelectOutcome(val as string)}
+                handleSelect={(val) => {
+                  handleSelectOutcome(val as string);
+                }}
                 options={outcomes}
                 placeholder="Outcome"
                 error={!!error?.message}
@@ -145,7 +149,11 @@ const ContractOutcomeField = ({
             <RadioGroup
               className="flex flex-col gap-4 md:w-[280px]"
               items={["Per outcome", "If threshold reached"]}
-              onChange={(e) => handleRadioSelect(e.target.value as RateEnum)}
+              value={selectedValue}
+              onChange={(e) => {
+                setSelectedValue(e.target.value);
+                handleRadioSelect(e.target.value as RateEnum);
+              }}
             />
 
             <div className="w-full translate-y-7">

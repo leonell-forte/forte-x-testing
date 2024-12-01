@@ -94,11 +94,11 @@ const Outcomes = ({ id }: IProps) => {
 
             return (
               <Table.Row key={index}>
-                <Table.Data className=" py-1">{`Outcome ${
+                <Table.Data className="py-1 w-[120px]">{`Outcome ${
                   index + 1
                 }`}</Table.Data>
 
-                <Table.Data className=" py-1">
+                <Table.Data className="py-1 w-[300px]">
                   {onEdit ? (
                     <Controller
                       name={`outcomes.${index}.name`}

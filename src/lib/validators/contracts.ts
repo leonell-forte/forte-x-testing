@@ -56,7 +56,7 @@ export const contracts = {
 
               rate: "",
 
-              perOutcome: false,
+              perOutcome: true,
 
               threshold: "0",
             },
