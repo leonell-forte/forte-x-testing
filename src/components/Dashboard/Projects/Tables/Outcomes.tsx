@@ -10,6 +10,7 @@ import { projects } from "../../../../lib/validators/projects";
 import { useProjectMutation } from "../../../../lib/mutations/projects";
 import { useQuery } from "@tanstack/react-query";
 import projectService from "../../../../api/projects";
+import { usePageTitle } from "../../../../lib/hooks";
 
 interface IProps {
   id: string;
@@ -23,6 +24,8 @@ const Outcomes = ({ id }: IProps) => {
 
     enabled: !!id,
   });
+
+  usePageTitle(project?.name);
 
   const [editIndex, setEditIndex] = useState<number | null>(null);
 

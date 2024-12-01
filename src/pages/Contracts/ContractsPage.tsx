@@ -16,7 +16,7 @@ import {
 } from "../../lib/types/contracts";
 import { formatDate } from "../../lib/utils";
 import Pagination from "../../components/ui/pagination";
-import { useDebounce } from "../../lib/hooks";
+import { useDebounce, usePageTitle } from "../../lib/hooks";
 import { STATUS } from "../../lib/constants";
 import { capitalize } from "@mui/material";
 import DatePicker from "../../components/ui/date-picker";
@@ -26,6 +26,8 @@ import projectService from "../../api/projects";
 import { IProject } from "@/lib/types/projects";
 
 const ContractsPage = () => {
+  usePageTitle("Contracts");
+
   const [page, setPage] = useState(1);
 
   const [search, setSearch] = useState("");

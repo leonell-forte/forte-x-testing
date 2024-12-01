@@ -50,8 +50,6 @@ class UserService {
       params.append("$filter", generateODataQuery(filter));
     }
 
-    console.log(generateODataQuery(filter));
-
     const res = await api.get(`/users?${params.toString()}`);
 
     return res.data;
