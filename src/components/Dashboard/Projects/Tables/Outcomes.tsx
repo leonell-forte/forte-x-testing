@@ -1,36 +1,67 @@
 import Table from "../../../../components/ui/table";
 import pencil from "../../../../assets/images/icons/pencil.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Input from "../../../../components/ui/input";
 import Button from "../../../../components/ui/button";
-import { IOutcome, ProjectFieldValues } from "../../../../lib/types/projects";
-import { Control, Controller, FormState } from "react-hook-form";
+import { ProjectFieldValues } from "../../../../lib/types/projects";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { projects } from "../../../../lib/validators/projects";
+import { useProjectMutation } from "../../../../lib/mutations/projects";
+import { useQuery } from "@tanstack/react-query";
+import projectService from "../../../../api/projects";
+import { usePageTitle } from "../../../../lib/hooks";
 
 interface IProps {
-  outcomes?: IOutcome[];
-
-  isLoading?: boolean;
-
-  control: Control<ProjectFieldValues>;
-
-  formState: FormState<ProjectFieldValues>;
-
-  onSubmit: () => void;
+  id: string;
 }
 
-const Outcomes = ({
-  outcomes = [],
-  isLoading,
-  control,
-  formState,
-  onSubmit,
-}: IProps) => {
-  const { errors } = formState;
+const Outcomes = ({ id }: IProps) => {
+  const { data: project, isLoading } = useQuery({
+    queryKey: ["specific-project", id],
+
+    queryFn: () => projectService.getOne(id!),
+
+    enabled: !!id,
+  });
+
+  usePageTitle(project?.name);
 
   const [editIndex, setEditIndex] = useState<number | null>(null);
 
   const closeEdit = () => {
     setEditIndex(null);
+  };
+
+  const {
+    formState: { errors },
+
+    handleSubmit,
+
+    reset,
+
+    control,
+  } = useForm<ProjectFieldValues>({
+    resolver: zodResolver(projects.schema),
+
+    defaultValues: projects.defaultValues(),
+  });
+
+  useEffect(() => {
+    // sets default value of project form
+    if (project) {
+      reset(projects.defaultValues(project));
+    }
+  }, [project, reset]);
+
+  const close = () => {
+    setEditIndex(null);
+  };
+
+  const { addProject, isPending } = useProjectMutation(id!, close);
+
+  const onSubmit = async (values: ProjectFieldValues) => {
+    await addProject(values);
   };
 
   return (
@@ -56,18 +87,18 @@ const Outcomes = ({
         </Table.Head>
 
         <Table.Body>
-          {outcomes.map((item, index) => {
+          {project?.outcomes.map((item, index) => {
             const { name, description } = item;
 
             const onEdit = index === editIndex;
 
             return (
               <Table.Row key={index}>
-                <Table.Data className=" py-1">{`Outcome ${
+                <Table.Data className="py-1 w-[120px]">{`Outcome ${
                   index + 1
                 }`}</Table.Data>
 
-                <Table.Data className=" py-1">
+                <Table.Data className="py-1 w-[300px]">
                   {onEdit ? (
                     <Controller
                       name={`outcomes.${index}.name`}
@@ -123,10 +154,8 @@ const Outcomes = ({
                         </Button>
 
                         <Button
-                          onClick={() => {
-                            onSubmit();
-                            closeEdit();
-                          }}
+                          loading={isPending}
+                          onClick={handleSubmit(onSubmit)}
                         >
                           Save
                         </Button>

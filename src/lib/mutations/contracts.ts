@@ -1,22 +1,23 @@
 import contractService from "../../api/contract";
 import { queryClient } from "../../components/QueryProvider";
-import {
-  ContractFieldValues,
-  IContractDetails,
-} from "../../lib/types/contracts";
+import { ContractFieldValues, IContract } from "../../lib/types/contracts";
 import { useMutation } from "@tanstack/react-query";
 import { useAlert } from "../hooks";
 import * as amplitude from "@amplitude/analytics-browser";
 
 interface IContractMutation {
+  id?: number;
+
   successCallback?: () => void;
 }
 
-const useContractMutation = ({ successCallback }: IContractMutation) => {
+const useContractMutation = ({ id, successCallback }: IContractMutation) => {
   const { setAlert } = useAlert();
 
   const { mutateAsync: addContract, isPending } = useMutation({
-    mutationFn: contractService.add,
+    mutationFn: id
+      ? (values: ContractFieldValues) => contractService.update(values)
+      : contractService.add,
 
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: ["contracts"] });
@@ -28,9 +29,9 @@ const useContractMutation = ({ successCallback }: IContractMutation) => {
 
     onSuccess: (addedContract: ContractFieldValues) => {
       queryClient.setQueryData(
-        ["contracts", 1, "", ""],
+        ["contracts", 1, ""],
 
-        (old: { items: IContractDetails[] }) => {
+        (old: { items: IContract[] }) => {
           return {
             ...old,
 
@@ -46,30 +47,30 @@ const useContractMutation = ({ successCallback }: IContractMutation) => {
 
         status: "success",
 
-        message: "Contract has been added successfully",
+        message: `Contract has been ${id ? "updated" : "added"} successfully`,
       });
 
-      amplitude.track(`Add Contract Form Submission`);
+      amplitude.track(`${id ? "Update" : "Add"} Contract Form Submission`);
     },
 
     onError: (err: any, newContract, context) => {
       setAlert({
         status: "error",
 
-        title: "Failed adding new contract",
+        title: `Failed ${id ? "updating" : "adding"} contract`,
 
         message: err?.response?.data?.message,
       });
 
       queryClient.setQueryData(
-        ["contracts", 1, "", ""],
+        ["contracts", 1, ""],
 
         context?.previousContracts,
       );
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["contracts", 1, "", ""] });
+      queryClient.invalidateQueries({ queryKey: ["contracts", 1, ""] });
     },
   });
 
@@ -88,7 +89,7 @@ export const useDeleteContractMutation = (
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: ["contracts"] });
 
-      const previousContracts = queryClient.getQueryData<IContractDetails[]>([
+      const previousContracts = queryClient.getQueryData<IContract[]>([
         "contracts",
       ]);
 
@@ -99,7 +100,7 @@ export const useDeleteContractMutation = (
       queryClient.setQueryData(
         ["contracts"],
 
-        (old: { items: IContractDetails[] }) => {
+        (old: { items: IContract[] }) => {
           return {
             ...old,
 

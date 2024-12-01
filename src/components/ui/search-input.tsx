@@ -13,7 +13,7 @@ type IProps = TextFieldProps & {
 
 const SearchInput = ({ dark, onClear, ...props }: IProps) => {
   return (
-    <div className="relative flex items-center">
+    <div className="relative flex items-center flex-shrink-0">
       <img
         alt="search"
         src={dark ? darkSearch : search}

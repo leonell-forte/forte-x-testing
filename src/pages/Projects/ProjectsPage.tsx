@@ -9,11 +9,13 @@ import ProjectDialogue from "../../components/Dashboard/Projects/Dialogues/Proje
 import { useQuery } from "@tanstack/react-query";
 import projectService from "../../api/projects";
 import DeleteDialogue from "../../components/Dashboard/Projects/Dialogues/DeleteDialogue";
-import { useDebounce } from "../../lib/hooks";
+import { useDebounce, usePageTitle } from "../../lib/hooks";
 import { Link } from "react-router-dom";
 import { IProject } from "../../lib/types/projects";
 
 const ProjectsPage = () => {
+  usePageTitle("Projects");
+
   const [page, setPage] = useState(1);
 
   const [search, setSearch] = useState("");
@@ -123,7 +125,7 @@ const ProjectsPage = () => {
                     <Table.Row key={bodyIndex}>
                       <Table.Data>
                         <Link to={`/projects/${id}`}>
-                          <p className="w-[140px] truncate">{name}</p>
+                          <p className="w-[220px] truncate">{name}</p>
                         </Link>
                       </Table.Data>
 

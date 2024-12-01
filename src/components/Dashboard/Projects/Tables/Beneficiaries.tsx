@@ -59,12 +59,12 @@ const Beneficiaries = () => {
               Import beneficiaries
             </Button>
 
-            <Button
+            {/* <Button
               onClick={() => setModal("tag")}
               buttonType="secondary"
             >
               Tag existing beneficiaries
-            </Button>
+            </Button> */}
 
             <Button onClick={() => setModal("beneficiaries")}>
               Add new beneficiaries

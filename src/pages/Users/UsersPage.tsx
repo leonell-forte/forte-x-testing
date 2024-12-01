@@ -10,12 +10,14 @@ import { useQuery } from "@tanstack/react-query";
 import userService from "../../api/users";
 import organizationService from "../../api/organization";
 import { ROLES } from "../../lib/constants";
-import { useDebounce } from "../../lib/hooks";
+import { useDebounce, usePageTitle } from "../../lib/hooks";
 import closeFilter from "../../assets/images/icons/close-filter.svg";
 import { IUser } from "../../lib/types/users";
 import { IOrganization } from "../../lib/types/organizations";
 
 const UsersPage = () => {
+  usePageTitle("Users");
+
   const [page, setPage] = useState(1);
 
   const [search, setSearch] = useState("");
@@ -127,8 +129,8 @@ const UsersPage = () => {
             placeholder="Organization"
             className="max-w-[166px]"
             options={organizations.map((item: IOrganization) => ({
-              label: item.registeredName,
-              value: item.registeredName,
+              label: item.name,
+              value: item.name,
             }))}
             readOnly
             isMultiSelect

@@ -12,8 +12,11 @@ import BeneficiariesDialogue from "../../components/Dashboard/Beneficiaries/Dial
 import DeleteDialogue from "../../components/Dashboard/Beneficiaries/Dialogues/DeleteDialogue";
 import ImportDialogue from "../../components/Dashboard/Beneficiaries/Dialogues/ImportDialogue";
 import DatePicker from "../../components/ui/date-picker";
+import { usePageTitle } from "../../lib/hooks";
 
 const BeneficiariesPage = () => {
+  usePageTitle("Beneficiaries");
+
   const [search, setSearch] = useState("");
 
   const [page, setPage] = useState(1);

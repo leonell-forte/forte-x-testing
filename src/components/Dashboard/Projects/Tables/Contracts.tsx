@@ -1,20 +1,49 @@
 import Table from "../../../../components/ui/table";
 import pencil from "../../../../assets/images/icons/pencil.svg";
 import { useState } from "react";
-import Input from "../../../../components/ui/input";
 import Button from "../../../../components/ui/button";
 import ContractDialogue from "../../Contracts/Dialogues/ContractDialogue";
 import TagExistingDialogue from "../Dialogues/TagExistingDialogue";
+import { useQuery } from "@tanstack/react-query";
+import contractService from "../../../../api/contract";
+import { formatDate } from "../../../../lib/utils";
 
 type ModalLabelType = "contract" | "tag" | "";
 
-const Contracts = () => {
-  const [editIndex, setEditIndex] = useState<number | null>(null);
+interface IProps {
+  projectId?: number;
+}
+
+const Contracts = ({ projectId }: IProps) => {
+  const { data: contractList, isLoading } = useQuery({
+    queryKey: ["contracts", 1, ""],
+
+    queryFn: () =>
+      contractService.list({
+        page: 1,
+
+        search: "",
+
+        filters: null,
+
+        projectId,
+      }),
+  });
+
+  const [selectedContract, setSelectedContract] = useState("");
 
   const [modal, setModal] = useState<ModalLabelType>("");
 
   const close = () => {
     setModal("");
+
+    setSelectedContract("");
+  };
+
+  const handleEdit = (id: string) => {
+    setSelectedContract(id);
+
+    setModal("contract");
   };
 
   const renderModal = (modal: ModalLabelType) => {
@@ -22,8 +51,10 @@ const Contracts = () => {
       case "contract":
         return (
           <ContractDialogue
+            id={Number(selectedContract)}
             isVisible={modal === "contract"}
             handleClose={close}
+            projectId={projectId}
           />
         );
 
@@ -48,20 +79,13 @@ const Contracts = () => {
           <p className="font-semibold text-[24px]">Contracts</p>
 
           <div className="flex gap-2.5">
-            <Button
-              onClick={() => setModal("tag")}
-              buttonType="secondary"
-            >
-              Tag existing contract
-            </Button>
-
             <Button onClick={() => setModal("contract")}>
               Add new contract
             </Button>
           </div>
         </div>
 
-        <Table.Container>
+        <Table.Container isLoading={isLoading}>
           <Table.Head>
             <Table.Row>
               {HEADERS.map((item, index) => {
@@ -80,63 +104,60 @@ const Contracts = () => {
           </Table.Head>
 
           <Table.Body>
-            {Array.from({ length: 3 }).map((item, index) => {
-              const onEdit = index === editIndex;
+            {contractList?.items.map((item, index) => {
+              const {
+                id,
+
+                parties,
+
+                outcomes,
+
+                targetNoOfBenefeciaries,
+
+                status,
+
+                startDate,
+
+                endDate,
+              } = item;
 
               return (
                 <Table.Row key={index}>
-                  <Table.Data className="h-[56px] py-1">{`Outcome ${
-                    index + 1
-                  }`}</Table.Data>
+                  <Table.Data className="h-[56px] py-1 w-[150px]">
+                    {parties}
+                  </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">
-                    {onEdit ? <Input noHelperText /> : <p>test</p>}
+                  <Table.Data className="h-[56px] py-1 w-[300px]">
+                    <p>{outcomes}</p>
+                  </Table.Data>
+
+                  <Table.Data className="h-[56px] py-1 w-[80px]">
+                    <p>{targetNoOfBenefeciaries}</p>
+                  </Table.Data>
+
+                  <Table.Data className="h-[56px] py-1 w-[120px]">
+                    <p className="capitalize">{status.toLowerCase()}</p>
+                  </Table.Data>
+
+                  <Table.Data className="h-[56px] py-1 w-[120px]">
+                    <p>{formatDate(startDate, "LL-dd-yyyy")}</p>
                   </Table.Data>
 
                   <Table.Data className="h-[56px] py-1">
-                    {onEdit ? <Input noHelperText /> : <p>test</p>}
-                  </Table.Data>
-
-                  <Table.Data className="h-[56px] py-1">
-                    {onEdit ? <Input noHelperText /> : <p>test</p>}
-                  </Table.Data>
-
-                  <Table.Data className="h-[56px] py-1">
-                    {onEdit ? <Input noHelperText /> : <p>test</p>}
-                  </Table.Data>
-
-                  <Table.Data className="h-[56px] py-1">
-                    {onEdit ? <Input noHelperText /> : <p>test</p>}
-                  </Table.Data>
-
-                  <Table.Data className="h-[56px] py-1">
-                    {onEdit ? <Input noHelperText /> : <p>test</p>}
+                    <p>{formatDate(endDate, "LL-dd-yyyy")}</p>
                   </Table.Data>
 
                   <Table.Data className="h-[56px] py-1">
                     <div className="flex justify-end gap-1.5">
-                      {onEdit ? (
-                        <>
-                          <Button
-                            onClick={() => setEditIndex(null)}
-                            buttonType="tertiary"
-                          >
-                            Cancel
-                          </Button>
-
-                          <Button>Save</Button>
-                        </>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => setEditIndex(index)}
-                        >
-                          <img
-                            src={pencil}
-                            alt=""
-                          />
-                        </button>
-                      )}
+                      <button
+                        type="button"
+                        onClick={() => handleEdit(id!.toString())}
+                      >
+                        <img
+                          src={pencil}
+                          alt=""
+                        />
+                      </button>
                     </div>
                   </Table.Data>
                 </Table.Row>
@@ -158,5 +179,4 @@ const HEADERS = [
   "Status",
   "Start date",
   "End date",
-  "Contract",
 ];

@@ -56,10 +56,10 @@ const UserDialogue = ({
   useEffect(() => {
     // sets default value of the form
 
-    if (userData) {
+    if (userId) {
       reset(users.defaultValues(userData));
     }
-  }, [userData, reset]);
+  }, [userData, reset, userId]);
 
   const close = () => {
     reset();

@@ -9,12 +9,14 @@ import pencil from "../../assets/images/icons/pencil.svg";
 import Pagination from "../../components/ui/pagination";
 import OrganizationDialogue from "../../components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
 import { REGIONS, STATUS, TYPES } from "../../lib/constants";
-import { useDebounce } from "../../lib/hooks";
+import { useDebounce, usePageTitle } from "../../lib/hooks";
 import closeFilter from "../../assets/images/icons/close-filter.svg";
 import { IFilters, IOrganization } from "../../lib/types/organizations";
 import HorizontalScroller from "../../components/ui/horizontal-scroller";
 
 const OrganizationsPage = () => {
+  usePageTitle("Organizations");
+
   const [modal, setModal] = useState<"org" | null>(null);
 
   const [page, setPage] = useState(1);

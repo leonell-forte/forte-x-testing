@@ -48,7 +48,7 @@ class OrganizationService {
         isSearch: true,
       },
 
-      "organizations.region": {
+      '"regions"."name"': {
         value: filters?.region || "",
 
         exact: false,
