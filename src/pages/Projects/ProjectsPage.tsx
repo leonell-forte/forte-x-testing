@@ -12,6 +12,7 @@ import DeleteDialogue from "../../components/Dashboard/Projects/Dialogues/Delete
 import { useDebounce, usePageTitle } from "../../lib/hooks";
 import { Link } from "react-router-dom";
 import { IProject } from "../../lib/types/projects";
+import HorizontalScroller from "../../components/ui/horizontal-scroller";
 
 const ProjectsPage = () => {
   usePageTitle("Projects");
@@ -35,7 +36,7 @@ const ProjectsPage = () => {
   const { data: projectsList, isLoading: projectLoading } = useQuery({
     queryKey: ["projects", page, debouncedSearch],
 
-    queryFn: () => projectService.list(page, debouncedSearch),
+    queryFn: () => projectService.list(page, debouncedSearch, false),
   });
 
   const projects: IProject[] = useMemo(
@@ -120,7 +121,7 @@ const ProjectsPage = () => {
               </Table.Head>
               <Table.Body>
                 {projects.map((item: IProject, bodyIndex: number) => {
-                  const { id, name, outcomes } = item;
+                  const { id, name, outcomes, contracts, providers } = item;
                   return (
                     <Table.Row key={bodyIndex}>
                       <Table.Data>
@@ -129,7 +130,11 @@ const ProjectsPage = () => {
                         </Link>
                       </Table.Data>
 
-                      <Table.Data>-</Table.Data>
+                      <Table.Data>
+                        <p className="w-[220px] truncate">
+                          {providers?.map((item) => item).join(", ") || "-"}
+                        </p>
+                      </Table.Data>
 
                       <Table.Data>
                         <p className="w-[220px] truncate">
@@ -137,7 +142,11 @@ const ProjectsPage = () => {
                         </p>
                       </Table.Data>
 
-                      <Table.Data>-</Table.Data>
+                      <Table.Data>
+                        <p className="w-[220px] truncate">
+                          {contracts?.map((item) => item).join(", ") || "-"}
+                        </p>
+                      </Table.Data>
 
                       <Table.Data>-</Table.Data>
 
@@ -182,11 +191,14 @@ const ProjectsPage = () => {
             </Table.Container>
           </div>
 
-          <div className="flex justify-end absolute bottom-4 right-2">
+          <div className="flex justify-end absolute bottom-4 right-2 w-full">
+            <div className="px-12 w-full">
+              <HorizontalScroller />
+            </div>
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}
-              total={projectsList?.totalSize}
+              total={projectsList?.totalSize as number}
             />
           </div>
         </div>

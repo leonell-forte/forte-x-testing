@@ -14,6 +14,7 @@ import { useDebounce, usePageTitle } from "../../lib/hooks";
 import closeFilter from "../../assets/images/icons/close-filter.svg";
 import { IUser } from "../../lib/types/users";
 import { IOrganization } from "../../lib/types/organizations";
+import HorizontalScroller from "../../components/ui/horizontal-scroller";
 
 const UsersPage = () => {
   usePageTitle("Users");
@@ -223,6 +224,9 @@ const UsersPage = () => {
           </div>
 
           <div className="flex justify-end items-center absolute bottom-4 right-2 w-full">
+            <div className="w-full px-12">
+              <HorizontalScroller />
+            </div>
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}

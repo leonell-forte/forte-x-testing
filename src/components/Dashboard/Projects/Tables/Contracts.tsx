@@ -123,11 +123,15 @@ const Contracts = ({ projectId }: IProps) => {
 
               return (
                 <Table.Row key={index}>
+                  <Table.Data className="h-[56px] py-1 w-[100px]">
+                    Contract {id}
+                  </Table.Data>
+
                   <Table.Data className="h-[56px] py-1 w-[150px]">
                     {parties}
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1 w-[300px]">
+                  <Table.Data className="h-[56px] py-1 w-[150px]">
                     <p>{outcomes}</p>
                   </Table.Data>
 
@@ -173,6 +177,7 @@ const Contracts = ({ projectId }: IProps) => {
 export default Contracts;
 
 const HEADERS = [
+  "Contract",
   "Parties",
   "Outcome(s)",
   "Beneficiaries",

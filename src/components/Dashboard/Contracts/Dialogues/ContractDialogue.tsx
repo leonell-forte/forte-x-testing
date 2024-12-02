@@ -106,18 +106,16 @@ const ContractDialogue = ({
     [organizationList],
   );
 
-  const projects = useMemo(
+  const projects: IOption[] = useMemo(
     () =>
       projectsList?.items.map((item: IProject) => ({
         label: item.name,
 
-        value: item.id,
+        value: item.id.toString(),
       })) || [],
 
     [projectsList],
   );
-
-  console.log(projectsList);
 
   const close = () => {
     handleClose!();

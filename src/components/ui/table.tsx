@@ -38,7 +38,7 @@ const Table = {
       >
         <table
           {...props}
-          className="w-full rounded-t-[8px]"
+          className="w-full !rounded-t-[8px] overflow-hidden"
         >
           {children}
         </table>
@@ -86,7 +86,7 @@ const Table = {
       <td
         {...props}
         className={classNames(
-          "px-4 py-[19px] border-b max-w-[300px] truncate text-[14px] overflow-visible",
+          "px-4 h-[56px] border-b max-w-[300px] truncate text-[14px] overflow-visible",
 
           className,
         )}
