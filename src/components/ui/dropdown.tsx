@@ -98,7 +98,7 @@ const Dropdown = ({
       <div
         ref={dropdownRef}
         className={classNames(
-          "relative h-[54px] w-full cursor-pointer rounded-[8px] border border-white",
+          "relative h-[50px] w-full cursor-pointer rounded-[8px] border border-white",
 
           className,
 

@@ -14,7 +14,7 @@ const theme = createTheme({
           },
 
           "& .MuiInputBase-input": {
-            height: 21,
+            height: 17.03,
           },
 
           ...(ownerState.color === "primary" && {

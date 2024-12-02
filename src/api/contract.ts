@@ -71,9 +71,11 @@ class ContractService {
 
     params.append("$pageSize", DEFAULT_PAGE_SIZE);
 
-    params.append("$listAll", listAll ? "true" : "false");
-
     params.append("$pageNum", (page || 1).toString());
+
+    if (listAll) {
+      params.append("$listAll", "true");
+    }
 
     if (generateODataQuery(filtersData)) {
       params.append("$filter", generateODataQuery(filtersData));

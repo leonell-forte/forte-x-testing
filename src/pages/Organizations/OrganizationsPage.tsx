@@ -160,7 +160,7 @@ const OrganizationsPage = () => {
         </div>
 
         <div className="space-y-[18px]">
-          <div className="h-[70vh] pr-4">
+          <div className="h-[66vh] pr-4 overflow-scroll">
             <Table.Container
               isEmpty={!organizations.length}
               isLoading={orgLoading}

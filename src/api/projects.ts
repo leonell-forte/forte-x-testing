@@ -4,7 +4,11 @@ import { generateODataQuery, IODataObject } from "../lib/utils";
 import { IProject, ProjectFieldValues } from "../lib/types/projects";
 
 class ProjectsService {
-  async list(page: number = 1, search?: string, listAll?: boolean) {
+  async list(
+    page: number = 1,
+    search?: string,
+    listAll?: boolean,
+  ): Promise<{ items: IProject[]; totalSize: number }> {
     const params = new URLSearchParams();
 
     const filters: IODataObject = {
@@ -26,9 +30,11 @@ class ProjectsService {
 
     params.append("$pageNum", page.toString());
 
-    params.append("$listAll", listAll ? "true" : "false");
-
     params.append("$pageSize", DEFAULT_PAGE_SIZE);
+
+    if (listAll) {
+      params.append("$listAll", "true");
+    }
 
     if (generateODataQuery(filters)) {
       params.append("$filter", generateODataQuery(filters));

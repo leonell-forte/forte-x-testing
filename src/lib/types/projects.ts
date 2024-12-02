@@ -23,6 +23,10 @@ export interface IProject {
   updatedAt?: string;
 
   outcomes: IOutcome[];
+
+  contracts?: string[];
+
+  providers?: string[];
 }
 
 export type ProjectFieldValues = z.infer<typeof projects.schema>;
