@@ -2,7 +2,6 @@ import { Link, useParams } from "react-router-dom";
 import Outcomes from "../../../components/Dashboard/Projects/Tables/Outcomes";
 import arrow from "../../../assets/images/icons/arrow.svg";
 import Contracts from "../../../components/Dashboard/Projects/Tables/Contracts";
-import HorizontalScroller from "../../../components/ui/horizontal-scroller";
 
 const IndividualProjectsPage = () => {
   // page title is set on the outcomes component
