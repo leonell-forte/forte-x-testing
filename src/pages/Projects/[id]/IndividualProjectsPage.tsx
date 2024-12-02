@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import Outcomes from "../../../components/Dashboard/Projects/Tables/Outcomes";
 import arrow from "../../../assets/images/icons/arrow.svg";
 import Contracts from "../../../components/Dashboard/Projects/Tables/Contracts";
+import HorizontalScroller from "../../../components/ui/horizontal-scroller";
 
 const IndividualProjectsPage = () => {
   // page title is set on the outcomes component
@@ -9,7 +10,7 @@ const IndividualProjectsPage = () => {
   const { id } = useParams();
 
   return (
-    <div className="space-y-2.5 py-3 overflow-y-scroll h-full hide-scroll">
+    <div className="space-y-2.5 py-3 overflow-scroll h-full hide-scroll">
       <Link
         to="/projects"
         className="flex items-center gap-2.5"

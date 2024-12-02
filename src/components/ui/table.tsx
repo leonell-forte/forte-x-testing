@@ -38,7 +38,7 @@ const Table = {
       >
         <table
           {...props}
-          className="w-full rounded-t-[8px]"
+          className="w-full !rounded-t-[8px] overflow-hidden"
         >
           {children}
         </table>
