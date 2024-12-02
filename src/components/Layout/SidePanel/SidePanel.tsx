@@ -62,6 +62,7 @@ const SidePanel = () => {
               <li
                 className={classNames(
                   "capitalize font-medium p-2.5 transition-all",
+
                   active && "text-mint",
                 )}
               >

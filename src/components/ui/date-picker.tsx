@@ -123,6 +123,7 @@ const DatePicker = ({ helperText, error, noHelperText, ...props }: IProps) => {
             <p
               className={classNames(
                 "text-white text-[12px]",
+
                 error && "!text-[#e61a1a]",
               )}
             >

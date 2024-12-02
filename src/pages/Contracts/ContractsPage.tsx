@@ -252,6 +252,10 @@ const ContractsPage = () => {
                   return (
                     <Table.Row key={index}>
                       <Table.Data>
+                        <p className="w-[90px] truncate">Contract {id}</p>
+                      </Table.Data>
+
+                      <Table.Data>
                         <p className="w-[150px] truncate">{parties}</p>
                       </Table.Data>
 
@@ -338,6 +342,7 @@ const ContractsPage = () => {
 export default ContractsPage;
 
 const TABLE_HEADER = [
+  "Contract",
   "Parties",
   "Status",
   "Project",
