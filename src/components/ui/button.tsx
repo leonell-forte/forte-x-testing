@@ -66,6 +66,7 @@ const Button = ({
       {...props}
       className={classNames(
         "gap-[10px] !px-6 !normal-case h-11",
+
         props.className,
       )}
       disabled={disabled || loading}

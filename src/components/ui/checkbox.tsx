@@ -68,8 +68,11 @@ const Checkbox = ({
             <p
               className={classNames(
                 dark && "!text-black",
+
                 "text-[12px] text-grey",
+
                 labelClass,
+
                 helperText && "!text-alert",
               )}
             >
