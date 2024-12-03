@@ -85,7 +85,9 @@ export const contracts = {
 
     endDate: z.string().min(1, "Required"),
 
-    contractParties: z.array(contractPartiesSchema),
+    contractParties: z
+      .array(contractPartiesSchema)
+      .min(1, { message: "Select atleast one party" }),
 
     contractOutcomeRates: z.array(contractOutcomeSchema).min(1),
   }),

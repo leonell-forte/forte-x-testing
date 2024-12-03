@@ -19,4 +19,10 @@ export interface IBeneficiaries {
   program: string;
 }
 
+export enum DisabilityStatusEnum {
+  true = "true",
+
+  false = "false",
+}
+
 export type IBeneficiariesFieldValues = z.infer<typeof beneficiaries.schema>;

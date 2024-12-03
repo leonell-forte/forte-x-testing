@@ -122,7 +122,7 @@ const DatePicker = ({ helperText, error, noHelperText, ...props }: IProps) => {
           <div className="pl-4 pt-1 absolute">
             <p
               className={classNames(
-                "text-white text-[12px]",
+                "text-white text-[12px] line-clamp-1",
 
                 error && "!text-[#e61a1a]",
               )}

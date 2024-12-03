@@ -65,6 +65,107 @@ export const STATUS = [
   },
 ];
 
+export const GENDER = [
+  {
+    label: "Male",
+    value: "male",
+  },
+  {
+    label: "Female",
+    value: "female",
+  },
+];
+
+export const LANGUAGES = [
+  {
+    label: "English",
+    value: "english",
+  },
+  {
+    label: "Spanish",
+    value: "spanish",
+  },
+  {
+    label: "French",
+    value: "french",
+  },
+  {
+    label: "Mandarin",
+    value: "mandarin",
+  },
+  {
+    label: "Hindi",
+    value: "hindi",
+  },
+  {
+    label: "Arabic",
+    value: "arabic",
+  },
+  {
+    label: "Portuguese",
+    value: "portuguese",
+  },
+  {
+    label: "Bengali",
+    value: "bengali",
+  },
+  {
+    label: "Russian",
+    value: "russian",
+  },
+  {
+    label: "Japanese",
+    value: "japanese",
+  },
+  {
+    label: "German",
+    value: "german",
+  },
+  {
+    label: "Korean",
+    value: "korean",
+  },
+  {
+    label: "Italian",
+    value: "italian",
+  },
+  {
+    label: "Turkish",
+    value: "turkish",
+  },
+  {
+    label: "Vietnamese",
+    value: "vietnamese",
+  },
+  {
+    label: "Swahili",
+    value: "swahili",
+  },
+  {
+    label: "Tamil",
+    value: "tamil",
+  },
+  {
+    label: "Urdu",
+    value: "urdu",
+  },
+  {
+    label: "Persian",
+    value: "persian",
+  },
+];
+
+export const BOOLEAN = [
+  {
+    label: "Yes",
+    value: "true",
+  },
+  {
+    label: "No",
+    value: "false",
+  },
+];
+
 export const REGIONS = [
   {
     label: "Asia",

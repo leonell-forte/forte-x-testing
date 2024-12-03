@@ -72,7 +72,7 @@ const ContractsPage = () => {
   const { data: projecrList, isLoading: isProjectLoading } = useQuery({
     queryKey: ["projects"],
 
-    queryFn: () => projectService.list(page, "", true),
+    queryFn: () => projectService.list({ page, listAll: true }),
   });
 
   const contracts: IContract[] = useMemo(

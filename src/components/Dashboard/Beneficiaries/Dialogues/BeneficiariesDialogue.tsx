@@ -6,15 +6,19 @@ import Dropdown, { IOption } from "../../../../components/ui/dropdown";
 import Button from "../../../../components/ui/button";
 import DatePicker from "../../../../components/ui/date-picker";
 import { Controller, useForm } from "react-hook-form";
-import { IBeneficiariesFieldValues } from "../../../../lib/types/beneficiaries";
+import {
+  DisabilityStatusEnum,
+  IBeneficiariesFieldValues,
+} from "../../../../lib/types/beneficiaries";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { beneficiaries } from "../../../../lib/validators/beneficiaries";
 import organizationService from "../../../../api/organization";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { reset } from "@amplitude/analytics-browser";
-import { STATUS } from "../../../../lib/constants";
+import { BOOLEAN, GENDER, LANGUAGES, STATUS } from "../../../../lib/constants";
 import contractService from "../../../../api/contract";
+import projectService from "../../../../api/projects";
 
 interface IBeneficiariesDialogueProps extends IDialogueProps {}
 
@@ -56,6 +60,22 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
         listAll: true,
       }),
   });
+
+  const { data: projectsList, isLoading: projectLoading } = useQuery({
+    queryKey: ["projects"],
+
+    queryFn: () => projectService.list({ listAll: true }),
+  });
+
+  const projects: IOption[] = useMemo(
+    () =>
+      projectsList?.items.map((item) => ({
+        label: item.name,
+
+        value: item.id.toString(),
+      })) || [],
+    [projectsList],
+  );
 
   const organizations: IOption[] = useMemo(
     () =>
@@ -301,6 +321,37 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
               )}
             />
           </div>
+
+          <div className="flex items-start">
+            <label
+              htmlFor=""
+              className="min-w-[140px] pt-3"
+            >
+              Project
+            </label>
+
+            <Controller
+              control={control}
+              name="projectId"
+              render={({ field }) => (
+                <Dropdown
+                  value={
+                    projects.find((item) => Number(item.value) === field.value)
+                      ?.label
+                  }
+                  handleSelect={(val) => {
+                    setValue("projectId", Number(val));
+
+                    setError("projectId", { message: "" });
+                  }}
+                  options={projects}
+                  placeholder="Project"
+                  error={!!errors.projectId?.message}
+                  helperText={errors.projectId?.message}
+                />
+              )}
+            />
+          </div>
         </div>
 
         <div className="flex items-center !mt-0">
@@ -309,8 +360,8 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
           <hr className="w-full" />
         </div>
 
-        <div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+        <div className="space-y-1">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1">
             <div className="flex items-start">
               <label
                 htmlFor=""
@@ -328,6 +379,8 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
                     onChange={(date) => {
                       setValue("cohortStartDate", date!.toISOString());
                     }}
+                    error={!!errors?.cohortStartDate?.message}
+                    helperText={errors?.cohortStartDate?.message}
                   />
                 )}
               />
@@ -341,7 +394,20 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
                 End date
               </label>
 
-              <DatePicker />
+              <Controller
+                control={control}
+                name="cohortEndDate"
+                render={({ field }) => (
+                  <DatePicker
+                    value={new Date(field.value)}
+                    onChange={(date) => {
+                      setValue("cohortEndDate", date!.toISOString());
+                    }}
+                    error={!!errors?.cohortEndDate?.message}
+                    helperText={errors?.cohortEndDate?.message}
+                  />
+                )}
+              />
             </div>
           </div>
 
@@ -353,7 +419,18 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
               Program
             </label>
 
-            <Input placeholder="Program" />
+            <Controller
+              control={control}
+              name="cohortName"
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  placeholder="Program"
+                  error={!!errors.cohortName?.message}
+                  helperText={errors.cohortName?.message}
+                />
+              )}
+            />
           </div>
         </div>
 
@@ -373,7 +450,18 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
                 Linkedin
               </label>
 
-              <Input placeholder="Linkdin link" />
+              <Controller
+                control={control}
+                name="linkedinUrl"
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    placeholder="Linkedin link"
+                    error={!!errors.linkedinUrl?.message}
+                    helperText={errors.linkedinUrl?.message}
+                  />
+                )}
+              />
             </div>
 
             <div className="flex items-start">
@@ -384,7 +472,18 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
                 Github
               </label>
 
-              <Input placeholder="Github link" />
+              <Controller
+                control={control}
+                name="githubUrl"
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    placeholder="Github link"
+                    error={!!errors.githubUrl?.message}
+                    helperText={errors.githubUrl?.message}
+                  />
+                )}
+              />
             </div>
           </div>
 
@@ -396,7 +495,18 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
               Other
             </label>
 
-            <Input placeholder="Other" />
+            <Controller
+              control={control}
+              name="otherUrl"
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  placeholder="Other"
+                  error={!!errors.otherUrl?.message}
+                  helperText={errors.otherUrl?.message}
+                />
+              )}
+            />
           </div>
         </div>
 
@@ -406,8 +516,8 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
           <hr className="w-full" />
         </div>
 
-        <div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+        <div className="space-y-1">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1">
             <div className="flex items-start">
               <label
                 htmlFor=""
@@ -416,7 +526,20 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
                 Date of birth
               </label>
 
-              <DatePicker />
+              <Controller
+                control={control}
+                name="birthdate"
+                render={({ field }) => (
+                  <DatePicker
+                    value={new Date(field.value)}
+                    onChange={(date) => {
+                      setValue("birthdate", date!.toISOString());
+                    }}
+                    error={!!errors?.birthdate?.message}
+                    helperText={errors?.birthdate?.message}
+                  />
+                )}
+              />
             </div>
 
             <div className="flex items-start">
@@ -424,12 +547,20 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
                 htmlFor=""
                 className="min-w-[140px] pt-3"
               >
-                Etnicity
+                Ethnicity
               </label>
 
-              <Dropdown
-                options={[]}
-                placeholder="Select"
+              <Controller
+                control={control}
+                name="ethnicity"
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    placeholder="Ethnicity"
+                    error={!!errors.ethnicity?.message}
+                    helperText={errors.ethnicity?.message}
+                  />
+                )}
               />
             </div>
 
@@ -441,9 +572,23 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
                 Gender
               </label>
 
-              <Dropdown
-                options={[]}
-                placeholder="Select"
+              <Controller
+                control={control}
+                name="gender"
+                render={({ field }) => (
+                  <Dropdown
+                    value={field.value}
+                    handleSelect={(val) => {
+                      setValue("gender", val as string);
+
+                      setError("gender", { message: "" });
+                    }}
+                    options={GENDER}
+                    placeholder="Gender"
+                    error={!!errors.gender?.message}
+                    helperText={errors.gender?.message}
+                  />
+                )}
               />
             </div>
 
@@ -455,9 +600,23 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
                 Disability status
               </label>
 
-              <Dropdown
-                options={[]}
-                placeholder="Select"
+              <Controller
+                control={control}
+                name="disabilityStatus"
+                render={({ field }) => (
+                  <Dropdown
+                    value={field.value}
+                    handleSelect={(val) => {
+                      setValue("disabilityStatus", val as DisabilityStatusEnum);
+
+                      setError("disabilityStatus", { message: "" });
+                    }}
+                    options={BOOLEAN}
+                    placeholder="Disability status"
+                    error={!!errors.disabilityStatus?.message}
+                    helperText={errors.disabilityStatus?.message}
+                  />
+                )}
               />
             </div>
           </div>
@@ -470,7 +629,18 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
               Address
             </label>
 
-            <Input placeholder="Address" />
+            <Controller
+              control={control}
+              name="address"
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  placeholder="Address"
+                  error={!!errors.address?.message}
+                  helperText={errors.address?.message}
+                />
+              )}
+            />
           </div>
 
           <div className="flex items-start">
@@ -481,7 +651,18 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
               Socio-economic status
             </label>
 
-            <Input placeholder="Socio-economic status" />
+            <Controller
+              control={control}
+              name="socioeconomicStatus"
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  placeholder="Socio-economic status"
+                  error={!!errors.socioeconomicStatus?.message}
+                  helperText={errors.socioeconomicStatus?.message}
+                />
+              )}
+            />
           </div>
 
           <div className="flex items-start">
@@ -492,7 +673,18 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
               Highest education level
             </label>
 
-            <Input placeholder="Highest education level" />
+            <Controller
+              control={control}
+              name="educationLevel"
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  placeholder="Highest education label"
+                  error={!!errors.educationLevel?.message}
+                  helperText={errors.educationLevel?.message}
+                />
+              )}
+            />
           </div>
 
           <div className="flex items-start">
@@ -503,9 +695,25 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
               Language(s) spoken
             </label>
 
-            <Dropdown
-              options={[]}
-              placeholder="Select"
+            <Controller
+              control={control}
+              name="languages"
+              render={({ field }) => (
+                <Dropdown
+                  isMultiSelect
+                  showAsTags
+                  value={field.value}
+                  handleSelect={(val) => {
+                    setValue("languages", val as string[]);
+
+                    setError("languages", { message: "" });
+                  }}
+                  options={LANGUAGES}
+                  placeholder="Select"
+                  error={!!errors.languages?.message}
+                  helperText={errors.languages?.message}
+                />
+              )}
             />
           </div>
         </div>

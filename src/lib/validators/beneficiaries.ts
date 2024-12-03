@@ -40,7 +40,7 @@ export const beneficiaries = {
 
       gender: "",
 
-      disabilityStatus: false,
+      disabilityStatus: "false",
 
       address: "",
 
@@ -55,21 +55,21 @@ export const beneficiaries = {
   },
 
   schema: z.object({
-    firstName: z.string().min(1).min(1),
+    firstName: z.string().min(1, { message: "Firstname is required" }),
 
-    lastName: z.string().min(1).min(1),
+    lastName: z.string().min(1, { message: "Lastname is required" }),
 
-    email: z.string().min(1).min(1),
+    email: z.string().min(1, { message: "Invalid email" }),
 
-    phone: z.string().min(1).min(1),
+    phone: z.string().min(1, { message: "Phone is required" }),
 
-    riskLevel: z.string().min(1),
+    riskLevel: z.string().min(1, { message: "Risk level is required" }),
 
-    status: z.string().min(1),
+    status: z.string().min(1, { message: "Status is required" }),
 
-    contractId: z.number().min(1),
+    contractId: z.number().min(1, { message: "Contract is required" }),
 
-    projectId: z.number().min(1),
+    projectId: z.number().min(1, { message: "Project is required" }),
 
     providerId: z.number().min(1),
 
@@ -91,7 +91,7 @@ export const beneficiaries = {
 
     gender: z.string().min(1),
 
-    disabilityStatus: z.boolean(),
+    disabilityStatus: z.enum(["true", "false"]),
 
     address: z.string().min(1),
 
@@ -99,6 +99,6 @@ export const beneficiaries = {
 
     educationLevel: z.string().min(1),
 
-    languages: z.array(z.string().min(1)),
+    languages: z.array(z.string()).min(1),
   }),
 };

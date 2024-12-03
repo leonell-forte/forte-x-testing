@@ -92,7 +92,7 @@ const ContractDialogue = ({
   const { data: projectsList, isLoading: projectLoading } = useQuery({
     queryKey: ["projects"],
 
-    queryFn: () => projectService.list(),
+    queryFn: () => projectService.list({}),
   });
 
   const organizations: IOption[] = useMemo(
