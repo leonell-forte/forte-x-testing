@@ -46,7 +46,7 @@ const UsersPage = () => {
   const { data: organizationList, isLoading: orgLoading } = useQuery({
     queryKey: ["organizations"],
 
-    queryFn: () => organizationService.list(1, true),
+    queryFn: () => organizationService.list({ page: 1, listAll: true }),
   });
 
   const [modal, setModal] = useState<"user" | null>(null);

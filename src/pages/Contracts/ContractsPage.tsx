@@ -60,8 +60,11 @@ const ContractsPage = () => {
     queryFn: () =>
       contractService.list({
         page,
+
         filters,
+
         search: debouncedSearch,
+
         listAll: false,
       }),
   });

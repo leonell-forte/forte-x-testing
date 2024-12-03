@@ -36,11 +36,11 @@ export interface IOrganization {
 export type OrgTypes = "funder" | "provider";
 
 export interface IFilters {
-  region: string[];
+  region?: string[];
 
-  status: string;
+  status?: string;
 
-  type: string;
+  type?: string;
 }
 
 export type OrganizationFieldTypes = z.infer<typeof organizations.schema>;

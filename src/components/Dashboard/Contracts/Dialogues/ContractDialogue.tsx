@@ -86,7 +86,7 @@ const ContractDialogue = ({
   const { data: organizationList, isLoading: orgLoading } = useQuery({
     queryKey: ["organizations"],
 
-    queryFn: () => organizationService.list(1, true),
+    queryFn: () => organizationService.list({ page: 1, listAll: true }),
   });
 
   const { data: projectsList, isLoading: projectLoading } = useQuery({
@@ -100,7 +100,7 @@ const ContractDialogue = ({
       organizationList?.items?.map((item: IOrganization) => ({
         label: item.name,
 
-        value: item.id?.toString(),
+        value: item.id?.toString() as string,
       })) || [],
 
     [organizationList],
