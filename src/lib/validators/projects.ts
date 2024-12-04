@@ -4,9 +4,9 @@ import { IProject } from "../types/projects";
 const OutcomeSchema = z.object({
   id: z.number().optional(),
 
-  name: z.string().min(1, "Outcome name is required"),
+  name: z.string().min(1, "Outcome name is a required field"),
 
-  description: z.string().min(1, "Description is required"),
+  description: z.string().min(1, "Description is a required field"),
 });
 
 export const projects = {
@@ -26,7 +26,7 @@ export const projects = {
   schema: z.object({
     id: z.number().optional(),
 
-    name: z.string().min(1, "Project name is required"),
+    name: z.string().min(1, "Project name is a required field"),
 
     outcomes: z.array(OutcomeSchema).min(1, "At least one outcome is required"),
   }),

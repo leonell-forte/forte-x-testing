@@ -82,6 +82,7 @@ const Dropdown = ({
       options.filter((item) =>
         item.label.toLowerCase().includes(search.toLowerCase()),
       ),
+
     [search, options],
   );
 
@@ -101,9 +102,7 @@ const Dropdown = ({
           "relative h-[50px] w-full cursor-pointer rounded-[8px] border border-white",
 
           className,
-
-          error && "!border-[#e61a1a]",
-
+          error && "!border-alert",
           showAsTags && "!h-fit",
         )}
       >
@@ -243,8 +242,8 @@ const Dropdown = ({
       </div>
 
       {helperText && (
-        <div className="pl-4 pt-1 absolute">
-          <p className="text-[#e61a1a] text-[12px] line-clamp-1">
+        <div className="pl-4 absolute">
+          <p className="text-alert text-[12px] line-clamp-1 font-medium">
             {helperText}
           </p>
         </div>

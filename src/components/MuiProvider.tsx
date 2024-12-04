@@ -89,33 +89,33 @@ const theme = createTheme({
           // Error Variant
           ...(ownerState.error && {
             "& .MuiOutlinedInput-root": {
-              height: "54px",
+              height: "50px",
 
               borderRadius: "10px !important",
 
-              color: "#e61a1a !important",
+              color: "#651A1A !important",
 
               "& fieldset": {
-                borderColor: "#e61a1a !important",
+                borderColor: "#651A1A !important",
               },
 
               "&:hover fieldset": {
-                borderColor: "#e61a1a !important",
+                borderColor: "#651A1A !important",
 
-                color: "#e61a1a !important",
+                color: "#651A1A !important",
               },
 
               "&.Mui-focused fieldset": {
                 border: "1.5px solid",
 
-                borderColor: "#e61a1a",
+                borderColor: "#651A1A",
 
-                color: "#e61a1a !important",
+                color: "#651A1A !important",
               },
             },
 
             "& .MuiInputLabel-root": {
-              color: "#e61a1a",
+              color: "#651A1A",
             },
 
             "& .MuiFormHelperText-root": {
@@ -125,7 +125,7 @@ const theme = createTheme({
 
               left: 0,
 
-              color: "#e61a1a !important",
+              color: "#651A1A !important",
 
               whiteSpace: "nowrap" /* Prevents wrapping */,
 
@@ -163,9 +163,7 @@ const theme = createTheme({
           }),
 
           ...(ownerState.multiline && {
-            "& .MuiInputBase-inputMultiline": {
-              minHeight: "119px", // Set desired min height here
-            },
+            "& .MuiInputBase-inputMultiline": {},
           }),
         }),
       },

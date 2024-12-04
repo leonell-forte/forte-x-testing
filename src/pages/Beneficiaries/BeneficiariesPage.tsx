@@ -1,7 +1,7 @@
-import Dropdown from "../../components/ui/dropdown";
+import Dropdown, { IOption } from "../../components/ui/dropdown";
 import Button from "../../components/ui/button";
 import SearchInput from "../../components/ui/search-input";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import closeFilter from "../../assets/images/icons/close-filter.svg";
 import Table from "../../components/ui/table";
 import Checkbox from "../../components/ui/checkbox";
@@ -12,18 +12,85 @@ import BeneficiariesDialogue from "../../components/Dashboard/Beneficiaries/Dial
 import DeleteDialogue from "../../components/Dashboard/Beneficiaries/Dialogues/DeleteDialogue";
 import ImportDialogue from "../../components/Dashboard/Beneficiaries/Dialogues/ImportDialogue";
 import DatePicker from "../../components/ui/date-picker";
-import { usePageTitle } from "../../lib/hooks";
+import { useDebounce, usePageTitle } from "../../lib/hooks";
+import { useQuery } from "@tanstack/react-query";
+import beneficiariesServce from "../../api/beneficiaries";
+import HorizontalScroller from "../../components/ui/horizontal-scroller";
+import { formatDate } from "../../lib/utils";
+import projectService from "../../api/projects";
+import { RISK_LEVEL, STATUS } from "../../lib/constants";
+import organizationService from "../../api/organization";
 
 const BeneficiariesPage = () => {
   usePageTitle("Beneficiaries");
 
   const [search, setSearch] = useState("");
 
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  useDebounce(
+    () => {
+      setDebouncedSearch(search);
+    },
+
+    500,
+
+    [search],
+  );
+
   const [page, setPage] = useState(1);
 
   const [modal, setModal] = useState<
     "beneficiaries" | "delete" | "import" | ""
   >("");
+
+  const [beneficiaryId, setBeneficiaryId] = useState<number | null>(null);
+
+  const { data: beneficiariesList, isLoading } = useQuery({
+    queryKey: ["beneficiaries", debouncedSearch, page],
+
+    queryFn: () => beneficiariesServce.list({ search: debouncedSearch, page }),
+  });
+
+  const { data: projectsList, isLoading: projectLoading } = useQuery({
+    queryKey: ["projects"],
+
+    queryFn: () => projectService.list({ listAll: true }),
+  });
+
+  const { data: organizationList, isLoading: orgLoading } = useQuery({
+    queryKey: ["organizations"],
+
+    queryFn: () =>
+      organizationService.list({
+        listAll: true,
+
+        page: 1,
+
+        filters: { type: "provider" },
+      }),
+  });
+
+  const projects: IOption[] = useMemo(
+    () =>
+      projectsList?.items.map((item) => ({
+        label: item.name,
+
+        value: item.id.toString(),
+      })) || [],
+    [projectsList],
+  );
+
+  const organizations: IOption[] = useMemo(
+    () =>
+      organizationList?.items.map((item) => ({
+        label: item.name,
+
+        value: item.id!.toString(),
+      })) || [],
+
+    [organizationList],
+  );
 
   const close = () => {
     setModal("");
@@ -34,6 +101,7 @@ const BeneficiariesPage = () => {
       case "beneficiaries":
         return (
           <BeneficiariesDialogue
+            id={beneficiaryId as number}
             isVisible={modal === "beneficiaries"}
             handleClose={close}
           />
@@ -55,13 +123,13 @@ const BeneficiariesPage = () => {
           />
         );
     }
-  }, [modal]);
+  }, [modal, beneficiaryId]);
 
   return (
     <>
       {renderModal()}
 
-      <div className="space-y-1.5">
+      <div className="space-y-2.5">
         <div className="flex justify-between items-center gap-4">
           <SearchInput
             value={search}
@@ -79,6 +147,7 @@ const BeneficiariesPage = () => {
             >
               Import beneficiaries
             </Button>
+
             <Button
               eventName="Add Beneficiary"
               onClick={() => setModal("beneficiaries")}
@@ -89,43 +158,49 @@ const BeneficiariesPage = () => {
         </div>
 
         <div>
-          <div className="flex items-center gap-[18px]">
+          <div className="flex items-center gap-2.5">
             <p className="text-[20px] font-medium flex-shrink-0">Filter by</p>
 
             <Dropdown
               noHelperText
-              options={[]}
+              loading={projectLoading}
+              options={projects}
               placeholder="Projects"
               className="max-w-[166px]"
+              handleSelect={() => {}}
             />
 
             <Dropdown
               noHelperText
-              options={[]}
+              options={STATUS}
               placeholder="Status"
               className="max-w-[166px]"
+              handleSelect={() => {}}
             />
 
             <Dropdown
               noHelperText
-              options={[]}
+              loading={orgLoading}
+              options={organizations}
               placeholder="Provider"
               className="max-w-[166px]"
+              handleSelect={() => {}}
             />
 
             <Dropdown
               noHelperText
-              options={[]}
+              options={RISK_LEVEL}
               placeholder="Risk Level"
               className="max-w-[166px]"
+              handleSelect={() => {}}
             />
 
-            <Dropdown
+            {/* <Dropdown
               noHelperText
               options={[]}
               placeholder="Program"
               className="max-w-[166px]"
-            />
+            /> */}
 
             <div className="max-w-[166px]">
               <DatePicker noHelperText />
@@ -143,9 +218,12 @@ const BeneficiariesPage = () => {
           </div>
         </div>
 
-        <div className="space-y-[18px]">
-          <div className="h-[70vh] pr-4 overflow-scroll">
-            <Table.Container>
+        <div className="space-y-[18px] overflow-scroll">
+          <div className="pr-4">
+            <Table.Container
+              isLoading={isLoading}
+              isEmpty={!beneficiariesList?.items?.length}
+            >
               <Table.Head>
                 <Table.Row>
                   <Table.Header small>
@@ -163,92 +241,136 @@ const BeneficiariesPage = () => {
 
                   <Table.Header>Phone number</Table.Header>
 
-                  <Table.Header>Contact</Table.Header>
+                  <Table.Header>Contract</Table.Header>
 
                   <Table.Header>Program</Table.Header>
 
-                  <Table.Header>Low</Table.Header>
+                  <Table.Header>Risk level</Table.Header>
 
-                  <Table.Header>Withdrawn</Table.Header>
+                  <Table.Header>Status</Table.Header>
 
-                  <Table.Header>10/10/24</Table.Header>
+                  <Table.Header>Cohort start date</Table.Header>
 
-                  <Table.Header>09/10/25</Table.Header>
+                  <Table.Header>Cohort end date</Table.Header>
 
                   <Table.Header></Table.Header>
                 </Table.Row>
               </Table.Head>
 
               <Table.Body>
-                <Table.Row>
-                  <Table.Data>
-                    <Checkbox
-                      label="First name"
-                      labelClass="text-[14px]"
-                    />
-                  </Table.Data>
-                  <Table.Data>test</Table.Data>
+                {beneficiariesList?.items?.map((item, index) => {
+                  const {
+                    firstName,
 
-                  <Table.Data>test</Table.Data>
+                    lastName,
 
-                  <Table.Data>test</Table.Data>
+                    provider,
 
-                  <Table.Data>test</Table.Data>
+                    email,
 
-                  <Table.Data>test</Table.Data>
+                    contractId,
 
-                  <Table.Data>test</Table.Data>
+                    id,
 
-                  <Table.Data>test</Table.Data>
+                    cohortEndDate,
 
-                  <Table.Data>test</Table.Data>
+                    cohortName,
 
-                  <Table.Data>test</Table.Data>
+                    cohortStartDate,
 
-                  <Table.Data>test</Table.Data>
+                    riskLevel,
 
-                  <Table.Data>
-                    <div className="flex justify-end">
-                      <Button
-                        eventName="Update Beneficiary"
-                        //   id={id.toString()}
-                        buttonType="default"
-                        type="button"
-                        className="p-[3px]"
-                      >
-                        <img
-                          alt="pencil"
-                          src={pencil}
+                    status,
+
+                    phone,
+                  } = item;
+
+                  return (
+                    <Table.Row key={index}>
+                      <Table.Data>
+                        <Checkbox
+                          label={firstName}
+                          labelClass="text-[14px]"
                         />
-                      </Button>
+                      </Table.Data>
 
-                      <Button
-                        eventName="Delete Beneficiary"
-                        // id={id.toString()}
-                        buttonType="default"
-                        type="button"
-                        onClick={() => {
-                          setModal("delete");
-                        }}
-                        className="p-[3px]"
-                      >
-                        <img
-                          alt="pencil"
-                          src={bin}
-                        />
-                      </Button>
-                    </div>
-                  </Table.Data>
-                </Table.Row>
+                      <Table.Data>{lastName}</Table.Data>
+
+                      <Table.Data>{provider}</Table.Data>
+
+                      <Table.Data>{email}</Table.Data>
+
+                      <Table.Data>{phone}</Table.Data>
+
+                      <Table.Data>Contract {contractId}</Table.Data>
+
+                      <Table.Data>{cohortName}</Table.Data>
+
+                      <Table.Data className="capitalize">
+                        {riskLevel}
+                      </Table.Data>
+
+                      <Table.Data className="capitalize">{status}</Table.Data>
+
+                      <Table.Data>
+                        {formatDate(cohortStartDate, "LL-dd-yyyy")}
+                      </Table.Data>
+
+                      <Table.Data>
+                        {formatDate(cohortEndDate, "LL-dd-yyyy")}
+                      </Table.Data>
+
+                      <Table.Data>
+                        <div className="flex justify-end">
+                          <Button
+                            eventName="Update Beneficiary"
+                            id={id.toString()}
+                            buttonType="default"
+                            type="button"
+                            className="p-[3px]"
+                            onClick={() => {
+                              setModal("beneficiaries");
+
+                              setBeneficiaryId(id);
+                            }}
+                          >
+                            <img
+                              alt="pencil"
+                              src={pencil}
+                            />
+                          </Button>
+
+                          <Button
+                            eventName="Delete Beneficiary"
+                            // id={id.toString()}
+                            buttonType="default"
+                            type="button"
+                            onClick={() => {
+                              setModal("delete");
+                            }}
+                            className="p-[3px]"
+                          >
+                            <img
+                              alt="pencil"
+                              src={bin}
+                            />
+                          </Button>
+                        </div>
+                      </Table.Data>
+                    </Table.Row>
+                  );
+                })}
               </Table.Body>
             </Table.Container>
           </div>
 
-          <div className="flex justify-end items-center absolute bottom-4 right-2 w-full">
+          <div className="flex justify-end items-center w-full">
+            <HorizontalScroller />
+
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}
-              total={10}
+              total={beneficiariesList?.totalSize as number}
             />
           </div>
         </div>
