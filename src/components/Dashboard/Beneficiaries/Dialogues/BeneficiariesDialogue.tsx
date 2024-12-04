@@ -21,9 +21,15 @@ import contractService from "../../../../api/contract";
 import projectService from "../../../../api/projects";
 import useBeneficiaryMutation from "../../../../lib/mutations/beneficiaries";
 
-interface IBeneficiariesDialogueProps extends IDialogueProps {}
+interface IBeneficiariesDialogueProps extends IDialogueProps {
+  id?: number;
+}
 
-const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
+const BeneficiariesDialogue = ({
+  id,
+
+  ...props
+}: IBeneficiariesDialogueProps) => {
   const {
     control,
 

@@ -28,6 +28,8 @@ const BeneficiariesPage = () => {
     "beneficiaries" | "delete" | "import" | ""
   >("");
 
+  const [beneficiaryId, setBeneficiaryId] = useState<number | null>(null);
+
   const { data: beneficiariesList, isLoading } = useQuery({
     queryKey: ["beneficiaries"],
 
@@ -43,6 +45,7 @@ const BeneficiariesPage = () => {
       case "beneficiaries":
         return (
           <BeneficiariesDialogue
+            id={beneficiaryId as number}
             isVisible={modal === "beneficiaries"}
             handleClose={close}
           />
@@ -236,10 +239,15 @@ const BeneficiariesPage = () => {
                         <div className="flex justify-end">
                           <Button
                             eventName="Update Beneficiary"
-                            //   id={id.toString()}
+                            id={id.toString()}
                             buttonType="default"
                             type="button"
                             className="p-[3px]"
+                            onClick={() => {
+                              setModal("beneficiaries");
+
+                              setBeneficiaryId(id);
+                            }}
                           >
                             <img
                               alt="pencil"
