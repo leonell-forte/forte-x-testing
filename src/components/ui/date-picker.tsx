@@ -28,42 +28,48 @@ const DatePicker = ({ helperText, error, noHelperText, ...props }: IProps) => {
                   borderRadius: "10px",
 
                   "& fieldset": {
-                    borderColor: error ? "#DE4841" : "#ffffff !important",
+                    borderColor: error
+                      ? "#651A1A !important"
+                      : "#ffffff !important",
                   },
 
                   "&:hover fieldset": {
-                    borderColor: error ? "#DE4841" : "#ffffff !important",
+                    borderColor: error
+                      ? "#651A1A !important"
+                      : "#ffffff !important",
                   },
 
                   "&.Mui-focused fieldset": {
                     border: "1.5px solid",
 
-                    borderColor: error ? "#DE4841" : "#ffffff !important",
+                    borderColor: error
+                      ? "#651A1A !important"
+                      : "#ffffff !important",
 
-                    color: error ? "#DE4841" : "#ffffff !important",
+                    color: error ? "#651A1A !important" : "#ffffff !important",
                   },
 
                   "& input::placeholder": {
-                    color: error ? "#DE4841" : "white !important",
+                    color: error ? "#651A1A !important" : "white !important",
 
                     opacity: error ? 1 : 0.5,
                   },
 
                   "& input": {
-                    color: error ? "red" : "white",
+                    color: error ? "#651A1A !important" : "white",
                   },
                 },
 
                 "& .MuiInputLabel-root": {
-                  color: error ? "#DE4841" : "#ffffff !important",
+                  color: error ? "#651A1A !important" : "#ffffff !important",
 
                   "&.Mui-focused": {
-                    color: error ? "#DE4841" : "white !important",
+                    color: error ? "#651A1A !important" : "white !important",
                   },
                 },
 
                 "& .MuiSvgIcon-root": {
-                  fill: error ? "#DE4841" : "#ffffff !important",
+                  fill: error ? "#651A1A !important" : "#ffffff !important",
                 },
               },
             },
@@ -119,12 +125,11 @@ const DatePicker = ({ helperText, error, noHelperText, ...props }: IProps) => {
         />
 
         {helperText && (
-          <div className="pl-4 pt-1 absolute">
+          <div className="pl-4 absolute">
             <p
               className={classNames(
-                "text-white text-[12px]",
-
-                error && "!text-[#e61a1a]",
+                "text-white text-[12px] font-medium",
+                error && "!text-alert",
               )}
             >
               {helperText}

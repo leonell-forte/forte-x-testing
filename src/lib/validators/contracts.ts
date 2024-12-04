@@ -8,7 +8,9 @@ const contractPartiesSchema = z.object({
 
 const contractOutcomeSchema = z
   .object({
-    projectOutcomeId: z.number().min(1),
+    projectOutcomeId: z
+      .number()
+      .min(1, { message: "Outcome is a required field" }),
 
     rate: z.union([z.string().min(1), z.number().min(1)]),
 
@@ -73,19 +75,23 @@ export const contracts = {
   schema: z.object({
     id: z.number().optional(),
 
-    projectId: z.number().min(1),
+    projectId: z.number().min(1, { message: "Party is a required field" }),
 
-    targetNoOfBenefeciaries: z.string().min(1),
+    targetNoOfBenefeciaries: z.string().min(1, {
+      message: "Target number of beneficiaries is a required field",
+    }),
 
-    document: z.string().min(1),
+    document: z.string().min(1, { message: "Document is a required field" }),
 
     status: z.enum(["ACTIVE", "INACTIVE", ""]),
 
-    startDate: z.string().min(1, "Required"),
+    startDate: z.string().min(1, "Start date is a required field"),
 
-    endDate: z.string().min(1, "Required"),
+    endDate: z.string().min(1, "End date is a required field"),
 
-    contractParties: z.array(contractPartiesSchema),
+    contractParties: z
+      .array(contractPartiesSchema)
+      .min(1, { message: "Please select at least one party" }),
 
     contractOutcomeRates: z.array(contractOutcomeSchema).min(1),
   }),

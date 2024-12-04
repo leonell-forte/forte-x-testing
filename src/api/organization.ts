@@ -7,16 +7,26 @@ import {
 } from "../lib/types/organizations";
 import { generateODataQuery, IODataObject } from "../lib/utils";
 
+interface IListProps {
+  page: number;
+
+  listAll?: boolean;
+
+  search?: string;
+
+  filters?: IFilters;
+}
+
 class OrganizationService {
-  async list(
-    page: number = 1,
+  async list({
+    page = 1,
 
-    listAll?: boolean,
+    listAll,
 
-    search?: string,
+    search,
 
-    filters?: IFilters,
-  ) {
+    filters,
+  }: IListProps): Promise<{ items: IOrganization[]; totalSize: number }> {
     const params = new URLSearchParams();
 
     params.append("$pageNum", page.toString());
@@ -55,13 +65,13 @@ class OrganizationService {
       },
 
       "organizations.type": {
-        value: filters?.type.toLowerCase() || "",
+        value: filters?.type?.toLowerCase() || "",
 
         exact: false,
       },
 
       "organizations.status": {
-        value: filters?.status.toLowerCase() || "",
+        value: filters?.status?.toLowerCase() || "",
 
         exact: false,
       },

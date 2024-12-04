@@ -18,7 +18,7 @@ module.exports = {
         "powder-blue": "#D9EAF3",
         sage: "#BDE8D8",
         grey: "#EFEFEF",
-        alert: "#e61a1a",
+        alert: "#651A1A",
         warning: "#EBBC46",
         success: "#42ECA8",
         disabled: "#787878",

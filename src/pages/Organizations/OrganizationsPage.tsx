@@ -50,7 +50,12 @@ const OrganizationsPage = () => {
     queryKey: ["organizations", page, debouncedSearch, filters],
 
     queryFn: () =>
-      organizationService.list(page, false, debouncedSearch, filters),
+      organizationService.list({
+        page,
+        listAll: false,
+        search: debouncedSearch,
+        filters,
+      }),
   });
 
   const organizations: IOrganization[] = useMemo(
@@ -92,7 +97,7 @@ const OrganizationsPage = () => {
         />
       )}
 
-      <div className="space-y-1.5">
+      <div className="space-y-2.5">
         <div className="flex items-center justify-between w-full gap-4">
           <SearchInput
             value={search}
@@ -159,8 +164,8 @@ const OrganizationsPage = () => {
           </button>
         </div>
 
-        <div className="space-y-[18px]">
-          <div className="h-[66vh] pr-4 overflow-scroll">
+        <div className="space-y-4">
+          <div className="pr-4 overflow-scroll">
             <Table.Container
               isEmpty={!organizations.length}
               isLoading={orgLoading}
@@ -261,16 +266,17 @@ const OrganizationsPage = () => {
             </Table.Container>
           </div>
 
-          <div className="flex justify-end items-center absolute bottom-4 right-2 w-full">
-            <div className="px-12 w-full">
+          {!!organizations.length && (
+            <div className="flex justify-end items-center w-full">
               <HorizontalScroller />
+
+              <Pagination
+                page={page}
+                onPageChange={(val) => setPage(val)}
+                total={organizationList?.totalSize as number}
+              />
             </div>
-            <Pagination
-              page={page}
-              onPageChange={(val) => setPage(val)}
-              total={organizationList?.totalSize}
-            />
-          </div>
+          )}
         </div>
       </div>
     </>

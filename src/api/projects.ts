@@ -3,12 +3,22 @@ import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import { generateODataQuery, IODataObject } from "../lib/utils";
 import { IProject, ProjectFieldValues } from "../lib/types/projects";
 
+interface IProjectListProp {
+  page?: number;
+
+  search?: string;
+
+  listAll?: boolean;
+}
+
 class ProjectsService {
-  async list(
-    page: number = 1,
-    search?: string,
-    listAll?: boolean,
-  ): Promise<{ items: IProject[]; totalSize: number }> {
+  async list({
+    page = 1,
+
+    search,
+
+    listAll,
+  }: IProjectListProp): Promise<{ items: IProject[]; totalSize: number }> {
     const params = new URLSearchParams();
 
     const filters: IODataObject = {
