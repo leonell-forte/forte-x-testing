@@ -757,6 +757,7 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
               name="languages"
               render={({ field }) => (
                 <Dropdown
+                  enableSearch
                   isMultiSelect
                   showAsTags
                   value={field.value}
