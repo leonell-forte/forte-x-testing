@@ -87,7 +87,7 @@ const ProjectsPage = () => {
     <>
       {renderModal()}
 
-      <div className="space-y-1.5">
+      <div className="space-y-2.5">
         <div className="flex justify-between items-center gap-4">
           <SearchInput
             value={search}
@@ -105,7 +105,7 @@ const ProjectsPage = () => {
         </div>
 
         <div className="space-y-[18px]">
-          <div className="h-[74vh] overflow-scroll pr-4">
+          <div className="overflow-scroll pr-4">
             <Table.Container
               isEmpty={!projects.length}
               isLoading={projectLoading}
@@ -191,16 +191,17 @@ const ProjectsPage = () => {
             </Table.Container>
           </div>
 
-          <div className="flex justify-end absolute bottom-4 right-2 w-full">
-            <div className="px-12 w-full">
+          {!!projects.length && (
+            <div className="flex justify-end items-center w-full">
               <HorizontalScroller />
+
+              <Pagination
+                page={page}
+                onPageChange={(val) => setPage(val)}
+                total={projectsList?.totalSize as number}
+              />
             </div>
-            <Pagination
-              page={page}
-              onPageChange={(val) => setPage(val)}
-              total={projectsList?.totalSize as number}
-            />
-          </div>
+          )}
         </div>
       </div>
     </>
