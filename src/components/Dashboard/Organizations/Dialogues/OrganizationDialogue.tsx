@@ -193,7 +193,7 @@ const OrganizationDialogue = ({
                 }}
               />
 
-              <div className="flex flex-col md:flex-row w-full gap-[22px] md:gap-2">
+              <div className="flex flex-col md:flex-row w-full gap-1 md:gap-2">
                 <Controller
                   name="state"
                   control={control}

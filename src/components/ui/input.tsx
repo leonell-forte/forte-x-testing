@@ -34,6 +34,7 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
 
               ...(type === "search" && {
                 paddingLeft: "40px !important", // adjust padding for input text if needed
+                // paddingRight: "40px",
               }),
 
               ...(small && {

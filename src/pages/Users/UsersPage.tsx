@@ -87,7 +87,7 @@ const UsersPage = () => {
         />
       )}
 
-      <div className="space-y-1.5">
+      <div className="space-y-2.5">
         <div className="flex items-center justify-between w-full gap-4">
           <SearchInput
             value={search}
@@ -146,8 +146,8 @@ const UsersPage = () => {
           </button>
         </div>
 
-        <div className="space-y-[18px]">
-          <div className="h-[70vh] overflow-scroll pr-4">
+        <div className="space-y-4">
+          <div className="overflow-scroll pr-4">
             <Table.Container
               isEmpty={!users.length}
               isLoading={userLoading}
@@ -223,10 +223,9 @@ const UsersPage = () => {
             </Table.Container>
           </div>
 
-          <div className="flex justify-end items-center absolute bottom-4 right-2 w-full">
-            <div className="w-full px-12">
-              <HorizontalScroller />
-            </div>
+          <div className="flex justify-end items-center w-full">
+            <HorizontalScroller />
+
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}

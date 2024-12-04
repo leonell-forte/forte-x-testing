@@ -7,7 +7,7 @@ const HorizontalScroller = () => {
   if (scrollValue === 100) return null;
 
   return (
-    <div className="px-[50px] w-full bg-[#D9D9D9]/20 flex items-center h-2 rounded-[8px]">
+    <div className="px-10 mx-4 w-full bg-[#D9D9D9]/20 flex items-center h-2 rounded-[8px]">
       <Slider
         aria-label="Volume"
         value={scrollValue}

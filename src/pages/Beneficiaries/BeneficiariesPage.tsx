@@ -69,7 +69,7 @@ const BeneficiariesPage = () => {
     <>
       {renderModal()}
 
-      <div className="space-y-1.5">
+      <div className="space-y-2.5">
         <div className="flex justify-between items-center gap-4">
           <SearchInput
             value={search}
@@ -87,6 +87,7 @@ const BeneficiariesPage = () => {
             >
               Import beneficiaries
             </Button>
+
             <Button
               eventName="Add Beneficiary"
               onClick={() => setModal("beneficiaries")}
