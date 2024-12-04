@@ -1,42 +1,84 @@
 import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import { api } from "../lib/axios/interceptor";
-import { ContractFieldValues, StatusType } from "../pages/Contracts/types";
 import { generateODataQuery, IODataObject } from "../lib/utils";
+import {
+  ContractFieldValues,
+  IContract,
+  IContractFilters,
+} from "../lib/types/contracts";
+
+interface IContractListProps {
+  page?: number;
+
+  filters?: IContractFilters | null;
+
+  search?: string;
+
+  listAll?: boolean;
+
+  projectId?: number;
+}
 
 class ContractService {
-  async list(page: number, search: string, status: StatusType) {
+  async list({
+    page = 1,
+
+    filters,
+
+    search,
+
+    listAll,
+
+    projectId,
+  }: IContractListProps): Promise<{ items: IContract[]; totalSize: number }> {
     const params = new URLSearchParams();
 
-    const filters: IODataObject = {
-      parties: {
-        value: search,
+    let filtersData: IODataObject = {
+      "organizations.name": {
+        value: search!,
 
         exact: false,
 
         isSearch: true,
       },
 
-      "contracts.project.name": {
-        value: search,
+      "projects.name": {
+        value: filters?.project || "",
 
-        exact: false,
-
-        isSearch: true,
+        exact: true,
       },
 
       "contracts.status": {
-        value: status.toUpperCase(),
+        value: filters?.status.toUpperCase() || "",
+
+        exact: true,
+      },
+
+      "contracts.startDate": {
+        value: filters?.date || "",
 
         exact: false,
+
+        isDate: true,
+      },
+
+      "projects.id": {
+        value: projectId ? projectId.toString() : "",
+
+        exact: true,
       },
     };
 
     params.append("$pageSize", DEFAULT_PAGE_SIZE);
 
-    params.append("$pageNum", page.toString());
+    params.append("$pageNum", (page || 1).toString());
 
-    if (generateODataQuery(filters)) {
-      params.append("$filter", generateODataQuery(filters));
+    if (listAll) {
+      params.append("$listAll", "true");
+    }
+
+    if (generateODataQuery(filtersData)) {
+      params.append("$filter", generateODataQuery(filtersData));
     }
 
     const res = await api.get(`/contracts?${params}`);
@@ -50,10 +92,22 @@ class ContractService {
     return response.data.data;
   }
 
+  async update(values: ContractFieldValues) {
+    const response = await api.put("/contracts", values);
+
+    return response.data.data;
+  }
+
   async getOne(id: string) {
     const response = await api.get(`/contracts/${id}`);
 
     return response.data.data;
+  }
+
+  async delete(id: string) {
+    const response = await api.delete(`/contracts/${id}`);
+
+    return response.data;
   }
 }
 

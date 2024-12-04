@@ -26,7 +26,8 @@ const Alert = () => {
     <div
       className={classNames(
         "absolute z-[999] top-4 right-0 w-full max-w-[545px] overflow-hidden px-4 hover:scale-[1.01] transition-all",
-        !status && "pointer-events-none"
+
+        !status && "pointer-events-none",
       )}
     >
       <motion.div
@@ -36,13 +37,24 @@ const Alert = () => {
         className={styles.alert}
       >
         <div className="relative  py-9 px-10 flex gap-6 items-start">
-          {status === "success" && <img src={success} alt="" />}
+          {status === "success" && (
+            <img
+              src={success}
+              alt=""
+            />
+          )}
           <div className="space-y-2">
             {title && <p className="font-semibold text-[20px]">{title}</p>}
             {message && <p className="text-[14px]">{message}</p>}
           </div>
-          <button className="absolute top-3 right-3" onClick={handleClose}>
-            <img src={close} alt="" />
+          <button
+            className="absolute top-3 right-3"
+            onClick={handleClose}
+          >
+            <img
+              src={close}
+              alt=""
+            />
           </button>
         </div>
       </motion.div>

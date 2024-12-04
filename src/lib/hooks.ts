@@ -3,6 +3,7 @@ import type { RootState, AppDispatch, AppStore } from "./store";
 import { MutableRefObject, useCallback, useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 import { IAlert, setToast } from "./slice/alert";
+import { setTitle } from "./slice/layout";
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
@@ -16,7 +17,7 @@ export const cookie = new Cookies();
 export const useOutsideClick = (
   ref: MutableRefObject<HTMLElement | null>,
 
-  callBack: () => void
+  callBack: () => void,
 ) => {
   const handleClick = useCallback(
     (e: MouseEvent) => {
@@ -25,7 +26,7 @@ export const useOutsideClick = (
       }
     },
 
-    [ref, callBack] // Depend on ref and callBack to ensure stability
+    [ref, callBack], // Depend on ref and callBack to ensure stability
   );
 
   useEffect(() => {
@@ -70,7 +71,7 @@ export const useDebounce = (
 
   time: number,
 
-  dependency: any
+  dependency: any,
 ) => {
   useEffect(() => {
     const debounce = setTimeout(() => {
@@ -81,6 +82,22 @@ export const useDebounce = (
   }, [dependency, callback, time]);
 
   return null;
+};
+
+export const usePageTitle = (title?: string) => {
+  const dispatch = useAppDispatch();
+
+  const { title: pageTitle } = useAppSelector((state) => state.layout);
+
+  useEffect(() => {
+    dispatch(setTitle(title));
+
+    return () => {
+      dispatch(setTitle(""));
+    };
+  }, [dispatch, title]);
+
+  return { pageTitle };
 };
 
 const BREAKPOINTS = {

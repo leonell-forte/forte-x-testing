@@ -9,8 +9,11 @@ const Spinner = ({ dark }: IProp) => {
   return (
     <div className={classNames(styles["container"], dark && styles["-dark"])}>
       <div className={styles["dot"]}></div>
+
       <div className={styles["dot"]}></div>
+
       <div className={styles["dot"]}></div>
+
       <div className={styles["dot"]}></div>
     </div>
   );

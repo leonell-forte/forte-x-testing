@@ -1,6 +1,7 @@
-import React, { TableHTMLAttributes } from "react";
+import { TableHTMLAttributes, useRef } from "react";
 import Spinner from "./spinner/spinner";
 import classNames from "classnames";
+import useScroll from "./horizontal-scroller/useScroll";
 
 interface ITableProp extends TableHTMLAttributes<HTMLTableElement> {}
 
@@ -19,23 +20,35 @@ interface ITableCellProps extends TableHTMLAttributes<HTMLTableCellElement> {
 const Table = {
   Container: ({
     children,
+
     isEmpty,
+
     isLoading,
+
     ...props
   }: ITableContainerProp) => {
+    const tableRef = useRef<HTMLDivElement>(null);
+
+    useScroll({ container: tableRef });
+
     return (
-      <div className="w-full overflow-scroll pb-8">
+      <div
+        ref={tableRef}
+        className="w-full pb-8 relative overflow-scroll hide-scroll"
+      >
         <table
           {...props}
-          className="w-full rounded-t-[8px] overflow-hidden"
+          className="w-full !rounded-t-[8px] overflow-hidden"
         >
           {children}
         </table>
+
         {isEmpty && !isLoading && (
           <div className="min-w-full flex items-center justify-center h-40 mx-auto">
             <p>No data</p>
           </div>
         )}
+
         {isLoading && (
           <div className="w-full h-40 flex items-center justify-center">
             <Spinner />
@@ -51,6 +64,7 @@ const Table = {
         {...props}
         className={classNames(
           "text-left bg-white text-[14px] font-medium truncate",
+
           props.className,
         )}
       >
@@ -72,7 +86,8 @@ const Table = {
       <td
         {...props}
         className={classNames(
-          "px-4 py-[19px] border-b max-w-[300px] truncate text-[14px]",
+          "px-4 h-[56px] border-b max-w-[300px] truncate text-[14px] overflow-visible",
+
           className,
         )}
       >

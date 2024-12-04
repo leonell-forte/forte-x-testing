@@ -1,4 +1,4 @@
-import { IContract } from "@/pages/Contracts/types";
+import { IContract, IContractDefaultValues } from "../../lib/types/contracts";
 import { z } from "zod";
 import { formatDate } from "../utils";
 
@@ -8,13 +8,15 @@ const contractPartiesSchema = z.object({
 
 const contractOutcomeSchema = z
   .object({
-    projectOutcomeId: z.number().min(1),
+    projectOutcomeId: z
+      .number()
+      .min(1, { message: "Outcome is a required field" }),
 
     rate: z.union([z.string().min(1), z.number().min(1)]),
 
     perOutcome: z.boolean(),
 
-    threshold: z.number().optional(),
+    threshold: z.string().optional(),
   })
   .refine((data) => data.perOutcome || !!data.threshold, {
     message: "Threshold cannot be empty",
@@ -23,15 +25,16 @@ const contractOutcomeSchema = z
   });
 
 export const contracts = {
-  defaultValues: (contract?: IContract) => {
+  defaultValues: ({ contract, projectId }: IContractDefaultValues) => {
     let data: IContract = {
-      projectId: contract?.projectId || 0,
+      projectId: contract?.projectId || projectId || 0,
 
-      targetNoOfBenefeciaries: contract?.targetNoOfBenefeciaries || "",
+      targetNoOfBenefeciaries:
+        contract?.targetNoOfBenefeciaries.toString() || "",
 
       document: contract?.document || "",
 
-      status: contract?.status || "active",
+      status: contract?.status || "ACTIVE",
 
       startDate: contract?.startDate
         ? formatDate(contract.startDate, "LL-dd-yyyy")
@@ -43,36 +46,52 @@ export const contracts = {
 
       contractParties: contract?.contractParties || [],
 
-      contractOutcomeRates: contract?.contractOutcomeRates || [
-        {
-          projectOutcomeId: 0,
+      contractOutcomeRates: contract
+        ? contract?.contractOutcomeRates.map((item) => ({
+            ...item,
 
-          rate: "",
+            threshold: item.threshold.toString(),
+          }))
+        : [
+            {
+              projectOutcomeId: 0,
 
-          perOutcome: false,
+              rate: "",
 
-          threshold: 0,
-        },
-      ],
+              perOutcome: true,
+
+              threshold: "0",
+            },
+          ],
     };
+
+    if (contract) {
+      data.id = contract.id;
+    }
 
     return data;
   },
 
   schema: z.object({
-    projectId: z.number().min(1),
+    id: z.number().optional(),
 
-    targetNoOfBenefeciaries: z.string().min(1),
+    projectId: z.number().min(1, { message: "Party is a required field" }),
 
-    document: z.string().min(1),
+    targetNoOfBenefeciaries: z.string().min(1, {
+      message: "Target number of beneficiaries is a required field",
+    }),
 
-    status: z.enum(["active", "inactive", ""]),
+    document: z.string().min(1, { message: "Document is a required field" }),
 
-    startDate: z.string().min(1, "Required"),
+    status: z.enum(["ACTIVE", "INACTIVE", ""]),
 
-    endDate: z.string().min(1, "Required"),
+    startDate: z.string().min(1, "Start date is a required field"),
 
-    contractParties: z.array(contractPartiesSchema),
+    endDate: z.string().min(1, "End date is a required field"),
+
+    contractParties: z
+      .array(contractPartiesSchema)
+      .min(1, { message: "Please selelect at least one party" }),
 
     contractOutcomeRates: z.array(contractOutcomeSchema).min(1),
   }),

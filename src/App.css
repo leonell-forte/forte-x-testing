@@ -43,7 +43,7 @@ body {
 }
 
 .link {
-  @apply underline underline-offset-4;
+  @apply text-mint;
 }
 
 .main-container {

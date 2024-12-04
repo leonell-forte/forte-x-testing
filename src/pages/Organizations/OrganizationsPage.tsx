@@ -6,14 +6,17 @@ import { useQuery } from "@tanstack/react-query";
 import organizationService from "../../api/organization";
 import Table from "../../components/ui/table";
 import pencil from "../../assets/images/icons/pencil.svg";
-import { IFilters, IOrganization } from "./types";
 import Pagination from "../../components/ui/pagination";
 import OrganizationDialogue from "../../components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
 import { REGIONS, STATUS, TYPES } from "../../lib/constants";
-import { useDebounce } from "../../lib/hooks";
+import { useDebounce, usePageTitle } from "../../lib/hooks";
 import closeFilter from "../../assets/images/icons/close-filter.svg";
+import { IFilters, IOrganization } from "../../lib/types/organizations";
+import HorizontalScroller from "../../components/ui/horizontal-scroller";
 
 const OrganizationsPage = () => {
+  usePageTitle("Organizations");
+
   const [modal, setModal] = useState<"org" | null>(null);
 
   const [page, setPage] = useState(1);
@@ -86,7 +89,6 @@ const OrganizationsPage = () => {
           orgId={selectedOrg}
           isVisible={modal === "org"}
           handleClose={close}
-          page={page}
         />
       )}
 
@@ -97,6 +99,7 @@ const OrganizationsPage = () => {
             onChange={(e) => setSearch(e.target.value)}
             className="!w-[286px]"
             placeholder="Search organizations"
+            onClear={() => setSearch("")}
           />
 
           <div className="flex items-center gap-6">
@@ -157,7 +160,7 @@ const OrganizationsPage = () => {
         </div>
 
         <div className="space-y-[18px]">
-          <div className="h-[70vh] overflow-scroll pr-4">
+          <div className="h-[66vh] pr-4 overflow-scroll">
             <Table.Container
               isEmpty={!organizations.length}
               isLoading={orgLoading}
@@ -258,7 +261,10 @@ const OrganizationsPage = () => {
             </Table.Container>
           </div>
 
-          <div className="flex justify-end absolute bottom-4 right-2">
+          <div className="flex justify-end items-center absolute bottom-4 right-2 w-full">
+            <div className="px-12 w-full">
+              <HorizontalScroller />
+            </div>
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}

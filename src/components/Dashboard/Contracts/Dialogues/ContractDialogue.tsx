@@ -7,29 +7,28 @@ import Dropdown, { IOption } from "../../../../components/ui/dropdown";
 import { useEffect, useMemo } from "react";
 import ContractOutcomeField from "../ContractOutcomeField";
 import organizationService from "../../../../api/organization";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { IOrganization } from "@/pages/Organizations/types";
+import { useQuery } from "@tanstack/react-query";
 import { STATUS } from "../../../../lib/constants";
 import projectService from "../../../../api/projects";
-import { IProject } from "../../../../pages/Projects/types";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { contracts } from "../../../../lib/validators/contracts";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ContractFieldValues,
-  IContractDetails,
   StatusType,
-} from "../../../../pages/Contracts/types";
+} from "../../../../lib/types/contracts";
 import contractService from "../../../../api/contract";
-import { queryClient } from "../../../../components/QueryProvider";
-import { useAlert } from "../../../../lib/hooks";
-import * as amplitude from "@amplitude/analytics-browser";
 import Spinner from "../../../../components/ui/spinner/spinner";
 import DatePicker from "../../../../components/ui/date-picker";
 import { formatDate } from "../../../../lib/utils";
+import useContractMutation from "../../../../lib/mutations/contracts";
+import { IProject } from "../../../../lib/types/projects";
+import { IOrganization } from "../../../../lib/types/organizations";
 
 interface IContractDialogueProps extends IDialogueProps {
   id?: number;
+
+  projectId?: number;
 }
 
 const ContractDialogue = ({
@@ -37,10 +36,10 @@ const ContractDialogue = ({
 
   id,
 
+  projectId,
+
   handleClose,
 }: IContractDialogueProps) => {
-  const { setAlert } = useAlert();
-
   const { data: contractDetails, isLoading: contractDetailsLoading } = useQuery(
     {
       queryKey: ["specific-contract", id],
@@ -68,12 +67,13 @@ const ContractDialogue = ({
   } = useForm<ContractFieldValues>({
     resolver: zodResolver(contracts.schema),
 
-    defaultValues: contracts.defaultValues(),
+    defaultValues: contracts.defaultValues({ projectId }),
   });
 
+  // sets contract form default values
   useEffect(() => {
     if (contractDetails) {
-      reset(contracts.defaultValues(contractDetails));
+      reset(contracts.defaultValues({ contract: contractDetails }));
     }
   }, [contractDetails, reset]);
 
@@ -106,12 +106,12 @@ const ContractDialogue = ({
     [organizationList],
   );
 
-  const projects = useMemo(
+  const projects: IOption[] = useMemo(
     () =>
       projectsList?.items.map((item: IProject) => ({
         label: item.name,
 
-        value: item.id,
+        value: item.id.toString(),
       })) || [],
 
     [projectsList],
@@ -123,62 +123,9 @@ const ContractDialogue = ({
     reset();
   };
 
-  const { mutateAsync: addContract, isPending } = useMutation({
-    mutationFn: contractService.add,
-
-    onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ["contracts"] });
-
-      const previousContracts = queryClient.getQueryData(["projects"]);
-
-      return { previousContracts };
-    },
-
-    onSuccess: (addedContract: ContractFieldValues) => {
-      queryClient.setQueryData(
-        ["contracts", 1, "", ""],
-
-        (old: { items: IContractDetails[] }) => {
-          return {
-            ...old,
-
-            items: [...(old?.items || []), addedContract],
-          };
-        },
-      );
-
-      close();
-
-      setAlert({
-        title: "Success!",
-
-        status: "success",
-
-        message: "Contract has been added successfully",
-      });
-
-      amplitude.track(`$Add Contract Form Submission`);
-    },
-
-    onError: (err: any, newContract, context) => {
-      setAlert({
-        status: "error",
-
-        title: "Failed adding new contract",
-
-        message: err?.response?.data?.message,
-      });
-
-      queryClient.setQueryData(
-        ["contracts", 1, "", ""],
-
-        context?.previousContracts,
-      );
-    },
-
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["contracts", 1, "", ""] });
-    },
+  const { addContract, isPending } = useContractMutation({
+    id,
+    successCallback: close,
   });
 
   const onSubmit = async (values: ContractFieldValues) => {
@@ -257,7 +204,10 @@ const ContractDialogue = ({
                   <Dropdown
                     value={field.value.toLowerCase()}
                     handleSelect={(val) => {
-                      setValue("status", val as StatusType);
+                      setValue(
+                        "status",
+                        val.toString().toUpperCase() as StatusType,
+                      );
 
                       setError("status", { message: "" });
                     }}
@@ -285,6 +235,7 @@ const ContractDialogue = ({
               render={({ field }) => {
                 return (
                   <Dropdown
+                    disabled={!!projectId}
                     loading={projectLoading}
                     enableSearch
                     value={
@@ -420,7 +371,7 @@ const ContractDialogue = ({
                     );
                   }}
                   handleRadioSelect={(value) => {
-                    setValue(`contractOutcomeRates.${index}.threshold`, 0);
+                    setValue(`contractOutcomeRates.${index}.threshold`, "0");
                     setError(`contractOutcomeRates.${index}.threshold`, {
                       message: "",
                     });
@@ -444,7 +395,7 @@ const ContractDialogue = ({
 
                       perOutcome: false,
 
-                      threshold: 0,
+                      threshold: "0",
                     })
                   }
                 />

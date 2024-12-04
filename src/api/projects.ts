@@ -1,11 +1,14 @@
-import { z } from "zod";
 import { api } from "../lib/axios/interceptor";
 import { DEFAULT_PAGE_SIZE } from "../lib/constants";
-import { projects } from "../lib/validators/projects";
 import { generateODataQuery, IODataObject } from "../lib/utils";
+import { IProject, ProjectFieldValues } from "../lib/types/projects";
 
 class ProjectsService {
-  async list(page: number = 1, search?: string) {
+  async list(
+    page: number = 1,
+    search?: string,
+    listAll?: boolean,
+  ): Promise<{ items: IProject[]; totalSize: number }> {
     const params = new URLSearchParams();
 
     const filters: IODataObject = {
@@ -29,6 +32,10 @@ class ProjectsService {
 
     params.append("$pageSize", DEFAULT_PAGE_SIZE);
 
+    if (listAll) {
+      params.append("$listAll", "true");
+    }
+
     if (generateODataQuery(filters)) {
       params.append("$filter", generateODataQuery(filters));
     }
@@ -38,7 +45,7 @@ class ProjectsService {
     return res.data;
   }
 
-  async add(project: z.infer<typeof projects.schema>) {
+  async add(project: ProjectFieldValues) {
     const res = await api.post("/projects", project);
 
     return res;
@@ -50,13 +57,13 @@ class ProjectsService {
     return res;
   }
 
-  async getOne(id: string) {
+  async getOne(id: string): Promise<IProject> {
     const response = await api.get(`/projects/${id}`);
 
     return response.data.data;
   }
 
-  async update(project: z.infer<typeof projects.schema>) {
+  async update(project: ProjectFieldValues) {
     const data = {
       ...project,
 
@@ -70,6 +77,7 @@ class ProjectsService {
         })),
       ],
     };
+
     const response = await api.put("/projects", data);
 
     return response;

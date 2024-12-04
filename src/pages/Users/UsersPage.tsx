@@ -5,17 +5,20 @@ import SearchInput from "../../components/ui/search-input";
 import Table from "../../components/ui/table";
 import { useMemo, useState } from "react";
 import pencil from "../../assets/images/icons/pencil.svg";
-import { IUser } from "./types";
 import UserDialogue from "../../components/Dashboard/Users/Dialogues/UserDialogue";
 import { useQuery } from "@tanstack/react-query";
 import userService from "../../api/users";
 import organizationService from "../../api/organization";
-import { IOrganization } from "../Organizations/types";
 import { ROLES } from "../../lib/constants";
-import { useDebounce } from "../../lib/hooks";
+import { useDebounce, usePageTitle } from "../../lib/hooks";
 import closeFilter from "../../assets/images/icons/close-filter.svg";
+import { IUser } from "../../lib/types/users";
+import { IOrganization } from "../../lib/types/organizations";
+import HorizontalScroller from "../../components/ui/horizontal-scroller";
 
 const UsersPage = () => {
+  usePageTitle("Users");
+
   const [page, setPage] = useState(1);
 
   const [search, setSearch] = useState("");
@@ -48,7 +51,7 @@ const UsersPage = () => {
 
   const [modal, setModal] = useState<"user" | null>(null);
 
-  const [selectedUser, setSelectedUser] = useState<string>("");
+  const [selectedUser, setSelectedUser] = useState<string | null>(null);
 
   const users: IUser[] = useMemo(() => userList?.items || [], [userList]);
 
@@ -75,13 +78,12 @@ const UsersPage = () => {
       {modal === "user" && (
         <UserDialogue
           organizations={organizations}
-          userId={selectedUser}
+          userId={selectedUser!}
           isVisible={modal === "user"}
           handleClose={() => {
-            setSelectedUser("");
+            setSelectedUser(null);
             setModal(null);
           }}
-          page={page}
         />
       )}
 
@@ -91,6 +93,7 @@ const UsersPage = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-[286px]"
+            onClear={() => setSearch("")}
           />
 
           <div className="flex items-center gap-6">
@@ -127,8 +130,8 @@ const UsersPage = () => {
             placeholder="Organization"
             className="max-w-[166px]"
             options={organizations.map((item: IOrganization) => ({
-              label: item.registeredName,
-              value: item.registeredName,
+              label: item.name,
+              value: item.name,
             }))}
             readOnly
             isMultiSelect
@@ -220,7 +223,10 @@ const UsersPage = () => {
             </Table.Container>
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex justify-end items-center absolute bottom-4 right-2 w-full">
+            <div className="w-full px-12">
+              <HorizontalScroller />
+            </div>
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}

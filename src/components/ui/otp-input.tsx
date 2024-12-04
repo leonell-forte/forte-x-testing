@@ -44,7 +44,10 @@ const OTPInput = ({ onChange }: IOTPInputProps) => {
   return (
     <div className="flex gap-4 md:gap-[30px] w-fit mx-auto">
       {otp.map((digit, index) => (
-        <div key={index} className="flex items-center justify-center">
+        <div
+          key={index}
+          className="flex items-center justify-center"
+        >
           <input
             key={index}
             id={`otp-input-${index}`}
@@ -54,7 +57,8 @@ const OTPInput = ({ onChange }: IOTPInputProps) => {
             maxLength={1}
             className={classNames(
               "w-10 md:w-[76px] h-10 md:h-[76px] rounded-xl md:rounded-[20px] bg-white !bg-opacity-[50%] text-center text-[24px] md:text-[40px] text-forest-green outline-none",
-              digit && "!bg-mint"
+
+              digit && "!bg-mint",
             )}
           />
         </div>

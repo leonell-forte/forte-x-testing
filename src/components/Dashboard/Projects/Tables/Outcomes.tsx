@@ -1,17 +1,74 @@
 import Table from "../../../../components/ui/table";
 import pencil from "../../../../assets/images/icons/pencil.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Input from "../../../../components/ui/input";
 import Button from "../../../../components/ui/button";
+import { ProjectFieldValues } from "../../../../lib/types/projects";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { projects } from "../../../../lib/validators/projects";
+import { useProjectMutation } from "../../../../lib/mutations/projects";
+import { useQuery } from "@tanstack/react-query";
+import projectService from "../../../../api/projects";
+import { usePageTitle } from "../../../../lib/hooks";
 
-const Outcomes = () => {
+interface IProps {
+  id: string;
+}
+
+const Outcomes = ({ id }: IProps) => {
+  const { data: project, isLoading } = useQuery({
+    queryKey: ["specific-project", id],
+
+    queryFn: () => projectService.getOne(id!),
+
+    enabled: !!id,
+  });
+
+  usePageTitle(project?.name);
+
   const [editIndex, setEditIndex] = useState<number | null>(null);
+
+  const closeEdit = () => {
+    setEditIndex(null);
+  };
+
+  const {
+    formState: { errors },
+
+    handleSubmit,
+
+    reset,
+
+    control,
+  } = useForm<ProjectFieldValues>({
+    resolver: zodResolver(projects.schema),
+
+    defaultValues: projects.defaultValues(),
+  });
+
+  useEffect(() => {
+    // sets default value of project form
+    if (project) {
+      reset(projects.defaultValues(project));
+    }
+  }, [project, reset]);
+
+  const close = () => {
+    setEditIndex(null);
+  };
+
+  const { addProject, isPending } = useProjectMutation(id!, close);
+
+  const onSubmit = async (values: ProjectFieldValues) => {
+    await addProject(values);
+  };
 
   return (
     <div className="space-y-2.5">
       <p className="font-semibold text-[24px]">Outcomes</p>
 
-      <Table.Container>
+      <Table.Container isLoading={isLoading}>
         <Table.Head>
           <Table.Row>
             {HEADERS.map((item, index) => {
@@ -30,35 +87,78 @@ const Outcomes = () => {
         </Table.Head>
 
         <Table.Body>
-          {Array.from({ length: 3 }).map((item, index) => {
+          {project?.outcomes.map((item, index) => {
+            const { name, description } = item;
+
             const onEdit = index === editIndex;
 
             return (
               <Table.Row key={index}>
-                <Table.Data className="h-[56px] py-1">{`Outcome ${
+                <Table.Data className="py-1 w-[120px]">{`Outcome ${
                   index + 1
                 }`}</Table.Data>
 
-                <Table.Data className="h-[56px] py-1">
-                  {onEdit ? <Input noHelperText /> : <p>test</p>}
+                <Table.Data className="py-1 w-[300px]">
+                  {onEdit ? (
+                    <Controller
+                      name={`outcomes.${index}.name`}
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          small
+                          {...field}
+                          noHelperText
+                          error={!!errors.outcomes?.[index]?.name?.message}
+                          helperText={errors.outcomes?.[index]?.name?.message}
+                        />
+                      )}
+                    />
+                  ) : (
+                    <p>{name}</p>
+                  )}
                 </Table.Data>
 
-                <Table.Data className="h-[56px] py-1">
-                  {onEdit ? <Input noHelperText /> : <p>test</p>}
+                <Table.Data className=" py-1">
+                  {onEdit ? (
+                    <Controller
+                      name={`outcomes.${index}.description`}
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          small
+                          {...field}
+                          noHelperText
+                          error={
+                            !!errors.outcomes?.[index]?.description?.message
+                          }
+                          helperText={
+                            errors.outcomes?.[index]?.description?.message
+                          }
+                        />
+                      )}
+                    />
+                  ) : (
+                    <p>{description}</p>
+                  )}
                 </Table.Data>
 
-                <Table.Data className="h-[56px] py-1">
+                <Table.Data className=" py-1">
                   <div className="flex justify-end gap-1.5">
                     {onEdit ? (
                       <>
                         <Button
-                          onClick={() => setEditIndex(null)}
+                          onClick={closeEdit}
                           buttonType="tertiary"
                         >
                           Cancel
                         </Button>
 
-                        <Button>Save</Button>
+                        <Button
+                          loading={isPending}
+                          onClick={handleSubmit(onSubmit)}
+                        >
+                          Save
+                        </Button>
                       </>
                     ) : (
                       <button
