@@ -164,7 +164,7 @@ const OrganizationDialogue = ({
       ) : (
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="space-y-[22px]"
+          className="space-y-1"
         >
           <div className="flex items-start gap-4">
             <label
@@ -246,7 +246,7 @@ const OrganizationDialogue = ({
               Registered address
             </label>
 
-            <div className="w-full space-y-[22px]">
+            <div className="w-full space-y-1">
               <Controller
                 name="registeredAddress"
                 control={control}
@@ -262,7 +262,7 @@ const OrganizationDialogue = ({
                 }}
               />
 
-              <div className="flex flex-col md:flex-row w-full gap-[22px] md:gap-2">
+              <div className="flex flex-col md:flex-row w-full gap-1 md:gap-2">
                 <Controller
                   name="state"
                   control={control}
