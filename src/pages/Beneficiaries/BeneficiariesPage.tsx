@@ -163,9 +163,11 @@ const BeneficiariesPage = () => {
 
             <Dropdown
               noHelperText
+              loading={projectLoading}
               options={projects}
               placeholder="Projects"
               className="max-w-[166px]"
+              handleSelect={() => {}}
             />
 
             <Dropdown
@@ -173,13 +175,16 @@ const BeneficiariesPage = () => {
               options={STATUS}
               placeholder="Status"
               className="max-w-[166px]"
+              handleSelect={() => {}}
             />
 
             <Dropdown
               noHelperText
+              loading={orgLoading}
               options={organizations}
               placeholder="Provider"
               className="max-w-[166px]"
+              handleSelect={() => {}}
             />
 
             <Dropdown
@@ -187,6 +192,7 @@ const BeneficiariesPage = () => {
               options={RISK_LEVEL}
               placeholder="Risk Level"
               className="max-w-[166px]"
+              handleSelect={() => {}}
             />
 
             {/* <Dropdown
