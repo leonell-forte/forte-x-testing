@@ -157,12 +157,26 @@ export const LANGUAGES = [
 
 export const BOOLEAN = [
   {
-    label: "Yes",
+    label: "True",
     value: "true",
   },
   {
-    label: "No",
+    label: "False",
     value: "false",
+  },
+];
+
+export const CONFIRM = [
+  {
+    label: "Yes",
+
+    value: "yes",
+  },
+
+  {
+    label: "No",
+
+    value: "no",
   },
 ];
 

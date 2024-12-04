@@ -40,7 +40,7 @@ export const beneficiaries = {
 
       gender: "",
 
-      disabilityStatus: "false",
+      disabilityStatus: "no",
 
       address: "",
 
@@ -59,7 +59,7 @@ export const beneficiaries = {
 
     lastName: z.string().min(1, { message: "Lastname is required" }),
 
-    email: z.string().min(1, { message: "Invalid email" }),
+    email: z.string().email(),
 
     phone: z.string().min(1, { message: "Phone is required" }),
 
@@ -73,32 +73,38 @@ export const beneficiaries = {
 
     providerId: z.number().min(1),
 
-    cohortStartDate: z.string().min(1).date(),
+    cohortStartDate: z.string().min(1, { message: "Start date is required" }),
 
-    cohortEndDate: z.string().min(1).date(),
+    cohortEndDate: z.string().min(1, { message: "End date is required" }),
 
-    cohortName: z.string().min(1),
+    cohortName: z.string().min(1, { message: "Program is required" }),
 
-    linkedinUrl: z.string().min(1).url(),
+    linkedinUrl: z.string(),
 
-    githubUrl: z.string().min(1).url(),
+    githubUrl: z.string(),
 
-    otherUrl: z.string().min(1).url(),
+    otherUrl: z.string(),
 
-    birthdate: z.string().min(1).date(),
+    birthdate: z.string().min(1, { message: "Birthdate is required" }),
 
-    ethnicity: z.string().min(1),
+    ethnicity: z.string().min(1, { message: "Ethnicity is required" }),
 
-    gender: z.string().min(1),
+    gender: z.string().min(1, { message: "Gender is required" }),
 
-    disabilityStatus: z.enum(["true", "false"]),
+    disabilityStatus: z.enum(["yes", "no"]),
 
-    address: z.string().min(1),
+    address: z.string().min(1, { message: "Address is required" }),
 
-    socioeconomicStatus: z.string().min(1),
+    socioeconomicStatus: z
+      .string()
+      .min(1, { message: "Socio-economic status is required" }),
 
-    educationLevel: z.string().min(1),
+    educationLevel: z
+      .string()
+      .min(1, { message: "Highest education level is required" }),
 
-    languages: z.array(z.string()).min(1),
+    languages: z
+      .array(z.string())
+      .min(1, { message: "Select at least one language" }),
   }),
 };

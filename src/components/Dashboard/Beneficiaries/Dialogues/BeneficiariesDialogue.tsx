@@ -16,9 +16,10 @@ import organizationService from "../../../../api/organization";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { reset } from "@amplitude/analytics-browser";
-import { BOOLEAN, GENDER, LANGUAGES, STATUS } from "../../../../lib/constants";
+import { CONFIRM, GENDER, LANGUAGES, STATUS } from "../../../../lib/constants";
 import contractService from "../../../../api/contract";
 import projectService from "../../../../api/projects";
+import useBeneficiaryMutation from "../../../../lib/mutations/beneficiaries";
 
 interface IBeneficiariesDialogueProps extends IDialogueProps {}
 
@@ -33,6 +34,8 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
     setValue,
 
     setError,
+
+    watch,
   } = useForm<IBeneficiariesFieldValues>({
     resolver: zodResolver(beneficiaries.schema),
 
@@ -52,7 +55,7 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
       }),
   });
 
-  const { data: contractList, isLoading } = useQuery({
+  const { data: contractList, isLoading: contractsLoading } = useQuery({
     queryKey: ["contracts"],
 
     queryFn: () =>
@@ -67,6 +70,41 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
     queryFn: () => projectService.list({ listAll: true }),
   });
 
+  const contracts: IOption[] = useMemo(
+    () =>
+      contractList?.items.map((item) => ({
+        label: `Contract ${item.id}`,
+
+        value: item.id!.toString(),
+      })) || [],
+
+    [contractList],
+  );
+
+  const organizations: IOption[] = useMemo(
+    () =>
+      organizationList?.items
+        .filter((org) => {
+          // filter the organizations based on selected contract
+          // provider dropdown should be disabled if no contract is selected
+
+          const selectedContract = contractList?.items.find(
+            (contract) => contract.id === watch("contractId"),
+          );
+
+          return selectedContract?.contractParties.some(
+            (item) => item.organizationId === Number(org.id),
+          );
+        })
+        .map((item) => ({
+          label: item.name,
+
+          value: item.id!.toString(),
+        })) || [],
+
+    [organizationList, contractList, watch("contractId")],
+  );
+
   const projects: IOption[] = useMemo(
     () =>
       projectsList?.items.map((item) => ({
@@ -77,36 +115,20 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
     [projectsList],
   );
 
-  const organizations: IOption[] = useMemo(
-    () =>
-      organizationList?.items.map((item) => ({
-        label: item.name,
-
-        value: item.id!.toString(),
-      })) || [],
-
-    [organizationList],
-  );
-
-  const contracts: IOption[] = useMemo(
-    () =>
-      contractList?.items.map((item) => ({
-        label: `Contract ${item.id}`,
-
-        value: item.id!.toString(),
-      })) || [],
-
-    [organizationList],
-  );
-
-  const onSubmit = (values: IBeneficiariesFieldValues) => {
-    console.log(values);
-  };
-
   const close = () => {
     reset();
 
     props.handleClose!();
+  };
+
+  const { addBeneficiary, isPending } = useBeneficiaryMutation({
+    successCallback: close,
+  });
+
+  const onSubmit = async (values: IBeneficiariesFieldValues) => {
+    console.log(values);
+
+    await addBeneficiary(values);
   };
 
   return (
@@ -119,7 +141,7 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
         onSubmit={handleSubmit(onSubmit)}
         className="space-y-6"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1">
           <div className="flex items-start">
             <label
               htmlFor=""
@@ -159,39 +181,6 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
                   placeholder="Last name"
                   error={!!errors.lastName?.message}
                   helperText={errors.lastName?.message}
-                />
-              )}
-            />
-          </div>
-
-          <div className="flex items-start">
-            <label
-              htmlFor=""
-              className="min-w-[140px] pt-3"
-            >
-              Provider
-            </label>
-
-            <Controller
-              control={control}
-              name="providerId"
-              render={({ field }) => (
-                <Dropdown
-                  value={
-                    organizations.find(
-                      (item) => Number(item.value) === field.value,
-                    )?.label
-                  }
-                  handleSelect={(val) => {
-                    setValue("providerId", Number(val));
-
-                    setError("providerId", { message: "" });
-                  }}
-                  loading={orgLoading}
-                  options={organizations}
-                  placeholder="Provider"
-                  error={!!errors.providerId?.message}
-                  helperText={errors.providerId?.message}
                 />
               )}
             />
@@ -304,6 +293,7 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
               name="contractId"
               render={({ field }) => (
                 <Dropdown
+                  loading={contractsLoading}
                   value={
                     contracts.find((item) => Number(item.value) === field.value)
                       ?.label
@@ -311,12 +301,48 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
                   handleSelect={(val) => {
                     setValue("contractId", Number(val));
 
+                    setValue("providerId", 0);
+
                     setError("contractId", { message: "" });
                   }}
                   options={contracts}
                   placeholder="Contract"
                   error={!!errors.contractId?.message}
                   helperText={errors.contractId?.message}
+                />
+              )}
+            />
+          </div>
+
+          <div className="flex items-start">
+            <label
+              htmlFor=""
+              className="min-w-[140px] pt-3"
+            >
+              Provider
+            </label>
+
+            <Controller
+              control={control}
+              name="providerId"
+              render={({ field }) => (
+                <Dropdown
+                  disabled={!watch("contractId")}
+                  value={
+                    organizations.find(
+                      (item) => Number(item.value) === field.value,
+                    )?.label
+                  }
+                  handleSelect={(val) => {
+                    setValue("providerId", Number(val));
+
+                    setError("providerId", { message: "" });
+                  }}
+                  loading={orgLoading}
+                  options={organizations}
+                  placeholder="Provider"
+                  error={!!errors.providerId?.message}
+                  helperText={errors.providerId?.message}
                 />
               )}
             />
@@ -335,6 +361,7 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
               name="projectId"
               render={({ field }) => (
                 <Dropdown
+                  loading={projectLoading}
                   value={
                     projects.find((item) => Number(item.value) === field.value)
                       ?.label
@@ -378,6 +405,8 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
                     value={new Date(field.value)}
                     onChange={(date) => {
                       setValue("cohortStartDate", date!.toISOString());
+
+                      setError("cohortStartDate", { message: "" });
                     }}
                     error={!!errors?.cohortStartDate?.message}
                     helperText={errors?.cohortStartDate?.message}
@@ -402,6 +431,8 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
                     value={new Date(field.value)}
                     onChange={(date) => {
                       setValue("cohortEndDate", date!.toISOString());
+
+                      setError("cohortEndDate", { message: "" });
                     }}
                     error={!!errors?.cohortEndDate?.message}
                     helperText={errors?.cohortEndDate?.message}
@@ -534,6 +565,8 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
                     value={new Date(field.value)}
                     onChange={(date) => {
                       setValue("birthdate", date!.toISOString());
+
+                      setError("birthdate", { message: "" });
                     }}
                     error={!!errors?.birthdate?.message}
                     helperText={errors?.birthdate?.message}
@@ -611,7 +644,7 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
 
                       setError("disabilityStatus", { message: "" });
                     }}
-                    options={BOOLEAN}
+                    options={CONFIRM}
                     placeholder="Disability status"
                     error={!!errors.disabilityStatus?.message}
                     helperText={errors.disabilityStatus?.message}
@@ -679,7 +712,7 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
               render={({ field }) => (
                 <Input
                   {...field}
-                  placeholder="Highest education label"
+                  placeholder="Highest education level"
                   error={!!errors.educationLevel?.message}
                   helperText={errors.educationLevel?.message}
                 />
@@ -726,7 +759,12 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
             Cancel
           </Button>
 
-          <Button type="submit">Save</Button>
+          <Button
+            type="submit"
+            loading={isPending}
+          >
+            Save
+          </Button>
         </div>
       </form>
     </Dialogue>

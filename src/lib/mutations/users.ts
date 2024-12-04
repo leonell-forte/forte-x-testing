@@ -69,7 +69,7 @@ const useUserMutation = ({
       setAlert({
         status: "error",
 
-        title: `Failed updating profile`,
+        title: `Failed ${userId ? "updating" : "adding"} user`,
 
         message: err?.response?.data?.message,
       });

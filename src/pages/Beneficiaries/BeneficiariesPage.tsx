@@ -13,6 +13,8 @@ import DeleteDialogue from "../../components/Dashboard/Beneficiaries/Dialogues/D
 import ImportDialogue from "../../components/Dashboard/Beneficiaries/Dialogues/ImportDialogue";
 import DatePicker from "../../components/ui/date-picker";
 import { usePageTitle } from "../../lib/hooks";
+import { useQuery } from "@tanstack/react-query";
+import beneficiariesServce from "../../api/beneficiaries";
 
 const BeneficiariesPage = () => {
   usePageTitle("Beneficiaries");
@@ -24,6 +26,12 @@ const BeneficiariesPage = () => {
   const [modal, setModal] = useState<
     "beneficiaries" | "delete" | "import" | ""
   >("");
+
+  const { data: beneficiariesList, isLoading } = useQuery({
+    queryKey: ["beneficiaries"],
+
+    queryFn: () => beneficiariesServce.list({}),
+  });
 
   const close = () => {
     setModal("");
