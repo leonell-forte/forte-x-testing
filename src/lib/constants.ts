@@ -104,6 +104,29 @@ export const BENEFICIARY_STATUS = [
   },
 ];
 
+export const HIGHEST_EDUCATION_LEVEL = [
+  {
+    label: "Less than High School",
+    value: "Less than High School",
+  },
+  {
+    label: "High School Graduate",
+    value: "High School Graduate",
+  },
+  {
+    label: "Some College",
+    value: "Some College",
+  },
+  {
+    label: "Bachelor’s Degree",
+    value: "Bachelor’s Degree",
+  },
+  {
+    label: "Postgraduate Degree",
+    value: "Postgraduate Degree",
+  },
+];
+
 export const STATUS = [
   {
     label: "Active",

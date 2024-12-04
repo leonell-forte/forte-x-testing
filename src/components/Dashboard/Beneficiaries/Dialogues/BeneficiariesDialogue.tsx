@@ -21,6 +21,7 @@ import {
   BENEFICIARY_STATUS,
   CONFIRM,
   GENDER,
+  HIGHEST_EDUCATION_LEVEL,
   LANGUAGES,
   RISK_LEVEL,
 } from "../../../../lib/constants";
@@ -727,8 +728,14 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
               control={control}
               name="educationLevel"
               render={({ field }) => (
-                <Input
-                  {...field}
+                <Dropdown
+                  value={field.value}
+                  handleSelect={(val) => {
+                    setValue("educationLevel", val as string);
+
+                    setError("educationLevel", { message: "" });
+                  }}
+                  options={HIGHEST_EDUCATION_LEVEL}
                   placeholder="Highest education level"
                   error={!!errors.educationLevel?.message}
                   helperText={errors.educationLevel?.message}
