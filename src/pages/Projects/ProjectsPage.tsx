@@ -105,8 +105,8 @@ const ProjectsPage = () => {
           </Button>
         </div>
 
-        <div className="space-y-[18px]">
-          <div className="overflow-scroll pr-4">
+        <div className="space-y-[18px] overflow-scroll ">
+          <div className="pr-4">
             <Table.Container
               isEmpty={!projects.length}
               isLoading={projectLoading}
