@@ -9,6 +9,7 @@ import { Controller, useForm } from "react-hook-form";
 import {
   DisabilityStatusEnum,
   IBeneficiariesFieldValues,
+  RiskLevelEnum,
 } from "../../../../lib/types/beneficiaries";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { beneficiaries } from "../../../../lib/validators/beneficiaries";
@@ -16,7 +17,13 @@ import organizationService from "../../../../api/organization";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { reset } from "@amplitude/analytics-browser";
-import { CONFIRM, GENDER, LANGUAGES, STATUS } from "../../../../lib/constants";
+import {
+  CONFIRM,
+  GENDER,
+  LANGUAGES,
+  RISK_LEVEL,
+  STATUS,
+} from "../../../../lib/constants";
 import contractService from "../../../../api/contract";
 import projectService from "../../../../api/projects";
 import useBeneficiaryMutation from "../../../../lib/mutations/beneficiaries";
@@ -274,8 +281,14 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
               control={control}
               name="riskLevel"
               render={({ field }) => (
-                <Input
-                  {...field}
+                <Dropdown
+                  value={field.value as string}
+                  handleSelect={(val) => {
+                    setValue("riskLevel", val as RiskLevelEnum);
+
+                    setError("riskLevel", { message: "" });
+                  }}
+                  options={RISK_LEVEL}
                   placeholder="Risk level"
                   error={!!errors.riskLevel?.message}
                   helperText={errors.riskLevel?.message}

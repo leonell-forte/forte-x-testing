@@ -12,7 +12,7 @@ export const beneficiaries = {
 
       phone: "",
 
-      riskLevel: "",
+      riskLevel: null,
 
       status: "",
 
@@ -63,7 +63,11 @@ export const beneficiaries = {
 
     phone: z.string().min(1, { message: "Phone is required" }),
 
-    riskLevel: z.string().min(1, { message: "Risk level is required" }),
+    riskLevel: z
+      .enum(["low", "medium", "high"], {
+        message: "Risk level is required",
+      })
+      .nullable(),
 
     status: z.string().min(1, { message: "Status is required" }),
 

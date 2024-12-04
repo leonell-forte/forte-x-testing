@@ -43,6 +43,21 @@ export const ROLES = [
   },
 ];
 
+export const RISK_LEVEL = [
+  {
+    label: "Low",
+    value: "low",
+  },
+  {
+    label: "Medium",
+    value: "medium",
+  },
+  {
+    label: "High",
+    value: "high",
+  },
+];
+
 export const TYPES = [
   {
     label: "Funder",
