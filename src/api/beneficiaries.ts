@@ -1,6 +1,9 @@
 import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import { api } from "../lib/axios/interceptor";
-import { IBeneficiariesFieldValues } from "../lib/types/beneficiaries";
+import {
+  IBeneficiaries,
+  IBeneficiariesFieldValues,
+} from "../lib/types/beneficiaries";
 
 interface IBeneficiariesListProps {
   page?: number;
@@ -11,7 +14,17 @@ interface IBeneficiariesListProps {
 }
 
 class BeneficiariesService {
-  async list({ page = 1, listAll, search }: IBeneficiariesListProps) {
+  async list({
+    page = 1,
+
+    listAll,
+
+    search,
+  }: IBeneficiariesListProps): Promise<{
+    items: IBeneficiaries[];
+
+    totalSize: number;
+  }> {
     const params = new URLSearchParams();
 
     params.append("$pageNum", page.toString());
@@ -20,7 +33,7 @@ class BeneficiariesService {
 
     const res = await api.get(`/beneficiaries?${params}`);
 
-    return res;
+    return res.data;
   }
 
   async add(beneficiaries: IBeneficiariesFieldValues) {

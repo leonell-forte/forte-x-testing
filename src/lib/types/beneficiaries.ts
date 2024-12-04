@@ -4,19 +4,17 @@ import { beneficiaries } from "../validators/beneficiaries";
 export interface IBeneficiaries {
   id: number;
 
+  contractId: number;
+
+  email: string;
+
   firstName: string;
 
   lastName: string;
 
+  phone: string;
+
   provider: string;
-
-  email: string;
-
-  phoneNumber: string;
-
-  contract: string;
-
-  program: string;
 }
 
 export enum DisabilityStatusEnum {

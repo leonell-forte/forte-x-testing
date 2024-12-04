@@ -1,7 +1,7 @@
 import Dropdown from "../../components/ui/dropdown";
 import Button from "../../components/ui/button";
 import SearchInput from "../../components/ui/search-input";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import closeFilter from "../../assets/images/icons/close-filter.svg";
 import Table from "../../components/ui/table";
 import Checkbox from "../../components/ui/checkbox";
@@ -15,6 +15,7 @@ import DatePicker from "../../components/ui/date-picker";
 import { usePageTitle } from "../../lib/hooks";
 import { useQuery } from "@tanstack/react-query";
 import beneficiariesServce from "../../api/beneficiaries";
+import HorizontalScroller from "../../components/ui/horizontal-scroller";
 
 const BeneficiariesPage = () => {
   usePageTitle("Beneficiaries");
@@ -152,8 +153,8 @@ const BeneficiariesPage = () => {
           </div>
         </div>
 
-        <div className="space-y-[18px]">
-          <div className="h-[70vh] pr-4 overflow-scroll">
+        <div className="space-y-[18px] overflow-scroll">
+          <div className="pr-4">
             <Table.Container>
               <Table.Head>
                 <Table.Row>
@@ -172,92 +173,111 @@ const BeneficiariesPage = () => {
 
                   <Table.Header>Phone number</Table.Header>
 
-                  <Table.Header>Contact</Table.Header>
+                  <Table.Header>Contract</Table.Header>
 
                   <Table.Header>Program</Table.Header>
 
-                  <Table.Header>Low</Table.Header>
+                  <Table.Header>Risk level</Table.Header>
 
-                  <Table.Header>Withdrawn</Table.Header>
+                  <Table.Header>Status</Table.Header>
 
-                  <Table.Header>10/10/24</Table.Header>
+                  <Table.Header>Cohort start date</Table.Header>
 
-                  <Table.Header>09/10/25</Table.Header>
+                  <Table.Header>Cohort end date</Table.Header>
+
+                  <Table.Header>Cohort name</Table.Header>
 
                   <Table.Header></Table.Header>
                 </Table.Row>
               </Table.Head>
 
               <Table.Body>
-                <Table.Row>
-                  <Table.Data>
-                    <Checkbox
-                      label="First name"
-                      labelClass="text-[14px]"
-                    />
-                  </Table.Data>
-                  <Table.Data>test</Table.Data>
-
-                  <Table.Data>test</Table.Data>
-
-                  <Table.Data>test</Table.Data>
-
-                  <Table.Data>test</Table.Data>
-
-                  <Table.Data>test</Table.Data>
-
-                  <Table.Data>test</Table.Data>
-
-                  <Table.Data>test</Table.Data>
-
-                  <Table.Data>test</Table.Data>
-
-                  <Table.Data>test</Table.Data>
-
-                  <Table.Data>test</Table.Data>
-
-                  <Table.Data>
-                    <div className="flex justify-end">
-                      <Button
-                        eventName="Update Beneficiary"
-                        //   id={id.toString()}
-                        buttonType="default"
-                        type="button"
-                        className="p-[3px]"
-                      >
-                        <img
-                          alt="pencil"
-                          src={pencil}
+                {beneficiariesList?.items.map((item, index) => {
+                  const {
+                    firstName,
+                    lastName,
+                    provider,
+                    email,
+                    contractId,
+                    id,
+                  } = item;
+                  return (
+                    <Table.Row>
+                      <Table.Data>
+                        <Checkbox
+                          label={firstName}
+                          labelClass="text-[14px]"
                         />
-                      </Button>
+                      </Table.Data>
 
-                      <Button
-                        eventName="Delete Beneficiary"
-                        // id={id.toString()}
-                        buttonType="default"
-                        type="button"
-                        onClick={() => {
-                          setModal("delete");
-                        }}
-                        className="p-[3px]"
-                      >
-                        <img
-                          alt="pencil"
-                          src={bin}
-                        />
-                      </Button>
-                    </div>
-                  </Table.Data>
-                </Table.Row>
+                      <Table.Data>{lastName}</Table.Data>
+
+                      <Table.Data>{provider}</Table.Data>
+
+                      <Table.Data>{email}</Table.Data>
+
+                      <Table.Data>-</Table.Data>
+
+                      <Table.Data>Contract {contractId}</Table.Data>
+
+                      <Table.Data>-</Table.Data>
+
+                      <Table.Data>-</Table.Data>
+
+                      <Table.Data>-</Table.Data>
+
+                      <Table.Data>-</Table.Data>
+
+                      <Table.Data>-</Table.Data>
+
+                      <Table.Data>-</Table.Data>
+
+                      <Table.Data>
+                        <div className="flex justify-end">
+                          <Button
+                            eventName="Update Beneficiary"
+                            //   id={id.toString()}
+                            buttonType="default"
+                            type="button"
+                            className="p-[3px]"
+                          >
+                            <img
+                              alt="pencil"
+                              src={pencil}
+                            />
+                          </Button>
+
+                          <Button
+                            eventName="Delete Beneficiary"
+                            // id={id.toString()}
+                            buttonType="default"
+                            type="button"
+                            onClick={() => {
+                              setModal("delete");
+                            }}
+                            className="p-[3px]"
+                          >
+                            <img
+                              alt="pencil"
+                              src={bin}
+                            />
+                          </Button>
+                        </div>
+                      </Table.Data>
+                    </Table.Row>
+                  );
+                })}
               </Table.Body>
             </Table.Container>
           </div>
 
-          <div className="flex justify-end items-center absolute bottom-4 right-2 w-full">
+          <div className="flex justify-end items-center w-full">
+            <HorizontalScroller />
+
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}
-              total={10}
+              total={beneficiariesList?.totalSize as number}
             />
           </div>
         </div>
