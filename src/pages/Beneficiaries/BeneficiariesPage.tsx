@@ -1,7 +1,7 @@
 import Dropdown from "../../components/ui/dropdown";
 import Button from "../../components/ui/button";
 import SearchInput from "../../components/ui/search-input";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import closeFilter from "../../assets/images/icons/close-filter.svg";
 import Table from "../../components/ui/table";
 import Checkbox from "../../components/ui/checkbox";
@@ -67,7 +67,7 @@ const BeneficiariesPage = () => {
           />
         );
     }
-  }, [modal]);
+  }, [modal, beneficiaryId]);
 
   return (
     <>
@@ -158,7 +158,7 @@ const BeneficiariesPage = () => {
 
         <div className="space-y-[18px] overflow-scroll">
           <div className="pr-4">
-            <Table.Container>
+            <Table.Container isLoading={isLoading}>
               <Table.Head>
                 <Table.Row>
                   <Table.Header small>
@@ -205,7 +205,7 @@ const BeneficiariesPage = () => {
                     id,
                   } = item;
                   return (
-                    <Table.Row>
+                    <Table.Row key={index}>
                       <Table.Data>
                         <Checkbox
                           label={firstName}

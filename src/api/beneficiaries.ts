@@ -4,6 +4,7 @@ import {
   IBeneficiaries,
   IBeneficiariesFieldValues,
 } from "../lib/types/beneficiaries";
+import { generateODataQuery, IODataObject } from "../lib/utils";
 
 interface IBeneficiariesListProps {
   page?: number;
@@ -27,9 +28,27 @@ class BeneficiariesService {
   }> {
     const params = new URLSearchParams();
 
+    const filterData: IODataObject = {
+      "beneficiaries.firstName": {
+        value: search!,
+
+        exact: false,
+
+        isSearch: true,
+      },
+    };
+
     params.append("$pageNum", page.toString());
 
     params.append("$pageSize", DEFAULT_PAGE_SIZE);
+
+    if (generateODataQuery(filterData)) {
+      params.append("$filter", generateODataQuery(filterData));
+    }
+
+    if (listAll) {
+      params.append("$listAll", "true");
+    }
 
     const res = await api.get(`/beneficiaries?${params}`);
 

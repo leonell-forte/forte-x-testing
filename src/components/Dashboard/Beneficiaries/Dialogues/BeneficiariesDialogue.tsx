@@ -25,11 +25,7 @@ interface IBeneficiariesDialogueProps extends IDialogueProps {
   id?: number;
 }
 
-const BeneficiariesDialogue = ({
-  id,
-
-  ...props
-}: IBeneficiariesDialogueProps) => {
+const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
   const {
     control,
 
@@ -87,6 +83,8 @@ const BeneficiariesDialogue = ({
     [contractList],
   );
 
+  const selectedContract = watch("contractId");
+
   const organizations: IOption[] = useMemo(
     () =>
       organizationList?.items
@@ -94,11 +92,11 @@ const BeneficiariesDialogue = ({
           // filter the organizations based on selected contract
           // provider dropdown should be disabled if no contract is selected
 
-          const selectedContract = contractList?.items.find(
-            (contract) => contract.id === watch("contractId"),
+          const contract = contractList?.items.find(
+            (contract) => contract.id === selectedContract,
           );
 
-          return selectedContract?.contractParties.some(
+          return contract?.contractParties.some(
             (item) => item.organizationId === Number(org.id),
           );
         })
@@ -108,7 +106,7 @@ const BeneficiariesDialogue = ({
           value: item.id!.toString(),
         })) || [],
 
-    [organizationList, contractList, watch("contractId")],
+    [organizationList, contractList, selectedContract],
   );
 
   const projects: IOption[] = useMemo(
