@@ -18,11 +18,11 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { reset } from "@amplitude/analytics-browser";
 import {
+  BENEFICIARY_STATUS,
   CONFIRM,
   GENDER,
   LANGUAGES,
   RISK_LEVEL,
-  STATUS,
 } from "../../../../lib/constants";
 import contractService from "../../../../api/contract";
 import projectService from "../../../../api/projects";
@@ -260,7 +260,7 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
 
                     setError("status", { message: "" });
                   }}
-                  options={STATUS}
+                  options={BENEFICIARY_STATUS}
                   placeholder="Status"
                   error={!!errors.status?.message}
                   helperText={errors.status?.message}

@@ -69,6 +69,41 @@ export const TYPES = [
   },
 ];
 
+export const BENEFICIARY_STATUS = [
+  {
+    label: "New",
+    value: "new",
+  },
+  {
+    label: "In Progress",
+    value: "in-progress",
+  },
+  {
+    label: "Withdrawn",
+    value: "withdrawn",
+  },
+  {
+    label: "Pending Evidence Collection",
+    value: "pending-evidence-collection",
+  },
+  {
+    label: "Pending Evidence Review",
+    value: "pending-evidence-review",
+  },
+  {
+    label: "Rejected",
+    value: "rejected",
+  },
+  {
+    label: "Accepted",
+    value: "accepted",
+  },
+  {
+    label: "Paid",
+    value: "paid",
+  },
+];
+
 export const STATUS = [
   {
     label: "Active",

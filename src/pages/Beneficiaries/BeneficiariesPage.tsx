@@ -18,7 +18,7 @@ import beneficiariesServce from "../../api/beneficiaries";
 import HorizontalScroller from "../../components/ui/horizontal-scroller";
 import { formatDate } from "../../lib/utils";
 import projectService from "../../api/projects";
-import { RISK_LEVEL, STATUS } from "../../lib/constants";
+import { BENEFICIARY_STATUS, RISK_LEVEL } from "../../lib/constants";
 import organizationService from "../../api/organization";
 
 const BeneficiariesPage = () => {
@@ -172,7 +172,7 @@ const BeneficiariesPage = () => {
 
             <Dropdown
               noHelperText
-              options={STATUS}
+              options={BENEFICIARY_STATUS}
               placeholder="Status"
               className="max-w-[166px]"
               handleSelect={() => {}}
