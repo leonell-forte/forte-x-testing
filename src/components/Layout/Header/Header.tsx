@@ -20,7 +20,7 @@ const Header = ({ user }: IProp) => {
   };
 
   return (
-    <div className="h-[80px] px-5 md:px-[30px] flex items-center justify-between w-screen">
+    <div className="px-5 md:px-[30px] flex items-center justify-between w-screen py-[22px]">
       <div className="flex items-center gap-[70px]">
         <button
           onClick={handleClick}
