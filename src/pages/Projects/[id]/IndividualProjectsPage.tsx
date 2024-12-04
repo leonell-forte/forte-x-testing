@@ -1,13 +1,15 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Outcomes from "../../../components/Dashboard/Projects/Tables/Outcomes";
 import arrow from "../../../assets/images/icons/arrow.svg";
 import Contracts from "../../../components/Dashboard/Projects/Tables/Contracts";
-import Partners from "../../../components/Dashboard/Projects/Tables/Partners";
-import Beneficiaries from "../../../components/Dashboard/Projects/Tables/Beneficiaries";
 
 const IndividualProjectsPage = () => {
+  // page title is set on the outcomes component
+
+  const { id } = useParams();
+
   return (
-    <div className="space-y-2.5 py-3">
+    <div className="space-y-2.5 py-3 overflow-scroll h-full hide-scroll">
       <Link
         to="/projects"
         className="flex items-center gap-2.5"
@@ -20,13 +22,13 @@ const IndividualProjectsPage = () => {
         <p className="font-semibold">Back</p>
       </Link>
 
-      <Outcomes />
+      <Outcomes id={id as string} />
 
-      <Contracts />
+      <Contracts projectId={Number(id)} />
 
-      <Partners />
+      {/* <Partners />
 
-      <Beneficiaries />
+      <Beneficiaries /> */}
     </div>
   );
 };

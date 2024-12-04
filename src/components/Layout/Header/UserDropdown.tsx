@@ -3,10 +3,10 @@ import { motion } from "framer-motion";
 import { useOutsideClick } from "../../../lib/hooks";
 import arrow from "../../../assets/images/icons/chevron.svg";
 import authService from "../../../api/auth";
-import { IUser } from "../../../pages/Users/types";
 import organizationService from "../../../api/organization";
 import { useQuery } from "@tanstack/react-query";
 import ViewProfileDialogue from "./ViewProfileDialogue";
+import { IUser } from "../../../lib/types/users";
 
 interface IProp {
   user: IUser;
@@ -45,7 +45,7 @@ const UserDropdown = ({ user }: IProp) => {
 
   return (
     <>
-      {user && (
+      {showModal && user && (
         <ViewProfileDialogue
           organizations={organizations}
           userId={user.id}

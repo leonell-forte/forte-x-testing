@@ -14,7 +14,7 @@ const theme = createTheme({
           },
 
           "& .MuiInputBase-input": {
-            height: 21,
+            height: 17.03,
           },
 
           ...(ownerState.color === "primary" && {
@@ -89,7 +89,7 @@ const theme = createTheme({
           // Error Variant
           ...(ownerState.error && {
             "& .MuiOutlinedInput-root": {
-              height: "54px",
+              height: "50px",
 
               borderRadius: "10px !important",
 

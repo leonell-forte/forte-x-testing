@@ -1,5 +1,5 @@
-import { IOrganization } from "@/pages/Organizations/types";
 import { z } from "zod";
+import { IOrganization } from "../types/organizations";
 
 export const organizations = {
   defaultValues: (org?: IOrganization) => {
@@ -27,20 +27,26 @@ export const organizations = {
     };
 
     if (org) {
-      data.id = org.id;
+      data.id = org.id?.toString();
     }
 
     return data;
   },
 
   schema: z.object({
-    name: z.string().min(1, "Organization name is required."),
+    id: z.string().optional(),
 
-    registeredName: z.string().min(1, "Registered name is required."),
+    name: z.string().min(1, "Organization name is a required field."),
 
-    registeredAddress: z.string().min(1, "Registered address is required."),
+    registeredName: z.string().min(1, "Registered name is a required field."),
 
-    registrationNumber: z.string().min(1, "Registration number is required"),
+    registeredAddress: z
+      .string()
+      .min(1, "Registered address is a required field."),
+
+    registrationNumber: z
+      .string()
+      .min(1, "Registration number is a required field"),
 
     state: z.string().min(1, "State is required"),
 
@@ -48,10 +54,12 @@ export const organizations = {
 
     postalCode: z.string().min(1, "Postal code is required"),
 
-    regions: z.array(z.string()).min(1, "Region is required"),
+    regions: z.array(z.string()).min(1, "Region is a required field"),
 
-    type: z.enum(["funder", "provider"], { message: "Type is required" }),
+    type: z.enum(["funder", "provider"], {
+      message: "Type is a required field",
+    }),
 
-    status: z.string().min(1, "Status is required"),
+    status: z.string().min(1, "Status is a required field"),
   }),
 };

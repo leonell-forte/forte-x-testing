@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import Button from "../../../../components/ui/button";
 import Dialogue, {
   IDialogueProps,
@@ -6,25 +6,20 @@ import Dialogue, {
 import Dropdown from "../../../../components/ui/dropdown";
 import Input from "../../../../components/ui/input";
 import { ROLES } from "../../../../lib/constants";
-import { z } from "zod";
 import { users } from "../../../../lib/validators/users";
 import { zodResolver } from "@hookform/resolvers/zod";
 import userService from "../../../../api/users";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { queryClient } from "../../../../components/QueryProvider";
-import { useAlert } from "../../../../lib/hooks";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import Spinner from "../../../ui/spinner/spinner";
-import * as amplitude from "@amplitude/analytics-browser";
-import { IOrganization } from "../../../../pages/Organizations/types";
-import { IUser } from "@/pages/Users/types";
+import useUserMutation from "../../../../lib/mutations/users";
+import { IOrganization } from "../../../../lib/types/organizations";
+import { UserFieldTypes } from "@/lib/types/users";
 
 interface IUserDialogueProps extends IDialogueProps {
   userId?: string;
 
   organizations: IOrganization[];
-
-  page?: number;
 }
 
 const UserDialogue = ({
@@ -35,11 +30,9 @@ const UserDialogue = ({
   handleClose,
 
   userId,
-
-  page,
 }: IUserDialogueProps) => {
   const { data: userData, isLoading } = useQuery({
-    queryKey: ["specific user", userId],
+    queryKey: ["specific-user", userId],
 
     queryFn: () => userService.getOne(userId!),
 
@@ -49,16 +42,12 @@ const UserDialogue = ({
   const {
     handleSubmit,
 
-    formState: { errors },
-
     setValue,
 
-    getValues,
-
-    watch,
-
     reset,
-  } = useForm<z.infer<typeof users.schema>>({
+
+    control,
+  } = useForm<UserFieldTypes>({
     resolver: zodResolver(users.schema),
 
     defaultValues: users.defaultValues(),
@@ -66,74 +55,29 @@ const UserDialogue = ({
 
   useEffect(() => {
     // sets default value of the form
-    if (userData) {
+
+    if (userId) {
       reset(users.defaultValues(userData));
     }
-  }, [userData, reset]);
-
-  const { setAlert } = useAlert();
+  }, [userData, reset, userId]);
 
   const close = () => {
     reset();
 
-    handleClose!();
+    handleClose?.();
   };
 
   // implements optimistic update after adding user
-  const { mutateAsync: addUser, isPending } = useMutation({
-    mutationFn: userId
-      ? () => userService.update(getValues())
-      : userService.add,
 
-    onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ["users", page] });
+  const { addUser, isPending } = useUserMutation({
+    userId: userId!,
 
-      const previousUsers = queryClient.getQueryData(["users", page]);
+    isProfile: false,
 
-      return { previousUsers };
-    },
-
-    onSuccess: (addedUser) => {
-      if (!userId) {
-        queryClient.setQueryData(["users", page], (old: { items: IUser[] }) => {
-          return {
-            ...old,
-
-            items: [...(old?.items || []), addedUser.data.data],
-          };
-        });
-      }
-
-      close();
-
-      setAlert({
-        status: "success",
-
-        message: `User ${userId ? "updated" : "added"} successfully`,
-
-        title: "Success!",
-      });
-
-      amplitude.track(`${userId ? "Update" : "Add"} User Form Submission`);
-    },
-
-    onError: (err: any, newUser, context) => {
-      setAlert({
-        status: "error",
-
-        title: `Failed ${userId ? "updating" : "adding"} user`,
-
-        message: err?.response?.data?.message,
-      });
-
-      queryClient.setQueryData(["users", page], context?.previousUsers);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["users", page] });
-    },
+    successCallback: close,
   });
 
-  const onSubmit = async (values: z.infer<typeof users.schema>) => {
+  const onSubmit = async (values: UserFieldTypes) => {
     await addUser(values);
   };
 
@@ -160,14 +104,23 @@ const UserDialogue = ({
               Email
             </label>
 
-            <Input
-              value={watch("email")}
-              onChange={(e) => setValue("email", e.target.value)}
-              error={!!errors.email?.message}
-              helperText={errors.email?.message}
-              type="email"
-              autoComplete="email"
-              placeholder="Email"
+            <Controller
+              name="email"
+              control={control}
+              render={({ field, fieldState }) => {
+                const { error } = fieldState;
+
+                return (
+                  <Input
+                    {...field}
+                    error={!!error?.message}
+                    helperText={error?.message}
+                    type="email"
+                    autoComplete="email"
+                    placeholder="Email"
+                  />
+                );
+              }}
             />
           </div>
 
@@ -179,13 +132,22 @@ const UserDialogue = ({
               First name
             </label>
 
-            <Input
-              value={watch("firstName")}
-              onChange={(e) => setValue("firstName", e.target.value)}
-              error={!!errors.firstName?.message}
-              helperText={errors.firstName?.message}
-              autoComplete="given-name"
-              placeholder="First name"
+            <Controller
+              name="firstName"
+              control={control}
+              render={({ field, fieldState }) => {
+                const { error } = fieldState;
+
+                return (
+                  <Input
+                    {...field}
+                    error={!!error?.message}
+                    helperText={error?.message}
+                    autoComplete="given-name"
+                    placeholder="First name"
+                  />
+                );
+              }}
             />
           </div>
 
@@ -197,13 +159,22 @@ const UserDialogue = ({
               Last name
             </label>
 
-            <Input
-              value={watch("lastName")}
-              onChange={(e) => setValue("lastName", e.target.value)}
-              error={!!errors.lastName?.message}
-              helperText={errors.lastName?.message}
-              autoComplete="family-name"
-              placeholder="Last name"
+            <Controller
+              name="lastName"
+              control={control}
+              render={({ field, fieldState }) => {
+                const { error } = fieldState;
+
+                return (
+                  <Input
+                    {...field}
+                    error={!!error?.message}
+                    helperText={error?.message}
+                    autoComplete="family-name"
+                    placeholder="Last name"
+                  />
+                );
+              }}
             />
           </div>
 
@@ -215,13 +186,22 @@ const UserDialogue = ({
               Phone number
             </label>
 
-            <Input
-              value={watch("phoneNumber")}
-              onChange={(e) => setValue("phoneNumber", e.target.value)}
-              error={!!errors.phoneNumber?.message}
-              helperText={errors.phoneNumber?.message}
-              autoComplete="tel"
-              placeholder="Phone number"
+            <Controller
+              name="phoneNumber"
+              control={control}
+              render={({ field, fieldState }) => {
+                const { error } = fieldState;
+
+                return (
+                  <Input
+                    {...field}
+                    error={!!error?.message}
+                    helperText={error?.message}
+                    autoComplete="tel"
+                    placeholder="Phone number"
+                  />
+                );
+              }}
             />
           </div>
 
@@ -233,22 +213,34 @@ const UserDialogue = ({
               Organization
             </label>
 
-            <Dropdown
-              enableSearch
-              value={
-                organizations.find(
-                  (item) => item.id?.toString() === watch("organizationId"),
-                )?.registeredName
-              }
-              options={organizations.map((item: IOrganization) => ({
-                label: item.registeredName,
-                value: item.id!.toString(),
-              }))}
-              handleSelect={(val) => setValue("organizationId", val.toString())}
-              placeholder="Organization"
-              error={!!errors.organizationId?.message}
-              helperText={errors.organizationId?.message}
-              readOnly
+            <Controller
+              name="organizationId"
+              control={control}
+              render={({ field, fieldState }) => {
+                const { error } = fieldState;
+
+                return (
+                  <Dropdown
+                    enableSearch
+                    value={
+                      organizations.find(
+                        (item) => item.id?.toString() === field.value,
+                      )?.registeredName
+                    }
+                    options={organizations.map((item: IOrganization) => ({
+                      label: item.registeredName,
+                      value: item.id!.toString(),
+                    }))}
+                    handleSelect={(val) =>
+                      setValue("organizationId", val.toString())
+                    }
+                    placeholder="Organization"
+                    error={!!error?.message}
+                    helperText={error?.message}
+                    readOnly
+                  />
+                );
+              }}
             />
           </div>
 
@@ -260,13 +252,25 @@ const UserDialogue = ({
               Role
             </label>
 
-            <Dropdown
-              value={ROLES.find((item) => item.value === watch("role"))?.label}
-              handleSelect={(val) => setValue("role", val as string)}
-              options={ROLES}
-              placeholder="Role"
-              error={!!errors.role?.message}
-              helperText={errors.role?.message}
+            <Controller
+              name="role"
+              control={control}
+              render={({ field, fieldState }) => {
+                const { error } = fieldState;
+
+                return (
+                  <Dropdown
+                    value={
+                      ROLES.find((item) => item.value === field.value)?.label
+                    }
+                    handleSelect={(val) => setValue("role", val as string)}
+                    options={ROLES}
+                    placeholder="Role"
+                    error={!!error?.message}
+                    helperText={error?.message}
+                  />
+                );
+              }}
             />
           </div>
 

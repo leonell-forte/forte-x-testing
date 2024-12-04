@@ -38,13 +38,15 @@ const Dialogue = ({
       animate={{ opacity: 1 }}
       transition={{ type: "spring", duration: 0.4 }}
       className={classNames(
-        "w-screen overflow-scroll py-12 px-4 h-screen flex items-start justify-center bg-[#011217] fixed bg-opacity-[90%] top-0 left-0 z-50",
+        "w-screen overflow-scroll py-12 px-4 h-screen flex items-start justify-center bg-[#011217] fixed bg-opacity-[90%] top-0 left-0 z-50 !mt-0",
+
         center && "items-center",
       )}
     >
       <div
         className={classNames(
           styles["dialogue-content"],
+
           title ? "p-10" : "px-10 pb-10",
         )}
       >

@@ -1,18 +1,12 @@
-import { IProject } from "../../../../pages/Projects/types";
 import Dialogue, {
   IDialogueProps,
 } from "../../../../components/ui/dialogue/dialogue";
 import Button from "../../../../components/ui/button";
-import projectService from "../../../../api/projects";
-import { useAlert } from "../../../../lib/hooks";
-import * as amplitude from "@amplitude/analytics-browser";
-import { useMutation } from "@tanstack/react-query";
-import { queryClient } from "../../../../components/QueryProvider";
+import { IProject } from "../../../../lib/types/projects";
+import { useDeleteProjectMutation } from "../../../../lib/mutations/projects";
 
 interface IDeleteDialogueProp extends IDialogueProps {
   project: IProject;
-
-  page: number;
 }
 
 const DeleteDialogue = ({
@@ -21,71 +15,10 @@ const DeleteDialogue = ({
   project,
 
   isVisible,
-
-  page,
 }: IDeleteDialogueProp) => {
   const { id } = project;
 
-  const { setAlert } = useAlert();
-
-  const { mutateAsync: deletProject, isPending } = useMutation({
-    mutationFn: projectService.delete,
-
-    onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ["projects", page, ""] });
-
-      const previousProject = queryClient.getQueryData<IProject[]>([
-        "projects",
-        page,
-      ]);
-
-      return { previousProject };
-    },
-
-    onSuccess: () => {
-      queryClient.setQueryData(
-        ["projects", page, ""],
-
-        (old: { items: IProject[] }) => {
-          return {
-            ...old,
-
-            items: old.items.filter((item) => item.id !== id),
-          };
-        },
-      );
-
-      handleClose!();
-
-      setAlert({
-        status: "success",
-
-        message: `Project deleted successfully`,
-
-        title: "Project Deleted!",
-      });
-
-      amplitude.track(`Delete Project Performed`, {
-        id: project.id,
-      });
-    },
-
-    onError: (err: any, newProject, context) => {
-      setAlert({
-        status: "error",
-
-        title: `Faild deleting project`,
-
-        message: err?.response?.data?.message,
-      });
-
-      queryClient.setQueryData(["projects", page], context?.previousProject);
-    },
-
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["projects", page, ""] });
-    },
-  });
+  const { deletProject, isPending } = useDeleteProjectMutation(id, handleClose);
 
   const handleDelete = async () => {
     await deletProject(project.id.toString());

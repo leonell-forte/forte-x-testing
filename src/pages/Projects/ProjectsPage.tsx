@@ -8,12 +8,15 @@ import bin from "../../assets/images/icons/bin.svg";
 import ProjectDialogue from "../../components/Dashboard/Projects/Dialogues/ProjectDialogue";
 import { useQuery } from "@tanstack/react-query";
 import projectService from "../../api/projects";
-import { IProject } from "./types";
 import DeleteDialogue from "../../components/Dashboard/Projects/Dialogues/DeleteDialogue";
-import { useDebounce } from "../../lib/hooks";
+import { useDebounce, usePageTitle } from "../../lib/hooks";
 import { Link } from "react-router-dom";
+import { IProject } from "../../lib/types/projects";
+import HorizontalScroller from "../../components/ui/horizontal-scroller";
 
 const ProjectsPage = () => {
+  usePageTitle("Projects");
+
   const [page, setPage] = useState(1);
 
   const [search, setSearch] = useState("");
@@ -33,7 +36,7 @@ const ProjectsPage = () => {
   const { data: projectsList, isLoading: projectLoading } = useQuery({
     queryKey: ["projects", page, debouncedSearch],
 
-    queryFn: () => projectService.list(page, debouncedSearch),
+    queryFn: () => projectService.list(page, debouncedSearch, false),
   });
 
   const projects: IProject[] = useMemo(
@@ -63,7 +66,6 @@ const ProjectsPage = () => {
       case "project":
         return (
           <ProjectDialogue
-            page={page}
             projectId={(selectedProject?.id || "") as string}
             isVisible={modal === "project"}
             handleClose={handleCloseModal}
@@ -73,14 +75,13 @@ const ProjectsPage = () => {
       case "delete":
         return (
           <DeleteDialogue
-            page={page}
             isVisible={modal === "delete"}
             project={selectedProject!}
             handleClose={handleCloseModal}
           />
         );
     }
-  }, [modal, selectedProject, page]);
+  }, [modal, selectedProject]);
 
   return (
     <>
@@ -92,6 +93,7 @@ const ProjectsPage = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="max-w-[286px]"
+            onClear={() => setSearch("")}
           />
 
           <Button
@@ -119,18 +121,18 @@ const ProjectsPage = () => {
               </Table.Head>
               <Table.Body>
                 {projects.map((item: IProject, bodyIndex: number) => {
-                  const { id, name, provider, outcomes } = item;
+                  const { id, name, outcomes, contracts, providers } = item;
                   return (
                     <Table.Row key={bodyIndex}>
                       <Table.Data>
                         <Link to={`/projects/${id}`}>
-                          <p className="w-[140px] truncate">{name}</p>
+                          <p className="w-[220px] truncate">{name}</p>
                         </Link>
                       </Table.Data>
 
                       <Table.Data>
-                        <p className="w-[140px] truncate">
-                          {provider?.map((item) => item.name).join(", ") || "-"}
+                        <p className="w-[220px] truncate">
+                          {providers?.map((item) => item).join(", ") || "-"}
                         </p>
                       </Table.Data>
 
@@ -140,7 +142,11 @@ const ProjectsPage = () => {
                         </p>
                       </Table.Data>
 
-                      <Table.Data>-</Table.Data>
+                      <Table.Data>
+                        <p className="w-[220px] truncate">
+                          {contracts?.map((item) => item).join(", ") || "-"}
+                        </p>
+                      </Table.Data>
 
                       <Table.Data>-</Table.Data>
 
@@ -185,11 +191,14 @@ const ProjectsPage = () => {
             </Table.Container>
           </div>
 
-          <div className="flex justify-end absolute bottom-4 right-2">
+          <div className="flex justify-end absolute bottom-4 right-2 w-full">
+            <div className="px-12 w-full">
+              <HorizontalScroller />
+            </div>
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}
-              total={projectsList?.totalSize}
+              total={projectsList?.totalSize as number}
             />
           </div>
         </div>

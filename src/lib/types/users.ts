@@ -1,3 +1,6 @@
+import { users } from "../../lib/validators/users";
+import { z } from "zod";
+
 export interface IUser {
   id?: string;
 
@@ -19,3 +22,5 @@ export interface IUser {
 
   updatedAt?: Date;
 }
+
+export type UserFieldTypes = z.infer<typeof users.schema>;

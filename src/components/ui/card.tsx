@@ -11,7 +11,8 @@ const Card = ({ className, children }: ICardProp) => {
     <div
       className={classNames(
         className,
-        "bg-white bg-opacity-[30%] !rounded-[30px]"
+
+        "bg-white bg-opacity-[30%] !rounded-[30px]",
       )}
     >
       {children}

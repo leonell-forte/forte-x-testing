@@ -7,11 +7,13 @@ import darkSearch from "../../assets/images/icons/dark-search.svg";
 
 type IProps = TextFieldProps & {
   dark?: boolean;
+
+  onClear?: () => void;
 };
 
-const SearchInput = ({ dark, ...props }: IProps) => {
+const SearchInput = ({ dark, onClear, ...props }: IProps) => {
   return (
-    <div className="relative flex items-center">
+    <div className="relative flex items-center flex-shrink-0">
       <img
         alt="search"
         src={dark ? darkSearch : search}
@@ -27,11 +29,16 @@ const SearchInput = ({ dark, ...props }: IProps) => {
       />
 
       {!!props.value && (
-        <img
-          alt="search"
-          src={dark ? darkClose : close}
-          className="absolute right-[15.33px] top-[17.8px] pointer-events-none"
-        />
+        <button
+          onClick={onClear}
+          className="flex items-center justify-center"
+        >
+          <img
+            alt="search"
+            src={dark ? darkClose : close}
+            className="absolute right-[15.33px] top-[19.8px]"
+          />
+        </button>
       )}
     </div>
   );

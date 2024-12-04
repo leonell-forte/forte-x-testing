@@ -83,6 +83,7 @@ const Pagination = ({
           src={arrow}
           className={classNames(
             "rotate-[-90deg]",
+
             page >= pageCount && "opacity-[.2]",
           )}
         />

@@ -12,8 +12,11 @@ import BeneficiariesDialogue from "../../components/Dashboard/Beneficiaries/Dial
 import DeleteDialogue from "../../components/Dashboard/Beneficiaries/Dialogues/DeleteDialogue";
 import ImportDialogue from "../../components/Dashboard/Beneficiaries/Dialogues/ImportDialogue";
 import DatePicker from "../../components/ui/date-picker";
+import { usePageTitle } from "../../lib/hooks";
 
 const BeneficiariesPage = () => {
+  usePageTitle("Beneficiaries");
+
   const [search, setSearch] = useState("");
 
   const [page, setPage] = useState(1);
@@ -65,6 +68,7 @@ const BeneficiariesPage = () => {
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search beneficiaries"
             className="max-w-[286px]"
+            onClear={() => setSearch("")}
           />
 
           <div className="space-x-2.5">
@@ -123,10 +127,9 @@ const BeneficiariesPage = () => {
               className="max-w-[166px]"
             />
 
-            <DatePicker
-              className="max-w-[166px]"
-              noHelperText
-            />
+            <div className="max-w-[166px]">
+              <DatePicker noHelperText />
+            </div>
 
             <button
               onClick={() => {}}
@@ -241,7 +244,7 @@ const BeneficiariesPage = () => {
             </Table.Container>
           </div>
 
-          <div className="flex justify-end absolute bottom-4 right-2">
+          <div className="flex justify-end items-center absolute bottom-4 right-2 w-full">
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}

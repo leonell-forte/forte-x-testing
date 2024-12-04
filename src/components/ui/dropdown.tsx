@@ -82,6 +82,7 @@ const Dropdown = ({
       options.filter((item) =>
         item.label.toLowerCase().includes(search.toLowerCase()),
       ),
+
     [search, options],
   );
 
@@ -89,14 +90,17 @@ const Dropdown = ({
     <div
       className={classNames(
         "w-full relative",
+
         className,
+
         !noHelperText && "pb-5",
       )}
     >
       <div
         ref={dropdownRef}
         className={classNames(
-          "relative h-[54px] w-full cursor-pointer rounded-[8px] border border-white",
+          "relative h-[50px] w-full cursor-pointer rounded-[8px] border border-white",
+
           className,
           error && "!border-alert",
           showAsTags && "!h-fit",
@@ -108,6 +112,7 @@ const Dropdown = ({
           onClick={() => setShowList((prev) => !prev)}
           className={classNames(
             "w-full px-4 flex items-center justify-between relative h-full min-h-[50px] outline-none",
+
             showAsTags && "!items-start py-[9px]",
           )}
         >
@@ -118,6 +123,7 @@ const Dropdown = ({
                   const label = options?.find(
                     (option) => option.value === item,
                   )?.label;
+
                   return (
                     <Tag
                       dark
@@ -148,6 +154,7 @@ const Dropdown = ({
               type="text"
               className={classNames(
                 "bg-transparent border-none outline-none w-[90%] placeholder:text-white/50 pointer-events-none disabled:text-white",
+
                 error && "placeholder:!text-[#fff]/50",
               )}
               {...props}
@@ -168,7 +175,7 @@ const Dropdown = ({
           initial={{ opacity: 0 }}
           animate={showList ? { opacity: 1 } : { opacity: 0, display: "none" }}
           transition={{ type: "spring", duration: 0.2, bounce: 0 }}
-          className="absolute space-y-2 top-[50px] left-0 rounded-[4px] min-w-[300px] bg-white/90 p-2.5 w-full overflow-hidden shadow-md z-10 max-h-[400px] hide-scroll overflow-y-scroll"
+          className="absolute space-y-2 top-[100%] left-0 rounded-[4px] min-w-[300px] bg-white/90 p-2.5 w-full overflow-hidden shadow-md z-10 max-h-[400px] hide-scroll overflow-y-scroll"
         >
           {enableSearch && (
             <SearchInput
@@ -197,6 +204,7 @@ const Dropdown = ({
                       checked={props?.value?.includes(value)}
                       onChange={() => {
                         let newValue;
+
                         if (props.value?.includes(value)) {
                           newValue = (props.value as string[]).filter(
                             (item) => item !== value,
@@ -204,6 +212,7 @@ const Dropdown = ({
                         } else {
                           newValue = [...(props.value as string[]), value];
                         }
+
                         handleSelect!(newValue);
                       }}
                       dark
@@ -215,6 +224,7 @@ const Dropdown = ({
                     type="button"
                     onClick={() => {
                       handleSelect!(value);
+
                       setShowList(false);
                     }}
                     key={index}

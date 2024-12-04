@@ -13,10 +13,17 @@ interface IRadioGroupProps {
 
   className?: string;
 
+  value?: string;
+
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
-const RadioGroup = ({ items, className, onChange }: IRadioGroupProps) => {
+const RadioGroup = ({
+  items,
+  className,
+  onChange,
+  value,
+}: IRadioGroupProps) => {
   const renderIcons = useCallback(() => {
     const checked = radioChecked;
 
@@ -36,6 +43,7 @@ const RadioGroup = ({ items, className, onChange }: IRadioGroupProps) => {
             return (
               <FormControlLabel
                 value={item}
+                checked={value === item}
                 control={
                   <Radio
                     icon={

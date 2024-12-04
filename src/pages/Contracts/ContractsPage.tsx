@@ -1,5 +1,5 @@
 import Button from "../../components/ui/button";
-import Dropdown from "../../components/ui/dropdown";
+import Dropdown, { IOption } from "../../components/ui/dropdown";
 import SearchInput from "../../components/ui/search-input";
 import closeFilter from "../../assets/images/icons/close-filter.svg";
 import Table from "../../components/ui/table";
@@ -9,20 +9,36 @@ import ContractDialogue from "../../components/Dashboard/Contracts/Dialogues/Con
 import { useCallback, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import contractService from "../../api/contract";
-import { IContractDetails, StatusType } from "./types";
+import {
+  IContract,
+  IContractFilters,
+  StatusType,
+} from "../../lib/types/contracts";
 import { formatDate } from "../../lib/utils";
 import Pagination from "../../components/ui/pagination";
-import { useDebounce } from "../../lib/hooks";
+import { useDebounce, usePageTitle } from "../../lib/hooks";
 import { STATUS } from "../../lib/constants";
 import { capitalize } from "@mui/material";
 import DatePicker from "../../components/ui/date-picker";
+import DeleteDialogue from "../../components/Dashboard/Contracts/Dialogues/DeleteDialogue";
+import HorizontalScroller from "../../components/ui/horizontal-scroller";
+import projectService from "../../api/projects";
+import { IProject } from "@/lib/types/projects";
 
 const ContractsPage = () => {
+  usePageTitle("Contracts");
+
   const [page, setPage] = useState(1);
 
   const [search, setSearch] = useState("");
 
-  const [status, setStatus] = useState<StatusType>("");
+  const [filters, setFilters] = useState<IContractFilters>({
+    status: "",
+
+    project: "",
+
+    date: "",
+  });
 
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
@@ -39,18 +55,41 @@ const ContractsPage = () => {
   );
 
   const { data: contractList, isLoading } = useQuery({
-    queryKey: ["contracts", page, debouncedSearch, status],
+    queryKey: ["contracts", page, debouncedSearch, filters],
 
-    queryFn: () => contractService.list(page, debouncedSearch, status),
+    queryFn: () =>
+      contractService.list({
+        page,
+        filters,
+        search: debouncedSearch,
+        listAll: false,
+      }),
   });
 
-  const contracts: IContractDetails[] = useMemo(
+  const { data: projecrList, isLoading: isProjectLoading } = useQuery({
+    queryKey: ["projects"],
+
+    queryFn: () => projectService.list(page, "", true),
+  });
+
+  const contracts: IContract[] = useMemo(
     () => contractList?.items || [],
 
     [contractList],
   );
 
-  const [modal, setModal] = useState<"contract" | null>(null);
+  const projects: IOption[] = useMemo(
+    () =>
+      projecrList?.items?.map((item: IProject) => ({
+        label: item.name,
+
+        value: item.name,
+      })) || [],
+
+    [projecrList],
+  );
+
+  const [modal, setModal] = useState<"contract" | "delete" | null>(null);
 
   const close = () => {
     setContractId(null);
@@ -68,11 +107,26 @@ const ContractsPage = () => {
             handleClose={close}
           />
         );
+
+      case "delete":
+        return (
+          <DeleteDialogue
+            id={contractId!.toString()}
+            isVisible={modal === "delete"}
+            handleClose={close}
+          />
+        );
     }
   }, [modal, contractId]);
 
   const handleEditContract = (id: number) => {
     setModal("contract");
+
+    setContractId(id);
+  };
+
+  const handleDeleteContract = (id: number) => {
+    setModal("delete");
 
     setContractId(id);
   };
@@ -88,6 +142,7 @@ const ContractsPage = () => {
             onChange={(e) => setSearch(e.target.value)}
             className="!w-[286px]"
             placeholder="Search contract"
+            onClear={() => setSearch("")}
           />
 
           <div className="flex items-center gap-6">
@@ -108,13 +163,20 @@ const ContractsPage = () => {
             placeholder="Status"
             className="max-w-[166px]"
             options={STATUS}
-            value={status}
-            handleSelect={(val) => setStatus(val as StatusType)}
+            value={filters.status}
+            handleSelect={(val) =>
+              setFilters((prev) => ({ ...prev, status: val as StatusType }))
+            }
           />
 
           <Dropdown
             noHelperText
-            options={[]}
+            value={filters.project}
+            handleSelect={(val) =>
+              setFilters((prev) => ({ ...prev, project: val as string }))
+            }
+            loading={isProjectLoading}
+            options={projects}
             placeholder="Project"
             className="max-w-[166px]"
           />
@@ -122,11 +184,27 @@ const ContractsPage = () => {
           <div className="max-w-[166px]">
             <DatePicker
               noHelperText
-              onChange={(date) => console.log(date)}
+              value={new Date(filters.date)}
+              onChange={(date) => {
+                setFilters((prev) => ({
+                  ...prev,
+                  date: formatDate(date as Date, "yyyy-LL-dd"),
+                }));
+              }}
             />
           </div>
 
-          <button onClick={() => {}}>
+          <button
+            onClick={() =>
+              setFilters({
+                status: "",
+
+                project: "",
+
+                date: "",
+              })
+            }
+          >
             <img
               src={closeFilter}
               alt="close-filter"
@@ -134,8 +212,8 @@ const ContractsPage = () => {
           </button>
         </div>
 
-        <div className="space-y-[18px]">
-          <div className="h-[70vh] overflow-scroll pr-4">
+        <div className="space-y-[18px] h-[70vh] overflow-scroll">
+          <div className="pr-4">
             <Table.Container
               isEmpty={!contracts.length}
               isLoading={isLoading}
@@ -174,11 +252,15 @@ const ContractsPage = () => {
                   return (
                     <Table.Row key={index}>
                       <Table.Data>
+                        <p className="w-[90px] truncate">Contract {id}</p>
+                      </Table.Data>
+
+                      <Table.Data>
                         <p className="w-[150px] truncate">{parties}</p>
                       </Table.Data>
 
                       <Table.Data>
-                        <p className="w-[50px] truncate">
+                        <p className="w-[100px] truncate">
                           {capitalize(status)}
                         </p>
                       </Table.Data>
@@ -207,10 +289,10 @@ const ContractsPage = () => {
                         <div className="flex justify-end">
                           <Button
                             eventName="Edit Contract"
-                            id={id.toString()}
+                            id={id!.toString()}
                             buttonType="default"
                             type="button"
-                            onClick={() => handleEditContract(id)}
+                            onClick={() => handleEditContract(id!)}
                             className="p-[3px]"
                           >
                             <img
@@ -220,15 +302,15 @@ const ContractsPage = () => {
                           </Button>
 
                           <Button
-                            eventName="Edit User"
-                            // id={id.toString()}
+                            eventName="Delete Contract"
+                            id={id!.toString()}
                             buttonType="default"
                             type="button"
-                            onClick={() => {}}
+                            onClick={() => handleDeleteContract(id!)}
                             className="p-[3px]"
                           >
                             <img
-                              alt="pencil"
+                              alt="bin"
                               src={bin}
                             />
                           </Button>
@@ -241,11 +323,14 @@ const ContractsPage = () => {
             </Table.Container>
           </div>
 
-          <div className="flex justify-end absolute bottom-4 right-2">
+          <div className="flex justify-end items-center absolute bottom-4 right-2 w-full">
+            <div className="w-full px-12">
+              <HorizontalScroller />
+            </div>
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}
-              total={contractList?.totalSize}
+              total={contractList?.totalSize as number}
             />
           </div>
         </div>
@@ -257,6 +342,7 @@ const ContractsPage = () => {
 export default ContractsPage;
 
 const TABLE_HEADER = [
+  "Contract",
   "Parties",
   "Status",
   "Project",
