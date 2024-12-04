@@ -18,11 +18,12 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { reset } from "@amplitude/analytics-browser";
 import {
+  BENEFICIARY_STATUS,
   CONFIRM,
   GENDER,
+  HIGHEST_EDUCATION_LEVEL,
   LANGUAGES,
   RISK_LEVEL,
-  STATUS,
 } from "../../../../lib/constants";
 import contractService from "../../../../api/contract";
 import projectService from "../../../../api/projects";
@@ -260,7 +261,7 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
 
                     setError("status", { message: "" });
                   }}
-                  options={STATUS}
+                  options={BENEFICIARY_STATUS}
                   placeholder="Status"
                   error={!!errors.status?.message}
                   helperText={errors.status?.message}
@@ -727,8 +728,14 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
               control={control}
               name="educationLevel"
               render={({ field }) => (
-                <Input
-                  {...field}
+                <Dropdown
+                  value={field.value}
+                  handleSelect={(val) => {
+                    setValue("educationLevel", val as string);
+
+                    setError("educationLevel", { message: "" });
+                  }}
+                  options={HIGHEST_EDUCATION_LEVEL}
                   placeholder="Highest education level"
                   error={!!errors.educationLevel?.message}
                   helperText={errors.educationLevel?.message}
@@ -750,6 +757,7 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
               name="languages"
               render={({ field }) => (
                 <Dropdown
+                  enableSearch
                   isMultiSelect
                   showAsTags
                   value={field.value}
