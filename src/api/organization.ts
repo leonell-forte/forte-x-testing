@@ -73,7 +73,7 @@ class OrganizationService {
       "organizations.status": {
         value: filters?.status?.toLowerCase() || "",
 
-        exact: false,
+        exact: true,
       },
     };
 
