@@ -57,8 +57,6 @@ class BeneficiariesService {
       params.append("$filter", generateODataQuery(filterData));
     }
 
-    console.log(generateODataQuery(filterData));
-
     if (listAll) {
       params.append("$listAll", "true");
     }

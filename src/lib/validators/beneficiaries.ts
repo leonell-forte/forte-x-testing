@@ -6,10 +6,12 @@ import {
 
 interface IBeneficiaryDefaultValue {
   beneficiary?: IBeneficiaries;
+
+  projectId?: number;
 }
 
 export const beneficiaries = {
-  defaultValues: ({ beneficiary }: IBeneficiaryDefaultValue) => {
+  defaultValues: ({ beneficiary, projectId }: IBeneficiaryDefaultValue) => {
     let data: IBeneficiariesFieldValues = {
       firstName: beneficiary?.firstName || "",
 
@@ -25,7 +27,7 @@ export const beneficiaries = {
 
       contractId: beneficiary?.contractId || 0,
 
-      projectId: beneficiary?.projectId || 0,
+      projectId: beneficiary?.projectId || projectId || 0,
 
       providerId: beneficiary?.providerId || 0,
 

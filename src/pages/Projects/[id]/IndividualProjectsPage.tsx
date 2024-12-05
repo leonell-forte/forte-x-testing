@@ -29,7 +29,7 @@ const IndividualProjectsPage = () => {
 
       {/* <Partners /> */}
 
-      <Beneficiaries />
+      <Beneficiaries id={id} />
     </div>
   );
 };

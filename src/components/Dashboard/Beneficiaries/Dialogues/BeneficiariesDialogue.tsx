@@ -32,10 +32,14 @@ import { findLabelFromOptions } from "../../../../lib/utils";
 
 interface IBeneficiariesDialogueProps extends IDialogueProps {
   id?: number;
+
+  projectId?: number;
 }
 
 const BeneficiariesDialogue = ({
   id,
+
+  projectId,
 
   ...props
 }: IBeneficiariesDialogueProps) => {
@@ -56,7 +60,7 @@ const BeneficiariesDialogue = ({
   } = useForm<IBeneficiariesFieldValues>({
     resolver: zodResolver(beneficiaries.schema),
 
-    defaultValues: beneficiaries.defaultValues({}),
+    defaultValues: beneficiaries.defaultValues({ projectId }),
   });
 
   const { data: beneficiaryData } = useQuery({
@@ -403,6 +407,7 @@ const BeneficiariesDialogue = ({
               render={({ field }) => (
                 <Dropdown
                   enableSearch
+                  disabled={!!projectId}
                   loading={projectLoading}
                   value={findLabelFromOptions(projects, field.value.toString())}
                   handleSelect={(val) => {
