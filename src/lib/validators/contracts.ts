@@ -36,8 +36,6 @@ const contractOutcomeSchema = z
 
 export const contracts = {
   defaultValues: ({ contract, projectId }: IContractDefaultValues) => {
-    console.log(contract);
-
     let data: IContract = {
       projectId: contract?.projectId || projectId || 0,
 

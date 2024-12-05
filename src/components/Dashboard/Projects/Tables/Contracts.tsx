@@ -85,7 +85,10 @@ const Contracts = ({ projectId }: IProps) => {
           </div>
         </div>
 
-        <Table.Container isLoading={isLoading}>
+        <Table.Container
+          isLoading={isLoading}
+          isEmpty={!contractList?.items.length}
+        >
           <Table.Head>
             <Table.Row>
               {HEADERS.map((item, index) => {
