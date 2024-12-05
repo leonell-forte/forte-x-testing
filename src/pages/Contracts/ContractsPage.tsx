@@ -17,7 +17,7 @@ import {
 import { formatDate } from "../../lib/utils";
 import Pagination from "../../components/ui/pagination";
 import { useDebounce, usePageTitle } from "../../lib/hooks";
-import { STATUS } from "../../lib/constants";
+import { DEFAULT_DATE_FORMAT, STATUS } from "../../lib/constants";
 import { capitalize } from "@mui/material";
 import DatePicker from "../../components/ui/date-picker";
 import DeleteDialogue from "../../components/Dashboard/Contracts/Dialogues/DeleteDialogue";
@@ -191,6 +191,7 @@ const ContractsPage = () => {
               onChange={(date) => {
                 setFilters((prev) => ({
                   ...prev,
+
                   date: formatDate(date as Date, "yyyy-LL-dd"),
                 }));
               }}
@@ -279,11 +280,11 @@ const ContractsPage = () => {
                       <Table.Data>{targetNoOfBenefeciaries}</Table.Data>
 
                       <Table.Data>
-                        {formatDate(startDate, "LL-dd-yyyy")}
+                        {formatDate(startDate, DEFAULT_DATE_FORMAT)}
                       </Table.Data>
 
                       <Table.Data>
-                        {formatDate(endDate, "LL-dd-yyyy")}
+                        {formatDate(endDate, DEFAULT_DATE_FORMAT)}
                       </Table.Data>
 
                       <Table.Data>{document}</Table.Data>

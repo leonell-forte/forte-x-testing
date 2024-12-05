@@ -390,3 +390,5 @@ export const REGIONS = [
     value: "Africa",
   },
 ];
+
+export const DEFAULT_DATE_FORMAT = "dd-LL-yyyy";

@@ -15,7 +15,19 @@ interface IProps extends DatePickerProps<Date> {
   noHelperText?: boolean;
 }
 
-const DatePicker = ({ helperText, error, noHelperText, ...props }: IProps) => {
+const DatePicker = ({
+  helperText,
+
+  error,
+
+  noHelperText,
+
+  value,
+
+  ...props
+}: IProps) => {
+  const isDateSelected = !!value; // Check if a date is selected
+
   return (
     <div className={classNames("relative w-full", !noHelperText && "pb-5")}>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -56,7 +68,13 @@ const DatePicker = ({ helperText, error, noHelperText, ...props }: IProps) => {
                   },
 
                   "& input": {
-                    color: error ? "#651A1A !important" : "white",
+                    color: error
+                      ? "#651A1A !important"
+                      : isDateSelected
+                      ? "white"
+                      : "#ffffff50",
+
+                    fontWeight: 300,
                   },
                 },
 

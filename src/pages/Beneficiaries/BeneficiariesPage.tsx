@@ -18,7 +18,11 @@ import beneficiariesServce from "../../api/beneficiaries";
 import HorizontalScroller from "../../components/ui/horizontal-scroller";
 import { formatDate } from "../../lib/utils";
 import projectService from "../../api/projects";
-import { BENEFICIARY_STATUS, RISK_LEVEL } from "../../lib/constants";
+import {
+  BENEFICIARY_STATUS,
+  DEFAULT_DATE_FORMAT,
+  RISK_LEVEL,
+} from "../../lib/constants";
 import organizationService from "../../api/organization";
 
 const BeneficiariesPage = () => {
@@ -313,11 +317,11 @@ const BeneficiariesPage = () => {
                       <Table.Data className="capitalize">{status}</Table.Data>
 
                       <Table.Data>
-                        {formatDate(cohortStartDate, "LL-dd-yyyy")}
+                        {formatDate(cohortStartDate, DEFAULT_DATE_FORMAT)}
                       </Table.Data>
 
                       <Table.Data>
-                        {formatDate(cohortEndDate, "LL-dd-yyyy")}
+                        {formatDate(cohortEndDate, DEFAULT_DATE_FORMAT)}
                       </Table.Data>
 
                       <Table.Data>
