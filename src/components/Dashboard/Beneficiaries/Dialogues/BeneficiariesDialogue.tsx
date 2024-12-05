@@ -15,8 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { beneficiaries } from "../../../../lib/validators/beneficiaries";
 import organizationService from "../../../../api/organization";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
-import { reset } from "@amplitude/analytics-browser";
+import { useEffect, useMemo } from "react";
 import {
   BENEFICIARY_STATUS,
   CONFIRM,
@@ -28,12 +27,17 @@ import {
 import contractService from "../../../../api/contract";
 import projectService from "../../../../api/projects";
 import useBeneficiaryMutation from "../../../../lib/mutations/beneficiaries";
+import beneficiariesServce from "../../../../api/beneficiaries";
 
 interface IBeneficiariesDialogueProps extends IDialogueProps {
   id?: number;
 }
 
-const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
+const BeneficiariesDialogue = ({
+  id,
+
+  ...props
+}: IBeneficiariesDialogueProps) => {
   const {
     control,
 
@@ -46,11 +50,29 @@ const BeneficiariesDialogue = ({ ...props }: IBeneficiariesDialogueProps) => {
     setError,
 
     watch,
+
+    reset,
   } = useForm<IBeneficiariesFieldValues>({
     resolver: zodResolver(beneficiaries.schema),
 
-    defaultValues: beneficiaries.defaultValues(),
+    defaultValues: beneficiaries.defaultValues({}),
   });
+
+  const { data: beneficiaryData } = useQuery({
+    queryKey: ["specific-beneficiary", id],
+
+    queryFn: () => beneficiariesServce.getOne(id),
+
+    enabled: !!id,
+  });
+
+  console.log(beneficiaryData);
+
+  useEffect(() => {
+    if (beneficiaryData) {
+      reset(beneficiaries.defaultValues({ beneficiary: beneficiaryData }));
+    }
+  }, [beneficiaryData, reset]);
 
   const { data: organizationList, isLoading: orgLoading } = useQuery({
     queryKey: ["organizations"],

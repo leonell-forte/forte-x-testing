@@ -1,60 +1,73 @@
 import { z } from "zod";
-import { IBeneficiariesFieldValues } from "../types/beneficiaries";
+import {
+  IBeneficiaries,
+  IBeneficiariesFieldValues,
+} from "../types/beneficiaries";
+
+interface IBeneficiaryDefaultValue {
+  beneficiary?: IBeneficiaries;
+}
 
 export const beneficiaries = {
-  defaultValues: () => {
+  defaultValues: ({ beneficiary }: IBeneficiaryDefaultValue) => {
     let data: IBeneficiariesFieldValues = {
-      firstName: "",
+      firstName: beneficiary?.firstName || "",
 
-      lastName: "",
+      lastName: beneficiary?.lastName || "",
 
-      email: "",
+      email: beneficiary?.email || "",
 
-      phone: "",
+      phone: beneficiary?.phone || "",
 
-      riskLevel: null,
+      riskLevel: beneficiary?.riskLevel || null,
 
-      status: "",
+      status: beneficiary?.status || "",
 
-      contractId: 0,
+      contractId: beneficiary?.contractId || 0,
 
-      projectId: 0,
+      projectId: beneficiary?.projectId || 0,
 
-      providerId: 0,
+      providerId: beneficiary?.providerId || 0,
 
-      cohortStartDate: "",
+      cohortStartDate: beneficiary?.cohortStartDate || "",
 
-      cohortEndDate: "",
+      cohortEndDate: beneficiary?.cohortEndDate || "",
 
-      cohortName: "",
+      cohortName: beneficiary?.cohortName || "",
 
-      linkedinUrl: "",
+      linkedinUrl: beneficiary?.linkedinUrl || "",
 
-      githubUrl: "",
+      githubUrl: beneficiary?.githubUrl || "",
 
-      otherUrl: "",
+      otherUrl: beneficiary?.otherUrl || "",
 
-      birthdate: "",
+      birthdate: beneficiary?.birthdate || "",
 
-      ethnicity: "",
+      ethnicity: beneficiary?.ethnicity || "",
 
-      gender: "",
+      gender: beneficiary?.gender || "",
 
-      disabilityStatus: "no",
+      disabilityStatus: beneficiary?.disabilityStatus ? "yes" : "no",
 
-      address: "",
+      address: beneficiary?.address || "",
 
-      socioeconomicStatus: "",
+      socioeconomicStatus: beneficiary?.socioeconomicStatus || "",
 
-      educationLevel: "",
+      educationLevel: beneficiary?.educationLevel || "",
 
-      languages: [],
+      languages: beneficiary?.languages || [],
     };
+
+    if (beneficiary) {
+      data.id = beneficiary.id;
+    }
 
     return data;
   },
 
   schema: z.object({
+    id: z.number().optional(),
+
     firstName: z.string().min(1, { message: "Firstname is required" }),
 
     lastName: z.string().min(1, { message: "Lastname is required" }),

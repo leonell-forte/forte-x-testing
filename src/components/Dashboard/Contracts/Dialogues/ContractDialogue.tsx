@@ -69,6 +69,7 @@ const ContractDialogue = ({
 
     defaultValues: contracts.defaultValues({
       contract: contractDetails,
+
       projectId,
     }),
   });

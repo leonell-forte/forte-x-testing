@@ -66,6 +66,12 @@ class BeneficiariesService {
 
     return res;
   }
+
+  async getOne(id?: number): Promise<IBeneficiaries> {
+    const response = await api.get(`/beneficiaries/${id}`);
+
+    return response.data.data;
+  }
 }
 
 const beneficiariesServce = new BeneficiariesService();

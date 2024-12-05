@@ -25,6 +25,36 @@ export interface IBeneficiaries {
   riskLevel: RiskLevelEnum;
 
   status: string;
+
+  projectId?: number;
+
+  providerId?: number;
+
+  linkedinUrl?: string;
+
+  githubUrl?: string;
+
+  otherUrl?: string;
+
+  birthdate?: string;
+
+  ethnicity?: string;
+
+  gender?: string;
+
+  disabilityStatus?: boolean;
+
+  address?: string;
+
+  socioeconomicStatus?: string;
+
+  educationLevel?: string;
+
+  languages?: string[];
+
+  createdAt?: string;
+
+  updatedAt?: string;
 }
 
 export enum DisabilityStatusEnum {
