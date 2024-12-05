@@ -18,7 +18,6 @@ import { formatDate } from "../../lib/utils";
 import Pagination from "../../components/ui/pagination";
 import { useDebounce, usePageTitle } from "../../lib/hooks";
 import { DEFAULT_DATE_FORMAT, STATUS } from "../../lib/constants";
-import { capitalize } from "@mui/material";
 import DatePicker from "../../components/ui/date-picker";
 import DeleteDialogue from "../../components/Dashboard/Contracts/Dialogues/DeleteDialogue";
 import HorizontalScroller from "../../components/ui/horizontal-scroller";
@@ -255,17 +254,17 @@ const ContractsPage = () => {
                   } = item;
                   return (
                     <Table.Row key={index}>
-                      <Table.Data>
+                      {/* <Table.Data>
                         <p className="w-[90px] truncate">Contract {id}</p>
-                      </Table.Data>
+                      </Table.Data> */}
 
                       <Table.Data>
                         <p className="w-[150px] truncate">{parties}</p>
                       </Table.Data>
 
                       <Table.Data>
-                        <p className="w-[100px] truncate">
-                          {capitalize(status)}
+                        <p className="w-[100px] truncate capitalize">
+                          {status.toLowerCase()}
                         </p>
                       </Table.Data>
 
@@ -277,7 +276,7 @@ const ContractsPage = () => {
 
                       <Table.Data>{targetNoOfBenefeciaries}</Table.Data>
 
-                      <Table.Data>{targetNoOfBenefeciaries}</Table.Data>
+                      <Table.Data>0</Table.Data>
 
                       <Table.Data>
                         {formatDate(startDate, DEFAULT_DATE_FORMAT)}
@@ -345,7 +344,7 @@ const ContractsPage = () => {
 export default ContractsPage;
 
 const TABLE_HEADER = [
-  "Contract",
+  // "Contract",
   "Parties",
   "Status",
   "Project",
