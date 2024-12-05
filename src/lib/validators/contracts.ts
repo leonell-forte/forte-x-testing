@@ -1,7 +1,5 @@
 import { IContract, IContractDefaultValues } from "../../lib/types/contracts";
 import { z } from "zod";
-import { formatDate } from "../utils";
-import { DEFAULT_DATE_FORMAT } from "../constants";
 
 const contractPartiesSchema = z.object({
   organizationId: z.number(),
@@ -23,14 +21,23 @@ const contractOutcomeSchema = z
 
     threshold: z.string().optional(),
   })
-  .refine((data) => data.perOutcome || !!data.threshold, {
-    message: "Threshold cannot be empty",
-
-    path: ["threshold"],
-  });
+  .refine(
+    (data) => {
+      // If perOutcome is true, threshold must exist and not be empty
+      return (
+        data.perOutcome || (data.threshold && data.threshold.trim().length > 0)
+      );
+    },
+    {
+      message: "Threshold is required when perOutcome is true",
+      path: ["threshold"], // Points to the 'threshold' field for the error
+    },
+  );
 
 export const contracts = {
   defaultValues: ({ contract, projectId }: IContractDefaultValues) => {
+    console.log(contract);
+
     let data: IContract = {
       projectId: contract?.projectId || projectId || 0,
 
@@ -41,13 +48,9 @@ export const contracts = {
 
       status: contract?.status || "ACTIVE",
 
-      startDate: contract?.startDate
-        ? formatDate(contract.startDate, DEFAULT_DATE_FORMAT)
-        : "",
+      startDate: contract?.startDate || "",
 
-      endDate: contract?.startDate
-        ? formatDate(contract.endDate, DEFAULT_DATE_FORMAT)
-        : "",
+      endDate: contract?.endDate || "",
 
       contractParties: contract?.contractParties || [],
 
@@ -55,7 +58,7 @@ export const contracts = {
         ? contract?.contractOutcomeRates.map((item) => ({
             ...item,
 
-            threshold: item.threshold.toString(),
+            threshold: item.threshold ? item.threshold.toString() : "",
           }))
         : [
             {

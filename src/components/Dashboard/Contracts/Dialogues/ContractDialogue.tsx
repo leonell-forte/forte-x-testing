@@ -8,7 +8,7 @@ import { useEffect, useMemo } from "react";
 import ContractOutcomeField from "../ContractOutcomeField";
 import organizationService from "../../../../api/organization";
 import { useQuery } from "@tanstack/react-query";
-import { DEFAULT_DATE_FORMAT, STATUS } from "../../../../lib/constants";
+import { STATUS } from "../../../../lib/constants";
 import projectService from "../../../../api/projects";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { contracts } from "../../../../lib/validators/contracts";
@@ -67,7 +67,10 @@ const ContractDialogue = ({
   } = useForm<ContractFieldValues>({
     resolver: zodResolver(contracts.schema),
 
-    defaultValues: contracts.defaultValues({ projectId }),
+    defaultValues: contracts.defaultValues({
+      contract: contractDetails,
+      projectId,
+    }),
   });
 
   // sets contract form default values
@@ -247,6 +250,18 @@ const ContractDialogue = ({
                     handleSelect={(val) => {
                       setValue("projectId", Number(val));
 
+                      setValue("contractOutcomeRates", [
+                        {
+                          projectOutcomeId: 0,
+
+                          rate: "",
+
+                          perOutcome: true,
+
+                          threshold: "",
+                        },
+                      ]);
+
                       setError("projectId", { message: "" });
                     }}
                     placeholder="Project"
@@ -315,19 +330,18 @@ const ContractDialogue = ({
               <Controller
                 name="startDate"
                 control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    value={new Date(field.value)}
-                    onChange={(date) => {
-                      setValue(
-                        "startDate",
-                        formatDate(date!, DEFAULT_DATE_FORMAT),
-                      );
-                    }}
-                    error={!!errors.startDate?.message}
-                    helperText={errors.startDate?.message}
-                  />
-                )}
+                render={({ field }) => {
+                  return (
+                    <DatePicker
+                      value={new Date(field.value)}
+                      onChange={(date) => {
+                        setValue("startDate", formatDate(date!, "LL-dd-yyyy"));
+                      }}
+                      error={!!errors.startDate?.message}
+                      helperText={errors.startDate?.message}
+                    />
+                  );
+                }}
               />
             </div>
 
@@ -346,10 +360,7 @@ const ContractDialogue = ({
                   <DatePicker
                     value={new Date(field.value)}
                     onChange={(date) => {
-                      setValue(
-                        "endDate",
-                        formatDate(date!, DEFAULT_DATE_FORMAT),
-                      );
+                      setValue("endDate", formatDate(date!, "LL-dd-yyyy"));
                     }}
                     error={!!errors.endDate?.message}
                     helperText={errors.endDate?.message}
@@ -377,7 +388,7 @@ const ContractDialogue = ({
                     );
                   }}
                   handleRadioSelect={(value) => {
-                    setValue(`contractOutcomeRates.${index}.threshold`, "0");
+                    setValue(`contractOutcomeRates.${index}.threshold`, "");
 
                     setError(`contractOutcomeRates.${index}.threshold`, {
                       message: "",
@@ -386,6 +397,7 @@ const ContractDialogue = ({
                     if (value === "Per outcome") {
                       setValue(
                         `contractOutcomeRates.${index}.perOutcome`,
+
                         true,
                       );
                     } else {
@@ -402,9 +414,9 @@ const ContractDialogue = ({
 
                       rate: "",
 
-                      perOutcome: false,
+                      perOutcome: true,
 
-                      threshold: "0",
+                      threshold: "",
                     })
                   }
                 />

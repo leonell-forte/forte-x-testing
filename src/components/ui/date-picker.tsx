@@ -33,6 +33,8 @@ const DatePicker = ({
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Picker
           {...props}
+          value={value}
+          format="dd/LL/yyyy"
           slotProps={{
             textField: {
               sx: {
