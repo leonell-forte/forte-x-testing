@@ -156,12 +156,11 @@ const BeneficiariesDialogue = ({
   };
 
   const { addBeneficiary, isPending } = useBeneficiaryMutation({
+    beneficiaryId: id,
     successCallback: close,
   });
 
   const onSubmit = async (values: IBeneficiariesFieldValues) => {
-    console.log(values);
-
     await addBeneficiary(values);
   };
 

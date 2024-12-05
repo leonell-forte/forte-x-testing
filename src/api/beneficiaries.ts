@@ -72,6 +72,18 @@ class BeneficiariesService {
 
     return response.data.data;
   }
+
+  async update(beneficiary: IBeneficiariesFieldValues) {
+    const body = {
+      ...beneficiary,
+
+      disabilityStatus: beneficiary.disabilityStatus === "yes" ? true : false,
+    };
+
+    const response = await api.put("/beneficiaries", body);
+
+    return response;
+  }
 }
 
 const beneficiariesServce = new BeneficiariesService();
