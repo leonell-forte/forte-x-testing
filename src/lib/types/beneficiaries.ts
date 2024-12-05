@@ -72,3 +72,7 @@ export enum RiskLevelEnum {
 }
 
 export type IBeneficiariesFieldValues = z.infer<typeof beneficiaries.schema>;
+
+export interface IBeneficiariesFilter {
+  project?: string;
+}

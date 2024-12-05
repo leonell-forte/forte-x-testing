@@ -286,6 +286,7 @@ const OrganizationDialogue = ({
               value={TYPES.find((item) => item.value === watch("type"))?.label}
               handleSelect={(val) => {
                 setError("type", { message: "" });
+
                 setValue("type", val as OrgTypes);
               }}
               options={TYPES}

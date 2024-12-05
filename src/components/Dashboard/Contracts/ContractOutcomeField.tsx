@@ -8,6 +8,7 @@ import projectService from "../../../api/projects";
 import { useMemo } from "react";
 import { Control, Controller } from "react-hook-form";
 import { ContractFieldValues, RateEnum } from "../../../lib/types/contracts";
+import { findLabelFromOptions } from "../../../lib/utils";
 
 interface IContractOutcomeField {
   projectId: number;
@@ -88,11 +89,7 @@ const ContractOutcomeField = ({
               <Dropdown
                 disabled={!projectId}
                 loading={isProjectLoading}
-                value={
-                  outcomes.find(
-                    (item: IOption) => item.value == field.value.toString(), //eslint-disable-line eqeqeq,
-                  )?.label
-                }
+                value={findLabelFromOptions(outcomes, field.value.toString())}
                 handleSelect={(val) => {
                   handleSelectOutcome(val as string);
                 }}

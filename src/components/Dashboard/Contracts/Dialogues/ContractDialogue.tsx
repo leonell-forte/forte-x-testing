@@ -20,7 +20,7 @@ import {
 import contractService from "../../../../api/contract";
 import Spinner from "../../../../components/ui/spinner/spinner";
 import DatePicker from "../../../../components/ui/date-picker";
-import { formatDate } from "../../../../lib/utils";
+import { findLabelFromOptions, formatDate } from "../../../../lib/utils";
 import useContractMutation from "../../../../lib/mutations/contracts";
 import { IProject } from "../../../../lib/types/projects";
 import { IOrganization } from "../../../../lib/types/organizations";
@@ -242,11 +242,11 @@ const ContractDialogue = ({
                     disabled={!!projectId}
                     loading={projectLoading}
                     enableSearch
-                    value={
-                      projects.find(
-                        (item: IOption) => item.value == field.value.toString(), //eslint-disable-line eqeqeq,
-                      )?.label
-                    }
+                    value={findLabelFromOptions(
+                      projects,
+
+                      field.value.toString(),
+                    )}
                     options={projects}
                     handleSelect={(val) => {
                       setValue("projectId", Number(val));

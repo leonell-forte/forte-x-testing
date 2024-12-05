@@ -3,6 +3,7 @@ import { api } from "../lib/axios/interceptor";
 import {
   IBeneficiaries,
   IBeneficiariesFieldValues,
+  IBeneficiariesFilter,
 } from "../lib/types/beneficiaries";
 import { generateODataQuery, IODataObject } from "../lib/utils";
 
@@ -12,6 +13,8 @@ interface IBeneficiariesListProps {
   listAll?: boolean;
 
   search?: string;
+
+  filters?: IBeneficiariesFilter;
 }
 
 class BeneficiariesService {
@@ -21,6 +24,8 @@ class BeneficiariesService {
     listAll,
 
     search,
+
+    filters,
   }: IBeneficiariesListProps): Promise<{
     items: IBeneficiaries[];
 
@@ -36,6 +41,12 @@ class BeneficiariesService {
 
         isSearch: true,
       },
+
+      "beneficiary.project_id": {
+        value: filters?.project as string,
+
+        exact: true,
+      },
     };
 
     params.append("$pageNum", page.toString());
@@ -45,6 +56,8 @@ class BeneficiariesService {
     if (generateODataQuery(filterData)) {
       params.append("$filter", generateODataQuery(filterData));
     }
+
+    console.log(generateODataQuery(filterData));
 
     if (listAll) {
       params.append("$listAll", "true");

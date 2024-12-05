@@ -28,6 +28,7 @@ import contractService from "../../../../api/contract";
 import projectService from "../../../../api/projects";
 import useBeneficiaryMutation from "../../../../lib/mutations/beneficiaries";
 import beneficiariesServce from "../../../../api/beneficiaries";
+import { findLabelFromOptions } from "../../../../lib/utils";
 
 interface IBeneficiariesDialogueProps extends IDialogueProps {
   id?: number;
@@ -65,8 +66,6 @@ const BeneficiariesDialogue = ({
 
     enabled: !!id,
   });
-
-  console.log(beneficiaryData);
 
   useEffect(() => {
     if (beneficiaryData) {
@@ -334,10 +333,11 @@ const BeneficiariesDialogue = ({
                 <Dropdown
                   enableSearch
                   loading={contractsLoading}
-                  value={
-                    contracts.find((item) => Number(item.value) === field.value)
-                      ?.label
-                  }
+                  value={findLabelFromOptions(
+                    contracts,
+
+                    field.value.toString(),
+                  )}
                   handleSelect={(val) => {
                     setValue("contractId", Number(val));
 
@@ -369,11 +369,11 @@ const BeneficiariesDialogue = ({
                 <Dropdown
                   enableSearch
                   disabled={!watch("contractId")}
-                  value={
-                    organizations.find(
-                      (item) => Number(item.value) === field.value,
-                    )?.label
-                  }
+                  value={findLabelFromOptions(
+                    organizations,
+
+                    field.value.toString(),
+                  )}
                   handleSelect={(val) => {
                     setValue("providerId", Number(val));
 
@@ -404,10 +404,7 @@ const BeneficiariesDialogue = ({
                 <Dropdown
                   enableSearch
                   loading={projectLoading}
-                  value={
-                    projects.find((item) => Number(item.value) === field.value)
-                      ?.label
-                  }
+                  value={findLabelFromOptions(projects, field.value.toString())}
                   handleSelect={(val) => {
                     setValue("projectId", Number(val));
 
