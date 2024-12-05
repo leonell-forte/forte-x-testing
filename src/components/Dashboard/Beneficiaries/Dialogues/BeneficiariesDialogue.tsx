@@ -332,6 +332,7 @@ const BeneficiariesDialogue = ({
               name="contractId"
               render={({ field }) => (
                 <Dropdown
+                  enableSearch
                   loading={contractsLoading}
                   value={
                     contracts.find((item) => Number(item.value) === field.value)
@@ -366,6 +367,7 @@ const BeneficiariesDialogue = ({
               name="providerId"
               render={({ field }) => (
                 <Dropdown
+                  enableSearch
                   disabled={!watch("contractId")}
                   value={
                     organizations.find(
@@ -400,6 +402,7 @@ const BeneficiariesDialogue = ({
               name="projectId"
               render={({ field }) => (
                 <Dropdown
+                  enableSearch
                   loading={projectLoading}
                   value={
                     projects.find((item) => Number(item.value) === field.value)
