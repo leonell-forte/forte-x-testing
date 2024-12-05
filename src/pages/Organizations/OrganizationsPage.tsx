@@ -50,7 +50,12 @@ const OrganizationsPage = () => {
     queryKey: ["organizations", page, debouncedSearch, filters],
 
     queryFn: () =>
-      organizationService.list(page, false, debouncedSearch, filters),
+      organizationService.list({
+        page,
+        listAll: false,
+        search: debouncedSearch,
+        filters,
+      }),
   });
 
   const organizations: IOrganization[] = useMemo(
@@ -268,7 +273,7 @@ const OrganizationsPage = () => {
               <Pagination
                 page={page}
                 onPageChange={(val) => setPage(val)}
-                total={organizationList?.totalSize}
+                total={organizationList?.totalSize as number}
               />
             </div>
           )}

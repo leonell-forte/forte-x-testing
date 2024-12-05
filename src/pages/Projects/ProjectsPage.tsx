@@ -36,7 +36,8 @@ const ProjectsPage = () => {
   const { data: projectsList, isLoading: projectLoading } = useQuery({
     queryKey: ["projects", page, debouncedSearch],
 
-    queryFn: () => projectService.list(page, debouncedSearch, false),
+    queryFn: () =>
+      projectService.list({ page, search: debouncedSearch, listAll: false }),
   });
 
   const projects: IProject[] = useMemo(

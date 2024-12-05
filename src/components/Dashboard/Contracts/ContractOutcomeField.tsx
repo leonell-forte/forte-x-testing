@@ -5,9 +5,10 @@ import RadioGroup from "../../../components/ui/radio-group";
 import Input from "../../../components/ui/input";
 import { useQuery } from "@tanstack/react-query";
 import projectService from "../../../api/projects";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Control, Controller } from "react-hook-form";
 import { ContractFieldValues, RateEnum } from "../../../lib/types/contracts";
+import { findLabelFromOptions } from "../../../lib/utils";
 
 interface IContractOutcomeField {
   projectId: number;
@@ -54,9 +55,9 @@ const ContractOutcomeField = ({
     queryFn: () => projectService.getOne(projectId.toString()),
 
     enabled: !!projectId,
-  });
 
-  const [selectedValue, setSelectedValue] = useState("Per outcome");
+    refetchOnMount: true,
+  });
 
   const outcomes: IOption[] = useMemo(
     () =>
@@ -88,11 +89,7 @@ const ContractOutcomeField = ({
               <Dropdown
                 disabled={!projectId}
                 loading={isProjectLoading}
-                value={
-                  outcomes.find(
-                    (item: IOption) => item.value == field.value.toString(), //eslint-disable-line eqeqeq,
-                  )?.label
-                }
+                value={findLabelFromOptions(outcomes, field.value.toString())}
                 handleSelect={(val) => {
                   handleSelectOutcome(val as string);
                 }}
@@ -135,7 +132,6 @@ const ContractOutcomeField = ({
               return (
                 <Input
                   {...field}
-                  value={field.value}
                   placeholder="Mention here"
                   type="number"
                   error={!!error?.message}
@@ -146,13 +142,20 @@ const ContractOutcomeField = ({
           />
 
           <div className="flex flex-col gap-2 md:flex-row md:items-end">
-            <RadioGroup
-              className="flex flex-col gap-4 md:w-[280px]"
-              items={["Per outcome", "If threshold reached"]}
-              value={selectedValue}
-              onChange={(e) => {
-                setSelectedValue(e.target.value);
-                handleRadioSelect(e.target.value as RateEnum);
+            <Controller
+              name={`contractOutcomeRates.${index}.perOutcome`}
+              control={control}
+              render={({ field }) => {
+                return (
+                  <RadioGroup
+                    className="flex flex-col gap-4 md:w-[280px]"
+                    items={["Per outcome", "If threshold reached"]}
+                    value={field.value ? "Per outcome" : "If threshold reached"}
+                    onChange={(e) => {
+                      handleRadioSelect(e.target.value as RateEnum);
+                    }}
+                  />
+                );
               }}
             />
 
@@ -169,6 +172,7 @@ const ContractOutcomeField = ({
                       disabled={perOutcome}
                       error={!!error}
                       helperText={error?.message}
+                      placeholder="Threshold"
                     />
                   );
                 }}

@@ -18,7 +18,7 @@ const UserDropdown = ({ user }: IProp) => {
   const { data: organizationList } = useQuery({
     queryKey: ["organizations"],
 
-    queryFn: () => organizationService.list(1, true),
+    queryFn: () => organizationService.list({ page: 1, listAll: true }),
   });
 
   const [showDropdown, setShowDropdown] = useState(false);

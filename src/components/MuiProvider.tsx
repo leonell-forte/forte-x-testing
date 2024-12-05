@@ -115,7 +115,7 @@ const theme = createTheme({
             },
 
             "& .MuiInputLabel-root": {
-              color: "#651A1A",
+              color: "#651A1A !important",
             },
 
             "& .MuiFormHelperText-root": {

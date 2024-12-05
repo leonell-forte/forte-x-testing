@@ -20,7 +20,7 @@ import {
 import contractService from "../../../../api/contract";
 import Spinner from "../../../../components/ui/spinner/spinner";
 import DatePicker from "../../../../components/ui/date-picker";
-import { formatDate } from "../../../../lib/utils";
+import { findLabelFromOptions, formatDate } from "../../../../lib/utils";
 import useContractMutation from "../../../../lib/mutations/contracts";
 import { IProject } from "../../../../lib/types/projects";
 import { IOrganization } from "../../../../lib/types/organizations";
@@ -67,7 +67,11 @@ const ContractDialogue = ({
   } = useForm<ContractFieldValues>({
     resolver: zodResolver(contracts.schema),
 
-    defaultValues: contracts.defaultValues({ projectId }),
+    defaultValues: contracts.defaultValues({
+      contract: contractDetails,
+
+      projectId,
+    }),
   });
 
   // sets contract form default values
@@ -86,13 +90,13 @@ const ContractDialogue = ({
   const { data: organizationList, isLoading: orgLoading } = useQuery({
     queryKey: ["organizations"],
 
-    queryFn: () => organizationService.list(1, true),
+    queryFn: () => organizationService.list({ page: 1, listAll: true }),
   });
 
   const { data: projectsList, isLoading: projectLoading } = useQuery({
     queryKey: ["projects"],
 
-    queryFn: () => projectService.list(),
+    queryFn: () => projectService.list({}),
   });
 
   const organizations: IOption[] = useMemo(
@@ -100,7 +104,7 @@ const ContractDialogue = ({
       organizationList?.items?.map((item: IOrganization) => ({
         label: item.name,
 
-        value: item.id?.toString(),
+        value: item.id?.toString() as string,
       })) || [],
 
     [organizationList],
@@ -238,14 +242,26 @@ const ContractDialogue = ({
                     disabled={!!projectId}
                     loading={projectLoading}
                     enableSearch
-                    value={
-                      projects.find(
-                        (item: IOption) => item.value == field.value.toString(), //eslint-disable-line eqeqeq,
-                      )?.label
-                    }
+                    value={findLabelFromOptions(
+                      projects,
+
+                      field.value.toString(),
+                    )}
                     options={projects}
                     handleSelect={(val) => {
                       setValue("projectId", Number(val));
+
+                      setValue("contractOutcomeRates", [
+                        {
+                          projectOutcomeId: 0,
+
+                          rate: "",
+
+                          perOutcome: true,
+
+                          threshold: "",
+                        },
+                      ]);
 
                       setError("projectId", { message: "" });
                     }}
@@ -315,16 +331,18 @@ const ContractDialogue = ({
               <Controller
                 name="startDate"
                 control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    value={new Date(field.value)}
-                    onChange={(date) => {
-                      setValue("startDate", formatDate(date!, "LL-dd-yyyy"));
-                    }}
-                    error={!!errors.startDate?.message}
-                    helperText={errors.startDate?.message}
-                  />
-                )}
+                render={({ field }) => {
+                  return (
+                    <DatePicker
+                      value={new Date(field.value)}
+                      onChange={(date) => {
+                        setValue("startDate", formatDate(date!, "LL-dd-yyyy"));
+                      }}
+                      error={!!errors.startDate?.message}
+                      helperText={errors.startDate?.message}
+                    />
+                  );
+                }}
               />
             </div>
 
@@ -371,18 +389,22 @@ const ContractDialogue = ({
                     );
                   }}
                   handleRadioSelect={(value) => {
-                    setValue(`contractOutcomeRates.${index}.threshold`, "0");
+                    setValue(`contractOutcomeRates.${index}.threshold`, "");
+
                     setError(`contractOutcomeRates.${index}.threshold`, {
                       message: "",
                     });
+
                     if (value === "Per outcome") {
                       setValue(
                         `contractOutcomeRates.${index}.perOutcome`,
+
                         true,
                       );
                     } else {
                       setValue(
                         `contractOutcomeRates.${index}.perOutcome`,
+
                         false,
                       );
                     }
@@ -393,9 +415,9 @@ const ContractDialogue = ({
 
                       rate: "",
 
-                      perOutcome: false,
+                      perOutcome: true,
 
-                      threshold: "0",
+                      threshold: "",
                     })
                   }
                 />

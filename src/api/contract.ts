@@ -87,13 +87,32 @@ class ContractService {
   }
 
   async add(data: ContractFieldValues): Promise<ContractFieldValues> {
-    const response = await api.post("/contracts", data);
+    const body = {
+      ...data,
+
+      contractOutcomeRates: data.contractOutcomeRates.map((item) => ({
+        ...item,
+
+        threshold: Number(item.threshold),
+      })),
+    };
+    const response = await api.post("/contracts", body);
 
     return response.data.data;
   }
 
   async update(values: ContractFieldValues) {
-    const response = await api.put("/contracts", values);
+    const body = {
+      ...values,
+
+      contractOutcomeRates: values.contractOutcomeRates.map((item) => ({
+        ...item,
+
+        threshold: Number(item.threshold),
+      })),
+    };
+
+    const response = await api.put("/contracts", body);
 
     return response.data.data;
   }
