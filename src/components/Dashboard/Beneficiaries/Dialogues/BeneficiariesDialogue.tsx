@@ -171,7 +171,7 @@ const BeneficiariesDialogue = ({
     <Dialogue
       {...props}
       handleClose={close}
-      title="Add beneficiaries"
+      title={`${id ? "Edit" : "Add"} beneficiaries`}
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
