@@ -1,6 +1,7 @@
 import { IContract, IContractDefaultValues } from "../../lib/types/contracts";
 import { z } from "zod";
 import { formatDate } from "../utils";
+import { DEFAULT_DATE_FORMAT } from "../constants";
 
 const contractPartiesSchema = z.object({
   organizationId: z.number(),
@@ -12,7 +13,11 @@ const contractOutcomeSchema = z
       .number()
       .min(1, { message: "Outcome is a required field" }),
 
-    rate: z.union([z.string().min(1), z.number().min(1)]),
+    rate: z.union([
+      z.string().min(1, { message: "Rate is a required field" }),
+
+      z.number().min(1, { message: "Rate is a required field" }),
+    ]),
 
     perOutcome: z.boolean(),
 
@@ -37,11 +42,11 @@ export const contracts = {
       status: contract?.status || "ACTIVE",
 
       startDate: contract?.startDate
-        ? formatDate(contract.startDate, "LL-dd-yyyy")
+        ? formatDate(contract.startDate, DEFAULT_DATE_FORMAT)
         : "",
 
       endDate: contract?.startDate
-        ? formatDate(contract.endDate, "LL-dd-yyyy")
+        ? formatDate(contract.endDate, DEFAULT_DATE_FORMAT)
         : "",
 
       contractParties: contract?.contractParties || [],
@@ -60,7 +65,7 @@ export const contracts = {
 
               perOutcome: true,
 
-              threshold: "0",
+              threshold: "",
             },
           ],
     };
@@ -75,7 +80,7 @@ export const contracts = {
   schema: z.object({
     id: z.number().optional(),
 
-    projectId: z.number().min(1, { message: "Party is a required field" }),
+    projectId: z.number().min(1, { message: "Project is a required field" }),
 
     targetNoOfBenefeciaries: z.string().min(1, {
       message: "Target number of beneficiaries is a required field",
@@ -91,7 +96,7 @@ export const contracts = {
 
     contractParties: z
       .array(contractPartiesSchema)
-      .min(1, { message: "Please select at least one party" }),
+      .min(1, { message: "Party is a required field" }),
 
     contractOutcomeRates: z.array(contractOutcomeSchema).min(1),
   }),

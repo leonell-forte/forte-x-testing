@@ -191,6 +191,7 @@ const ContractsPage = () => {
               onChange={(date) => {
                 setFilters((prev) => ({
                   ...prev,
+
                   date: formatDate(date as Date, "yyyy-LL-dd"),
                 }));
               }}

@@ -169,6 +169,7 @@ const ContractOutcomeField = ({
                       disabled={perOutcome}
                       error={!!error}
                       helperText={error?.message}
+                      placeholder="Threshold"
                     />
                   );
                 }}

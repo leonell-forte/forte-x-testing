@@ -8,7 +8,7 @@ import { useEffect, useMemo } from "react";
 import ContractOutcomeField from "../ContractOutcomeField";
 import organizationService from "../../../../api/organization";
 import { useQuery } from "@tanstack/react-query";
-import { STATUS } from "../../../../lib/constants";
+import { DEFAULT_DATE_FORMAT, STATUS } from "../../../../lib/constants";
 import projectService from "../../../../api/projects";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { contracts } from "../../../../lib/validators/contracts";
@@ -319,7 +319,10 @@ const ContractDialogue = ({
                   <DatePicker
                     value={new Date(field.value)}
                     onChange={(date) => {
-                      setValue("startDate", formatDate(date!, "LL-dd-yyyy"));
+                      setValue(
+                        "startDate",
+                        formatDate(date!, DEFAULT_DATE_FORMAT),
+                      );
                     }}
                     error={!!errors.startDate?.message}
                     helperText={errors.startDate?.message}
@@ -343,7 +346,10 @@ const ContractDialogue = ({
                   <DatePicker
                     value={new Date(field.value)}
                     onChange={(date) => {
-                      setValue("endDate", formatDate(date!, "LL-dd-yyyy"));
+                      setValue(
+                        "endDate",
+                        formatDate(date!, DEFAULT_DATE_FORMAT),
+                      );
                     }}
                     error={!!errors.endDate?.message}
                     helperText={errors.endDate?.message}
@@ -372,9 +378,11 @@ const ContractDialogue = ({
                   }}
                   handleRadioSelect={(value) => {
                     setValue(`contractOutcomeRates.${index}.threshold`, "0");
+
                     setError(`contractOutcomeRates.${index}.threshold`, {
                       message: "",
                     });
+
                     if (value === "Per outcome") {
                       setValue(
                         `contractOutcomeRates.${index}.perOutcome`,
@@ -383,6 +391,7 @@ const ContractDialogue = ({
                     } else {
                       setValue(
                         `contractOutcomeRates.${index}.perOutcome`,
+
                         false,
                       );
                     }
