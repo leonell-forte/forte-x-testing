@@ -3,6 +3,7 @@ import Dialogue, {
 } from "../../../../components/ui/dialogue/dialogue";
 
 import BeneficiariesForm from "./BeneficiariesForm";
+import Evidences from "./Evidences";
 
 interface IBeneficiariesDialogueProps extends IDialogueProps {
   id?: number;
@@ -23,11 +24,15 @@ const BeneficiariesDialogue = ({
       handleClose={props.handleClose}
       title={`${id ? "Edit" : "Add"} beneficiaries`}
     >
-      <BeneficiariesForm
-        id={id}
-        projectId={projectId}
-        handleClose={props.handleClose}
-      />
+      <div className="space-y-5">
+        <BeneficiariesForm
+          id={id}
+          projectId={projectId}
+          handleClose={props.handleClose}
+        />
+
+        {id && <Evidences />}
+      </div>
     </Dialogue>
   );
 };
