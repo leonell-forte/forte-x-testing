@@ -10,11 +10,15 @@ const CommentSection = () => {
           return (
             <li
               key={index}
-              className="flex justify-between text-[13px]"
+              className="flex justify-between text-[13px] gap-12"
             >
-              <p>The generated Lorem Ipsum is therefore always free </p>
+              <p>
+                There are many variations of passages of Lorem Ipsum available,
+                but the majority have suffered alteration in some form, by
+                injected humour, or randomised words which don't look
+              </p>
 
-              <div className="text-right">
+              <div className="text-right flex-shrink-0">
                 <div className="flex items-center gap-4">
                   <p> Errin Burger</p>
 
