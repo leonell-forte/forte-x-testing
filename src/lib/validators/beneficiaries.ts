@@ -127,3 +127,13 @@ export const beneficiaries = {
       .min(1, { message: "Select at least one language" }),
   }),
 };
+
+export const beneficiaryStatus = {
+  default: {
+    status: "",
+  },
+
+  schema: z.object({
+    status: z.string().min(1, "Status is a required field"),
+  }),
+};
