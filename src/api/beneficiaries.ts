@@ -3,6 +3,7 @@ import { api } from "../lib/axios/interceptor";
 import {
   IBeneficiaries,
   IBeneficiariesFieldValues,
+  IBeneficiariesFilter,
 } from "../lib/types/beneficiaries";
 import { generateODataQuery, IODataObject } from "../lib/utils";
 
@@ -12,6 +13,8 @@ interface IBeneficiariesListProps {
   listAll?: boolean;
 
   search?: string;
+
+  filters?: IBeneficiariesFilter;
 }
 
 class BeneficiariesService {
@@ -21,6 +24,8 @@ class BeneficiariesService {
     listAll,
 
     search,
+
+    filters,
   }: IBeneficiariesListProps): Promise<{
     items: IBeneficiaries[];
 
@@ -35,6 +40,12 @@ class BeneficiariesService {
         exact: false,
 
         isSearch: true,
+      },
+
+      "beneficiary.project_id": {
+        value: filters?.project as string,
+
+        exact: true,
       },
     };
 
@@ -65,6 +76,24 @@ class BeneficiariesService {
     const res = await api.post("/beneficiaries", body);
 
     return res;
+  }
+
+  async getOne(id?: number): Promise<IBeneficiaries> {
+    const response = await api.get(`/beneficiaries/${id}`);
+
+    return response.data.data;
+  }
+
+  async update(beneficiary: IBeneficiariesFieldValues) {
+    const body = {
+      ...beneficiary,
+
+      disabilityStatus: beneficiary.disabilityStatus === "yes" ? true : false,
+    };
+
+    const response = await api.put("/beneficiaries", body);
+
+    return response;
   }
 }
 

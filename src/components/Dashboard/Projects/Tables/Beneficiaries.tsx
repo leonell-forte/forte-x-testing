@@ -4,10 +4,22 @@ import { useState } from "react";
 import TagExistingDialogue from "../Dialogues/TagExistingDialogue";
 import BeneficiariesDialogue from "../../Beneficiaries/Dialogues/BeneficiariesDialogue";
 import ImportDialogue from "../../Beneficiaries/Dialogues/ImportDialogue";
+import { useQuery } from "@tanstack/react-query";
+import beneficiariesServce from "../../../../api/beneficiaries";
 
 type ModalLabelType = "beneficiaries" | "tag" | "import" | "";
 
-const Beneficiaries = () => {
+interface IProps {
+  id?: string;
+}
+
+const Beneficiaries = ({ id }: IProps) => {
+  const { data, isLoading } = useQuery({
+    queryKey: ["beneficiaries", id],
+
+    queryFn: () => beneficiariesServce.list({ filters: { project: id } }),
+  });
+
   const [modal, setModal] = useState<ModalLabelType>("");
 
   const close = () => {
@@ -19,6 +31,7 @@ const Beneficiaries = () => {
       case "beneficiaries":
         return (
           <BeneficiariesDialogue
+            projectId={Number(id)}
             isVisible={modal === "beneficiaries"}
             handleClose={close}
           />
@@ -72,7 +85,10 @@ const Beneficiaries = () => {
           </div>
         </div>
 
-        <Table.Container>
+        <Table.Container
+          isLoading={isLoading}
+          isEmpty={!data?.items.length}
+        >
           <Table.Head>
             <Table.Row>
               {HEADERS.map((item, index) => {
@@ -89,22 +105,42 @@ const Beneficiaries = () => {
           </Table.Head>
 
           <Table.Body>
-            {Array.from({ length: 3 }).map((item, index) => {
+            {data?.items.map((item, index) => {
+              const {
+                firstName,
+
+                lastName,
+
+                provider,
+
+                email,
+
+                contractId,
+
+                cohortName,
+
+                phone,
+              } = item;
+
               return (
                 <Table.Row key={index}>
-                  <Table.Data className="h-[56px] py-1">test</Table.Data>
+                  <Table.Data className="h-[56px] py-1">{firstName}</Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">test</Table.Data>
+                  <Table.Data className="h-[56px] py-1">{lastName}</Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">test</Table.Data>
+                  <Table.Data className="h-[56px] py-1">{provider}</Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">test</Table.Data>
+                  <Table.Data className="h-[56px] py-1">{email}</Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">test</Table.Data>
+                  <Table.Data className="h-[56px] py-1">{phone}</Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">test</Table.Data>
+                  <Table.Data className="h-[56px] py-1">
+                    Contaract {contractId}
+                  </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">test</Table.Data>
+                  <Table.Data className="h-[56px] py-1">
+                    {cohortName}
+                  </Table.Data>
                 </Table.Row>
               );
             })}

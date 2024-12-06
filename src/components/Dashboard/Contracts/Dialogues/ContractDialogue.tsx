@@ -20,7 +20,7 @@ import {
 import contractService from "../../../../api/contract";
 import Spinner from "../../../../components/ui/spinner/spinner";
 import DatePicker from "../../../../components/ui/date-picker";
-import { formatDate } from "../../../../lib/utils";
+import { findLabelFromOptions, formatDate } from "../../../../lib/utils";
 import useContractMutation from "../../../../lib/mutations/contracts";
 import { IProject } from "../../../../lib/types/projects";
 import { IOrganization } from "../../../../lib/types/organizations";
@@ -69,6 +69,7 @@ const ContractDialogue = ({
 
     defaultValues: contracts.defaultValues({
       contract: contractDetails,
+
       projectId,
     }),
   });
@@ -139,7 +140,7 @@ const ContractDialogue = ({
     <Dialogue
       isVisible={isVisible}
       handleClose={close}
-      title="Add contract"
+      title={`${id ? "Edit" : "Add"} contract`}
     >
       {contractDetailsLoading ? (
         <div className="w-full h-[470px] flex items-center justify-center">
@@ -241,11 +242,11 @@ const ContractDialogue = ({
                     disabled={!!projectId}
                     loading={projectLoading}
                     enableSearch
-                    value={
-                      projects.find(
-                        (item: IOption) => item.value == field.value.toString(), //eslint-disable-line eqeqeq,
-                      )?.label
-                    }
+                    value={findLabelFromOptions(
+                      projects,
+
+                      field.value.toString(),
+                    )}
                     options={projects}
                     handleSelect={(val) => {
                       setValue("projectId", Number(val));

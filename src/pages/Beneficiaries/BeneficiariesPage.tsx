@@ -16,7 +16,7 @@ import { useDebounce, usePageTitle } from "../../lib/hooks";
 import { useQuery } from "@tanstack/react-query";
 import beneficiariesServce from "../../api/beneficiaries";
 import HorizontalScroller from "../../components/ui/horizontal-scroller";
-import { formatDate } from "../../lib/utils";
+import { findLabelFromOptions, formatDate } from "../../lib/utils";
 import projectService from "../../api/projects";
 import {
   BENEFICIARY_STATUS,
@@ -24,6 +24,7 @@ import {
   RISK_LEVEL,
 } from "../../lib/constants";
 import organizationService from "../../api/organization";
+import { IBeneficiariesFilter } from "@/lib/types/beneficiaries";
 
 const BeneficiariesPage = () => {
   usePageTitle("Beneficiaries");
@@ -31,6 +32,10 @@ const BeneficiariesPage = () => {
   const [search, setSearch] = useState("");
 
   const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  const [filters, setFilters] = useState<IBeneficiariesFilter>({
+    project: "",
+  });
 
   useDebounce(
     () => {
@@ -51,9 +56,10 @@ const BeneficiariesPage = () => {
   const [beneficiaryId, setBeneficiaryId] = useState<number | null>(null);
 
   const { data: beneficiariesList, isLoading } = useQuery({
-    queryKey: ["beneficiaries", debouncedSearch, page],
+    queryKey: ["beneficiaries", debouncedSearch, page, filters],
 
-    queryFn: () => beneficiariesServce.list({ search: debouncedSearch, page }),
+    queryFn: () =>
+      beneficiariesServce.list({ search: debouncedSearch, page, filters }),
   });
 
   const { data: projectsList, isLoading: projectLoading } = useQuery({
@@ -98,6 +104,8 @@ const BeneficiariesPage = () => {
 
   const close = () => {
     setModal("");
+
+    setBeneficiaryId(null);
   };
 
   const renderModal = useCallback(() => {
@@ -167,11 +175,14 @@ const BeneficiariesPage = () => {
 
             <Dropdown
               noHelperText
+              value={findLabelFromOptions(projects, filters.project as string)}
               loading={projectLoading}
               options={projects}
               placeholder="Projects"
               className="max-w-[166px]"
-              handleSelect={() => {}}
+              handleSelect={(val) =>
+                setFilters((prev) => ({ ...prev, project: val as string }))
+              }
             />
 
             <Dropdown

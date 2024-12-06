@@ -1,3 +1,4 @@
+import { IOption } from "@/components/ui/dropdown";
 import { format } from "date-fns";
 
 export const filterBySearch = (
@@ -102,4 +103,14 @@ export const formatDate = (date: string | Date, dateFormat: string) => {
     return "";
   }
   return format(parsedDate, dateFormat);
+};
+
+export const findLabelFromOptions = (
+  options: IOption[],
+
+  value: string,
+) => {
+  const label = options.find((item) => item.value === value)?.label;
+
+  return label;
 };

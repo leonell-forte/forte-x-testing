@@ -18,7 +18,9 @@ const useBeneficiaryMutation = ({
   const { setAlert } = useAlert();
 
   const { mutateAsync: addBeneficiary, isPending } = useMutation({
-    mutationFn: beneficiariesServce.add,
+    mutationFn: beneficiaryId
+      ? beneficiariesServce.update
+      : beneficiariesServce.add,
 
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: ["beneficiaries"] });
