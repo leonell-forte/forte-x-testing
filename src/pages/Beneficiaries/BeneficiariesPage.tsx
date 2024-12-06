@@ -171,7 +171,7 @@ const BeneficiariesPage = () => {
           />
         );
     }
-  }, [modal, beneficiaryId]);
+  }, [modal, beneficiaryId, selectedIds]);
 
   return (
     <>
@@ -196,7 +196,7 @@ const BeneficiariesPage = () => {
               Import beneficiaries
             </Button>
 
-            {!!selectedIds.length ? (
+            {selectedIds.length ? (
               <Button
                 onClick={() => setModal("update status")}
                 eventName="Update Beneficiary Status"

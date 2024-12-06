@@ -15,7 +15,7 @@ interface IBulkUpdateProps extends IDialogueProps {
 }
 
 const BulkUpdateStatus = ({ ids, ...props }: IBulkUpdateProps) => {
-  const { handleSubmit, reset, control, setValue, getValues } =
+  const { handleSubmit, control, setValue, getValues } =
     useForm<BeneficiaryStatusUpdateField>({
       resolver: zodResolver(beneficiaryStatus.schema),
 
