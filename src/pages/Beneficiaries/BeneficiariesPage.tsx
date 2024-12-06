@@ -104,6 +104,8 @@ const BeneficiariesPage = () => {
 
   const close = () => {
     setModal("");
+
+    setBeneficiaryId(null);
   };
 
   const renderModal = useCallback(() => {

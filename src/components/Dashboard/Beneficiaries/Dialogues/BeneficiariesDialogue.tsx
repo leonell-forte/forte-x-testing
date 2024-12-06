@@ -1,9 +1,9 @@
-import Dialogue, {
-  IDialogueProps,
-} from "../../../../components/ui/dialogue/dialogue";
+import { useState } from "react";
+import { IDialogueProps } from "../../../../components/ui/dialogue/dialogue";
+import AddDialogue from "./AddDialogue";
+import EvidencesDialogue from "./EvidencesDialogue";
 
-import BeneficiariesForm from "./BeneficiariesForm";
-import Evidences from "./Evidences";
+type ModalLabelType = "beneficiaries" | "evidence";
 
 interface IBeneficiariesDialogueProps extends IDialogueProps {
   id?: number;
@@ -18,23 +18,48 @@ const BeneficiariesDialogue = ({
 
   ...props
 }: IBeneficiariesDialogueProps) => {
-  return (
-    <Dialogue
-      {...props}
-      handleClose={props.handleClose}
-      title={`${id ? "Edit" : "Add"} beneficiaries`}
-    >
-      <div className="space-y-5">
-        <BeneficiariesForm
-          id={id}
-          projectId={projectId}
-          handleClose={props.handleClose}
-        />
+  const [modal, setModal] = useState<ModalLabelType>("beneficiaries");
 
-        {id && <Evidences />}
-      </div>
-    </Dialogue>
-  );
+  const [evidenceId, setEvidenceId] = useState<number | null>(null);
+
+  const close = () => {
+    props.handleClose?.();
+
+    setEvidenceId(null);
+  };
+
+  const renderModal = (modal: ModalLabelType) => {
+    switch (modal) {
+      case "beneficiaries":
+        return (
+          <AddDialogue
+            {...props}
+            handleClose={close}
+            id={id}
+            projectId={projectId}
+            handleAddOrViewEvidence={(id) => {
+              setModal("evidence");
+
+              if (id) setEvidenceId(id);
+            }}
+          />
+        );
+
+      case "evidence":
+        return (
+          <EvidencesDialogue
+            {...props}
+            id={evidenceId as number}
+            handleClose={close}
+          />
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  return renderModal(modal);
 };
 
 export default BeneficiariesDialogue;
