@@ -2,24 +2,27 @@ import Dialogue, {
   IDialogueProps,
 } from "../../../../components/ui/dialogue/dialogue";
 import Button from "../../../../components/ui/button";
-// import { useAlert } from "../../../../lib/hooks";
+import { useDeleteBeneficiaryMutation } from "../../../../lib/mutations/beneficiaries";
 
-interface IDeleteDialogueProp extends IDialogueProps {}
+interface IDeleteDialogueProp extends IDialogueProps {
+  id: number;
+}
 
-const DeleteDialogue = ({
-  handleClose,
+const DeleteDialogue = ({ id, ...props }: IDeleteDialogueProp) => {
+  const { deleteBeneficiary, isPending } = useDeleteBeneficiaryMutation(
+    id,
+    props.handleClose,
+  );
 
-  isVisible,
-}: IDeleteDialogueProp) => {
-  // const { setAlert } = useAlert();
-
-  const handleDelete = async () => {};
+  const handleDelete = async () => {
+    await deleteBeneficiary(id);
+  };
 
   return (
     <Dialogue
       center
-      isVisible={isVisible}
-      handleClose={handleClose}
+      isVisible={props.isVisible}
+      handleClose={props.handleClose}
     >
       <div className="text-left">
         <p className="text-[20px] font-semibold">
@@ -32,13 +35,18 @@ const DeleteDialogue = ({
 
         <div className="flex justify-end gap-2 mt-6">
           <Button
-            onClick={handleClose}
+            onClick={props.handleClose}
             buttonType="secondary"
           >
             Cancel
           </Button>
 
-          <Button onClick={handleDelete}>Delete</Button>
+          <Button
+            loading={isPending}
+            onClick={handleDelete}
+          >
+            Delete
+          </Button>
         </div>
       </div>
     </Dialogue>

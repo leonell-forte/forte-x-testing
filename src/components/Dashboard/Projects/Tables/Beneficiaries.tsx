@@ -5,7 +5,7 @@ import TagExistingDialogue from "../Dialogues/TagExistingDialogue";
 import BeneficiariesDialogue from "../../Beneficiaries/Dialogues/BeneficiariesDialogue";
 import ImportDialogue from "../../Beneficiaries/Dialogues/ImportDialogue";
 import { useQuery } from "@tanstack/react-query";
-import beneficiariesServce from "../../../../api/beneficiaries";
+import beneficiariesService from "../../../../api/beneficiaries";
 
 type ModalLabelType = "beneficiaries" | "tag" | "import" | "";
 
@@ -17,7 +17,7 @@ const Beneficiaries = ({ id }: IProps) => {
   const { data, isLoading } = useQuery({
     queryKey: ["beneficiaries", id],
 
-    queryFn: () => beneficiariesServce.list({ filters: { project: id } }),
+    queryFn: () => beneficiariesService.list({ filters: { project: id } }),
   });
 
   const [modal, setModal] = useState<ModalLabelType>("");

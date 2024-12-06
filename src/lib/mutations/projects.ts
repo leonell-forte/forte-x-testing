@@ -95,6 +95,7 @@ export const useProjectMutation = (
 
 export const useDeleteProjectMutation = (
   id: number,
+
   successCallback?: () => void,
 ) => {
   const { setAlert } = useAlert();
@@ -133,7 +134,7 @@ export const useDeleteProjectMutation = (
 
         message: `Project deleted successfully`,
 
-        title: "Project Deleted!",
+        title: "Project deleted!",
       });
 
       amplitude.track(`Delete Project Performed`, {

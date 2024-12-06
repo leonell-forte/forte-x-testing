@@ -1,4 +1,4 @@
-import beneficiariesServce from "../../../../api/beneficiaries";
+import beneficiariesService from "../../../../api/beneficiaries";
 import contractService from "../../../../api/contract";
 import organizationService from "../../../../api/organization";
 import projectService from "../../../../api/projects";
@@ -14,7 +14,7 @@ import {
   LANGUAGES,
   RISK_LEVEL,
 } from "../../../../lib/constants";
-import useBeneficiaryMutation from "../../../../lib/mutations/beneficiaries";
+import { useBeneficiaryMutation } from "../../../../lib/mutations/beneficiaries";
 import {
   DisabilityStatusEnum,
   IBeneficiariesFieldValues,
@@ -59,7 +59,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
   const { data: beneficiaryData } = useQuery({
     queryKey: ["specific-beneficiary", id],
 
-    queryFn: () => beneficiariesServce.getOne(id),
+    queryFn: () => beneficiariesService.getOne(id),
 
     enabled: !!id,
   });
