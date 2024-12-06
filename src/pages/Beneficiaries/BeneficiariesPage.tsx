@@ -14,7 +14,7 @@ import ImportDialogue from "../../components/Dashboard/Beneficiaries/Dialogues/I
 import DatePicker from "../../components/ui/date-picker";
 import { useDebounce, usePageTitle } from "../../lib/hooks";
 import { useQuery } from "@tanstack/react-query";
-import beneficiariesServce from "../../api/beneficiaries";
+import beneficiariesService from "../../api/beneficiaries";
 import HorizontalScroller from "../../components/ui/horizontal-scroller";
 import { findLabelFromOptions, formatDate } from "../../lib/utils";
 import projectService from "../../api/projects";
@@ -59,7 +59,7 @@ const BeneficiariesPage = () => {
     queryKey: ["beneficiaries", debouncedSearch, page, filters],
 
     queryFn: () =>
-      beneficiariesServce.list({ search: debouncedSearch, page, filters }),
+      beneficiariesService.list({ search: debouncedSearch, page, filters }),
   });
 
   const { data: projectsList, isLoading: projectLoading } = useQuery({
@@ -108,6 +108,12 @@ const BeneficiariesPage = () => {
     setBeneficiaryId(null);
   };
 
+  const handleDelete = (id: number) => {
+    setModal("delete");
+
+    setBeneficiaryId(id);
+  };
+
   const renderModal = useCallback(() => {
     switch (modal) {
       case "beneficiaries":
@@ -122,6 +128,7 @@ const BeneficiariesPage = () => {
       case "delete":
         return (
           <DeleteDialogue
+            id={beneficiaryId as number}
             isVisible={modal === "delete"}
             handleClose={close}
           />
@@ -357,12 +364,10 @@ const BeneficiariesPage = () => {
 
                           <Button
                             eventName="Delete Beneficiary"
-                            // id={id.toString()}
+                            id={id.toString()}
                             buttonType="default"
                             type="button"
-                            onClick={() => {
-                              setModal("delete");
-                            }}
+                            onClick={() => handleDelete(id)}
                             className="p-[3px]"
                           >
                             <img
