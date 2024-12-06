@@ -15,7 +15,16 @@ const CommentSection = () => {
               <p>The generated Lorem Ipsum is therefore always free </p>
 
               <div className="text-right">
-                <p> Errin Burger</p>
+                <div className="flex items-center gap-4">
+                  <p> Errin Burger</p>
+
+                  <button
+                    type="button"
+                    className="link"
+                  >
+                    Delete
+                  </button>
+                </div>
                 <p> 12-11-2024 I 12:09pm</p>
               </div>
             </li>
