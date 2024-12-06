@@ -101,6 +101,12 @@ class BeneficiariesService {
 
     return response;
   }
+
+  async bulkStatusUpdate(data: { ids: number[]; status: string }) {
+    const response = api.patch("/beneficiaries/status", data);
+
+    return response;
+  }
 }
 
 const beneficiariesService = new BeneficiariesService();

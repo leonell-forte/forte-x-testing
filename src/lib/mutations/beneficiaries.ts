@@ -144,3 +144,71 @@ export const useDeleteBeneficiaryMutation = (
 
   return { deleteBeneficiary, isPending };
 };
+
+export const useBulkStatusUpdateMutation = (
+  status: string,
+
+  successCallback?: () => void,
+) => {
+  const { setAlert } = useAlert();
+
+  const { mutateAsync: updateStatus, isPending } = useMutation({
+    mutationFn: beneficiariesService.bulkStatusUpdate,
+
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ["beneficiaries"] });
+
+      const previousBeneficiaries = queryClient.getQueryData<IBeneficiaries[]>([
+        "beneficiaries",
+      ]);
+
+      return { previousBeneficiaries };
+    },
+
+    onSuccess: () => {
+      queryClient.setQueryData(
+        ["beneficiaries"],
+
+        (old: { items: IBeneficiaries[] }) => ({
+          ...old,
+
+          items: old?.items?.map((item) => ({ ...item, status })),
+        }),
+      );
+
+      successCallback?.();
+
+      setAlert({
+        title: "Success!",
+
+        message: "Beneficiaries status updated.",
+
+        status: "success",
+      });
+
+      amplitude.track(`Bulk Beneficiary Status Performed`);
+    },
+
+    onError: (err: any, _, context) => {
+      setAlert({
+        title: "Error",
+
+        message: err?.response?.data?.message,
+
+        status: "error",
+      });
+
+      queryClient.setQueryData(
+        ["beneficiaries"],
+
+        context?.previousBeneficiaries,
+      );
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["beneficiaries"] });
+    },
+  });
+
+  return { updateStatus, isPending };
+};
