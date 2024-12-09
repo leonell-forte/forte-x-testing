@@ -1,7 +1,7 @@
 import Dropdown, { IOption } from "../../components/ui/dropdown";
 import Button from "../../components/ui/button";
 import SearchInput from "../../components/ui/search-input";
-import { useCallback, useMemo, useState } from "react";
+import { ChangeEvent, useCallback, useMemo, useState } from "react";
 import closeFilter from "../../assets/images/icons/close-filter.svg";
 import Table from "../../components/ui/table";
 import Checkbox from "../../components/ui/checkbox";
@@ -14,7 +14,7 @@ import ImportDialogue from "../../components/Dashboard/Beneficiaries/Dialogues/I
 import DatePicker from "../../components/ui/date-picker";
 import { useDebounce, usePageTitle } from "../../lib/hooks";
 import { useQuery } from "@tanstack/react-query";
-import beneficiariesServce from "../../api/beneficiaries";
+import beneficiariesService from "../../api/beneficiaries";
 import HorizontalScroller from "../../components/ui/horizontal-scroller";
 import { findLabelFromOptions, formatDate } from "../../lib/utils";
 import projectService from "../../api/projects";
@@ -24,7 +24,15 @@ import {
   RISK_LEVEL,
 } from "../../lib/constants";
 import organizationService from "../../api/organization";
-import { IBeneficiariesFilter } from "@/lib/types/beneficiaries";
+import { IBeneficiariesFilter } from "../../lib/types/beneficiaries";
+import BulkUpdateStatus from "../../components/Dashboard/Beneficiaries/Dialogues/BulkUpdateStatus";
+
+type ModalLabelTypes =
+  | "beneficiaries"
+  | "delete"
+  | "import"
+  | "update status"
+  | "";
 
 const BeneficiariesPage = () => {
   usePageTitle("Beneficiaries");
@@ -49,17 +57,17 @@ const BeneficiariesPage = () => {
 
   const [page, setPage] = useState(1);
 
-  const [modal, setModal] = useState<
-    "beneficiaries" | "delete" | "import" | ""
-  >("");
+  const [modal, setModal] = useState<ModalLabelTypes>("");
 
   const [beneficiaryId, setBeneficiaryId] = useState<number | null>(null);
+
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   const { data: beneficiariesList, isLoading } = useQuery({
     queryKey: ["beneficiaries", debouncedSearch, page, filters],
 
     queryFn: () =>
-      beneficiariesServce.list({ search: debouncedSearch, page, filters }),
+      beneficiariesService.list({ search: debouncedSearch, page, filters }),
   });
 
   const { data: projectsList, isLoading: projectLoading } = useQuery({
@@ -104,7 +112,27 @@ const BeneficiariesPage = () => {
 
   const close = () => {
     setModal("");
+
+    setBeneficiaryId(null);
+
+    setSelectedIds([]);
   };
+
+  const handleDelete = (id: number) => {
+    setModal("delete");
+
+    setBeneficiaryId(id);
+  };
+
+  const handleSelectAll = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      if (e.target.checked) {
+        setSelectedIds((beneficiariesList?.items || []).map((item) => item.id));
+      } else setSelectedIds([]);
+    },
+
+    [beneficiariesList],
+  );
 
   const renderModal = useCallback(() => {
     switch (modal) {
@@ -120,7 +148,17 @@ const BeneficiariesPage = () => {
       case "delete":
         return (
           <DeleteDialogue
+            id={beneficiaryId as number}
             isVisible={modal === "delete"}
+            handleClose={close}
+          />
+        );
+
+      case "update status":
+        return (
+          <BulkUpdateStatus
+            ids={selectedIds}
+            isVisible={modal === "update status"}
             handleClose={close}
           />
         );
@@ -133,7 +171,7 @@ const BeneficiariesPage = () => {
           />
         );
     }
-  }, [modal, beneficiaryId]);
+  }, [modal, beneficiaryId, selectedIds]);
 
   return (
     <>
@@ -158,12 +196,21 @@ const BeneficiariesPage = () => {
               Import beneficiaries
             </Button>
 
-            <Button
-              eventName="Add Beneficiary"
-              onClick={() => setModal("beneficiaries")}
-            >
-              Add beneficiaries
-            </Button>
+            {selectedIds.length ? (
+              <Button
+                onClick={() => setModal("update status")}
+                eventName="Update Beneficiary Status"
+              >
+                Update status
+              </Button>
+            ) : (
+              <Button
+                eventName="Add Beneficiary"
+                onClick={() => setModal("beneficiaries")}
+              >
+                Add beneficiaries
+              </Button>
+            )}
           </div>
         </div>
 
@@ -241,8 +288,12 @@ const BeneficiariesPage = () => {
                 <Table.Row>
                   <Table.Header small>
                     <Checkbox
+                      checked={
+                        selectedIds.length === beneficiariesList?.items.length
+                      }
                       label="First name"
                       labelClass="!text-black text-[14px]"
+                      onChange={handleSelectAll}
                     />
                   </Table.Header>
 
@@ -304,6 +355,15 @@ const BeneficiariesPage = () => {
                         <Checkbox
                           label={firstName}
                           labelClass="text-[14px]"
+                          checked={selectedIds.includes(id)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedIds((prev) => [...prev, id]);
+                            } else
+                              setSelectedIds((prev) =>
+                                prev.filter((item) => item !== id),
+                              );
+                          }}
                         />
                       </Table.Data>
 
@@ -355,12 +415,10 @@ const BeneficiariesPage = () => {
 
                           <Button
                             eventName="Delete Beneficiary"
-                            // id={id.toString()}
+                            id={id.toString()}
                             buttonType="default"
                             type="button"
-                            onClick={() => {
-                              setModal("delete");
-                            }}
+                            onClick={() => handleDelete(id)}
                             className="p-[3px]"
                           >
                             <img

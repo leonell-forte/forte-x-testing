@@ -42,8 +42,6 @@ export interface IContract {
 
   updatedAt?: string;
 
-  parties?: string;
-
   project?: string;
 
   outcomes?: string; // Specify the type better if outcomes can have different types (e.g., number, boolean).

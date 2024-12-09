@@ -140,7 +140,7 @@ const ContractDialogue = ({
     <Dialogue
       isVisible={isVisible}
       handleClose={close}
-      title="Add contract"
+      title={`${id ? "Edit" : "Add"} contract`}
     >
       {contractDetailsLoading ? (
         <div className="w-full h-[470px] flex items-center justify-center">

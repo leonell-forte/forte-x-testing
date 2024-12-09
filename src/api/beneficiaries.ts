@@ -95,8 +95,20 @@ class BeneficiariesService {
 
     return response;
   }
+
+  async delete(id: number) {
+    const response = await api.delete(`/beneficiaries/${id}`);
+
+    return response;
+  }
+
+  async bulkStatusUpdate(data: { ids: number[]; status: string }) {
+    const response = api.patch("/beneficiaries/status", data);
+
+    return response;
+  }
 }
 
-const beneficiariesServce = new BeneficiariesService();
+const beneficiariesService = new BeneficiariesService();
 
-export default beneficiariesServce;
+export default beneficiariesService;

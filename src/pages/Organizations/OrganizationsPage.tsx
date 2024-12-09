@@ -52,8 +52,11 @@ const OrganizationsPage = () => {
     queryFn: () =>
       organizationService.list({
         page,
+
         listAll: false,
+
         search: debouncedSearch,
+
         filters,
       }),
   });

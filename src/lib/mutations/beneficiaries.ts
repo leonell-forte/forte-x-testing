@@ -1,8 +1,9 @@
 import { useAlert } from "../hooks";
 import { useMutation } from "@tanstack/react-query";
-import beneficiariesServce from "../../api/beneficiaries";
+import beneficiariesService from "../../api/beneficiaries";
 import { queryClient } from "../../components/QueryProvider";
 import * as amplitude from "@amplitude/analytics-browser";
+import { IBeneficiaries } from "../types/beneficiaries";
 
 interface IBeneficiaryMutationProps {
   beneficiaryId?: number;
@@ -10,7 +11,7 @@ interface IBeneficiaryMutationProps {
   successCallback?: () => void;
 }
 
-const useBeneficiaryMutation = ({
+export const useBeneficiaryMutation = ({
   beneficiaryId,
 
   successCallback,
@@ -19,8 +20,8 @@ const useBeneficiaryMutation = ({
 
   const { mutateAsync: addBeneficiary, isPending } = useMutation({
     mutationFn: beneficiaryId
-      ? beneficiariesServce.update
-      : beneficiariesServce.add,
+      ? beneficiariesService.update
+      : beneficiariesService.add,
 
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: ["beneficiaries"] });
@@ -74,4 +75,140 @@ const useBeneficiaryMutation = ({
   return { addBeneficiary, isPending };
 };
 
-export default useBeneficiaryMutation;
+export const useDeleteBeneficiaryMutation = (
+  id: number,
+
+  successCallback?: () => void,
+) => {
+  const { setAlert } = useAlert();
+
+  const { mutateAsync: deleteBeneficiary, isPending } = useMutation({
+    mutationFn: beneficiariesService.delete,
+
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ["beneficiaries"] });
+
+      const previousBeneficiaries = queryClient.getQueryData<IBeneficiaries[]>([
+        "beneficiaries",
+      ]);
+
+      return { previousBeneficiaries };
+    },
+
+    onSuccess: () => {
+      queryClient.setQueryData(
+        ["beneficiaries"],
+
+        (old: { items: IBeneficiaries[] }) => ({
+          ...old,
+
+          itemss: old?.items?.filter((item) => item.id !== id),
+        }),
+      );
+
+      successCallback?.();
+
+      setAlert({
+        title: "Beneficiary deleted",
+
+        message: "Beneficiary deleted successfully",
+
+        status: "success",
+      });
+
+      amplitude.track(`Delete Beneficiary Performed`, {
+        id: id,
+      });
+    },
+
+    onError: (err: any, _, context) => {
+      setAlert({
+        title: "Failed deleting beneficiary",
+
+        message: err?.response?.data?.message,
+
+        status: "error",
+      });
+
+      queryClient.setQueryData(
+        ["beneficiaries"],
+
+        context?.previousBeneficiaries,
+      );
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["beneficiaries"] });
+    },
+  });
+
+  return { deleteBeneficiary, isPending };
+};
+
+export const useBulkStatusUpdateMutation = (
+  status: string,
+
+  successCallback?: () => void,
+) => {
+  const { setAlert } = useAlert();
+
+  const { mutateAsync: updateStatus, isPending } = useMutation({
+    mutationFn: beneficiariesService.bulkStatusUpdate,
+
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ["beneficiaries"] });
+
+      const previousBeneficiaries = queryClient.getQueryData<IBeneficiaries[]>([
+        "beneficiaries",
+      ]);
+
+      return { previousBeneficiaries };
+    },
+
+    onSuccess: () => {
+      queryClient.setQueryData(
+        ["beneficiaries"],
+
+        (old: { items: IBeneficiaries[] }) => ({
+          ...old,
+
+          items: old?.items?.map((item) => ({ ...item, status })),
+        }),
+      );
+
+      successCallback?.();
+
+      setAlert({
+        title: "Success!",
+
+        message: "Beneficiaries status updated.",
+
+        status: "success",
+      });
+
+      amplitude.track(`Bulk Beneficiary Status Performed`);
+    },
+
+    onError: (err: any, _, context) => {
+      setAlert({
+        title: "Error",
+
+        message: err?.response?.data?.message,
+
+        status: "error",
+      });
+
+      queryClient.setQueryData(
+        ["beneficiaries"],
+
+        context?.previousBeneficiaries,
+      );
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["beneficiaries"] });
+    },
+  });
+
+  return { updateStatus, isPending };
+};

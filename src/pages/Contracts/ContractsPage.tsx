@@ -14,7 +14,7 @@ import {
   IContractFilters,
   StatusType,
 } from "../../lib/types/contracts";
-import { formatDate } from "../../lib/utils";
+import { extractPartiesNamesFromContract, formatDate } from "../../lib/utils";
 import Pagination from "../../components/ui/pagination";
 import { useDebounce, usePageTitle } from "../../lib/hooks";
 import { DEFAULT_DATE_FORMAT, STATUS } from "../../lib/constants";
@@ -22,7 +22,8 @@ import DatePicker from "../../components/ui/date-picker";
 import DeleteDialogue from "../../components/Dashboard/Contracts/Dialogues/DeleteDialogue";
 import HorizontalScroller from "../../components/ui/horizontal-scroller";
 import projectService from "../../api/projects";
-import { IProject } from "@/lib/types/projects";
+import { IProject } from "../../lib/types/projects";
+import organizationService from "../../api/organization";
 
 const ContractsPage = () => {
   usePageTitle("Contracts");
@@ -65,6 +66,19 @@ const ContractsPage = () => {
         search: debouncedSearch,
 
         listAll: false,
+      }),
+  });
+
+  const { data: organizationList } = useQuery({
+    queryKey: ["organizations", page, debouncedSearch, filters],
+
+    queryFn: () =>
+      organizationService.list({
+        listAll: true,
+
+        page: 1,
+
+        filters: {},
       }),
   });
 
@@ -236,7 +250,7 @@ const ContractsPage = () => {
                   const {
                     id,
 
-                    parties,
+                    contractParties,
 
                     project,
 
@@ -252,6 +266,7 @@ const ContractsPage = () => {
 
                     document,
                   } = item;
+
                   return (
                     <Table.Row key={index}>
                       {/* <Table.Data>
@@ -259,7 +274,13 @@ const ContractsPage = () => {
                       </Table.Data> */}
 
                       <Table.Data>
-                        <p className="w-[150px] truncate">{parties}</p>
+                        <p className="w-[150px] truncate">
+                          {extractPartiesNamesFromContract(
+                            contractParties,
+
+                            organizationList!.items,
+                          )}
+                        </p>
                       </Table.Data>
 
                       <Table.Data>
