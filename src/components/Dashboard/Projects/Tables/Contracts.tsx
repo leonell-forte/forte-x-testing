@@ -111,8 +111,6 @@ const Contracts = ({ projectId }: IProps) => {
               const {
                 id,
 
-                parties,
-
                 outcomes,
 
                 targetNoOfBenefeciaries,
@@ -131,7 +129,7 @@ const Contracts = ({ projectId }: IProps) => {
                   </Table.Data>
 
                   <Table.Data className="h-[56px] py-1 w-[150px]">
-                    {parties}
+                    {/* {parties} */}
                   </Table.Data>
 
                   <Table.Data className="h-[56px] py-1 w-[150px]">
