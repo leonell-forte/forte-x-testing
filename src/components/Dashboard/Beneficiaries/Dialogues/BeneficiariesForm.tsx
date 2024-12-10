@@ -110,29 +110,29 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
   );
 
   const selectedContract = watch("contractId");
-  const organizations: IOption[] = useMemo(
-    () =>
-      organizationList?.items
-        .filter((org) => {
-          // filter the organizations based on selected contract
-          // provider dropdown should be disabled if no contract is selected
+  // const organizations: IOption[] = useMemo(
+  //   () =>
+  //     organizationList?.items
+  //       .filter((org) => {
+  //         // filter the organizations based on selected contract
+  //         // provider dropdown should be disabled if no contract is selected
 
-          const contract = contractList?.items.find(
-            (contract) => contract.id === selectedContract,
-          );
+  //         const contract = contractList?.items.find(
+  //           (contract) => contract.id === selectedContract,
+  //         );
 
-          return contract?.contractParties.some(
-            (item) => item.organizationId === Number(org.id),
-          );
-        })
-        .map((item) => ({
-          label: item.name,
+  //         return contract?.contractParties.some(
+  //           (item) => item.organizationId === Number(org.id),
+  //         );
+  //       })
+  //       .map((item) => ({
+  //         label: item.name,
 
-          value: item.id!.toString(),
-        })) || [],
+  //         value: item.id!.toString(),
+  //       })) || [],
 
-    [organizationList, contractList, selectedContract],
-  );
+  //   [organizationList, contractList, selectedContract],
+  // );
 
   const projects: IOption[] = useMemo(
     () =>
@@ -354,7 +354,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
             Provider
           </label>
 
-          <Controller
+          {/* <Controller
             control={control}
             name="providerId"
             render={({ field }) => (
@@ -378,7 +378,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
                 helperText={errors.providerId?.message}
               />
             )}
-          />
+          /> */}
         </div>
 
         <div className="flex items-start">

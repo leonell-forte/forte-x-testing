@@ -1,4 +1,5 @@
 "use client";
+import FileInput from "../../components/ui/file-input";
 import DatePicker from "../../components/ui/date-picker";
 import Input from "../../components/ui/input";
 
@@ -35,6 +36,9 @@ const InputFields = () => {
           label="Label"
           helperText="Helper Text"
         />
+
+        <FileInput />
+
         <DatePicker
           label="Select date"
           helperText="Helper text"

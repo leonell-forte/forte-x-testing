@@ -1,15 +1,9 @@
 import { IContract, IContractDefaultValues } from "../../lib/types/contracts";
 import { z } from "zod";
 
-const contractPartiesSchema = z.object({
-  organizationId: z.number(),
-});
-
 const contractOutcomeSchema = z
   .object({
-    projectOutcomeId: z
-      .number()
-      .min(1, { message: "Outcome is a required field" }),
+    outcomeId: z.number().min(1, { message: "Outcome is a required field" }),
 
     rate: z.union([
       z.string().min(1, { message: "Rate is a required field" }),
@@ -28,8 +22,10 @@ const contractOutcomeSchema = z
         data.perOutcome || (data.threshold && data.threshold.trim().length > 0)
       );
     },
+
     {
       message: "Threshold is required when perOutcome is true",
+
       path: ["threshold"], // Points to the 'threshold' field for the error
     },
   );
@@ -39,10 +35,9 @@ export const contracts = {
     let data: IContract = {
       projectId: contract?.projectId || projectId || 0,
 
-      targetNoOfBenefeciaries:
-        contract?.targetNoOfBenefeciaries.toString() || "",
+      targetNoOfBenefeciaries: contract?.targetNoOfBenefeciaries || "",
 
-      document: contract?.document || "",
+      documentId: contract?.documentId || "",
 
       status: contract?.status || "ACTIVE",
 
@@ -50,10 +45,10 @@ export const contracts = {
 
       endDate: contract?.endDate || "",
 
-      contractParties: contract?.contractParties || [],
+      partyIds: contract?.partyIds || [],
 
-      contractOutcomeRates: contract
-        ? contract?.contractOutcomeRates.map((item) => ({
+      outcomeRates: contract
+        ? contract?.outcomeRates.map((item) => ({
             ...item,
 
             threshold: item.threshold ? item.threshold.toString() : "",
@@ -87,7 +82,9 @@ export const contracts = {
       message: "Target number of beneficiaries is a required field",
     }),
 
-    document: z.string().min(1, { message: "Document is a required field" }),
+    documentId: z.string().min(1, { message: "Document is a required field" }),
+
+    partyIds: z.array(z.number()).min(1, "Party is a required field"),
 
     status: z.enum(["ACTIVE", "INACTIVE", ""]),
 
@@ -95,10 +92,6 @@ export const contracts = {
 
     endDate: z.string().min(1, "End date is a required field"),
 
-    contractParties: z
-      .array(contractPartiesSchema)
-      .min(1, { message: "Party is a required field" }),
-
-    contractOutcomeRates: z.array(contractOutcomeSchema).min(1),
+    outcomeRates: z.array(contractOutcomeSchema).min(1),
   }),
 };

@@ -26,7 +26,7 @@ export interface IContract {
 
   targetNoOfBenefeciaries: string;
 
-  document: string;
+  documentId: string;
 
   status: StatusType;
 
@@ -34,9 +34,9 @@ export interface IContract {
 
   endDate: string;
 
-  contractParties: IContractParties[];
+  partyIds: number[];
 
-  contractOutcomeRates: IContractOutcomeRates[];
+  outcomeRates: IContractOutcomeRates[];
 
   createdAt?: string;
 

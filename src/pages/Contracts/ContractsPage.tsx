@@ -229,7 +229,7 @@ const ContractsPage = () => {
           </button>
         </div>
 
-        <div className="space-y-[18px] overflow-scroll">
+        {/* <div className="space-y-[18px] overflow-scroll">
           <div className="pr-4">
             <Table.Container
               isEmpty={!contracts.length}
@@ -273,7 +273,7 @@ const ContractsPage = () => {
                         <p className="w-[90px] truncate">Contract {id}</p>
                       </Table.Data> */}
 
-                      <Table.Data>
+        {/* <Table.Data>
                         <p className="w-[150px] truncate">
                           {extractPartiesNamesFromContract(
                             contractParties,
@@ -345,8 +345,8 @@ const ContractsPage = () => {
                 })}
               </Table.Body>
             </Table.Container>
-          </div>
-
+          </div> */}
+        {/* 
           <div className="flex justify-end items-center w-full">
             <HorizontalScroller />
 
@@ -356,7 +356,7 @@ const ContractsPage = () => {
               total={contractList?.totalSize as number}
             />
           </div>
-        </div>
+        </div>  */}
       </div>
     </>
   );

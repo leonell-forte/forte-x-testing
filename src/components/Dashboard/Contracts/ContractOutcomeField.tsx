@@ -80,7 +80,7 @@ const ContractOutcomeField = ({
         </label>
 
         <Controller
-          name={`contractOutcomeRates.${index}.projectOutcomeId`}
+          name={`outcomeRates.${index}.outcomeId`}
           control={control}
           render={({ field, fieldState }) => {
             const { error } = fieldState;
@@ -89,7 +89,7 @@ const ContractOutcomeField = ({
               <Dropdown
                 disabled={!projectId}
                 loading={isProjectLoading}
-                value={findLabelFromOptions(outcomes, field.value.toString())}
+                value={findLabelFromOptions(outcomes, field.value?.toString())}
                 handleSelect={(val) => {
                   handleSelectOutcome(val as string);
                 }}
@@ -124,7 +124,7 @@ const ContractOutcomeField = ({
 
         <div className="w-full">
           <Controller
-            name={`contractOutcomeRates.${index}.rate`}
+            name={`outcomeRates.${index}.rate`}
             control={control}
             render={({ field, fieldState }) => {
               const { error } = fieldState;
@@ -132,7 +132,7 @@ const ContractOutcomeField = ({
               return (
                 <Input
                   {...field}
-                  placeholder="Mention here"
+                  placeholder="Rate"
                   type="number"
                   error={!!error?.message}
                   helperText={error?.message}
@@ -143,7 +143,7 @@ const ContractOutcomeField = ({
 
           <div className="flex flex-col gap-2 md:flex-row md:items-end">
             <Controller
-              name={`contractOutcomeRates.${index}.perOutcome`}
+              name={`outcomeRates.${index}.perOutcome`}
               control={control}
               render={({ field }) => {
                 return (
@@ -161,7 +161,7 @@ const ContractOutcomeField = ({
 
             <div className="w-full translate-y-7">
               <Controller
-                name={`contractOutcomeRates.${index}.threshold`}
+                name={`outcomeRates.${index}.threshold`}
                 control={control}
                 render={({ field, fieldState }) => {
                   const { error } = fieldState;
