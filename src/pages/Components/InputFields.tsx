@@ -37,7 +37,10 @@ const InputFields = () => {
           helperText="Helper Text"
         />
 
-        <FileInput />
+        <FileInput
+          placeholder="Upload file"
+          onSuccess={(data) => console.log(data)}
+        />
 
         <DatePicker
           label="Select date"
