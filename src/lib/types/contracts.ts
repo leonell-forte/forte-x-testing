@@ -10,41 +10,51 @@ export interface IContractParties {
 }
 
 export interface IContractOutcomeRates {
+  id: number;
+
   projectOutcomeId: number;
 
   rate: string | number;
 
   perOutcome: boolean;
 
-  threshold: string;
+  threshold: string | number;
 }
 
 export interface IContract {
-  id?: number;
+  createdAt?: string;
 
-  projectId: number;
+  createdBy?: number;
 
-  targetNoOfBenefeciaries: string;
+  document?: string;
 
-  documentId: number;
-
-  status: StatusType;
-
-  startDate: string;
+  documentId?: number;
 
   endDate: string;
 
+  id?: number;
+
+  outcomenames?: string[];
+
+  outcomes: IContractOutcomeRates[];
+
+  parties?: string[];
+
   partyIds: number[];
-
-  outcomeRates: IContractOutcomeRates[];
-
-  createdAt?: string;
-
-  updatedAt?: string;
 
   project?: string;
 
-  outcomes?: string; // Specify the type better if outcomes can have different types (e.g., number, boolean).
+  projectId: number;
+
+  startDate: string;
+
+  status: StatusType;
+
+  targetNoOfBenefeciaries: number | string;
+
+  updatedAt?: string;
+
+  updatedBy?: number;
 }
 
 export interface IContractFilters {

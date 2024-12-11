@@ -1,4 +1,8 @@
-import { IContract, IContractDefaultValues } from "../../lib/types/contracts";
+import {
+  ContractFieldValues,
+  IContract,
+  IContractDefaultValues,
+} from "../../lib/types/contracts";
 import { z } from "zod";
 
 const contractOutcomeSchema = z
@@ -32,10 +36,11 @@ const contractOutcomeSchema = z
 
 export const contracts = {
   defaultValues: ({ contract, projectId }: IContractDefaultValues) => {
-    let data: IContract = {
+    let data: ContractFieldValues = {
       projectId: contract?.projectId || projectId || 0,
 
-      targetNoOfBenefeciaries: contract?.targetNoOfBenefeciaries || "",
+      targetNoOfBenefeciaries:
+        contract?.targetNoOfBenefeciaries.toString() || "",
 
       documentId: contract?.documentId || 0,
 
@@ -48,14 +53,18 @@ export const contracts = {
       partyIds: contract?.partyIds || [],
 
       outcomeRates: contract
-        ? contract?.outcomeRates.map((item) => ({
-            ...item,
+        ? contract?.outcomes.map((item) => ({
+            outcomeId: item.id,
 
-            threshold: item.threshold ? item.threshold.toString() : "",
+            rate: item.rate,
+
+            perOutcome: item.perOutcome,
+
+            threshold: item.threshold.toString(),
           }))
         : [
             {
-              projectOutcomeId: 0,
+              outcomeId: 0,
 
               rate: "",
 

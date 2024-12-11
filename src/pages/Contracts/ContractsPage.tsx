@@ -69,6 +69,8 @@ const ContractsPage = () => {
       }),
   });
 
+  console.log(contractList);
+
   const { data: organizationList } = useQuery({
     queryKey: ["organizations", page, debouncedSearch, filters],
 
@@ -229,7 +231,7 @@ const ContractsPage = () => {
           </button>
         </div>
 
-        {/* <div className="space-y-[18px] overflow-scroll">
+        <div className="space-y-[18px] overflow-scroll">
           <div className="pr-4">
             <Table.Container
               isEmpty={!contracts.length}
@@ -250,13 +252,11 @@ const ContractsPage = () => {
                   const {
                     id,
 
-                    contractParties,
-
                     project,
 
                     status,
 
-                    outcomes,
+                    parties,
 
                     targetNoOfBenefeciaries,
 
@@ -273,13 +273,9 @@ const ContractsPage = () => {
                         <p className="w-[90px] truncate">Contract {id}</p>
                       </Table.Data> */}
 
-        {/* <Table.Data>
+                      <Table.Data>
                         <p className="w-[150px] truncate">
-                          {extractPartiesNamesFromContract(
-                            contractParties,
-
-                            organizationList!.items,
-                          )}
+                          {parties?.join(" ")}
                         </p>
                       </Table.Data>
 
@@ -293,7 +289,7 @@ const ContractsPage = () => {
                         <p className="w-[140px] truncate">{project}</p>
                       </Table.Data>
 
-                      <Table.Data>{outcomes}</Table.Data>
+                      <Table.Data>outcomes</Table.Data>
 
                       <Table.Data>{targetNoOfBenefeciaries}</Table.Data>
 
@@ -345,8 +341,8 @@ const ContractsPage = () => {
                 })}
               </Table.Body>
             </Table.Container>
-          </div> */}
-        {/* 
+          </div>
+
           <div className="flex justify-end items-center w-full">
             <HorizontalScroller />
 
@@ -356,7 +352,7 @@ const ContractsPage = () => {
               total={contractList?.totalSize as number}
             />
           </div>
-        </div>  */}
+        </div>
       </div>
     </>
   );
