@@ -26,7 +26,7 @@ export interface IContract {
 
   targetNoOfBenefeciaries: string;
 
-  documentId: string;
+  documentId: number;
 
   status: StatusType;
 

@@ -37,7 +37,7 @@ export const contracts = {
 
       targetNoOfBenefeciaries: contract?.targetNoOfBenefeciaries || "",
 
-      documentId: contract?.documentId || "",
+      documentId: contract?.documentId || 0,
 
       status: contract?.status || "ACTIVE",
 
@@ -82,7 +82,7 @@ export const contracts = {
       message: "Target number of beneficiaries is a required field",
     }),
 
-    documentId: z.string().min(1, { message: "Document is a required field" }),
+    documentId: z.number().min(1, { message: "Document is a required field" }),
 
     partyIds: z.array(z.number()).min(1, "Party is a required field"),
 

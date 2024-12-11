@@ -24,6 +24,7 @@ import { findLabelFromOptions, formatDate } from "../../../../lib/utils";
 import useContractMutation from "../../../../lib/mutations/contracts";
 import { IProject } from "../../../../lib/types/projects";
 import { IOrganization } from "../../../../lib/types/organizations";
+import FileInput from "../../../../components/ui/file-input";
 
 interface IContractDialogueProps extends IDialogueProps {
   id?: number;
@@ -304,10 +305,12 @@ const ContractDialogue = ({
             <Controller
               name="documentId"
               control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  placeholder="Upload here"
+              render={() => (
+                <FileInput
+                  onSuccess={(data) => {
+                    setValue("documentId", data.id);
+                  }}
+                  placeholder="Document"
                   error={!!errors.documentId?.message}
                   helperText={errors.documentId?.message}
                 />

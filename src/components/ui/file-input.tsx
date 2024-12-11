@@ -4,6 +4,7 @@ import loader from "../../assets/images/icons/loader.svg";
 import Input from "./input";
 import { ChangeEvent, useState } from "react";
 import { uploadFile } from "../../api/upload";
+import classNames from "classnames";
 
 type ReturnType = {
   id: number;
@@ -25,6 +26,7 @@ const FileInput = ({ onSuccess, ...props }: IProps) => {
   const [loading, setLoading] = useState(false);
 
   const [value, setValue] = useState("");
+
   const handleUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     setLoading(true);
 
@@ -33,7 +35,7 @@ const FileInput = ({ onSuccess, ...props }: IProps) => {
 
       onSuccess?.(res.data.data);
 
-      setValue(res.data.data.fileName);
+      setValue(res.data.data.filename);
     } catch (err) {
       console.log(err);
     } finally {
@@ -42,7 +44,7 @@ const FileInput = ({ onSuccess, ...props }: IProps) => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <Input
         color="primary"
         type="file"
@@ -65,7 +67,12 @@ const FileInput = ({ onSuccess, ...props }: IProps) => {
         />
       )}
 
-      <div className="absolute left-4 top-4 text-gray-500 text-sm">
+      <div
+        className={classNames(
+          "absolute left-4 top-3.5",
+          value ? "text-white" : "text-white/50",
+        )}
+      >
         {loading ? "Uploading..." : value || props.placeholder}
       </div>
     </div>
