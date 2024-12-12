@@ -40,6 +40,11 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
               ...(small && {
                 height: "10px",
               }),
+
+              ...(type === "file" && {
+                opacity: 0,
+                cursor: "pointer",
+              }),
             },
 
             "& .MuiOutlinedInput-root": {

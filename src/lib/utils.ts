@@ -1,7 +1,5 @@
 import { IOption } from "@/components/ui/dropdown";
 import { format } from "date-fns";
-import { IContractParties } from "./types/contracts";
-import { IOrganization } from "./types/organizations";
 
 export const filterBySearch = (
   list: Record<string, string>[],
@@ -115,19 +113,4 @@ export const findLabelFromOptions = (
   const label = options.find((item) => item.value === value)?.label;
 
   return label;
-};
-
-export const extractPartiesNamesFromContract = (
-  contractParties: IContractParties[],
-  organizations: IOrganization[],
-) => {
-  return contractParties
-    .map((item) => {
-      const organization = organizations.find(
-        (org) => Number(org.id) === item.organizationId,
-      );
-
-      return organization?.name;
-    })
-    .join(", ");
 };

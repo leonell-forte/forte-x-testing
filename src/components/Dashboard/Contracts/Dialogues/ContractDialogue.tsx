@@ -24,6 +24,7 @@ import { findLabelFromOptions, formatDate } from "../../../../lib/utils";
 import useContractMutation from "../../../../lib/mutations/contracts";
 import { IProject } from "../../../../lib/types/projects";
 import { IOrganization } from "../../../../lib/types/organizations";
+import FileInput from "../../../../components/ui/file-input";
 
 interface IContractDialogueProps extends IDialogueProps {
   id?: number;
@@ -84,7 +85,7 @@ const ContractDialogue = ({
   const { fields, append, remove } = useFieldArray({
     control,
 
-    name: "contractOutcomeRates",
+    name: "outcomeRates",
   });
 
   const { data: organizationList, isLoading: orgLoading } = useQuery({
@@ -160,7 +161,7 @@ const ContractDialogue = ({
             </label>
 
             <Controller
-              name="contractParties"
+              name="partyIds"
               control={control}
               render={({ field }) => {
                 return (
@@ -168,22 +169,18 @@ const ContractDialogue = ({
                     enableSearch
                     loading={orgLoading}
                     showAsTags
-                    value={field.value.map((item) =>
-                      item.organizationId?.toString(),
-                    )}
+                    value={field.value.map((item) => item.toString())}
                     options={organizations}
                     handleSelect={(val) => {
                       setValue(
-                        "contractParties",
-                        (val as string[]).map((item) => ({
-                          organizationId: Number(item),
-                        })),
+                        "partyIds",
+                        (val as string[]).map((item) => Number(item)),
                       );
 
-                      setError("contractParties", { message: "" });
+                      setError("partyIds", { message: "" });
                     }}
-                    error={!!errors.contractParties?.message}
-                    helperText={errors.contractParties?.message}
+                    error={!!errors.partyIds?.message}
+                    helperText={errors.partyIds?.message}
                     isMultiSelect
                     placeholder="Parties"
                   />
@@ -251,9 +248,9 @@ const ContractDialogue = ({
                     handleSelect={(val) => {
                       setValue("projectId", Number(val));
 
-                      setValue("contractOutcomeRates", [
+                      setValue("outcomeRates", [
                         {
-                          projectOutcomeId: 0,
+                          outcomeId: 0,
 
                           rate: "",
 
@@ -306,14 +303,16 @@ const ContractDialogue = ({
             </label>
 
             <Controller
-              name="document"
+              name="documentId"
               control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  placeholder="Upload here"
-                  error={!!errors.document?.message}
-                  helperText={errors.document?.message}
+              render={() => (
+                <FileInput
+                  onSuccess={(data) => {
+                    setValue("documentId", data.id);
+                  }}
+                  placeholder="Document"
+                  error={!!errors.documentId?.message}
+                  helperText={errors.documentId?.message}
                 />
               )}
             />
@@ -379,31 +378,28 @@ const ContractDialogue = ({
                   key={index}
                   projectId={watch("projectId")}
                   control={control}
-                  perOutcome={watch(`contractOutcomeRates.${index}.perOutcome`)}
+                  perOutcome={watch(`outcomeRates.${index}.perOutcome`)}
                   index={index}
                   handleDelete={() => remove(index)}
                   handleSelectOutcome={(val) => {
-                    setValue(
-                      `contractOutcomeRates.${index}.projectOutcomeId`,
-                      Number(val),
-                    );
+                    setValue(`outcomeRates.${index}.outcomeId`, Number(val));
                   }}
                   handleRadioSelect={(value) => {
-                    setValue(`contractOutcomeRates.${index}.threshold`, "");
+                    setValue(`outcomeRates.${index}.threshold`, "");
 
-                    setError(`contractOutcomeRates.${index}.threshold`, {
+                    setError(`outcomeRates.${index}.threshold`, {
                       message: "",
                     });
 
                     if (value === "Per outcome") {
                       setValue(
-                        `contractOutcomeRates.${index}.perOutcome`,
+                        `outcomeRates.${index}.perOutcome`,
 
                         true,
                       );
                     } else {
                       setValue(
-                        `contractOutcomeRates.${index}.perOutcome`,
+                        `outcomeRates.${index}.perOutcome`,
 
                         false,
                       );
@@ -411,7 +407,7 @@ const ContractDialogue = ({
                   }}
                   handleAdd={() =>
                     append({
-                      projectOutcomeId: 0,
+                      outcomeId: 0,
 
                       rate: "",
 

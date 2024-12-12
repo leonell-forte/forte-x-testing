@@ -110,6 +110,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
   );
 
   const selectedContract = watch("contractId");
+
   const organizations: IOption[] = useMemo(
     () =>
       organizationList?.items
@@ -121,8 +122,8 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
             (contract) => contract.id === selectedContract,
           );
 
-          return contract?.contractParties.some(
-            (item) => item.organizationId === Number(org.id),
+          return contract?.partyIds.some(
+            (item) => Number(item) === Number(org.id),
           );
         })
         .map((item) => ({

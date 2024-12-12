@@ -90,12 +90,17 @@ class ContractService {
     const body = {
       ...data,
 
-      contractOutcomeRates: data.contractOutcomeRates.map((item) => ({
+      targetNoOfBenefeciaries: Number(data.targetNoOfBenefeciaries),
+
+      documentId: Number(data.documentId),
+
+      outcomeRates: data.outcomeRates.map((item) => ({
         ...item,
 
         threshold: Number(item.threshold),
       })),
     };
+
     const response = await api.post("/contracts", body);
 
     return response.data.data;
@@ -105,7 +110,7 @@ class ContractService {
     const body = {
       ...values,
 
-      contractOutcomeRates: values.contractOutcomeRates.map((item) => ({
+      contractOutcomeRates: values.outcomeRates.map((item) => ({
         ...item,
 
         threshold: Number(item.threshold),
