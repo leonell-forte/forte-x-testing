@@ -14,7 +14,7 @@ import {
   IContractFilters,
   StatusType,
 } from "../../lib/types/contracts";
-import { extractPartiesNamesFromContract, formatDate } from "../../lib/utils";
+import { formatDate } from "../../lib/utils";
 import Pagination from "../../components/ui/pagination";
 import { useDebounce, usePageTitle } from "../../lib/hooks";
 import { DEFAULT_DATE_FORMAT, STATUS } from "../../lib/constants";
@@ -23,7 +23,6 @@ import DeleteDialogue from "../../components/Dashboard/Contracts/Dialogues/Delet
 import HorizontalScroller from "../../components/ui/horizontal-scroller";
 import projectService from "../../api/projects";
 import { IProject } from "../../lib/types/projects";
-import organizationService from "../../api/organization";
 
 const ContractsPage = () => {
   usePageTitle("Contracts");
@@ -66,21 +65,6 @@ const ContractsPage = () => {
         search: debouncedSearch,
 
         listAll: false,
-      }),
-  });
-
-  console.log(contractList);
-
-  const { data: organizationList } = useQuery({
-    queryKey: ["organizations", page, debouncedSearch, filters],
-
-    queryFn: () =>
-      organizationService.list({
-        listAll: true,
-
-        page: 1,
-
-        filters: {},
       }),
   });
 

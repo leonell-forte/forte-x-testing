@@ -1,6 +1,5 @@
 import {
   ContractFieldValues,
-  IContract,
   IContractDefaultValues,
 } from "../../lib/types/contracts";
 import { z } from "zod";

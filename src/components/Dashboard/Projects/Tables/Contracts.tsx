@@ -111,8 +111,6 @@ const Contracts = ({ projectId }: IProps) => {
               const {
                 id,
 
-                outcomes,
-
                 targetNoOfBenefeciaries,
 
                 status,
