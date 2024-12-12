@@ -12,3 +12,47 @@ export type AddEvidenceParams = {
 
   values: EvidenceFieldValues;
 };
+
+export type Evidence = {
+  id: number;
+
+  description: string;
+
+  status: string;
+
+  outcome: {
+    id: number;
+
+    name: string;
+
+    description: string;
+  };
+
+  file: {
+    id: number;
+
+    filename: string;
+
+    key: string;
+
+    fileUrl: string;
+  };
+
+  createdAt: string;
+
+  createdBy: {
+    id: number;
+
+    firstName: string;
+
+    lastName: string;
+  };
+
+  updatedBy: {
+    id: number;
+
+    firstName: string;
+
+    lastName: string;
+  };
+};

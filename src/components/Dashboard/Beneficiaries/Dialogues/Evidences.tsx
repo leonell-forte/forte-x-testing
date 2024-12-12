@@ -5,6 +5,9 @@ import Button from "../../../../components/ui/button";
 import { useAppSelector } from "../../../../lib/hooks";
 import { useQuery } from "@tanstack/react-query";
 import evidenceService from "../../../../api/evidence";
+import { useMemo } from "react";
+import { capitalize } from "@mui/material";
+import { Link } from "react-router-dom";
 
 interface IProps {
   handleAddOrViewEvidence?: (id?: number) => void;
@@ -13,13 +16,13 @@ interface IProps {
 const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
   const { beneficiaryId } = useAppSelector((state) => state.evidence);
 
-  const { data, isLoading } = useQuery({
+  const { data: evidenceList, isLoading } = useQuery({
     queryKey: ["evidences", beneficiaryId],
 
     queryFn: () => evidenceService.list(beneficiaryId as number),
   });
 
-  console.log(data);
+  const evidences = useMemo(() => evidenceList?.items || [], [evidenceList]);
 
   return (
     <div className="space-y-[30px]">
@@ -42,7 +45,7 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
         </div>
       </div>
 
-      <Table.Container isLoading={isLoading}>
+      <Table.Container isEmpty={!evidences.length}>
         <Table.Head>
           <Table.Row>
             {HEADERS.map((item, index) => {
@@ -54,31 +57,37 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
         </Table.Head>
 
         <Table.Body>
-          {Array.from({ length: 3 }).map((item, index) => {
+          {evidences.map((item, index) => {
+            const { file, outcome, description, status, id } = item;
             return (
               <Table.Row key={index}>
                 <Table.Data>
                   <button
-                    onClick={() => handleAddOrViewEvidence?.(index + 1)}
+                    onClick={() => handleAddOrViewEvidence?.(id)}
                     className="link underline"
                   >
-                    Evidence file 1.pdf
+                    {file.filename}
                   </button>
                 </Table.Data>
 
-                <Table.Data>Lorem </Table.Data>
+                <Table.Data>{outcome.name} </Table.Data>
 
-                <Table.Data>Employment contract</Table.Data>
+                <Table.Data>{description}</Table.Data>
 
-                <Table.Data>More information request</Table.Data>
+                <Table.Data>{capitalize(status)}</Table.Data>
 
                 <Table.Data>
-                  <button type="button">
+                  <Link
+                    to={file.fileUrl}
+                    download
+                    target="_blank"
+                    type="button"
+                  >
                     <img
                       src={download}
                       alt="download"
                     />
-                  </button>
+                  </Link>
                 </Table.Data>
               </Table.Row>
             );

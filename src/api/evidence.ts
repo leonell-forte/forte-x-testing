@@ -1,5 +1,5 @@
 import { api } from "../lib/axios/interceptor";
-import { AddEvidenceParams } from "../lib/types/evidence";
+import { AddEvidenceParams, Evidence } from "../lib/types/evidence";
 
 export class EvidenceService {
   async add({
@@ -21,13 +21,15 @@ export class EvidenceService {
       body,
     );
 
-    return response;
+    return response.data;
   }
 
-  async list(beneficiaryId: number) {
+  async list(
+    beneficiaryId: number,
+  ): Promise<{ items: Evidence[]; totalSize: number }> {
     const response = await api.get(`/beneficiaries/${beneficiaryId}/evidences`);
 
-    return response;
+    return response.data;
   }
 }
 
