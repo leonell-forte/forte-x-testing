@@ -110,29 +110,36 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
   );
 
   const selectedContract = watch("contractId");
-  // const organizations: IOption[] = useMemo(
-  //   () =>
-  //     organizationList?.items
-  //       .filter((org) => {
-  //         // filter the organizations based on selected contract
-  //         // provider dropdown should be disabled if no contract is selected
 
-  //         const contract = contractList?.items.find(
-  //           (contract) => contract.id === selectedContract,
-  //         );
+  const organizations: IOption[] = useMemo(
+    () =>
+      organizationList?.items
+        .filter((org) => {
+          // filter the organizations based on selected contract
+          // provider dropdown should be disabled if no contract is selected
 
-  //         return contract?.contractParties.some(
-  //           (item) => item.organizationId === Number(org.id),
-  //         );
-  //       })
-  //       .map((item) => ({
-  //         label: item.name,
+          const contract = contractList?.items.find(
+            (contract) => contract.id === selectedContract,
+          );
 
-  //         value: item.id!.toString(),
-  //       })) || [],
+          return contract?.partyIds.some(
+            (item) => Number(item) === Number(org.id),
+          );
+        })
+        .map((item) => ({
+          label: item.name,
 
-  //   [organizationList, contractList, selectedContract],
-  // );
+          value: item.id!.toString(),
+        })) || [],
+
+    [organizationList, contractList, selectedContract],
+  );
+
+  console.log(selectedContract);
+
+  console.log(organizationList);
+
+  console.log(contractList);
 
   const projects: IOption[] = useMemo(
     () =>
@@ -354,7 +361,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
             Provider
           </label>
 
-          {/* <Controller
+          <Controller
             control={control}
             name="providerId"
             render={({ field }) => (
@@ -378,7 +385,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
                 helperText={errors.providerId?.message}
               />
             )}
-          /> */}
+          />
         </div>
 
         <div className="flex items-start">
