@@ -45,7 +45,10 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
         </div>
       </div>
 
-      <Table.Container isEmpty={!evidences.length}>
+      <Table.Container
+        isEmpty={!evidences.length}
+        isLoading={isLoading}
+      >
         <Table.Head>
           <Table.Row>
             {HEADERS.map((item, index) => {
