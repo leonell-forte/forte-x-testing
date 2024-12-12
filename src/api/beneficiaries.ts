@@ -47,6 +47,32 @@ class BeneficiariesService {
 
         exact: true,
       },
+
+      "beneficiary.status": {
+        value: filters?.status as string,
+
+        exact: true,
+      },
+
+      "beneficiary.provider_id": {
+        value: filters?.provider?.toString() || "",
+
+        exact: true,
+      },
+
+      "beneficiary.risk_level": {
+        value: filters?.riskLevel || "",
+
+        exact: true,
+      },
+
+      "beneficiary.cohort_start_date": {
+        value: filters?.startDate || "",
+
+        exact: false,
+
+        isDate: true,
+      },
     };
 
     params.append("$pageNum", page.toString());
