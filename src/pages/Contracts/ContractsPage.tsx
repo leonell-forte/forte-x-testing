@@ -85,7 +85,7 @@ const ContractsPage = () => {
       projecrList?.items?.map((item: IProject) => ({
         label: item.name,
 
-        value: item.name,
+        value: item.id.toString(),
       })) || [],
 
     [projecrList],
@@ -259,7 +259,7 @@ const ContractsPage = () => {
 
                       <Table.Data>
                         <p className="w-[150px] truncate">
-                          {parties?.join(" ")}
+                          {parties?.join(", ")}
                         </p>
                       </Table.Data>
 
