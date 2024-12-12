@@ -5,7 +5,7 @@ import Dialogue, {
 import Button from "../../../../components/ui/button";
 import Dropdown, { IOption } from "../../../../components/ui/dropdown";
 import { BENEFICIARY_STATUS } from "../../../../lib/constants";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import CommentSection from "./Sections/CommentSection";
 import ActivityLogSection from "./Sections/ActivityLogSection";
 import DocumentSection from "./Sections/DocumentSection";
@@ -32,6 +32,14 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
   const { contractId, projectId, beneficiaryId } = useAppSelector(
     (state) => state.evidence,
   );
+
+  const { data: evidenceData, isLoading: evidenceLoading } = useQuery({
+    queryKey: ["evidence", id],
+
+    queryFn: () => evidenceService.getOne(beneficiaryId!, id!),
+
+    enabled: !!id,
+  });
 
   const { data: project, isLoading: isProjectLoading } = useQuery({
     queryKey: ["specific-project", projectId],
@@ -63,11 +71,19 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
     setError,
 
     formState: { errors },
+
+    reset,
   } = useForm({
     resolver: zodResolver(evidence.schema),
 
     defaultValues: evidence.defaultValues(),
   });
+
+  useEffect(() => {
+    if (evidenceData) {
+      reset(evidence.defaultValues(evidenceData));
+    }
+  }, [reset, evidenceData]);
 
   const { setAlert } = useAlert();
 

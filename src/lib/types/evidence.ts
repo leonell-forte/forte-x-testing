@@ -56,3 +56,33 @@ export type Evidence = {
     lastName: string;
   };
 };
+
+export type EvidenceData = {
+  id: number;
+
+  description: string;
+
+  status: string;
+
+  "file.id": number;
+
+  "file.key": string;
+
+  "file.fileUrl": string;
+
+  "file.filename": string;
+
+  createdAt: string;
+
+  "createdBy.id": number;
+
+  "createdBy.firstName": string;
+
+  "createdBy.lastName": string;
+
+  "updatedBy.id": number;
+
+  "updatedBy.firstName": string;
+
+  "updatedBy.lastName": string;
+};

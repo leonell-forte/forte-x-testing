@@ -1,12 +1,12 @@
 import { z } from "zod";
-import { EvidenceFieldValues } from "../types/evidence";
+import { EvidenceData, EvidenceFieldValues } from "../types/evidence";
 
 export const evidence = {
-  defaultValues: () => {
+  defaultValues: (evidence?: EvidenceData) => {
     let data: EvidenceFieldValues = {
-      description: "",
+      description: evidence?.description || "",
 
-      status: "",
+      status: evidence?.status || "",
 
       outcomeId: "",
 
