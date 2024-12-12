@@ -135,12 +135,6 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
     [organizationList, contractList, selectedContract],
   );
 
-  console.log(selectedContract);
-
-  console.log(organizationList);
-
-  console.log(contractList);
-
   const projects: IOption[] = useMemo(
     () =>
       projectsList?.items.map((item) => ({
