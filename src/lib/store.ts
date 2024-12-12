@@ -3,10 +3,11 @@ import auth from "./slice/auth";
 import alert from "./slice/alert";
 import scroll from "./slice/scroll";
 import layout from "./slice/layout";
+import evidence from "./slice/evidence";
 
 export const makeStore = () => {
   return configureStore({
-    reducer: { auth, alert, layout, scroll },
+    reducer: { auth, alert, layout, scroll, evidence },
   });
 };
 

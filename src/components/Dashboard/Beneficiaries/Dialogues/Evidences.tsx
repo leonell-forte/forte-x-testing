@@ -2,12 +2,25 @@ import Table from "../../../../components/ui/table";
 import add from "../../../../assets/images/icons/add.svg";
 import download from "../../../../assets/images/icons/download.svg";
 import Button from "../../../../components/ui/button";
+import { useAppSelector } from "../../../../lib/hooks";
+import { useQuery } from "@tanstack/react-query";
+import evidenceService from "../../../../api/evidence";
 
 interface IProps {
   handleAddOrViewEvidence?: (id?: number) => void;
 }
 
 const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
+  const { beneficiaryId } = useAppSelector((state) => state.evidence);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["evidences", beneficiaryId],
+
+    queryFn: () => evidenceService.list(beneficiaryId as number),
+  });
+
+  console.log(data);
+
   return (
     <div className="space-y-[30px]">
       <div className="flex items-center gap-12">
@@ -29,7 +42,7 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
         </div>
       </div>
 
-      <Table.Container>
+      <Table.Container isLoading={isLoading}>
         <Table.Head>
           <Table.Row>
             {HEADERS.map((item, index) => {

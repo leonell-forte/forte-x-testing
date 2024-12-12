@@ -1,3 +1,4 @@
+import { useAppDispatch } from "../../../../lib/hooks";
 import beneficiariesService from "../../../../api/beneficiaries";
 import contractService from "../../../../api/contract";
 import organizationService from "../../../../api/organization";
@@ -26,6 +27,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { setSelectedData } from "../../../../lib/slice/evidence";
 
 interface IProps {
   id?: number;
@@ -36,6 +38,8 @@ interface IProps {
 }
 
 const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
+  const dispatch = useAppDispatch();
+
   const {
     control,
 
@@ -69,6 +73,23 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
       reset(beneficiaries.defaultValues({ beneficiary: beneficiaryData }));
     }
   }, [beneficiaryData, reset]);
+
+  const contract = watch("contractId");
+
+  const project = watch("projectId");
+
+  useEffect(() => {
+    // this passes beneficiary, contract and project to add evidence dialogue component as it is needed when editing and adding an evidence
+    dispatch(
+      setSelectedData({
+        contractId: contract,
+
+        projectId: project,
+
+        beneficiaryId: Number(id),
+      }),
+    );
+  }, [contract, project, id, dispatch, watch]);
 
   const { data: organizationList, isLoading: orgLoading } = useQuery({
     queryKey: ["organizations"],
