@@ -57,7 +57,7 @@ class ContractService {
       },
 
       "contract.projectId": {
-        value: projectId?.toString() || filters?.project || "",
+        value: projectId?.toString() ?? filters?.project ?? "",
 
         exact: true,
       },
