@@ -42,19 +42,13 @@ class ContractService {
         isSearch: true,
       },
 
-      "projects.name": {
-        value: filters?.project || "",
-
-        exact: true,
-      },
-
-      "contracts.status": {
+      "contract.status": {
         value: filters?.status.toUpperCase() || "",
 
         exact: true,
       },
 
-      "contracts.startDate": {
+      "contract.startDate": {
         value: filters?.date || "",
 
         exact: false,
@@ -62,8 +56,8 @@ class ContractService {
         isDate: true,
       },
 
-      "projects.id": {
-        value: projectId ? projectId.toString() : "",
+      "contract.projectId": {
+        value: projectId?.toString() || filters?.project || "",
 
         exact: true,
       },
