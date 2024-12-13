@@ -205,10 +205,11 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
               <div className="flex flex-col items-center">
                 <div className="w-full max-w-[490px] max-h-[644px] flex items-center justify-center">
                   <img
-                    src={file?.fileUrl}
+                    src={file.fileUrl}
                     alt={file.filename}
                     className={classNames(uploading && "opacity-20")}
                   />
+
                   {uploading && (
                     <img
                       src={loader}
@@ -221,6 +222,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
                 {!uploading && (
                   <div className="py-3 px-6 relative text-center">
                     <p className="font-semibold text-mint">Replace document</p>
+
                     <div className="absolute top-0 opacity-0 cursor-pointer">
                       <Controller
                         control={control}
