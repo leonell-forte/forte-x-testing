@@ -5,30 +5,30 @@ import Input from "./input";
 import { ChangeEvent, useState } from "react";
 import { uploadFile } from "../../api/upload";
 import classNames from "classnames";
-
-type ReturnType = {
-  id: number;
-
-  filename: string;
-
-  key: string;
-
-  fileUrl: string;
-
-  createdAt: string;
-};
+import { File } from "../../lib/types/common";
 
 type IProps = TextFieldProps & {
-  onSuccess?: (data: ReturnType) => void;
+  onUploadStart?: () => void;
+
+  onUploadEnd?: () => void;
+
+  onSuccess?: (data: File) => void;
 };
 
-const FileInput = ({ onSuccess, ...props }: IProps) => {
+const FileInput = ({
+  onSuccess,
+  onUploadStart,
+  onUploadEnd,
+  ...props
+}: IProps) => {
   const [loading, setLoading] = useState(false);
 
   const [value, setValue] = useState("");
 
   const handleUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     setLoading(true);
+
+    onUploadStart?.();
 
     try {
       const res = await uploadFile(e.target.files![0]);
@@ -39,18 +39,20 @@ const FileInput = ({ onSuccess, ...props }: IProps) => {
     } catch (err) {
       console.log(err);
     } finally {
+      onUploadEnd?.();
       setLoading(false);
     }
   };
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full cursor-pointer">
       <Input
         color="primary"
         type="file"
         {...props}
         disabled={loading}
         onChange={handleUpload}
+        className="z-10 absolute top-0 left-0 cursor-pointer"
       />
 
       {loading ? (
@@ -69,7 +71,7 @@ const FileInput = ({ onSuccess, ...props }: IProps) => {
 
       <div
         className={classNames(
-          "absolute left-4 top-3.5",
+          "absolute left-4 top-3.5 pointer-events-none",
           value ? "text-white" : "text-white/50",
         )}
       >

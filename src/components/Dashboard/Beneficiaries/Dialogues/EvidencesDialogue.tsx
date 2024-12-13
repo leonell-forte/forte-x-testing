@@ -5,11 +5,10 @@ import Dialogue, {
 import Button from "../../../../components/ui/button";
 import Dropdown, { IOption } from "../../../../components/ui/dropdown";
 import { BENEFICIARY_STATUS } from "../../../../lib/constants";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import CommentSection from "./Sections/CommentSection";
-import ActivityLogSection from "./Sections/ActivityLogSection";
-import DocumentSection from "./Sections/DocumentSection";
-import { useAlert, useAppSelector } from "../../../../lib/hooks";
+
+import { useAppSelector } from "../../../../lib/hooks";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { evidence } from "../../../../lib/validators/evidence";
@@ -19,19 +18,29 @@ import FileInput from "../../../../components/ui/file-input";
 import { useQuery } from "@tanstack/react-query";
 import projectService from "../../../../api/projects";
 import { findLabelFromOptions } from "../../../../lib/utils";
+import loader from "../../../../assets/images/icons/loader.svg";
+import classNames from "classnames";
+import { useEvidenceMutation } from "../../../../lib/mutations/evidences";
+import Spinner from "../../../../components/ui/spinner/spinner";
 
 interface IEvidencesDialogueProps extends IDialogueProps {
   id?: number;
 }
 
 const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
-  const [onEdit, setOnEdit] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
-  const [loading, setLoading] = useState(false);
-
-  const { contractId, projectId, beneficiaryId } = useAppSelector(
-    (state) => state.evidence
+  const { projectId, beneficiaryId } = useAppSelector(
+    (state) => state.evidence,
   );
+
+  const { data: evidenceData, isLoading: evidenceLoading } = useQuery({
+    queryKey: ["evidence", id],
+
+    queryFn: () => evidenceService.getOne(beneficiaryId!, id!),
+
+    enabled: !!id,
+  });
 
   const { data: project, isLoading: isProjectLoading } = useQuery({
     queryKey: ["specific-project", projectId],
@@ -50,7 +59,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
 
         value: item.id.toString(),
       })) || [],
-    [project]
+    [project],
   );
 
   const {
@@ -63,176 +72,242 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
     setError,
 
     formState: { errors },
+
+    reset,
+
+    watch,
   } = useForm({
     resolver: zodResolver(evidence.schema),
 
-    defaultValues: evidence.defaultValues(),
+    defaultValues: evidence.defaultValues(evidenceData),
   });
 
-  const { setAlert } = useAlert();
+  const file = watch("file");
+
+  useEffect(() => {
+    // prefills defaultvalue of evidence form
+    if (evidenceData) {
+      reset(evidence.defaultValues(evidenceData));
+    }
+  }, [reset, evidenceData]);
+
+  const { addEvidence, isPending } = useEvidenceMutation({
+    beneficiaryId: beneficiaryId!,
+
+    evidenceId: id!,
+
+    successCallback: () => props.handleClose?.(),
+  });
 
   const onSubmit = async (values: EvidenceFieldValues) => {
-    setLoading(true);
-    try {
-      evidenceService.add({
-        projectId: projectId!,
-
-        beneficiaryId: beneficiaryId!,
-
-        contractId: contractId!,
-
-        values,
-      });
-
-      setAlert({
-        title: "Success!",
-
-        message: "New evidence added successfully",
-
-        status: "success",
-      });
-
-      props.handleClose?.();
-    } catch (err: any) {
-      setAlert({
-        title: "An error has occurred",
-
-        message: err?.response?.data?.message,
-
-        status: "error",
-      });
-    } finally {
-      setLoading(false);
-    }
+    await addEvidence(values);
   };
 
   return (
-    <Dialogue {...props} title={`${id ? "Edit" : "Add"} evidence`}>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="space-y-[30px]"
-        id="evidences-form"
-      >
-        <div>
-          <div className="flex items-start gap-4">
-            <label htmlFor="" className="pt-3 flex-shrink-0 w-[120px]">
-              Description
-            </label>
-
-            <Controller
-              control={control}
-              name="description"
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  placeholder="Description"
-                  error={!!errors.description?.message}
-                  helperText={errors.description?.message}
-                />
-              )}
-            />
-          </div>
-
-          <div className="flex items-start gap-4">
-            <label htmlFor="" className="pt-3 flex-shrink-0 w-[120px]">
-              Outcome
-            </label>
-
-            <Controller
-              control={control}
-              name="outcomeId"
-              render={({ field }) => (
-                <Dropdown
-                  loading={isProjectLoading}
-                  value={findLabelFromOptions(
-                    outcomes,
-                    field.value?.toString()
-                  )}
-                  handleSelect={(val) => {
-                    setValue("outcomeId", val as string);
-                  }}
-                  options={outcomes}
-                  placeholder="Outcome"
-                  error={!!errors.outcomeId?.message}
-                  helperText={errors.outcomeId?.message}
-                />
-              )}
-            />
-          </div>
-
-          <div className="flex items-start gap-4">
-            <label htmlFor="" className="pt-3 flex-shrink-0 w-[120px]">
-              Status
-            </label>
-
-            <Controller
-              control={control}
-              name="status"
-              render={({ field }) => (
-                <Dropdown
-                  value={field.value}
-                  handleSelect={(val) => {
-                    setValue("status", val as string);
-
-                    setError("status", { message: "" });
-                  }}
-                  placeholder="Status"
-                  options={BENEFICIARY_STATUS}
-                  error={!!errors.status?.message}
-                  helperText={errors.status?.message}
-                />
-              )}
-            />
-          </div>
-
-          <div className="flex items-start gap-4">
-            <label htmlFor="" className="pt-3 flex-shrink-0 w-[120px]">
-              File
-            </label>
-
-            <Controller
-              control={control}
-              name="fileId"
-              render={() => (
-                <FileInput
-                  placeholder="Upload file"
-                  onSuccess={(data) => {
-                    setValue("fileId", data.id);
-
-                    setError("fileId", { message: "" });
-                  }}
-                  error={!!errors.fileId?.message}
-                  helperText={errors.fileId?.message}
-                />
-              )}
-            />
-          </div>
+    <Dialogue
+      {...props}
+      title={`${id ? "Edit" : "Add"} evidence`}
+    >
+      {evidenceLoading ? (
+        <div className="w-full h-[470px] flex items-center justify-center">
+          <Spinner />
         </div>
-      </form>
+      ) : (
+        <>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="space-y-[30px]"
+            id="evidences-form"
+          >
+            <div>
+              <div className="flex items-start gap-4">
+                <label
+                  htmlFor=""
+                  className="pt-3 flex-shrink-0 w-[120px]"
+                >
+                  Description
+                </label>
+
+                <Controller
+                  control={control}
+                  name="description"
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder="Description"
+                      error={!!errors.description?.message}
+                      helperText={errors.description?.message}
+                    />
+                  )}
+                />
+              </div>
+
+              <div className="flex items-start gap-4">
+                <label
+                  htmlFor=""
+                  className="pt-3 flex-shrink-0 w-[120px]"
+                >
+                  Outcome
+                </label>
+
+                <Controller
+                  control={control}
+                  name="outcomeId"
+                  render={({ field }) => (
+                    <Dropdown
+                      loading={isProjectLoading}
+                      value={findLabelFromOptions(
+                        outcomes,
+                        field.value?.toString(),
+                      )}
+                      handleSelect={(val) => {
+                        setValue("outcomeId", val as string);
+                      }}
+                      options={outcomes}
+                      placeholder="Outcome"
+                      error={!!errors.outcomeId?.message}
+                      helperText={errors.outcomeId?.message}
+                    />
+                  )}
+                />
+              </div>
+
+              <div className="flex items-start gap-4">
+                <label
+                  htmlFor=""
+                  className="pt-3 flex-shrink-0 w-[120px]"
+                >
+                  Status
+                </label>
+
+                <Controller
+                  control={control}
+                  name="status"
+                  render={({ field }) => (
+                    <Dropdown
+                      value={field.value}
+                      handleSelect={(val) => {
+                        setValue("status", val as string);
+
+                        setError("status", { message: "" });
+                      }}
+                      placeholder="Status"
+                      options={BENEFICIARY_STATUS}
+                      error={!!errors.status?.message}
+                      helperText={errors.status?.message}
+                    />
+                  )}
+                />
+              </div>
+            </div>
+
+            {file && (
+              <div className="flex flex-col items-center">
+                <div className="w-full max-w-[490px] max-h-[644px] flex items-center justify-center">
+                  <img
+                    src={file.fileUrl}
+                    alt={file.filename}
+                    className={classNames(uploading && "opacity-20")}
+                  />
+
+                  {uploading && (
+                    <img
+                      src={loader}
+                      alt="loader"
+                      className="animate-spin absolute w-10"
+                    />
+                  )}
+                </div>
+
+                {!uploading && (
+                  <div className="py-3 px-6 relative text-center">
+                    <p className="font-semibold text-mint">Replace document</p>
+
+                    <div className="absolute top-0 opacity-0 cursor-pointer">
+                      <Controller
+                        control={control}
+                        name="file"
+                        render={() => (
+                          <FileInput
+                            onUploadStart={() => setUploading(true)}
+                            onUploadEnd={() => setUploading(false)}
+                            onSuccess={(data) => {
+                              setValue("file", data);
+
+                              setError("file", { message: "" });
+                            }}
+                          />
+                        )}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {!file && (
+              <div className="flex items-start gap-4">
+                <label
+                  htmlFor=""
+                  className="pt-3 flex-shrink-0 w-[120px]"
+                >
+                  File
+                </label>
+
+                <Controller
+                  control={control}
+                  name="file"
+                  render={() => (
+                    <FileInput
+                      placeholder="Upload file"
+                      onSuccess={(data) => {
+                        setValue("file", data);
+
+                        setError("file", { message: "" });
+                      }}
+                      error={!!errors.file?.message}
+                      helperText={errors.file?.message}
+                    />
+                  )}
+                />
+              </div>
+            )}
+          </form>
+        </>
+      )}
 
       {!!id && (
         <div className="space-y-12">
-          <DocumentSection />
-
-          <ActivityLogSection />
+          {/* <ActivityLogSection /> */}
 
           <CommentSection id={id} />
         </div>
       )}
 
       <div className="flex justify-end mt-16">
-        {onEdit ? (
+        {id ? (
           <div className="space-x-4">
-            <Button buttonType="secondary" onClick={() => setOnEdit(false)}>
+            <Button
+              buttonType="secondary"
+              onClick={props.handleClose}
+            >
               Cancel
             </Button>
 
-            <Button>Save</Button>
+            <Button
+              type="submit"
+              form="evidences-form"
+              loading={isPending}
+            >
+              Save
+            </Button>
           </div>
-        ) : id ? (
-          <Button onClick={() => setOnEdit(true)}>Edit</Button>
         ) : (
-          <Button loading={loading} type="submit" form="evidences-form">
+          <Button
+            loading={isPending}
+            type="submit"
+            form="evidences-form"
+          >
             Save and upload document
           </Button>
         )}
