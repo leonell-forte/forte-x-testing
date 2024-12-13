@@ -1,5 +1,6 @@
 import { useState } from "react";
-import Dropdown from "../../components/ui/dropdown";
+
+import Dropdown from "components/ui/dropdown";
 
 const DropdownFields = () => {
   const [single, setSingle] = useState("");
@@ -7,11 +8,11 @@ const DropdownFields = () => {
   const [multiple, setMultiple] = useState<string[]>([]);
   return (
     <div>
-      <p className="text-2xl text-white font-semibold uppercase mb-2">
+      <p className="mb-2 text-2xl font-semibold uppercase text-white">
         Dropdown Fields
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <Dropdown
           placeholder="Single dropdown"
           value={single}

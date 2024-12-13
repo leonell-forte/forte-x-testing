@@ -24,14 +24,14 @@ export class EvidenceService {
     const response = await api.post(
       `/beneficiaries/${beneficiaryId}/evidences`,
 
-      body,
+      body
     );
 
     return response.data;
   }
 
   async list(
-    beneficiaryId: number,
+    beneficiaryId: number
   ): Promise<{ items: Evidence[]; totalSize: number }> {
     const response = await api.get(`/beneficiaries/${beneficiaryId}/evidences`);
 
@@ -40,7 +40,7 @@ export class EvidenceService {
 
   async getOne(beneficiaryId: number, evidenceId: number): Promise<Evidence> {
     const response = await api.get(
-      `/beneficiaries/${beneficiaryId}/evidences/${evidenceId}`,
+      `/beneficiaries/${beneficiaryId}/evidences/${evidenceId}`
     );
 
     return response.data.data;
@@ -61,7 +61,7 @@ export class EvidenceService {
 
     const response = await api.put(
       `/beneficiaries/${beneficiaryId}/evidences`,
-      body,
+      body
     );
 
     return response.data.data;

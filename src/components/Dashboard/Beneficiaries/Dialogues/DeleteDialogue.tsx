@@ -1,8 +1,7 @@
-import Dialogue, {
-  IDialogueProps,
-} from "../../../../components/ui/dialogue/dialogue";
-import Button from "../../../../components/ui/button";
-import { useDeleteBeneficiaryMutation } from "../../../../lib/mutations/beneficiaries";
+import { useDeleteBeneficiaryMutation } from "lib/mutations/beneficiaries";
+
+import Button from "components/ui/button";
+import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
 
 interface IDeleteDialogueProp extends IDialogueProps {
   id: number;
@@ -11,7 +10,7 @@ interface IDeleteDialogueProp extends IDialogueProps {
 const DeleteDialogue = ({ id, ...props }: IDeleteDialogueProp) => {
   const { deleteBeneficiary, isPending } = useDeleteBeneficiaryMutation(
     id,
-    props.handleClose,
+    props.handleClose
   );
 
   const handleDelete = async () => {
@@ -33,18 +32,12 @@ const DeleteDialogue = ({ id, ...props }: IDeleteDialogueProp) => {
           information are deleted too.
         </p>
 
-        <div className="flex justify-end gap-2 mt-6">
-          <Button
-            onClick={props.handleClose}
-            buttonType="secondary"
-          >
+        <div className="mt-6 flex justify-end gap-2">
+          <Button onClick={props.handleClose} buttonType="secondary">
             Cancel
           </Button>
 
-          <Button
-            loading={isPending}
-            onClick={handleDelete}
-          >
+          <Button loading={isPending} onClick={handleDelete}>
             Delete
           </Button>
         </div>

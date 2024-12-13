@@ -1,5 +1,6 @@
-import Tag from "../../components/ui/tag";
 import { useState } from "react";
+
+import Tag from "components/ui/tag";
 
 const Tags = () => {
   const [tags, setTags] = useState([
@@ -14,7 +15,7 @@ const Tags = () => {
   };
   return (
     <div>
-      <p className="text-2xl text-white font-semibold uppercase mb-2">
+      <p className="mb-2 text-2xl font-semibold uppercase text-white">
         Filter Tags
       </p>
       <div className="flex flex-wrap gap-4">

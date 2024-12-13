@@ -1,15 +1,16 @@
-import { IOption } from "@/components/ui/dropdown";
 import { format } from "date-fns";
+
+import { IOption } from "components/ui/dropdown";
 
 export const filterBySearch = (
   list: Record<string, string>[],
-  search: string,
+  search: string
 ): any => {
   let filteredList: Record<string, string>[] = [];
 
   list.forEach((item) => {
     const isMatch = Object.values(item).some((item) =>
-      item.toLowerCase().includes(search.toLowerCase()),
+      item.toLowerCase().includes(search.toLowerCase())
     );
 
     if (isMatch) {
@@ -108,7 +109,7 @@ export const formatDate = (date: string | Date, dateFormat: string) => {
 export const findLabelFromOptions = (
   options: IOption[],
 
-  value: string,
+  value: string
 ) => {
   const label = options.find((item) => item.value === value)?.label;
 

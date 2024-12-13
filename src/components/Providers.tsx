@@ -1,8 +1,9 @@
-import { ReactNode, useEffect } from "react";
-import StoreProvider from "./StoreProvider";
-import MuiProvider from "./MuiProvider";
-import { useLocation } from "react-router-dom";
 import * as amplitude from "@amplitude/analytics-browser";
+import { ReactNode, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+
+import MuiProvider from "./MuiProvider";
+import StoreProvider from "./StoreProvider";
 
 const Providers = ({ children }: { children: ReactNode }) => {
   const location = useLocation();

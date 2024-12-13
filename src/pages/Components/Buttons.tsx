@@ -1,9 +1,9 @@
-import Button from "../../components/ui/button";
+import Button from "components/ui/button";
 
 const Buttons = () => {
   return (
     <div>
-      <p className="text-2xl text-white font-semibold uppercase mb-2">
+      <p className="mb-2 text-2xl font-semibold uppercase text-white">
         buttons
       </p>
       <div className="flex flex-wrap gap-4">

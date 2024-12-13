@@ -1,11 +1,13 @@
-import Table from "../../../ui/table";
-import Button from "../../../ui/button";
+import { useQuery } from "@tanstack/react-query";
+import beneficiariesService from "api/beneficiaries";
 import { useState } from "react";
-import TagExistingDialogue from "../Dialogues/TagExistingDialogue";
+
+import Button from "components/ui/button";
+import Table from "components/ui/table";
+
 import BeneficiariesDialogue from "../../Beneficiaries/Dialogues/BeneficiariesDialogue";
 import ImportDialogue from "../../Beneficiaries/Dialogues/ImportDialogue";
-import { useQuery } from "@tanstack/react-query";
-import beneficiariesService from "../../../../api/beneficiaries";
+import TagExistingDialogue from "../Dialogues/TagExistingDialogue";
 
 type ModalLabelType = "beneficiaries" | "tag" | "import" | "";
 
@@ -49,10 +51,7 @@ const Beneficiaries = ({ id }: IProps) => {
 
       case "import":
         return (
-          <ImportDialogue
-            isVisible={modal === "import"}
-            handleClose={close}
-          />
+          <ImportDialogue isVisible={modal === "import"} handleClose={close} />
         );
     }
   };
@@ -61,14 +60,11 @@ const Beneficiaries = ({ id }: IProps) => {
       {renderModal(modal)}
 
       <div className="space-y-2.5">
-        <div className="flex justify-between items-center">
-          <p className="font-semibold text-[24px]">Beneficiaries</p>
+        <div className="flex items-center justify-between">
+          <p className="text-[24px] font-semibold">Beneficiaries</p>
 
           <div className="flex gap-2.5">
-            <Button
-              onClick={() => setModal("import")}
-              buttonType="secondary"
-            >
+            <Button onClick={() => setModal("import")} buttonType="secondary">
               Import beneficiaries
             </Button>
 
@@ -85,18 +81,12 @@ const Beneficiaries = ({ id }: IProps) => {
           </div>
         </div>
 
-        <Table.Container
-          isLoading={isLoading}
-          isEmpty={!data?.items.length}
-        >
+        <Table.Container isLoading={isLoading} isEmpty={!data?.items.length}>
           <Table.Head>
             <Table.Row>
               {HEADERS.map((item, index) => {
                 return (
-                  <Table.Header
-                    small
-                    key={index}
-                  >
+                  <Table.Header small key={index}>
                     {item}
                   </Table.Header>
                 );

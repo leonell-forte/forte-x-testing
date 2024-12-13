@@ -1,10 +1,12 @@
-import { Link, useParams } from "react-router-dom";
-import Outcomes from "../../../components/Dashboard/Projects/Tables/Outcomes";
-import arrow from "../../../assets/images/icons/arrow.svg";
-import Contracts from "../../../components/Dashboard/Projects/Tables/Contracts";
-import Beneficiaries from "../../../components/Dashboard/Projects/Tables/Beneficiaries";
 import * as amplitude from "@amplitude/analytics-browser";
 import { useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
+
+import arrow from "assets/images/icons/arrow.svg";
+
+import Beneficiaries from "components/Dashboard/Projects/Tables/Beneficiaries";
+import Contracts from "components/Dashboard/Projects/Tables/Contracts";
+import Outcomes from "components/Dashboard/Projects/Tables/Outcomes";
 
 const IndividualProjectsPage = () => {
   // page title is set on the outcomes component
@@ -16,15 +18,9 @@ const IndividualProjectsPage = () => {
   }, [id]);
 
   return (
-    <div className="space-y-2.5 py-3 overflow-scroll h-full hide-scroll">
-      <Link
-        to="/projects"
-        className="flex items-center gap-2.5"
-      >
-        <img
-          src={arrow}
-          alt="back"
-        />
+    <div className="hide-scroll h-full space-y-2.5 overflow-scroll py-3">
+      <Link to="/projects" className="flex items-center gap-2.5">
+        <img src={arrow} alt="back" />
 
         <p className="font-semibold">Back</p>
       </Link>

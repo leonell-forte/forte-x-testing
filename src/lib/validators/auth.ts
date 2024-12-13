@@ -38,7 +38,7 @@ export const password = {
         .regex(/\d/, "Password must inlcude at least one number")
         .regex(
           /[!@#$%^&*(),.?":{}|<>]/,
-          "Password must include at least one special character",
+          "Password must include at least one special character"
         ),
       confirmPassword: z
         .string()
@@ -84,7 +84,7 @@ export const signup = {
         .regex(/\d/, "Password must contain at least one number")
         .regex(
           /[!@#$%^&*(),.?":{}|<>]/,
-          "Password must contain at least one special character",
+          "Password must contain at least one special character"
         ),
 
       confirmPassword: z.string().min(1, "Passwords do not match"),

@@ -1,27 +1,28 @@
-import Input from "../../../../components/ui/input";
-import Dialogue, {
-  IDialogueProps,
-} from "../../../../components/ui/dialogue/dialogue";
-import Button from "../../../../components/ui/button";
-import Dropdown, { IOption } from "../../../../components/ui/dropdown";
-import { BENEFICIARY_STATUS } from "../../../../lib/constants";
-import { useEffect, useMemo, useState } from "react";
-import CommentSection from "./Sections/CommentSection";
-
-import { useAppSelector } from "../../../../lib/hooks";
-import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { evidence } from "../../../../lib/validators/evidence";
-import { EvidenceFieldValues } from "../../../../lib/types/evidence";
-import evidenceService from "../../../../api/evidence";
-import FileInput from "../../../../components/ui/file-input";
 import { useQuery } from "@tanstack/react-query";
-import projectService from "../../../../api/projects";
-import { findLabelFromOptions } from "../../../../lib/utils";
-import loader from "../../../../assets/images/icons/loader.svg";
+import evidenceService from "api/evidence";
+import projectService from "api/projects";
 import classNames from "classnames";
-import { useEvidenceMutation } from "../../../../lib/mutations/evidences";
-import Spinner from "../../../../components/ui/spinner/spinner";
+import { useEffect, useMemo, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+
+import loader from "assets/images/icons/loader.svg";
+
+import { BENEFICIARY_STATUS } from "lib/constants";
+import { useAppSelector } from "lib/hooks";
+import { useEvidenceMutation } from "lib/mutations/evidences";
+import { EvidenceFieldValues } from "lib/types/evidence";
+import { findLabelFromOptions } from "lib/utils";
+import { evidence } from "lib/validators/evidence";
+
+import Button from "components/ui/button";
+import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
+import Dropdown, { IOption } from "components/ui/dropdown";
+import FileInput from "components/ui/file-input";
+import Input from "components/ui/input";
+import Spinner from "components/ui/spinner/spinner";
+
+import CommentSection from "./Sections/CommentSection";
 
 interface IEvidencesDialogueProps extends IDialogueProps {
   id?: number;
@@ -31,7 +32,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
   const [uploading, setUploading] = useState(false);
 
   const { projectId, beneficiaryId } = useAppSelector(
-    (state) => state.evidence,
+    (state) => state.evidence
   );
 
   const { data: evidenceData, isLoading: evidenceLoading } = useQuery({
@@ -59,7 +60,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
 
         value: item.id.toString(),
       })) || [],
-    [project],
+    [project]
   );
 
   const {
@@ -104,12 +105,9 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
   };
 
   return (
-    <Dialogue
-      {...props}
-      title={`${id ? "Edit" : "Add"} evidence`}
-    >
+    <Dialogue {...props} title={`${id ? "Edit" : "Add"} evidence`}>
       {evidenceLoading ? (
-        <div className="w-full h-[470px] flex items-center justify-center">
+        <div className="flex h-[470px] w-full items-center justify-center">
           <Spinner />
         </div>
       ) : (
@@ -121,10 +119,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
           >
             <div>
               <div className="flex items-start gap-4">
-                <label
-                  htmlFor=""
-                  className="pt-3 flex-shrink-0 w-[120px]"
-                >
+                <label htmlFor="" className="w-[120px] flex-shrink-0 pt-3">
                   Description
                 </label>
 
@@ -143,10 +138,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
               </div>
 
               <div className="flex items-start gap-4">
-                <label
-                  htmlFor=""
-                  className="pt-3 flex-shrink-0 w-[120px]"
-                >
+                <label htmlFor="" className="w-[120px] flex-shrink-0 pt-3">
                   Outcome
                 </label>
 
@@ -158,7 +150,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
                       loading={isProjectLoading}
                       value={findLabelFromOptions(
                         outcomes,
-                        field.value?.toString(),
+                        field.value?.toString()
                       )}
                       handleSelect={(val) => {
                         setValue("outcomeId", val as string);
@@ -173,10 +165,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
               </div>
 
               <div className="flex items-start gap-4">
-                <label
-                  htmlFor=""
-                  className="pt-3 flex-shrink-0 w-[120px]"
-                >
+                <label htmlFor="" className="w-[120px] flex-shrink-0 pt-3">
                   Status
                 </label>
 
@@ -203,7 +192,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
 
             {file && (
               <div className="flex flex-col items-center">
-                <div className="w-full max-w-[490px] max-h-[644px] flex items-center justify-center">
+                <div className="flex max-h-[644px] w-full max-w-[490px] items-center justify-center">
                   <img
                     src={file.fileUrl}
                     alt={file.filename}
@@ -214,16 +203,16 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
                     <img
                       src={loader}
                       alt="loader"
-                      className="animate-spin absolute w-10"
+                      className="absolute w-10 animate-spin"
                     />
                   )}
                 </div>
 
                 {!uploading && (
-                  <div className="py-3 px-6 relative text-center">
+                  <div className="relative px-6 py-3 text-center">
                     <p className="font-semibold text-mint">Replace document</p>
 
-                    <div className="absolute top-0 opacity-0 cursor-pointer">
+                    <div className="absolute top-0 cursor-pointer opacity-0">
                       <Controller
                         control={control}
                         name="file"
@@ -247,10 +236,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
 
             {!file && (
               <div className="flex items-start gap-4">
-                <label
-                  htmlFor=""
-                  className="pt-3 flex-shrink-0 w-[120px]"
-                >
+                <label htmlFor="" className="w-[120px] flex-shrink-0 pt-3">
                   File
                 </label>
 
@@ -284,30 +270,19 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
         </div>
       )}
 
-      <div className="flex justify-end mt-16">
+      <div className="mt-16 flex justify-end">
         {id ? (
           <div className="space-x-4">
-            <Button
-              buttonType="secondary"
-              onClick={props.handleClose}
-            >
+            <Button buttonType="secondary" onClick={props.handleClose}>
               Cancel
             </Button>
 
-            <Button
-              type="submit"
-              form="evidences-form"
-              loading={isPending}
-            >
+            <Button type="submit" form="evidences-form" loading={isPending}>
               Save
             </Button>
           </div>
         ) : (
-          <Button
-            loading={isPending}
-            type="submit"
-            form="evidences-form"
-          >
+          <Button loading={isPending} type="submit" form="evidences-form">
             Save and upload document
           </Button>
         )}

@@ -1,14 +1,14 @@
-import { BENEFICIARY_STATUS } from "../../../../lib/constants";
-import Dialogue, {
-  IDialogueProps,
-} from "../../../../components/ui/dialogue/dialogue";
-import Dropdown from "../../../../components/ui/dropdown";
-import Button from "../../../../components/ui/button";
-import { Controller, useForm } from "react-hook-form";
-import { BeneficiaryStatusUpdateField } from "@/lib/types/beneficiaries";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { beneficiaryStatus } from "../../../../lib/validators/beneficiaries";
-import { useBulkStatusUpdateMutation } from "../../../../lib/mutations/beneficiaries";
+import { Controller, useForm } from "react-hook-form";
+
+import { BENEFICIARY_STATUS } from "lib/constants";
+import { useBulkStatusUpdateMutation } from "lib/mutations/beneficiaries";
+import { BeneficiaryStatusUpdateField } from "lib/types/beneficiaries";
+import { beneficiaryStatus } from "lib/validators/beneficiaries";
+
+import Button from "components/ui/button";
+import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
+import Dropdown from "components/ui/dropdown";
 
 interface IBulkUpdateProps extends IDialogueProps {
   ids: number[];
@@ -25,7 +25,7 @@ const BulkUpdateStatus = ({ ids, ...props }: IBulkUpdateProps) => {
   const { updateStatus, isPending } = useBulkStatusUpdateMutation(
     getValues("status"),
 
-    props.handleClose,
+    props.handleClose
   );
 
   const onSubmit = async (values: BeneficiaryStatusUpdateField) => {
@@ -33,17 +33,10 @@ const BulkUpdateStatus = ({ ids, ...props }: IBulkUpdateProps) => {
   };
 
   return (
-    <Dialogue
-      {...props}
-      center
-      title="Bulk update status"
-    >
+    <Dialogue {...props} center title="Bulk update status">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex items-start">
-          <label
-            htmlFor=""
-            className="min-w-[140px] pt-3"
-          >
+          <label htmlFor="" className="min-w-[140px] pt-3">
             Beneficiary status
           </label>
 
@@ -68,18 +61,12 @@ const BulkUpdateStatus = ({ ids, ...props }: IBulkUpdateProps) => {
           />
         </div>
 
-        <div className="flex justify-end items-center gap-4 mt-6">
-          <Button
-            buttonType="secondary"
-            onClick={props.handleClose}
-          >
+        <div className="mt-6 flex items-center justify-end gap-4">
+          <Button buttonType="secondary" onClick={props.handleClose}>
             Cancel
           </Button>
 
-          <Button
-            type="submit"
-            loading={isPending}
-          >
+          <Button type="submit" loading={isPending}>
             Save
           </Button>
         </div>

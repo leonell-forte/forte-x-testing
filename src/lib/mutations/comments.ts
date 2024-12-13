@@ -1,9 +1,12 @@
-import { useAlert } from "../hooks";
 import { useMutation } from "@tanstack/react-query";
-import commentsService from "../../api/comments";
-import { queryClient } from "../../components/QueryProvider";
+import commentsService from "api/comments";
+
 // import * as amplitude from "@amplitude/analytics-browser";
-import { Comment } from "../../lib/types/comments";
+import { Comment } from "lib/types/comments";
+
+import { queryClient } from "components/QueryProvider";
+
+import { useAlert } from "../hooks";
 
 interface ICommentMutationProps {
   successCallback?: () => void;
