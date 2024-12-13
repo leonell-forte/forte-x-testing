@@ -13,7 +13,7 @@ const IndividualProjectsPage = () => {
 
   useEffect(() => {
     amplitude.track(`Individual Project Page View`, { id });
-  }, []);
+  }, [id]);
 
   return (
     <div className="space-y-2.5 py-3 overflow-scroll h-full hide-scroll">
