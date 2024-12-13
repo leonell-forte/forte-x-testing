@@ -3,11 +3,17 @@ import Outcomes from "../../../components/Dashboard/Projects/Tables/Outcomes";
 import arrow from "../../../assets/images/icons/arrow.svg";
 import Contracts from "../../../components/Dashboard/Projects/Tables/Contracts";
 import Beneficiaries from "../../../components/Dashboard/Projects/Tables/Beneficiaries";
+import * as amplitude from "@amplitude/analytics-browser";
+import { useEffect } from "react";
 
 const IndividualProjectsPage = () => {
   // page title is set on the outcomes component
 
   const { id } = useParams();
+
+  useEffect(() => {
+    amplitude.track(`Individual Project Page View`, { id });
+  }, []);
 
   return (
     <div className="space-y-2.5 py-3 overflow-scroll h-full hide-scroll">
