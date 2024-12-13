@@ -30,7 +30,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
   const [loading, setLoading] = useState(false);
 
   const { contractId, projectId, beneficiaryId } = useAppSelector(
-    (state) => state.evidence,
+    (state) => state.evidence
   );
 
   const { data: project, isLoading: isProjectLoading } = useQuery({
@@ -50,7 +50,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
 
         value: item.id.toString(),
       })) || [],
-    [project],
+    [project]
   );
 
   const {
@@ -107,20 +107,15 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
   };
 
   return (
-    <Dialogue
-      {...props}
-      title={`${id ? "Edit" : "Add"} evidence`}
-    >
+    <Dialogue {...props} title={`${id ? "Edit" : "Add"} evidence`}>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="space-y-[30px]"
+        id="evidences-form"
       >
         <div>
           <div className="flex items-start gap-4">
-            <label
-              htmlFor=""
-              className="pt-3 flex-shrink-0 w-[120px]"
-            >
+            <label htmlFor="" className="pt-3 flex-shrink-0 w-[120px]">
               Description
             </label>
 
@@ -139,10 +134,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
           </div>
 
           <div className="flex items-start gap-4">
-            <label
-              htmlFor=""
-              className="pt-3 flex-shrink-0 w-[120px]"
-            >
+            <label htmlFor="" className="pt-3 flex-shrink-0 w-[120px]">
               Outcome
             </label>
 
@@ -154,7 +146,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
                   loading={isProjectLoading}
                   value={findLabelFromOptions(
                     outcomes,
-                    field.value?.toString(),
+                    field.value?.toString()
                   )}
                   handleSelect={(val) => {
                     setValue("outcomeId", val as string);
@@ -169,10 +161,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
           </div>
 
           <div className="flex items-start gap-4">
-            <label
-              htmlFor=""
-              className="pt-3 flex-shrink-0 w-[120px]"
-            >
+            <label htmlFor="" className="pt-3 flex-shrink-0 w-[120px]">
               Status
             </label>
 
@@ -197,10 +186,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
           </div>
 
           <div className="flex items-start gap-4">
-            <label
-              htmlFor=""
-              className="pt-3 flex-shrink-0 w-[120px]"
-            >
+            <label htmlFor="" className="pt-3 flex-shrink-0 w-[120px]">
               File
             </label>
 
@@ -222,41 +208,35 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
             />
           </div>
         </div>
-
-        {!!id && (
-          <div className="space-y-12">
-            <DocumentSection />
-
-            <ActivityLogSection />
-
-            <CommentSection />
-          </div>
-        )}
-
-        <div className="flex justify-end mt-16">
-          {onEdit ? (
-            <div className="space-x-4">
-              <Button
-                buttonType="secondary"
-                onClick={() => setOnEdit(false)}
-              >
-                Cancel
-              </Button>
-
-              <Button>Save</Button>
-            </div>
-          ) : id ? (
-            <Button onClick={() => setOnEdit(true)}>Edit</Button>
-          ) : (
-            <Button
-              loading={loading}
-              type="submit"
-            >
-              Save and upload document
-            </Button>
-          )}
-        </div>
       </form>
+
+      {!!id && (
+        <div className="space-y-12">
+          <DocumentSection />
+
+          <ActivityLogSection />
+
+          <CommentSection id={id} />
+        </div>
+      )}
+
+      <div className="flex justify-end mt-16">
+        {onEdit ? (
+          <div className="space-x-4">
+            <Button buttonType="secondary" onClick={() => setOnEdit(false)}>
+              Cancel
+            </Button>
+
+            <Button>Save</Button>
+          </div>
+        ) : id ? (
+          <Button onClick={() => setOnEdit(true)}>Edit</Button>
+        ) : (
+          <Button loading={loading} type="submit" form="evidences-form">
+            Save and upload document
+          </Button>
+        )}
+      </div>
     </Dialogue>
   );
 };
