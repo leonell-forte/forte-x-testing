@@ -113,90 +113,135 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
           <Spinner />
         </div>
       ) : (
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-[30px]"
-        >
-          <div>
-            <div className="flex items-start gap-4">
-              <label
-                htmlFor=""
-                className="pt-3 flex-shrink-0 w-[120px]"
-              >
-                Description
-              </label>
+        <>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="space-y-[30px]"
+            id="evidences-form"
+          >
+            <div>
+              <div className="flex items-start gap-4">
+                <label
+                  htmlFor=""
+                  className="pt-3 flex-shrink-0 w-[120px]"
+                >
+                  Description
+                </label>
 
-              <Controller
-                control={control}
-                name="description"
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    placeholder="Description"
-                    error={!!errors.description?.message}
-                    helperText={errors.description?.message}
-                  />
-                )}
-              />
+                <Controller
+                  control={control}
+                  name="description"
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder="Description"
+                      error={!!errors.description?.message}
+                      helperText={errors.description?.message}
+                    />
+                  )}
+                />
+              </div>
+
+              <div className="flex items-start gap-4">
+                <label
+                  htmlFor=""
+                  className="pt-3 flex-shrink-0 w-[120px]"
+                >
+                  Outcome
+                </label>
+
+                <Controller
+                  control={control}
+                  name="outcomeId"
+                  render={({ field }) => (
+                    <Dropdown
+                      loading={isProjectLoading}
+                      value={findLabelFromOptions(
+                        outcomes,
+                        field.value?.toString(),
+                      )}
+                      handleSelect={(val) => {
+                        setValue("outcomeId", val as string);
+                      }}
+                      options={outcomes}
+                      placeholder="Outcome"
+                      error={!!errors.outcomeId?.message}
+                      helperText={errors.outcomeId?.message}
+                    />
+                  )}
+                />
+              </div>
+
+              <div className="flex items-start gap-4">
+                <label
+                  htmlFor=""
+                  className="pt-3 flex-shrink-0 w-[120px]"
+                >
+                  Status
+                </label>
+
+                <Controller
+                  control={control}
+                  name="status"
+                  render={({ field }) => (
+                    <Dropdown
+                      value={field.value}
+                      handleSelect={(val) => {
+                        setValue("status", val as string);
+
+                        setError("status", { message: "" });
+                      }}
+                      placeholder="Status"
+                      options={BENEFICIARY_STATUS}
+                      error={!!errors.status?.message}
+                      helperText={errors.status?.message}
+                    />
+                  )}
+                />
+              </div>
             </div>
 
-            <div className="flex items-start gap-4">
-              <label
-                htmlFor=""
-                className="pt-3 flex-shrink-0 w-[120px]"
-              >
-                Outcome
-              </label>
-
-              <Controller
-                control={control}
-                name="outcomeId"
-                render={({ field }) => (
-                  <Dropdown
-                    loading={isProjectLoading}
-                    value={findLabelFromOptions(
-                      outcomes,
-                      field.value?.toString(),
-                    )}
-                    handleSelect={(val) => {
-                      setValue("outcomeId", val as string);
-                    }}
-                    options={outcomes}
-                    placeholder="Outcome"
-                    error={!!errors.outcomeId?.message}
-                    helperText={errors.outcomeId?.message}
+            {file && (
+              <div className="flex flex-col items-center">
+                <div className="w-full max-w-[490px] max-h-[644px] flex items-center justify-center">
+                  <img
+                    src={file?.fileUrl}
+                    alt={file.filename}
+                    className={classNames(uploading && "opacity-20")}
                   />
+                  {uploading && (
+                    <img
+                      src={loader}
+                      alt="loader"
+                      className="animate-spin absolute w-10"
+                    />
+                  )}
+                </div>
+
+                {!uploading && (
+                  <div className="py-3 px-6 relative text-center">
+                    <p className="font-semibold text-mint">Replace document</p>
+                    <div className="absolute top-0 opacity-0 cursor-pointer">
+                      <Controller
+                        control={control}
+                        name="file"
+                        render={() => (
+                          <FileInput
+                            onUploadStart={() => setUploading(true)}
+                            onUploadEnd={() => setUploading(false)}
+                            onSuccess={(data) => {
+                              setValue("file", data);
+
+                              setError("file", { message: "" });
+                            }}
+                          />
+                        )}
+                      />
+                    </div>
+                  </div>
                 )}
-              />
-            </div>
-
-            <div className="flex items-start gap-4">
-              <label
-                htmlFor=""
-                className="pt-3 flex-shrink-0 w-[120px]"
-              >
-                Status
-              </label>
-
-              <Controller
-                control={control}
-                name="status"
-                render={({ field }) => (
-                  <Dropdown
-                    value={field.value}
-                    handleSelect={(val) => {
-                      setValue("status", val as string);
-
-                      setError("status", { message: "" });
-                    }}
-                    placeholder="Status"
-                    options={BENEFICIARY_STATUS}
-                    error={!!errors.status?.message}
-                    helperText={errors.status?.message}
-                  />
-                )}
-              />
-            </div>
+              </div>
+            )}
 
             {!file && (
               <div className="flex items-start gap-4">
@@ -225,86 +270,46 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
                 />
               </div>
             )}
-          </div>
-
-          {file && (
-            <div className="flex flex-col items-center">
-              <div className="w-full max-w-[490px] max-h-[644px] flex items-center justify-center">
-                <img
-                  src={file?.fileUrl}
-                  alt={file.filename}
-                  className={classNames(uploading && "opacity-20")}
-                />
-                {uploading && (
-                  <img
-                    src={loader}
-                    alt="loader"
-                    className="animate-spin absolute w-10"
-                  />
-                )}
-              </div>
-
-              {!uploading && (
-                <div className="py-3 px-6 relative text-center">
-                  <p className="font-semibold text-mint">Replace document</p>
-                  <div className="absolute top-0 opacity-0 cursor-pointer">
-                    <Controller
-                      control={control}
-                      name="file"
-                      render={() => (
-                        <FileInput
-                          onUploadStart={() => setUploading(true)}
-                          onUploadEnd={() => setUploading(false)}
-                          onSuccess={(data) => {
-                            setValue("file", data);
-
-                            setError("file", { message: "" });
-                          }}
-                        />
-                      )}
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {!!id && (
-            <div className="space-y-12">
-              {/* <ActivityLogSection /> */}
-
-              <CommentSection id={id} />
-            </div>
-          )}
-
-          <div className="flex justify-end mt-16">
-            {id ? (
-              <div className="space-x-4">
-                <Button
-                  buttonType="secondary"
-                  onClick={props.handleClose}
-                >
-                  Cancel
-                </Button>
-
-                <Button
-                  type="submit"
-                  loading={isPending}
-                >
-                  Save
-                </Button>
-              </div>
-            ) : (
-              <Button
-                loading={isPending}
-                type="submit"
-              >
-                Save and upload document
-              </Button>
-            )}
-          </div>
-        </form>
+          </form>
+        </>
       )}
+
+      {!!id && (
+        <div className="space-y-12">
+          {/* <ActivityLogSection /> */}
+
+          <CommentSection id={id} />
+        </div>
+      )}
+
+      <div className="flex justify-end mt-16">
+        {id ? (
+          <div className="space-x-4">
+            <Button
+              buttonType="secondary"
+              onClick={props.handleClose}
+            >
+              Cancel
+            </Button>
+
+            <Button
+              type="submit"
+              form="evidences-form"
+              loading={isPending}
+            >
+              Save
+            </Button>
+          </div>
+        ) : (
+          <Button
+            loading={isPending}
+            type="submit"
+            form="evidences-form"
+          >
+            Save and upload document
+          </Button>
+        )}
+      </div>
     </Dialogue>
   );
 };

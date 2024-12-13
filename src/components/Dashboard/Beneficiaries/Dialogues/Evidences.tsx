@@ -64,7 +64,7 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
             const { file, outcome, description, status, id } = item;
             return (
               <Table.Row key={index}>
-                <Table.Data>
+                <Table.Data className="max-w-[150px]">
                   <button
                     onClick={() => handleAddOrViewEvidence?.(id)}
                     className="link underline"
@@ -75,9 +75,11 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
 
                 <Table.Data>{outcome.name} </Table.Data>
 
-                <Table.Data className="max-w-[200px]">{description}</Table.Data>
+                <Table.Data className="max-w-[100px]">{description}</Table.Data>
 
-                <Table.Data>{capitalize(status)}</Table.Data>
+                <Table.Data className="max-w-[100px]">
+                  {capitalize(status)}
+                </Table.Data>
 
                 <Table.Data>
                   <Link
