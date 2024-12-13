@@ -1,14 +1,15 @@
 import { z } from "zod";
 import { evidence } from "../validators/evidence";
+import { File, User } from "./common";
 
 export type EvidenceFieldValues = z.infer<typeof evidence.schema>;
 
 export type AddEvidenceParams = {
-  beneficiaryId: number;
+  beneficiaryId?: number;
 
-  projectId: number;
+  projectId?: number;
 
-  contractId: number;
+  contractId?: number;
 
   values: EvidenceFieldValues;
 };
@@ -28,61 +29,13 @@ export type Evidence = {
     description: string;
   };
 
-  file: {
-    id: number;
-
-    filename: string;
-
-    key: string;
-
-    fileUrl: string;
-  };
+  file: File;
 
   createdAt: string;
 
-  createdBy: {
-    id: number;
+  createdBy: User;
 
-    firstName: string;
+  updatedBy: User;
 
-    lastName: string;
-  };
-
-  updatedBy: {
-    id: number;
-
-    firstName: string;
-
-    lastName: string;
-  };
-};
-
-export type EvidenceData = {
-  id: number;
-
-  description: string;
-
-  status: string;
-
-  "file.id": number;
-
-  "file.key": string;
-
-  "file.fileUrl": string;
-
-  "file.filename": string;
-
-  createdAt: string;
-
-  "createdBy.id": number;
-
-  "createdBy.firstName": string;
-
-  "createdBy.lastName": string;
-
-  "updatedBy.id": number;
-
-  "updatedBy.firstName": string;
-
-  "updatedBy.lastName": string;
+  beneficiaryId?: number;
 };

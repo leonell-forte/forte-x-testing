@@ -1,28 +1,37 @@
 import { z } from "zod";
-import { EvidenceData, EvidenceFieldValues } from "../types/evidence";
+import { Evidence, EvidenceFieldValues } from "../types/evidence";
+import { fileSchema } from "./common";
 
 export const evidence = {
-  defaultValues: (evidence?: EvidenceData) => {
+  defaultValues: (evidence?: Evidence) => {
+    console.log(evidence);
+
     let data: EvidenceFieldValues = {
       description: evidence?.description || "",
 
       status: evidence?.status || "",
 
-      outcomeId: "",
+      outcomeId: evidence?.outcome.id.toString() || "",
 
-      fileId: 0,
+      file: evidence?.file || null,
     };
+
+    if (evidence?.id) {
+      data.id = evidence.id;
+    }
 
     return data;
   },
 
   schema: z.object({
+    id: z.number().optional(),
+
     description: z.string().min(1, "Description is a required field"),
 
     status: z.string().min(1, "Status is a required field"),
 
     outcomeId: z.string().min(1, "Outcome is a required field"),
 
-    fileId: z.number().min(1, "File is a required field"),
+    file: fileSchema.nullable(),
   }),
 };
