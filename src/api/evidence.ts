@@ -64,7 +64,7 @@ export class EvidenceService {
       body,
     );
 
-    return response.data;
+    return response.data.data;
   }
 }
 

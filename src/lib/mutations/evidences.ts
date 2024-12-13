@@ -38,11 +38,13 @@ export const useEvidenceMutation = ({
 
       const previousEvidences = queryClient.getQueryData([
         "evidences",
+
         beneficiaryId,
       ]);
 
       const previousEvidence = queryClient.getQueryData([
         "evidence",
+
         evidenceId,
       ]);
 
@@ -60,6 +62,12 @@ export const useEvidenceMutation = ({
             items: [...(old?.items || []), addedEvidence],
           };
         },
+      );
+
+      queryClient.setQueryData(
+        ["evidence", evidenceId],
+
+        () => addedEvidence,
       );
 
       successCallback?.();

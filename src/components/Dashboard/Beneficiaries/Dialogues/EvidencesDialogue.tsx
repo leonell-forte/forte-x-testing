@@ -7,7 +7,7 @@ import Dropdown, { IOption } from "../../../../components/ui/dropdown";
 import { BENEFICIARY_STATUS } from "../../../../lib/constants";
 import { useEffect, useMemo, useState } from "react";
 import CommentSection from "./Sections/CommentSection";
-import ActivityLogSection from "./Sections/ActivityLogSection";
+
 import { useAppSelector } from "../../../../lib/hooks";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -95,6 +95,8 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
     beneficiaryId: beneficiaryId!,
 
     evidenceId: id!,
+
+    successCallback: () => props.handleClose?.(),
   });
 
   const onSubmit = async (values: EvidenceFieldValues) => {
@@ -269,9 +271,9 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
 
           {!!id && (
             <div className="space-y-12">
-              <ActivityLogSection />
+              {/* <ActivityLogSection /> */}
 
-              <CommentSection />
+              <CommentSection id={id} />
             </div>
           )}
 

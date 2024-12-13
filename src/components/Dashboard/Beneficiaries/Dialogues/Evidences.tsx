@@ -75,7 +75,7 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
 
                 <Table.Data>{outcome.name} </Table.Data>
 
-                <Table.Data>{description}</Table.Data>
+                <Table.Data className="max-w-[200px]">{description}</Table.Data>
 
                 <Table.Data>{capitalize(status)}</Table.Data>
 
@@ -89,6 +89,7 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
                     <img
                       src={download}
                       alt="download"
+                      className="min-w-4"
                     />
                   </Link>
                 </Table.Data>
