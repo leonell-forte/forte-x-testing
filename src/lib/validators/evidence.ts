@@ -4,8 +4,6 @@ import { fileSchema } from "./common";
 
 export const evidence = {
   defaultValues: (evidence?: Evidence) => {
-    console.log(evidence);
-
     let data: EvidenceFieldValues = {
       description: evidence?.description || "",
 
