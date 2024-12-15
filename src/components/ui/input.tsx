@@ -1,10 +1,11 @@
 "use client";
 
 import { TextField, TextFieldProps } from "@mui/material";
-import { forwardRef, useState } from "react";
-import eyeOpen from "../../assets/images/icons/eye-open.svg";
-import eyeClosed from "../../assets/images/icons/eye-closed.svg";
 import classNames from "classnames";
+import { forwardRef, useState } from "react";
+
+import eyeClosed from "assets/images/icons/eye-closed.svg";
+import eyeOpen from "assets/images/icons/eye-open.svg";
 
 type PropTypes = TextFieldProps & {
   dark?: boolean;
@@ -84,15 +85,12 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
             onClick={() => setShow((prev) => !prev)}
             className="absolute right-4 top-4"
           >
-            <img
-              alt="eye"
-              src={show ? eyeOpen : eyeClosed}
-            />
+            <img alt="eye" src={show ? eyeOpen : eyeClosed} />
           </button>
         )}
       </div>
     );
-  },
+  }
 );
 
 export default Input;

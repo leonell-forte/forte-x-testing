@@ -1,8 +1,9 @@
+import { z } from "zod";
+
 import {
   ContractFieldValues,
   IContractDefaultValues,
-} from "../../lib/types/contracts";
-import { z } from "zod";
+} from "lib/types/contracts";
 
 const contractOutcomeSchema = z
   .object({
@@ -30,7 +31,7 @@ const contractOutcomeSchema = z
       message: "Threshold is required when perOutcome is true",
 
       path: ["threshold"], // Points to the 'threshold' field for the error
-    },
+    }
   );
 
 export const contracts = {

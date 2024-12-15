@@ -1,15 +1,16 @@
 "use client";
 
-import Pagination from "../../components/ui/pagination";
-import Table from "../../components/ui/table";
 import { useState } from "react";
+
+import Pagination from "components/ui/pagination";
+import Table from "components/ui/table";
 
 const TableComponent = () => {
   const [page, setPage] = useState(1);
 
   return (
     <div>
-      <p className="text-2xl text-white font-semibold uppercase mb-2">
+      <p className="mb-2 text-2xl font-semibold uppercase text-white">
         Table Component
       </p>
       <div className="flex flex-col gap-4">

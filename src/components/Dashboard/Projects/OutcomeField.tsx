@@ -1,6 +1,8 @@
-import Input from "../../../components/ui/input";
-import minus from "../../../assets/images/icons/minus.svg";
 import { Controller } from "react-hook-form";
+
+import minus from "assets/images/icons/minus.svg";
+
+import Input from "components/ui/input";
 
 interface IOutcomeFieldProps {
   count: number;
@@ -32,14 +34,11 @@ const OutcomeField = ({
   return (
     <div className="space-y-[22px]">
       <div className="flex">
-        <label
-          htmlFor=""
-          className="w-[180px] pt-3"
-        >
+        <label htmlFor="" className="w-[180px] pt-3">
           Outcome {count} name
         </label>
 
-        <div className=" flex w-full gap-[17px]">
+        <div className="flex w-full gap-[17px]">
           <Controller
             name={`outcomes.${index}.name`}
             control={control}
@@ -57,22 +56,16 @@ const OutcomeField = ({
             <button
               type="button"
               onClick={handleDelete}
-              className="!w-8 !h-8 bg-white rounded-full flex-shrink-0 text-forest-green flex items-center justify-center hover:scale-[1.05] transition-all hover:opacity-80 mt-2"
+              className="mt-2 flex !h-8 !w-8 flex-shrink-0 items-center justify-center rounded-full bg-white text-forest-green transition-all hover:scale-[1.05] hover:opacity-80"
             >
-              <img
-                src={minus}
-                alt=""
-              />
+              <img src={minus} alt="" />
             </button>
           )}
         </div>
       </div>
 
       <div className="flex">
-        <label
-          htmlFor=""
-          className="w-[180px] mt-3.5"
-        >
+        <label htmlFor="" className="mt-3.5 w-[180px]">
           Description
         </label>
 

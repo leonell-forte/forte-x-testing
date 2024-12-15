@@ -1,14 +1,17 @@
-import Dropdown, { IOption } from "../../../components/ui/dropdown";
-import add from "../../../assets/images/icons/add.svg";
-import minus from "../../../assets/images/icons/minus.svg";
-import RadioGroup from "../../../components/ui/radio-group";
-import Input from "../../../components/ui/input";
 import { useQuery } from "@tanstack/react-query";
-import projectService from "../../../api/projects";
+import projectService from "api/projects";
 import { useMemo } from "react";
 import { Control, Controller } from "react-hook-form";
-import { ContractFieldValues, RateEnum } from "../../../lib/types/contracts";
-import { findLabelFromOptions } from "../../../lib/utils";
+
+import add from "assets/images/icons/add.svg";
+import minus from "assets/images/icons/minus.svg";
+
+import { ContractFieldValues, RateEnum } from "lib/types/contracts";
+import { findLabelFromOptions } from "lib/utils";
+
+import Dropdown, { IOption } from "components/ui/dropdown";
+import Input from "components/ui/input";
+import RadioGroup from "components/ui/radio-group";
 
 interface IContractOutcomeField {
   projectId: number;
@@ -66,16 +69,13 @@ const ContractOutcomeField = ({
 
         value: item.id.toString(),
       })) || [],
-    [project],
+    [project]
   );
 
   return (
     <div className="space-y-1">
       <div className="flex gap-4">
-        <label
-          htmlFor=""
-          className="pt-4 min-w-[120px]"
-        >
+        <label htmlFor="" className="min-w-[120px] pt-4">
           Outcome
         </label>
 
@@ -105,20 +105,14 @@ const ContractOutcomeField = ({
         <button
           onClick={isLast ? handleAdd : handleDelete}
           type="button"
-          className="!w-8 !h-8 bg-white rounded-full flex-shrink-0 text-forest-green flex items-center justify-center hover:scale-[1.05] transition-all hover:opacity-80 mt-3"
+          className="mt-3 flex !h-8 !w-8 flex-shrink-0 items-center justify-center rounded-full bg-white text-forest-green transition-all hover:scale-[1.05] hover:opacity-80"
         >
-          <img
-            src={isLast ? add : minus}
-            alt=""
-          />
+          <img src={isLast ? add : minus} alt="" />
         </button>
       </div>
 
       <div className="flex items-start gap-4">
-        <label
-          htmlFor=""
-          className="pt-4 min-w-[120px]"
-        >
+        <label htmlFor="" className="min-w-[120px] pt-4">
           Rate
         </label>
 

@@ -1,8 +1,11 @@
-import Table from "../../../../components/ui/table";
-import pencil from "../../../../assets/images/icons/pencil.svg";
 import { useState } from "react";
-import Input from "../../../../components/ui/input";
-import Button from "../../../../components/ui/button";
+
+import pencil from "assets/images/icons/pencil.svg";
+
+import Button from "components/ui/button";
+import Input from "components/ui/input";
+import Table from "components/ui/table";
+
 import OrganizationDialogue from "../../Organizations/Dialogues/OrganizationDialogue";
 import TagExistingDialogue from "../Dialogues/TagExistingDialogue";
 
@@ -44,8 +47,8 @@ const Partners = () => {
       {renderModal(modal)}
 
       <div className="space-y-2.5">
-        <div className="flex justify-between items-center">
-          <p className="font-semibold text-[24px]">Partners</p>
+        <div className="flex items-center justify-between">
+          <p className="text-[24px] font-semibold">Partners</p>
 
           <div className="flex gap-2.5">
             {/* <Button
@@ -64,10 +67,7 @@ const Partners = () => {
             <Table.Row>
               {HEADERS.map((item, index) => {
                 return (
-                  <Table.Header
-                    small
-                    key={index}
-                  >
+                  <Table.Header small key={index}>
                     {item}
                   </Table.Header>
                 );
@@ -137,10 +137,7 @@ const Partners = () => {
                           type="button"
                           onClick={() => setEditIndex(index)}
                         >
-                          <img
-                            src={pencil}
-                            alt=""
-                          />
+                          <img src={pencil} alt="" />
                         </button>
                       )}
                     </div>

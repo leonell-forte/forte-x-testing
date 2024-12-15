@@ -1,7 +1,7 @@
 import { api } from "../lib/axios/interceptor";
 import { DEFAULT_PAGE_SIZE } from "../lib/constants";
-import { generateODataQuery, IODataObject } from "../lib/utils";
 import { IProject, ProjectFieldValues } from "../lib/types/projects";
+import { IODataObject, generateODataQuery } from "../lib/utils";
 
 interface IProjectListProp {
   page?: number;

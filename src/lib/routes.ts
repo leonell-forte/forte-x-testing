@@ -5,19 +5,19 @@ const UsersPage = React.lazy(() => import("../pages/Users/UsersPage"));
 const ProjectsPage = React.lazy(() => import("../pages/Projects/ProjectsPage"));
 
 const IndividualProjectsPage = React.lazy(
-  () => import("../pages/Projects/[id]/IndividualProjectsPage"),
+  () => import("../pages/Projects/[id]/IndividualProjectsPage")
 );
 
 const OrganizationsPage = React.lazy(
-  () => import("../pages/Organizations/OrganizationsPage"),
+  () => import("../pages/Organizations/OrganizationsPage")
 );
 
 const ContractsPage = React.lazy(
-  () => import("../pages/Contracts/ContractsPage"),
+  () => import("../pages/Contracts/ContractsPage")
 );
 
 const BeneficiariesPage = React.lazy(
-  () => import("../pages/Beneficiaries/BeneficiariesPage"),
+  () => import("../pages/Beneficiaries/BeneficiariesPage")
 );
 
 export const PROTECTED_ROUTES = [
@@ -65,11 +65,11 @@ const LoginPage = React.lazy(() => import("../pages/Login/LoginPage"));
 const SignupPage = React.lazy(() => import("../pages/Signup/SignupPage"));
 
 const ForgotPasswordPage = React.lazy(
-  () => import("../pages/ForgotPassword/ForgotPasswordPage"),
+  () => import("../pages/ForgotPassword/ForgotPasswordPage")
 );
 
 const ComponentsPage = React.lazy(
-  () => import("../pages/Components/ComponentsPage"),
+  () => import("../pages/Components/ComponentsPage")
 );
 
 export const PUBLIC_ROUTES = [

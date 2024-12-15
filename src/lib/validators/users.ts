@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { IUser } from "../types/users";
 
 export const users = {

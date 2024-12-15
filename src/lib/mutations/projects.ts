@@ -1,13 +1,16 @@
-import projectService from "../../api/projects";
-import { queryClient } from "../../components/QueryProvider";
-import { useAlert } from "../../lib/hooks";
-import { useMutation } from "@tanstack/react-query";
 import * as amplitude from "@amplitude/analytics-browser";
+import { useMutation } from "@tanstack/react-query";
+import projectService from "api/projects";
+
+import { useAlert } from "lib/hooks";
+
+import { queryClient } from "components/QueryProvider";
+
 import { IProject, ProjectFieldValues } from "../types/projects";
 
 export const useProjectMutation = (
   projectId: string,
-  succesCallback?: () => void,
+  succesCallback?: () => void
 ) => {
   const { setAlert } = useAlert();
 
@@ -60,7 +63,7 @@ export const useProjectMutation = (
       });
 
       amplitude.track(
-        `${projectId ? "Update" : "Add"} Project Form Submission`,
+        `${projectId ? "Update" : "Add"} Project Form Submission`
       );
     },
 
@@ -77,7 +80,7 @@ export const useProjectMutation = (
 
       queryClient.setQueryData(
         ["specific-project", projectId],
-        context?.previousProject,
+        context?.previousProject
       );
     },
 
@@ -96,7 +99,7 @@ export const useProjectMutation = (
 export const useDeleteProjectMutation = (
   id: number,
 
-  successCallback?: () => void,
+  successCallback?: () => void
 ) => {
   const { setAlert } = useAlert();
 
@@ -124,7 +127,7 @@ export const useDeleteProjectMutation = (
 
             items: old.items.filter((item) => item.id !== id),
           };
-        },
+        }
       );
 
       successCallback?.();

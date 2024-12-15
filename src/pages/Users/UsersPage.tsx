@@ -1,20 +1,23 @@
-import Button from "../../components/ui/button";
-import Dropdown from "../../components/ui/dropdown";
-import Pagination from "../../components/ui/pagination";
-import SearchInput from "../../components/ui/search-input";
-import Table from "../../components/ui/table";
-import { useMemo, useState } from "react";
-import pencil from "../../assets/images/icons/pencil.svg";
-import UserDialogue from "../../components/Dashboard/Users/Dialogues/UserDialogue";
 import { useQuery } from "@tanstack/react-query";
-import userService from "../../api/users";
-import organizationService from "../../api/organization";
-import { ROLES } from "../../lib/constants";
-import { useDebounce, usePageTitle } from "../../lib/hooks";
-import closeFilter from "../../assets/images/icons/close-filter.svg";
-import { IUser } from "../../lib/types/users";
-import { IOrganization } from "../../lib/types/organizations";
-import HorizontalScroller from "../../components/ui/horizontal-scroller";
+import organizationService from "api/organization";
+import userService from "api/users";
+import { useMemo, useState } from "react";
+
+import closeFilter from "assets/images/icons/close-filter.svg";
+import pencil from "assets/images/icons/pencil.svg";
+
+import { ROLES } from "lib/constants";
+import { useDebounce, usePageTitle } from "lib/hooks";
+import { IOrganization } from "lib/types/organizations";
+import { IUser } from "lib/types/users";
+
+import UserDialogue from "components/Dashboard/Users/Dialogues/UserDialogue";
+import Button from "components/ui/button";
+import Dropdown from "components/ui/dropdown";
+import HorizontalScroller from "components/ui/horizontal-scroller";
+import Pagination from "components/ui/pagination";
+import SearchInput from "components/ui/search-input";
+import Table from "components/ui/table";
 
 const UsersPage = () => {
   usePageTitle("Users");
@@ -34,7 +37,7 @@ const UsersPage = () => {
       setDebouncedSearch(search);
     },
     500,
-    [search],
+    [search]
   );
 
   const { data: userList, isLoading: userLoading } = useQuery({
@@ -58,7 +61,7 @@ const UsersPage = () => {
   const organizations = useMemo(
     () => organizationList?.items || [],
 
-    [organizationList],
+    [organizationList]
   );
 
   const handleRemoveFilters = () => {
@@ -88,7 +91,7 @@ const UsersPage = () => {
       )}
 
       <div className="space-y-2.5">
-        <div className="flex items-center justify-between w-full gap-4">
+        <div className="flex w-full items-center justify-between gap-4">
           <SearchInput
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -139,19 +142,13 @@ const UsersPage = () => {
           />
 
           <button onClick={handleRemoveFilters}>
-            <img
-              src={closeFilter}
-              alt="close-filter"
-            />
+            <img src={closeFilter} alt="close-filter" />
           </button>
         </div>
 
         <div className="space-y-4">
           <div className="overflow-scroll pr-4">
-            <Table.Container
-              isEmpty={!users.length}
-              isLoading={userLoading}
-            >
+            <Table.Container isEmpty={!users.length} isLoading={userLoading}>
               <Table.Head>
                 <Table.Row>
                   {TABLE_HEADER.map((key, headerIndex) => {
@@ -209,10 +206,7 @@ const UsersPage = () => {
                             onClick={() => handleEditUser(item)}
                             className="p-[3px]"
                           >
-                            <img
-                              alt="pencil"
-                              src={pencil}
-                            />
+                            <img alt="pencil" src={pencil} />
                           </Button>
                         </div>
                       </Table.Data>
@@ -223,7 +217,7 @@ const UsersPage = () => {
             </Table.Container>
           </div>
 
-          <div className="flex justify-end items-center w-full">
+          <div className="flex w-full items-center justify-end">
             <HorizontalScroller />
 
             <Pagination

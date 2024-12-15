@@ -1,8 +1,10 @@
-import { useAlert } from "../hooks";
-import { useMutation } from "@tanstack/react-query";
-import beneficiariesService from "../../api/beneficiaries";
-import { queryClient } from "../../components/QueryProvider";
 import * as amplitude from "@amplitude/analytics-browser";
+import { useMutation } from "@tanstack/react-query";
+import beneficiariesService from "api/beneficiaries";
+
+import { queryClient } from "components/QueryProvider";
+
+import { useAlert } from "../hooks";
 import { IBeneficiaries } from "../types/beneficiaries";
 
 interface IBeneficiaryMutationProps {
@@ -47,7 +49,7 @@ export const useBeneficiaryMutation = ({
       });
 
       amplitude.track(
-        `${beneficiaryId ? "Update" : "Add"} Beneficiary Form Submission`,
+        `${beneficiaryId ? "Update" : "Add"} Beneficiary Form Submission`
       );
     },
 
@@ -63,7 +65,7 @@ export const useBeneficiaryMutation = ({
       queryClient.setQueryData(
         ["beneficiaries"],
 
-        context?.previousBeneficiaries,
+        context?.previousBeneficiaries
       );
     },
 
@@ -78,7 +80,7 @@ export const useBeneficiaryMutation = ({
 export const useDeleteBeneficiaryMutation = (
   id: number,
 
-  successCallback?: () => void,
+  successCallback?: () => void
 ) => {
   const { setAlert } = useAlert();
 
@@ -103,7 +105,7 @@ export const useDeleteBeneficiaryMutation = (
           ...old,
 
           itemss: old?.items?.filter((item) => item.id !== id),
-        }),
+        })
       );
 
       successCallback?.();
@@ -133,7 +135,7 @@ export const useDeleteBeneficiaryMutation = (
       queryClient.setQueryData(
         ["beneficiaries"],
 
-        context?.previousBeneficiaries,
+        context?.previousBeneficiaries
       );
     },
 
@@ -148,7 +150,7 @@ export const useDeleteBeneficiaryMutation = (
 export const useBulkStatusUpdateMutation = (
   status: string,
 
-  successCallback?: () => void,
+  successCallback?: () => void
 ) => {
   const { setAlert } = useAlert();
 
@@ -173,7 +175,7 @@ export const useBulkStatusUpdateMutation = (
           ...old,
 
           items: old?.items?.map((item) => ({ ...item, status })),
-        }),
+        })
       );
 
       successCallback?.();
@@ -201,7 +203,7 @@ export const useBulkStatusUpdateMutation = (
       queryClient.setQueryData(
         ["beneficiaries"],
 
-        context?.previousBeneficiaries,
+        context?.previousBeneficiaries
       );
     },
 

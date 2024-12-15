@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { beneficiaries, beneficiaryStatus } from "../validators/beneficiaries";
 
 export interface IBeneficiaries {

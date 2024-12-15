@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { IDialogueProps } from "../../../../components/ui/dialogue/dialogue";
+
+import { IDialogueProps } from "components/ui/dialogue/dialogue";
+
 import AddDialogue from "./AddDialogue";
 import EvidencesDialogue from "./EvidencesDialogue";
 
@@ -50,7 +52,11 @@ const BeneficiariesDialogue = ({
           <EvidencesDialogue
             {...props}
             id={evidenceId as number}
-            handleClose={close}
+            handleClose={() => {
+              setModal("beneficiaries");
+
+              setEvidenceId(null);
+            }}
           />
         );
 

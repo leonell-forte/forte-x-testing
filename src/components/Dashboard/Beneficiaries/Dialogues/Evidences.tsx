@@ -1,13 +1,16 @@
-import Table from "../../../../components/ui/table";
-import add from "../../../../assets/images/icons/add.svg";
-import download from "../../../../assets/images/icons/download.svg";
-import Button from "../../../../components/ui/button";
-import { useAppSelector } from "../../../../lib/hooks";
-import { useQuery } from "@tanstack/react-query";
-import evidenceService from "../../../../api/evidence";
-import { useMemo } from "react";
 import { capitalize } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
+import evidenceService from "api/evidence";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
+
+import add from "assets/images/icons/add.svg";
+import download from "assets/images/icons/download.svg";
+
+import { useAppSelector } from "lib/hooks";
+
+import Button from "components/ui/button";
+import Table from "components/ui/table";
 
 interface IProps {
   handleAddOrViewEvidence?: (id?: number) => void;
@@ -29,26 +32,20 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
       <div className="flex items-center gap-12">
         <p>Evidences</p>
 
-        <div className="flex items-center gap-4 w-full">
+        <div className="flex w-full items-center gap-4">
           <hr className="w-full" />
 
           <button
             type="button"
             onClick={() => handleAddOrViewEvidence?.()}
-            className="!w-8 !h-8 bg-white rounded-full flex-shrink-0 text-forest-green flex items-center justify-center hover:scale-[1.05] transition-all hover:opacity-80"
+            className="flex !h-8 !w-8 flex-shrink-0 items-center justify-center rounded-full bg-white text-forest-green transition-all hover:scale-[1.05] hover:opacity-80"
           >
-            <img
-              src={add}
-              alt="add"
-            />
+            <img src={add} alt="add" />
           </button>
         </div>
       </div>
 
-      <Table.Container
-        isEmpty={!evidences.length}
-        isLoading={isLoading}
-      >
+      <Table.Container isEmpty={!evidences.length} isLoading={isLoading}>
         <Table.Head>
           <Table.Row>
             {HEADERS.map((item, index) => {
@@ -64,7 +61,7 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
             const { file, outcome, description, status, id } = item;
             return (
               <Table.Row key={index}>
-                <Table.Data>
+                <Table.Data className="max-w-[150px]">
                   <button
                     onClick={() => handleAddOrViewEvidence?.(id)}
                     className="link underline"
@@ -75,9 +72,11 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
 
                 <Table.Data>{outcome.name} </Table.Data>
 
-                <Table.Data>{description}</Table.Data>
+                <Table.Data className="max-w-[100px]">{description}</Table.Data>
 
-                <Table.Data>{capitalize(status)}</Table.Data>
+                <Table.Data className="max-w-[100px]">
+                  {capitalize(status)}
+                </Table.Data>
 
                 <Table.Data>
                   <Link
@@ -86,10 +85,7 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
                     target="_blank"
                     type="button"
                   >
-                    <img
-                      src={download}
-                      alt="download"
-                    />
+                    <img src={download} alt="download" className="min-w-4" />
                   </Link>
                 </Table.Data>
               </Table.Row>

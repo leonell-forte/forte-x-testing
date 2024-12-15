@@ -1,8 +1,9 @@
+import { useQuery } from "@tanstack/react-query";
+import authService from "api/auth";
 import { ReactNode } from "react";
+
 import Header from "../Layout/Header/Header";
 import SidePanel from "../Layout/SidePanel/SidePanel";
-import { useQuery } from "@tanstack/react-query";
-import authService from "../../api/auth";
 
 const DashboardLayout = ({ children }: { children: ReactNode }) => {
   const { data: user } = useQuery({
@@ -12,13 +13,13 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
   });
 
   return (
-    <div className="h-screen overflow-y-scroll w-screen overflow-x-hidden">
+    <div className="h-screen w-screen overflow-x-hidden overflow-y-scroll">
       <Header user={user} />
 
-      <div className="px-5 flex gap-4 min-h-[88vh] pb-4 w-screen overflow-scroll">
+      <div className="flex min-h-[88vh] w-screen gap-4 overflow-scroll px-5 pb-4">
         <SidePanel />
 
-        <div className="relative bg-white bg-opacity-[30%] rounded-[10px] p-[17px] w-full min-w-[1024px] hide-scroll overflow-hidden">
+        <div className="hide-scroll relative w-full min-w-[1024px] overflow-hidden rounded-[10px] bg-white bg-opacity-[30%] p-[17px]">
           {children}
         </div>
       </div>

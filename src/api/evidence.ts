@@ -12,24 +12,59 @@ export class EvidenceService {
     values,
   }: AddEvidenceParams) {
     const body = {
-      ...values,
+      status: values.status,
+
+      description: values.description,
+
+      fileId: values.file?.id,
 
       outcomeId: Number(values.outcomeId),
     };
+
     const response = await api.post(
       `/beneficiaries/${beneficiaryId}/evidences`,
-      body,
+
+      body
     );
 
     return response.data;
   }
 
   async list(
-    beneficiaryId: number,
+    beneficiaryId: number
   ): Promise<{ items: Evidence[]; totalSize: number }> {
     const response = await api.get(`/beneficiaries/${beneficiaryId}/evidences`);
 
     return response.data;
+  }
+
+  async getOne(beneficiaryId: number, evidenceId: number): Promise<Evidence> {
+    const response = await api.get(
+      `/beneficiaries/${beneficiaryId}/evidences/${evidenceId}`
+    );
+
+    return response.data.data;
+  }
+
+  async update({ beneficiaryId, values }: AddEvidenceParams) {
+    const body = {
+      id: values.id,
+
+      status: values.status,
+
+      description: values.description,
+
+      fileId: values.file?.id,
+
+      outcomeId: Number(values.outcomeId),
+    };
+
+    const response = await api.put(
+      `/beneficiaries/${beneficiaryId}/evidences`,
+      body
+    );
+
+    return response.data.data;
   }
 }
 

@@ -1,28 +1,27 @@
-import Button from "../../components/ui/button";
-import Dropdown, { IOption } from "../../components/ui/dropdown";
-import SearchInput from "../../components/ui/search-input";
-import closeFilter from "../../assets/images/icons/close-filter.svg";
-import Table from "../../components/ui/table";
-import pencil from "../../assets/images/icons/pencil.svg";
-import bin from "../../assets/images/icons/bin.svg";
-import ContractDialogue from "../../components/Dashboard/Contracts/Dialogues/ContractDialogue";
-import { useCallback, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import contractService from "../../api/contract";
-import {
-  IContract,
-  IContractFilters,
-  StatusType,
-} from "../../lib/types/contracts";
-import { formatDate } from "../../lib/utils";
-import Pagination from "../../components/ui/pagination";
-import { useDebounce, usePageTitle } from "../../lib/hooks";
-import { DEFAULT_DATE_FORMAT, STATUS } from "../../lib/constants";
-import DatePicker from "../../components/ui/date-picker";
-import DeleteDialogue from "../../components/Dashboard/Contracts/Dialogues/DeleteDialogue";
-import HorizontalScroller from "../../components/ui/horizontal-scroller";
-import projectService from "../../api/projects";
-import { IProject } from "../../lib/types/projects";
+import contractService from "api/contract";
+import projectService from "api/projects";
+import { useCallback, useMemo, useState } from "react";
+
+import bin from "assets/images/icons/bin.svg";
+import closeFilter from "assets/images/icons/close-filter.svg";
+import pencil from "assets/images/icons/pencil.svg";
+
+import { DEFAULT_DATE_FORMAT, STATUS } from "lib/constants";
+import { useDebounce, usePageTitle } from "lib/hooks";
+import { IContract, IContractFilters, StatusType } from "lib/types/contracts";
+import { IProject } from "lib/types/projects";
+import { formatDate } from "lib/utils";
+
+import ContractDialogue from "components/Dashboard/Contracts/Dialogues/ContractDialogue";
+import DeleteDialogue from "components/Dashboard/Contracts/Dialogues/DeleteDialogue";
+import Button from "components/ui/button";
+import DatePicker from "components/ui/date-picker";
+import Dropdown, { IOption } from "components/ui/dropdown";
+import HorizontalScroller from "components/ui/horizontal-scroller";
+import Pagination from "components/ui/pagination";
+import SearchInput from "components/ui/search-input";
+import Table from "components/ui/table";
 
 const ContractsPage = () => {
   usePageTitle("Contracts");
@@ -50,7 +49,7 @@ const ContractsPage = () => {
 
     500,
 
-    [search],
+    [search]
   );
 
   const { data: contractList, isLoading } = useQuery({
@@ -77,7 +76,7 @@ const ContractsPage = () => {
   const contracts: IContract[] = useMemo(
     () => contractList?.items || [],
 
-    [contractList],
+    [contractList]
   );
 
   const projects: IOption[] = useMemo(
@@ -88,7 +87,7 @@ const ContractsPage = () => {
         value: item.id.toString(),
       })) || [],
 
-    [projecrList],
+    [projecrList]
   );
 
   const [modal, setModal] = useState<"contract" | "delete" | null>(null);
@@ -138,7 +137,7 @@ const ContractsPage = () => {
       {renderModal()}
 
       <div className="space-y-2.5">
-        <div className="flex items-center justify-between w-full gap-4">
+        <div className="flex w-full items-center justify-between gap-4">
           <SearchInput
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -148,17 +147,14 @@ const ContractsPage = () => {
           />
 
           <div className="flex items-center gap-6">
-            <Button
-              eventName="Add User"
-              onClick={() => setModal("contract")}
-            >
+            <Button eventName="Add User" onClick={() => setModal("contract")}>
               Add contract
             </Button>
           </div>
         </div>
 
         <div className="flex items-center gap-[18px]">
-          <p className="text-[20px] font-medium flex-shrink-0">Filter by</p>
+          <p className="flex-shrink-0 text-[20px] font-medium">Filter by</p>
 
           <Dropdown
             noHelperText
@@ -208,19 +204,13 @@ const ContractsPage = () => {
               })
             }
           >
-            <img
-              src={closeFilter}
-              alt="close-filter"
-            />
+            <img src={closeFilter} alt="close-filter" />
           </button>
         </div>
 
         <div className="space-y-[18px] overflow-scroll">
           <div className="pr-4">
-            <Table.Container
-              isEmpty={!contracts.length}
-              isLoading={isLoading}
-            >
+            <Table.Container isEmpty={!contracts.length} isLoading={isLoading}>
               <Table.Head>
                 <Table.Row>
                   {TABLE_HEADER.map((key, headerIndex) => {
@@ -299,10 +289,7 @@ const ContractsPage = () => {
                             onClick={() => handleEditContract(id!)}
                             className="p-[3px]"
                           >
-                            <img
-                              alt="pencil"
-                              src={pencil}
-                            />
+                            <img alt="pencil" src={pencil} />
                           </Button>
 
                           <Button
@@ -313,10 +300,7 @@ const ContractsPage = () => {
                             onClick={() => handleDeleteContract(id!)}
                             className="p-[3px]"
                           >
-                            <img
-                              alt="bin"
-                              src={bin}
-                            />
+                            <img alt="bin" src={bin} />
                           </Button>
                         </div>
                       </Table.Data>
@@ -327,7 +311,7 @@ const ContractsPage = () => {
             </Table.Container>
           </div>
 
-          <div className="flex justify-end items-center w-full">
+          <div className="flex w-full items-center justify-end">
             <HorizontalScroller />
 
             <Pagination

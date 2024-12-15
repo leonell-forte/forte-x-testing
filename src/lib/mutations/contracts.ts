@@ -1,9 +1,12 @@
-import contractService from "../../api/contract";
-import { queryClient } from "../../components/QueryProvider";
-import { ContractFieldValues, IContract } from "../../lib/types/contracts";
-import { useMutation } from "@tanstack/react-query";
-import { useAlert } from "../hooks";
 import * as amplitude from "@amplitude/analytics-browser";
+import { useMutation } from "@tanstack/react-query";
+import contractService from "api/contract";
+
+import { ContractFieldValues, IContract } from "lib/types/contracts";
+
+import { queryClient } from "components/QueryProvider";
+
+import { useAlert } from "../hooks";
 
 interface IContractMutation {
   id?: number;
@@ -37,7 +40,7 @@ const useContractMutation = ({ id, successCallback }: IContractMutation) => {
 
             items: [...(old?.items || []), addedContract],
           };
-        },
+        }
       );
 
       successCallback?.();
@@ -65,7 +68,7 @@ const useContractMutation = ({ id, successCallback }: IContractMutation) => {
       queryClient.setQueryData(
         ["contracts", 1, ""],
 
-        context?.previousContracts,
+        context?.previousContracts
       );
     },
 
@@ -79,7 +82,7 @@ const useContractMutation = ({ id, successCallback }: IContractMutation) => {
 
 export const useDeleteContractMutation = (
   id: string,
-  succesCallback?: () => void,
+  succesCallback?: () => void
 ) => {
   const { setAlert } = useAlert();
 
@@ -105,10 +108,10 @@ export const useDeleteContractMutation = (
             ...old,
 
             items: [...(old?.items || [])].filter(
-              (item) => item.id !== Number(id),
+              (item) => item.id !== Number(id)
             ),
           };
-        },
+        }
       );
 
       succesCallback?.();

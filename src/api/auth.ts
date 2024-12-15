@@ -1,8 +1,9 @@
-import { z } from "zod";
-import { login, password, signup } from "../lib/validators/auth";
-import { cookie } from "../lib/hooks";
-import { api } from "../lib/axios/interceptor";
 import axios from "axios";
+import { z } from "zod";
+
+import { api } from "../lib/axios/interceptor";
+import { cookie } from "../lib/hooks";
+import { login, password, signup } from "../lib/validators/auth";
 
 class AuthService {
   async login(body: z.infer<typeof login.schema>) {

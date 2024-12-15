@@ -5,8 +5,9 @@ import {
   RadioGroup as RadioButtons,
 } from "@mui/material";
 import { ChangeEvent, useCallback } from "react";
-import radioChecked from "../../assets/images/icons/radio-checked.svg";
-import radioUnchecked from "../../assets/images/icons/radio-unchecked.svg";
+
+import radioChecked from "assets/images/icons/radio-checked.svg";
+import radioUnchecked from "assets/images/icons/radio-unchecked.svg";
 
 interface IRadioGroupProps {
   items: string[];
@@ -46,17 +47,9 @@ const RadioGroup = ({
                 checked={value === item}
                 control={
                   <Radio
-                    icon={
-                      <img
-                        src={renderIcons().unchecked}
-                        alt="unchecked"
-                      />
-                    }
+                    icon={<img src={renderIcons().unchecked} alt="unchecked" />}
                     checkedIcon={
-                      <img
-                        src={renderIcons().checked}
-                        alt="checked"
-                      />
+                      <img src={renderIcons().checked} alt="checked" />
                     }
                     onChange={onChange}
                   />

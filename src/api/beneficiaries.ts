@@ -1,11 +1,11 @@
-import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import { api } from "../lib/axios/interceptor";
+import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import {
   IBeneficiaries,
   IBeneficiariesFieldValues,
   IBeneficiariesFilter,
 } from "../lib/types/beneficiaries";
-import { generateODataQuery, IODataObject } from "../lib/utils";
+import { IODataObject, generateODataQuery } from "../lib/utils";
 
 interface IBeneficiariesListProps {
   page?: number;

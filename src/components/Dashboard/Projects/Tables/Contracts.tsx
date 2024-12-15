@@ -1,12 +1,16 @@
-import Table from "../../../../components/ui/table";
-import pencil from "../../../../assets/images/icons/pencil.svg";
+import { useQuery } from "@tanstack/react-query";
+import contractService from "api/contract";
 import { useState } from "react";
-import Button from "../../../../components/ui/button";
+
+import pencil from "assets/images/icons/pencil.svg";
+
+import { formatDate } from "lib/utils";
+
+import Button from "components/ui/button";
+import Table from "components/ui/table";
+
 import ContractDialogue from "../../Contracts/Dialogues/ContractDialogue";
 import TagExistingDialogue from "../Dialogues/TagExistingDialogue";
-import { useQuery } from "@tanstack/react-query";
-import contractService from "../../../../api/contract";
-import { formatDate } from "../../../../lib/utils";
 
 type ModalLabelType = "contract" | "tag" | "";
 
@@ -75,8 +79,8 @@ const Contracts = ({ projectId }: IProps) => {
       {renderModal(modal)}
 
       <div className="space-y-2.5">
-        <div className="flex justify-between items-center">
-          <p className="font-semibold text-[24px]">Contracts</p>
+        <div className="flex items-center justify-between">
+          <p className="text-[24px] font-semibold">Contracts</p>
 
           <div className="flex gap-2.5">
             <Button onClick={() => setModal("contract")}>
@@ -93,10 +97,7 @@ const Contracts = ({ projectId }: IProps) => {
             <Table.Row>
               {HEADERS.map((item, index) => {
                 return (
-                  <Table.Header
-                    small
-                    key={index}
-                  >
+                  <Table.Header small key={index}>
                     {item}
                   </Table.Header>
                 );
@@ -122,27 +123,27 @@ const Contracts = ({ projectId }: IProps) => {
 
               return (
                 <Table.Row key={index}>
-                  <Table.Data className="h-[56px] py-1 w-[100px]">
+                  <Table.Data className="h-[56px] w-[100px] py-1">
                     Contract {id}
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1 w-[150px]">
+                  <Table.Data className="h-[56px] w-[150px] py-1">
                     {/* {parties} */}
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1 w-[150px]">
+                  <Table.Data className="h-[56px] w-[150px] py-1">
                     <p>outcomes</p>
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1 w-[80px]">
+                  <Table.Data className="h-[56px] w-[80px] py-1">
                     <p>{targetNoOfBenefeciaries}</p>
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1 w-[120px]">
+                  <Table.Data className="h-[56px] w-[120px] py-1">
                     <p className="capitalize">{status?.toLowerCase()}</p>
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1 w-[120px]">
+                  <Table.Data className="h-[56px] w-[120px] py-1">
                     <p>{formatDate(startDate, "LL-dd-yyyy")}</p>
                   </Table.Data>
 
@@ -156,10 +157,7 @@ const Contracts = ({ projectId }: IProps) => {
                         type="button"
                         onClick={() => handleEdit(id!.toString())}
                       >
-                        <img
-                          src={pencil}
-                          alt=""
-                        />
+                        <img src={pencil} alt="" />
                       </button>
                     </div>
                   </Table.Data>

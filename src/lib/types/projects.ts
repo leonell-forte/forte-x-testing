@@ -1,5 +1,6 @@
-import { projects } from "../../lib/validators/projects";
 import { z } from "zod";
+
+import { projects } from "lib/validators/projects";
 
 export interface IOutcome {
   id: number;
