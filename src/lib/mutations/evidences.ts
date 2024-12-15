@@ -1,8 +1,10 @@
-import { useMutation } from "@tanstack/react-query";
-import { useAlert } from "../hooks";
-import evidenceService from "../../api/evidence";
-import { queryClient } from "../../components/QueryProvider";
 import * as amplitude from "@amplitude/analytics-browser";
+import { useMutation } from "@tanstack/react-query";
+import evidenceService from "api/evidence";
+
+import { queryClient } from "components/QueryProvider";
+
+import { useAlert } from "../hooks";
 import { Evidence, EvidenceFieldValues } from "../types/evidence";
 
 interface IEvidenceMutation {
@@ -61,13 +63,13 @@ export const useEvidenceMutation = ({
 
             items: [...(old?.items || []), addedEvidence],
           };
-        },
+        }
       );
 
       queryClient.setQueryData(
         ["evidence", evidenceId],
 
-        () => addedEvidence,
+        () => addedEvidence
       );
 
       successCallback?.();
@@ -83,7 +85,7 @@ export const useEvidenceMutation = ({
       });
 
       amplitude.track(
-        `${evidenceId ? "Update" : "Add"} Evidence Form Submission`,
+        `${evidenceId ? "Update" : "Add"} Evidence Form Submission`
       );
     },
 
@@ -99,13 +101,13 @@ export const useEvidenceMutation = ({
       queryClient.setQueryData(
         ["evidences", beneficiaryId],
 
-        context?.previousEvidences,
+        context?.previousEvidences
       );
 
       queryClient.setQueryData(
         ["evidence", evidenceId],
 
-        context?.previousEvidence,
+        context?.previousEvidence
       );
     },
 

@@ -1,10 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import OTPInput from "../ui/otp-input";
+
+import { useAppSelector } from "lib/hooks";
+
 import Button from "../ui/button";
+import OTPInput from "../ui/otp-input";
 import { ILoginProps } from "./types";
-import { useAppSelector } from "../../lib/hooks";
 
 const OTPForm = ({ handleNext }: ILoginProps) => {
   const { email } = useAppSelector((state) => state.auth);
@@ -45,7 +47,7 @@ const OTPForm = ({ handleNext }: ILoginProps) => {
         Log in
       </Button>
 
-      <p className="text-center text-[14px] mt-[15px]">
+      <p className="mt-[15px] text-center text-[14px]">
         Didn&apos;t receive the email?{" "}
         <button className="font-bold">Resend code</button>
       </p>

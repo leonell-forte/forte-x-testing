@@ -1,17 +1,19 @@
 "use client";
 
-import { useState } from "react";
-import Input from "../ui/input";
-import Checkbox from "../ui/checkbox";
-import Button from "../ui/button";
-import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
-import { signup } from "../../lib/validators/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
+import authService from "api/auth";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { Link, useSearchParams } from "react-router-dom";
-import authService from "../../api/auth";
-import { cookie, useAlert } from "../../lib/hooks";
+import { z } from "zod";
+
+import { cookie, useAlert } from "lib/hooks";
+import { signup } from "lib/validators/auth";
+
 import { ILoginProps } from "../Login/types";
+import Button from "../ui/button";
+import Checkbox from "../ui/checkbox";
+import Input from "../ui/input";
 
 const SignupForm = ({ handleNext }: ILoginProps) => {
   const [loading, setLoading] = useState(false);
@@ -63,11 +65,8 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
   };
   return (
     <div className="w-full">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="space-y-5 w-full"
-      >
-        <div className="flex flex-col w-full gap-1">
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-5">
+        <div className="flex w-full flex-col gap-1">
           <Controller
             name="firstName"
             control={control}
@@ -181,36 +180,25 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
           </div>
         </div>
 
-        <div className="w-full text-center space-y-[15px]">
-          <Button
-            type="submit"
-            fullWidth
-            loading={loading}
-          >
+        <div className="w-full space-y-[15px] text-center">
+          <Button type="submit" fullWidth loading={loading}>
             Continue
           </Button>
           <div className="flex items-center gap-4">
             <hr className="w-full" />
 
-            <p className="text-[14px] md:ext-[18px]">OR</p>
+            <p className="md:ext-[18px] text-[14px]">OR</p>
 
             <hr className="w-full" />
           </div>{" "}
-          <Button
-            type="button"
-            fullWidth
-            buttonType="secondary"
-          >
+          <Button type="button" fullWidth buttonType="secondary">
             Continue with Google{" "}
           </Button>
         </div>
 
         <p className="text-center text-[14px]">
           Have an account?{" "}
-          <Link
-            className="font-bold"
-            to="/"
-          >
+          <Link className="font-bold" to="/">
             Log in
           </Link>
         </p>

@@ -1,5 +1,6 @@
-import { users } from "../../lib/validators/users";
 import { z } from "zod";
+
+import { users } from "lib/validators/users";
 
 export interface IUser {
   id?: string;

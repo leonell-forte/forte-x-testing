@@ -1,9 +1,12 @@
-import { useAlert } from "../hooks";
-import { IUser, UserFieldTypes } from "../../lib/types/users";
-import userService from "../../api/users";
-import { queryClient } from "../../components/QueryProvider";
-import { useMutation } from "@tanstack/react-query";
 import * as amplitude from "@amplitude/analytics-browser";
+import { useMutation } from "@tanstack/react-query";
+import userService from "api/users";
+
+import { IUser, UserFieldTypes } from "lib/types/users";
+
+import { queryClient } from "components/QueryProvider";
+
+import { useAlert } from "../hooks";
 
 interface IUserMutation {
   userId: string;
@@ -76,7 +79,7 @@ const useUserMutation = ({
 
       queryClient.setQueryData(
         ["specific-user", userId],
-        context?.previousData,
+        context?.previousData
       );
 
       queryClient.setQueryData(["profile"], context?.previousData);

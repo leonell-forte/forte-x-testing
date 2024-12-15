@@ -1,9 +1,10 @@
-import { useDispatch, useSelector, useStore } from "react-redux";
-import type { RootState, AppDispatch, AppStore } from "./store";
 import { MutableRefObject, useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector, useStore } from "react-redux";
 import Cookies from "universal-cookie";
+
 import { IAlert, setToast } from "./slice/alert";
 import { setTitle } from "./slice/layout";
+import type { AppDispatch, AppStore, RootState } from "./store";
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
@@ -17,7 +18,7 @@ export const cookie = new Cookies();
 export const useOutsideClick = (
   ref: MutableRefObject<HTMLElement | null>,
 
-  callBack: () => void,
+  callBack: () => void
 ) => {
   const handleClick = useCallback(
     (e: MouseEvent) => {
@@ -26,7 +27,7 @@ export const useOutsideClick = (
       }
     },
 
-    [ref, callBack], // Depend on ref and callBack to ensure stability
+    [ref, callBack] // Depend on ref and callBack to ensure stability
   );
 
   useEffect(() => {
@@ -71,7 +72,7 @@ export const useDebounce = (
 
   time: number,
 
-  dependency: any,
+  dependency: any
 ) => {
   useEffect(() => {
     const debounce = setTimeout(() => {

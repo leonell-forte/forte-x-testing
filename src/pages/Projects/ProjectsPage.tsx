@@ -1,18 +1,21 @@
-import { useCallback, useMemo, useState } from "react";
-import Button from "../../components/ui/button";
-import SearchInput from "../../components/ui/search-input";
-import Table from "../../components/ui/table";
-import Pagination from "../../components/ui/pagination";
-import pencil from "../../assets/images/icons/pencil.svg";
-import bin from "../../assets/images/icons/bin.svg";
-import ProjectDialogue from "../../components/Dashboard/Projects/Dialogues/ProjectDialogue";
 import { useQuery } from "@tanstack/react-query";
-import projectService from "../../api/projects";
-import DeleteDialogue from "../../components/Dashboard/Projects/Dialogues/DeleteDialogue";
-import { useDebounce, usePageTitle } from "../../lib/hooks";
+import projectService from "api/projects";
+import { useCallback, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { IProject } from "../../lib/types/projects";
-import HorizontalScroller from "../../components/ui/horizontal-scroller";
+
+import bin from "assets/images/icons/bin.svg";
+import pencil from "assets/images/icons/pencil.svg";
+
+import { useDebounce, usePageTitle } from "lib/hooks";
+import { IProject } from "lib/types/projects";
+
+import DeleteDialogue from "components/Dashboard/Projects/Dialogues/DeleteDialogue";
+import ProjectDialogue from "components/Dashboard/Projects/Dialogues/ProjectDialogue";
+import Button from "components/ui/button";
+import HorizontalScroller from "components/ui/horizontal-scroller";
+import Pagination from "components/ui/pagination";
+import SearchInput from "components/ui/search-input";
+import Table from "components/ui/table";
 
 const ProjectsPage = () => {
   usePageTitle("Projects");
@@ -30,7 +33,7 @@ const ProjectsPage = () => {
 
     500,
 
-    [search],
+    [search]
   );
 
   const { data: projectsList, isLoading: projectLoading } = useQuery({
@@ -43,7 +46,7 @@ const ProjectsPage = () => {
   const projects: IProject[] = useMemo(
     () => projectsList?.items || [],
 
-    [projectsList],
+    [projectsList]
   );
 
   const [modal, setModal] = useState<"project" | "delete" | null>(null);
@@ -89,7 +92,7 @@ const ProjectsPage = () => {
       {renderModal()}
 
       <div className="space-y-2.5">
-        <div className="flex justify-between items-center gap-4">
+        <div className="flex items-center justify-between gap-4">
           <SearchInput
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -97,15 +100,12 @@ const ProjectsPage = () => {
             onClear={() => setSearch("")}
           />
 
-          <Button
-            eventName="Add User"
-            onClick={() => setModal("project")}
-          >
+          <Button eventName="Add User" onClick={() => setModal("project")}>
             Add project
           </Button>
         </div>
 
-        <div className="space-y-[18px] overflow-scroll ">
+        <div className="space-y-[18px] overflow-scroll">
           <div className="pr-4">
             <Table.Container
               isEmpty={!projects.length}
@@ -161,10 +161,7 @@ const ProjectsPage = () => {
                             onClick={() => handleEditUser(item)}
                             className="p-[3px]"
                           >
-                            <img
-                              alt="pencil"
-                              src={pencil}
-                            />
+                            <img alt="pencil" src={pencil} />
                           </Button>
 
                           <Button
@@ -178,10 +175,7 @@ const ProjectsPage = () => {
                             }}
                             className="p-[3px]"
                           >
-                            <img
-                              alt="pencil"
-                              src={bin}
-                            />
+                            <img alt="pencil" src={bin} />
                           </Button>
                         </div>
                       </Table.Data>
@@ -193,7 +187,7 @@ const ProjectsPage = () => {
           </div>
 
           {!!projects.length && (
-            <div className="flex justify-end items-center w-full">
+            <div className="flex w-full items-center justify-end">
               <HorizontalScroller />
 
               <Pagination

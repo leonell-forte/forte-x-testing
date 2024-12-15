@@ -1,6 +1,5 @@
-import Dialogue, {
-  IDialogueProps,
-} from "../../../../components/ui/dialogue/dialogue";
+import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
+
 import BeneficiariesForm from "./BeneficiariesForm";
 import Evidences from "./Evidences";
 

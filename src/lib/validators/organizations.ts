@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { IOrganization } from "../types/organizations";
 
 export const organizations = {

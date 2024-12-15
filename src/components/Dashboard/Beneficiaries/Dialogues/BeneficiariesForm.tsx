@@ -1,12 +1,12 @@
-import { useAppDispatch } from "../../../../lib/hooks";
-import beneficiariesService from "../../../../api/beneficiaries";
-import contractService from "../../../../api/contract";
-import organizationService from "../../../../api/organization";
-import projectService from "../../../../api/projects";
-import Button from "../../../../components/ui/button";
-import DatePicker from "../../../../components/ui/date-picker";
-import Dropdown, { IOption } from "../../../../components/ui/dropdown";
-import Input from "../../../../components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
+import beneficiariesService from "api/beneficiaries";
+import contractService from "api/contract";
+import organizationService from "api/organization";
+import projectService from "api/projects";
+import { useEffect, useMemo } from "react";
+import { Controller, useForm } from "react-hook-form";
+
 import {
   BENEFICIARY_STATUS,
   CONFIRM,
@@ -14,20 +14,22 @@ import {
   HIGHEST_EDUCATION_LEVEL,
   LANGUAGES,
   RISK_LEVEL,
-} from "../../../../lib/constants";
-import { useBeneficiaryMutation } from "../../../../lib/mutations/beneficiaries";
+} from "lib/constants";
+import { useAppDispatch } from "lib/hooks";
+import { useBeneficiaryMutation } from "lib/mutations/beneficiaries";
+import { setSelectedData } from "lib/slice/evidence";
 import {
   DisabilityStatusEnum,
   IBeneficiariesFieldValues,
   RiskLevelEnum,
-} from "../../../../lib/types/beneficiaries";
-import { findLabelFromOptions } from "../../../../lib/utils";
-import { beneficiaries } from "../../../../lib/validators/beneficiaries";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
-import { useEffect, useMemo } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { setSelectedData } from "../../../../lib/slice/evidence";
+} from "lib/types/beneficiaries";
+import { findLabelFromOptions } from "lib/utils";
+import { beneficiaries } from "lib/validators/beneficiaries";
+
+import Button from "components/ui/button";
+import DatePicker from "components/ui/date-picker";
+import Dropdown, { IOption } from "components/ui/dropdown";
+import Input from "components/ui/input";
 
 interface IProps {
   id?: number;
@@ -87,7 +89,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
         projectId: project,
 
         beneficiaryId: Number(id),
-      }),
+      })
     );
   }, [contract, project, id, dispatch, watch]);
 
@@ -127,7 +129,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
         value: item.id!.toString(),
       })) || [],
 
-    [contractList],
+    [contractList]
   );
 
   const selectedContract = watch("contractId");
@@ -140,11 +142,11 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
           // provider dropdown should be disabled if no contract is selected
 
           const contract = contractList?.items.find(
-            (contract) => contract.id === selectedContract,
+            (contract) => contract.id === selectedContract
           );
 
           return contract?.partyIds.some(
-            (item) => Number(item) === Number(org.id),
+            (item) => Number(item) === Number(org.id)
           );
         })
         .map((item) => ({
@@ -153,7 +155,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
           value: item.id!.toString(),
         })) || [],
 
-    [organizationList, contractList, selectedContract],
+    [organizationList, contractList, selectedContract]
   );
 
   const projects: IOption[] = useMemo(
@@ -163,7 +165,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
 
         value: item.id.toString(),
       })) || [],
-    [projectsList],
+    [projectsList]
   );
 
   const close = () => {
@@ -183,16 +185,10 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="space-y-6"
-    >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <div className="grid grid-cols-1 gap-x-6 gap-y-1 md:grid-cols-2">
         <div className="flex items-start">
-          <label
-            htmlFor=""
-            className="min-w-[140px] pt-3"
-          >
+          <label htmlFor="" className="min-w-[140px] pt-3">
             First name
           </label>
 
@@ -211,10 +207,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
         </div>
 
         <div className="flex items-start">
-          <label
-            htmlFor=""
-            className="min-w-[140px] pt-3"
-          >
+          <label htmlFor="" className="min-w-[140px] pt-3">
             Last name
           </label>
 
@@ -233,10 +226,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
         </div>
 
         <div className="flex items-start">
-          <label
-            htmlFor=""
-            className="min-w-[140px] pt-3"
-          >
+          <label htmlFor="" className="min-w-[140px] pt-3">
             Email
           </label>
 
@@ -255,10 +245,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
         </div>
 
         <div className="flex items-start">
-          <label
-            htmlFor=""
-            className="min-w-[140px] pt-3"
-          >
+          <label htmlFor="" className="min-w-[140px] pt-3">
             Phone
           </label>
 
@@ -277,10 +264,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
         </div>
 
         <div className="flex items-start">
-          <label
-            htmlFor=""
-            className="min-w-[140px] pt-3"
-          >
+          <label htmlFor="" className="min-w-[140px] pt-3">
             Status
           </label>
 
@@ -305,10 +289,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
         </div>
 
         <div className="flex items-start">
-          <label
-            htmlFor=""
-            className="min-w-[140px] pt-3"
-          >
+          <label htmlFor="" className="min-w-[140px] pt-3">
             Risk level
           </label>
 
@@ -333,10 +314,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
         </div>
 
         <div className="flex items-start">
-          <label
-            htmlFor=""
-            className="min-w-[140px] pt-3"
-          >
+          <label htmlFor="" className="min-w-[140px] pt-3">
             Contract
           </label>
 
@@ -350,7 +328,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
                 value={findLabelFromOptions(
                   contracts,
 
-                  field.value.toString(),
+                  field.value.toString()
                 )}
                 handleSelect={(val) => {
                   setValue("contractId", Number(val));
@@ -369,10 +347,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
         </div>
 
         <div className="flex items-start">
-          <label
-            htmlFor=""
-            className="min-w-[140px] pt-3"
-          >
+          <label htmlFor="" className="min-w-[140px] pt-3">
             Provider
           </label>
 
@@ -386,7 +361,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
                 value={findLabelFromOptions(
                   organizations,
 
-                  field.value.toString(),
+                  field.value.toString()
                 )}
                 handleSelect={(val) => {
                   setValue("providerId", Number(val));
@@ -404,10 +379,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
         </div>
 
         <div className="flex items-start">
-          <label
-            htmlFor=""
-            className="min-w-[140px] pt-3"
-          >
+          <label htmlFor="" className="min-w-[140px] pt-3">
             Project
           </label>
 
@@ -435,19 +407,16 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
         </div>
       </div>
 
-      <div className="flex items-center !mt-0">
-        <p className="text-[20px] font-semibold w-[190px]">Cohort</p>
+      <div className="!mt-0 flex items-center">
+        <p className="w-[190px] text-[20px] font-semibold">Cohort</p>
 
         <hr className="w-full" />
       </div>
 
       <div className="space-y-1">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1">
+        <div className="grid grid-cols-1 gap-x-6 gap-y-1 md:grid-cols-2">
           <div className="flex items-start">
-            <label
-              htmlFor=""
-              className="min-w-[140px] pt-3"
-            >
+            <label htmlFor="" className="min-w-[140px] pt-3">
               Start date
             </label>
 
@@ -470,10 +439,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
           </div>
 
           <div className="flex items-start">
-            <label
-              htmlFor=""
-              className="min-w-[140px] pt-3"
-            >
+            <label htmlFor="" className="min-w-[140px] pt-3">
               End date
             </label>
 
@@ -497,10 +463,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
         </div>
 
         <div className="flex items-start">
-          <label
-            htmlFor=""
-            className="min-w-[140px] pt-3"
-          >
+          <label htmlFor="" className="min-w-[140px] pt-3">
             Program
           </label>
 
@@ -519,19 +482,16 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
         </div>
       </div>
 
-      <div className="flex items-center !mt-0">
-        <p className="text-[20px] font-semibold w-[190px]">Social media</p>
+      <div className="!mt-0 flex items-center">
+        <p className="w-[190px] text-[20px] font-semibold">Social media</p>
 
         <hr className="w-full" />
       </div>
 
       <div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+        <div className="grid grid-cols-1 gap-x-6 md:grid-cols-2">
           <div className="flex items-start">
-            <label
-              htmlFor=""
-              className="min-w-[140px] pt-3"
-            >
+            <label htmlFor="" className="min-w-[140px] pt-3">
               Linkedin
             </label>
 
@@ -550,10 +510,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
           </div>
 
           <div className="flex items-start">
-            <label
-              htmlFor=""
-              className="min-w-[140px] pt-3"
-            >
+            <label htmlFor="" className="min-w-[140px] pt-3">
               Github
             </label>
 
@@ -573,10 +530,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
         </div>
 
         <div className="flex items-start">
-          <label
-            htmlFor=""
-            className="min-w-[140px] pt-3"
-          >
+          <label htmlFor="" className="min-w-[140px] pt-3">
             Other
           </label>
 
@@ -595,19 +549,16 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
         </div>
       </div>
 
-      <div className="flex items-center !mt-0">
-        <p className="text-[20px] font-semibold w-[190px]">Demographics</p>
+      <div className="!mt-0 flex items-center">
+        <p className="w-[190px] text-[20px] font-semibold">Demographics</p>
 
         <hr className="w-full" />
       </div>
 
       <div className="space-y-1">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1">
+        <div className="grid grid-cols-1 gap-x-6 gap-y-1 md:grid-cols-2">
           <div className="flex items-start">
-            <label
-              htmlFor=""
-              className="min-w-[140px] pt-3"
-            >
+            <label htmlFor="" className="min-w-[140px] pt-3">
               Date of birth
             </label>
 
@@ -630,10 +581,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
           </div>
 
           <div className="flex items-start">
-            <label
-              htmlFor=""
-              className="min-w-[140px] pt-3"
-            >
+            <label htmlFor="" className="min-w-[140px] pt-3">
               Ethnicity
             </label>
 
@@ -652,10 +600,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
           </div>
 
           <div className="flex items-start">
-            <label
-              htmlFor=""
-              className="min-w-[140px] pt-3"
-            >
+            <label htmlFor="" className="min-w-[140px] pt-3">
               Gender
             </label>
 
@@ -680,10 +625,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
           </div>
 
           <div className="flex items-start">
-            <label
-              htmlFor=""
-              className="min-w-[140px] pt-3"
-            >
+            <label htmlFor="" className="min-w-[140px] pt-3">
               Disability status
             </label>
 
@@ -709,10 +651,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
         </div>
 
         <div className="flex items-start">
-          <label
-            htmlFor=""
-            className="min-w-[140px] pt-3"
-          >
+          <label htmlFor="" className="min-w-[140px] pt-3">
             Address
           </label>
 
@@ -731,10 +670,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
         </div>
 
         <div className="flex items-start">
-          <label
-            htmlFor=""
-            className="min-w-[140px] pt-3"
-          >
+          <label htmlFor="" className="min-w-[140px] pt-3">
             Socio-economic status
           </label>
 
@@ -753,10 +689,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
         </div>
 
         <div className="flex items-start">
-          <label
-            htmlFor=""
-            className="min-w-[140px] pt-3"
-          >
+          <label htmlFor="" className="min-w-[140px] pt-3">
             Highest education level
           </label>
 
@@ -781,10 +714,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
         </div>
 
         <div className="flex items-start">
-          <label
-            htmlFor=""
-            className="min-w-[140px] pt-3"
-          >
+          <label htmlFor="" className="min-w-[140px] pt-3">
             Language(s) spoken
           </label>
 
@@ -813,17 +743,11 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
       </div>
 
       <div className="flex justify-end gap-4 pt-6">
-        <Button
-          buttonType="secondary"
-          onClick={close}
-        >
+        <Button buttonType="secondary" onClick={close}>
           Cancel
         </Button>
 
-        <Button
-          type="submit"
-          loading={isPending}
-        >
+        <Button type="submit" loading={isPending}>
           Save
         </Button>
       </div>

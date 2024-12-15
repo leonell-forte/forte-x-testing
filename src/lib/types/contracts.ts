@@ -1,5 +1,6 @@
-import { contracts } from "../../lib/validators/contracts";
 import { z } from "zod";
+
+import { contracts } from "lib/validators/contracts";
 
 export type StatusType = "ACTIVE" | "INACTIVE" | "";
 

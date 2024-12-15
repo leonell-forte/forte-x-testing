@@ -1,11 +1,11 @@
-import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import { api } from "../lib/axios/interceptor";
-import { generateODataQuery, IODataObject } from "../lib/utils";
+import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import {
   ContractFieldValues,
   IContract,
   IContractFilters,
 } from "../lib/types/contracts";
+import { IODataObject, generateODataQuery } from "../lib/utils";
 
 interface IContractListProps {
   page?: number;

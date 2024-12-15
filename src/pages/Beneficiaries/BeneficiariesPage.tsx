@@ -1,31 +1,34 @@
-import Dropdown, { IOption } from "../../components/ui/dropdown";
-import Button from "../../components/ui/button";
-import SearchInput from "../../components/ui/search-input";
-import { ChangeEvent, useCallback, useMemo, useState } from "react";
-import closeFilter from "../../assets/images/icons/close-filter.svg";
-import Table from "../../components/ui/table";
-import Checkbox from "../../components/ui/checkbox";
-import Pagination from "../../components/ui/pagination";
-import pencil from "../../assets/images/icons/pencil.svg";
-import bin from "../../assets/images/icons/bin.svg";
-import BeneficiariesDialogue from "../../components/Dashboard/Beneficiaries/Dialogues/BeneficiariesDialogue";
-import DeleteDialogue from "../../components/Dashboard/Beneficiaries/Dialogues/DeleteDialogue";
-import ImportDialogue from "../../components/Dashboard/Beneficiaries/Dialogues/ImportDialogue";
-import DatePicker from "../../components/ui/date-picker";
-import { useDebounce, usePageTitle } from "../../lib/hooks";
 import { useQuery } from "@tanstack/react-query";
-import beneficiariesService from "../../api/beneficiaries";
-import HorizontalScroller from "../../components/ui/horizontal-scroller";
-import { findLabelFromOptions, formatDate } from "../../lib/utils";
-import projectService from "../../api/projects";
+import beneficiariesService from "api/beneficiaries";
+import organizationService from "api/organization";
+import projectService from "api/projects";
+import { ChangeEvent, useCallback, useMemo, useState } from "react";
+
+import bin from "assets/images/icons/bin.svg";
+import closeFilter from "assets/images/icons/close-filter.svg";
+import pencil from "assets/images/icons/pencil.svg";
+
 import {
   BENEFICIARY_STATUS,
   DEFAULT_DATE_FORMAT,
   RISK_LEVEL,
-} from "../../lib/constants";
-import organizationService from "../../api/organization";
-import { IBeneficiariesFilter } from "../../lib/types/beneficiaries";
-import BulkUpdateStatus from "../../components/Dashboard/Beneficiaries/Dialogues/BulkUpdateStatus";
+} from "lib/constants";
+import { useDebounce, usePageTitle } from "lib/hooks";
+import { IBeneficiariesFilter } from "lib/types/beneficiaries";
+import { findLabelFromOptions, formatDate } from "lib/utils";
+
+import BeneficiariesDialogue from "components/Dashboard/Beneficiaries/Dialogues/BeneficiariesDialogue";
+import BulkUpdateStatus from "components/Dashboard/Beneficiaries/Dialogues/BulkUpdateStatus";
+import DeleteDialogue from "components/Dashboard/Beneficiaries/Dialogues/DeleteDialogue";
+import ImportDialogue from "components/Dashboard/Beneficiaries/Dialogues/ImportDialogue";
+import Button from "components/ui/button";
+import Checkbox from "components/ui/checkbox";
+import DatePicker from "components/ui/date-picker";
+import Dropdown, { IOption } from "components/ui/dropdown";
+import HorizontalScroller from "components/ui/horizontal-scroller";
+import Pagination from "components/ui/pagination";
+import SearchInput from "components/ui/search-input";
+import Table from "components/ui/table";
 
 type ModalLabelTypes =
   | "beneficiaries"
@@ -60,7 +63,7 @@ const BeneficiariesPage = () => {
 
     500,
 
-    [search],
+    [search]
   );
 
   const [page, setPage] = useState(1);
@@ -104,7 +107,7 @@ const BeneficiariesPage = () => {
 
         value: item.id.toString(),
       })) || [],
-    [projectsList],
+    [projectsList]
   );
 
   const organizations: IOption[] = useMemo(
@@ -115,7 +118,7 @@ const BeneficiariesPage = () => {
         value: item.id!.toString(),
       })) || [],
 
-    [organizationList],
+    [organizationList]
   );
 
   const close = () => {
@@ -139,7 +142,7 @@ const BeneficiariesPage = () => {
       } else setSelectedIds([]);
     },
 
-    [beneficiariesList],
+    [beneficiariesList]
   );
 
   const renderModal = useCallback(() => {
@@ -173,10 +176,7 @@ const BeneficiariesPage = () => {
 
       case "import":
         return (
-          <ImportDialogue
-            isVisible={modal === "import"}
-            handleClose={close}
-          />
+          <ImportDialogue isVisible={modal === "import"} handleClose={close} />
         );
     }
   }, [modal, beneficiaryId, selectedIds]);
@@ -186,7 +186,7 @@ const BeneficiariesPage = () => {
       {renderModal()}
 
       <div className="space-y-2.5">
-        <div className="flex justify-between items-center gap-4">
+        <div className="flex items-center justify-between gap-4">
           <SearchInput
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -224,7 +224,7 @@ const BeneficiariesPage = () => {
 
         <div>
           <div className="flex items-center gap-2.5">
-            <p className="text-[20px] font-medium flex-shrink-0">Filter by</p>
+            <p className="flex-shrink-0 text-[20px] font-medium">Filter by</p>
 
             <Dropdown
               noHelperText
@@ -258,7 +258,7 @@ const BeneficiariesPage = () => {
               value={findLabelFromOptions(
                 organizations,
 
-                filters.provider as string,
+                filters.provider as string
               )}
               handleSelect={(val) => {
                 setFilters((prev) => ({ ...prev, provider: val as string }));
@@ -311,10 +311,7 @@ const BeneficiariesPage = () => {
               }
               className="flex-shrink-0"
             >
-              <img
-                src={closeFilter}
-                alt="close-filter"
-              />
+              <img src={closeFilter} alt="close-filter" />
             </button>
           </div>
         </div>
@@ -402,7 +399,7 @@ const BeneficiariesPage = () => {
                               setSelectedIds((prev) => [...prev, id]);
                             } else
                               setSelectedIds((prev) =>
-                                prev.filter((item) => item !== id),
+                                prev.filter((item) => item !== id)
                               );
                           }}
                         />
@@ -448,10 +445,7 @@ const BeneficiariesPage = () => {
                               setBeneficiaryId(id);
                             }}
                           >
-                            <img
-                              alt="pencil"
-                              src={pencil}
-                            />
+                            <img alt="pencil" src={pencil} />
                           </Button>
 
                           <Button
@@ -462,10 +456,7 @@ const BeneficiariesPage = () => {
                             onClick={() => handleDelete(id)}
                             className="p-[3px]"
                           >
-                            <img
-                              alt="pencil"
-                              src={bin}
-                            />
+                            <img alt="pencil" src={bin} />
                           </Button>
                         </div>
                       </Table.Data>
@@ -476,7 +467,7 @@ const BeneficiariesPage = () => {
             </Table.Container>
           </div>
 
-          <div className="flex justify-end items-center w-full">
+          <div className="flex w-full items-center justify-end">
             <HorizontalScroller />
 
             <Pagination

@@ -1,5 +1,6 @@
-import { organizations } from "../../lib/validators/organizations";
 import { z } from "zod";
+
+import { organizations } from "lib/validators/organizations";
 
 export interface IOrganization {
   id?: string;

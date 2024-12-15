@@ -1,9 +1,9 @@
+import { api } from "../lib/axios/interceptor";
 import {
   AddCommentParams,
   Comment,
   DeleteCommentParams,
 } from "../lib/types/comments";
-import { api } from "../lib/axios/interceptor";
 
 export class CommentsService {
   async add({ beneficiaryId, evidenceId, values }: AddCommentParams) {

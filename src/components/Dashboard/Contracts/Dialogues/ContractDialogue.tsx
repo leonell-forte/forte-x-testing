@@ -1,30 +1,28 @@
-import Input from "../../../../components/ui/input";
-import Dialogue, {
-  IDialogueProps,
-} from "../../../../components/ui/dialogue/dialogue";
-import Button from "../../../../components/ui/button";
-import Dropdown, { IOption } from "../../../../components/ui/dropdown";
-import { useEffect, useMemo } from "react";
-import ContractOutcomeField from "../ContractOutcomeField";
-import organizationService from "../../../../api/organization";
-import { useQuery } from "@tanstack/react-query";
-import { STATUS } from "../../../../lib/constants";
-import projectService from "../../../../api/projects";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { contracts } from "../../../../lib/validators/contracts";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  ContractFieldValues,
-  StatusType,
-} from "../../../../lib/types/contracts";
-import contractService from "../../../../api/contract";
-import Spinner from "../../../../components/ui/spinner/spinner";
-import DatePicker from "../../../../components/ui/date-picker";
-import { findLabelFromOptions, formatDate } from "../../../../lib/utils";
-import useContractMutation from "../../../../lib/mutations/contracts";
-import { IProject } from "../../../../lib/types/projects";
-import { IOrganization } from "../../../../lib/types/organizations";
-import FileInput from "../../../../components/ui/file-input";
+import { useQuery } from "@tanstack/react-query";
+import contractService from "api/contract";
+import organizationService from "api/organization";
+import projectService from "api/projects";
+import { useEffect, useMemo } from "react";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
+
+import { STATUS } from "lib/constants";
+import useContractMutation from "lib/mutations/contracts";
+import { ContractFieldValues, StatusType } from "lib/types/contracts";
+import { IOrganization } from "lib/types/organizations";
+import { IProject } from "lib/types/projects";
+import { findLabelFromOptions, formatDate } from "lib/utils";
+import { contracts } from "lib/validators/contracts";
+
+import Button from "components/ui/button";
+import DatePicker from "components/ui/date-picker";
+import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
+import Dropdown, { IOption } from "components/ui/dropdown";
+import FileInput from "components/ui/file-input";
+import Input from "components/ui/input";
+import Spinner from "components/ui/spinner/spinner";
+
+import ContractOutcomeField from "../ContractOutcomeField";
 
 interface IContractDialogueProps extends IDialogueProps {
   id?: number;
@@ -48,7 +46,7 @@ const ContractDialogue = ({
       queryFn: () => contractService.getOne(id!.toString()!),
 
       enabled: !!id,
-    },
+    }
   );
 
   const {
@@ -108,7 +106,7 @@ const ContractDialogue = ({
         value: item.id?.toString() as string,
       })) || [],
 
-    [organizationList],
+    [organizationList]
   );
 
   const projects: IOption[] = useMemo(
@@ -119,7 +117,7 @@ const ContractDialogue = ({
         value: item.id.toString(),
       })) || [],
 
-    [projectsList],
+    [projectsList]
   );
 
   const close = () => {
@@ -144,19 +142,13 @@ const ContractDialogue = ({
       title={`${id ? "Edit" : "Add"} contract`}
     >
       {contractDetailsLoading ? (
-        <div className="w-full h-[470px] flex items-center justify-center">
+        <div className="flex h-[470px] w-full items-center justify-center">
           <Spinner />
         </div>
       ) : (
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-1"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-1">
           <div className="flex items-start gap-4">
-            <label
-              htmlFor=""
-              className="pt-4 min-w-[120px]"
-            >
+            <label htmlFor="" className="min-w-[120px] pt-4">
               Parties
             </label>
 
@@ -174,7 +166,7 @@ const ContractDialogue = ({
                     handleSelect={(val) => {
                       setValue(
                         "partyIds",
-                        (val as string[]).map((item) => Number(item)),
+                        (val as string[]).map((item) => Number(item))
                       );
 
                       setError("partyIds", { message: "" });
@@ -190,10 +182,7 @@ const ContractDialogue = ({
           </div>
 
           <div className="flex items-start gap-4">
-            <label
-              htmlFor=""
-              className="pt-4 min-w-[120px]"
-            >
+            <label htmlFor="" className="min-w-[120px] pt-4">
               Status
             </label>
 
@@ -207,7 +196,7 @@ const ContractDialogue = ({
                     handleSelect={(val) => {
                       setValue(
                         "status",
-                        val.toString().toUpperCase() as StatusType,
+                        val.toString().toUpperCase() as StatusType
                       );
 
                       setError("status", { message: "" });
@@ -223,10 +212,7 @@ const ContractDialogue = ({
           </div>
 
           <div className="flex items-start gap-4">
-            <label
-              htmlFor=""
-              className="pt-4 min-w-[120px]"
-            >
+            <label htmlFor="" className="min-w-[120px] pt-4">
               Project
             </label>
 
@@ -242,7 +228,7 @@ const ContractDialogue = ({
                     value={findLabelFromOptions(
                       projects,
 
-                      field.value.toString(),
+                      field.value.toString()
                     )}
                     options={projects}
                     handleSelect={(val) => {
@@ -272,10 +258,7 @@ const ContractDialogue = ({
           </div>
 
           <div className="flex items-start gap-4">
-            <label
-              htmlFor=""
-              className="pt-1 flex-shrink-0 w-[120px]"
-            >
+            <label htmlFor="" className="w-[120px] flex-shrink-0 pt-1">
               Target number of beneficiaries
             </label>
 
@@ -295,10 +278,7 @@ const ContractDialogue = ({
           </div>
 
           <div className="flex items-start gap-4">
-            <label
-              htmlFor=""
-              className="pt-4 min-w-[120px]"
-            >
+            <label htmlFor="" className="min-w-[120px] pt-4">
               Document
             </label>
 
@@ -318,12 +298,9 @@ const ContractDialogue = ({
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6 gap-1">
+          <div className="grid grid-cols-1 gap-1 md:grid-cols-2 md:gap-6">
             <div className="flex items-start gap-4">
-              <label
-                htmlFor=""
-                className="pt-4 min-w-[120px]"
-              >
+              <label htmlFor="" className="min-w-[120px] pt-4">
                 Start date
               </label>
 
@@ -346,10 +323,7 @@ const ContractDialogue = ({
             </div>
 
             <div className="flex items-start gap-4">
-              <label
-                htmlFor=""
-                className="pt-4 min-w-[120px]"
-              >
+              <label htmlFor="" className="min-w-[120px] pt-4">
                 End date
               </label>
 
@@ -395,13 +369,13 @@ const ContractDialogue = ({
                       setValue(
                         `outcomeRates.${index}.perOutcome`,
 
-                        true,
+                        true
                       );
                     } else {
                       setValue(
                         `outcomeRates.${index}.perOutcome`,
 
-                        false,
+                        false
                       );
                     }
                   }}
@@ -421,18 +395,12 @@ const ContractDialogue = ({
             })}
           </div>
 
-          <div className="flex justify-end gap-4 !mt-10">
-            <Button
-              onClick={close}
-              buttonType="secondary"
-            >
+          <div className="!mt-10 flex justify-end gap-4">
+            <Button onClick={close} buttonType="secondary">
               Cancel
             </Button>
 
-            <Button
-              type="submit"
-              loading={isPending}
-            >
+            <Button type="submit" loading={isPending}>
               Save
             </Button>
           </div>

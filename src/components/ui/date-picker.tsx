@@ -73,8 +73,8 @@ const DatePicker = ({
                     color: error
                       ? "#651A1A !important"
                       : isDateSelected
-                      ? "white"
-                      : "#ffffff50",
+                        ? "white"
+                        : "#ffffff50",
 
                     fontWeight: 300,
                   },
@@ -145,11 +145,11 @@ const DatePicker = ({
         />
 
         {helperText && (
-          <div className="pl-4 absolute">
+          <div className="absolute pl-4">
             <p
               className={classNames(
-                "text-white text-[12px] font-medium",
-                error && "!text-alert",
+                "text-[12px] font-medium text-white",
+                error && "!text-alert"
               )}
             >
               {helperText}

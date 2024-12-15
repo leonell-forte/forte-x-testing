@@ -1,7 +1,8 @@
-import { RefObject, useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../../lib/hooks";
-import { setValue } from "../../../lib/slice/scroll";
 import { useScroll as useFramerScroll } from "framer-motion";
+import { RefObject, useEffect } from "react";
+
+import { useAppDispatch, useAppSelector } from "lib/hooks";
+import { setValue } from "lib/slice/scroll";
 
 interface IProp {
   container?: RefObject<HTMLDivElement>;

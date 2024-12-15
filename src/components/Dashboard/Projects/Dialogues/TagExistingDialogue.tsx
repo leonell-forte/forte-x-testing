@@ -1,10 +1,10 @@
-import Dropdown from "../../../../components/ui/dropdown";
-import Dialogue, {
-  IDialogueProps,
-} from "../../../../components/ui/dialogue/dialogue";
-import { ROLES } from "../../../../lib/constants";
 import { useState } from "react";
-import Button from "../../../../components/ui/button";
+
+import { ROLES } from "lib/constants";
+
+import Button from "components/ui/button";
+import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
+import Dropdown from "components/ui/dropdown";
 
 interface IProp extends IDialogueProps {
   handleAdd?: () => void;
@@ -25,10 +25,7 @@ const TagExistingDialogue = ({ ...props }: IProp) => {
         />
 
         <div className="flex justify-end gap-2.5">
-          <Button
-            onClick={props.handleClose}
-            buttonType="secondary"
-          >
+          <Button onClick={props.handleClose} buttonType="secondary">
             Cancel
           </Button>
 

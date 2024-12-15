@@ -1,19 +1,15 @@
-import Input from "../../../../components/ui/input";
-import Dialogue, {
-  IDialogueProps,
-} from "../../../../components/ui/dialogue/dialogue";
-import Checkbox from "../../../../components/ui/checkbox";
 import { Link } from "react-router-dom";
-import Button from "../../../../components/ui/button";
+
+import Button from "components/ui/button";
+import Checkbox from "components/ui/checkbox";
+import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
+import Input from "components/ui/input";
 
 interface IImportDialogueProps extends IDialogueProps {}
 
 const ImportDialogue = ({ ...props }: IImportDialogueProps) => {
   return (
-    <Dialogue
-      {...props}
-      title="Import beneficiaries"
-    >
+    <Dialogue {...props} title="Import beneficiaries">
       <div className="space-y-6">
         <div className="grid grid-cols-2 divide-x">
           <div className="space-y-2 pr-5">
@@ -60,20 +56,14 @@ const ImportDialogue = ({ ...props }: IImportDialogueProps) => {
 
         <p className="font-semibold">
           Need help getting started?{" "}
-          <Link
-            to="#"
-            className="text-mint font-semibold"
-          >
+          <Link to="#" className="font-semibold text-mint">
             Download a basic CSV template here.
           </Link>
         </p>
       </div>
 
-      <div className="flex gap-2.5 justify-end mt-12">
-        <Button
-          onClick={props.handleClose}
-          buttonType="secondary"
-        >
+      <div className="mt-12 flex justify-end gap-2.5">
+        <Button onClick={props.handleClose} buttonType="secondary">
           Cancel
         </Button>
 

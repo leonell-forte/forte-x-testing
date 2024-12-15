@@ -1,16 +1,19 @@
-import Table from "../../../../components/ui/table";
-import pencil from "../../../../assets/images/icons/pencil.svg";
-import { useEffect, useState } from "react";
-import Input from "../../../../components/ui/input";
-import Button from "../../../../components/ui/button";
-import { ProjectFieldValues } from "../../../../lib/types/projects";
-import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { projects } from "../../../../lib/validators/projects";
-import { useProjectMutation } from "../../../../lib/mutations/projects";
 import { useQuery } from "@tanstack/react-query";
-import projectService from "../../../../api/projects";
-import { usePageTitle } from "../../../../lib/hooks";
+import projectService from "api/projects";
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+
+import pencil from "assets/images/icons/pencil.svg";
+
+import { usePageTitle } from "lib/hooks";
+import { useProjectMutation } from "lib/mutations/projects";
+import { ProjectFieldValues } from "lib/types/projects";
+import { projects } from "lib/validators/projects";
+
+import Button from "components/ui/button";
+import Input from "components/ui/input";
+import Table from "components/ui/table";
 
 interface IProps {
   id: string;
@@ -66,17 +69,14 @@ const Outcomes = ({ id }: IProps) => {
 
   return (
     <div className="space-y-2.5">
-      <p className="font-semibold text-[24px]">Outcomes</p>
+      <p className="text-[24px] font-semibold">Outcomes</p>
 
       <Table.Container isLoading={isLoading}>
         <Table.Head>
           <Table.Row>
             {HEADERS.map((item, index) => {
               return (
-                <Table.Header
-                  small
-                  key={index}
-                >
+                <Table.Header small key={index}>
                   {item}
                 </Table.Header>
               );
@@ -94,11 +94,11 @@ const Outcomes = ({ id }: IProps) => {
 
             return (
               <Table.Row key={index}>
-                <Table.Data className="py-1 w-[120px]">{`Outcome ${
+                <Table.Data className="w-[120px] py-1">{`Outcome ${
                   index + 1
                 }`}</Table.Data>
 
-                <Table.Data className="py-1 w-[300px]">
+                <Table.Data className="w-[300px] py-1">
                   {onEdit ? (
                     <Controller
                       name={`outcomes.${index}.name`}
@@ -118,7 +118,7 @@ const Outcomes = ({ id }: IProps) => {
                   )}
                 </Table.Data>
 
-                <Table.Data className=" py-1">
+                <Table.Data className="py-1">
                   {onEdit ? (
                     <Controller
                       name={`outcomes.${index}.description`}
@@ -142,14 +142,11 @@ const Outcomes = ({ id }: IProps) => {
                   )}
                 </Table.Data>
 
-                <Table.Data className=" py-1">
+                <Table.Data className="py-1">
                   <div className="flex justify-end gap-1.5">
                     {onEdit ? (
                       <>
-                        <Button
-                          onClick={closeEdit}
-                          buttonType="tertiary"
-                        >
+                        <Button onClick={closeEdit} buttonType="tertiary">
                           Cancel
                         </Button>
 
@@ -161,14 +158,8 @@ const Outcomes = ({ id }: IProps) => {
                         </Button>
                       </>
                     ) : (
-                      <button
-                        type="button"
-                        onClick={() => setEditIndex(index)}
-                      >
-                        <img
-                          src={pencil}
-                          alt=""
-                        />
+                      <button type="button" onClick={() => setEditIndex(index)}>
+                        <img src={pencil} alt="" />
                       </button>
                     )}
                   </div>

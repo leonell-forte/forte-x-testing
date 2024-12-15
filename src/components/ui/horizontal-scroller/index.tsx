@@ -1,4 +1,5 @@
 import Slider from "@mui/material/Slider";
+
 import useScroll from "./useScroll";
 
 const HorizontalScroller = () => {
@@ -7,13 +8,13 @@ const HorizontalScroller = () => {
   if (scrollValue === 100) return null;
 
   return (
-    <div className="px-10 mx-4 w-full bg-[#D9D9D9]/20 flex items-center h-2 rounded-[8px]">
+    <div className="mx-4 flex h-2 w-full items-center rounded-[8px] bg-[#D9D9D9]/20 px-10">
       <Slider
         aria-label="Volume"
         value={scrollValue}
         max={90}
         onChange={(e, value) => setScrollValue(value as number)}
-        className="cursor-default pointer-events-none"
+        className="pointer-events-none cursor-default"
         sx={{
           "& .MuiSlider-thumb": {
             backgroundColor: "white",

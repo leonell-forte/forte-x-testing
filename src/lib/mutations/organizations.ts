@@ -1,8 +1,10 @@
-import organizationService from "../../api/organization";
-import { queryClient } from "../../components/QueryProvider";
-import { useMutation } from "@tanstack/react-query";
-import { useAlert } from "../hooks";
 import * as amplitude from "@amplitude/analytics-browser";
+import { useMutation } from "@tanstack/react-query";
+import organizationService from "api/organization";
+
+import { queryClient } from "components/QueryProvider";
+
+import { useAlert } from "../hooks";
 import { OrganizationFieldTypes } from "../types/organizations";
 
 interface IOrganizationMutation {
@@ -52,7 +54,7 @@ const useOrganizationMutation = ({
       successCallback?.();
 
       amplitude.track(
-        `${orgId ? "Update" : "Add"} Organization Form Submission`,
+        `${orgId ? "Update" : "Add"} Organization Form Submission`
       );
     },
 
@@ -60,7 +62,7 @@ const useOrganizationMutation = ({
       queryClient.setQueryData(
         ["organizations", 1],
 
-        context?.prevOrganizations,
+        context?.prevOrganizations
       );
 
       setAlert({

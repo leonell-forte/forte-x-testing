@@ -1,17 +1,19 @@
-import { useAppSelector } from "../../../../../lib/hooks";
-import Input from "../../../../ui/input";
-import { useQuery } from "@tanstack/react-query";
-import commentsService from "../../../../../api/comments";
 import { InputAdornment } from "@mui/material";
-import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import authService from "api/auth";
+import commentsService from "api/comments";
 import classNames from "classnames";
+import { useState } from "react";
+
+import { useAppSelector } from "lib/hooks";
 import {
   useCommentMutation,
   useDeleteCommentMutation,
-} from "../../../../../lib/mutations/comments";
-import { formatDate } from "../../../../../lib/utils";
-import authService from "../../../../../api/auth";
-import Spinner from "../../../../../components/ui/spinner/spinner";
+} from "lib/mutations/comments";
+import { formatDate } from "lib/utils";
+
+import Input from "components/ui/input";
+import Spinner from "components/ui/spinner/spinner";
 
 const CommentSection = ({ id: evidenceId }: { id: number }) => {
   const [comment, setComment] = useState("");
@@ -46,7 +48,7 @@ const CommentSection = ({ id: evidenceId }: { id: number }) => {
       <p className="font-medium">Comments</p>
 
       {isLoading ? (
-        <div className="w-full h-[40px] flex items-center justify-center">
+        <div className="flex h-[40px] w-full items-center justify-center">
           <Spinner />
         </div>
       ) : (
@@ -59,18 +61,18 @@ const CommentSection = ({ id: evidenceId }: { id: number }) => {
               return (
                 <li
                   key={index}
-                  className="flex justify-between text-[13px] gap-12"
+                  className="flex justify-between gap-12 text-[13px]"
                 >
                   <p>{item.message}</p>
 
-                  <div className="text-right flex-shrink-0">
+                  <div className="flex-shrink-0 text-right">
                     <div className="flex items-center gap-4">
                       <p>{name}</p>
 
                       {user?.id === item.createdBy.id ? (
                         <button
                           type="button"
-                          className="text-mint hover:text-mint/70 hover:underline transition-all"
+                          className="text-mint transition-all hover:text-mint/70 hover:underline"
                           onClick={() =>
                             deleteComment({
                               beneficiaryId,
@@ -84,7 +86,7 @@ const CommentSection = ({ id: evidenceId }: { id: number }) => {
                         </button>
                       ) : null}
                     </div>
-                    <div className="justify-end flex items-center gap-1.5">
+                    <div className="flex items-center justify-end gap-1.5">
                       <p>{formatDate(item.createdAt, "dd-LL-yyyy")}</p>
                       <span className="text-[9px] font-extrabold">|</span>
                       <p className="lowercase">

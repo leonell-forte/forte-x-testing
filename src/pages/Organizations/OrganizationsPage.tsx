@@ -1,18 +1,21 @@
-import Dropdown from "../../components/ui/dropdown";
-import Button from "../../components/ui/button";
-import SearchInput from "../../components/ui/search-input";
-import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import organizationService from "../../api/organization";
-import Table from "../../components/ui/table";
-import pencil from "../../assets/images/icons/pencil.svg";
-import Pagination from "../../components/ui/pagination";
-import OrganizationDialogue from "../../components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
-import { REGIONS, STATUS, TYPES } from "../../lib/constants";
-import { useDebounce, usePageTitle } from "../../lib/hooks";
-import closeFilter from "../../assets/images/icons/close-filter.svg";
-import { IFilters, IOrganization } from "../../lib/types/organizations";
-import HorizontalScroller from "../../components/ui/horizontal-scroller";
+import organizationService from "api/organization";
+import { useMemo, useState } from "react";
+
+import closeFilter from "assets/images/icons/close-filter.svg";
+import pencil from "assets/images/icons/pencil.svg";
+
+import { REGIONS, STATUS, TYPES } from "lib/constants";
+import { useDebounce, usePageTitle } from "lib/hooks";
+import { IFilters, IOrganization } from "lib/types/organizations";
+
+import OrganizationDialogue from "components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
+import Button from "components/ui/button";
+import Dropdown from "components/ui/dropdown";
+import HorizontalScroller from "components/ui/horizontal-scroller";
+import Pagination from "components/ui/pagination";
+import SearchInput from "components/ui/search-input";
+import Table from "components/ui/table";
 
 const OrganizationsPage = () => {
   usePageTitle("Organizations");
@@ -31,7 +34,7 @@ const OrganizationsPage = () => {
     },
 
     500,
-    [search],
+    [search]
   );
 
   const [selectedOrg, setSelectedOrg] = useState("");
@@ -64,7 +67,7 @@ const OrganizationsPage = () => {
   const organizations: IOrganization[] = useMemo(
     () => organizationList?.items || [],
 
-    [organizationList],
+    [organizationList]
   );
 
   const close = () => {
@@ -81,7 +84,7 @@ const OrganizationsPage = () => {
 
   const handleSelectFilter = (
     key: keyof IFilters,
-    value: string | string[],
+    value: string | string[]
   ) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
@@ -101,7 +104,7 @@ const OrganizationsPage = () => {
       )}
 
       <div className="space-y-2.5">
-        <div className="flex items-center justify-between w-full gap-4">
+        <div className="flex w-full items-center justify-between gap-4">
           <SearchInput
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -160,15 +163,12 @@ const OrganizationsPage = () => {
           />
 
           <button onClick={handleRemoveFilters}>
-            <img
-              src={closeFilter}
-              alt="close-filter"
-            />
+            <img src={closeFilter} alt="close-filter" />
           </button>
         </div>
 
         <div className="space-y-4">
-          <div className="pr-4 overflow-scroll">
+          <div className="overflow-scroll pr-4">
             <Table.Container
               isEmpty={!organizations.length}
               isLoading={orgLoading}
@@ -202,49 +202,49 @@ const OrganizationsPage = () => {
                   return (
                     <Table.Row key={bodyIndex}>
                       <Table.Data>
-                        <p className="truncate w-[200px]">{name}</p>
+                        <p className="w-[200px] truncate">{name}</p>
                       </Table.Data>
 
                       <Table.Data>
-                        <p className="truncate w-[200px]">{registeredName}</p>
+                        <p className="w-[200px] truncate">{registeredName}</p>
                       </Table.Data>
 
                       <Table.Data>
-                        <p className="truncate w-[250px]">
+                        <p className="w-[250px] truncate">
                           {`${registeredAddress}, ${state} ${postalCode} ${country}`}
                         </p>
                       </Table.Data>
 
                       <Table.Data>
-                        <p className="truncate w-[100px]">
+                        <p className="w-[100px] truncate">
                           {registrationNumber}
                         </p>
                       </Table.Data>
 
                       <Table.Data>
-                        <p className="truncate w-[120px]">
+                        <p className="w-[120px] truncate">
                           {regions.join(", ")}
                         </p>
                       </Table.Data>
 
                       <Table.Data>
-                        <p className="truncate w-[60px] capitalize">{type}</p>
+                        <p className="w-[60px] truncate capitalize">{type}</p>
                       </Table.Data>
 
                       <Table.Data>
-                        <p className="truncate w-[55px] capitalize">{status}</p>
+                        <p className="w-[55px] truncate capitalize">{status}</p>
                       </Table.Data>
 
                       <Table.Data>
-                        <p className="truncate w-[35px]">{noOfUsers}</p>
+                        <p className="w-[35px] truncate">{noOfUsers}</p>
                       </Table.Data>
 
                       <Table.Data>
-                        <p className="truncate w-[35px]">{noOfProjects}</p>
+                        <p className="w-[35px] truncate">{noOfProjects}</p>
                       </Table.Data>
 
                       <Table.Data>
-                        <p className="truncate w-[35px]">-</p>
+                        <p className="w-[35px] truncate">-</p>
                       </Table.Data>
 
                       <Table.Data>
@@ -256,10 +256,7 @@ const OrganizationsPage = () => {
                           onClick={() => handleEditOrg(id!)}
                           className="p-[3px]"
                         >
-                          <img
-                            alt="pencil"
-                            src={pencil}
-                          />
+                          <img alt="pencil" src={pencil} />
                         </Button>
                       </Table.Data>
                     </Table.Row>
@@ -270,7 +267,7 @@ const OrganizationsPage = () => {
           </div>
 
           {!!organizations.length && (
-            <div className="flex justify-end items-center w-full">
+            <div className="flex w-full items-center justify-end">
               <HorizontalScroller />
 
               <Pagination

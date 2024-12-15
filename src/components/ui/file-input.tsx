@@ -1,11 +1,14 @@
 import { TextFieldProps } from "@mui/material";
-import upload from "../../assets/images/icons/upload.svg";
-import loader from "../../assets/images/icons/loader.svg";
-import Input from "./input";
-import { ChangeEvent, useState } from "react";
-import { uploadFile } from "../../api/upload";
+import { uploadFile } from "api/upload";
 import classNames from "classnames";
-import { File } from "../../lib/types/common";
+import { ChangeEvent, useState } from "react";
+
+import loader from "assets/images/icons/loader.svg";
+import upload from "assets/images/icons/upload.svg";
+
+import { File } from "lib/types/common";
+
+import Input from "./input";
 
 type IProps = TextFieldProps & {
   onUploadStart?: () => void;
@@ -52,27 +55,27 @@ const FileInput = ({
         {...props}
         disabled={loading}
         onChange={handleUpload}
-        className="z-10 absolute top-0 left-0 cursor-pointer"
+        className="absolute left-0 top-0 z-10 cursor-pointer"
       />
 
       {loading ? (
         <img
           src={loader}
           alt="loader"
-          className="animate-spin w-6 absolute right-3 top-3.5"
+          className="absolute right-3 top-3.5 w-6 animate-spin"
         />
       ) : (
         <img
           src={upload}
           alt="upload"
-          className="w-4 h-[18px] absolute right-4 top-4"
+          className="absolute right-4 top-4 h-[18px] w-4"
         />
       )}
 
       <div
         className={classNames(
-          "absolute left-4 top-3.5 pointer-events-none",
-          value ? "text-white" : "text-white/50",
+          "pointer-events-none absolute left-4 top-3.5",
+          value ? "text-white" : "text-white/50"
         )}
       >
         {loading ? "Uploading..." : value || props.placeholder}

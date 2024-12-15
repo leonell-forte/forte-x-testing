@@ -1,19 +1,21 @@
-import Dialogue, {
-  IDialogueProps,
-} from "../../../../components/ui/dialogue/dialogue";
-import { useEffect } from "react";
-import Input from "../../../../components/ui/input";
-import Button from "../../../../components/ui/button";
-import OutcomeField from "../OutcomeField";
-import add from "../../../../assets/images/icons/add.svg";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { projects } from "../../../../lib/validators/projects";
 import { zodResolver } from "@hookform/resolvers/zod";
-import projectService from "../../../../api/projects";
 import { useQuery } from "@tanstack/react-query";
-import Spinner from "../../../../components/ui/spinner/spinner";
-import { useProjectMutation } from "../../../../lib/mutations/projects";
-import { ProjectFieldValues } from "../../../../lib/types/projects";
+import projectService from "api/projects";
+import { useEffect } from "react";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
+
+import add from "assets/images/icons/add.svg";
+
+import { useProjectMutation } from "lib/mutations/projects";
+import { ProjectFieldValues } from "lib/types/projects";
+import { projects } from "lib/validators/projects";
+
+import Button from "components/ui/button";
+import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
+import Input from "components/ui/input";
+import Spinner from "components/ui/spinner/spinner";
+
+import OutcomeField from "../OutcomeField";
 
 interface IProjectDialogueProps extends IDialogueProps {
   projectId?: string;
@@ -91,19 +93,13 @@ const ProjectDialogue = ({
       title={project ? "Edit project" : "Add project"}
     >
       {projectLoading ? (
-        <div className="w-full h-[470px] flex items-center justify-center">
+        <div className="flex h-[470px] w-full items-center justify-center">
           <Spinner />
         </div>
       ) : (
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-[22px]"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-[22px]">
           <div className="flex items-start">
-            <label
-              htmlFor=""
-              className="w-[180px] pt-3"
-            >
+            <label htmlFor="" className="w-[180px] pt-3">
               Project name
             </label>
 
@@ -129,12 +125,9 @@ const ProjectDialogue = ({
             <button
               type="button"
               onClick={handleAddOutcome}
-              className="!w-8 !h-8 bg-white rounded-full flex-shrink-0 text-forest-green flex items-center justify-center hover:scale-[1.05] transition-all hover:opacity-80"
+              className="flex !h-8 !w-8 flex-shrink-0 items-center justify-center rounded-full bg-white text-forest-green transition-all hover:scale-[1.05] hover:opacity-80"
             >
-              <img
-                src={add}
-                alt=""
-              />
+              <img src={add} alt="" />
             </button>
           </div>
 
@@ -158,18 +151,12 @@ const ProjectDialogue = ({
             })}
           </div>
 
-          <div className="flex justify-end gap-4 !mt-10">
-            <Button
-              onClick={close}
-              buttonType="secondary"
-            >
+          <div className="!mt-10 flex justify-end gap-4">
+            <Button onClick={close} buttonType="secondary">
               Cancel
             </Button>
 
-            <Button
-              loading={isPending}
-              type="submit"
-            >
+            <Button loading={isPending} type="submit">
               Save
             </Button>
           </div>

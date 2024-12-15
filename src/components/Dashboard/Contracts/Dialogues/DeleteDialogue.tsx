@@ -1,8 +1,7 @@
-import Button from "../../../../components/ui/button";
-import Dialogue, {
-  IDialogueProps,
-} from "../../../../components/ui/dialogue/dialogue";
-import { useDeleteContractMutation } from "../../../../lib/mutations/contracts";
+import { useDeleteContractMutation } from "lib/mutations/contracts";
+
+import Button from "components/ui/button";
+import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
 
 interface IDeleteDialogueProp extends IDialogueProps {
   id: string;
@@ -11,7 +10,7 @@ interface IDeleteDialogueProp extends IDialogueProps {
 const DeleteDialogue = ({ id, ...props }: IDeleteDialogueProp) => {
   const { deleteContract, isPending } = useDeleteContractMutation(
     id,
-    props.handleClose,
+    props.handleClose
   );
 
   const handleDelete = async () => {
@@ -19,10 +18,7 @@ const DeleteDialogue = ({ id, ...props }: IDeleteDialogueProp) => {
   };
 
   return (
-    <Dialogue
-      center
-      {...props}
-    >
+    <Dialogue center {...props}>
       <div className="text-left">
         <p className="text-[20px] font-semibold">
           Are you sure you want to delete this contract?
@@ -32,18 +28,12 @@ const DeleteDialogue = ({ id, ...props }: IDeleteDialogueProp) => {
           related to the contract.
         </p>
 
-        <div className="flex justify-end gap-2 mt-10">
-          <Button
-            onClick={props.handleClose}
-            buttonType="secondary"
-          >
+        <div className="mt-10 flex justify-end gap-2">
+          <Button onClick={props.handleClose} buttonType="secondary">
             Cancel
           </Button>
 
-          <Button
-            loading={isPending}
-            onClick={handleDelete}
-          >
+          <Button loading={isPending} onClick={handleDelete}>
             Delete
           </Button>
         </div>

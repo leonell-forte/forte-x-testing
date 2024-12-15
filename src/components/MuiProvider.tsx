@@ -1,6 +1,6 @@
 "use client";
 
-import { createTheme, ThemeProvider } from "@mui/material";
+import { ThemeProvider, createTheme } from "@mui/material";
 import React, { ReactNode } from "react";
 
 const theme = createTheme({
