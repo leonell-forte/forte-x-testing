@@ -1,4 +1,3 @@
-import { capitalize } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import evidenceService from "api/evidence";
 import { useMemo } from "react";
