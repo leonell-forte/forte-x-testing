@@ -66,7 +66,7 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
                     onClick={() => handleAddOrViewEvidence?.(id)}
                     className="link underline"
                   >
-                    {file.filename}
+                    {file?.filename}
                   </button>
                 </Table.Data>
 
