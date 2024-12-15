@@ -70,7 +70,7 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
                   </button>
                 </Table.Data>
 
-                <Table.Data>{outcome.name} </Table.Data>
+                <Table.Data>{outcome?.name} </Table.Data>
 
                 <Table.Data className="max-w-[100px]">{description}</Table.Data>
 
@@ -80,7 +80,7 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
 
                 <Table.Data>
                   <Link
-                    to={file.fileUrl}
+                    to={file?.fileUrl}
                     download
                     target="_blank"
                     type="button"

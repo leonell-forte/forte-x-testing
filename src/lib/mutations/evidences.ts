@@ -54,6 +54,8 @@ export const useEvidenceMutation = ({
     },
 
     onSuccess: (addedEvidence) => {
+      console.log(addedEvidence, "addedEvidence");
+
       queryClient.setQueryData(
         ["evidences", beneficiaryId],
 
