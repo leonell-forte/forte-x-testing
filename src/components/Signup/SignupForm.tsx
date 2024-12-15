@@ -201,7 +201,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
             fullWidth
             buttonType="secondary"
           >
-            CONTINUE WITH GOOGLE{" "}
+            Continue with Google{" "}
           </Button>
         </div>
 

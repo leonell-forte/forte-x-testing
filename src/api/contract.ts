@@ -42,19 +42,13 @@ class ContractService {
         isSearch: true,
       },
 
-      "projects.name": {
-        value: filters?.project || "",
-
-        exact: true,
-      },
-
-      "contracts.status": {
+      "contract.status": {
         value: filters?.status.toUpperCase() || "",
 
         exact: true,
       },
 
-      "contracts.startDate": {
+      "contract.startDate": {
         value: filters?.date || "",
 
         exact: false,
@@ -62,8 +56,8 @@ class ContractService {
         isDate: true,
       },
 
-      "projects.id": {
-        value: projectId ? projectId.toString() : "",
+      "contract.projectId": {
+        value: projectId?.toString() ?? filters?.project ?? "",
 
         exact: true,
       },
@@ -90,12 +84,17 @@ class ContractService {
     const body = {
       ...data,
 
-      contractOutcomeRates: data.contractOutcomeRates.map((item) => ({
+      targetNoOfBenefeciaries: Number(data.targetNoOfBenefeciaries),
+
+      documentId: Number(data.documentId),
+
+      outcomeRates: data.outcomeRates.map((item) => ({
         ...item,
 
         threshold: Number(item.threshold),
       })),
     };
+
     const response = await api.post("/contracts", body);
 
     return response.data.data;
@@ -105,7 +104,7 @@ class ContractService {
     const body = {
       ...values,
 
-      contractOutcomeRates: values.contractOutcomeRates.map((item) => ({
+      contractOutcomeRates: values.outcomeRates.map((item) => ({
         ...item,
 
         threshold: Number(item.threshold),

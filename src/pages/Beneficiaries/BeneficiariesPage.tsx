@@ -43,6 +43,14 @@ const BeneficiariesPage = () => {
 
   const [filters, setFilters] = useState<IBeneficiariesFilter>({
     project: "",
+
+    status: "",
+
+    provider: "",
+
+    riskLevel: "",
+
+    startDate: "",
   });
 
   useDebounce(
@@ -235,7 +243,10 @@ const BeneficiariesPage = () => {
               options={BENEFICIARY_STATUS}
               placeholder="Status"
               className="max-w-[166px]"
-              handleSelect={() => {}}
+              value={filters.status}
+              handleSelect={(val) =>
+                setFilters((prev) => ({ ...prev, status: val as string }))
+              }
             />
 
             <Dropdown
@@ -244,7 +255,14 @@ const BeneficiariesPage = () => {
               options={organizations}
               placeholder="Provider"
               className="max-w-[166px]"
-              handleSelect={() => {}}
+              value={findLabelFromOptions(
+                organizations,
+
+                filters.provider as string,
+              )}
+              handleSelect={(val) => {
+                setFilters((prev) => ({ ...prev, provider: val as string }));
+              }}
             />
 
             <Dropdown
@@ -252,7 +270,10 @@ const BeneficiariesPage = () => {
               options={RISK_LEVEL}
               placeholder="Risk Level"
               className="max-w-[166px]"
-              handleSelect={() => {}}
+              value={filters.riskLevel}
+              handleSelect={(val) =>
+                setFilters((prev) => ({ ...prev, riskLevel: val as string }))
+              }
             />
 
             {/* <Dropdown
@@ -263,11 +284,31 @@ const BeneficiariesPage = () => {
             /> */}
 
             <div className="max-w-[166px]">
-              <DatePicker noHelperText />
+              <DatePicker
+                noHelperText
+                value={new Date(filters.startDate as string)}
+                onChange={(date) => {
+                  setFilters((prev) => ({
+                    ...prev,
+
+                    startDate: formatDate(date as Date, "yyyy-LL-dd"),
+                  }));
+                }}
+              />
             </div>
 
             <button
-              onClick={() => {}}
+              onClick={() =>
+                setFilters({
+                  project: "",
+
+                  status: "",
+
+                  provider: "",
+
+                  riskLevel: "",
+                })
+              }
               className="flex-shrink-0"
             >
               <img

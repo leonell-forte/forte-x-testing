@@ -79,4 +79,12 @@ export type BeneficiaryStatusUpdateField = z.infer<
 
 export interface IBeneficiariesFilter {
   project?: string;
+
+  status?: string;
+
+  provider?: string;
+
+  riskLevel?: string;
+
+  startDate?: string;
 }

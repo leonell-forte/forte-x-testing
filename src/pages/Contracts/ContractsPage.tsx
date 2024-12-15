@@ -14,7 +14,7 @@ import {
   IContractFilters,
   StatusType,
 } from "../../lib/types/contracts";
-import { extractPartiesNamesFromContract, formatDate } from "../../lib/utils";
+import { formatDate } from "../../lib/utils";
 import Pagination from "../../components/ui/pagination";
 import { useDebounce, usePageTitle } from "../../lib/hooks";
 import { DEFAULT_DATE_FORMAT, STATUS } from "../../lib/constants";
@@ -23,7 +23,6 @@ import DeleteDialogue from "../../components/Dashboard/Contracts/Dialogues/Delet
 import HorizontalScroller from "../../components/ui/horizontal-scroller";
 import projectService from "../../api/projects";
 import { IProject } from "../../lib/types/projects";
-import organizationService from "../../api/organization";
 
 const ContractsPage = () => {
   usePageTitle("Contracts");
@@ -69,19 +68,6 @@ const ContractsPage = () => {
       }),
   });
 
-  const { data: organizationList } = useQuery({
-    queryKey: ["organizations", page, debouncedSearch, filters],
-
-    queryFn: () =>
-      organizationService.list({
-        listAll: true,
-
-        page: 1,
-
-        filters: {},
-      }),
-  });
-
   const { data: projecrList, isLoading: isProjectLoading } = useQuery({
     queryKey: ["projects"],
 
@@ -99,7 +85,7 @@ const ContractsPage = () => {
       projecrList?.items?.map((item: IProject) => ({
         label: item.name,
 
-        value: item.name,
+        value: item.id.toString(),
       })) || [],
 
     [projecrList],
@@ -250,13 +236,11 @@ const ContractsPage = () => {
                   const {
                     id,
 
-                    contractParties,
-
                     project,
 
                     status,
 
-                    outcomes,
+                    parties,
 
                     targetNoOfBenefeciaries,
 
@@ -275,11 +259,7 @@ const ContractsPage = () => {
 
                       <Table.Data>
                         <p className="w-[150px] truncate">
-                          {extractPartiesNamesFromContract(
-                            contractParties,
-
-                            organizationList!.items,
-                          )}
+                          {parties?.join(", ")}
                         </p>
                       </Table.Data>
 
@@ -293,7 +273,7 @@ const ContractsPage = () => {
                         <p className="w-[140px] truncate">{project}</p>
                       </Table.Data>
 
-                      <Table.Data>{outcomes}</Table.Data>
+                      <Table.Data>outcomes</Table.Data>
 
                       <Table.Data>{targetNoOfBenefeciaries}</Table.Data>
 
