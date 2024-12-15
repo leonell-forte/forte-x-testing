@@ -75,7 +75,7 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
                 <Table.Data className="max-w-[100px]">{description}</Table.Data>
 
                 <Table.Data className="max-w-[100px]">
-                  {capitalize(status)}
+                  <span className="capitalize">{status}</span>
                 </Table.Data>
 
                 <Table.Data>
