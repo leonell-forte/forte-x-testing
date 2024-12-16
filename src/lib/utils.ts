@@ -111,7 +111,9 @@ export const findLabelFromOptions = (
 
   value: string
 ) => {
-  const label = options.find((item) => item.value == value)?.label;
+  const label = options.find(
+    (item) => item.value.toString() === value.toString()
+  )?.label;
 
   return label;
 };
