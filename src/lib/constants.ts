@@ -104,6 +104,25 @@ export const BENEFICIARY_STATUS = [
   },
 ];
 
+export const CONTRACT_STATUS = [
+  {
+    label: "Draft",
+    value: "draft",
+  },
+  {
+    label: "Signed",
+    value: "signed",
+  },
+  {
+    label: "Completed",
+    value: "completed",
+  },
+  {
+    label: "Cancelled",
+    value: "cancelled",
+  },
+];
+
 export const HIGHEST_EDUCATION_LEVEL = [
   {
     label: "Less than High School",

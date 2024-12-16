@@ -7,7 +7,7 @@ import bin from "assets/images/icons/bin.svg";
 import closeFilter from "assets/images/icons/close-filter.svg";
 import pencil from "assets/images/icons/pencil.svg";
 
-import { DEFAULT_DATE_FORMAT, STATUS } from "lib/constants";
+import { CONTRACT_STATUS, DEFAULT_DATE_FORMAT, STATUS } from "lib/constants";
 import { useDebounce, usePageTitle } from "lib/hooks";
 import { IContract, IContractFilters, StatusType } from "lib/types/contracts";
 import { IProject } from "lib/types/projects";
@@ -159,7 +159,7 @@ const ContractsPage = () => {
             noHelperText
             placeholder="Status"
             className="max-w-[166px]"
-            options={STATUS}
+            options={CONTRACT_STATUS}
             value={filters.status}
             handleSelect={(val) =>
               setFilters((prev) => ({ ...prev, status: val as StatusType }))
