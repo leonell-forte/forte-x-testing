@@ -11,7 +11,7 @@ import { DEFAULT_DATE_FORMAT, STATUS } from "lib/constants";
 import { useDebounce, usePageTitle } from "lib/hooks";
 import { IContract, IContractFilters, StatusType } from "lib/types/contracts";
 import { IProject } from "lib/types/projects";
-import { formatDate } from "lib/utils";
+import { findLabelFromOptions, formatDate } from "lib/utils";
 
 import ContractDialogue from "components/Dashboard/Contracts/Dialogues/ContractDialogue";
 import DeleteDialogue from "components/Dashboard/Contracts/Dialogues/DeleteDialogue";
@@ -169,7 +169,7 @@ const ContractsPage = () => {
 
           <Dropdown
             noHelperText
-            value={filters.project}
+            value={findLabelFromOptions(projects, filters.project)}
             handleSelect={(val) =>
               setFilters((prev) => ({ ...prev, project: val as string }))
             }
@@ -179,7 +179,8 @@ const ContractsPage = () => {
             className="max-w-[166px]"
           />
 
-          <div className="max-w-[166px]">
+          {/* Temporarily comment out date filter */}
+          {/* <div className="max-w-[166px]">
             <DatePicker
               noHelperText
               value={new Date(filters.date)}
@@ -191,7 +192,7 @@ const ContractsPage = () => {
                 }));
               }}
             />
-          </div>
+          </div> */}
 
           <button
             onClick={() =>
