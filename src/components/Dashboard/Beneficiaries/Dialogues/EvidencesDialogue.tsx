@@ -8,7 +8,7 @@ import { Controller, useForm } from "react-hook-form";
 
 import loader from "assets/images/icons/loader.svg";
 
-import { BENEFICIARY_STATUS } from "lib/constants";
+import { EVIDENCE_STATUS } from "lib/constants";
 import { useAppSelector } from "lib/hooks";
 import { useEvidenceMutation } from "lib/mutations/evidences";
 import { EvidenceFieldValues } from "lib/types/evidence";
@@ -117,147 +117,162 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
             className="space-y-[30px]"
             id="evidences-form"
           >
-            <div>
-              <div className="flex items-start gap-4">
-                <label htmlFor="" className="w-[120px] flex-shrink-0 pt-3">
-                  Description
-                </label>
+            <div className="space-y-[1px]">
+              <div className="space-y-[1px]">
+                <div className="flex items-start gap-4">
+                  <label htmlFor="" className="w-[120px] flex-shrink-0 pt-3">
+                    Description
+                  </label>
 
-                <Controller
-                  control={control}
-                  name="description"
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      placeholder="Description"
-                      error={!!errors.description?.message}
-                      helperText={errors.description?.message}
-                    />
-                  )}
-                />
-              </div>
-
-              <div className="flex items-start gap-4">
-                <label htmlFor="" className="w-[120px] flex-shrink-0 pt-3">
-                  Outcome
-                </label>
-
-                <Controller
-                  control={control}
-                  name="outcomeId"
-                  render={({ field }) => (
-                    <Dropdown
-                      loading={isProjectLoading}
-                      value={findLabelFromOptions(
-                        outcomes,
-                        field.value?.toString()
-                      )}
-                      handleSelect={(val) => {
-                        setValue("outcomeId", val as string);
-                      }}
-                      options={outcomes}
-                      placeholder="Outcome"
-                      error={!!errors.outcomeId?.message}
-                      helperText={errors.outcomeId?.message}
-                    />
-                  )}
-                />
-              </div>
-
-              <div className="flex items-start gap-4">
-                <label htmlFor="" className="w-[120px] flex-shrink-0 pt-3">
-                  Status
-                </label>
-
-                <Controller
-                  control={control}
-                  name="status"
-                  render={({ field }) => (
-                    <Dropdown
-                      value={field.value}
-                      handleSelect={(val) => {
-                        setValue("status", val as string);
-
-                        setError("status", { message: "" });
-                      }}
-                      placeholder="Status"
-                      options={BENEFICIARY_STATUS}
-                      error={!!errors.status?.message}
-                      helperText={errors.status?.message}
-                    />
-                  )}
-                />
-              </div>
-            </div>
-
-            {file && (
-              <div className="flex flex-col items-center">
-                <div className="flex max-h-[644px] w-full max-w-[490px] items-center justify-center">
-                  <img
-                    src={file.fileUrl}
-                    alt={file.filename}
-                    className={classNames(uploading && "opacity-20")}
+                  <Controller
+                    control={control}
+                    name="description"
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        placeholder="Description"
+                        error={!!errors.description?.message}
+                        helperText={errors.description?.message}
+                      />
+                    )}
                   />
-
-                  {uploading && (
-                    <img
-                      src={loader}
-                      alt="loader"
-                      className="absolute w-10 animate-spin"
-                    />
-                  )}
                 </div>
 
-                {!uploading && (
-                  <div className="relative px-6 py-3 text-center">
-                    <p className="font-semibold text-mint">Replace document</p>
+                <div className="flex items-start gap-4">
+                  <label htmlFor="" className="w-[120px] flex-shrink-0 pt-3">
+                    Outcome
+                  </label>
 
-                    <div className="absolute top-0 cursor-pointer opacity-0">
-                      <Controller
-                        control={control}
-                        name="file"
-                        render={() => (
-                          <FileInput
-                            onUploadStart={() => setUploading(true)}
-                            onUploadEnd={() => setUploading(false)}
-                            onSuccess={(data) => {
-                              setValue("file", data);
-
-                              setError("file", { message: "" });
-                            }}
-                          />
+                  <Controller
+                    control={control}
+                    name="outcomeId"
+                    render={({ field }) => (
+                      <Dropdown
+                        loading={isProjectLoading}
+                        value={findLabelFromOptions(
+                          outcomes,
+                          field.value?.toString()
                         )}
+                        handleSelect={(val) => {
+                          setValue("outcomeId", val as string);
+                        }}
+                        options={outcomes}
+                        placeholder="Outcome"
+                        error={!!errors.outcomeId?.message}
+                        helperText={errors.outcomeId?.message}
                       />
-                    </div>
+                    )}
+                  />
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <label htmlFor="" className="w-[120px] flex-shrink-0 pt-3">
+                    Status
+                  </label>
+
+                  <Controller
+                    control={control}
+                    name="status"
+                    render={({ field }) => (
+                      <Dropdown
+                        disabled={!id}
+                        value={field.value}
+                        handleSelect={(val) => {
+                          setValue("status", val as string);
+
+                          setError("status", { message: "" });
+                        }}
+                        placeholder="Status"
+                        options={EVIDENCE_STATUS}
+                        error={!!errors.status?.message}
+                        helperText={errors.status?.message}
+                      />
+                    )}
+                  />
+                </div>
+              </div>
+
+              {!!file.id && (
+                <div className="flex flex-col items-center">
+                  <div className="flex max-h-[644px] w-full max-w-[490px] items-center justify-center">
+                    {/* <img
+                      src={file.fileUrl}
+                      alt={file.filename}
+                      className={classNames(uploading && "opacity-20")}
+                    /> */}
+
+                    {/* <iframe
+                      src={file.fileUrl}
+                      title="PDF Viewer"
+                      width="100%"
+                      height="100%"
+                      style={{ border: "none" }}
+                     /> */}
+
+                    {uploading && (
+                      <img
+                        src={loader}
+                        alt="loader"
+                        className="absolute w-10 animate-spin"
+                      />
+                    )}
                   </div>
-                )}
-              </div>
-            )}
 
-            {!file && (
-              <div className="flex items-start gap-4">
-                <label htmlFor="" className="w-[120px] flex-shrink-0 pt-3">
-                  File
-                </label>
+                  {!uploading && (
+                    <div className="relative px-6 py-3 text-center">
+                      <p className="font-semibold text-mint">
+                        Replace document
+                      </p>
 
-                <Controller
-                  control={control}
-                  name="file"
-                  render={() => (
-                    <FileInput
-                      placeholder="Upload file"
-                      onSuccess={(data) => {
-                        setValue("file", data);
+                      <div className="absolute top-0 cursor-pointer opacity-0">
+                        <Controller
+                          control={control}
+                          name="file"
+                          render={() => (
+                            <FileInput
+                              onUploadStart={() => setUploading(true)}
+                              onUploadEnd={() => setUploading(false)}
+                              onSuccess={(data) => {
+                                setValue("file", data);
 
-                        setError("file", { message: "" });
-                      }}
-                      error={!!errors.file?.message}
-                      helperText={errors.file?.message}
-                    />
+                                setError("file", { message: "" });
+                              }}
+                              error={!!errors.file?.id?.message}
+                              helperText={errors.file?.id?.message}
+                            />
+                          )}
+                        />
+                      </div>
+                    </div>
                   )}
-                />
-              </div>
-            )}
+                </div>
+              )}
+
+              {!file.id && (
+                <div className="flex items-start gap-x-4">
+                  <label htmlFor="" className="w-[120px] flex-shrink-0 pt-3">
+                    File
+                  </label>
+
+                  <Controller
+                    control={control}
+                    name="file"
+                    render={() => (
+                      <FileInput
+                        placeholder="Upload file"
+                        onSuccess={(data) => {
+                          setValue("file", data);
+
+                          setError("file", { message: "" });
+                        }}
+                        error={!!errors.file?.message}
+                        helperText={errors.file?.message}
+                      />
+                    )}
+                  />
+                </div>
+              )}
+            </div>
           </form>
         </>
       )}
