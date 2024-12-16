@@ -168,6 +168,8 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
     [projectsList]
   );
 
+  console.log(contractList);
+
   const close = () => {
     reset();
 
@@ -335,6 +337,13 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
 
                   setValue("providerId", 0);
 
+                  setValue(
+                    "projectId",
+
+                    contractList?.items.find((item) => item.id === Number(val))
+                      ?.projectId as number
+                  );
+
                   setError("contractId", { message: "" });
                 }}
                 options={contracts}
@@ -378,7 +387,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
           />
         </div>
 
-        <div className="flex items-start">
+        {/* <div className="flex items-start">
           <label htmlFor="" className="min-w-[140px] pt-3">
             Project
           </label>
@@ -404,7 +413,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
               />
             )}
           />
-        </div>
+        </div> */}
       </div>
 
       <div className="!mt-0 flex items-center">
