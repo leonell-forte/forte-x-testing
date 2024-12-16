@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import beneficiariesService from "api/beneficiaries";
 import contractService from "api/contract";
 import organizationService from "api/organization";
-import projectService from "api/projects";
 import { useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 
@@ -115,12 +114,6 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
       }),
   });
 
-  const { data: projectsList, isLoading: projectLoading } = useQuery({
-    queryKey: ["projects"],
-
-    queryFn: () => projectService.list({ listAll: true }),
-  });
-
   const contracts: IOption[] = useMemo(
     () =>
       contractList?.items.map((item) => ({
@@ -156,16 +149,6 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
         })) || [],
 
     [organizationList, contractList, selectedContract]
-  );
-
-  const projects: IOption[] = useMemo(
-    () =>
-      projectsList?.items.map((item) => ({
-        label: item.name,
-
-        value: item.id.toString(),
-      })) || [],
-    [projectsList]
   );
 
   const close = () => {

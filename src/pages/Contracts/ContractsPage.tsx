@@ -16,7 +16,6 @@ import { findLabelFromOptions, formatDate } from "lib/utils";
 import ContractDialogue from "components/Dashboard/Contracts/Dialogues/ContractDialogue";
 import DeleteDialogue from "components/Dashboard/Contracts/Dialogues/DeleteDialogue";
 import Button from "components/ui/button";
-import DatePicker from "components/ui/date-picker";
 import Dropdown, { IOption } from "components/ui/dropdown";
 import HorizontalScroller from "components/ui/horizontal-scroller";
 import Pagination from "components/ui/pagination";
