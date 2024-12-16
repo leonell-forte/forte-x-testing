@@ -4,7 +4,7 @@ import { contracts } from "lib/validators/contracts";
 
 import { File } from "./common";
 
-export type StatusType = "ACTIVE" | "INACTIVE" | "";
+export type StatusType = "DRAFT" | "SIGNED" | "COMPLETED" | "CANCELLED" | "";
 
 export type RateEnum = "Per outcome" | "If threshold reached";
 
