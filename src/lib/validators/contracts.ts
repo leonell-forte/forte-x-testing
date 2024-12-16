@@ -54,7 +54,7 @@ export const contracts = {
 
       outcomeRates: contract
         ? contract?.outcomes.map((item) => ({
-            outcomeId: item.id,
+            outcomeId: item.outcomeId as number,
 
             rate: item.rate,
 

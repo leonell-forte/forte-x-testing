@@ -116,7 +116,7 @@ class ContractService {
     return response.data.data;
   }
 
-  async getOne(id: string) {
+  async getOne(id: string): Promise<IContract> {
     const response = await api.get(`/contracts/${id}`);
 
     return response.data.data;

@@ -11,6 +11,8 @@ import { File } from "lib/types/common";
 import Input from "./input";
 
 type IProps = TextFieldProps & {
+  filename?: string;
+
   onUploadStart?: () => void;
 
   onUploadEnd?: () => void;
@@ -19,14 +21,19 @@ type IProps = TextFieldProps & {
 };
 
 const FileInput = ({
+  filename,
+
   onSuccess,
+
   onUploadStart,
+
   onUploadEnd,
+
   ...props
 }: IProps) => {
   const [loading, setLoading] = useState(false);
 
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(filename || "");
 
   const handleUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     setLoading(true);

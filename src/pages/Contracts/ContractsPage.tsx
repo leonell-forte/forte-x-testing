@@ -239,6 +239,8 @@ const ContractsPage = () => {
                     endDate,
 
                     document,
+
+                    outcomenames,
                   } = item;
 
                   return (
@@ -263,7 +265,7 @@ const ContractsPage = () => {
                         <p className="w-[140px] truncate">{project}</p>
                       </Table.Data>
 
-                      <Table.Data>outcomes</Table.Data>
+                      <Table.Data>{outcomenames?.join(", ")}</Table.Data>
 
                       <Table.Data>{targetNoOfBenefeciaries}</Table.Data>
 
@@ -277,7 +279,7 @@ const ContractsPage = () => {
                         {formatDate(endDate, DEFAULT_DATE_FORMAT)}
                       </Table.Data>
 
-                      <Table.Data>{document}</Table.Data>
+                      {/* <Table.Data>{document?.filename}</Table.Data> */}
 
                       <Table.Data>
                         <div className="flex justify-end">
@@ -338,5 +340,5 @@ const TABLE_HEADER = [
   "Actual beneficiaries ",
   "Start date",
   "End date",
-  "Document",
+  // "Document",
 ];

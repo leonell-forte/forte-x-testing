@@ -287,6 +287,7 @@ const ContractDialogue = ({
               control={control}
               render={() => (
                 <FileInput
+                  filename={contractDetails?.document?.filename || ""}
                   onSuccess={(data) => {
                     setValue("documentId", data.id);
                   }}
@@ -313,6 +314,8 @@ const ContractDialogue = ({
                       value={new Date(field.value)}
                       onChange={(date) => {
                         setValue("startDate", formatDate(date!, "LL-dd-yyyy"));
+
+                        setError("startDate", { message: "" });
                       }}
                       error={!!errors.startDate?.message}
                       helperText={errors.startDate?.message}
@@ -335,6 +338,8 @@ const ContractDialogue = ({
                     value={new Date(field.value)}
                     onChange={(date) => {
                       setValue("endDate", formatDate(date!, "LL-dd-yyyy"));
+
+                      setError("endDate", { message: "" });
                     }}
                     error={!!errors.endDate?.message}
                     helperText={errors.endDate?.message}
