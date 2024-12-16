@@ -238,7 +238,7 @@ const ContractsPage = () => {
 
                     endDate,
 
-                    document,
+                    // document,
 
                     outcomenames,
                   } = item;
