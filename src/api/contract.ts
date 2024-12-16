@@ -101,8 +101,10 @@ class ContractService {
   }
 
   async update(values: ContractFieldValues) {
-    const body = {
+    let body = {
       ...values,
+
+      partyIds: values.partyIds.map((item) => item.toString()),
 
       contractOutcomeRates: values.outcomeRates.map((item) => ({
         ...item,
@@ -110,6 +112,8 @@ class ContractService {
         threshold: Number(item.threshold),
       })),
     };
+    delete (body as any).outcomeRates;
+    console.log(body);
 
     const response = await api.put("/contracts", body);
 
