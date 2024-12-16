@@ -168,8 +168,6 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
     [projectsList]
   );
 
-  console.log(contractList);
-
   const close = () => {
     reset();
 
@@ -386,34 +384,6 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
             )}
           />
         </div>
-
-        {/* <div className="flex items-start">
-          <label htmlFor="" className="min-w-[140px] pt-3">
-            Project
-          </label>
-
-          <Controller
-            control={control}
-            name="projectId"
-            render={({ field }) => (
-              <Dropdown
-                enableSearch
-                disabled={!!projectId}
-                loading={projectLoading}
-                value={findLabelFromOptions(projects, field.value.toString())}
-                handleSelect={(val) => {
-                  setValue("projectId", Number(val));
-
-                  setError("projectId", { message: "" });
-                }}
-                options={projects}
-                placeholder="Project"
-                error={!!errors.projectId?.message}
-                helperText={errors.projectId?.message}
-              />
-            )}
-          />
-        </div> */}
       </div>
 
       <div className="!mt-0 flex items-center">
