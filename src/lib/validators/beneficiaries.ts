@@ -50,7 +50,11 @@ export const beneficiaries = {
 
       gender: beneficiary?.gender || "",
 
-      disabilityStatus: beneficiary?.disabilityStatus ? "yes" : "no",
+      disabilityStatus: !beneficiary
+        ? ""
+        : beneficiary?.disabilityStatus
+          ? "yes"
+          : "no",
 
       address: beneficiary?.address || "",
 
@@ -105,27 +109,21 @@ export const beneficiaries = {
 
     otherUrl: z.string(),
 
-    birthdate: z.string().min(1, { message: "Birthdate is required" }),
+    birthdate: z.string(),
 
-    ethnicity: z.string().min(1, { message: "Ethnicity is required" }),
+    ethnicity: z.string(),
 
-    gender: z.string().min(1, { message: "Gender is required" }),
+    gender: z.string(),
 
-    disabilityStatus: z.enum(["yes", "no"]),
+    disabilityStatus: z.enum(["yes", "no", ""]),
 
-    address: z.string().min(1, { message: "Address is required" }),
+    address: z.string(),
 
-    socioeconomicStatus: z
-      .string()
-      .min(1, { message: "Socio-economic status is required" }),
+    socioeconomicStatus: z.string(),
 
-    educationLevel: z
-      .string()
-      .min(1, { message: "Highest education level is required" }),
+    educationLevel: z.string(),
 
-    languages: z
-      .array(z.string())
-      .min(1, { message: "Select at least one language" }),
+    languages: z.array(z.string()),
   }),
 };
 
