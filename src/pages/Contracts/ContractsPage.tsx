@@ -7,7 +7,7 @@ import bin from "assets/images/icons/bin.svg";
 import closeFilter from "assets/images/icons/close-filter.svg";
 import pencil from "assets/images/icons/pencil.svg";
 
-import { CONTRACT_STATUS, DEFAULT_DATE_FORMAT, STATUS } from "lib/constants";
+import { CONTRACT_STATUS, DEFAULT_DATE_FORMAT } from "lib/constants";
 import { useDebounce, usePageTitle } from "lib/hooks";
 import { IContract, IContractFilters, StatusType } from "lib/types/contracts";
 import { IProject } from "lib/types/projects";
