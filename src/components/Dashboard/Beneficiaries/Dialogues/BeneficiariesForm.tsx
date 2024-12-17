@@ -117,7 +117,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
   const contracts: IOption[] = useMemo(
     () =>
       contractList?.items.map((item) => ({
-        label: `Contract ${item.id}`,
+        label: item.name,
 
         value: item.id!.toString(),
       })) || [],
