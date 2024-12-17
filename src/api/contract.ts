@@ -34,7 +34,7 @@ class ContractService {
     const params = new URLSearchParams();
 
     let filtersData: IODataObject = {
-      "organizations.name": {
+      "contract.name": {
         value: search!,
 
         exact: false,
