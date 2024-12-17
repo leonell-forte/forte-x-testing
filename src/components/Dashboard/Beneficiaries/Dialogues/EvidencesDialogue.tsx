@@ -174,7 +174,10 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
                   name="status"
                   render={({ field }) => (
                     <Dropdown
-                      value={field.value}
+                      value={findLabelFromOptions(
+                        BENEFICIARY_STATUS,
+                        field.value
+                      )}
                       handleSelect={(val) => {
                         setValue("status", val as string);
 

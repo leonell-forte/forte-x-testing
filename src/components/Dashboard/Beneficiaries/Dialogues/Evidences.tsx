@@ -6,7 +6,9 @@ import { Link } from "react-router-dom";
 import add from "assets/images/icons/add.svg";
 import download from "assets/images/icons/download.svg";
 
+import { BENEFICIARY_STATUS } from "lib/constants";
 import { useAppSelector } from "lib/hooks";
+import { findLabelFromOptions } from "lib/utils";
 
 import Button from "components/ui/button";
 import Table from "components/ui/table";
@@ -29,7 +31,7 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
   return (
     <div className="space-y-[30px]">
       <div className="flex items-center gap-12">
-        <p>Evidences</p>
+        <p className="text-[20px] font-semibold">Evidence</p>
 
         <div className="flex w-full items-center gap-4">
           <hr className="w-full" />
@@ -74,7 +76,9 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
                 <Table.Data className="max-w-[100px]">{description}</Table.Data>
 
                 <Table.Data className="max-w-[100px]">
-                  <span className="capitalize">{status}</span>
+                  <span>
+                    {findLabelFromOptions(BENEFICIARY_STATUS, status)}
+                  </span>
                 </Table.Data>
 
                 <Table.Data>

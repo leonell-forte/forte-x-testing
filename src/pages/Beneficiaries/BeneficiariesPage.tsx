@@ -70,6 +70,8 @@ const BeneficiariesPage = () => {
 
   const [modal, setModal] = useState<ModalLabelTypes>("");
 
+  const [editMode, setEditMode] = useState(false);
+
   const [beneficiaryId, setBeneficiaryId] = useState<number | null>(null);
 
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
@@ -151,6 +153,7 @@ const BeneficiariesPage = () => {
         return (
           <BeneficiariesDialogue
             id={beneficiaryId as number}
+            editMode={editMode}
             isVisible={modal === "beneficiaries"}
             handleClose={close}
           />
@@ -390,19 +393,33 @@ const BeneficiariesPage = () => {
                   return (
                     <Table.Row key={index}>
                       <Table.Data>
-                        <Checkbox
-                          label={firstName}
-                          labelClass="text-[14px]"
-                          checked={selectedIds.includes(id)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setSelectedIds((prev) => [...prev, id]);
-                            } else
-                              setSelectedIds((prev) =>
-                                prev.filter((item) => item !== id)
-                              );
-                          }}
-                        />
+                        <div className="flex items-center">
+                          <Checkbox
+                            // label={firstName}
+                            labelClass="text-[14px]"
+                            checked={selectedIds.includes(id)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedIds((prev) => [...prev, id]);
+                              } else
+                                setSelectedIds((prev) =>
+                                  prev.filter((item) => item !== id)
+                                );
+                            }}
+                          />
+                          <p
+                            onClick={() => {
+                              setBeneficiaryId(id);
+
+                              setModal("beneficiaries");
+
+                              setEditMode(false);
+                            }}
+                            className="translate-x-[-15px] cursor-pointer"
+                          >
+                            asda
+                          </p>
+                        </div>
                       </Table.Data>
 
                       <Table.Data>{lastName}</Table.Data>
@@ -443,6 +460,8 @@ const BeneficiariesPage = () => {
                               setModal("beneficiaries");
 
                               setBeneficiaryId(id);
+
+                              setEditMode(true);
                             }}
                           >
                             <img alt="pencil" src={pencil} />

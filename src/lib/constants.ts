@@ -75,7 +75,7 @@ export const BENEFICIARY_STATUS = [
     value: "new",
   },
   {
-    label: "In Progress",
+    label: "In progress",
     value: "in-progress",
   },
   {
@@ -83,11 +83,11 @@ export const BENEFICIARY_STATUS = [
     value: "withdrawn",
   },
   {
-    label: "Pending Evidence Collection",
+    label: "Pending evidence collection",
     value: "pending-evidence-collection",
   },
   {
-    label: "Pending Evidence Review",
+    label: "Pending evidence review",
     value: "pending-evidence-review",
   },
   {
