@@ -92,7 +92,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
     );
   }, [contract, project, id, dispatch, watch]);
 
-  const { data: organizationList, isLoading: orgLoading } = useQuery({
+  const { data: organizationList } = useQuery({
     queryKey: ["organizations"],
 
     queryFn: () =>
