@@ -188,76 +188,77 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
                   )}
                 />
               </div>
-            </div>
-
-            {file && (
-              <div className="flex flex-col items-center">
-                <div className="flex max-h-[644px] w-full max-w-[490px] items-center justify-center">
-                  <img
-                    src={file.fileUrl}
-                    alt={file.filename}
-                    className={classNames(uploading && "opacity-20")}
-                  />
-
-                  {uploading && (
+              {file && (
+                <div className="flex flex-col items-center">
+                  <div className="flex max-h-[644px] w-full max-w-[490px] items-center justify-center">
                     <img
-                      src={loader}
-                      alt="loader"
-                      className="absolute w-10 animate-spin"
+                      src={file.fileUrl}
+                      alt={file.filename}
+                      className={classNames(uploading && "opacity-20")}
                     />
+
+                    {uploading && (
+                      <img
+                        src={loader}
+                        alt="loader"
+                        className="absolute w-10 animate-spin"
+                      />
+                    )}
+                  </div>
+
+                  {!uploading && (
+                    <div className="relative px-6 py-3 text-center">
+                      <p className="font-semibold text-mint">
+                        Replace document
+                      </p>
+
+                      <div className="absolute top-0 cursor-pointer opacity-0">
+                        <Controller
+                          control={control}
+                          name="file"
+                          render={() => (
+                            <FileInput
+                              onUploadStart={() => setUploading(true)}
+                              onUploadEnd={() => setUploading(false)}
+                              onSuccess={(data) => {
+                                setValue("file", data);
+
+                                setError("file", { message: "" });
+                              }}
+                            />
+                          )}
+                        />
+                      </div>
+                    </div>
                   )}
                 </div>
+              )}
 
-                {!uploading && (
-                  <div className="relative px-6 py-3 text-center">
-                    <p className="font-semibold text-mint">Replace document</p>
+              {!file && (
+                <div className="flex items-start gap-4">
+                  <label htmlFor="" className="w-[120px] flex-shrink-0 pt-3">
+                    File
+                  </label>
 
-                    <div className="absolute top-0 cursor-pointer opacity-0">
-                      <Controller
-                        control={control}
-                        name="file"
-                        render={() => (
-                          <FileInput
-                            onUploadStart={() => setUploading(true)}
-                            onUploadEnd={() => setUploading(false)}
-                            onSuccess={(data) => {
-                              setValue("file", data);
+                  <Controller
+                    control={control}
+                    name="file"
+                    render={() => (
+                      <FileInput
+                        placeholder="Upload file"
+                        onSuccess={(data) => {
+                          setValue("file", data);
 
-                              setError("file", { message: "" });
-                            }}
-                          />
-                        )}
+                          setError("file", { message: "" });
+                        }}
+                        error={!!errors.file?.message}
+                        helperText={errors.file?.message}
                       />
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {!file && (
-              <div className="flex items-start gap-4">
-                <label htmlFor="" className="w-[120px] flex-shrink-0 pt-3">
-                  File
-                </label>
-
-                <Controller
-                  control={control}
-                  name="file"
-                  render={() => (
-                    <FileInput
-                      placeholder="Upload file"
-                      onSuccess={(data) => {
-                        setValue("file", data);
-
-                        setError("file", { message: "" });
-                      }}
-                      error={!!errors.file?.message}
-                      helperText={errors.file?.message}
-                    />
-                  )}
-                />
-              </div>
-            )}
+                    )}
+                  />
+                </div>
+              )}
+            </div>
           </form>
         </>
       )}
