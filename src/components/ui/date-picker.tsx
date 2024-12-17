@@ -26,7 +26,7 @@ const DatePicker = ({
 
   ...props
 }: IProps) => {
-  const isDateSelected = !!value; // Check if a date is selected
+  const isDateSelected = value?.toString() !== "Invalid Date"; // Check if a date is selected
 
   return (
     <div className={classNames("relative w-full", !noHelperText && "pb-5")}>
@@ -74,7 +74,7 @@ const DatePicker = ({
                       ? "#651A1A !important"
                       : isDateSelected
                         ? "white"
-                        : "#ffffff50",
+                        : "#abb2b3 !important",
 
                     fontWeight: 300,
                   },

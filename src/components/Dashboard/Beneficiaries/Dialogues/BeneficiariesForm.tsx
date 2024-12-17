@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import beneficiariesService from "api/beneficiaries";
 import contractService from "api/contract";
 import organizationService from "api/organization";
-import projectService from "api/projects";
 import { useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 
@@ -115,12 +114,6 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
       }),
   });
 
-  const { data: projectsList, isLoading: projectLoading } = useQuery({
-    queryKey: ["projects"],
-
-    queryFn: () => projectService.list({ listAll: true }),
-  });
-
   const contracts: IOption[] = useMemo(
     () =>
       contractList?.items.map((item) => ({
@@ -156,16 +149,6 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
         })) || [],
 
     [organizationList, contractList, selectedContract]
-  );
-
-  const projects: IOption[] = useMemo(
-    () =>
-      projectsList?.items.map((item) => ({
-        label: item.name,
-
-        value: item.id.toString(),
-      })) || [],
-    [projectsList]
   );
 
   const close = () => {
@@ -335,6 +318,13 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
 
                   setValue("providerId", 0);
 
+                  setValue(
+                    "projectId",
+
+                    contractList?.items.find((item) => item.id === Number(val))
+                      ?.projectId as number
+                  );
+
                   setError("contractId", { message: "" });
                 }}
                 options={contracts}
@@ -373,34 +363,6 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
                 placeholder="Provider"
                 error={!!errors.providerId?.message}
                 helperText={errors.providerId?.message}
-              />
-            )}
-          />
-        </div>
-
-        <div className="flex items-start">
-          <label htmlFor="" className="min-w-[140px] pt-3">
-            Project
-          </label>
-
-          <Controller
-            control={control}
-            name="projectId"
-            render={({ field }) => (
-              <Dropdown
-                enableSearch
-                disabled={!!projectId}
-                loading={projectLoading}
-                value={findLabelFromOptions(projects, field.value.toString())}
-                handleSelect={(val) => {
-                  setValue("projectId", Number(val));
-
-                  setError("projectId", { message: "" });
-                }}
-                options={projects}
-                placeholder="Project"
-                error={!!errors.projectId?.message}
-                helperText={errors.projectId?.message}
               />
             )}
           />

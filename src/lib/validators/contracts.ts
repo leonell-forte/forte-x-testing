@@ -37,6 +37,8 @@ const contractOutcomeSchema = z
 export const contracts = {
   defaultValues: ({ contract, projectId }: IContractDefaultValues) => {
     let data: ContractFieldValues = {
+      name: contract?.name || "",
+
       projectId: contract?.projectId || projectId || 0,
 
       targetNoOfBenefeciaries:
@@ -44,7 +46,7 @@ export const contracts = {
 
       documentId: contract?.documentId || 0,
 
-      status: contract?.status || "ACTIVE",
+      status: contract?.status || "DRAFT",
 
       startDate: contract?.startDate || "",
 
@@ -85,6 +87,8 @@ export const contracts = {
   schema: z.object({
     id: z.number().optional(),
 
+    name: z.string().min(1, "Name is a required field"),
+
     projectId: z.number().min(1, { message: "Project is a required field" }),
 
     targetNoOfBenefeciaries: z.string().min(1, {
@@ -95,7 +99,7 @@ export const contracts = {
 
     partyIds: z.array(z.number()).min(1, "Party is a required field"),
 
-    status: z.enum(["ACTIVE", "INACTIVE", ""]),
+    status: z.enum(["DRAFT", "SIGNED", "COMPLETED", "CANCELLED", ""]),
 
     startDate: z.string().min(1, "Start date is a required field"),
 

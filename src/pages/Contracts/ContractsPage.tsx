@@ -7,16 +7,15 @@ import bin from "assets/images/icons/bin.svg";
 import closeFilter from "assets/images/icons/close-filter.svg";
 import pencil from "assets/images/icons/pencil.svg";
 
-import { DEFAULT_DATE_FORMAT, STATUS } from "lib/constants";
+import { CONTRACT_STATUS, DEFAULT_DATE_FORMAT } from "lib/constants";
 import { useDebounce, usePageTitle } from "lib/hooks";
 import { IContract, IContractFilters, StatusType } from "lib/types/contracts";
 import { IProject } from "lib/types/projects";
-import { formatDate } from "lib/utils";
+import { findLabelFromOptions, formatDate } from "lib/utils";
 
 import ContractDialogue from "components/Dashboard/Contracts/Dialogues/ContractDialogue";
 import DeleteDialogue from "components/Dashboard/Contracts/Dialogues/DeleteDialogue";
 import Button from "components/ui/button";
-import DatePicker from "components/ui/date-picker";
 import Dropdown, { IOption } from "components/ui/dropdown";
 import HorizontalScroller from "components/ui/horizontal-scroller";
 import Pagination from "components/ui/pagination";
@@ -160,7 +159,7 @@ const ContractsPage = () => {
             noHelperText
             placeholder="Status"
             className="max-w-[166px]"
-            options={STATUS}
+            options={CONTRACT_STATUS}
             value={filters.status}
             handleSelect={(val) =>
               setFilters((prev) => ({ ...prev, status: val as StatusType }))
@@ -169,7 +168,7 @@ const ContractsPage = () => {
 
           <Dropdown
             noHelperText
-            value={filters.project}
+            value={findLabelFromOptions(projects, filters.project)}
             handleSelect={(val) =>
               setFilters((prev) => ({ ...prev, project: val as string }))
             }
@@ -179,7 +178,8 @@ const ContractsPage = () => {
             className="max-w-[166px]"
           />
 
-          <div className="max-w-[166px]">
+          {/* Temporarily comment out date filter */}
+          {/* <div className="max-w-[166px]">
             <DatePicker
               noHelperText
               value={new Date(filters.date)}
@@ -191,7 +191,7 @@ const ContractsPage = () => {
                 }));
               }}
             />
-          </div>
+          </div> */}
 
           <button
             onClick={() =>
@@ -226,6 +226,8 @@ const ContractsPage = () => {
                   const {
                     id,
 
+                    name,
+
                     project,
 
                     status,
@@ -245,9 +247,9 @@ const ContractsPage = () => {
 
                   return (
                     <Table.Row key={index}>
-                      {/* <Table.Data>
-                        <p className="w-[90px] truncate">Contract {id}</p>
-                      </Table.Data> */}
+                      <Table.Data>
+                        <p className="w-[90px] truncate">{name}</p>
+                      </Table.Data>
 
                       <Table.Data>
                         <p className="w-[150px] truncate">
@@ -331,7 +333,7 @@ const ContractsPage = () => {
 export default ContractsPage;
 
 const TABLE_HEADER = [
-  // "Contract",
+  "Name",
   "Parties",
   "Status",
   "Project",
