@@ -92,7 +92,7 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
     );
   }, [contract, project, id, dispatch, watch]);
 
-  const { data: organizationList, isLoading: orgLoading } = useQuery({
+  const { data: organizationList } = useQuery({
     queryKey: ["organizations"],
 
     queryFn: () =>
@@ -316,7 +316,20 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
                 handleSelect={(val) => {
                   setValue("contractId", Number(val));
 
-                  setValue("providerId", 0);
+                  setValue(
+                    "providerId",
+                    Number(
+                      organizationList?.items.filter((org) => {
+                        const contract = contractList?.items.find(
+                          (contract) => contract.id === Number(val)
+                        );
+
+                        return contract?.partyIds.some(
+                          (item) => Number(item) === Number(org.id)
+                        );
+                      })[0].id
+                    )
+                  );
 
                   setValue(
                     "projectId",
@@ -345,26 +358,32 @@ const BeneficiariesForm = ({ id, projectId, handleClose }: IProps) => {
             control={control}
             name="providerId"
             render={({ field }) => (
-              <Dropdown
-                enableSearch
-                disabled={!watch("contractId")}
+              <Input
+                disabled
+                placeholder="Provider"
                 value={findLabelFromOptions(
                   organizations,
 
                   field.value.toString()
                 )}
-                handleSelect={(val) => {
-                  setValue("providerId", Number(val));
-
-                  setError("providerId", { message: "" });
-                }}
-                loading={orgLoading}
-                options={organizations}
-                placeholder="Provider"
-                error={!!errors.providerId?.message}
-                helperText={errors.providerId?.message}
               />
             )}
+          />
+        </div>
+
+        <div className="flex items-start">
+          <label htmlFor="" className="min-w-[140px] pt-3">
+            Project
+          </label>
+
+          <Input
+            disabled
+            placeholder="Project"
+            value={
+              contractList?.items.find(
+                (item) => item.id === watch("contractId")
+              )?.project
+            }
           />
         </div>
       </div>
