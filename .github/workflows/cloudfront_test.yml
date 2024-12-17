@@ -18,7 +18,7 @@ jobs:
       - name: Inject Environment Variables
         run: |
           echo "REACT_APP_AMPLITUDE_API_KEY=${{ secrets.REACT_APP_AMPLITUDE_API_KEY }}" >> .env
-          echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL_TEST }}" >> .env
+          echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL_DEV }}" >> .env
 
       - name: Build project
         run: npm run build
