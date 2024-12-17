@@ -182,7 +182,7 @@ const BeneficiariesPage = () => {
           <ImportDialogue isVisible={modal === "import"} handleClose={close} />
         );
     }
-  }, [modal, beneficiaryId, selectedIds]);
+  }, [modal, beneficiaryId, selectedIds, editMode]);
 
   return (
     <>
