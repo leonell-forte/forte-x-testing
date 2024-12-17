@@ -8,6 +8,8 @@ interface IBeneficiariesDialogueProps extends IDialogueProps {
 
   projectId?: number;
 
+  editMode?: boolean;
+
   handleAddOrViewEvidence?: (id?: number) => void;
 }
 
@@ -15,6 +17,8 @@ const AddDialogue = ({
   id,
 
   projectId,
+
+  editMode,
 
   handleAddOrViewEvidence,
 
@@ -24,11 +28,12 @@ const AddDialogue = ({
     <Dialogue
       {...props}
       handleClose={props.handleClose}
-      title={`${id ? "Edit" : "Add"} beneficiaries`}
+      title={`${id ? `Beneficiary ID #${id}` : "Add beneficiary"}`}
     >
-      <div className="space-y-5">
+      <div className="space-y-[22px]">
         <BeneficiariesForm
           id={id}
+          editMode={editMode}
           projectId={projectId}
           handleClose={props.handleClose}
         />

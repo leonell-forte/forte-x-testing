@@ -146,7 +146,7 @@ const Dropdown = ({
                 })
               ) : (
                 <input
-                  className="pointer-events-none mt-1 w-[90%] border-none bg-transparent outline-none placeholder:font-medium placeholder:text-white/50"
+                  className="pointer-events-none mt-1 w-[90%] border-none bg-transparent font-medium outline-none placeholder:font-medium placeholder:text-white/50"
                   type="text"
                   {...props}
                 />
@@ -156,7 +156,7 @@ const Dropdown = ({
             <input
               type="text"
               className={classNames(
-                "pointer-events-none w-[90%] border-none bg-transparent outline-none placeholder:font-medium placeholder:text-white/50 disabled:text-white",
+                "pointer-events-none w-[90%] border-none bg-transparent font-medium outline-none placeholder:font-medium placeholder:text-white/50 disabled:text-white",
 
                 error && "placeholder:!text-[#fff]/50"
               )}

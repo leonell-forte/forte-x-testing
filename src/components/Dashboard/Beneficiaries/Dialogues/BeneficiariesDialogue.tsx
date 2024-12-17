@@ -11,12 +11,16 @@ interface IBeneficiariesDialogueProps extends IDialogueProps {
   id?: number;
 
   projectId?: number;
+
+  editMode?: boolean;
 }
 
 const BeneficiariesDialogue = ({
   id,
 
   projectId,
+
+  editMode,
 
   ...props
 }: IBeneficiariesDialogueProps) => {
@@ -36,6 +40,7 @@ const BeneficiariesDialogue = ({
         return (
           <AddDialogue
             {...props}
+            editMode={editMode}
             handleClose={close}
             id={id}
             projectId={projectId}

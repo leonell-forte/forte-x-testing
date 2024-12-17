@@ -43,7 +43,7 @@ export const useBeneficiaryMutation = ({
       setAlert({
         title: "Success!",
 
-        message: `Beneficiary added successfully`,
+        message: `Beneficiary ${beneficiaryId ? "updated" : "added"} successfully`,
 
         status: "success",
       });

@@ -63,20 +63,18 @@ const DatePicker = ({
                     color: error ? "#651A1A !important" : "#ffffff !important",
                   },
 
-                  "& input::placeholder": {
-                    color: error ? "#651A1A !important" : "white !important",
+                  // "& input::placeholder": {
+                  //   color: error ? "#651A1A !important" : "white !important",
 
-                    opacity: error ? 1 : 0.5,
-                  },
+                  //   opacity: error ? 1 : 0.5,
+                  // },
 
                   "& input": {
-                    color: error
-                      ? "#651A1A !important"
-                      : isDateSelected
-                        ? "white"
-                        : "#abb2b3 !important",
+                    color: error ? "#651A1A !important" : "white",
 
-                    fontWeight: 300,
+                    opacity: isDateSelected ? 1 : 0.5,
+
+                    fontWeight: 500,
                   },
                 },
 

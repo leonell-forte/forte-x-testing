@@ -9,6 +9,7 @@ const theme = createTheme({
       styleOverrides: {
         root: ({ ownerState }) => ({
           // Primary Variant (default)
+
           "& input[type='search']::-webkit-search-cancel-button": {
             display: "none",
           },
