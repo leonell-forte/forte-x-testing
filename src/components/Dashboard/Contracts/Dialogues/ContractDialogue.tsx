@@ -6,7 +6,7 @@ import projectService from "api/projects";
 import { useEffect, useMemo } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 
-import { STATUS } from "lib/constants";
+import { CONTRACT_STATUS } from "lib/constants";
 import useContractMutation from "lib/mutations/contracts";
 import { ContractFieldValues, StatusType } from "lib/types/contracts";
 import { IOrganization } from "lib/types/organizations";
@@ -148,6 +148,25 @@ const ContractDialogue = ({
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-1">
           <div className="flex items-start gap-4">
+            <label htmlFor="" className="w-[120px] flex-shrink-0 pt-1">
+              Name
+            </label>
+
+            <Controller
+              name="name"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  placeholder="Name"
+                  error={!!errors.name?.message}
+                  helperText={errors.name?.message}
+                />
+              )}
+            />
+          </div>
+
+          <div className="flex items-start gap-4">
             <label htmlFor="" className="min-w-[120px] pt-4">
               Parties
             </label>
@@ -201,7 +220,7 @@ const ContractDialogue = ({
 
                       setError("status", { message: "" });
                     }}
-                    options={STATUS}
+                    options={CONTRACT_STATUS}
                     placeholder="Status"
                     error={!!errors.status?.message}
                     helperText={errors.status?.message}
@@ -288,8 +307,11 @@ const ContractDialogue = ({
               render={() => (
                 <FileInput
                   filename={contractDetails?.document?.filename || ""}
+                  accept=".pdf"
                   onSuccess={(data) => {
                     setValue("documentId", data.id);
+
+                    setError("documentId", { message: "" });
                   }}
                   placeholder="Document"
                   error={!!errors.documentId?.message}
