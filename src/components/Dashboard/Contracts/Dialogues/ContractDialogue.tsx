@@ -139,7 +139,7 @@ const ContractDialogue = ({
     <Dialogue
       isVisible={isVisible}
       handleClose={close}
-      title={`${id ? "Edit" : "Add"} contract`}
+      title={`${id ? `Edit contract Id: ${id}` : "Add contract"}`}
     >
       {contractDetailsLoading ? (
         <div className="flex h-[470px] w-full items-center justify-center">
@@ -148,8 +148,8 @@ const ContractDialogue = ({
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-1">
           <div className="flex items-start gap-4">
-            <label htmlFor="" className="w-[120px] flex-shrink-0 pt-1">
-              Name
+            <label htmlFor="" className="w-[120px] flex-shrink-0 pt-3">
+              Contract name
             </label>
 
             <Controller
@@ -158,7 +158,7 @@ const ContractDialogue = ({
               render={({ field }) => (
                 <Input
                   {...field}
-                  placeholder="Name"
+                  placeholder="Contract name"
                   error={!!errors.name?.message}
                   helperText={errors.name?.message}
                 />
