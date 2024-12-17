@@ -395,7 +395,6 @@ const BeneficiariesPage = () => {
                       <Table.Data>
                         <div className="flex items-center">
                           <Checkbox
-                            // label={firstName}
                             labelClass="text-[14px]"
                             checked={selectedIds.includes(id)}
                             onChange={(e) => {
@@ -417,7 +416,7 @@ const BeneficiariesPage = () => {
                             }}
                             className="translate-x-[-15px] cursor-pointer"
                           >
-                            asda
+                            {firstName}
                           </p>
                         </div>
                       </Table.Data>
