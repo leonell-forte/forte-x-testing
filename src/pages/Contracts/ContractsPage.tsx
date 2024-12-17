@@ -226,6 +226,8 @@ const ContractsPage = () => {
                   const {
                     id,
 
+                    name,
+
                     project,
 
                     status,
@@ -245,9 +247,9 @@ const ContractsPage = () => {
 
                   return (
                     <Table.Row key={index}>
-                      {/* <Table.Data>
-                        <p className="w-[90px] truncate">Contract {id}</p>
-                      </Table.Data> */}
+                      <Table.Data>
+                        <p className="w-[150px] truncate">{name}</p>
+                      </Table.Data>
 
                       <Table.Data>
                         <p className="w-[150px] truncate">
@@ -331,7 +333,7 @@ const ContractsPage = () => {
 export default ContractsPage;
 
 const TABLE_HEADER = [
-  // "Contract",
+  "Name",
   "Parties",
   "Status",
   "Project",

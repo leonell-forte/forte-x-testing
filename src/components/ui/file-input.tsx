@@ -13,6 +13,8 @@ import Input from "./input";
 type IProps = TextFieldProps & {
   filename?: string;
 
+  accept?: string;
+
   onUploadStart?: () => void;
 
   onUploadEnd?: () => void;
@@ -22,6 +24,8 @@ type IProps = TextFieldProps & {
 
 const FileInput = ({
   filename,
+
+  accept = "",
 
   onSuccess,
 
@@ -60,6 +64,9 @@ const FileInput = ({
         color="primary"
         type="file"
         {...props}
+        inputProps={{
+          accept: accept,
+        }}
         disabled={loading}
         onChange={handleUpload}
         className="absolute left-0 top-0 z-10 cursor-pointer"
