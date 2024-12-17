@@ -148,6 +148,25 @@ const ContractDialogue = ({
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-1">
           <div className="flex items-start gap-4">
+            <label htmlFor="" className="w-[120px] flex-shrink-0 pt-1">
+              Name
+            </label>
+
+            <Controller
+              name="name"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  placeholder="Name"
+                  error={!!errors.name?.message}
+                  helperText={errors.name?.message}
+                />
+              )}
+            />
+          </div>
+
+          <div className="flex items-start gap-4">
             <label htmlFor="" className="min-w-[120px] pt-4">
               Parties
             </label>
@@ -291,6 +310,8 @@ const ContractDialogue = ({
                   accept=".pdf"
                   onSuccess={(data) => {
                     setValue("documentId", data.id);
+
+                    setError("documentId", { message: "" });
                   }}
                   placeholder="Document"
                   error={!!errors.documentId?.message}

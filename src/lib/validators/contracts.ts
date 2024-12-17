@@ -37,6 +37,8 @@ const contractOutcomeSchema = z
 export const contracts = {
   defaultValues: ({ contract, projectId }: IContractDefaultValues) => {
     let data: ContractFieldValues = {
+      name: contract?.name || "",
+
       projectId: contract?.projectId || projectId || 0,
 
       targetNoOfBenefeciaries:
@@ -84,6 +86,8 @@ export const contracts = {
 
   schema: z.object({
     id: z.number().optional(),
+
+    name: z.string().min(1, "Name is a required field"),
 
     projectId: z.number().min(1, { message: "Project is a required field" }),
 

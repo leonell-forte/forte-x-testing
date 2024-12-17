@@ -27,6 +27,8 @@ export interface IContractOutcomeRates {
 }
 
 export interface IContract {
+  name: string;
+
   createdAt?: string;
 
   createdBy?: number;
