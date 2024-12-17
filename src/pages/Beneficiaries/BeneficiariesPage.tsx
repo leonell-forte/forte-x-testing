@@ -406,7 +406,7 @@ const BeneficiariesPage = () => {
                                 );
                             }}
                           />
-                          <p
+                          <button
                             onClick={() => {
                               setBeneficiaryId(id);
 
@@ -414,10 +414,10 @@ const BeneficiariesPage = () => {
 
                               setEditMode(false);
                             }}
-                            className="translate-x-[-15px] cursor-pointer"
+                            className="translate-x-[-8px] outline-none"
                           >
                             {firstName}
-                          </p>
+                          </button>
                         </div>
                       </Table.Data>
 
