@@ -84,7 +84,7 @@ const Table = {
       <td
         {...props}
         className={classNames(
-          "h-[56px] max-w-[300px] overflow-visible truncate border-b px-4 text-[14px]",
+          "h-[56px] max-w-[300px] overflow-visible truncate border-b px-8 text-[14px]",
 
           className
         )}
@@ -98,7 +98,7 @@ const Table = {
     return (
       <th
         {...props}
-        className={classNames("px-4 py-5 !text-black", small && "!py-3")}
+        className={classNames("px-8 py-5 !text-black", small && "!py-3")}
       >
         {children}
       </th>

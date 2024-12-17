@@ -23,7 +23,7 @@ import DeleteDialogue from "components/Dashboard/Beneficiaries/Dialogues/DeleteD
 import ImportDialogue from "components/Dashboard/Beneficiaries/Dialogues/ImportDialogue";
 import Button from "components/ui/button";
 import Checkbox from "components/ui/checkbox";
-import DatePicker from "components/ui/date-picker";
+// import DatePicker from "components/ui/date-picker";
 import Dropdown, { IOption } from "components/ui/dropdown";
 import HorizontalScroller from "components/ui/horizontal-scroller";
 import Pagination from "components/ui/pagination";
@@ -53,7 +53,7 @@ const BeneficiariesPage = () => {
 
     riskLevel: "",
 
-    startDate: "",
+    // startDate: "",
   });
 
   useDebounce(
@@ -283,6 +283,7 @@ const BeneficiariesPage = () => {
               className="max-w-[166px]"
             /> */}
 
+            {/* removing for now
             <div className="max-w-[166px]">
               <DatePicker
                 noHelperText
@@ -295,7 +296,7 @@ const BeneficiariesPage = () => {
                   }));
                 }}
               />
-            </div>
+            </div> */}
 
             <button
               onClick={() =>
@@ -327,6 +328,7 @@ const BeneficiariesPage = () => {
                   <Table.Header small>
                     <Checkbox
                       checked={
+                        beneficiariesList?.items?.length !== 0 &&
                         selectedIds.length === beneficiariesList?.items.length
                       }
                       label="First name"
