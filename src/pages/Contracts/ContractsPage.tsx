@@ -248,7 +248,7 @@ const ContractsPage = () => {
                   return (
                     <Table.Row key={index}>
                       <Table.Data>
-                        <p className="w-[90px] truncate">{name}</p>
+                        <p className="w-[150px] truncate">{name}</p>
                       </Table.Data>
 
                       <Table.Data>
