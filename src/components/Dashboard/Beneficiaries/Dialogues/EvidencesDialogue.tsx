@@ -232,6 +232,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
                             render={() => (
                               <FileInput
                                 disabled={!onEdit}
+                                accept=".pdf"
                                 onUploadStart={() => setUploading(true)}
                                 onUploadEnd={() => setUploading(false)}
                                 onSuccess={(data) => {
@@ -261,6 +262,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
                       name="file"
                       render={() => (
                         <FileInput
+                          accept=".pdf"
                           disabled={!onEdit}
                           placeholder="Upload file"
                           onSuccess={(data) => {
