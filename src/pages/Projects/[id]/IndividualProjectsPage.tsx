@@ -7,6 +7,7 @@ import arrow from "assets/images/icons/arrow.svg";
 import Beneficiaries from "components/Dashboard/Projects/Tables/Beneficiaries";
 import Contracts from "components/Dashboard/Projects/Tables/Contracts";
 import Outcomes from "components/Dashboard/Projects/Tables/Outcomes";
+import Partners from "components/Dashboard/Projects/Tables/Partners";
 
 const IndividualProjectsPage = () => {
   // page title is set on the outcomes component
@@ -29,7 +30,7 @@ const IndividualProjectsPage = () => {
 
       <Contracts projectId={Number(id)} />
 
-      {/* <Partners /> */}
+      <Partners />
 
       <Beneficiaries id={id} />
     </div>

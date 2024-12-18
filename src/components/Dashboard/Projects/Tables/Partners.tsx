@@ -51,12 +51,9 @@ const Partners = () => {
           <p className="text-[24px] font-semibold">Partners</p>
 
           <div className="flex gap-2.5">
-            {/* <Button
-              onClick={() => setModal("tag")}
-              buttonType="secondary"
-            >
+            <Button onClick={() => setModal("tag")} buttonType="secondary">
               Tag existing partner
-            </Button> */}
+            </Button>
 
             <Button onClick={() => setModal("partner")}>Add new partner</Button>
           </div>
