@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import add from "assets/images/icons/add.svg";
 import download from "assets/images/icons/download.svg";
 
-import { BENEFICIARY_STATUS } from "lib/constants";
+import { BENEFICIARY_STATUS, EVIDENCE_STATUS } from "lib/constants";
 import { useAppSelector } from "lib/hooks";
 import { findLabelFromOptions } from "lib/utils";
 
@@ -76,9 +76,7 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
                 <Table.Data className="max-w-[100px]">{description}</Table.Data>
 
                 <Table.Data className="max-w-[100px]">
-                  <span>
-                    {findLabelFromOptions(BENEFICIARY_STATUS, status)}
-                  </span>
+                  <span>{findLabelFromOptions(EVIDENCE_STATUS, status)}</span>
                 </Table.Data>
 
                 <Table.Data>
