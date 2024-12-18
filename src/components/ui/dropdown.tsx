@@ -83,7 +83,7 @@ const Dropdown = ({
   const optionList = useMemo(
     () =>
       options.filter((item) =>
-        item.label.toLowerCase().includes(search.toLowerCase())
+        item.label?.toLowerCase().includes(search?.toLowerCase())
       ),
 
     [search, options]
