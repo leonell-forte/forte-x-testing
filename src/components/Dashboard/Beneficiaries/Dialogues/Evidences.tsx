@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import add from "assets/images/icons/add.svg";
 import download from "assets/images/icons/download.svg";
 
-import { BENEFICIARY_STATUS, EVIDENCE_STATUS } from "lib/constants";
+import { EVIDENCE_STATUS } from "lib/constants";
 import { useAppSelector } from "lib/hooks";
 import { findLabelFromOptions } from "lib/utils";
 
