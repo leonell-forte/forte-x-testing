@@ -207,6 +207,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
                         width="100%"
                         height="600px"
                         title={file.filename}
+                        className={uploading ? "opacity-[.4]" : ""}
                       ></iframe>
 
                       {uploading && (
