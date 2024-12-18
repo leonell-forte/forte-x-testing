@@ -217,7 +217,11 @@ const BeneficiariesPage = () => {
             ) : (
               <Button
                 eventName="Add Beneficiary"
-                onClick={() => setModal("beneficiaries")}
+                onClick={() => {
+                  setModal("beneficiaries");
+
+                  setEditMode(true);
+                }}
               >
                 Add beneficiaries
               </Button>
