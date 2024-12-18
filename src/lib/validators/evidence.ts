@@ -8,11 +8,16 @@ export const evidence = {
     let data: EvidenceFieldValues = {
       description: evidence?.description || "",
 
-      status: evidence?.status || "",
+      status: evidence?.status || "pending review",
 
-      outcomeId: evidence?.outcome.id.toString() || "",
+      outcomeId: evidence?.outcome?.id.toString() || "",
 
-      file: evidence?.file || null,
+      file: evidence?.file || {
+        id: 0, // Provide default values for required fields
+        key: "",
+        filename: "",
+        fileUrl: "",
+      },
     };
 
     if (evidence?.id) {
@@ -31,6 +36,8 @@ export const evidence = {
 
     outcomeId: z.string().min(1, "Outcome is a required field"),
 
-    file: fileSchema.nullable(),
+    file: fileSchema.refine((file) => file.key !== "", {
+      message: "File is a required field",
+    }),
   }),
 };

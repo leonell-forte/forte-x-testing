@@ -69,6 +69,21 @@ export const TYPES = [
   },
 ];
 
+export const EVIDENCE_STATUS = [
+  {
+    label: "Accepted",
+    value: "accepted",
+  },
+  {
+    label: "Pending review",
+    value: "pending review",
+  },
+  {
+    label: "More information requested",
+    value: "more information requested",
+  },
+];
+
 export const BENEFICIARY_STATUS = [
   {
     label: "New",

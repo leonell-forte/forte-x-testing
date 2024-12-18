@@ -70,6 +70,8 @@ const FileInput = ({
         disabled={loading}
         onChange={handleUpload}
         className="absolute left-0 top-0 z-10 cursor-pointer"
+        error={props.error}
+        helperText={props.helperText}
       />
 
       {loading ? (
