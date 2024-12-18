@@ -30,6 +30,23 @@ interface IEvidencesDialogueProps extends IDialogueProps {
 const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
   const [uploading, setUploading] = useState(false);
 
+  const [pages, setPages] = useState(0);
+
+  const [pageHeight, setPageHeight] = useState(0);
+
+  const [scale, setScale] = useState(1);
+
+  const onLoadDocument = async (result: any) => {
+    document.getElementsByTagName("body")[0].className = "overflow-hidden";
+    setPages(result.numPages);
+  };
+
+  const onPageLoadSuccess = (page: any) => {
+    if (pageHeight === 0) {
+      setPageHeight(page.height);
+    }
+  };
+
   const { projectId, beneficiaryId } = useAppSelector(
     (state) => state.evidence
   );
@@ -194,19 +211,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
               {!!file.id && (
                 <div className="flex flex-col items-center">
                   <div className="flex max-h-[644px] w-full max-w-[490px] items-center justify-center">
-                    {/* <img
-                      src={file.fileUrl}
-                      alt={file.filename}
-                      className={classNames(uploading && "opacity-20")}
-                    /> */}
-
-                    {/* <iframe
-                      src={file.fileUrl}
-                      title="PDF Viewer"
-                      width="100%"
-                      height="100%"
-                      style={{ border: "none" }}
-                     /> */}
+                    <iframe src={file.fileUrl}></iframe>
 
                     {uploading && (
                       <img
