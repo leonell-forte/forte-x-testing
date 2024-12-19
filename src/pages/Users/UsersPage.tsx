@@ -14,7 +14,6 @@ import { IUser } from "lib/types/users";
 import UserDialogue from "components/Dashboard/Users/Dialogues/UserDialogue";
 import Button from "components/ui/button";
 import Dropdown from "components/ui/dropdown";
-import HorizontalScroller from "components/ui/horizontal-scroller";
 import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
 import Table from "components/ui/table";
@@ -91,7 +90,7 @@ const UsersPage = () => {
       )}
 
       <div className="space-y-2.5">
-        <div className="flex w-full items-center justify-between gap-4">
+        <div className="flex w-full flex-wrap items-center justify-between gap-4">
           <SearchInput
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -111,7 +110,7 @@ const UsersPage = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-[18px]">
+        <div className="flex flex-wrap items-center gap-[18px]">
           <p className="text-[20px] font-medium">Filter by</p>
 
           <Dropdown
@@ -147,7 +146,7 @@ const UsersPage = () => {
         </div>
 
         <div className="space-y-4">
-          <div className="overflow-scroll pr-4">
+          <div className="pr-4">
             <Table.Container isEmpty={!users.length} isLoading={userLoading}>
               <Table.Head>
                 <Table.Row>
@@ -218,8 +217,6 @@ const UsersPage = () => {
           </div>
 
           <div className="flex w-full items-center justify-end">
-            <HorizontalScroller />
-
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}

@@ -17,7 +17,6 @@ import ContractDialogue from "components/Dashboard/Contracts/Dialogues/ContractD
 import DeleteDialogue from "components/Dashboard/Contracts/Dialogues/DeleteDialogue";
 import Button from "components/ui/button";
 import Dropdown, { IOption } from "components/ui/dropdown";
-import HorizontalScroller from "components/ui/horizontal-scroller";
 import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
 import Table from "components/ui/table";
@@ -136,7 +135,7 @@ const ContractsPage = () => {
       {renderModal()}
 
       <div className="space-y-2.5">
-        <div className="flex w-full items-center justify-between gap-4">
+        <div className="flex w-full flex-wrap items-center justify-between gap-4">
           <SearchInput
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -152,7 +151,7 @@ const ContractsPage = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-[18px]">
+        <div className="flex flex-wrap items-center gap-[18px]">
           <p className="flex-shrink-0 text-[20px] font-medium">Filter by</p>
 
           <Dropdown
@@ -320,8 +319,6 @@ const ContractsPage = () => {
           </div>
 
           <div className="flex w-full items-center justify-end">
-            <HorizontalScroller />
-
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}

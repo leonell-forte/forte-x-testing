@@ -25,7 +25,6 @@ import Button from "components/ui/button";
 import Checkbox from "components/ui/checkbox";
 // import DatePicker from "components/ui/date-picker";
 import Dropdown, { IOption } from "components/ui/dropdown";
-import HorizontalScroller from "components/ui/horizontal-scroller";
 import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
 import Table from "components/ui/table";
@@ -492,8 +491,6 @@ const BeneficiariesPage = () => {
           </div>
 
           <div className="flex w-full items-center justify-end">
-            <HorizontalScroller />
-
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}

@@ -12,7 +12,6 @@ import { IProject } from "lib/types/projects";
 import DeleteDialogue from "components/Dashboard/Projects/Dialogues/DeleteDialogue";
 import ProjectDialogue from "components/Dashboard/Projects/Dialogues/ProjectDialogue";
 import Button from "components/ui/button";
-import HorizontalScroller from "components/ui/horizontal-scroller";
 import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
 import Table from "components/ui/table";
@@ -188,8 +187,6 @@ const ProjectsPage = () => {
 
           {!!projects.length && (
             <div className="flex w-full items-center justify-end">
-              <HorizontalScroller />
-
               <Pagination
                 page={page}
                 onPageChange={(val) => setPage(val)}
