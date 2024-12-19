@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { TableHTMLAttributes, useRef } from "react";
 
-import useScroll from "./horizontal-scroller/useScroll";
+import { ScrollArea, ScrollBar } from "./scroll-area/ScrollArea";
 import Spinner from "./spinner/spinner";
 
 interface ITableProp extends TableHTMLAttributes<HTMLTableElement> {}
@@ -30,29 +30,27 @@ const Table = {
   }: ITableContainerProp) => {
     const tableRef = useRef<HTMLDivElement>(null);
 
-    useScroll({ container: tableRef });
-
     return (
-      <div
-        ref={tableRef}
-        className="hide-scroll relative w-full overflow-scroll pb-8"
-      >
-        <table {...props} className="w-full overflow-hidden !rounded-t-[8px]">
-          {children}
-        </table>
+      <ScrollArea className="w-full pb-8" type="auto">
+        <div ref={tableRef} className="hide-scroll relative w-full">
+          <table {...props} className="w-full !rounded-t-[8px]">
+            {children}
+          </table>
 
-        {isEmpty && !isLoading && (
-          <div className="mx-auto flex h-40 min-w-full items-center justify-center">
-            <p>No data</p>
-          </div>
-        )}
+          {isEmpty && !isLoading && (
+            <div className="mx-auto flex h-40 min-w-full items-center justify-center">
+              <p>No data</p>
+            </div>
+          )}
 
-        {isLoading && (
-          <div className="flex h-40 w-full items-center justify-center">
-            <Spinner />
-          </div>
-        )}
-      </div>
+          {isLoading && (
+            <div className="flex h-40 w-full items-center justify-center">
+              <Spinner />
+            </div>
+          )}
+        </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
     );
   },
 
