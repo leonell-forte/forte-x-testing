@@ -10,7 +10,7 @@ import { OrganizationFieldTypes } from "../types/organizations";
 interface IOrganizationMutation {
   orgId?: string;
 
-  successCallback?: () => void;
+  successCallback?: (id: number) => void;
 }
 
 const useOrganizationMutation = ({
@@ -51,7 +51,9 @@ const useOrganizationMutation = ({
         title: "Success!",
       });
 
-      successCallback?.();
+      console.log(addedOrg);
+
+      successCallback?.(addedOrg.data.data.id);
 
       amplitude.track(
         `${orgId ? "Update" : "Add"} Organization Form Submission`

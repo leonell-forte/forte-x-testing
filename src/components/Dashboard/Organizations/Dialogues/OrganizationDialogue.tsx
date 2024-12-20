@@ -17,10 +17,14 @@ import Spinner from "components/ui/spinner/spinner";
 
 interface IOrganizationDialogueProps extends IDialogueProps {
   orgId?: string;
+
+  addSuccessCallback?: (id: number) => void;
 }
 
 const OrganizationDialogue = ({
   handleClose,
+
+  addSuccessCallback,
 
   isVisible,
 
@@ -72,7 +76,11 @@ const OrganizationDialogue = ({
 
   const { addOrganization, isPending } = useOrganizationMutation({
     orgId,
-    successCallback: onClose,
+    successCallback: (id) => {
+      onClose();
+
+      addSuccessCallback?.(id);
+    },
   });
 
   const onSubmit = async (values: OrganizationFieldTypes) => {

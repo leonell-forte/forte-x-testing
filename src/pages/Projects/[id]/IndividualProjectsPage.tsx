@@ -30,7 +30,7 @@ const IndividualProjectsPage = () => {
 
       <Contracts projectId={Number(id)} />
 
-      <Partners />
+      <Partners projectId={Number(id)} />
 
       <Beneficiaries id={id} />
     </div>

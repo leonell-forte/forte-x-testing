@@ -92,6 +92,20 @@ class ProjectsService {
 
     return response;
   }
+
+  async getOrganizations(id: number) {
+    const response = await api.get(`/projects/${id}/organizations`);
+
+    return response.data;
+  }
+
+  async tagPartners(id: number, organizationIds: number[]) {
+    const response = await api.post(`/projects/${id}/organizations`, {
+      organizationIds,
+    });
+
+    return response.data;
+  }
 }
 
 const projectService = new ProjectsService();

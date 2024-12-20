@@ -6,7 +6,11 @@ import { useAlert } from "lib/hooks";
 
 import { queryClient } from "components/QueryProvider";
 
-import { IProject, ProjectFieldValues } from "../types/projects";
+import {
+  IProject,
+  IProjectOrganization,
+  ProjectFieldValues,
+} from "../types/projects";
 
 export const useProjectMutation = (
   projectId: string,
@@ -163,4 +167,79 @@ export const useDeleteProjectMutation = (
   });
 
   return { deletProject, isPending };
+};
+
+export const useTagPartnerMutation = (
+  projectId: number,
+
+  successCallback?: () => void
+) => {
+  const { setAlert } = useAlert();
+
+  const { mutateAsync: tagPartners, isPending } = useMutation({
+    mutationFn: (organizationIds: number[]) =>
+      projectService.tagPartners(projectId, organizationIds),
+
+    onMutate: async () => {
+      await queryClient.cancelQueries({
+        queryKey: ["project-organizations", projectId],
+      });
+
+      const previousPartners = queryClient.getQueryData([
+        "project-organizations",
+        projectId,
+      ]);
+
+      return { previousPartners };
+    },
+
+    onSuccess: (addedPartner) => {
+      queryClient.setQueryData(
+        ["project-organizations"],
+        (old: { items: IProjectOrganization }) => {
+          return {
+            ...old,
+          };
+        }
+      );
+
+      successCallback?.();
+
+      setAlert({
+        status: "success",
+
+        message: `Partner tagged successfully`,
+
+        title: "Success!",
+      });
+
+      amplitude.track(`Project Tag Partner Form Submission`, {
+        id: projectId,
+      });
+    },
+
+    onError: (err: any, _, context) => {
+      setAlert({
+        status: "error",
+
+        title: `Failed tagging partner`,
+
+        message: err?.response?.data?.message,
+      });
+
+      queryClient.setQueryData(
+        ["project-organizations", projectId],
+
+        context?.previousPartners
+      );
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["project-organizations", projectId],
+      });
+    },
+  });
+
+  return { tagPartners, isPending };
 };

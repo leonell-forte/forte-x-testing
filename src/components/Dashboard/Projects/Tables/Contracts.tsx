@@ -68,7 +68,6 @@ const Contracts = ({ projectId }: IProps) => {
             isVisible={modal === "tag"}
             handleClose={close}
             title="Add contracts to project"
-            handleAdd={() => {}}
           />
         );
     }

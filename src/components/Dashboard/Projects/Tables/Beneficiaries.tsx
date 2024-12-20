@@ -45,7 +45,6 @@ const Beneficiaries = ({ id }: IProps) => {
             isVisible={modal === "tag"}
             handleClose={close}
             title="Add beneficiaries to project"
-            handleAdd={() => {}}
           />
         );
 
