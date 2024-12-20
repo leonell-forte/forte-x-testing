@@ -191,7 +191,9 @@ const Partners = ({ projectId }: IProps) => {
                     {onEdit ? <Input noHelperText /> : <p>{contracts}</p>}
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">
+                  <Table.Data></Table.Data>
+
+                  {/* <Table.Data className="h-[56px] py-1">
                     <div className="flex justify-end gap-1.5">
                       {onEdit ? (
                         <>
@@ -214,7 +216,7 @@ const Partners = ({ projectId }: IProps) => {
                         </button>
                       )}
                     </div>
-                  </Table.Data>
+                  </Table.Data> */}
                 </Table.Row>
               );
             })}
