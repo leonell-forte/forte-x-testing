@@ -1,6 +1,11 @@
-import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import projectService from "api/projects";
+import { useMemo, useState } from "react";
 
 import pencil from "assets/images/icons/pencil.svg";
+
+import { useTagPartnerMutation } from "lib/mutations/projects";
+import { IProjectOrganization } from "lib/types/projects";
 
 import Button from "components/ui/button";
 import Input from "components/ui/input";
@@ -11,13 +16,35 @@ import TagExistingDialogue from "../Dialogues/TagExistingDialogue";
 
 type ModalLabelType = "partner" | "tag" | "";
 
-const Partners = () => {
+interface IProps {
+  projectId: number;
+}
+
+const Partners = ({ projectId }: IProps) => {
+  const { data, isLoading } = useQuery<{ items: IProjectOrganization[] }>({
+    queryKey: ["project-organizations", projectId],
+
+    queryFn: () => projectService.getOrganizations(projectId),
+  });
+
   const [editIndex, setEditIndex] = useState<number | null>(null);
 
   const [modal, setModal] = useState<ModalLabelType>("");
 
   const close = () => {
     setModal("");
+  };
+
+  const partners = useMemo(
+    () => data?.items.filter((item) => !!item.id),
+
+    [data?.items]
+  );
+
+  const { tagPartners, isPending } = useTagPartnerMutation(projectId, close);
+
+  const onSubmit = async (organizationIds: number[]) => {
+    await tagPartners(organizationIds);
   };
 
   const renderModal = (modal: ModalLabelType) => {
@@ -27,6 +54,9 @@ const Partners = () => {
           <OrganizationDialogue
             isVisible={modal === "partner"}
             handleClose={close}
+            addSuccessCallback={(id) => {
+              onSubmit([id]);
+            }}
           />
         );
 
@@ -36,7 +66,8 @@ const Partners = () => {
             isVisible={modal === "tag"}
             handleClose={close}
             title="Add partners to project"
-            handleAdd={() => {}}
+            handleAdd={onSubmit}
+            isPending={isPending}
           />
         );
     }
@@ -51,18 +82,15 @@ const Partners = () => {
           <p className="text-[24px] font-semibold">Partners</p>
 
           <div className="flex gap-2.5">
-            {/* <Button
-              onClick={() => setModal("tag")}
-              buttonType="secondary"
-            >
+            <Button onClick={() => setModal("tag")} buttonType="secondary">
               Tag existing partner
-            </Button> */}
+            </Button>
 
             <Button onClick={() => setModal("partner")}>Add new partner</Button>
           </div>
         </div>
 
-        <Table.Container>
+        <Table.Container isEmpty={!partners?.length} isLoading={isLoading}>
           <Table.Head>
             <Table.Row>
               {HEADERS.map((item, index) => {
@@ -78,45 +106,89 @@ const Partners = () => {
           </Table.Head>
 
           <Table.Body>
-            {Array.from({ length: 3 }).map((item, index) => {
+            {partners?.map((item, index) => {
+              const {
+                name,
+
+                registeredName,
+
+                registeredAddress,
+
+                registrationNumber,
+
+                regions,
+
+                type,
+
+                status,
+
+                users,
+
+                projects,
+
+                contracts,
+              } = item;
+
               const onEdit = index === editIndex;
 
               return (
                 <Table.Row key={index}>
-                  <Table.Data className="h-[56px] py-1">{`Outcome ${
-                    index + 1
-                  }`}</Table.Data>
+                  <Table.Data className="h-[56px] py-1">{name}</Table.Data>
 
                   <Table.Data className="h-[56px] py-1">
-                    {onEdit ? <Input noHelperText /> : <p>test</p>}
+                    {onEdit ? <Input noHelperText /> : <p>{registeredName}</p>}
                   </Table.Data>
 
                   <Table.Data className="h-[56px] py-1">
-                    {onEdit ? <Input noHelperText /> : <p>test</p>}
+                    {onEdit ? (
+                      <Input noHelperText />
+                    ) : (
+                      <p>{registeredAddress}</p>
+                    )}
                   </Table.Data>
 
                   <Table.Data className="h-[56px] py-1">
-                    {onEdit ? <Input noHelperText /> : <p>test</p>}
+                    {onEdit ? (
+                      <Input noHelperText />
+                    ) : (
+                      <p>{registrationNumber}</p>
+                    )}
                   </Table.Data>
 
                   <Table.Data className="h-[56px] py-1">
-                    {onEdit ? <Input noHelperText /> : <p>test</p>}
+                    {onEdit ? (
+                      <Input noHelperText />
+                    ) : (
+                      <p>{regions?.join(", ")}</p>
+                    )}
                   </Table.Data>
 
                   <Table.Data className="h-[56px] py-1">
-                    {onEdit ? <Input noHelperText /> : <p>test</p>}
+                    {onEdit ? (
+                      <Input noHelperText />
+                    ) : (
+                      <p className="capitalize">{type}</p>
+                    )}
                   </Table.Data>
 
                   <Table.Data className="h-[56px] py-1">
-                    {onEdit ? <Input noHelperText /> : <p>test</p>}
+                    {onEdit ? (
+                      <Input noHelperText />
+                    ) : (
+                      <p className="capitalize">{status}</p>
+                    )}
                   </Table.Data>
 
                   <Table.Data className="h-[56px] py-1">
-                    {onEdit ? <Input noHelperText /> : <p>test</p>}
+                    {onEdit ? <Input noHelperText /> : <p>{users}</p>}
                   </Table.Data>
 
                   <Table.Data className="h-[56px] py-1">
-                    {onEdit ? <Input noHelperText /> : <p>test</p>}
+                    {onEdit ? <Input noHelperText /> : <p>{projects}</p>}
+                  </Table.Data>
+
+                  <Table.Data className="h-[56px] py-1">
+                    {onEdit ? <Input noHelperText /> : <p>{contracts}</p>}
                   </Table.Data>
 
                   <Table.Data className="h-[56px] py-1">
@@ -136,6 +208,7 @@ const Partners = () => {
                         <button
                           type="button"
                           onClick={() => setEditIndex(index)}
+                          className="flex-shrink-0"
                         >
                           <img src={pencil} alt="" />
                         </button>
@@ -160,6 +233,7 @@ const HEADERS = [
   "Registered Address",
   "Registration",
   "Region",
+  "Type",
   "Status",
   "Users",
   "Projects",
