@@ -398,7 +398,7 @@ const BeneficiariesPage = () => {
                   return (
                     <Table.Row key={index}>
                       <Table.Data>
-                        <div className="flex items-center">
+                        <div className="flex items-center gap-3">
                           <Checkbox
                             labelClass="text-[14px]"
                             checked={selectedIds.includes(id)}
