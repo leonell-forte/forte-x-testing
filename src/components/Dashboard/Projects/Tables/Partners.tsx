@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 
 import pencil from "assets/images/icons/pencil.svg";
 
-import { api } from "lib/axios/interceptor";
 import { useTagPartnerMutation } from "lib/mutations/projects";
 import { IProjectOrganization } from "lib/types/projects";
 

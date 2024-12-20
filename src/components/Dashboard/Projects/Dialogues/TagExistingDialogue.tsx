@@ -1,7 +1,5 @@
-import { isPending } from "@reduxjs/toolkit";
 import { useQuery } from "@tanstack/react-query";
 import organizationService from "api/organization";
-import projectService from "api/projects";
 import { useMemo, useState } from "react";
 
 import Button from "components/ui/button";

@@ -193,7 +193,7 @@ export const useTagPartnerMutation = (
       return { previousPartners };
     },
 
-    onSuccess: (addedPartner) => {
+    onSuccess: () => {
       queryClient.setQueryData(
         ["project-organizations"],
         (old: { items: IProjectOrganization }) => {
