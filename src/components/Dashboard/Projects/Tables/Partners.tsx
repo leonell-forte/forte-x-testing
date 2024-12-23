@@ -2,8 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import projectService from "api/projects";
 import { useMemo, useState } from "react";
 
-import pencil from "assets/images/icons/pencil.svg";
-
 import { useTagPartnerMutation } from "lib/mutations/projects";
 import { IProjectOrganization } from "lib/types/projects";
 
