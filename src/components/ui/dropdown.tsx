@@ -129,6 +129,7 @@ const Dropdown = ({
 
                   return (
                     <Tag
+                      disabled={props.disabled}
                       dark
                       handleRemove={(e) => {
                         e.stopPropagation();

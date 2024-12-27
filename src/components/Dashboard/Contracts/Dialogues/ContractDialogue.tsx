@@ -1,9 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
+import { getValue } from "@testing-library/user-event/dist/utils";
 import contractService from "api/contract";
 import organizationService from "api/organization";
 import projectService from "api/projects";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 
 import { CONTRACT_STATUS } from "lib/constants";
@@ -120,6 +121,14 @@ const ContractDialogue = ({
     [projectsList]
   );
 
+  const [onEdit, setOnEdit] = useState(false);
+
+  useEffect(() => {
+    // determines if form is on edit mode or not. if id is present and contract has draft status, it should automatically have edit mode on.
+    // if id is not present, edit mode should automatically be on for adding contract.
+    setOnEdit(id ? contractDetails?.status === "DRAFT" : true);
+  }, [contractDetails?.status, id]);
+
   const close = () => {
     handleClose!();
 
@@ -139,7 +148,7 @@ const ContractDialogue = ({
     <Dialogue
       isVisible={isVisible}
       handleClose={close}
-      title={`${id ? `Edit contract Id: ${id}` : "Add contract"}`}
+      title={`${id ? `${onEdit ? "Edit" : "View"} contract Id: ${id}` : "Add contract"}`}
     >
       {contractDetailsLoading ? (
         <div className="flex h-[470px] w-full items-center justify-center">
@@ -158,6 +167,7 @@ const ContractDialogue = ({
               render={({ field }) => (
                 <Input
                   {...field}
+                  disabled={!onEdit}
                   placeholder="Contract name"
                   error={!!errors.name?.message}
                   helperText={errors.name?.message}
@@ -177,6 +187,7 @@ const ContractDialogue = ({
               render={({ field }) => {
                 return (
                   <Dropdown
+                    disabled={!onEdit}
                     enableSearch
                     loading={orgLoading}
                     showAsTags
@@ -211,6 +222,7 @@ const ContractDialogue = ({
               render={({ field }) => {
                 return (
                   <Dropdown
+                    disabled={!onEdit}
                     value={field.value.toLowerCase()}
                     handleSelect={(val) => {
                       setValue(
@@ -241,7 +253,7 @@ const ContractDialogue = ({
               render={({ field }) => {
                 return (
                   <Dropdown
-                    disabled={!!projectId}
+                    disabled={!!projectId || !onEdit}
                     loading={projectLoading}
                     enableSearch
                     value={findLabelFromOptions(
@@ -287,6 +299,7 @@ const ContractDialogue = ({
               render={({ field }) => (
                 <Input
                   {...field}
+                  disabled={!onEdit}
                   placeholder="Number of beneficiaries"
                   type="number"
                   error={!!errors.targetNoOfBenefeciaries?.message}
@@ -306,6 +319,7 @@ const ContractDialogue = ({
               control={control}
               render={() => (
                 <FileInput
+                  disabled={!onEdit}
                   filename={contractDetails?.document?.filename || ""}
                   accept=".pdf"
                   onSuccess={(data) => {
@@ -333,6 +347,7 @@ const ContractDialogue = ({
                 render={({ field }) => {
                   return (
                     <DatePicker
+                      disabled={!onEdit}
                       value={new Date(field.value)}
                       onChange={(date) => {
                         setValue("startDate", formatDate(date!, "LL-dd-yyyy"));
@@ -357,6 +372,7 @@ const ContractDialogue = ({
                 control={control}
                 render={({ field }) => (
                   <DatePicker
+                    disabled={!onEdit}
                     value={new Date(field.value)}
                     onChange={(date) => {
                       setValue("endDate", formatDate(date!, "LL-dd-yyyy"));
@@ -375,6 +391,7 @@ const ContractDialogue = ({
             {fields.map((item, index) => {
               return (
                 <ContractOutcomeField
+                  disabled={!onEdit}
                   isLast={index === fields.length - 1}
                   key={index}
                   projectId={watch("projectId")}
@@ -422,14 +439,38 @@ const ContractDialogue = ({
             })}
           </div>
 
-          <div className="!mt-10 flex justify-end gap-4">
-            <Button onClick={close} buttonType="secondary">
-              Cancel
-            </Button>
+          <div className="!mt-10 flex items-center justify-between">
+            <div>
+              {id && (
+                <Button onClick={() => {}} buttonType="secondary">
+                  Mark as completed
+                </Button>
+              )}
+            </div>
+            {!onEdit ? (
+              <Button onClick={() => setOnEdit(true)} loading={isPending}>
+                Edit
+              </Button>
+            ) : (
+              <div className="flex justify-end gap-4">
+                <Button
+                  onClick={() => {
+                    reset(
+                      contracts.defaultValues({ contract: contractDetails })
+                    );
 
-            <Button type="submit" loading={isPending}>
-              Save
-            </Button>
+                    setOnEdit(false);
+                  }}
+                  buttonType="secondary"
+                >
+                  Cancel
+                </Button>
+
+                <Button type="submit" loading={isPending}>
+                  Save
+                </Button>
+              </div>
+            )}
           </div>
         </form>
       )}
