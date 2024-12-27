@@ -42,6 +42,22 @@ class ContractService {
         isSearch: true,
       },
 
+      "project.name": {
+        value: search!,
+
+        exact: false,
+
+        isSearch: true,
+      },
+
+      "organization.name": {
+        value: search!,
+
+        exact: false,
+
+        isSearch: true,
+      },
+
       "contract.status": {
         value: filters?.status.toUpperCase() || "",
 
