@@ -36,6 +36,7 @@ const Beneficiaries = ({ id }: IProps) => {
             projectId={Number(id)}
             isVisible={modal === "beneficiaries"}
             handleClose={close}
+            editMode
           />
         );
 
