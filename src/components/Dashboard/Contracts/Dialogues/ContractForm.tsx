@@ -139,7 +139,7 @@ const ContractForm = ({
     // determines if form is on edit mode or not. if id is present and contract has draft status, it should automatically have edit mode on.
     // if id is not present, edit mode should automatically be on for adding contract.
     handleEdit(contractDetails ? contractDetails?.status === "DRAFT" : true);
-  }, [contractDetails]);
+  }, [contractDetails, handleEdit]);
 
   const close = () => {
     handleClose!();
