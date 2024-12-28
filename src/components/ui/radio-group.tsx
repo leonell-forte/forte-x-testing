@@ -16,13 +16,20 @@ interface IRadioGroupProps {
 
   value?: string;
 
+  disabled?: boolean;
+
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const RadioGroup = ({
   items,
+
   className,
+
+  disabled,
+
   onChange,
+
   value,
 }: IRadioGroupProps) => {
   const renderIcons = useCallback(() => {
@@ -47,15 +54,31 @@ const RadioGroup = ({
                 checked={value === item}
                 control={
                   <Radio
-                    icon={<img src={renderIcons().unchecked} alt="unchecked" />}
+                    disabled={disabled}
+                    icon={
+                      <img
+                        src={renderIcons().unchecked}
+                        alt="unchecked"
+                        className={disabled ? "grayscale" : ""}
+                      />
+                    }
                     checkedIcon={
-                      <img src={renderIcons().checked} alt="checked" />
+                      <img
+                        src={renderIcons().checked}
+                        alt="checked"
+                        className={disabled ? "grayscale" : ""}
+                      />
                     }
                     onChange={onChange}
                   />
                 }
                 label={item}
                 key={index}
+                sx={{
+                  "& .MuiFormControlLabel-label": {
+                    color: "white !important", // Set the label color to white
+                  },
+                }}
               />
             );
           })}

@@ -19,7 +19,7 @@ const useContractMutation = ({ id, successCallback }: IContractMutation) => {
 
   const { mutateAsync: addContract, isPending } = useMutation({
     mutationFn: id
-      ? (values: ContractFieldValues) => contractService.update(values)
+      ? (values: ContractFieldValues) => contractService.update({ ...values })
       : contractService.add,
 
     onMutate: async () => {

@@ -24,6 +24,8 @@ interface IContractOutcomeField {
 
   isLast?: boolean;
 
+  disabled?: boolean;
+
   handleDelete?: () => void;
 
   handleSelectOutcome: (id: string) => void;
@@ -43,6 +45,8 @@ const ContractOutcomeField = ({
   perOutcome,
 
   isLast,
+
+  disabled,
 
   handleDelete,
 
@@ -87,7 +91,7 @@ const ContractOutcomeField = ({
 
             return (
               <Dropdown
-                disabled={!projectId}
+                disabled={!projectId || disabled}
                 loading={isProjectLoading}
                 value={findLabelFromOptions(outcomes, field.value?.toString())}
                 handleSelect={(val) => {
@@ -102,13 +106,15 @@ const ContractOutcomeField = ({
           }}
         />
 
-        <button
-          onClick={isLast ? handleAdd : handleDelete}
-          type="button"
-          className="mt-3 flex !h-8 !w-8 flex-shrink-0 items-center justify-center rounded-full bg-white text-forest-green transition-all hover:scale-[1.05] hover:opacity-80"
-        >
-          <img src={isLast ? add : minus} alt="" />
-        </button>
+        {!disabled && (
+          <button
+            onClick={isLast ? handleAdd : handleDelete}
+            type="button"
+            className="mt-3 flex !h-8 !w-8 flex-shrink-0 items-center justify-center rounded-full bg-white text-forest-green transition-all hover:scale-[1.05] hover:opacity-80"
+          >
+            <img src={isLast ? add : minus} alt="" />
+          </button>
+        )}
       </div>
 
       <div className="flex items-start gap-4">
@@ -126,6 +132,7 @@ const ContractOutcomeField = ({
               return (
                 <Input
                   {...field}
+                  disabled={disabled}
                   placeholder="Rate"
                   type="number"
                   error={!!error?.message}
@@ -142,6 +149,7 @@ const ContractOutcomeField = ({
               render={({ field }) => {
                 return (
                   <RadioGroup
+                    disabled={disabled}
                     className="flex flex-col gap-4 md:w-[280px]"
                     items={["Per outcome", "If threshold reached"]}
                     value={field.value ? "Per outcome" : "If threshold reached"}

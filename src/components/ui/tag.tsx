@@ -9,9 +9,11 @@ interface ITagProps {
   dark?: boolean;
 
   handleRemove?: (e: MouseEvent<HTMLButtonElement>) => void;
+
+  disabled?: boolean;
 }
 
-const Tag = ({ label, dark, handleRemove }: ITagProps) => {
+const Tag = ({ label, dark, handleRemove, disabled }: ITagProps) => {
   return (
     <div
       className={classNames(
@@ -22,9 +24,11 @@ const Tag = ({ label, dark, handleRemove }: ITagProps) => {
     >
       <span>{label}</span>
 
-      <button type="button" onClick={handleRemove}>
-        <img alt="close" src={close} />
-      </button>
+      {!disabled && (
+        <button type="button" onClick={handleRemove}>
+          <img alt="close" src={close} />
+        </button>
+      )}
     </div>
   );
 };
