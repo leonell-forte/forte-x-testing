@@ -129,7 +129,6 @@ class ContractService {
       })),
     };
     delete (body as any).outcomeRates;
-    console.log(body);
 
     const response = await api.put("/contracts", body);
 
