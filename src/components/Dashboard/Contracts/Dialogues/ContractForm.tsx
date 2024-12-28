@@ -1,9 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
-import contractService from "api/contract";
 import organizationService from "api/organization";
 import projectService from "api/projects";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 
 import { CONTRACT_STATUS } from "lib/constants";
