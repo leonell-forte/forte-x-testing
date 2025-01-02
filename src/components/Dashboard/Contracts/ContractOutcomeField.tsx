@@ -22,8 +22,6 @@ interface IContractOutcomeField {
 
   perOutcome?: boolean;
 
-  isLast?: boolean;
-
   disabled?: boolean;
 
   handleDelete: (index: number) => void;
@@ -43,8 +41,6 @@ const ContractOutcomeField = ({
   index,
 
   perOutcome,
-
-  isLast,
 
   disabled,
 

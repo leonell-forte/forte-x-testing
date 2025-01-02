@@ -391,7 +391,6 @@ const ContractForm = ({
           return (
             <ContractOutcomeField
               disabled={!onEdit}
-              isLast={index === fields.length - 1}
               key={item.id}
               projectId={watch("projectId")}
               control={control}
