@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import beneficiariesService from "api/beneficiaries";
 import { Controller, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-import { z } from "zod";
 
 import { IImportBeneficiariesFieldValues } from "lib/types/beneficiaries";
 import { importBeneficiaries } from "lib/validators/beneficiaries";
@@ -11,7 +10,6 @@ import Button from "components/ui/button";
 import Checkbox from "components/ui/checkbox";
 import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
 import FileInput from "components/ui/file-input";
-import Input from "components/ui/input";
 
 interface IImportDialogueProps extends IDialogueProps {}
 
