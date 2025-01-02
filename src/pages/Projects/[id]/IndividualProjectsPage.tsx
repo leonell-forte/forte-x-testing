@@ -1,5 +1,5 @@
-import * as amplitude from "@amplitude/analytics-browser";
-import { useEffect } from "react";
+// import * as amplitude from "@amplitude/analytics-browser";
+// import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import arrow from "assets/images/icons/arrow.svg";
