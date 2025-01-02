@@ -26,13 +26,13 @@ interface IContractOutcomeField {
 
   disabled?: boolean;
 
-  handleDelete?: () => void;
+  handleDelete: (index: number) => void;
 
   handleSelectOutcome: (id: string) => void;
 
   handleRadioSelect: (value: RateEnum) => void;
 
-  handleAdd?: () => void;
+  handleAdd: (index: number) => void;
 }
 
 const ContractOutcomeField = ({
@@ -108,7 +108,7 @@ const ContractOutcomeField = ({
 
         {!disabled && (
           <button
-            onClick={isLast ? handleAdd : handleDelete}
+            onClick={() => (isLast ? handleAdd(index) : handleDelete(index))}
             type="button"
             className="mt-3 flex !h-8 !w-8 flex-shrink-0 items-center justify-center rounded-full bg-white text-forest-green transition-all hover:scale-[1.05] hover:opacity-80"
           >

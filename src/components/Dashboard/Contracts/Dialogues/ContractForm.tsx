@@ -386,55 +386,61 @@ const ContractForm = ({
       </div>
 
       <div className="space-y-10">
-        {fields.map((item, index) => {
-          return (
-            <ContractOutcomeField
-              disabled={!onEdit}
-              isLast={index === fields.length - 1}
-              key={index}
-              projectId={watch("projectId")}
-              control={control}
-              perOutcome={watch(`outcomeRates.${index}.perOutcome`)}
-              index={index}
-              handleDelete={() => remove(index)}
-              handleSelectOutcome={(val) => {
-                setValue(`outcomeRates.${index}.outcomeId`, Number(val));
-              }}
-              handleRadioSelect={(value) => {
-                setValue(`outcomeRates.${index}.threshold`, "");
+        {fields
+          .map((item, index) => {
+            return (
+              <ContractOutcomeField
+                disabled={!onEdit}
+                isLast={index === fields.length - 1}
+                key={item.id}
+                projectId={watch("projectId")}
+                control={control}
+                perOutcome={watch(`outcomeRates.${index}.perOutcome`)}
+                index={index}
+                handleDelete={() => {
+                  remove(index);
+                }}
+                handleSelectOutcome={(val) => {
+                  setValue(`outcomeRates.${index}.outcomeId`, Number(val));
 
-                setError(`outcomeRates.${index}.threshold`, {
-                  message: "",
-                });
+                  setError(`outcomeRates.${index}.outcomeId`, { message: "" });
+                }}
+                handleRadioSelect={(value) => {
+                  setValue(`outcomeRates.${index}.threshold`, "");
 
-                if (value === "Per outcome") {
-                  setValue(
-                    `outcomeRates.${index}.perOutcome`,
+                  setError(`outcomeRates.${index}.threshold`, {
+                    message: "",
+                  });
 
-                    true
-                  );
-                } else {
-                  setValue(
-                    `outcomeRates.${index}.perOutcome`,
+                  if (value === "Per outcome") {
+                    setValue(
+                      `outcomeRates.${index}.perOutcome`,
 
-                    false
-                  );
+                      true
+                    );
+                  } else {
+                    setValue(
+                      `outcomeRates.${index}.perOutcome`,
+
+                      false
+                    );
+                  }
+                }}
+                handleAdd={() =>
+                  append({
+                    outcomeId: 0,
+
+                    rate: "",
+
+                    perOutcome: true,
+
+                    threshold: "",
+                  })
                 }
-              }}
-              handleAdd={() =>
-                append({
-                  outcomeId: 0,
-
-                  rate: "",
-
-                  perOutcome: true,
-
-                  threshold: "",
-                })
-              }
-            />
-          );
-        })}
+              />
+            );
+          })
+          .reverse()}
       </div>
 
       <div className="!mt-10 flex items-center justify-between">
