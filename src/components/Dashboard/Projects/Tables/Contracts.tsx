@@ -102,7 +102,7 @@ const Contracts = ({ projectId }: IProps) => {
                 );
               })}
 
-              <Table.Header></Table.Header>
+              <Table.Header small></Table.Header>
             </Table.Row>
           </Table.Head>
 
@@ -110,6 +110,8 @@ const Contracts = ({ projectId }: IProps) => {
             {contractList?.items.map((item, index) => {
               const {
                 id,
+
+                name,
 
                 targetNoOfBenefeciaries,
 
@@ -122,35 +124,39 @@ const Contracts = ({ projectId }: IProps) => {
 
               return (
                 <Table.Row key={index}>
-                  <Table.Data className="h-[56px] w-[100px] py-1">
-                    Contract {id}
+                  <Table.Data small className="h-[56px] w-[100px] py-1">
+                    {id}
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] w-[150px] py-1">
+                  <Table.Data small className="h-[56px] w-[100px] py-1">
+                    {name}
+                  </Table.Data>
+
+                  <Table.Data small className="h-[56px] w-[150px] py-1">
                     {/* {parties} */}
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] w-[150px] py-1">
+                  <Table.Data small className="h-[56px] w-[150px] py-1">
                     <p>outcomes</p>
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] w-[80px] py-1">
+                  <Table.Data small className="h-[56px] w-[80px] py-1">
                     <p>{targetNoOfBenefeciaries}</p>
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] w-[120px] py-1">
+                  <Table.Data small className="h-[56px] w-[120px] py-1">
                     <p className="capitalize">{status?.toLowerCase()}</p>
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] w-[120px] py-1">
+                  <Table.Data small className="h-[56px] w-[120px] py-1">
                     <p>{formatDate(startDate, "LL-dd-yyyy")}</p>
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">
+                  <Table.Data small className="h-[56px] py-1">
                     <p>{formatDate(endDate, "LL-dd-yyyy")}</p>
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">
+                  <Table.Data small className="h-[56px] py-1">
                     <div className="flex justify-end gap-1.5">
                       <button
                         type="button"
@@ -173,6 +179,7 @@ const Contracts = ({ projectId }: IProps) => {
 export default Contracts;
 
 const HEADERS = [
+  "ID",
   "Contract",
   "Parties",
   "Outcome(s)",

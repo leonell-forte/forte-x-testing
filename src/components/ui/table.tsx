@@ -77,12 +77,14 @@ const Table = {
     return <tr className="w-full">{children}</tr>;
   },
 
-  Data: ({ children, className, ...props }: ITableCellProps) => {
+  Data: ({ children, className, small, ...props }: ITableCellProps) => {
     return (
       <td
         {...props}
         className={classNames(
           "h-[56px] max-w-[300px] overflow-visible truncate border-b px-8 text-[14px]",
+
+          small && "!h-[52px] !px-4 !py-2",
 
           className
         )}
@@ -96,7 +98,10 @@ const Table = {
     return (
       <th
         {...props}
-        className={classNames("px-8 py-5 !text-black", small && "!py-3")}
+        className={classNames(
+          "px-8 py-5 !text-black",
+          small && "!h-[52px] !px-4 !py-2"
+        )}
       >
         {children}
       </th>

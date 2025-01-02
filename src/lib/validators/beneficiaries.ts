@@ -136,3 +136,21 @@ export const beneficiaryStatus = {
     status: z.string().min(1, "Status is a required field"),
   }),
 };
+
+export const importBeneficiaries = {
+  defaultValue: {
+    file: undefined,
+
+    isOverwriteByEmailEnabled: false,
+  },
+
+  schema: z.object({
+    file: z
+      .custom<File>((value) => value instanceof File && value.size > 0, {
+        message: "Invalid file. Please upload a valid file.",
+      })
+      .nullable(),
+
+    isOverwriteByEmailEnabled: z.boolean(),
+  }),
+};
