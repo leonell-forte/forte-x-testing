@@ -108,11 +108,11 @@ const ContractOutcomeField = ({
 
         {!disabled && (
           <button
-            onClick={() => (isLast ? handleAdd(index) : handleDelete(index))}
+            onClick={() => (!index ? handleAdd(index) : handleDelete(index))}
             type="button"
             className="mt-3 flex !h-8 !w-8 flex-shrink-0 items-center justify-center rounded-full bg-white text-forest-green transition-all hover:scale-[1.05] hover:opacity-80"
           >
-            <img src={isLast ? add : minus} alt="" />
+            <img src={!index ? add : minus} alt="" />
           </button>
         )}
       </div>
