@@ -11,7 +11,7 @@ const Providers = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (window !== undefined) {
       amplitude.init(process.env.REACT_APP_AMPLITUDE_API_KEY as string, {
-        autocapture: true,
+        autocapture: false,
       });
     }
   }, []);
