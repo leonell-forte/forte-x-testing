@@ -14,9 +14,9 @@ const IndividualProjectsPage = () => {
 
   const { id } = useParams();
 
-  useEffect(() => {
-    amplitude.track(`Individual Project Page View`, { id });
-  }, [id]);
+  // useEffect(() => {
+  //   amplitude.track(`Individual Project Page View`, { id });
+  // }, [id]);
 
   return (
     <div className="hide-scroll h-full space-y-2.5 overflow-scroll py-3">
