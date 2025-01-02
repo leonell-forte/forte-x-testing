@@ -297,6 +297,7 @@ const ContractForm = ({
           render={({ field }) => (
             <Input
               {...field}
+              min={0}
               disabled={!onEdit}
               placeholder="Number of beneficiaries"
               type="number"
@@ -390,15 +391,18 @@ const ContractForm = ({
           return (
             <ContractOutcomeField
               disabled={!onEdit}
-              isLast={index === fields.length - 1}
-              key={index}
+              key={item.id}
               projectId={watch("projectId")}
               control={control}
               perOutcome={watch(`outcomeRates.${index}.perOutcome`)}
               index={index}
-              handleDelete={() => remove(index)}
+              handleDelete={() => {
+                remove(index);
+              }}
               handleSelectOutcome={(val) => {
                 setValue(`outcomeRates.${index}.outcomeId`, Number(val));
+
+                setError(`outcomeRates.${index}.outcomeId`, { message: "" });
               }}
               handleRadioSelect={(value) => {
                 setValue(`outcomeRates.${index}.threshold`, "");
