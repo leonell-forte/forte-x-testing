@@ -33,7 +33,7 @@ const Table = {
     return (
       <ScrollArea className="w-full pb-8" type="auto">
         <div ref={tableRef} className="hide-scroll relative w-full">
-          <table {...props} className="w-full !rounded-t-[8px]">
+          <table {...props} className="w-full overflow-hidden !rounded-t-[8px]">
             {children}
           </table>
 

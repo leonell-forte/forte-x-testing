@@ -40,7 +40,7 @@ const TagExistingDialogue = ({ handleAdd, isPending, ...props }: IProp) => {
   const [values, setValues] = useState<string[]>([]);
 
   return (
-    <Dialogue {...props}>
+    <Dialogue center {...props}>
       <div className="space-y-6">
         <Dropdown
           enableSearch

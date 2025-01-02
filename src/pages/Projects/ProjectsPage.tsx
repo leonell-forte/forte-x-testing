@@ -99,7 +99,7 @@ const ProjectsPage = () => {
             onClear={() => setSearch("")}
           />
 
-          <Button eventName="Add User" onClick={() => setModal("project")}>
+          <Button eventName="Add Project" onClick={() => setModal("project")}>
             Add project
           </Button>
         </div>

@@ -114,7 +114,7 @@ const OrganizationsPage = () => {
 
           <div className="flex items-center gap-6">
             <Button
-              eventName="Add User"
+              eventName="Add Organization"
               onClick={() => {
                 setModal("org");
               }}
