@@ -145,7 +145,10 @@ const ContractsPage = () => {
           />
 
           <div className="flex items-center gap-6">
-            <Button eventName="Add User" onClick={() => setModal("contract")}>
+            <Button
+              eventName="Add Contract"
+              onClick={() => setModal("contract")}
+            >
               Add contract
             </Button>
           </div>
