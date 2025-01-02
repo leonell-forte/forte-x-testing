@@ -138,8 +138,9 @@ const ContractForm = ({
   useEffect(() => {
     // determines if form is on edit mode or not. if id is present and contract has draft status, it should automatically have edit mode on.
     // if id is not present, edit mode should automatically be on for adding contract.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     handleEdit(contractDetails ? contractDetails?.status === "DRAFT" : true);
-  }, [contractDetails, handleEdit]);
+  }, [contractDetails]);
 
   const close = () => {
     handleClose!();
@@ -467,9 +468,9 @@ const ContractForm = ({
             <div className="flex justify-end gap-4">
               <Button
                 onClick={() => {
-                  reset(contracts.defaultValues({ contract: contractDetails }));
-
                   handleEdit(false);
+
+                  reset(contracts.defaultValues({ contract: contractDetails }));
                 }}
                 buttonType="secondary"
               >

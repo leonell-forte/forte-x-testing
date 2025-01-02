@@ -91,6 +91,8 @@ class ContractService {
       params.append("$filter", generateODataQuery(filtersData));
     }
 
+    // params.append("$orderBy", "contract.name asc");
+
     const res = await api.get(`/contracts?${params}`);
 
     return res.data;
