@@ -292,7 +292,11 @@ const ContractsPage = () => {
                       <Table.Data>
                         <div className="flex justify-end">
                           <Button
-                            eventName="Edit Contract"
+                            eventName={
+                              status === "DRAFT"
+                                ? "Edit Contract"
+                                : "View Contract"
+                            }
                             id={id!.toString()}
                             buttonType="default"
                             type="button"
