@@ -135,13 +135,6 @@ const ContractForm = ({
     [contractDetails?.status]
   );
 
-  useEffect(() => {
-    // determines if form is on edit mode or not. if id is present and contract has draft status, it should automatically have edit mode on.
-    // if id is not present, edit mode should automatically be on for adding contract.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    handleEdit(contractDetails ? contractDetails?.status === "DRAFT" : true);
-  }, [contractDetails]);
-
   const close = () => {
     handleClose!();
 
