@@ -132,6 +132,7 @@ const ContractOutcomeField = ({
               return (
                 <Input
                   {...field}
+                  min={0}
                   disabled={disabled}
                   placeholder="Rate"
                   type="number"

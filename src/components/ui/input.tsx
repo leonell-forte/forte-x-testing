@@ -13,6 +13,8 @@ type PropTypes = TextFieldProps & {
   noHelperText?: boolean;
 
   small?: boolean;
+
+  min?: number;
 };
 
 const Input = forwardRef<HTMLDivElement, PropTypes>(
@@ -26,6 +28,12 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
         <TextField
           ref={ref}
           {...props}
+          onKeyDown={(e) => {
+            // prevents negative number if min is 0
+            if (props.min! >= 0 && type === "number" && e.key === "-") {
+              e.preventDefault();
+            }
+          }}
           type={type === "password" ? (show ? "text" : "password") : type}
           sx={{
             "& .MuiInputBase-input": {
@@ -74,6 +82,11 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
                   color: "black",
                 },
               }),
+            },
+          }}
+          slotProps={{
+            htmlInput: {
+              ...(type === "number" && { min: props.min }), // Set minimum value for type="number"
             },
           }}
           fullWidth
