@@ -1,3 +1,4 @@
+import * as amplitude from "@amplitude/analytics-browser";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import projectService from "api/projects";
@@ -29,6 +30,10 @@ const Outcomes = ({ id }: IProps) => {
   });
 
   usePageTitle(project?.name);
+
+  useEffect(() => {
+    amplitude.track(`${project?.name} Page View`, { id });
+  }, [project?.name, id]);
 
   const [editIndex, setEditIndex] = useState<number | null>(null);
 
