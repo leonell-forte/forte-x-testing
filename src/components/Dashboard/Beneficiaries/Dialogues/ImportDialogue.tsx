@@ -1,8 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import beneficiariesService from "api/beneficiaries";
 import { Controller, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
+import { useImportBeneficiaryMutation } from "lib/mutations/beneficiaries";
 import { IImportBeneficiariesFieldValues } from "lib/types/beneficiaries";
 import { importBeneficiaries } from "lib/validators/beneficiaries";
 
@@ -30,8 +30,13 @@ const ImportDialogue = ({ ...props }: IImportDialogueProps) => {
     defaultValues: importBeneficiaries.defaultValue,
   });
 
+  const { importBeneficiaries: beneficiariesImport, isPending } =
+    useImportBeneficiaryMutation({
+      successCallback: props.handleClose,
+    });
+
   const onSubmit = async (values: IImportBeneficiariesFieldValues) => {
-    await beneficiariesService.importBeneficiaries(values);
+    await beneficiariesImport(values);
   };
 
   return (
@@ -117,7 +122,9 @@ const ImportDialogue = ({ ...props }: IImportDialogueProps) => {
             Cancel
           </Button>
 
-          <Button type="submit">Import</Button>
+          <Button type="submit" loading={isPending}>
+            Import
+          </Button>
         </div>
       </form>
     </Dialogue>

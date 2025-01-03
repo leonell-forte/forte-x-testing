@@ -3,6 +3,7 @@ import { z } from "zod";
 import {
   IBeneficiaries,
   IBeneficiariesFieldValues,
+  RiskLevelEnum,
 } from "../types/beneficiaries";
 
 interface IBeneficiaryDefaultValue {
@@ -22,7 +23,8 @@ export const beneficiaries = {
 
       phone: beneficiary?.phone || "",
 
-      riskLevel: beneficiary?.riskLevel || null,
+      riskLevel:
+        (beneficiary?.riskLevel.toLowerCase() as RiskLevelEnum) || null,
 
       status: beneficiary?.status || "",
 

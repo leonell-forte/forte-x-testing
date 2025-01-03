@@ -77,6 +77,64 @@ export const useBeneficiaryMutation = ({
   return { addBeneficiary, isPending };
 };
 
+export const useImportBeneficiaryMutation = ({
+  successCallback,
+}: IBeneficiaryMutationProps) => {
+  const { setAlert } = useAlert();
+
+  const { mutateAsync: importBeneficiaries, isPending } = useMutation({
+    mutationFn: beneficiariesService.importBeneficiaries,
+
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ["beneficiaries"] });
+
+      const previousBeneficiaries = queryClient.getQueryData(["beneficiaries"]);
+
+      return { previousBeneficiaries };
+    },
+
+    onSuccess: (addedBeneficiary) => {
+      queryClient.setQueryData(["beneficiaries"], () => {
+        return addedBeneficiary.data.data;
+      });
+
+      successCallback?.();
+
+      setAlert({
+        title: "Success!",
+
+        message: `Beneficiary imported successfully`,
+
+        status: "success",
+      });
+
+      amplitude.track(`Import Beneficiary Form Submission`);
+    },
+
+    onError: (err: any, newBeneficiary, context) => {
+      setAlert({
+        title: `Failed importing beneficiary`,
+
+        message: err?.response?.data?.message,
+
+        status: "error",
+      });
+
+      queryClient.setQueryData(
+        ["beneficiaries"],
+
+        context?.previousBeneficiaries
+      );
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["beneficiaries"] });
+    },
+  });
+
+  return { importBeneficiaries, isPending };
+};
+
 export const useDeleteBeneficiaryMutation = (
   id: number,
 

@@ -111,6 +111,8 @@ const Contracts = ({ projectId }: IProps) => {
               const {
                 id,
 
+                parties,
+
                 name,
 
                 targetNoOfBenefeciaries,
@@ -120,6 +122,8 @@ const Contracts = ({ projectId }: IProps) => {
                 startDate,
 
                 endDate,
+
+                outcomenames,
               } = item;
 
               return (
@@ -133,11 +137,11 @@ const Contracts = ({ projectId }: IProps) => {
                   </Table.Data>
 
                   <Table.Data small className="h-[56px] w-[150px] py-1">
-                    {/* {parties} */}
+                    {parties?.join(", ")}
                   </Table.Data>
 
                   <Table.Data small className="h-[56px] w-[150px] py-1">
-                    <p>outcomes</p>
+                    {outcomenames?.join(", ")}
                   </Table.Data>
 
                   <Table.Data small className="h-[56px] w-[80px] py-1">

@@ -72,13 +72,6 @@ const Beneficiaries = ({ id }: IProps) => {
               Import beneficiaries
             </Button>
 
-            {/* <Button
-              onClick={() => setModal("tag")}
-              buttonType="secondary"
-            >
-              Tag existing beneficiaries
-            </Button> */}
-
             <Button onClick={() => setModal("beneficiaries")}>
               Add new beneficiaries
             </Button>
