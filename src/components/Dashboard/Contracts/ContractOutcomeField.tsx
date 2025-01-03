@@ -76,7 +76,7 @@ const ContractOutcomeField = ({
     <div className="space-y-1">
       <div className="flex gap-4">
         <label htmlFor="" className="min-w-[120px] pt-4">
-          Outcome
+          Outcome {index + 1}
         </label>
 
         <Controller
