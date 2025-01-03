@@ -6,7 +6,7 @@ import MuiProvider from "./MuiProvider";
 import StoreProvider from "./StoreProvider";
 
 const Providers = ({ children }: { children: ReactNode }) => {
-  const location = useLocation();
+  const { pathname } = useLocation();
 
   useEffect(() => {
     if (window !== undefined) {
@@ -17,12 +17,20 @@ const Providers = ({ children }: { children: ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    const path = location.pathname.split("/").join(" ").toUpperCase();
+    const excludedPaths = [/^\/projects\/\d+$/]; // Define excluded paths as regex patterns
+
+    const isExcluded = excludedPaths.some((pattern) => pattern.test(pathname));
+
+    if (isExcluded) {
+      return;
+    }
+
+    const path = pathname.split("/").join(" ").toUpperCase();
 
     // Track page views on route change
 
     amplitude.track(`${path || "LOGIN"} Page View`);
-  }, [location]);
+  }, [pathname]);
   return (
     <StoreProvider>
       <MuiProvider>{children}</MuiProvider>

@@ -1,5 +1,3 @@
-// import * as amplitude from "@amplitude/analytics-browser";
-// import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import arrow from "assets/images/icons/arrow.svg";
@@ -13,10 +11,6 @@ const IndividualProjectsPage = () => {
   // page title is set on the outcomes component
 
   const { id } = useParams();
-
-  // useEffect(() => {
-  //   amplitude.track(`Individual Project Page View`, { id });
-  // }, [id]);
 
   return (
     <div className="hide-scroll h-full space-y-2.5 overflow-scroll py-3">

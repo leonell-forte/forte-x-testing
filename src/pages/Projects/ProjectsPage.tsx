@@ -153,8 +153,8 @@ const ProjectsPage = () => {
                       <Table.Data>
                         <div className="flex justify-end">
                           <Button
-                            eventName="Edit User"
-                            // id={project}
+                            eventName="Edit Project"
+                            id={id.toString()}
                             buttonType="default"
                             type="button"
                             onClick={() => handleEditUser(item)}
