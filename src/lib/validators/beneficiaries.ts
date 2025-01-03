@@ -3,6 +3,7 @@ import { z } from "zod";
 import {
   IBeneficiaries,
   IBeneficiariesFieldValues,
+  RiskLevelEnum,
 } from "../types/beneficiaries";
 
 interface IBeneficiaryDefaultValue {
@@ -22,7 +23,8 @@ export const beneficiaries = {
 
       phone: beneficiary?.phone || "",
 
-      riskLevel: beneficiary?.riskLevel || null,
+      riskLevel:
+        (beneficiary?.riskLevel.toLowerCase() as RiskLevelEnum) || null,
 
       status: beneficiary?.status || "",
 
@@ -134,5 +136,23 @@ export const beneficiaryStatus = {
 
   schema: z.object({
     status: z.string().min(1, "Status is a required field"),
+  }),
+};
+
+export const importBeneficiaries = {
+  defaultValue: {
+    file: undefined,
+
+    isOverwriteByEmailEnabled: false,
+  },
+
+  schema: z.object({
+    file: z
+      .custom<File>((value) => value instanceof File && value.size > 0, {
+        message: "Invalid file. Please upload a valid file.",
+      })
+      .nullable(),
+
+    isOverwriteByEmailEnabled: z.boolean(),
   }),
 };

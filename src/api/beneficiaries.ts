@@ -4,6 +4,7 @@ import {
   IBeneficiaries,
   IBeneficiariesFieldValues,
   IBeneficiariesFilter,
+  IImportBeneficiariesFieldValues,
 } from "../lib/types/beneficiaries";
 import { IODataObject, generateODataQuery } from "../lib/utils";
 
@@ -130,6 +131,26 @@ class BeneficiariesService {
 
   async bulkStatusUpdate(data: { ids: number[]; status: string }) {
     const response = api.patch("/beneficiaries/status", data);
+
+    return response;
+  }
+
+  async importBeneficiaries(values: IImportBeneficiariesFieldValues) {
+    const formData = new FormData();
+
+    formData.append("file", values.file!);
+
+    formData.append(
+      "isOverwriteByEmailEnabled",
+      values.isOverwriteByEmailEnabled.toString()
+    );
+    const response = await api.post("/beneficiaries/import", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    console.log(response);
 
     return response;
   }

@@ -99,7 +99,7 @@ const Partners = ({ projectId }: IProps) => {
                 );
               })}
 
-              <Table.Header></Table.Header>
+              <Table.Header small></Table.Header>
             </Table.Row>
           </Table.Head>
 
@@ -131,13 +131,15 @@ const Partners = ({ projectId }: IProps) => {
 
               return (
                 <Table.Row key={index}>
-                  <Table.Data className="h-[56px] py-1">{name}</Table.Data>
+                  <Table.Data small className="h-[56px] py-1">
+                    {name}
+                  </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">
+                  <Table.Data small className="h-[56px] py-1">
                     {onEdit ? <Input noHelperText /> : <p>{registeredName}</p>}
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">
+                  <Table.Data small className="h-[56px] py-1">
                     {onEdit ? (
                       <Input noHelperText />
                     ) : (
@@ -145,7 +147,7 @@ const Partners = ({ projectId }: IProps) => {
                     )}
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">
+                  <Table.Data small className="h-[56px] py-1">
                     {onEdit ? (
                       <Input noHelperText />
                     ) : (
@@ -153,7 +155,7 @@ const Partners = ({ projectId }: IProps) => {
                     )}
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">
+                  <Table.Data small className="h-[56px] py-1">
                     {onEdit ? (
                       <Input noHelperText />
                     ) : (
@@ -161,7 +163,7 @@ const Partners = ({ projectId }: IProps) => {
                     )}
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">
+                  <Table.Data small className="h-[56px] py-1">
                     {onEdit ? (
                       <Input noHelperText />
                     ) : (
@@ -169,7 +171,7 @@ const Partners = ({ projectId }: IProps) => {
                     )}
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">
+                  <Table.Data small className="h-[56px] py-1">
                     {onEdit ? (
                       <Input noHelperText />
                     ) : (
@@ -177,21 +179,21 @@ const Partners = ({ projectId }: IProps) => {
                     )}
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">
+                  <Table.Data small className="h-[56px] py-1">
                     {onEdit ? <Input noHelperText /> : <p>{users}</p>}
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">
+                  <Table.Data small className="h-[56px] py-1">
                     {onEdit ? <Input noHelperText /> : <p>{projects}</p>}
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">
+                  <Table.Data small className="h-[56px] py-1">
                     {onEdit ? <Input noHelperText /> : <p>{contracts}</p>}
                   </Table.Data>
 
-                  <Table.Data></Table.Data>
+                  <Table.Data small></Table.Data>
 
-                  {/* <Table.Data className="h-[56px] py-1">
+                  {/* <Table.Data small className="h-[56px] py-1">
                     <div className="flex justify-end gap-1.5">
                       {onEdit ? (
                         <>

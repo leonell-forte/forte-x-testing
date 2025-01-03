@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-import { beneficiaries, beneficiaryStatus } from "../validators/beneficiaries";
+import {
+  beneficiaries,
+  beneficiaryStatus,
+  importBeneficiaries,
+} from "../validators/beneficiaries";
 
 export interface IBeneficiaries {
   id: number;
@@ -73,6 +77,10 @@ export enum RiskLevelEnum {
 }
 
 export type IBeneficiariesFieldValues = z.infer<typeof beneficiaries.schema>;
+
+export type IImportBeneficiariesFieldValues = z.infer<
+  typeof importBeneficiaries.schema
+>;
 
 export type BeneficiaryStatusUpdateField = z.infer<
   typeof beneficiaryStatus.schema

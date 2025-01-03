@@ -6,7 +6,7 @@ import { ChangeEvent, useState } from "react";
 import loader from "assets/images/icons/loader.svg";
 import upload from "assets/images/icons/upload.svg";
 
-import { File } from "lib/types/common";
+import { File as FileType } from "lib/types/common";
 
 import Input from "./input";
 
@@ -15,17 +15,21 @@ type IProps = TextFieldProps & {
 
   accept?: string;
 
-  onUploadStart?: () => void;
+  raw?: boolean;
+
+  onUploadStart?: (file?: File) => void;
 
   onUploadEnd?: () => void;
 
-  onSuccess?: (data: File) => void;
+  onSuccess?: (data: FileType) => void;
 };
 
 const FileInput = ({
   filename,
 
   accept = "",
+
+  raw,
 
   onSuccess,
 
@@ -42,18 +46,25 @@ const FileInput = ({
   const handleUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     setLoading(true);
 
-    onUploadStart?.();
+    const file = e.target.files![0];
 
-    try {
-      const res = await uploadFile(e.target.files![0]);
+    onUploadStart?.(file);
 
-      onSuccess?.(res.data.data);
+    if (!raw) {
+      try {
+        const res = await uploadFile(file);
 
-      setValue(res.data.data.filename);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      onUploadEnd?.();
+        onSuccess?.(res.data.data);
+
+        setValue(res.data.data.filename);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        onUploadEnd?.();
+        setLoading(false);
+      }
+    } else {
+      setValue(file.name);
       setLoading(false);
     }
   };

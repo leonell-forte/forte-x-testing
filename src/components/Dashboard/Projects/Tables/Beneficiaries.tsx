@@ -64,16 +64,13 @@ const Beneficiaries = ({ id }: IProps) => {
           <p className="text-[24px] font-semibold">Beneficiaries</p>
 
           <div className="flex gap-2.5">
-            <Button onClick={() => setModal("import")} buttonType="secondary">
-              Import beneficiaries
-            </Button>
-
-            {/* <Button
-              onClick={() => setModal("tag")}
+            <Button
+              eventName="Import Beneficiaries"
+              onClick={() => setModal("import")}
               buttonType="secondary"
             >
-              Tag existing beneficiaries
-            </Button> */}
+              Import beneficiaries
+            </Button>
 
             <Button onClick={() => setModal("beneficiaries")}>
               Add new beneficiaries
@@ -114,21 +111,31 @@ const Beneficiaries = ({ id }: IProps) => {
 
               return (
                 <Table.Row key={index}>
-                  <Table.Data className="h-[56px] py-1">{firstName}</Table.Data>
+                  <Table.Data small className="h-[56px] py-1">
+                    {firstName}
+                  </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">{lastName}</Table.Data>
+                  <Table.Data small className="h-[56px] py-1">
+                    {lastName}
+                  </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">{provider}</Table.Data>
+                  <Table.Data small className="h-[56px] py-1">
+                    {provider}
+                  </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">{email}</Table.Data>
+                  <Table.Data small className="h-[56px] py-1">
+                    {email}
+                  </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">{phone}</Table.Data>
+                  <Table.Data small className="h-[56px] py-1">
+                    {phone}
+                  </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">
+                  <Table.Data small className="h-[56px] py-1">
                     Contaract {contractId}
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">
+                  <Table.Data small className="h-[56px] py-1">
                     {cohortName}
                   </Table.Data>
                 </Table.Row>

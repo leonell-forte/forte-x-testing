@@ -82,7 +82,7 @@ const Outcomes = ({ id }: IProps) => {
               );
             })}
 
-            <Table.Header></Table.Header>
+            <Table.Header small></Table.Header>
           </Table.Row>
         </Table.Head>
 
@@ -94,11 +94,11 @@ const Outcomes = ({ id }: IProps) => {
 
             return (
               <Table.Row key={index}>
-                <Table.Data className="w-[120px] py-1">{`Outcome ${
+                <Table.Data small className="w-[120px] py-1">{`Outcome ${
                   index + 1
                 }`}</Table.Data>
 
-                <Table.Data className="w-[300px] py-1">
+                <Table.Data small className="w-[300px] py-1">
                   {onEdit ? (
                     <Controller
                       name={`outcomes.${index}.name`}
@@ -118,7 +118,7 @@ const Outcomes = ({ id }: IProps) => {
                   )}
                 </Table.Data>
 
-                <Table.Data className="py-1">
+                <Table.Data small className="py-1">
                   {onEdit ? (
                     <Controller
                       name={`outcomes.${index}.description`}
@@ -142,7 +142,7 @@ const Outcomes = ({ id }: IProps) => {
                   )}
                 </Table.Data>
 
-                <Table.Data className="py-1">
+                <Table.Data small className="py-1">
                   <div className="flex justify-end gap-1.5">
                     {onEdit ? (
                       <>
