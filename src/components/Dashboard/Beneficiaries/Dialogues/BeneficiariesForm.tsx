@@ -81,8 +81,6 @@ const BeneficiariesForm = ({
     enabled: !!id,
   });
 
-  console.log(beneficiaryData);
-
   useEffect(() => {
     if (beneficiaryData) {
       reset(beneficiaries.defaultValues({ beneficiary: beneficiaryData }));
