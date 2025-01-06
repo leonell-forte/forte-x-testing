@@ -21,15 +21,17 @@ const Providers = ({ children }: { children: ReactNode }) => {
 
     const isExcluded = excludedPaths.some((pattern) => pattern.test(pathname));
 
-    if (isExcluded) {
-      return;
-    }
+    const debounce = setTimeout(() => {
+      if (!isExcluded) {
+        const path = pathname.split("/").join(" ").toUpperCase();
 
-    const path = pathname.split("/").join(" ").toUpperCase();
+        // Track page views on route change
 
-    // Track page views on route change
+        amplitude.track(`${path || "LOGIN"} Page View`);
+      }
+    }, 300);
 
-    amplitude.track(`${path || "LOGIN"} Page View`);
+    return () => clearTimeout(debounce);
   }, [pathname]);
   return (
     <StoreProvider>

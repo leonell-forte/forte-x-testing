@@ -32,7 +32,10 @@ const Outcomes = ({ id }: IProps) => {
   usePageTitle(project?.name);
 
   useEffect(() => {
-    amplitude.track(`${project?.name} Page View`, { id });
+    const debounce = setTimeout(() => {
+      amplitude.track(`${project?.name} Page View`, { id });
+    }, 300);
+    return () => clearTimeout(debounce);
   }, [project?.name, id]);
 
   const [editIndex, setEditIndex] = useState<number | null>(null);
