@@ -748,7 +748,11 @@ const BeneficiariesForm = ({
 
                     setError("languages", { message: "" });
                   }}
-                  options={LANGUAGES}
+                  options={LANGUAGES.map((item) => ({
+                    label: item,
+
+                    value: item,
+                  }))}
                   placeholder="Select"
                   error={!!errors.languages?.message}
                   helperText={errors.languages?.message}
