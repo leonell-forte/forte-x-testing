@@ -420,18 +420,20 @@ const BeneficiariesPage = () => {
                     <Table.Row key={index}>
                       <Table.Data small>
                         <div className="flex items-center gap-2">
-                          <Checkbox
-                            labelClass="text-[14px]"
-                            checked={selectedIds.includes(id)}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setSelectedIds((prev) => [...prev, id]);
-                              } else
-                                setSelectedIds((prev) =>
-                                  prev.filter((item) => item !== id)
-                                );
-                            }}
-                          />
+                          <div className="w-6">
+                            <Checkbox
+                              labelClass="text-[14px]"
+                              checked={selectedIds.includes(id)}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setSelectedIds((prev) => [...prev, id]);
+                                } else
+                                  setSelectedIds((prev) =>
+                                    prev.filter((item) => item !== id)
+                                  );
+                              }}
+                            />
+                          </div>
                           <button
                             onClick={() => {
                               setBeneficiaryId(id);
