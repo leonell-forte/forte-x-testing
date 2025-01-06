@@ -14,6 +14,7 @@ import {
   RISK_LEVEL,
 } from "lib/constants";
 import { useDebounce, usePageTitle } from "lib/hooks";
+import { useExportEvidenceMutation } from "lib/mutations/beneficiaries";
 import { IBeneficiariesFilter } from "lib/types/beneficiaries";
 import { findLabelFromOptions, formatDate } from "lib/utils";
 
@@ -136,6 +137,15 @@ const BeneficiariesPage = () => {
     setBeneficiaryId(id);
   };
 
+  // download evidence function
+
+  const { exportEvidence, isPending: isDownloadingEvidence } =
+    useExportEvidenceMutation();
+
+  const handleDownloadEvidence = () => {
+    exportEvidence({ beneficiaryIds: selectedIds });
+  };
+
   const handleSelectAll = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       if (e.target.checked) {
@@ -198,32 +208,43 @@ const BeneficiariesPage = () => {
           />
 
           <div className="space-x-2.5">
-            <Button
-              eventName="Import Beneficiaries"
-              buttonType="secondary"
-              onClick={() => setModal("import")}
-            >
-              Import beneficiaries
-            </Button>
-
-            {selectedIds.length ? (
-              <Button
-                onClick={() => setModal("update status")}
-                eventName="Update Beneficiary Status"
-              >
-                Update status
-              </Button>
+            {selectedIds.length > 0 ? (
+              <>
+                <Button
+                  onClick={() => setModal("update status")}
+                  buttonType="secondary"
+                  eventName="Update Beneficiary Status"
+                >
+                  Update status
+                </Button>
+                <Button
+                  onClick={handleDownloadEvidence}
+                  buttonType="secondary"
+                  disabled={isDownloadingEvidence}
+                >
+                  Download Evidence
+                </Button>
+              </>
             ) : (
-              <Button
-                eventName="Add Beneficiary"
-                onClick={() => {
-                  setModal("beneficiaries");
+              <>
+                <Button
+                  eventName="Import Beneficiaries"
+                  buttonType="secondary"
+                  onClick={() => setModal("import")}
+                >
+                  Import beneficiaries
+                </Button>
+                <Button
+                  eventName="Add Beneficiary"
+                  onClick={() => {
+                    setModal("beneficiaries");
 
-                  setEditMode(true);
-                }}
-              >
-                Add beneficiaries
-              </Button>
+                    setEditMode(true);
+                  }}
+                >
+                  Add beneficiaries
+                </Button>
+              </>
             )}
           </div>
         </div>
