@@ -48,8 +48,16 @@ const Checkbox = ({
             sx={{
               fontSize: "12px",
             }}
-            icon={<img src={renderIcons().unchecked} alt="unchecked" />}
-            checkedIcon={<img src={renderIcons().checked} alt="checked" />}
+            icon={
+              <img
+                src={renderIcons().unchecked}
+                alt="unchecked"
+                className="w-4"
+              />
+            }
+            checkedIcon={
+              <img src={renderIcons().checked} alt="checked" className="w-4" />
+            }
             {...props}
             className="flex-shrink-0"
           />

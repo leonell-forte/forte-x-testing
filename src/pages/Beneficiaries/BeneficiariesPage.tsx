@@ -364,27 +364,27 @@ const BeneficiariesPage = () => {
                     />
                   </Table.Header>
 
-                  <Table.Header>Last name</Table.Header>
+                  <Table.Header small>Last name</Table.Header>
 
-                  <Table.Header>Provider</Table.Header>
+                  <Table.Header small>Provider</Table.Header>
 
-                  <Table.Header>Email</Table.Header>
+                  <Table.Header small>Email</Table.Header>
 
-                  <Table.Header>Phone number</Table.Header>
+                  <Table.Header small>Phone number</Table.Header>
 
-                  <Table.Header>Contract</Table.Header>
+                  <Table.Header small>Contract</Table.Header>
 
-                  <Table.Header>Program</Table.Header>
+                  <Table.Header small>Program</Table.Header>
 
-                  <Table.Header>Risk level</Table.Header>
+                  <Table.Header small>Risk level</Table.Header>
 
-                  <Table.Header>Status</Table.Header>
+                  <Table.Header small>Status</Table.Header>
 
-                  <Table.Header>Cohort start date</Table.Header>
+                  <Table.Header small>Cohort start date</Table.Header>
 
-                  <Table.Header>Cohort end date</Table.Header>
+                  <Table.Header small>Cohort end date</Table.Header>
 
-                  <Table.Header></Table.Header>
+                  <Table.Header small></Table.Header>
                 </Table.Row>
               </Table.Head>
 
@@ -418,8 +418,8 @@ const BeneficiariesPage = () => {
 
                   return (
                     <Table.Row key={index}>
-                      <Table.Data>
-                        <div className="flex items-center gap-3">
+                      <Table.Data small>
+                        <div className="flex items-center gap-2">
                           <Checkbox
                             labelClass="text-[14px]"
                             checked={selectedIds.includes(id)}
@@ -447,33 +447,33 @@ const BeneficiariesPage = () => {
                         </div>
                       </Table.Data>
 
-                      <Table.Data>{lastName}</Table.Data>
+                      <Table.Data small>{lastName}</Table.Data>
 
-                      <Table.Data>{provider}</Table.Data>
+                      <Table.Data small>{provider}</Table.Data>
 
-                      <Table.Data>{email}</Table.Data>
+                      <Table.Data small>{email}</Table.Data>
 
-                      <Table.Data>{phone}</Table.Data>
+                      <Table.Data small>{phone}</Table.Data>
 
-                      <Table.Data>Contract {contractId}</Table.Data>
+                      <Table.Data small>Contract {contractId}</Table.Data>
 
-                      <Table.Data>{cohortName}</Table.Data>
+                      <Table.Data small>{cohortName}</Table.Data>
 
-                      <Table.Data className="capitalize">
+                      <Table.Data small className="capitalize">
                         {riskLevel}
                       </Table.Data>
 
                       <Table.Data className="capitalize">{status}</Table.Data>
 
-                      <Table.Data>
+                      <Table.Data small>
                         {formatDate(cohortStartDate, DEFAULT_DATE_FORMAT)}
                       </Table.Data>
 
-                      <Table.Data>
+                      <Table.Data small>
                         {formatDate(cohortEndDate, DEFAULT_DATE_FORMAT)}
                       </Table.Data>
 
-                      <Table.Data>
+                      <Table.Data small>
                         <div className="flex justify-end">
                           <Button
                             eventName="Update Beneficiary"
