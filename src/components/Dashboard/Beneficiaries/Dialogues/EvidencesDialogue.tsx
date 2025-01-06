@@ -28,7 +28,7 @@ interface IEvidencesDialogueProps extends IDialogueProps {
 }
 
 const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
-  const [onEdit, setOnEdit] = useState(false);
+  const [onEdit, setOnEdit] = useState(id ? false : true);
 
   const [uploading, setUploading] = useState(false);
 
@@ -106,7 +106,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
   };
 
   return (
-    <Dialogue {...props} title={`Evidence ID ${id}`}>
+    <Dialogue {...props} title={id ? `Evidence ID ${id}` : "Add evidence"}>
       <div className="space-y-[30px]">
         {evidenceLoading ? (
           <div className="flex h-[470px] w-full items-center justify-center">
@@ -195,7 +195,6 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
                     />
                   </div>
                 </div>
-
                 {!!file.id && (
                   <div className="flex flex-col items-center">
                     <div className="flex max-h-[644px] w-full max-w-[490px] items-center justify-center">
