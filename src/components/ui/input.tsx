@@ -15,10 +15,12 @@ type PropTypes = TextFieldProps & {
   small?: boolean;
 
   min?: number;
+
+  wholeNumberOnly?: boolean;
 };
 
 const Input = forwardRef<HTMLDivElement, PropTypes>(
-  ({ dark, small, noHelperText, ...props }, ref) => {
+  ({ dark, small, noHelperText, wholeNumberOnly, ...props }, ref) => {
     const [show, setShow] = useState(false);
 
     const { type } = props;
@@ -31,6 +33,14 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
           onKeyDown={(e) => {
             // prevents negative number if min is 0
             if (props.min! >= 0 && type === "number" && e.key === "-") {
+              e.preventDefault();
+            }
+
+            if (
+              wholeNumberOnly &&
+              type === "number" &&
+              (e.key === "." || e.key === ",")
+            ) {
               e.preventDefault();
             }
           }}

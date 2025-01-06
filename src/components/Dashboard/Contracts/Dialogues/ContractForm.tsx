@@ -297,6 +297,7 @@ const ContractForm = ({
           render={({ field }) => (
             <Input
               {...field}
+              wholeNumberOnly
               min={0}
               disabled={!onEdit}
               placeholder="Number of beneficiaries"
