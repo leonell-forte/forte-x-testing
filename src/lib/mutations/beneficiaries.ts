@@ -1,6 +1,7 @@
 import * as amplitude from "@amplitude/analytics-browser";
 import { useMutation } from "@tanstack/react-query";
 import beneficiariesService from "api/beneficiaries";
+import { format } from "date-fns";
 
 import { queryClient } from "components/QueryProvider";
 
@@ -271,4 +272,38 @@ export const useBulkStatusUpdateMutation = (
   });
 
   return { updateStatus, isPending };
+};
+
+export const useExportEvidenceMutation = () => {
+  const { setAlert } = useAlert();
+
+  const { mutateAsync: exportEvidence, isPending } = useMutation({
+    mutationFn: beneficiariesService.bulkEvidenceExport,
+
+    onSuccess: (response) => {
+      const timestamp = format(new Date(), "MM_dd_yy-HH_mm");
+      const fileName = `Evidences_Export-${timestamp}.zip`;
+      const url = window.URL.createObjectURL(
+        new Blob([response.data], { type: "application/zip" })
+      );
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode?.removeChild(link);
+    },
+
+    onError: (err: any, _, context) => {
+      setAlert({
+        title: "Error",
+
+        message: err?.response?.data?.message,
+
+        status: "error",
+      });
+    },
+  });
+
+  return { exportEvidence, isPending };
 };
