@@ -72,7 +72,11 @@ const ContractsPage = () => {
   });
 
   const contracts: IContract[] = useMemo(
-    () => contractList?.items || [],
+    () =>
+      contractList?.items.map((item) => ({
+        ...item,
+        documentName: item.document!.toString(),
+      })) || [],
 
     [contractList]
   );
@@ -242,7 +246,7 @@ const ContractsPage = () => {
 
                     endDate,
 
-                    // document,
+                    documentName,
 
                     outcomenames,
                   } = item;
@@ -287,7 +291,7 @@ const ContractsPage = () => {
                         {formatDate(endDate, DEFAULT_DATE_FORMAT)}
                       </Table.Data>
 
-                      {/* <Table.Data>{document?.filename}</Table.Data> */}
+                      <Table.Data>{documentName}</Table.Data>
 
                       <Table.Data>
                         <div className="flex justify-end">
@@ -351,5 +355,5 @@ const TABLE_HEADER = [
   "Actual beneficiaries ",
   "Start date",
   "End date",
-  // "Document",
+  "Document",
 ];

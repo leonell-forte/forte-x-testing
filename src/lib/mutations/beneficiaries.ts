@@ -294,7 +294,7 @@ export const useExportEvidenceMutation = () => {
       link.parentNode?.removeChild(link);
     },
 
-    onError: (err: any, _, context) => {
+    onError: (err: any) => {
       setAlert({
         title: "Error",
 

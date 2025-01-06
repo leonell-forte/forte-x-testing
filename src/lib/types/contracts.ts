@@ -35,6 +35,8 @@ export interface IContract {
 
   document?: File;
 
+  documentName?: string;
+
   documentId?: number;
 
   endDate: string;
