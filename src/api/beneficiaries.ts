@@ -154,6 +154,14 @@ class BeneficiariesService {
 
     return response;
   }
+
+  async bulkEvidenceExport(data: { beneficiaryIds: number[] }) {
+    const response = api.post("/beneficiaries/evidences/download", data, {
+      responseType: "arraybuffer",
+    });
+
+    return response;
+  }
 }
 
 const beneficiariesService = new BeneficiariesService();
