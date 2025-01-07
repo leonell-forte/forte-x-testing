@@ -137,6 +137,8 @@ const BeneficiariesForm = ({
     [contractList]
   );
 
+  console.log(contractList);
+
   const selectedContract = watch("contractId");
 
   const organizations: IOption[] = useMemo(
@@ -360,6 +362,10 @@ const BeneficiariesForm = ({
                     );
 
                     setError("contractId", { message: "" });
+
+                    setError("projectId", { message: "" });
+
+                    setError("providerId", { message: "" });
                   }}
                   options={contracts}
                   placeholder="Contract"
@@ -387,6 +393,8 @@ const BeneficiariesForm = ({
 
                     field.value.toString()
                   )}
+                  error={!!errors.providerId?.message}
+                  helperText={errors.providerId?.message}
                 />
               )}
             />
@@ -405,6 +413,8 @@ const BeneficiariesForm = ({
                   (item) => item.id === watch("contractId")
                 )?.project
               }
+              error={!!errors.projectId?.message}
+              helperText={errors.projectId?.message}
             />
           </div>
         </div>

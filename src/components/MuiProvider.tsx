@@ -146,6 +146,8 @@ const theme = createTheme({
           // Disabled Variant
           ...(ownerState.disabled && {
             "& .MuiOutlinedInput-root.Mui-disabled": {
+              height: "50px",
+
               "& .MuiInputBase-input": {
                 "-webkit-text-fill-color": "#fff !important", // Override text fill color
               },
@@ -153,14 +155,14 @@ const theme = createTheme({
             "& .MuiOutlinedInput-root": {
               borderRadius: "10px",
               "&.Mui-disabled fieldset": {
-                borderColor: "#fff",
+                borderColor: ownerState.error ? "#651A1A" : "#fff",
               },
             },
-            "& .MuiFormHelperText-root": {
-              position: "absolute",
-              bottom: -25,
-              color: "#787878 !important",
-            },
+            // "& .MuiFormHelperText-root": {
+            //   position: "absolute",
+            //   bottom: -25,
+            //   color: "#787878 !important",
+            // },
           }),
 
           ...(ownerState.multiline && {
