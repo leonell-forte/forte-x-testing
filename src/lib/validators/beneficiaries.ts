@@ -85,11 +85,9 @@ export const beneficiaries = {
 
     phone: z.string().min(1, { message: "Phone is required" }),
 
-    riskLevel: z
-      .enum(["low", "medium", "high"], {
-        message: "Risk level is required",
-      })
-      .nullable(),
+    riskLevel: z.enum(["low", "medium", "high"], {
+      message: "Risk level is required",
+    }),
 
     status: z.string().min(1, { message: "Status is required" }),
 
@@ -97,7 +95,7 @@ export const beneficiaries = {
 
     projectId: z.number().min(1, { message: "Project is required" }),
 
-    providerId: z.number().min(1),
+    providerId: z.number().min(1, { message: "Provider is required" }),
 
     cohortStartDate: z.string().min(1, { message: "Start date is required" }),
 
