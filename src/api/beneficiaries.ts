@@ -35,7 +35,7 @@ class BeneficiariesService {
     const params = new URLSearchParams();
 
     const filterData: IODataObject = {
-      "beneficiaries.firstName": {
+      "beneficiary.firstName": {
         value: search!,
 
         exact: false,
