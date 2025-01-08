@@ -214,7 +214,7 @@ const ContractsPage = () => {
           </button>
         </div>
 
-        <div className="space-y-[18px] overflow-scroll">
+        <div className="space-y-[18px]">
           <div className="pr-4">
             <Table.Container isEmpty={!contracts.length} isLoading={isLoading}>
               <Table.Head>
