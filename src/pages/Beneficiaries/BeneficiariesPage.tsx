@@ -14,7 +14,10 @@ import {
   RISK_LEVEL,
 } from "lib/constants";
 import { useDebounce, usePageTitle } from "lib/hooks";
-import { useExportEvidenceMutation } from "lib/mutations/beneficiaries";
+import {
+  useExportBeneficiaries,
+  useExportEvidenceMutation,
+} from "lib/mutations/beneficiaries";
 import { IBeneficiariesFilter } from "lib/types/beneficiaries";
 import { findLabelFromOptions, formatDate } from "lib/utils";
 
@@ -146,6 +149,15 @@ const BeneficiariesPage = () => {
     exportEvidence({ beneficiaryIds: selectedIds });
   };
 
+  // export beneficiaries
+
+  const { exportBeneficiaries, isPending: isExportingBeneficiaries } =
+    useExportBeneficiaries();
+
+  const handleExportBeneficiaries = () => {
+    exportBeneficiaries({ beneficiaryIds: selectedIds });
+  };
+
   const handleSelectAll = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       if (e.target.checked) {
@@ -223,6 +235,13 @@ const BeneficiariesPage = () => {
                   disabled={isDownloadingEvidence}
                 >
                   Download Evidence
+                </Button>
+                <Button
+                  onClick={handleExportBeneficiaries}
+                  buttonType="secondary"
+                  disabled={isExportingBeneficiaries}
+                >
+                  Export CSV
                 </Button>
               </>
             ) : (
@@ -344,7 +363,7 @@ const BeneficiariesPage = () => {
           </div>
         </div>
 
-        <div className="space-y-[18px] overflow-scroll">
+        <div className="space-y-[18px]">
           <div className="pr-4">
             <Table.Container
               isLoading={isLoading}

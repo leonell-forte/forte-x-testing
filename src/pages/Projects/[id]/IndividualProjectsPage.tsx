@@ -13,7 +13,7 @@ const IndividualProjectsPage = () => {
   const { id } = useParams();
 
   return (
-    <div className="hide-scroll h-full space-y-2.5 overflow-scroll py-3">
+    <div className="hide-scroll h-full space-y-2.5 py-3">
       <Link to="/projects" className="flex items-center gap-2.5">
         <img src={arrow} alt="back" />
 

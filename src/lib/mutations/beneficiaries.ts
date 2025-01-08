@@ -307,3 +307,35 @@ export const useExportEvidenceMutation = () => {
 
   return { exportEvidence, isPending };
 };
+
+export const useExportBeneficiaries = () => {
+  const { setAlert } = useAlert();
+
+  const { mutateAsync: exportBeneficiaries, isPending } = useMutation({
+    mutationFn: beneficiariesService.bulkExportBeneficiaries,
+
+    onSuccess: (response) => {
+      const timestamp = format(new Date(), "MM_dd_yy-HH_mm");
+      const fileName = `Beneficiaries_Export-${timestamp}.csv`;
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode?.removeChild(link);
+    },
+
+    onError: (err: any) => {
+      setAlert({
+        title: "Error",
+
+        message: err?.response?.data?.message,
+
+        status: "error",
+      });
+    },
+  });
+
+  return { exportBeneficiaries, isPending };
+};
