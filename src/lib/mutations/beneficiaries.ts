@@ -58,7 +58,7 @@ export const useBeneficiaryMutation = ({
       setAlert({
         title: `Failed ${beneficiaryId ? "updating" : "adding"} beneficiary`,
 
-        message: err?.response?.data?.message,
+        message: err?.response?.data?.data?.[0],
 
         status: "error",
       });
