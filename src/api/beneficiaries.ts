@@ -162,6 +162,14 @@ class BeneficiariesService {
 
     return response;
   }
+
+  async bulkExportBeneficiaries(data: { beneficiaryIds: number[] }) {
+    const response = api.post("/beneficiaries/export", data, {
+      responseType: "arraybuffer",
+    });
+
+    return response;
+  }
 }
 
 const beneficiariesService = new BeneficiariesService();
