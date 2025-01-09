@@ -87,35 +87,35 @@ export const EVIDENCE_STATUS = [
 export const BENEFICIARY_STATUS = [
   {
     label: "New",
-    value: "new",
+    value: "New",
   },
   {
     label: "In progress",
-    value: "in-progress",
+    value: "In progress",
   },
   {
     label: "Withdrawn",
-    value: "withdrawn",
+    value: "Withdrawn",
   },
   {
     label: "Pending evidence collection",
-    value: "pending-evidence-collection",
+    value: "Pending evidence collection",
   },
   {
     label: "Pending evidence review",
-    value: "pending-evidence-review",
+    value: "Pending evidence review",
   },
   {
     label: "Rejected",
-    value: "rejected",
+    value: "Rejected",
   },
   {
     label: "Accepted",
-    value: "accepted",
+    value: "Accepted",
   },
   {
     label: "Paid",
-    value: "paid",
+    value: "Paid",
   },
 ];
 
