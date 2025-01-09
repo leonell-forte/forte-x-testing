@@ -46,6 +46,18 @@ const MarkAsCompleted = ({
     }),
   });
 
+  const { isCompleted, isDraft } = useMemo(() => {
+    const status = contractDetails?.status;
+
+    return {
+      isSigned: status === "SIGNED",
+
+      isCompleted: status === "COMPLETED",
+
+      isDraft: status === "DRAFT",
+    };
+  }, [contractDetails?.status]);
+
   useEffect(() => {
     if (contractDetails) {
       let contract = { ...contractDetails };
@@ -58,24 +70,12 @@ const MarkAsCompleted = ({
         })
       );
     }
-  }, [contractDetails, reset]);
+  }, [contractDetails, reset, isDraft]);
 
   const { addContract, isPending } = useContractMutation({
     id: contractDetails.id,
     successCallback: handleClose,
   });
-
-  const { isCompleted, isDraft } = useMemo(() => {
-    const status = contractDetails?.status;
-
-    return {
-      isSigned: status === "SIGNED",
-
-      isCompleted: status === "COMPLETED",
-
-      isDraft: status === "DRAFT",
-    };
-  }, [contractDetails?.status]);
 
   const { next, revert } = useMemo(() => {
     const states: Record<StatusRecords, { next: string; revert: string }> = {

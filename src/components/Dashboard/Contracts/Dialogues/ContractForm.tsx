@@ -145,7 +145,7 @@ const ContractForm = ({
     if (isCompleted) return { label: "Mark as incomplete" };
 
     return null;
-  }, [isDraft, isSigned, isCompleted, markContract]);
+  }, [isDraft, isSigned, isCompleted]);
 
   const close = () => {
     handleClose!();
