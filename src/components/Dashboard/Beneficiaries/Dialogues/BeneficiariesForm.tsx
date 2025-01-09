@@ -256,6 +256,7 @@ const BeneficiariesForm = ({
               render={({ field }) => (
                 <Input
                   {...field}
+                  type="number"
                   disabled={!onEdit}
                   placeholder="Phone"
                   error={!!errors.phone?.message}
