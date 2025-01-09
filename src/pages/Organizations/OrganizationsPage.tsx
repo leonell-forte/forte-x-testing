@@ -69,6 +69,8 @@ const OrganizationsPage = () => {
     [organizationList]
   );
 
+  console.log(organizationList);
+
   const close = () => {
     setSelectedOrg("");
 
