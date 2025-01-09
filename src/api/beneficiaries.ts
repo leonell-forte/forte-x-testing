@@ -43,6 +43,14 @@ class BeneficiariesService {
         isSearch: true,
       },
 
+      "beneficiary.cohortName": {
+        value: search!,
+
+        exact: false,
+
+        isSearch: true,
+      },
+
       "beneficiary.project_id": {
         value: filters?.project as string,
 
