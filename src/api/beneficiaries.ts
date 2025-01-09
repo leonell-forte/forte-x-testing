@@ -43,6 +43,22 @@ class BeneficiariesService {
         isSearch: true,
       },
 
+      "beneficiary.lastName": {
+        value: search!,
+
+        exact: false,
+
+        isSearch: true,
+      },
+
+      "beneficiary.email": {
+        value: search!,
+
+        exact: false,
+
+        isSearch: true,
+      },
+
       "beneficiary.project_id": {
         value: filters?.project as string,
 
