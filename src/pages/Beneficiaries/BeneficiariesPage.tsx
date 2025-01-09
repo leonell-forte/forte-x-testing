@@ -484,9 +484,7 @@ const BeneficiariesPage = () => {
                         {riskLevel}
                       </Table.Data>
 
-                      <Table.Data small className="capitalize">
-                        {status}
-                      </Table.Data>
+                      <Table.Data small>{status}</Table.Data>
 
                       <Table.Data small>
                         {formatDate(cohortStartDate, DEFAULT_DATE_FORMAT)}
