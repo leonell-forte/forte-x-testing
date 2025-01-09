@@ -29,6 +29,14 @@ class UserService {
         isSearch: true,
       },
 
+      "user.email": {
+        value: search!,
+
+        exact: false,
+
+        isSearch: true,
+      },
+
       "user.role": {
         value: role!,
 

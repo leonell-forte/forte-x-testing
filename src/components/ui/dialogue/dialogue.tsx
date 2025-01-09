@@ -45,6 +45,7 @@ const Dialogue = ({
 
         center && "items-center"
       )}
+      onClick={handleClose}
     >
       <div
         className={classNames(
@@ -52,6 +53,7 @@ const Dialogue = ({
 
           title ? "p-10" : "px-10 pb-10"
         )}
+        onClick={(e) => e.stopPropagation()}
       >
         <button
           type="button"

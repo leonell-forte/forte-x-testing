@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import organizationService from "api/organization";
 import projectService from "api/projects";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 
 import { CONTRACT_STATUS } from "lib/constants";
@@ -52,6 +52,8 @@ const ContractForm = ({
 
   markContract,
 }: IContractForm) => {
+  const [isAmmending, setIsAmmending] = useState(false);
+
   const {
     watch,
 
@@ -123,17 +125,27 @@ const ContractForm = ({
     [projectsList]
   );
 
-  const isSigned = useMemo(
-    () => contractDetails?.status === "SIGNED",
+  const { isSigned, isCompleted, isDraft } = useMemo(() => {
+    const status = contractDetails?.status;
 
-    [contractDetails?.status]
-  );
+    return {
+      isSigned: status === "SIGNED",
 
-  const isCompleted = useMemo(
-    () => contractDetails?.status === "COMPLETED",
+      isCompleted: status === "COMPLETED",
 
-    [contractDetails?.status]
-  );
+      isDraft: status === "DRAFT",
+    };
+  }, [contractDetails?.status]);
+
+  const statusActions = useMemo(() => {
+    if (isDraft) return { label: "Mark as signed" };
+
+    if (isSigned) return { label: "Mark as completed" };
+
+    if (isCompleted) return { label: "Mark as incomplete" };
+
+    return null;
+  }, [isDraft, isSigned, isCompleted]);
 
   const close = () => {
     handleClose!();
@@ -152,119 +164,307 @@ const ContractForm = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-1">
-      <div className="flex items-start gap-4">
-        <label htmlFor="" className="w-[120px] flex-shrink-0 pt-3">
-          Contract name
-        </label>
+      {isAmmending ? (
+        <div className="space-y-1">
+          <label>Please upload ammended contract</label>
+          <Controller
+            name="documentId"
+            control={control}
+            render={() => (
+              <FileInput
+                accept=".pdf"
+                onSuccess={(data) => {
+                  setValue("documentId", data.id);
 
-        <Controller
-          name="name"
-          control={control}
-          render={({ field }) => (
-            <Input
-              {...field}
-              disabled={!onEdit || isSigned}
-              placeholder="Contract name"
-              error={!!errors.name?.message}
-              helperText={errors.name?.message}
+                  setError("documentId", { message: "" });
+                }}
+                placeholder="Document"
+                error={!!errors.documentId?.message}
+                helperText={errors.documentId?.message}
+              />
+            )}
+          />
+        </div>
+      ) : (
+        <>
+          <div className="flex items-start gap-4">
+            <label htmlFor="" className="w-[120px] flex-shrink-0 pt-3">
+              Contract name
+            </label>
+
+            <Controller
+              name="name"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  disabled={!onEdit || isSigned}
+                  placeholder="Contract name"
+                  error={!!errors.name?.message}
+                  helperText={errors.name?.message}
+                />
+              )}
             />
-          )}
-        />
-      </div>
+          </div>
 
-      <div className="flex items-start gap-4">
-        <label htmlFor="" className="min-w-[120px] pt-4">
-          Parties
-        </label>
+          <div className="flex items-start gap-4">
+            <label htmlFor="" className="min-w-[120px] pt-4">
+              Parties
+            </label>
 
-        <Controller
-          name="partyIds"
-          control={control}
-          render={({ field }) => {
-            return (
-              <Dropdown
-                disabled={!onEdit}
-                enableSearch
-                loading={orgLoading}
-                showAsTags
-                value={field.value.map((item) => item.toString())}
-                options={organizations}
-                handleSelect={(val) => {
-                  setValue(
-                    "partyIds",
-                    (val as string[]).map((item) => Number(item))
+            <Controller
+              name="partyIds"
+              control={control}
+              render={({ field }) => {
+                return (
+                  <Dropdown
+                    disabled={!onEdit}
+                    enableSearch
+                    loading={orgLoading}
+                    showAsTags
+                    value={field.value.map((item) => item.toString())}
+                    options={organizations}
+                    handleSelect={(val) => {
+                      setValue(
+                        "partyIds",
+                        (val as string[]).map((item) => Number(item))
+                      );
+
+                      setError("partyIds", { message: "" });
+                    }}
+                    error={!!errors.partyIds?.message}
+                    helperText={errors.partyIds?.message}
+                    isMultiSelect
+                    placeholder="Parties"
+                  />
+                );
+              }}
+            />
+          </div>
+
+          <div className="flex items-start gap-4">
+            <label htmlFor="" className="min-w-[120px] pt-4">
+              Status
+            </label>
+
+            <Controller
+              name="status"
+              control={control}
+              render={({ field }) => {
+                return (
+                  <Dropdown
+                    disabled={!onEdit}
+                    value={field.value.toLowerCase()}
+                    handleSelect={(val) => {
+                      setValue(
+                        "status",
+                        val.toString().toUpperCase() as StatusType
+                      );
+
+                      setError("status", { message: "" });
+                    }}
+                    options={CONTRACT_STATUS.filter(
+                      (item) => item.value !== "completed"
+                    )}
+                    placeholder="Status"
+                    error={!!errors.status?.message}
+                    helperText={errors.status?.message}
+                  />
+                );
+              }}
+            />
+          </div>
+
+          <div className="flex items-start gap-4">
+            <label htmlFor="" className="min-w-[120px] pt-4">
+              Project
+            </label>
+
+            <Controller
+              name="projectId"
+              control={control}
+              render={({ field }) => {
+                return (
+                  <Dropdown
+                    disabled={!!projectId || !onEdit}
+                    loading={projectLoading}
+                    enableSearch
+                    value={findLabelFromOptions(
+                      projects,
+
+                      field.value.toString()
+                    )}
+                    options={projects}
+                    handleSelect={(val) => {
+                      setValue("projectId", Number(val));
+
+                      setValue("outcomeRates", [
+                        {
+                          outcomeId: 0,
+
+                          rate: "",
+
+                          perOutcome: true,
+
+                          threshold: "",
+                        },
+                      ]);
+
+                      setError("projectId", { message: "" });
+                    }}
+                    placeholder="Project"
+                    error={!!errors.projectId?.message}
+                    helperText={errors.projectId?.message}
+                  />
+                );
+              }}
+            />
+          </div>
+
+          <div className="flex items-start gap-4">
+            <label htmlFor="" className="w-[120px] flex-shrink-0 pt-1">
+              Target number of beneficiaries
+            </label>
+
+            <Controller
+              name="targetNoOfBenefeciaries"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  wholeNumberOnly
+                  min={0}
+                  disabled={!onEdit}
+                  placeholder="Number of beneficiaries"
+                  type="number"
+                  error={!!errors.targetNoOfBenefeciaries?.message}
+                  helperText={errors.targetNoOfBenefeciaries?.message}
+                />
+              )}
+            />
+          </div>
+
+          <div className="flex items-start gap-4">
+            <label htmlFor="" className="min-w-[120px] pt-4">
+              Document
+            </label>
+
+            <Controller
+              name="documentId"
+              control={control}
+              render={() => (
+                <FileInput
+                  disabled={!onEdit || isSigned}
+                  filename={contractDetails?.document?.filename || ""}
+                  accept=".pdf"
+                  onSuccess={(data) => {
+                    setValue("documentId", data.id);
+
+                    setError("documentId", { message: "" });
+                  }}
+                  placeholder="Document"
+                  error={!!errors.documentId?.message}
+                  helperText={errors.documentId?.message}
+                />
+              )}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 gap-1 md:grid-cols-2 md:gap-6">
+            <div className="flex items-start gap-4">
+              <label htmlFor="" className="min-w-[120px] pt-4">
+                Start date
+              </label>
+
+              <Controller
+                name="startDate"
+                control={control}
+                render={({ field }) => {
+                  return (
+                    <DatePicker
+                      disabled={!onEdit}
+                      value={new Date(field.value)}
+                      onChange={(date) => {
+                        setValue("startDate", formatDate(date!, "LL-dd-yyyy"));
+
+                        setError("startDate", { message: "" });
+                      }}
+                      error={!!errors.startDate?.message}
+                      helperText={errors.startDate?.message}
+                    />
                   );
-
-                  setError("partyIds", { message: "" });
                 }}
-                error={!!errors.partyIds?.message}
-                helperText={errors.partyIds?.message}
-                isMultiSelect
-                placeholder="Parties"
               />
-            );
-          }}
-        />
-      </div>
+            </div>
 
-      <div className="flex items-start gap-4">
-        <label htmlFor="" className="min-w-[120px] pt-4">
-          Status
-        </label>
+            <div className="flex items-start gap-4">
+              <label htmlFor="" className="min-w-[120px] pt-4">
+                End date
+              </label>
 
-        <Controller
-          name="status"
-          control={control}
-          render={({ field }) => {
-            return (
-              <Dropdown
-                disabled={!onEdit}
-                value={field.value.toLowerCase()}
-                handleSelect={(val) => {
-                  setValue(
-                    "status",
-                    val.toString().toUpperCase() as StatusType
-                  );
+              <Controller
+                name="endDate"
+                control={control}
+                render={({ field }) => (
+                  <DatePicker
+                    disabled={!onEdit}
+                    value={new Date(field.value)}
+                    onChange={(date) => {
+                      setValue("endDate", formatDate(date!, "LL-dd-yyyy"));
 
-                  setError("status", { message: "" });
-                }}
-                options={CONTRACT_STATUS.filter(
-                  (item) => item.value !== "completed"
+                      setError("endDate", { message: "" });
+                    }}
+                    error={!!errors.endDate?.message}
+                    helperText={errors.endDate?.message}
+                  />
                 )}
-                placeholder="Status"
-                error={!!errors.status?.message}
-                helperText={errors.status?.message}
               />
-            );
-          }}
-        />
-      </div>
+            </div>
+          </div>
 
-      <div className="flex items-start gap-4">
-        <label htmlFor="" className="min-w-[120px] pt-4">
-          Project
-        </label>
+          <div className="space-y-10">
+            {fields.map((item, index) => {
+              return (
+                <ContractOutcomeField
+                  disabled={!onEdit}
+                  key={item.id}
+                  projectId={watch("projectId")}
+                  control={control}
+                  perOutcome={watch(`outcomeRates.${index}.perOutcome`)}
+                  index={index}
+                  handleDelete={() => {
+                    remove(index);
+                  }}
+                  handleSelectOutcome={(val) => {
+                    setValue(`outcomeRates.${index}.outcomeId`, Number(val));
 
-        <Controller
-          name="projectId"
-          control={control}
-          render={({ field }) => {
-            return (
-              <Dropdown
-                disabled={!!projectId || !onEdit}
-                loading={projectLoading}
-                enableSearch
-                value={findLabelFromOptions(
-                  projects,
+                    setError(`outcomeRates.${index}.outcomeId`, {
+                      message: "",
+                    });
+                  }}
+                  handleRadioSelect={(value) => {
+                    setValue(`outcomeRates.${index}.threshold`, "");
 
-                  field.value.toString()
-                )}
-                options={projects}
-                handleSelect={(val) => {
-                  setValue("projectId", Number(val));
+                    setError(`outcomeRates.${index}.threshold`, {
+                      message: "",
+                    });
 
-                  setValue("outcomeRates", [
-                    {
+                    if (value === "Per outcome") {
+                      setValue(
+                        `outcomeRates.${index}.perOutcome`,
+
+                        true
+                      );
+                    } else {
+                      setValue(
+                        `outcomeRates.${index}.perOutcome`,
+
+                        false
+                      );
+                    }
+                  }}
+                  handleAdd={() =>
+                    append({
                       outcomeId: 0,
 
                       rate: "",
@@ -272,212 +472,70 @@ const ContractForm = ({
                       perOutcome: true,
 
                       threshold: "",
-                    },
-                  ]);
-
-                  setError("projectId", { message: "" });
-                }}
-                placeholder="Project"
-                error={!!errors.projectId?.message}
-                helperText={errors.projectId?.message}
-              />
-            );
-          }}
-        />
-      </div>
-
-      <div className="flex items-start gap-4">
-        <label htmlFor="" className="w-[120px] flex-shrink-0 pt-1">
-          Target number of beneficiaries
-        </label>
-
-        <Controller
-          name="targetNoOfBenefeciaries"
-          control={control}
-          render={({ field }) => (
-            <Input
-              {...field}
-              wholeNumberOnly
-              min={0}
-              disabled={!onEdit}
-              placeholder="Number of beneficiaries"
-              type="number"
-              error={!!errors.targetNoOfBenefeciaries?.message}
-              helperText={errors.targetNoOfBenefeciaries?.message}
-            />
-          )}
-        />
-      </div>
-
-      <div className="flex items-start gap-4">
-        <label htmlFor="" className="min-w-[120px] pt-4">
-          Document
-        </label>
-
-        <Controller
-          name="documentId"
-          control={control}
-          render={() => (
-            <FileInput
-              disabled={!onEdit || isSigned}
-              filename={contractDetails?.document?.filename || ""}
-              accept=".pdf"
-              onSuccess={(data) => {
-                setValue("documentId", data.id);
-
-                setError("documentId", { message: "" });
-              }}
-              placeholder="Document"
-              error={!!errors.documentId?.message}
-              helperText={errors.documentId?.message}
-            />
-          )}
-        />
-      </div>
-
-      <div className="grid grid-cols-1 gap-1 md:grid-cols-2 md:gap-6">
-        <div className="flex items-start gap-4">
-          <label htmlFor="" className="min-w-[120px] pt-4">
-            Start date
-          </label>
-
-          <Controller
-            name="startDate"
-            control={control}
-            render={({ field }) => {
-              return (
-                <DatePicker
-                  disabled={!onEdit}
-                  value={new Date(field.value)}
-                  onChange={(date) => {
-                    setValue("startDate", formatDate(date!, "LL-dd-yyyy"));
-
-                    setError("startDate", { message: "" });
-                  }}
-                  error={!!errors.startDate?.message}
-                  helperText={errors.startDate?.message}
+                    })
+                  }
                 />
               );
-            }}
-          />
-        </div>
-
-        <div className="flex items-start gap-4">
-          <label htmlFor="" className="min-w-[120px] pt-4">
-            End date
-          </label>
-
-          <Controller
-            name="endDate"
-            control={control}
-            render={({ field }) => (
-              <DatePicker
-                disabled={!onEdit}
-                value={new Date(field.value)}
-                onChange={(date) => {
-                  setValue("endDate", formatDate(date!, "LL-dd-yyyy"));
-
-                  setError("endDate", { message: "" });
-                }}
-                error={!!errors.endDate?.message}
-                helperText={errors.endDate?.message}
-              />
-            )}
-          />
-        </div>
-      </div>
-
-      <div className="space-y-10">
-        {fields.map((item, index) => {
-          return (
-            <ContractOutcomeField
-              disabled={!onEdit}
-              key={item.id}
-              projectId={watch("projectId")}
-              control={control}
-              perOutcome={watch(`outcomeRates.${index}.perOutcome`)}
-              index={index}
-              handleDelete={() => {
-                remove(index);
-              }}
-              handleSelectOutcome={(val) => {
-                setValue(`outcomeRates.${index}.outcomeId`, Number(val));
-
-                setError(`outcomeRates.${index}.outcomeId`, { message: "" });
-              }}
-              handleRadioSelect={(value) => {
-                setValue(`outcomeRates.${index}.threshold`, "");
-
-                setError(`outcomeRates.${index}.threshold`, {
-                  message: "",
-                });
-
-                if (value === "Per outcome") {
-                  setValue(
-                    `outcomeRates.${index}.perOutcome`,
-
-                    true
-                  );
-                } else {
-                  setValue(
-                    `outcomeRates.${index}.perOutcome`,
-
-                    false
-                  );
-                }
-              }}
-              handleAdd={() =>
-                append({
-                  outcomeId: 0,
-
-                  rate: "",
-
-                  perOutcome: true,
-
-                  threshold: "",
-                })
-              }
-            />
-          );
-        })}
-      </div>
+            })}
+          </div>
+        </>
+      )}
 
       <div className="!mt-10 flex items-center justify-between">
         <div>
-          {isSigned && (
+          {contractDetails && !isDraft && !isAmmending && (
             <Button onClick={markContract} buttonType="secondary">
-              Mark as completed
-            </Button>
-          )}
-
-          {isCompleted && (
-            <Button onClick={markContract} buttonType="secondary">
-              Mark as incomplete
+              {statusActions?.label}
             </Button>
           )}
         </div>
 
         {!isCompleted &&
           (!onEdit ? (
-            <Button onClick={() => handleEdit(true)} loading={isPending}>
+            <Button onClick={() => handleEdit(true)}>
               {isSigned ? "Amend" : "Edit"}
             </Button>
           ) : (
             <div className="flex justify-end gap-4">
-              <Button
-                onClick={() => {
-                  handleEdit(false);
+              {contractDetails ? (
+                <Button
+                  onClick={() => {
+                    if (isAmmending) {
+                      setIsAmmending(false);
+                    } else {
+                      handleEdit(false);
 
-                  reset(contracts.defaultValues({ contract: contractDetails }));
-                }}
-                buttonType="secondary"
-              >
-                Cancel
-              </Button>
+                      reset(
+                        contracts.defaultValues({ contract: contractDetails })
+                      );
+                    }
+                  }}
+                  buttonType="secondary"
+                >
+                  Cancel
+                </Button>
+              ) : (
+                <Button onClick={handleClose} buttonType="secondary">
+                  Cancel
+                </Button>
+              )}
 
-              <Button type="submit" loading={isPending}>
-                Save
-              </Button>
+              {isSigned && !isAmmending ? (
+                <Button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsAmmending(true);
+                    setValue("documentId", 0);
+                    setError("documentId", { message: "" });
+                  }}
+                >
+                  Save
+                </Button>
+              ) : (
+                <Button type="submit" loading={isPending}>
+                  Save
+                </Button>
+              )}
             </div>
           ))}
       </div>

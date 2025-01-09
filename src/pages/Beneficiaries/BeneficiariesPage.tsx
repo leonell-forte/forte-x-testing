@@ -261,7 +261,7 @@ const BeneficiariesPage = () => {
                     setEditMode(true);
                   }}
                 >
-                  Add beneficiaries
+                  Add beneficiary
                 </Button>
               </>
             )}
