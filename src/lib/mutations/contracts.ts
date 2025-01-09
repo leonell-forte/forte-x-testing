@@ -43,6 +43,12 @@ const useContractMutation = ({ id, successCallback }: IContractMutation) => {
         }
       );
 
+      queryClient.setQueryData(
+        ["specific-contract", id],
+
+        () => addedContract
+      );
+
       successCallback?.();
 
       setAlert({

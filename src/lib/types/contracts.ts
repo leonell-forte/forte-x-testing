@@ -6,6 +6,8 @@ import { File } from "./common";
 
 export type StatusType = "DRAFT" | "SIGNED" | "COMPLETED" | "CANCELLED" | "";
 
+export type StatusRecords = Exclude<StatusType, "CANCELLED" | "">;
+
 export type RateEnum = "Per outcome" | "If threshold reached";
 
 export interface IContractParties {
