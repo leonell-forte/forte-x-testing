@@ -21,7 +21,7 @@ export const beneficiaries = {
 
       email: beneficiary?.email || "",
 
-      phone: beneficiary?.phone || "",
+      phone: beneficiary?.phoneNumber || "",
 
       riskLevel: (beneficiary?.riskLevel.toLowerCase() as RiskLevelEnum) || "",
 
@@ -37,7 +37,7 @@ export const beneficiaries = {
 
       cohortEndDate: beneficiary?.cohortEndDate || null,
 
-      cohortName: beneficiary?.cohortName || "",
+      cohortName: beneficiary?.program || "",
 
       linkedinUrl: beneficiary?.linkedinUrl || "",
 
