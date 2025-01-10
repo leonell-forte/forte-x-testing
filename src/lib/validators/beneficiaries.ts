@@ -21,10 +21,9 @@ export const beneficiaries = {
 
       email: beneficiary?.email || "",
 
-      phone: beneficiary?.phone || "",
+      phone: beneficiary?.phoneNumber || "",
 
-      riskLevel:
-        (beneficiary?.riskLevel.toLowerCase() as RiskLevelEnum) || null,
+      riskLevel: (beneficiary?.riskLevel.toLowerCase() as RiskLevelEnum) || "",
 
       status: beneficiary?.status || "New",
 
@@ -34,11 +33,11 @@ export const beneficiaries = {
 
       providerId: beneficiary?.providerId || 0,
 
-      cohortStartDate: beneficiary?.cohortStartDate || "",
+      cohortStartDate: beneficiary?.cohortStartDate || null,
 
-      cohortEndDate: beneficiary?.cohortEndDate || "",
+      cohortEndDate: beneficiary?.cohortEndDate || null,
 
-      cohortName: beneficiary?.cohortName || "",
+      cohortName: beneficiary?.program || "",
 
       linkedinUrl: beneficiary?.linkedinUrl || "",
 
@@ -83,11 +82,9 @@ export const beneficiaries = {
 
     email: z.string().email(),
 
-    phone: z.string().min(1, { message: "Phone is required" }),
+    phone: z.string(),
 
-    riskLevel: z.enum(["low", "medium", "high"], {
-      message: "Risk level is required",
-    }),
+    riskLevel: z.string(),
 
     status: z.string().min(1, { message: "Status is required" }),
 
@@ -97,11 +94,11 @@ export const beneficiaries = {
 
     providerId: z.number().min(1, { message: "Provider is required" }),
 
-    cohortStartDate: z.string().min(1, { message: "Start date is required" }),
+    cohortStartDate: z.string().nullable(),
 
-    cohortEndDate: z.string().min(1, { message: "End date is required" }),
+    cohortEndDate: z.string().nullable(),
 
-    cohortName: z.string().min(1, { message: "Program is required" }),
+    cohortName: z.string(),
 
     linkedinUrl: z.string(),
 
