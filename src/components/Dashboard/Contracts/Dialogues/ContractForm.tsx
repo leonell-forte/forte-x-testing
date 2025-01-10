@@ -26,7 +26,7 @@ import Input from "components/ui/input";
 import ContractOutcomeField from "../ContractOutcomeField";
 
 interface IContractForm {
-  contractDetails: IContract;
+  contractDetails: IContract | null;
 
   onEdit?: boolean;
 

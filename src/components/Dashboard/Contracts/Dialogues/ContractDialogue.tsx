@@ -52,7 +52,7 @@ const ContractDialogue = ({
       case "form":
         return (
           <ContractForm
-            contractDetails={contractDetails!}
+            contractDetails={id ? contractDetails! : null}
             onEdit={onEdit}
             handleEdit={(val) => setOnEdit(val)}
             handleClose={handleClose!}
