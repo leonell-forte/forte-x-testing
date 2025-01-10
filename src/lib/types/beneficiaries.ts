@@ -5,6 +5,7 @@ import {
   beneficiaryStatus,
   importBeneficiaries,
 } from "../validators/beneficiaries";
+import { Evidence } from "./evidence";
 
 export interface IBeneficiaries {
   id: number;
@@ -17,13 +18,13 @@ export interface IBeneficiaries {
 
   lastName: string;
 
-  phone: string;
+  phoneNumber: string;
 
   provider: string;
 
   cohortEndDate: string;
 
-  cohortName: string;
+  program: string;
 
   cohortStartDate: string;
 
@@ -54,6 +55,8 @@ export interface IBeneficiaries {
   socioeconomicStatus?: string;
 
   educationLevel?: string;
+
+  evidences: Evidence[];
 
   languages?: string[];
 
