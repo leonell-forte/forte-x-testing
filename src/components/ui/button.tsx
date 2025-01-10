@@ -71,6 +71,7 @@ const Button = ({
       )}
       disabled={disabled || loading}
       onClick={(e) => {
+        e.stopPropagation();
         if (eventName) {
           amplitude.track(`${eventName} Button Click`, {
             id,

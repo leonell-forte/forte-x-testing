@@ -2,11 +2,11 @@
 
 import classNames from "classnames";
 import { motion } from "framer-motion";
-import { ReactNode } from "react";
+import { ReactNode, useRef } from "react";
 
 import close from "assets/images/icons/close.svg";
 
-import { useEscapeKey } from "lib/hooks";
+import { useEscapeKey, useOutsideClick } from "lib/hooks";
 
 import styles from "./styles.module.scss";
 
@@ -35,6 +35,12 @@ const Dialogue = ({
 }: IDialogueProps) => {
   useEscapeKey(handleClose!);
 
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useOutsideClick(containerRef, () => {
+    handleClose?.();
+  });
+
   return isVisible ? (
     <motion.div
       initial={{ opacity: 0 }}
@@ -45,15 +51,14 @@ const Dialogue = ({
 
         center && "items-center"
       )}
-      onClick={handleClose}
     >
       <div
+        ref={containerRef}
         className={classNames(
           styles["dialogue-content"],
 
           title ? "p-10" : "px-10 pb-10"
         )}
-        onClick={(e) => e.stopPropagation()}
       >
         <button
           type="button"

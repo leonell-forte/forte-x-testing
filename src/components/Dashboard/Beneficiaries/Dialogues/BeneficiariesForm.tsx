@@ -137,8 +137,6 @@ const BeneficiariesForm = ({
     [contractList]
   );
 
-  console.log(contractList);
-
   const selectedContract = watch("contractId");
 
   const organizations: IOption[] = useMemo(
