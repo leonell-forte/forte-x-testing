@@ -77,7 +77,7 @@ export interface IContractFilters {
 }
 
 export interface IContractDefaultValues {
-  contract?: IContract;
+  contract?: IContract | null;
 
   projectId?: number;
 }
