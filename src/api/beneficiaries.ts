@@ -51,7 +51,7 @@ class BeneficiariesService {
         isSearch: true,
       },
 
-      "beneficiary.cohortName": {
+      "beneficiary.cohort_name": {
         value: search!,
 
         exact: false,
