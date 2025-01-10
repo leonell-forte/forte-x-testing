@@ -383,6 +383,7 @@ const ContractForm = ({
                   return (
                     <DatePicker
                       disabled={!onEdit}
+                      maxDate={new Date(watch("endDate"))}
                       value={new Date(field.value)}
                       onChange={(date) => {
                         setValue("startDate", formatDate(date!, "LL-dd-yyyy"));
@@ -408,6 +409,7 @@ const ContractForm = ({
                 render={({ field }) => (
                   <DatePicker
                     disabled={!onEdit}
+                    minDate={new Date(watch("startDate"))}
                     value={new Date(field.value)}
                     onChange={(date) => {
                       setValue("endDate", formatDate(date!, "LL-dd-yyyy"));
