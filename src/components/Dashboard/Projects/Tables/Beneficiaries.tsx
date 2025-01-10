@@ -104,9 +104,9 @@ const Beneficiaries = ({ id }: IProps) => {
 
                 contractId,
 
-                cohortName,
+                program,
 
-                phone,
+                phoneNumber,
               } = item;
 
               return (
@@ -128,7 +128,7 @@ const Beneficiaries = ({ id }: IProps) => {
                   </Table.Data>
 
                   <Table.Data small className="h-[56px] py-1">
-                    {phone}
+                    {phoneNumber}
                   </Table.Data>
 
                   <Table.Data small className="h-[56px] py-1">
@@ -136,7 +136,7 @@ const Beneficiaries = ({ id }: IProps) => {
                   </Table.Data>
 
                   <Table.Data small className="h-[56px] py-1">
-                    {cohortName}
+                    {program}
                   </Table.Data>
                 </Table.Row>
               );
