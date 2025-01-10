@@ -438,9 +438,9 @@ const BeneficiariesForm = ({
                 name="cohortStartDate"
                 render={({ field }) => (
                   <DatePicker
-                    maxDate={new Date(watch("cohortEndDate"))}
+                    maxDate={new Date(watch("cohortEndDate") || "")}
                     disabled={!onEdit}
-                    value={new Date(field.value)}
+                    value={new Date(field.value || "")}
                     onChange={(date) => {
                       setValue("cohortStartDate", date!.toISOString());
 
@@ -464,8 +464,8 @@ const BeneficiariesForm = ({
                 render={({ field }) => (
                   <DatePicker
                     disabled={!onEdit}
-                    minDate={new Date(watch("cohortStartDate"))}
-                    value={new Date(field.value)}
+                    minDate={new Date(watch("cohortStartDate") || "")}
+                    value={new Date(field.value || "")}
                     onChange={(date) => {
                       setValue("cohortEndDate", date!.toISOString());
 

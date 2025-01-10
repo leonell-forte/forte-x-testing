@@ -33,9 +33,9 @@ export const beneficiaries = {
 
       providerId: beneficiary?.providerId || 0,
 
-      cohortStartDate: beneficiary?.cohortStartDate || "",
+      cohortStartDate: beneficiary?.cohortStartDate || null,
 
-      cohortEndDate: beneficiary?.cohortEndDate || "",
+      cohortEndDate: beneficiary?.cohortEndDate || null,
 
       cohortName: beneficiary?.cohortName || "",
 
@@ -94,9 +94,9 @@ export const beneficiaries = {
 
     providerId: z.number().min(1, { message: "Provider is required" }),
 
-    cohortStartDate: z.string(),
+    cohortStartDate: z.string().nullable(),
 
-    cohortEndDate: z.string(),
+    cohortEndDate: z.string().nullable(),
 
     cohortName: z.string(),
 
