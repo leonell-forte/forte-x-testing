@@ -29,7 +29,10 @@ const DatePicker = ({
   const isDateSelected = value?.toString() !== "Invalid Date"; // Check if a date is selected
 
   return (
-    <div className={classNames("relative w-full", !noHelperText && "pb-5")}>
+    <div
+      className={classNames("relative w-full", !noHelperText && "pb-5")}
+      onClick={(e) => e.stopPropagation()}
+    >
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Picker
           {...props}
