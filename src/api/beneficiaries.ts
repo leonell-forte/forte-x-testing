@@ -43,7 +43,23 @@ class BeneficiariesService {
         isSearch: true,
       },
 
+      "beneficiary.lastName": {
+        value: search!,
+
+        exact: false,
+
+        isSearch: true,
+      },
+
       "beneficiary.cohortName": {
+        value: search!,
+
+        exact: false,
+
+        isSearch: true,
+      },
+
+      "beneficiary.email": {
         value: search!,
 
         exact: false,

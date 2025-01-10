@@ -3,16 +3,25 @@ import authService from "api/auth";
 import { ReactNode } from "react";
 
 import { ScrollArea } from "components/ui/scroll-area/ScrollArea";
+import Spinner from "components/ui/spinner/spinner";
 
 import Header from "../Layout/Header/Header";
 import SidePanel from "../Layout/SidePanel/SidePanel";
 
 const DashboardLayout = ({ children }: { children: ReactNode }) => {
-  const { data: user } = useQuery({
+  const { data: user, isLoading } = useQuery({
     queryKey: ["profile"],
 
     queryFn: authService.getProfile,
   });
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <ScrollArea>

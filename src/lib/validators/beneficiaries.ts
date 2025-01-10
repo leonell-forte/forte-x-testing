@@ -25,7 +25,7 @@ export const beneficiaries = {
 
       riskLevel: (beneficiary?.riskLevel.toLowerCase() as RiskLevelEnum) || "",
 
-      status: beneficiary?.status || "",
+      status: beneficiary?.status || "New",
 
       contractId: beneficiary?.contractId || 0,
 
