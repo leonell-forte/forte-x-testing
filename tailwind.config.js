@@ -1,3 +1,4 @@
+const twAnimate = require("tailwindcss-animate");
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -41,5 +42,5 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [twAnimate],
 };
