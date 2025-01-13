@@ -126,11 +126,12 @@ const BeneficiariesTable = ({
 
               <Table.Header small>Status</Table.Header>
 
-              <Table.Header small>Cohort start date</Table.Header>
+              <Table.Header small> Start date</Table.Header>
 
-              <Table.Header small>Cohort end date</Table.Header>
+              <Table.Header small> End date</Table.Header>
 
-              <Table.Header small></Table.Header>
+              <Table.Header small>Evidence</Table.Header>
+
               <Table.Header small></Table.Header>
             </Table.Row>
           </Table.Head>
@@ -152,7 +153,7 @@ const BeneficiariesTable = ({
 
                 cohortEndDate,
 
-                cohortName,
+                program,
 
                 cohortStartDate,
 
@@ -160,7 +161,9 @@ const BeneficiariesTable = ({
 
                 status,
 
-                phone,
+                evidences,
+
+                phoneNumber,
               } = item;
 
               return (
@@ -212,19 +215,17 @@ const BeneficiariesTable = ({
 
                   <Table.Data small>{email}</Table.Data>
 
-                  <Table.Data small>{phone}</Table.Data>
+                  <Table.Data small>{phoneNumber}</Table.Data>
 
                   <Table.Data small>Contract {contractId}</Table.Data>
 
-                  <Table.Data small>{cohortName}</Table.Data>
+                  <Table.Data small>{program}</Table.Data>
 
                   <Table.Data small className="capitalize">
                     {riskLevel}
                   </Table.Data>
 
-                  <Table.Data small className="capitalize">
-                    {status}
-                  </Table.Data>
+                  <Table.Data small>{status}</Table.Data>
 
                   <Table.Data small>
                     {formatDate(cohortStartDate, DEFAULT_DATE_FORMAT)}
@@ -232,6 +233,10 @@ const BeneficiariesTable = ({
 
                   <Table.Data small>
                     {formatDate(cohortEndDate, DEFAULT_DATE_FORMAT)}
+                  </Table.Data>
+
+                  <Table.Data small>
+                    {evidences?.map((item) => item.file.filename).join(", ")}
                   </Table.Data>
 
                   <Table.Data small>
