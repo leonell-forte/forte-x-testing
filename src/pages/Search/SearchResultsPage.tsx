@@ -68,13 +68,13 @@ const SearchResultsPage = () => {
         <div className="flex flex-col items-center justify-center space-y-10 py-[144px]">
           <img alt="search" src={search} className="w-16" />
           <div className="text-2xl font-semibold">
-            We couldn't find anything matching your search.
+            We couldn&apos;t find anything matching your search.
           </div>
         </div>
       ) : (
         <div className="space-y-4 px-2">
           {data?.map((item: SearchItem) => (
-            <div className="space-y-4">
+            <div className="space-y-4" key={JSON.stringify(item)}>
               <Accordion
                 text={
                   <div className="text-2xl font-semibold">

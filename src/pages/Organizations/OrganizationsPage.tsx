@@ -3,18 +3,17 @@ import organizationService from "api/organization";
 import { useMemo, useState } from "react";
 
 import closeFilter from "assets/images/icons/close-filter.svg";
-import pencil from "assets/images/icons/pencil.svg";
 
 import { REGIONS, STATUS, TYPES } from "lib/constants";
 import { useDebounce, usePageTitle } from "lib/hooks";
 import { IFilters, IOrganization } from "lib/types/organizations";
 
 import OrganizationDialogue from "components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
+import OrganizationTable from "components/tables/Organization";
 import Button from "components/ui/button";
 import Dropdown from "components/ui/dropdown";
 import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
-import Table from "components/ui/table";
 
 const OrganizationsPage = () => {
   usePageTitle("Organizations");
@@ -73,12 +72,6 @@ const OrganizationsPage = () => {
     setSelectedOrg("");
 
     setModal(null);
-  };
-
-  const handleEditOrg = (id: string) => {
-    setModal("org");
-
-    setSelectedOrg(id);
   };
 
   const handleSelectFilter = (
@@ -167,103 +160,10 @@ const OrganizationsPage = () => {
         </div>
 
         <div className="space-y-4">
-          <div className="pr-4">
-            <Table.Container
-              isEmpty={!organizations.length}
-              isLoading={orgLoading}
-            >
-              <Table.Head>
-                <Table.Row>
-                  {TABLE_HEADER.map((key, headerIndex) => {
-                    return <Table.Header key={headerIndex}>{key}</Table.Header>;
-                  })}
-
-                  <Table.Header></Table.Header>
-                </Table.Row>
-              </Table.Head>
-              <Table.Body>
-                {organizations.map((item: IOrganization, bodyIndex: number) => {
-                  const {
-                    id,
-                    name,
-                    registeredName,
-                    regions,
-                    type,
-                    status,
-                    registeredAddress,
-                    registrationNumber,
-                    noOfProjects,
-                    noOfUsers,
-                    state,
-                    postalCode,
-                    country,
-                  } = item;
-                  return (
-                    <Table.Row key={bodyIndex}>
-                      <Table.Data>
-                        <p className="w-[200px] truncate">{name}</p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="w-[200px] truncate">{registeredName}</p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="w-[250px] truncate">
-                          {`${registeredAddress}, ${state} ${postalCode} ${country}`}
-                        </p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="w-[100px] truncate">
-                          {registrationNumber}
-                        </p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="w-[120px] truncate">
-                          {regions.join(", ")}
-                        </p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="w-[60px] truncate capitalize">{type}</p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="w-[55px] truncate capitalize">{status}</p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="w-[35px] truncate">{noOfUsers}</p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="w-[35px] truncate">{noOfProjects}</p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="w-[35px] truncate">-</p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <Button
-                          eventName="Edit User"
-                          id={id}
-                          buttonType="default"
-                          type="button"
-                          onClick={() => handleEditOrg(id!)}
-                          className="p-[3px]"
-                        >
-                          <img alt="pencil" src={pencil} />
-                        </Button>
-                      </Table.Data>
-                    </Table.Row>
-                  );
-                })}
-              </Table.Body>
-            </Table.Container>
-          </div>
+          <OrganizationTable
+            list={organizationList?.items || []}
+            isLoading={orgLoading}
+          />
 
           {!!organizations.length && (
             <div className="flex w-full items-center justify-end">
@@ -281,16 +181,3 @@ const OrganizationsPage = () => {
 };
 
 export default OrganizationsPage;
-
-const TABLE_HEADER = [
-  "Organization",
-  "Registered Name",
-  "Registered Address",
-  "Registration",
-  "Region",
-  "Type",
-  "Status",
-  "Users",
-  "Projects",
-  "Contracts",
-];

@@ -19,7 +19,7 @@ const SearchInput = ({ dark, onClear, ...props }: IProps) => {
       <button
         type="submit"
         className="absolute left-4 top-[16px] z-10"
-        disabled={!Boolean(props.value)}
+        disabled={!props.value}
       >
         <img alt="search" src={dark ? darkSearch : search} />
       </button>

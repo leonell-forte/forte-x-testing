@@ -1,3 +1,4 @@
+import React from "react";
 import { ChangeEvent, useCallback, useState } from "react";
 
 import bin from "assets/images/icons/bin.svg";
@@ -32,7 +33,6 @@ const BeneficiariesTable = ({
   setChecked,
 }: TBeneficiariesTable) => {
   const [modal, setModal] = useState<ModalLabelTypes>("");
-  console.log(list);
   const [editMode, setEditMode] = useState(false);
 
   const [beneficiaryId, setBeneficiaryId] = useState<number | null>(null);
@@ -45,6 +45,8 @@ const BeneficiariesTable = ({
     setBeneficiaryId(null);
 
     setSelectedIds([]);
+
+    if (setChecked) setChecked([]);
   };
 
   const handleDelete = (id: number) => {
