@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 
 import search from "assets/images/icons/search.svg";
 
+import { usePageTitle } from "lib/hooks";
 import { IBeneficiaries } from "lib/types/beneficiaries";
 import { IContract } from "lib/types/contracts";
 import { IOrganization } from "lib/types/organizations";
@@ -54,6 +55,8 @@ const SearchResultsPage = () => {
 
     enabled: Boolean(query),
   });
+
+  usePageTitle(`Showing results for "${query}"`);
 
   return (
     <div className="h-full">
