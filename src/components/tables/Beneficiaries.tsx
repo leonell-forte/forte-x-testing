@@ -39,7 +39,7 @@ const BeneficiariesTable = ({
 
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
-  const close = () => {
+  const close = useCallback(() => {
     setModal("");
 
     setBeneficiaryId(null);
@@ -47,7 +47,7 @@ const BeneficiariesTable = ({
     setSelectedIds([]);
 
     if (setChecked) setChecked([]);
-  };
+  }, [setChecked]);
 
   const handleDelete = (id: number) => {
     setModal("delete");
