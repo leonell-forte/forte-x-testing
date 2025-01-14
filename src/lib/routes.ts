@@ -22,47 +22,67 @@ const BeneficiariesPage = React.lazy(
   () => import("../pages/Beneficiaries/BeneficiariesPage")
 );
 
-export const PROTECTED_ROUTES = [
+interface RouteConfig {
+  link: string;
+  Component: React.ComponentType;
+  restrictedRoles: string[]; // Define this as an array of strings
+}
+
+export const PROTECTED_ROUTES: RouteConfig[] = [
   {
     link: "/users",
 
     Component: UsersPage,
+
+    restrictedRoles: [],
   },
 
   {
     link: "/projects",
 
     Component: ProjectsPage,
+
+    restrictedRoles: [],
   },
 
   {
     link: "/projects/:id",
 
     Component: IndividualProjectsPage,
+
+    restrictedRoles: [],
   },
 
   {
     link: "/organizations",
 
     Component: OrganizationsPage,
+
+    restrictedRoles: ["provider"],
   },
 
   {
     link: "/contracts",
 
     Component: ContractsPage,
+
+    restrictedRoles: [],
   },
 
   {
     link: "/beneficiaries",
 
     Component: BeneficiariesPage,
+
+    restrictedRoles: [],
   },
 
   {
     link: "/search/:query",
 
     Component: SearchResultsPage,
+
+    restrictedRoles: [],
   },
 ];
 

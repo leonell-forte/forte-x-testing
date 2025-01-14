@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import authService from "api/auth";
 import { ReactNode } from "react";
+import { Navigate } from "react-router-dom";
 
 import { ScrollArea } from "components/ui/scroll-area/ScrollArea";
 import Spinner from "components/ui/spinner/spinner";
@@ -8,14 +9,24 @@ import Spinner from "components/ui/spinner/spinner";
 import Header from "../Layout/Header/Header";
 import SidePanel from "../Layout/SidePanel/SidePanel";
 
-const DashboardLayout = ({ children }: { children: ReactNode }) => {
+const DashboardLayout = ({
+  children,
+  restrictedRoles,
+}: {
+  children: ReactNode;
+  restrictedRoles?: string[];
+}) => {
   const { data: user, isLoading } = useQuery({
     queryKey: ["profile"],
 
     queryFn: authService.getProfile,
   });
 
-  if (isLoading) {
+  if (restrictedRoles?.includes(user?.role as string)) {
+    return <Navigate to="/not-found" />;
+  }
+
+  if (isLoading || !user) {
     return (
       <div className="flex h-screen w-screen items-center justify-center">
         <Spinner />
@@ -29,7 +40,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
         <Header user={user} />
 
         <div className="flex flex-1 gap-4 px-5 pb-4">
-          <SidePanel />
+          <SidePanel role={user.role} />
 
           <div className="relative w-full flex-1 overflow-hidden rounded-[10px] bg-white bg-opacity-[30%] p-[17px]">
             {children}

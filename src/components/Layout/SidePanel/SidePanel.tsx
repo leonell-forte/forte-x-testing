@@ -2,6 +2,7 @@
 
 import classNames from "classnames";
 import { motion } from "framer-motion";
+import { useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import close from "assets/images/icons/close.svg";
@@ -9,8 +10,13 @@ import close from "assets/images/icons/close.svg";
 import { MENUS } from "lib/constants";
 import { useAppDispatch, useAppSelector, useScreenSize } from "lib/hooks";
 import { setShowSidePanel } from "lib/slice/layout";
+import { RolesTypes } from "lib/types/common";
 
-const SidePanel = () => {
+interface IProps {
+  role: RolesTypes;
+}
+
+const SidePanel = ({ role }: IProps) => {
   const dispatch = useAppDispatch();
 
   const { isMobile } = useScreenSize();
@@ -29,6 +35,11 @@ const SidePanel = () => {
     false: { left: !isMobile ? 0 : "-100%" },
   };
 
+  const filteredMenu = useMemo(
+    () => MENUS.filter((item) => !item.restrictedRoles.includes(role)),
+    [role]
+  );
+
   return (
     <motion.div
       initial={variants[showSidePanel.toString() as "true" | "false"]}
@@ -44,7 +55,7 @@ const SidePanel = () => {
           <img src={close} alt="" />
         </button>
 
-        {MENUS.map((item, index) => {
+        {filteredMenu.map((item, index) => {
           const { name, link } = item;
 
           const active = pathname.includes(link);
