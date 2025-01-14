@@ -26,7 +26,7 @@ const DashboardLayout = ({
     return <Navigate to="/not-found" />;
   }
 
-  if (isLoading) {
+  if (isLoading || !user) {
     return (
       <div className="flex h-screen w-screen items-center justify-center">
         <Spinner />
@@ -37,10 +37,10 @@ const DashboardLayout = ({
   return (
     <ScrollArea>
       <div className="flex h-screen w-screen flex-col">
-        <Header user={user!} />
+        <Header user={user} />
 
         <div className="flex flex-1 gap-4 px-5 pb-4">
-          <SidePanel role={user?.role!} />
+          <SidePanel role={user.role} />
 
           <div className="relative w-full flex-1 overflow-hidden rounded-[10px] bg-white bg-opacity-[30%] p-[17px]">
             {children}
