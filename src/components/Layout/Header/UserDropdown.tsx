@@ -7,12 +7,12 @@ import { useMemo, useRef, useState } from "react";
 import arrow from "assets/images/icons/chevron.svg";
 
 import { useOutsideClick } from "lib/hooks";
-import { IUser } from "lib/types/users";
+import { ProfileType } from "lib/types/profile";
 
 import ViewProfileDialogue from "./ViewProfileDialogue";
 
 interface IProp {
-  user: IUser;
+  user: ProfileType;
 }
 
 const UserDropdown = ({ user }: IProp) => {
@@ -51,7 +51,7 @@ const UserDropdown = ({ user }: IProp) => {
       {showModal && user && (
         <ViewProfileDialogue
           organizations={organizations}
-          userId={user.id}
+          userId={user.id.toString()}
           isVisible={showModal}
           handleClose={() => {
             setShowModal(false);

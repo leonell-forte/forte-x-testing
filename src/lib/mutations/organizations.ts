@@ -72,7 +72,7 @@ const useOrganizationMutation = ({
 
         title: `Failed ${orgId ? "updating" : "adding"} organization`,
 
-        message: err?.response?.data?.message,
+        message: err?.response?.data?.data,
       });
     },
 

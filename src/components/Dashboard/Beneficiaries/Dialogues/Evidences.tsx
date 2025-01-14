@@ -38,7 +38,11 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
 
           <button
             type="button"
-            onClick={() => handleAddOrViewEvidence?.()}
+            onClick={(e) => {
+              e.stopPropagation();
+
+              handleAddOrViewEvidence?.();
+            }}
             className="flex !h-8 !w-8 flex-shrink-0 items-center justify-center rounded-full bg-white text-forest-green transition-all hover:scale-[1.05] hover:opacity-80"
           >
             <img src={add} alt="add" />

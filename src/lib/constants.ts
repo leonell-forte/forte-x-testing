@@ -4,23 +4,28 @@ export const MENUS = [
   {
     name: "beneficiaries",
     link: "/beneficiaries",
+    restrictedRoles: [],
   },
   {
     name: "contracts",
     link: "/contracts",
+    restrictedRoles: [],
   },
   {
     name: "organizations",
     link: "/organizations",
+    restrictedRoles: ["provider"],
   },
   {
     name: "projects",
     link: "/projects",
+    restrictedRoles: [],
   },
 
   {
     name: "users",
     link: "/users",
+    restrictedRoles: [],
   },
 ];
 
