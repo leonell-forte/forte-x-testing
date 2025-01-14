@@ -118,7 +118,16 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
                   </Table.Data>
 
                   <Table.Data>
-                    <p className="w-[150px] truncate">{name}</p>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+
+                        handleEditContract(id!);
+                      }}
+                      className="w-[150px] truncate text-left outline-none"
+                    >
+                      {name}
+                    </button>
                   </Table.Data>
 
                   <Table.Data>
@@ -153,18 +162,18 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
 
                   <Table.Data>
                     <div className="flex justify-end">
-                      <Button
-                        eventName={
-                          status === "DRAFT" ? "Edit Contract" : "View Contract"
-                        }
-                        id={id?.toString()}
-                        buttonType="default"
-                        type="button"
-                        onClick={() => handleEditContract(id!)}
-                        className="p-[3px]"
-                      >
-                        <img alt="pencil" src={pencil} />
-                      </Button>
+                      {status === "DRAFT" && (
+                        <Button
+                          eventName="Edit Contract"
+                          id={id?.toString()}
+                          buttonType="default"
+                          type="button"
+                          onClick={() => handleEditContract(id!)}
+                          className="p-[3px]"
+                        >
+                          <img alt="pencil" src={pencil} />
+                        </Button>
+                      )}
 
                       <Button
                         eventName="Delete Contract"
