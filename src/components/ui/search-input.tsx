@@ -16,11 +16,13 @@ type IProps = TextFieldProps & {
 const SearchInput = ({ dark, onClear, ...props }: IProps) => {
   return (
     <div className="relative flex flex-shrink-0 items-center">
-      <img
-        alt="search"
-        src={dark ? darkSearch : search}
-        className="absolute left-4 top-[18px]"
-      />
+      <button
+        type="submit"
+        className="absolute left-4 top-[16px] z-10"
+        disabled={!props.value}
+      >
+        <img alt="search" src={dark ? darkSearch : search} />
+      </button>
 
       <Input
         noHelperText
@@ -31,7 +33,11 @@ const SearchInput = ({ dark, onClear, ...props }: IProps) => {
       />
 
       {!!props.value && (
-        <button onClick={onClear} className="flex items-center justify-center">
+        <button
+          type="button"
+          onClick={onClear}
+          className="flex items-center justify-center"
+        >
           <img
             alt="search"
             src={dark ? darkClose : close}

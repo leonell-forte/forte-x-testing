@@ -4,7 +4,6 @@ import userService from "api/users";
 import { useMemo, useState } from "react";
 
 import closeFilter from "assets/images/icons/close-filter.svg";
-import pencil from "assets/images/icons/pencil.svg";
 
 import { ROLES } from "lib/constants";
 import { useDebounce, usePageTitle } from "lib/hooks";
@@ -12,11 +11,11 @@ import { IOrganization } from "lib/types/organizations";
 import { IUser } from "lib/types/users";
 
 import UserDialogue from "components/Dashboard/Users/Dialogues/UserDialogue";
+import UsersTable from "components/tables/Users";
 import Button from "components/ui/button";
 import Dropdown from "components/ui/dropdown";
 import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
-import Table from "components/ui/table";
 
 const UsersPage = () => {
   usePageTitle("Users");
@@ -67,12 +66,6 @@ const UsersPage = () => {
     setRole("");
 
     setOrganization([]);
-  };
-
-  const handleEditUser = (user: IUser) => {
-    setSelectedUser(user.id!.toString());
-
-    setModal("user");
   };
 
   return (
@@ -146,75 +139,7 @@ const UsersPage = () => {
         </div>
 
         <div className="space-y-4">
-          <div className="pr-4">
-            <Table.Container isEmpty={!users.length} isLoading={userLoading}>
-              <Table.Head>
-                <Table.Row>
-                  {TABLE_HEADER.map((key, headerIndex) => {
-                    return <Table.Header key={headerIndex}>{key}</Table.Header>;
-                  })}
-
-                  <Table.Header></Table.Header>
-                </Table.Row>
-              </Table.Head>
-              <Table.Body>
-                {users.map((item: IUser, bodyIndex: number) => {
-                  const {
-                    id,
-                    firstName,
-                    lastName,
-                    email,
-                    phoneNumber,
-                    role,
-                    organization,
-                  } = item;
-
-                  return (
-                    <Table.Row key={bodyIndex}>
-                      <Table.Data>
-                        <p className="w-[120px] truncate">{firstName}</p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="w-[120px] truncate">{lastName}</p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="w-[190px] truncate">{email}</p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="w-[150px] truncate">{phoneNumber}</p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="w-[80px] truncate capitalize">{role}</p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="w-[150px] truncate">{organization}</p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <div className="flex justify-end">
-                          <Button
-                            eventName="Edit User"
-                            id={id}
-                            buttonType="default"
-                            type="button"
-                            onClick={() => handleEditUser(item)}
-                            className="p-[3px]"
-                          >
-                            <img alt="pencil" src={pencil} />
-                          </Button>
-                        </div>
-                      </Table.Data>
-                    </Table.Row>
-                  );
-                })}
-              </Table.Body>
-            </Table.Container>
-          </div>
+          <UsersTable list={users} isLoading={userLoading} />
 
           <div className="flex w-full items-center justify-end">
             <Pagination
@@ -230,12 +155,3 @@ const UsersPage = () => {
 };
 
 export default UsersPage;
-
-const TABLE_HEADER = [
-  "First name",
-  "Last name",
-  "Email",
-  "Phone",
-  "Role",
-  "Organization",
-];

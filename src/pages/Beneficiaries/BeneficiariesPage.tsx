@@ -2,36 +2,28 @@ import { useQuery } from "@tanstack/react-query";
 import beneficiariesService from "api/beneficiaries";
 import organizationService from "api/organization";
 import projectService from "api/projects";
-import { ChangeEvent, useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
-import bin from "assets/images/icons/bin.svg";
 import closeFilter from "assets/images/icons/close-filter.svg";
-import pencil from "assets/images/icons/pencil.svg";
 
-import {
-  BENEFICIARY_STATUS,
-  DEFAULT_DATE_FORMAT,
-  RISK_LEVEL,
-} from "lib/constants";
+import { BENEFICIARY_STATUS, RISK_LEVEL } from "lib/constants";
 import { useDebounce, usePageTitle } from "lib/hooks";
 import {
   useExportBeneficiaries,
   useExportEvidenceMutation,
 } from "lib/mutations/beneficiaries";
 import { IBeneficiariesFilter } from "lib/types/beneficiaries";
-import { findLabelFromOptions, formatDate } from "lib/utils";
+import { findLabelFromOptions } from "lib/utils";
 
 import BeneficiariesDialogue from "components/Dashboard/Beneficiaries/Dialogues/BeneficiariesDialogue";
 import BulkUpdateStatus from "components/Dashboard/Beneficiaries/Dialogues/BulkUpdateStatus";
 import DeleteDialogue from "components/Dashboard/Beneficiaries/Dialogues/DeleteDialogue";
 import ImportDialogue from "components/Dashboard/Beneficiaries/Dialogues/ImportDialogue";
+import BeneficiariesTable from "components/tables/Beneficiaries";
 import Button from "components/ui/button";
-import Checkbox from "components/ui/checkbox";
-// import DatePicker from "components/ui/date-picker";
 import Dropdown, { IOption } from "components/ui/dropdown";
 import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
-import Table from "components/ui/table";
 
 type ModalLabelTypes =
   | "beneficiaries"
@@ -134,12 +126,6 @@ const BeneficiariesPage = () => {
     setSelectedIds([]);
   };
 
-  const handleDelete = (id: number) => {
-    setModal("delete");
-
-    setBeneficiaryId(id);
-  };
-
   // download evidence function
 
   const { exportEvidence, isPending: isDownloadingEvidence } =
@@ -157,16 +143,6 @@ const BeneficiariesPage = () => {
   const handleExportBeneficiaries = () => {
     exportBeneficiaries({ beneficiaryIds: selectedIds });
   };
-
-  const handleSelectAll = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      if (e.target.checked) {
-        setSelectedIds((beneficiariesList?.items || []).map((item) => item.id));
-      } else setSelectedIds([]);
-    },
-
-    [beneficiariesList]
-  );
 
   const renderModal = useCallback(() => {
     switch (modal) {
@@ -364,181 +340,11 @@ const BeneficiariesPage = () => {
         </div>
 
         <div className="space-y-[18px]">
-          <div className="pr-4">
-            <Table.Container
-              isLoading={isLoading}
-              isEmpty={!beneficiariesList?.items?.length}
-            >
-              <Table.Head>
-                <Table.Row>
-                  <Table.Header small>
-                    <Checkbox
-                      checked={
-                        beneficiariesList?.items?.length !== 0 &&
-                        selectedIds.length === beneficiariesList?.items.length
-                      }
-                      label="First name"
-                      labelClass="!text-black text-[14px]"
-                      onChange={handleSelectAll}
-                    />
-                  </Table.Header>
-
-                  <Table.Header small>Last name</Table.Header>
-
-                  <Table.Header small>Provider</Table.Header>
-
-                  <Table.Header small>Email</Table.Header>
-
-                  <Table.Header small>Phone number</Table.Header>
-
-                  <Table.Header small>Contract</Table.Header>
-
-                  <Table.Header small>Program</Table.Header>
-
-                  <Table.Header small>Risk level</Table.Header>
-
-                  <Table.Header small>Status</Table.Header>
-
-                  <Table.Header small> Start date</Table.Header>
-
-                  <Table.Header small> End date</Table.Header>
-
-                  <Table.Header small>Evidence</Table.Header>
-
-                  <Table.Header small></Table.Header>
-                </Table.Row>
-              </Table.Head>
-
-              <Table.Body>
-                {beneficiariesList?.items?.map((item, index) => {
-                  const {
-                    firstName,
-
-                    lastName,
-
-                    provider,
-
-                    email,
-
-                    contractId,
-
-                    id,
-
-                    cohortEndDate,
-
-                    program,
-
-                    cohortStartDate,
-
-                    riskLevel,
-
-                    status,
-
-                    evidences,
-
-                    phoneNumber,
-                  } = item;
-
-                  return (
-                    <Table.Row key={index}>
-                      <Table.Data small>
-                        <div className="flex items-center gap-2">
-                          <div className="w-6">
-                            <Checkbox
-                              labelClass="text-[14px]"
-                              checked={selectedIds.includes(id)}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedIds((prev) => [...prev, id]);
-                                } else
-                                  setSelectedIds((prev) =>
-                                    prev.filter((item) => item !== id)
-                                  );
-                              }}
-                            />
-                          </div>
-                          <button
-                            onClick={() => {
-                              setBeneficiaryId(id);
-
-                              setModal("beneficiaries");
-
-                              setEditMode(false);
-                            }}
-                            className="translate-x-[-8px] outline-none"
-                          >
-                            {firstName}
-                          </button>
-                        </div>
-                      </Table.Data>
-
-                      <Table.Data small>{lastName}</Table.Data>
-
-                      <Table.Data small>{provider}</Table.Data>
-
-                      <Table.Data small>{email}</Table.Data>
-
-                      <Table.Data small>{phoneNumber}</Table.Data>
-
-                      <Table.Data small>Contract {contractId}</Table.Data>
-
-                      <Table.Data small>{program}</Table.Data>
-
-                      <Table.Data small className="capitalize">
-                        {riskLevel}
-                      </Table.Data>
-
-                      <Table.Data small>{status}</Table.Data>
-
-                      <Table.Data small>
-                        {formatDate(cohortStartDate, DEFAULT_DATE_FORMAT)}
-                      </Table.Data>
-
-                      <Table.Data small>
-                        {formatDate(cohortEndDate, DEFAULT_DATE_FORMAT)}
-                      </Table.Data>
-
-                      <Table.Data small>
-                        {evidences.map((item) => item.file.filename).join(", ")}
-                      </Table.Data>
-
-                      <Table.Data small>
-                        <div className="flex justify-end">
-                          <Button
-                            eventName="Update Beneficiary"
-                            id={id.toString()}
-                            buttonType="default"
-                            type="button"
-                            className="p-[3px]"
-                            onClick={() => {
-                              setModal("beneficiaries");
-
-                              setBeneficiaryId(id);
-
-                              setEditMode(true);
-                            }}
-                          >
-                            <img alt="pencil" src={pencil} />
-                          </Button>
-
-                          <Button
-                            eventName="Delete Beneficiary"
-                            id={id.toString()}
-                            buttonType="default"
-                            type="button"
-                            onClick={() => handleDelete(id)}
-                            className="p-[3px]"
-                          >
-                            <img alt="pencil" src={bin} />
-                          </Button>
-                        </div>
-                      </Table.Data>
-                    </Table.Row>
-                  );
-                })}
-              </Table.Body>
-            </Table.Container>
-          </div>
+          <BeneficiariesTable
+            list={beneficiariesList?.items || []}
+            isLoading={isLoading}
+            setChecked={setSelectedIds}
+          />
 
           <div className="flex w-full items-center justify-end">
             <Pagination

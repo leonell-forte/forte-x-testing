@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import arrow from "assets/images/icons/arrow.svg";
 
@@ -11,10 +11,18 @@ const IndividualProjectsPage = () => {
   // page title is set on the outcomes component
 
   const { id } = useParams();
+  const navigate = useNavigate();
 
   return (
     <div className="hide-scroll h-full space-y-2.5 py-3">
-      <Link to="/projects" className="flex items-center gap-2.5">
+      <Link
+        to={".."}
+        onClick={(e) => {
+          e.preventDefault();
+          navigate(-1);
+        }}
+        className="flex items-center gap-2.5"
+      >
         <img src={arrow} alt="back" />
 
         <p className="font-semibold">Back</p>
