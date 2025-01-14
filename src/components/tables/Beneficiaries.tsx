@@ -220,7 +220,9 @@ const BeneficiariesTable = ({
                         </div>
                       ) : null}
                       <button
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
+
                           setBeneficiaryId(id);
 
                           setModal("beneficiaries");
