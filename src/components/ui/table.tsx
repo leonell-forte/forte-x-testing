@@ -99,7 +99,7 @@ const Table = {
       <th
         {...props}
         className={classNames(
-          "px-12 py-5 !text-black",
+          "px-8 py-5 !text-black",
           small && "!h-[52px] !px-4 !py-2",
           props.className
         )}
