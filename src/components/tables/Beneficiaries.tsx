@@ -98,7 +98,7 @@ const BeneficiariesTable = ({
           <Table.Head>
             <Table.Row>
               {setChecked ? (
-                <Table.Header small>
+                <Table.Header small className="!h-[60px] !pr-12">
                   <Checkbox
                     checked={
                       list?.length !== 0 && selectedIds.length === list.length
@@ -109,32 +109,58 @@ const BeneficiariesTable = ({
                   />
                 </Table.Header>
               ) : (
-                <Table.Header small>First Name</Table.Header>
+                <Table.Header small className="!h-[60px] !pr-12">
+                  First Name
+                </Table.Header>
               )}
 
-              <Table.Header small>Last name</Table.Header>
+              <Table.Header small className="!h-[60px] !pr-12">
+                Last name
+              </Table.Header>
 
-              <Table.Header small>Provider</Table.Header>
+              <Table.Header small className="!h-[60px] !pr-12">
+                Provider
+              </Table.Header>
 
-              <Table.Header small>Email</Table.Header>
+              <Table.Header small className="!h-[60px] !pr-12">
+                Email
+              </Table.Header>
 
-              <Table.Header small>Phone number</Table.Header>
+              <Table.Header small className="!h-[60px] !pr-12">
+                Phone number
+              </Table.Header>
 
-              <Table.Header small>Contract</Table.Header>
+              <Table.Header small className="!h-[60px] !pr-12">
+                Contract
+              </Table.Header>
 
-              <Table.Header small>Program</Table.Header>
+              <Table.Header small className="!h-[60px] !pr-12">
+                Program
+              </Table.Header>
 
-              <Table.Header small>Risk level</Table.Header>
+              <Table.Header small className="!h-[60px] !pr-12">
+                Risk level
+              </Table.Header>
 
-              <Table.Header small>Status</Table.Header>
+              <Table.Header small className="!h-[60px] !pr-12">
+                Status
+              </Table.Header>
 
-              <Table.Header small> Start date</Table.Header>
+              <Table.Header small className="!h-[60px] !pr-12">
+                {" "}
+                Start date
+              </Table.Header>
 
-              <Table.Header small> End date</Table.Header>
+              <Table.Header small className="!h-[60px] !pr-12">
+                {" "}
+                End date
+              </Table.Header>
 
-              <Table.Header small>Evidence</Table.Header>
+              <Table.Header small className="!h-[60px] !pr-12">
+                Evidence
+              </Table.Header>
 
-              <Table.Header small></Table.Header>
+              <Table.Header small className="!h-[60px] !pr-12"></Table.Header>
             </Table.Row>
           </Table.Head>
 
@@ -170,7 +196,7 @@ const BeneficiariesTable = ({
 
               return (
                 <Table.Row key={index}>
-                  <Table.Data small>
+                  <Table.Data small className="!h-[64px]">
                     <div className="flex items-center gap-2">
                       {setChecked ? (
                         <div className="w-6">
@@ -211,37 +237,51 @@ const BeneficiariesTable = ({
                     </div>
                   </Table.Data>
 
-                  <Table.Data small>{lastName}</Table.Data>
+                  <Table.Data small className="!h-[64px]">
+                    {lastName}
+                  </Table.Data>
 
-                  <Table.Data small>{provider}</Table.Data>
+                  <Table.Data small className="!h-[64px]">
+                    {provider}
+                  </Table.Data>
 
-                  <Table.Data small>{email}</Table.Data>
+                  <Table.Data small className="!h-[64px]">
+                    {email}
+                  </Table.Data>
 
-                  <Table.Data small>{phoneNumber}</Table.Data>
+                  <Table.Data small className="!h-[64px]">
+                    {phoneNumber}
+                  </Table.Data>
 
-                  <Table.Data small>Contract {contractId}</Table.Data>
+                  <Table.Data small className="!h-[64px]">
+                    Contract {contractId}
+                  </Table.Data>
 
-                  <Table.Data small>{program}</Table.Data>
+                  <Table.Data small className="!h-[64px]">
+                    {program}
+                  </Table.Data>
 
-                  <Table.Data small className="capitalize">
+                  <Table.Data small className="!h-[64px] capitalize">
                     {riskLevel}
                   </Table.Data>
 
-                  <Table.Data small>{status}</Table.Data>
+                  <Table.Data small className="!h-[64px]">
+                    {status}
+                  </Table.Data>
 
-                  <Table.Data small>
+                  <Table.Data small className="!h-[64px]">
                     {formatDate(cohortStartDate, DEFAULT_DATE_FORMAT)}
                   </Table.Data>
 
-                  <Table.Data small>
+                  <Table.Data small className="!h-[64px]">
                     {formatDate(cohortEndDate, DEFAULT_DATE_FORMAT)}
                   </Table.Data>
 
-                  <Table.Data small>
+                  <Table.Data small className="!h-[64px]">
                     {evidences?.map((item) => item.file.filename).join(", ")}
                   </Table.Data>
 
-                  <Table.Data small>
+                  <Table.Data small className="!h-[64px]">
                     <div className="flex justify-end">
                       <Button
                         eventName="Update Beneficiary"
