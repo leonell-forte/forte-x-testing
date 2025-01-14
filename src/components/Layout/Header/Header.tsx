@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import menu from "assets/images/icons/menu.svg";
 
@@ -15,13 +16,25 @@ interface IProp {
 }
 
 const Header = ({ user }: IProp) => {
+  const [q, setQ] = useState("");
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const { pageTitle } = usePageTitle();
 
   const handleClick = () => {
     dispatch(setShowSidePanel(true));
   };
+
+  const params = useParams();
+
+  useEffect(() => {
+    if (!params?.query) {
+      setQ("");
+      return;
+    }
+    setQ(params.query);
+  }, [params]);
 
   return (
     <div className="flex w-screen items-center justify-between px-5 py-[22px] md:px-[30px]">
@@ -41,7 +54,20 @@ const Header = ({ user }: IProp) => {
       </div>
 
       <div className="flex w-full items-center justify-end gap-4">
-        <SearchInput className="!hidden flex-shrink-0 sm:!block md:w-[286px]" />
+        <form
+          autoComplete="off"
+          onSubmit={(e) => {
+            e.preventDefault();
+            navigate(`/search/${q}`);
+          }}
+        >
+          <SearchInput
+            className="!hidden flex-shrink-0 sm:!block md:w-[286px]"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            onClear={() => setQ("")}
+          />
+        </form>
 
         <UserDropdown user={user} />
       </div>

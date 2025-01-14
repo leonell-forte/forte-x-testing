@@ -1,5 +1,7 @@
 import React from "react";
 
+import SearchResultsPage from "pages/Search/SearchResultsPage";
+
 const UsersPage = React.lazy(() => import("../pages/Users/UsersPage"));
 
 const ProjectsPage = React.lazy(() => import("../pages/Projects/ProjectsPage"));
@@ -55,6 +57,12 @@ export const PROTECTED_ROUTES = [
     link: "/beneficiaries",
 
     Component: BeneficiariesPage,
+  },
+
+  {
+    link: "/search/:query",
+
+    Component: SearchResultsPage,
   },
 ];
 
