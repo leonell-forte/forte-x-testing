@@ -64,7 +64,10 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
               <Table.Row key={index}>
                 <Table.Data className="max-w-[150px]">
                   <button
-                    onClick={() => handleAddOrViewEvidence?.(id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddOrViewEvidence?.(id);
+                    }}
                     className="link underline"
                   >
                     {file?.filename}
