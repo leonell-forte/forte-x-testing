@@ -17,3 +17,7 @@ export interface User {
 
   lastName: string;
 }
+
+export type StatusTypes = "active" | "inactive";
+
+export type RolesTypes = "provider" | "admin" | "user";

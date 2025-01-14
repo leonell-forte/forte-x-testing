@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
 import "./App.css";
@@ -36,13 +36,14 @@ function App() {
                     );
                   })}
                   {PROTECTED_ROUTES.map((item, index) => {
-                    const { link, Component } = item;
+                    const { link, Component, restrictedRoles } = item;
+
                     return (
                       <Route
                         key={index}
                         path={link}
                         element={
-                          <DashboardLayout>
+                          <DashboardLayout restrictedRoles={restrictedRoles}>
                             <Component />
                           </DashboardLayout>
                         }

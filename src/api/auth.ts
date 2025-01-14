@@ -1,6 +1,8 @@
 import axios from "axios";
 import { z } from "zod";
 
+import { ProfileType } from "lib/types/profile";
+
 import { api } from "../lib/axios/interceptor";
 import { cookie } from "../lib/hooks";
 import { login, password, signup } from "../lib/validators/auth";
@@ -44,7 +46,7 @@ class AuthService {
     window.location.href = "/users";
   }
 
-  async getProfile() {
+  async getProfile(): Promise<ProfileType> {
     const response = await api.get(`/authentication/profile`);
 
     return response.data.data;

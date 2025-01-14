@@ -5,14 +5,14 @@ import menu from "assets/images/icons/menu.svg";
 
 import { useAppDispatch, usePageTitle } from "lib/hooks";
 import { setShowSidePanel } from "lib/slice/layout";
-import { IUser } from "lib/types/users";
+import { ProfileType } from "lib/types/profile";
 
 import SearchInput from "components/ui/search-input";
 
 import UserDropdown from "./UserDropdown";
 
 interface IProp {
-  user: IUser;
+  user: ProfileType;
 }
 
 const Header = ({ user }: IProp) => {
