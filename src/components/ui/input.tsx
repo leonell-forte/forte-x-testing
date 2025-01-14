@@ -17,6 +17,8 @@ type PropTypes = TextFieldProps & {
   min?: number;
 
   wholeNumberOnly?: boolean;
+
+  accept?: string;
 };
 
 const Input = forwardRef<HTMLDivElement, PropTypes>(
@@ -97,6 +99,7 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
           slotProps={{
             htmlInput: {
               ...(type === "number" && { min: props.min }), // Set minimum value for type="number"
+              accept: props.accept,
             },
           }}
           fullWidth
