@@ -97,7 +97,7 @@ export const useEvidenceMutation = ({
 
         title: `Failed ${evidenceId ? "updating" : "adding"} evidence`,
 
-        message: err?.response?.data?.message,
+        message: err?.response?.data?.data,
       });
 
       queryClient.setQueryData(
