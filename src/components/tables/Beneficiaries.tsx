@@ -88,7 +88,7 @@ const BeneficiariesTable = ({
           />
         );
     }
-  }, [beneficiaryId, editMode, modal]);
+  }, [beneficiaryId, editMode, modal, close]);
 
   return (
     <>
