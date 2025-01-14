@@ -33,7 +33,7 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
     setSelectedProject(null);
   };
 
-  const renderModal = useCallback(() => {
+  const renderDialog = useCallback(() => {
     switch (modal) {
       case "project":
         return (
@@ -57,7 +57,7 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
 
   return (
     <>
-      {renderModal()}
+      {renderDialog()}
 
       <div className="pr-4">
         <Table.Container isEmpty={!list.length} isLoading={isLoading}>

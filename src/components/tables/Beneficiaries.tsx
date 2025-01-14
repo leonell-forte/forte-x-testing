@@ -67,7 +67,7 @@ const BeneficiariesTable = ({
     [list, setChecked]
   );
 
-  const renderModal = useCallback(() => {
+  const renderDialog = useCallback(() => {
     switch (modal) {
       case "beneficiaries":
         return (
@@ -92,7 +92,7 @@ const BeneficiariesTable = ({
 
   return (
     <>
-      {renderModal()}
+      {renderDialog()}
       <div className="pr-4">
         <Table.Container isLoading={isLoading} isEmpty={!list?.length}>
           <Table.Head>

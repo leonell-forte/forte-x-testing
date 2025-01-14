@@ -5,7 +5,6 @@ import { useCallback, useMemo, useState } from "react";
 import { useDebounce, usePageTitle } from "lib/hooks";
 import { IProject } from "lib/types/projects";
 
-import DeleteDialogue from "components/Dashboard/Projects/Dialogues/DeleteDialogue";
 import ProjectDialogue from "components/Dashboard/Projects/Dialogues/ProjectDialogue";
 import ProjectsTable from "components/tables/Projects";
 import Button from "components/ui/button";
@@ -61,15 +60,6 @@ const ProjectsPage = () => {
           <ProjectDialogue
             projectId={(selectedProject?.id || "") as string}
             isVisible={modal === "project"}
-            handleClose={handleCloseModal}
-          />
-        );
-
-      case "delete":
-        return (
-          <DeleteDialogue
-            isVisible={modal === "delete"}
-            project={selectedProject!}
             handleClose={handleCloseModal}
           />
         );

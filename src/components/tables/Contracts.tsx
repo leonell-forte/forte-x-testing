@@ -38,7 +38,7 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
     setModal(null);
   };
 
-  const renderModal = useCallback(() => {
+  const renderDialog = useCallback(() => {
     switch (modal) {
       case "contract":
         return (
@@ -74,7 +74,7 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
 
   return (
     <>
-      {renderModal()}
+      {renderDialog()}
       <div className="pr-4">
         <Table.Container isEmpty={!contracts.length} isLoading={isLoading}>
           <Table.Head>

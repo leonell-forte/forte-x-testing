@@ -12,7 +12,6 @@ import { IProject } from "lib/types/projects";
 import { findLabelFromOptions } from "lib/utils";
 
 import ContractDialogue from "components/Dashboard/Contracts/Dialogues/ContractDialogue";
-import DeleteDialogue from "components/Dashboard/Contracts/Dialogues/DeleteDialogue";
 import ContractsTable from "components/tables/Contracts";
 import Button from "components/ui/button";
 import Dropdown, { IOption } from "components/ui/dropdown";
@@ -105,15 +104,6 @@ const ContractsPage = () => {
           <ContractDialogue
             id={contractId!}
             isVisible={modal === "contract"}
-            handleClose={close}
-          />
-        );
-
-      case "delete":
-        return (
-          <DeleteDialogue
-            id={contractId!.toString()}
-            isVisible={modal === "delete"}
             handleClose={close}
           />
         );
