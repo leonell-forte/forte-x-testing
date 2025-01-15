@@ -69,7 +69,7 @@ const useContractMutation = ({ id, successCallback }: IContractMutation) => {
 
         title: `Failed ${id ? "updating" : "adding"} contract`,
 
-        message: formatErrorMessage(err?.response?.data?.data[0]),
+        message: formatErrorMessage(err?.response?.data?.data?.[0]),
       });
 
       queryClient.setQueryData(

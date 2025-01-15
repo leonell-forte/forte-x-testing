@@ -99,7 +99,7 @@ export const useEvidenceMutation = ({
 
         title: `Failed ${evidenceId ? "updating" : "adding"} evidence`,
 
-        message: formatErrorMessage(err?.response?.data?.data[0]),
+        message: formatErrorMessage(err?.response?.data?.data?.[0]),
       });
 
       queryClient.setQueryData(
