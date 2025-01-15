@@ -46,7 +46,14 @@ const Alert = () => {
             {title && <p className="text-[20px] font-semibold">{title}</p>}
             {message && <p className="text-[14px]">{message}</p>}
           </div>
-          <button className="absolute right-3 top-3" onClick={handleClose}>
+          <button
+            className="absolute right-3 top-3"
+            onClick={(e) => {
+              e.stopPropagation();
+
+              handleClose();
+            }}
+          >
             <img src={close} alt="" />
           </button>
         </div>

@@ -123,3 +123,20 @@ export const findLabelFromOptions = (
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+export function formatErrorMessage(input: string) {
+  // Remove leading and trailing quotes if present
+  const unescapedInput = input.replace(/^"|"$/g, "");
+
+  // Split the string into parts using unescaped quotes
+  const parts = unescapedInput.split('"');
+
+  const quotedWord = parts[0]; // Extract the quoted word
+  const rest = parts[1]; // Extract the rest of the sentence
+
+  // Capitalize the quoted word and the rest of the sentence
+  const capitalizedQuotedWord = `${quotedWord.charAt(0).toUpperCase()}${quotedWord.slice(1)}`;
+  const capitalizedRest = rest.charAt(0).toUpperCase() + rest.slice(1);
+
+  return `${capitalizedQuotedWord} ${capitalizedRest}`;
+}
