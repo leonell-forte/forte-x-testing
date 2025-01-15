@@ -131,8 +131,6 @@ export function formatErrorMessage(input: string) {
   // Split the string into parts using unescaped quotes
   const parts = unescapedInput.split('"');
 
-  console.log(parts);
-
   const quotedWord = parts[0]; // Extract the quoted word
   const rest = parts[1]; // Extract the rest of the sentence
 
