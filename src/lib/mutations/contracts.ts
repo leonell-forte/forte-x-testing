@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import contractService from "api/contract";
 
 import { ContractFieldValues, IContract } from "lib/types/contracts";
+import { formatErrorMessage } from "lib/utils";
 
 import { queryClient } from "components/QueryProvider";
 
@@ -68,7 +69,7 @@ const useContractMutation = ({ id, successCallback }: IContractMutation) => {
 
         title: `Failed ${id ? "updating" : "adding"} contract`,
 
-        message: err?.response?.data?.data,
+        message: formatErrorMessage(err?.response?.data?.data[0]),
       });
 
       queryClient.setQueryData(

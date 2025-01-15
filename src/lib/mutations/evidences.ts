@@ -2,6 +2,8 @@ import * as amplitude from "@amplitude/analytics-browser";
 import { useMutation } from "@tanstack/react-query";
 import evidenceService from "api/evidence";
 
+import { formatErrorMessage } from "lib/utils";
+
 import { queryClient } from "components/QueryProvider";
 
 import { useAlert } from "../hooks";
@@ -97,7 +99,7 @@ export const useEvidenceMutation = ({
 
         title: `Failed ${evidenceId ? "updating" : "adding"} evidence`,
 
-        message: err?.response?.data?.data,
+        message: formatErrorMessage(err?.response?.data?.data[0]),
       });
 
       queryClient.setQueryData(

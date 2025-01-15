@@ -2,6 +2,8 @@ import * as amplitude from "@amplitude/analytics-browser";
 import { useMutation } from "@tanstack/react-query";
 import organizationService from "api/organization";
 
+import { formatErrorMessage } from "lib/utils";
+
 import { queryClient } from "components/QueryProvider";
 
 import { useAlert } from "../hooks";
@@ -72,7 +74,7 @@ const useOrganizationMutation = ({
 
         title: `Failed ${orgId ? "updating" : "adding"} organization`,
 
-        message: err?.response?.data?.data,
+        message: formatErrorMessage(err?.response?.data?.data[0]),
       });
     },
 

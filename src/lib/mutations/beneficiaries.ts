@@ -3,6 +3,8 @@ import { useMutation } from "@tanstack/react-query";
 import beneficiariesService from "api/beneficiaries";
 import { format } from "date-fns";
 
+import { formatErrorMessage } from "lib/utils";
+
 import { queryClient } from "components/QueryProvider";
 
 import { useAlert } from "../hooks";
@@ -58,7 +60,7 @@ export const useBeneficiaryMutation = ({
       setAlert({
         title: `Failed ${beneficiaryId ? "updating" : "adding"} beneficiary`,
 
-        message: err?.response?.data?.data?.[0],
+        message: formatErrorMessage(err?.response?.data?.data?.[0]),
 
         status: "error",
       });
