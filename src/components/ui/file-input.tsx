@@ -61,8 +61,6 @@ const FileInput = ({
 
         setValue(res.data.data.filename);
       } catch (err: any) {
-        console.log(err);
-
         setAlert({
           title: "Failed uploading file",
 
