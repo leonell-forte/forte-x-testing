@@ -30,4 +30,13 @@ export type UserRoleType =
   | "provider.user"
   | "provider.admin"
   | "provider.owner"
-  | "provider.readonly";
+  | "provider.readonly"
+  | "admin";
+
+export type LoginReturnType = {
+  expiryDate: string;
+
+  role: UserRoleType;
+
+  token: string;
+};

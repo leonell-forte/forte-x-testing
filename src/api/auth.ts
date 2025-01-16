@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { UserData } from "lib/types/auth";
 import { ProfileType } from "lib/types/profile";
+import { LoginReturnType } from "lib/types/users";
 import { removeFirstTwoAndEquals } from "lib/utils";
 
 import { api } from "../lib/axios/interceptor";
@@ -10,10 +11,10 @@ import { cookie } from "../lib/hooks";
 import { login, password, signup } from "../lib/validators/auth";
 
 class AuthService {
-  async login(body: z.infer<typeof login.schema>) {
+  async login(body: z.infer<typeof login.schema>): Promise<LoginReturnType> {
     const res = await api.post("/authentication/login", body);
 
-    return res;
+    return res.data.data;
   }
 
   async signup(body: z.infer<typeof signup.schema>, code: string = "") {
