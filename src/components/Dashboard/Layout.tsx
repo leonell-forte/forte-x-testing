@@ -1,28 +1,53 @@
+import { useQuery } from "@tanstack/react-query";
+import authService from "api/auth";
 import { ReactNode } from "react";
+import { Navigate } from "react-router-dom";
+
+import { ScrollArea } from "components/ui/scroll-area/ScrollArea";
+import Spinner from "components/ui/spinner/spinner";
+
 import Header from "../Layout/Header/Header";
 import SidePanel from "../Layout/SidePanel/SidePanel";
-import { useQuery } from "@tanstack/react-query";
-import authService from "../../api/auth";
 
-const DashboardLayout = ({ children }: { children: ReactNode }) => {
-  const { data: user } = useQuery({
+const DashboardLayout = ({
+  children,
+  restrictedRoles,
+}: {
+  children: ReactNode;
+  restrictedRoles?: string[];
+}) => {
+  const { data: user, isLoading } = useQuery({
     queryKey: ["profile"],
 
     queryFn: authService.getProfile,
   });
 
+  if (restrictedRoles?.includes(user?.role as string)) {
+    return <Navigate to="/not-found" />;
+  }
+
+  if (isLoading || !user) {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
+
   return (
-    <div className="h-screen overflow-y-scroll w-screen overflow-x-hidden">
-      <Header user={user} />
+    <ScrollArea>
+      <div className="flex h-screen w-screen flex-col">
+        <Header user={user} />
 
-      <div className="px-5 flex gap-4 min-h-[88vh] pb-4 w-screen overflow-scroll">
-        <SidePanel />
+        <div className="flex flex-1 gap-4 px-5 pb-4">
+          <SidePanel role={user.role} />
 
-        <div className="relative bg-white bg-opacity-[30%] rounded-[10px] p-[17px] w-full min-w-[1024px] hide-scroll overflow-hidden">
-          {children}
+          <div className="relative w-full flex-1 overflow-hidden rounded-[10px] bg-white bg-opacity-[30%] p-[17px]">
+            {children}
+          </div>
         </div>
       </div>
-    </div>
+    </ScrollArea>
   );
 };
 

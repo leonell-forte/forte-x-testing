@@ -1,14 +1,18 @@
-import organizationService from "../../api/organization";
-import { queryClient } from "../../components/QueryProvider";
-import { useMutation } from "@tanstack/react-query";
-import { useAlert } from "../hooks";
 import * as amplitude from "@amplitude/analytics-browser";
+import { useMutation } from "@tanstack/react-query";
+import organizationService from "api/organization";
+
+import { formatErrorMessage } from "lib/utils";
+
+import { queryClient } from "components/QueryProvider";
+
+import { useAlert } from "../hooks";
 import { OrganizationFieldTypes } from "../types/organizations";
 
 interface IOrganizationMutation {
   orgId?: string;
 
-  successCallback?: () => void;
+  successCallback?: (id: number) => void;
 }
 
 const useOrganizationMutation = ({
@@ -49,10 +53,12 @@ const useOrganizationMutation = ({
         title: "Success!",
       });
 
-      successCallback?.();
+      console.log(addedOrg);
+
+      successCallback?.(addedOrg.data.data.id);
 
       amplitude.track(
-        `${orgId ? "Update" : "Add"} Organization Form Submission`,
+        `${orgId ? "Update" : "Add"} Organization Form Submission`
       );
     },
 
@@ -60,7 +66,7 @@ const useOrganizationMutation = ({
       queryClient.setQueryData(
         ["organizations", 1],
 
-        context?.prevOrganizations,
+        context?.prevOrganizations
       );
 
       setAlert({
@@ -68,7 +74,7 @@ const useOrganizationMutation = ({
 
         title: `Failed ${orgId ? "updating" : "adding"} organization`,
 
-        message: err?.response?.data?.message,
+        message: formatErrorMessage(err?.response?.data?.data?.[0]),
       });
     },
 

@@ -1,31 +1,30 @@
-import SignupForm from "../../components/Signup/SignupForm";
-import Card from "../../components/ui/card";
-import skills from "../../assets/images/signup/spot-future-skills.png";
 import { useNavigate } from "react-router-dom";
+
+import skills from "assets/images/signup/spot-future-skills.png";
+
+import SignupForm from "components/Signup/SignupForm";
+import Card from "components/ui/card";
 
 const SignupPage = () => {
   const navigate = useNavigate();
 
-  const handleNextStep = () => {
-    navigate("/users");
+  const handleNextStep = (path?: string) => {
+    navigate(path || "/users");
   };
 
   return (
-    <div className="main-container grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-[99px] items-center h-[95vh] md:px-[86px] py-10">
+    <div className="main-container grid h-[95vh] grid-cols-1 items-center gap-10 py-10 md:gap-[99px] md:px-[86px] lg:grid-cols-2">
       <div className="hidden lg:block">
-        <div className="max-w-[437px] w-auto h-auto mx-auto md:mx-0">
-          <img
-            alt="jobs"
-            src={skills}
-          />
+        <div className="mx-auto h-auto w-auto max-w-[437px] md:mx-0">
+          <img alt="jobs" src={skills} />
         </div>
 
         <div className="space-y-6 text-center md:text-left">
-          <p className="text-[40px] md:text-[52px] font-famaime leading-[110%]">
+          <p className="font-famaime text-[40px] leading-[110%] md:text-[52px]">
             Unlocking Human <br /> Potential
           </p>
 
-          <p className="text-[18px] md:text-[24px] leading-[110%]">
+          <p className="text-[18px] leading-[110%] md:text-[24px]">
             We’re building a future of work that works for everyone <br />- by
             funding effective training at no cost to students, and no risk to
             governments.
@@ -33,12 +32,12 @@ const SignupPage = () => {
         </div>
       </div>
 
-      <Card className="px-10 py-12 md:py-[74px] h-fit flex items-center">
-        <div className="max-w-[400px] mx-auto space-y-12 w-full">
+      <Card className="flex h-fit items-center px-10 py-12 md:py-[74px]">
+        <div className="mx-auto w-full max-w-[400px] space-y-12">
           <img
             alt="logo"
             src="/logo.png"
-            className="w-auto h-auto mx-auto max-w-[122px]"
+            className="mx-auto h-auto w-auto max-w-[122px]"
           />
 
           <SignupForm handleNext={handleNextStep} />

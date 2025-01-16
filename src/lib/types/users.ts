@@ -1,5 +1,6 @@
-import { users } from "../../lib/validators/users";
 import { z } from "zod";
+
+import { users } from "lib/validators/users";
 
 export interface IUser {
   id?: string;
@@ -24,3 +25,18 @@ export interface IUser {
 }
 
 export type UserFieldTypes = z.infer<typeof users.schema>;
+
+export type UserRoleType =
+  | "provider.user"
+  | "provider.admin"
+  | "provider.owner"
+  | "provider.readonly"
+  | "admin";
+
+export type LoginReturnType = {
+  expiryDate: string;
+
+  role: UserRoleType;
+
+  token: string;
+};

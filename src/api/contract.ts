@@ -1,11 +1,11 @@
-import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import { api } from "../lib/axios/interceptor";
-import { generateODataQuery, IODataObject } from "../lib/utils";
+import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import {
   ContractFieldValues,
   IContract,
   IContractFilters,
 } from "../lib/types/contracts";
+import { IODataObject, generateODataQuery } from "../lib/utils";
 
 interface IContractListProps {
   page?: number;
@@ -34,7 +34,7 @@ class ContractService {
     const params = new URLSearchParams();
 
     let filtersData: IODataObject = {
-      "organizations.name": {
+      "contract.name": {
         value: search!,
 
         exact: false,
@@ -42,19 +42,29 @@ class ContractService {
         isSearch: true,
       },
 
-      "projects.name": {
-        value: filters?.project || "",
+      "project.name": {
+        value: search!,
 
-        exact: true,
+        exact: false,
+
+        isSearch: true,
       },
 
-      "contracts.status": {
+      "organization.name": {
+        value: search!,
+
+        exact: false,
+
+        isSearch: true,
+      },
+
+      "contract.status": {
         value: filters?.status.toUpperCase() || "",
 
         exact: true,
       },
 
-      "contracts.startDate": {
+      "contract.startDate": {
         value: filters?.date || "",
 
         exact: false,
@@ -62,8 +72,8 @@ class ContractService {
         isDate: true,
       },
 
-      "projects.id": {
-        value: projectId ? projectId.toString() : "",
+      "contract.projectId": {
+        value: projectId?.toString() ?? filters?.project ?? "",
 
         exact: true,
       },
@@ -81,6 +91,8 @@ class ContractService {
       params.append("$filter", generateODataQuery(filtersData));
     }
 
+    params.append("$orderBy", "contract.name asc");
+
     const res = await api.get(`/contracts?${params}`);
 
     return res.data;
@@ -90,34 +102,42 @@ class ContractService {
     const body = {
       ...data,
 
-      contractOutcomeRates: data.contractOutcomeRates.map((item) => ({
+      targetNoOfBenefeciaries: Number(data.targetNoOfBenefeciaries),
+
+      documentId: Number(data.documentId),
+
+      outcomeRates: data.outcomeRates.map((item) => ({
         ...item,
 
         threshold: Number(item.threshold),
       })),
     };
+
     const response = await api.post("/contracts", body);
 
     return response.data.data;
   }
 
   async update(values: ContractFieldValues) {
-    const body = {
+    let body = {
       ...values,
 
-      contractOutcomeRates: values.contractOutcomeRates.map((item) => ({
+      partyIds: values.partyIds.map((item) => item.toString()),
+
+      contractOutcomeRates: values.outcomeRates.map((item) => ({
         ...item,
 
         threshold: Number(item.threshold),
       })),
     };
+    delete (body as any).outcomeRates;
 
     const response = await api.put("/contracts", body);
 
     return response.data.data;
   }
 
-  async getOne(id: string) {
+  async getOne(id: string): Promise<IContract> {
     const response = await api.get(`/contracts/${id}`);
 
     return response.data.data;

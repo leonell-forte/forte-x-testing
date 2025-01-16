@@ -1,14 +1,15 @@
-import { ReactNode, useCallback } from "react";
 import {
   CheckboxProps,
   FormControlLabel,
   Checkbox as MuiCheckbox,
 } from "@mui/material";
-import checkedDisabled from "../../assets/images/icons/checkbox-disabled-checked.svg";
-import unCheckedDisabled from "../../assets/images/icons/checkbox-disabled-unchecked.svg";
-import check from "../../assets/images/icons/checkbox-checked.svg";
-import unChecked from "../../assets/images/icons/checkbox-unchecked.svg";
 import classNames from "classnames";
+import { ReactNode, useCallback } from "react";
+
+import check from "assets/images/icons/checkbox-checked.svg";
+import checkedDisabled from "assets/images/icons/checkbox-disabled-checked.svg";
+import unCheckedDisabled from "assets/images/icons/checkbox-disabled-unchecked.svg";
+import unChecked from "assets/images/icons/checkbox-unchecked.svg";
 
 interface ICheckboxProps extends CheckboxProps {
   label?: string | ReactNode;
@@ -51,13 +52,11 @@ const Checkbox = ({
               <img
                 src={renderIcons().unchecked}
                 alt="unchecked"
+                className="w-4"
               />
             }
             checkedIcon={
-              <img
-                src={renderIcons().checked}
-                alt="checked"
-              />
+              <img src={renderIcons().checked} alt="checked" className="w-4" />
             }
             {...props}
             className="flex-shrink-0"
@@ -73,7 +72,7 @@ const Checkbox = ({
 
                 labelClass,
 
-                helperText && "!text-alert",
+                helperText && "!text-alert"
               )}
             >
               {label}
@@ -82,7 +81,7 @@ const Checkbox = ({
         }
       />
       {helperText && (
-        <p className="absolute text-alert top-7 left-6 text-[12px] font-medium truncate">
+        <p className="absolute left-6 top-7 truncate text-[12px] font-medium text-alert">
           {helperText}
         </p>
       )}

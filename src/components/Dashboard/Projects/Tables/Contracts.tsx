@@ -1,12 +1,16 @@
-import Table from "../../../../components/ui/table";
-import pencil from "../../../../assets/images/icons/pencil.svg";
+import { useQuery } from "@tanstack/react-query";
+import contractService from "api/contract";
 import { useState } from "react";
-import Button from "../../../../components/ui/button";
+
+import pencil from "assets/images/icons/pencil.svg";
+
+import { formatDate } from "lib/utils";
+
+import Button from "components/ui/button";
+import Table from "components/ui/table";
+
 import ContractDialogue from "../../Contracts/Dialogues/ContractDialogue";
 import TagExistingDialogue from "../Dialogues/TagExistingDialogue";
-import { useQuery } from "@tanstack/react-query";
-import contractService from "../../../../api/contract";
-import { formatDate } from "../../../../lib/utils";
 
 type ModalLabelType = "contract" | "tag" | "";
 
@@ -64,7 +68,6 @@ const Contracts = ({ projectId }: IProps) => {
             isVisible={modal === "tag"}
             handleClose={close}
             title="Add contracts to project"
-            handleAdd={() => {}}
           />
         );
     }
@@ -75,8 +78,8 @@ const Contracts = ({ projectId }: IProps) => {
       {renderModal(modal)}
 
       <div className="space-y-2.5">
-        <div className="flex justify-between items-center">
-          <p className="font-semibold text-[24px]">Contracts</p>
+        <div className="flex items-center justify-between">
+          <p className="text-[24px] font-semibold">Contracts</p>
 
           <div className="flex gap-2.5">
             <Button onClick={() => setModal("contract")}>
@@ -93,16 +96,13 @@ const Contracts = ({ projectId }: IProps) => {
             <Table.Row>
               {HEADERS.map((item, index) => {
                 return (
-                  <Table.Header
-                    small
-                    key={index}
-                  >
+                  <Table.Header small key={index}>
                     {item}
                   </Table.Header>
                 );
               })}
 
-              <Table.Header></Table.Header>
+              <Table.Header small></Table.Header>
             </Table.Row>
           </Table.Head>
 
@@ -111,7 +111,9 @@ const Contracts = ({ projectId }: IProps) => {
               const {
                 id,
 
-                outcomes,
+                parties,
+
+                name,
 
                 targetNoOfBenefeciaries,
 
@@ -120,48 +122,51 @@ const Contracts = ({ projectId }: IProps) => {
                 startDate,
 
                 endDate,
+
+                outcomenames,
               } = item;
 
               return (
                 <Table.Row key={index}>
-                  <Table.Data className="h-[56px] py-1 w-[100px]">
-                    Contract {id}
+                  <Table.Data small className="h-[56px] w-[100px] py-1">
+                    {id}
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1 w-[150px]">
-                    {/* {parties} */}
+                  <Table.Data small className="h-[56px] w-[100px] py-1">
+                    {name}
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1 w-[150px]">
-                    <p>{outcomes}</p>
+                  <Table.Data small className="h-[56px] w-[150px] py-1">
+                    {parties?.join(", ")}
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1 w-[80px]">
+                  <Table.Data small className="h-[56px] w-[150px] py-1">
+                    {outcomenames?.join(", ")}
+                  </Table.Data>
+
+                  <Table.Data small className="h-[56px] w-[80px] py-1">
                     <p>{targetNoOfBenefeciaries}</p>
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1 w-[120px]">
+                  <Table.Data small className="h-[56px] w-[120px] py-1">
                     <p className="capitalize">{status?.toLowerCase()}</p>
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1 w-[120px]">
+                  <Table.Data small className="h-[56px] w-[120px] py-1">
                     <p>{formatDate(startDate, "LL-dd-yyyy")}</p>
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">
+                  <Table.Data small className="h-[56px] py-1">
                     <p>{formatDate(endDate, "LL-dd-yyyy")}</p>
                   </Table.Data>
 
-                  <Table.Data className="h-[56px] py-1">
+                  <Table.Data small className="h-[56px] py-1">
                     <div className="flex justify-end gap-1.5">
                       <button
                         type="button"
                         onClick={() => handleEdit(id!.toString())}
                       >
-                        <img
-                          src={pencil}
-                          alt=""
-                        />
+                        <img src={pencil} alt="" />
                       </button>
                     </div>
                   </Table.Data>
@@ -178,6 +183,7 @@ const Contracts = ({ projectId }: IProps) => {
 export default Contracts;
 
 const HEADERS = [
+  "ID",
   "Contract",
   "Parties",
   "Outcome(s)",

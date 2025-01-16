@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+
 import Alert from "./ui/alert/alert";
 
 const AlertProvider = ({ children }: { children: ReactNode }) => {

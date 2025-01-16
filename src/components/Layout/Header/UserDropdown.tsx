@@ -1,15 +1,18 @@
-import { useMemo, useRef, useState } from "react";
-import { motion } from "framer-motion";
-import { useOutsideClick } from "../../../lib/hooks";
-import arrow from "../../../assets/images/icons/chevron.svg";
-import authService from "../../../api/auth";
-import organizationService from "../../../api/organization";
 import { useQuery } from "@tanstack/react-query";
+import authService from "api/auth";
+import organizationService from "api/organization";
+import { motion } from "framer-motion";
+import { useMemo, useRef, useState } from "react";
+
+import arrow from "assets/images/icons/chevron.svg";
+
+import { useOutsideClick } from "lib/hooks";
+import { ProfileType } from "lib/types/profile";
+
 import ViewProfileDialogue from "./ViewProfileDialogue";
-import { IUser } from "../../../lib/types/users";
 
 interface IProp {
-  user: IUser;
+  user: ProfileType;
 }
 
 const UserDropdown = ({ user }: IProp) => {
@@ -32,7 +35,7 @@ const UserDropdown = ({ user }: IProp) => {
   const organizations = useMemo(
     () => organizationList?.items || [],
 
-    [organizationList],
+    [organizationList]
   );
 
   useOutsideClick(dropdownRef, () => setShowDropdown(false));
@@ -48,7 +51,7 @@ const UserDropdown = ({ user }: IProp) => {
       {showModal && user && (
         <ViewProfileDialogue
           organizations={organizations}
-          userId={user.id}
+          userId={user.id.toString()}
           isVisible={showModal}
           handleClose={() => {
             setShowModal(false);
@@ -56,27 +59,23 @@ const UserDropdown = ({ user }: IProp) => {
         />
       )}
 
-      <div
-        ref={dropdownRef}
-        className="relative z-40"
-      >
+      <div ref={dropdownRef} className="relative z-40">
         <button
           onClick={() => setShowDropdown((prev) => !prev)}
-          className="w-[80px] sm:w-[184px] h-[42px] rounded-[50px] bg-white bg-opacity-[30%] flex justify-between items-center pl-1.5 pr-4 cursor-pointer hover:brightness-[.8] transition-all"
+          className="flex h-[42px] w-[80px] cursor-pointer items-center justify-between rounded-[50px] bg-white bg-opacity-[30%] pl-1.5 pr-4 transition-all hover:brightness-[.8] sm:w-[184px]"
         >
-          <div className="flex gap-1.5">
-            <div className="w-[28px] h-[28px] rounded-full bg-[#D9D9D9]"></div>
+          <div className="flex items-center gap-1.5">
+            <div className="h-[28px] w-[28px] flex-shrink-0 rounded-full bg-[#D9D9D9]"></div>
 
-            <div className="sm:flex items-center px-2 hidden">
-              <p className="text-forest-green font-medium">{user?.firstName}</p>
+            <div className="hidden w-full items-center sm:flex">
+              <p className="max-w-[100px] overflow-hidden text-ellipsis whitespace-nowrap font-medium text-forest-green">
+                {user?.firstName}
+              </p>
             </div>
           </div>
 
-          <div className="px-1.5 cursor-pointer">
-            <img
-              alt="arrow"
-              src={arrow}
-            />
+          <div className="flex-shrink-0 cursor-pointer px-1.5">
+            <img alt="arrow" src={arrow} />
           </div>
         </button>
 
@@ -88,13 +87,10 @@ const UserDropdown = ({ user }: IProp) => {
               : { height: 0, opacity: 0 }
           }
           transition={{ type: "spring", duration: 0.4, bounce: 0 }}
-          className="absolute top-12 left-0 rounded-[4px] bg-white w-full overflow-hidden"
+          className="absolute left-0 top-12 w-full overflow-hidden rounded-[4px] bg-white"
         >
-          <button
-            onClick={handleViewProfile}
-            className="w-full text-left"
-          >
-            <li className="text-black py-1.5 px-2.5 hover:bg-grey transition-all">
+          <button onClick={handleViewProfile} className="w-full text-left">
+            <li className="px-2.5 py-1.5 text-black transition-all hover:bg-grey">
               Profile
             </li>
           </button>
@@ -104,7 +100,7 @@ const UserDropdown = ({ user }: IProp) => {
             onClick={handleLogout}
             className="w-full text-left"
           >
-            <li className="text-black py-1.5 px-2.5 hover:bg-grey transition-all">
+            <li className="px-2.5 py-1.5 text-black transition-all hover:bg-grey">
               Log out
             </li>
           </button>

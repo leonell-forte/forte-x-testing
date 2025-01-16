@@ -1,18 +1,19 @@
-import Dropdown from "../../components/ui/dropdown";
-import Button from "../../components/ui/button";
-import SearchInput from "../../components/ui/search-input";
-import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import organizationService from "../../api/organization";
-import Table from "../../components/ui/table";
-import pencil from "../../assets/images/icons/pencil.svg";
-import Pagination from "../../components/ui/pagination";
-import OrganizationDialogue from "../../components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
-import { REGIONS, STATUS, TYPES } from "../../lib/constants";
-import { useDebounce, usePageTitle } from "../../lib/hooks";
-import closeFilter from "../../assets/images/icons/close-filter.svg";
-import { IFilters, IOrganization } from "../../lib/types/organizations";
-import HorizontalScroller from "../../components/ui/horizontal-scroller";
+import organizationService from "api/organization";
+import { useMemo, useState } from "react";
+
+import closeFilter from "assets/images/icons/close-filter.svg";
+
+import { REGIONS, STATUS, TYPES } from "lib/constants";
+import { useDebounce, usePageTitle } from "lib/hooks";
+import { IFilters, IOrganization } from "lib/types/organizations";
+
+import OrganizationDialogue from "components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
+import OrganizationTable from "components/tables/Organization";
+import Button from "components/ui/button";
+import Dropdown from "components/ui/dropdown";
+import Pagination from "components/ui/pagination";
+import SearchInput from "components/ui/search-input";
 
 const OrganizationsPage = () => {
   usePageTitle("Organizations");
@@ -31,7 +32,7 @@ const OrganizationsPage = () => {
     },
 
     500,
-    [search],
+    [search]
   );
 
   const [selectedOrg, setSelectedOrg] = useState("");
@@ -64,7 +65,7 @@ const OrganizationsPage = () => {
   const organizations: IOrganization[] = useMemo(
     () => organizationList?.items || [],
 
-    [organizationList],
+    [organizationList]
   );
 
   const close = () => {
@@ -73,15 +74,9 @@ const OrganizationsPage = () => {
     setModal(null);
   };
 
-  const handleEditOrg = (id: string) => {
-    setModal("org");
-
-    setSelectedOrg(id);
-  };
-
   const handleSelectFilter = (
     key: keyof IFilters,
-    value: string | string[],
+    value: string | string[]
   ) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
@@ -101,7 +96,7 @@ const OrganizationsPage = () => {
       )}
 
       <div className="space-y-2.5">
-        <div className="flex items-center justify-between w-full gap-4">
+        <div className="flex w-full flex-wrap items-center justify-between gap-4">
           <SearchInput
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -112,7 +107,7 @@ const OrganizationsPage = () => {
 
           <div className="flex items-center gap-6">
             <Button
-              eventName="Add User"
+              eventName="Add Organization"
               onClick={() => {
                 setModal("org");
               }}
@@ -121,7 +116,7 @@ const OrganizationsPage = () => {
             </Button>
           </div>
         </div>
-        <div className="flex items-center gap-[18px]">
+        <div className="flex flex-wrap items-center gap-[18px]">
           <p className="text-[20px] font-medium">Filter by</p>
 
           <Dropdown
@@ -160,119 +155,18 @@ const OrganizationsPage = () => {
           />
 
           <button onClick={handleRemoveFilters}>
-            <img
-              src={closeFilter}
-              alt="close-filter"
-            />
+            <img src={closeFilter} alt="close-filter" />
           </button>
         </div>
 
         <div className="space-y-4">
-          <div className="pr-4 overflow-scroll">
-            <Table.Container
-              isEmpty={!organizations.length}
-              isLoading={orgLoading}
-            >
-              <Table.Head>
-                <Table.Row>
-                  {TABLE_HEADER.map((key, headerIndex) => {
-                    return <Table.Header key={headerIndex}>{key}</Table.Header>;
-                  })}
-
-                  <Table.Header></Table.Header>
-                </Table.Row>
-              </Table.Head>
-              <Table.Body>
-                {organizations.map((item: IOrganization, bodyIndex: number) => {
-                  const {
-                    id,
-                    name,
-                    registeredName,
-                    regions,
-                    type,
-                    status,
-                    registeredAddress,
-                    registrationNumber,
-                    noOfProjects,
-                    noOfUsers,
-                    state,
-                    postalCode,
-                    country,
-                  } = item;
-                  return (
-                    <Table.Row key={bodyIndex}>
-                      <Table.Data>
-                        <p className="truncate w-[200px]">{name}</p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="truncate w-[200px]">{registeredName}</p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="truncate w-[250px]">
-                          {`${registeredAddress}, ${state} ${postalCode} ${country}`}
-                        </p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="truncate w-[100px]">
-                          {registrationNumber}
-                        </p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="truncate w-[120px]">
-                          {regions.join(", ")}
-                        </p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="truncate w-[60px] capitalize">{type}</p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="truncate w-[55px] capitalize">{status}</p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="truncate w-[35px]">{noOfUsers}</p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="truncate w-[35px]">{noOfProjects}</p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="truncate w-[35px]">-</p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <Button
-                          eventName="Edit User"
-                          id={id}
-                          buttonType="default"
-                          type="button"
-                          onClick={() => handleEditOrg(id!)}
-                          className="p-[3px]"
-                        >
-                          <img
-                            alt="pencil"
-                            src={pencil}
-                          />
-                        </Button>
-                      </Table.Data>
-                    </Table.Row>
-                  );
-                })}
-              </Table.Body>
-            </Table.Container>
-          </div>
+          <OrganizationTable
+            list={organizationList?.items || []}
+            isLoading={orgLoading}
+          />
 
           {!!organizations.length && (
-            <div className="flex justify-end items-center w-full">
-              <HorizontalScroller />
-
+            <div className="flex w-full items-center justify-end">
               <Pagination
                 page={page}
                 onPageChange={(val) => setPage(val)}
@@ -287,16 +181,3 @@ const OrganizationsPage = () => {
 };
 
 export default OrganizationsPage;
-
-const TABLE_HEADER = [
-  "Organization",
-  "Registered Name",
-  "Registered Address",
-  "Registration",
-  "Region",
-  "Type",
-  "Status",
-  "Users",
-  "Projects",
-  "Contracts",
-];

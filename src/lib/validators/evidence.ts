@@ -1,0 +1,43 @@
+import { z } from "zod";
+
+import { Evidence, EvidenceFieldValues } from "../types/evidence";
+import { fileSchema } from "./common";
+
+export const evidence = {
+  defaultValues: (evidence?: Evidence) => {
+    let data: EvidenceFieldValues = {
+      description: evidence?.description || "",
+
+      status: evidence?.status || "pending review",
+
+      outcomeId: evidence?.outcome?.id.toString() || "",
+
+      file: evidence?.file || {
+        id: 0, // Provide default values for required fields
+        key: "",
+        filename: "",
+        fileUrl: "",
+      },
+    };
+
+    if (evidence?.id) {
+      data.id = evidence.id;
+    }
+
+    return data;
+  },
+
+  schema: z.object({
+    id: z.number().optional(),
+
+    description: z.string().min(1, "Description is a required field"),
+
+    status: z.string().min(1, "Status is a required field"),
+
+    outcomeId: z.string().min(1, "Outcome is a required field"),
+
+    file: fileSchema.refine((file) => file.key !== "", {
+      message: "File is a required field",
+    }),
+  }),
+};

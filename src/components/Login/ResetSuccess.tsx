@@ -1,11 +1,12 @@
-import Button from "../ui/button";
 import { useNavigate } from "react-router-dom";
+
+import Button from "../ui/button";
 
 const ResetSuccess = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="text-center space-y-10">
+    <div className="space-y-10 text-center">
       <div>
         <p className="text-[24px] md:text-[32px]">Password reset!</p>
 

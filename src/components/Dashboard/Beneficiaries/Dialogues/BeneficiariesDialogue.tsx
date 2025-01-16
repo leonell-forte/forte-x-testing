@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { IDialogueProps } from "../../../../components/ui/dialogue/dialogue";
+
+import { IDialogueProps } from "components/ui/dialogue/dialogue";
+
 import AddDialogue from "./AddDialogue";
 import EvidencesDialogue from "./EvidencesDialogue";
 
@@ -9,12 +11,16 @@ interface IBeneficiariesDialogueProps extends IDialogueProps {
   id?: number;
 
   projectId?: number;
+
+  editMode?: boolean;
 }
 
 const BeneficiariesDialogue = ({
   id,
 
   projectId,
+
+  editMode,
 
   ...props
 }: IBeneficiariesDialogueProps) => {
@@ -34,6 +40,7 @@ const BeneficiariesDialogue = ({
         return (
           <AddDialogue
             {...props}
+            editMode={editMode}
             handleClose={close}
             id={id}
             projectId={projectId}
@@ -50,7 +57,11 @@ const BeneficiariesDialogue = ({
           <EvidencesDialogue
             {...props}
             id={evidenceId as number}
-            handleClose={close}
+            handleClose={() => {
+              setModal("beneficiaries");
+
+              setEvidenceId(null);
+            }}
           />
         );
 

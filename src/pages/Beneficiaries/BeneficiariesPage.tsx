@@ -1,31 +1,29 @@
-import Dropdown, { IOption } from "../../components/ui/dropdown";
-import Button from "../../components/ui/button";
-import SearchInput from "../../components/ui/search-input";
-import { ChangeEvent, useCallback, useMemo, useState } from "react";
-import closeFilter from "../../assets/images/icons/close-filter.svg";
-import Table from "../../components/ui/table";
-import Checkbox from "../../components/ui/checkbox";
-import Pagination from "../../components/ui/pagination";
-import pencil from "../../assets/images/icons/pencil.svg";
-import bin from "../../assets/images/icons/bin.svg";
-import BeneficiariesDialogue from "../../components/Dashboard/Beneficiaries/Dialogues/BeneficiariesDialogue";
-import DeleteDialogue from "../../components/Dashboard/Beneficiaries/Dialogues/DeleteDialogue";
-import ImportDialogue from "../../components/Dashboard/Beneficiaries/Dialogues/ImportDialogue";
-import DatePicker from "../../components/ui/date-picker";
-import { useDebounce, usePageTitle } from "../../lib/hooks";
 import { useQuery } from "@tanstack/react-query";
-import beneficiariesService from "../../api/beneficiaries";
-import HorizontalScroller from "../../components/ui/horizontal-scroller";
-import { findLabelFromOptions, formatDate } from "../../lib/utils";
-import projectService from "../../api/projects";
+import beneficiariesService from "api/beneficiaries";
+import organizationService from "api/organization";
+import projectService from "api/projects";
+import { useCallback, useMemo, useState } from "react";
+
+import closeFilter from "assets/images/icons/close-filter.svg";
+
+import { BENEFICIARY_STATUS, RISK_LEVEL } from "lib/constants";
+import { useDebounce, usePageTitle } from "lib/hooks";
 import {
-  BENEFICIARY_STATUS,
-  DEFAULT_DATE_FORMAT,
-  RISK_LEVEL,
-} from "../../lib/constants";
-import organizationService from "../../api/organization";
-import { IBeneficiariesFilter } from "../../lib/types/beneficiaries";
-import BulkUpdateStatus from "../../components/Dashboard/Beneficiaries/Dialogues/BulkUpdateStatus";
+  useExportBeneficiaries,
+  useExportEvidenceMutation,
+} from "lib/mutations/beneficiaries";
+import { IBeneficiariesFilter } from "lib/types/beneficiaries";
+import { findLabelFromOptions } from "lib/utils";
+
+import BeneficiariesDialogue from "components/Dashboard/Beneficiaries/Dialogues/BeneficiariesDialogue";
+import BulkUpdateStatus from "components/Dashboard/Beneficiaries/Dialogues/BulkUpdateStatus";
+import DeleteDialogue from "components/Dashboard/Beneficiaries/Dialogues/DeleteDialogue";
+import ImportDialogue from "components/Dashboard/Beneficiaries/Dialogues/ImportDialogue";
+import BeneficiariesTable from "components/tables/Beneficiaries";
+import Button from "components/ui/button";
+import Dropdown, { IOption } from "components/ui/dropdown";
+import Pagination from "components/ui/pagination";
+import SearchInput from "components/ui/search-input";
 
 type ModalLabelTypes =
   | "beneficiaries"
@@ -43,6 +41,14 @@ const BeneficiariesPage = () => {
 
   const [filters, setFilters] = useState<IBeneficiariesFilter>({
     project: "",
+
+    status: "",
+
+    provider: "",
+
+    riskLevel: "",
+
+    // startDate: "",
   });
 
   useDebounce(
@@ -52,12 +58,14 @@ const BeneficiariesPage = () => {
 
     500,
 
-    [search],
+    [search]
   );
 
   const [page, setPage] = useState(1);
 
   const [modal, setModal] = useState<ModalLabelTypes>("");
+
+  const [editMode, setEditMode] = useState(false);
 
   const [beneficiaryId, setBeneficiaryId] = useState<number | null>(null);
 
@@ -96,7 +104,7 @@ const BeneficiariesPage = () => {
 
         value: item.id.toString(),
       })) || [],
-    [projectsList],
+    [projectsList]
   );
 
   const organizations: IOption[] = useMemo(
@@ -107,32 +115,32 @@ const BeneficiariesPage = () => {
         value: item.id!.toString(),
       })) || [],
 
-    [organizationList],
+    [organizationList]
   );
 
   const close = () => {
     setModal("");
 
     setBeneficiaryId(null);
-
-    setSelectedIds([]);
   };
 
-  const handleDelete = (id: number) => {
-    setModal("delete");
+  // download evidence function
 
-    setBeneficiaryId(id);
+  const { exportEvidence, isPending: isDownloadingEvidence } =
+    useExportEvidenceMutation();
+
+  const handleDownloadEvidence = () => {
+    exportEvidence({ beneficiaryIds: selectedIds });
   };
 
-  const handleSelectAll = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      if (e.target.checked) {
-        setSelectedIds((beneficiariesList?.items || []).map((item) => item.id));
-      } else setSelectedIds([]);
-    },
+  // export beneficiaries
 
-    [beneficiariesList],
-  );
+  const { exportBeneficiaries, isPending: isExportingBeneficiaries } =
+    useExportBeneficiaries();
+
+  const handleExportBeneficiaries = () => {
+    exportBeneficiaries({ beneficiaryIds: selectedIds });
+  };
 
   const renderModal = useCallback(() => {
     switch (modal) {
@@ -140,6 +148,7 @@ const BeneficiariesPage = () => {
         return (
           <BeneficiariesDialogue
             id={beneficiaryId as number}
+            editMode={editMode}
             isVisible={modal === "beneficiaries"}
             handleClose={close}
           />
@@ -165,20 +174,17 @@ const BeneficiariesPage = () => {
 
       case "import":
         return (
-          <ImportDialogue
-            isVisible={modal === "import"}
-            handleClose={close}
-          />
+          <ImportDialogue isVisible={modal === "import"} handleClose={close} />
         );
     }
-  }, [modal, beneficiaryId, selectedIds]);
+  }, [modal, beneficiaryId, selectedIds, editMode]);
 
   return (
     <>
       {renderModal()}
 
       <div className="space-y-2.5">
-        <div className="flex justify-between items-center gap-4">
+        <div className="flex items-center justify-between gap-4">
           <SearchInput
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -188,35 +194,57 @@ const BeneficiariesPage = () => {
           />
 
           <div className="space-x-2.5">
-            <Button
-              eventName="Import Beneficiaries"
-              buttonType="secondary"
-              onClick={() => setModal("import")}
-            >
-              Import beneficiaries
-            </Button>
-
-            {selectedIds.length ? (
-              <Button
-                onClick={() => setModal("update status")}
-                eventName="Update Beneficiary Status"
-              >
-                Update status
-              </Button>
+            {selectedIds.length > 0 ? (
+              <>
+                <Button
+                  onClick={() => setModal("update status")}
+                  buttonType="secondary"
+                  eventName="Update Beneficiary Status"
+                >
+                  Update status
+                </Button>
+                <Button
+                  onClick={handleDownloadEvidence}
+                  buttonType="secondary"
+                  disabled={isDownloadingEvidence}
+                >
+                  Download Evidence
+                </Button>
+                <Button
+                  onClick={handleExportBeneficiaries}
+                  buttonType="secondary"
+                  disabled={isExportingBeneficiaries}
+                >
+                  Export CSV
+                </Button>
+              </>
             ) : (
-              <Button
-                eventName="Add Beneficiary"
-                onClick={() => setModal("beneficiaries")}
-              >
-                Add beneficiaries
-              </Button>
+              <>
+                <Button
+                  eventName="Import Beneficiaries"
+                  buttonType="secondary"
+                  onClick={() => setModal("import")}
+                >
+                  Import beneficiaries
+                </Button>
+                <Button
+                  eventName="Add Beneficiary"
+                  onClick={() => {
+                    setModal("beneficiaries");
+
+                    setEditMode(true);
+                  }}
+                >
+                  Add beneficiary
+                </Button>
+              </>
             )}
           </div>
         </div>
 
         <div>
           <div className="flex items-center gap-2.5">
-            <p className="text-[20px] font-medium flex-shrink-0">Filter by</p>
+            <p className="flex-shrink-0 text-[20px] font-medium">Filter by</p>
 
             <Dropdown
               noHelperText
@@ -235,7 +263,10 @@ const BeneficiariesPage = () => {
               options={BENEFICIARY_STATUS}
               placeholder="Status"
               className="max-w-[166px]"
-              handleSelect={() => {}}
+              value={filters.status}
+              handleSelect={(val) =>
+                setFilters((prev) => ({ ...prev, status: val as string }))
+              }
             />
 
             <Dropdown
@@ -244,7 +275,14 @@ const BeneficiariesPage = () => {
               options={organizations}
               placeholder="Provider"
               className="max-w-[166px]"
-              handleSelect={() => {}}
+              value={findLabelFromOptions(
+                organizations,
+
+                filters.provider as string
+              )}
+              handleSelect={(val) => {
+                setFilters((prev) => ({ ...prev, provider: val as string }));
+              }}
             />
 
             <Dropdown
@@ -252,7 +290,10 @@ const BeneficiariesPage = () => {
               options={RISK_LEVEL}
               placeholder="Risk Level"
               className="max-w-[166px]"
-              handleSelect={() => {}}
+              value={filters.riskLevel}
+              handleSelect={(val) =>
+                setFilters((prev) => ({ ...prev, riskLevel: val as string }))
+              }
             />
 
             {/* <Dropdown
@@ -262,182 +303,48 @@ const BeneficiariesPage = () => {
               className="max-w-[166px]"
             /> */}
 
+            {/* removing for now
             <div className="max-w-[166px]">
-              <DatePicker noHelperText />
-            </div>
+              <DatePicker
+                noHelperText
+                value={new Date(filters.startDate as string)}
+                onChange={(date) => {
+                  setFilters((prev) => ({
+                    ...prev,
+
+                    startDate: formatDate(date as Date, "yyyy-LL-dd"),
+                  }));
+                }}
+              />
+            </div> */}
 
             <button
-              onClick={() => {}}
+              onClick={() =>
+                setFilters({
+                  project: "",
+
+                  status: "",
+
+                  provider: "",
+
+                  riskLevel: "",
+                })
+              }
               className="flex-shrink-0"
             >
-              <img
-                src={closeFilter}
-                alt="close-filter"
-              />
+              <img src={closeFilter} alt="close-filter" />
             </button>
           </div>
         </div>
 
-        <div className="space-y-[18px] overflow-scroll">
-          <div className="pr-4">
-            <Table.Container
-              isLoading={isLoading}
-              isEmpty={!beneficiariesList?.items?.length}
-            >
-              <Table.Head>
-                <Table.Row>
-                  <Table.Header small>
-                    <Checkbox
-                      checked={
-                        selectedIds.length === beneficiariesList?.items.length
-                      }
-                      label="First name"
-                      labelClass="!text-black text-[14px]"
-                      onChange={handleSelectAll}
-                    />
-                  </Table.Header>
+        <div className="space-y-[18px]">
+          <BeneficiariesTable
+            list={beneficiariesList?.items || []}
+            isLoading={isLoading}
+            setChecked={setSelectedIds}
+          />
 
-                  <Table.Header>Last name</Table.Header>
-
-                  <Table.Header>Provider</Table.Header>
-
-                  <Table.Header>Email</Table.Header>
-
-                  <Table.Header>Phone number</Table.Header>
-
-                  <Table.Header>Contract</Table.Header>
-
-                  <Table.Header>Program</Table.Header>
-
-                  <Table.Header>Risk level</Table.Header>
-
-                  <Table.Header>Status</Table.Header>
-
-                  <Table.Header>Cohort start date</Table.Header>
-
-                  <Table.Header>Cohort end date</Table.Header>
-
-                  <Table.Header></Table.Header>
-                </Table.Row>
-              </Table.Head>
-
-              <Table.Body>
-                {beneficiariesList?.items?.map((item, index) => {
-                  const {
-                    firstName,
-
-                    lastName,
-
-                    provider,
-
-                    email,
-
-                    contractId,
-
-                    id,
-
-                    cohortEndDate,
-
-                    cohortName,
-
-                    cohortStartDate,
-
-                    riskLevel,
-
-                    status,
-
-                    phone,
-                  } = item;
-
-                  return (
-                    <Table.Row key={index}>
-                      <Table.Data>
-                        <Checkbox
-                          label={firstName}
-                          labelClass="text-[14px]"
-                          checked={selectedIds.includes(id)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setSelectedIds((prev) => [...prev, id]);
-                            } else
-                              setSelectedIds((prev) =>
-                                prev.filter((item) => item !== id),
-                              );
-                          }}
-                        />
-                      </Table.Data>
-
-                      <Table.Data>{lastName}</Table.Data>
-
-                      <Table.Data>{provider}</Table.Data>
-
-                      <Table.Data>{email}</Table.Data>
-
-                      <Table.Data>{phone}</Table.Data>
-
-                      <Table.Data>Contract {contractId}</Table.Data>
-
-                      <Table.Data>{cohortName}</Table.Data>
-
-                      <Table.Data className="capitalize">
-                        {riskLevel}
-                      </Table.Data>
-
-                      <Table.Data className="capitalize">{status}</Table.Data>
-
-                      <Table.Data>
-                        {formatDate(cohortStartDate, DEFAULT_DATE_FORMAT)}
-                      </Table.Data>
-
-                      <Table.Data>
-                        {formatDate(cohortEndDate, DEFAULT_DATE_FORMAT)}
-                      </Table.Data>
-
-                      <Table.Data>
-                        <div className="flex justify-end">
-                          <Button
-                            eventName="Update Beneficiary"
-                            id={id.toString()}
-                            buttonType="default"
-                            type="button"
-                            className="p-[3px]"
-                            onClick={() => {
-                              setModal("beneficiaries");
-
-                              setBeneficiaryId(id);
-                            }}
-                          >
-                            <img
-                              alt="pencil"
-                              src={pencil}
-                            />
-                          </Button>
-
-                          <Button
-                            eventName="Delete Beneficiary"
-                            id={id.toString()}
-                            buttonType="default"
-                            type="button"
-                            onClick={() => handleDelete(id)}
-                            className="p-[3px]"
-                          >
-                            <img
-                              alt="pencil"
-                              src={bin}
-                            />
-                          </Button>
-                        </div>
-                      </Table.Data>
-                    </Table.Row>
-                  );
-                })}
-              </Table.Body>
-            </Table.Container>
-          </div>
-
-          <div className="flex justify-end items-center w-full">
-            <HorizontalScroller />
-
+          <div className="flex w-full items-center justify-end">
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}

@@ -1,11 +1,12 @@
-import Switch from "../../components/ui/switch";
 import { useState } from "react";
+
+import Switch from "components/ui/switch";
 
 const ToggleButtons = () => {
   const [on, setOn] = useState(false);
   return (
     <div>
-      <p className="text-2xl text-white font-semibold uppercase mb-2">
+      <p className="mb-2 text-2xl font-semibold uppercase text-white">
         Switch Buttons
       </p>
       <div className="flex flex-col gap-4">

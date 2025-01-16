@@ -1,18 +1,19 @@
+import HorizontalScroller from "components/ui/horizontal-scroller";
+
 import Buttons from "./Buttons";
-import InputFields from "./InputFields";
 import Checkboxes from "./Checkboxes";
-import RadioButtons from "./RadioButtons";
-import SwitchButtons from "./SwitchButtons";
-import Tags from "./Tags";
-import PaginationComponent from "./PaginationComponent";
-import TableComponent from "./TableComponent";
 import DialogueComponent from "./DialogueComponent";
 import DropdownFields from "./DropdownFields";
-import HorizontalScroller from "../../components/ui/horizontal-scroller";
+import InputFields from "./InputFields";
+import PaginationComponent from "./PaginationComponent";
+import RadioButtons from "./RadioButtons";
+import SwitchButtons from "./SwitchButtons";
+import TableComponent from "./TableComponent";
+import Tags from "./Tags";
 
 const ComponentsPage = () => {
   return (
-    <div className="p-10 space-y-10 overflow-scroll h-screen">
+    <div className="h-screen space-y-10 overflow-scroll p-10">
       <Buttons />
 
       <InputFields />

@@ -1,4 +1,5 @@
 import axios from "axios";
+
 import { cookie } from "../hooks";
 
 export const api = axios.create({
@@ -25,7 +26,7 @@ api.interceptors.request.use(
 
     // Do something with request error
     return Promise.reject(error);
-  },
+  }
 );
 
 // Add a response interceptor
@@ -38,12 +39,12 @@ api.interceptors.response.use(
     return response;
   },
   function (error) {
-    if (error.status === 401) {
-      // window.location.href = "/";
+    if (error.status === 401 && window.location.pathname !== "/") {
+      window.location.href = "/";
     }
 
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
     return Promise.reject(error);
-  },
+  }
 );

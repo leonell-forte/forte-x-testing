@@ -1,11 +1,11 @@
-import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import { api } from "../lib/axios/interceptor";
+import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import {
   IFilters,
   IOrganization,
   OrganizationFieldTypes,
 } from "../lib/types/organizations";
-import { generateODataQuery, IODataObject } from "../lib/utils";
+import { IODataObject, generateODataQuery } from "../lib/utils";
 
 interface IListProps {
   page: number;

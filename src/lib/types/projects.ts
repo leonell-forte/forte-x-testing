@@ -1,5 +1,6 @@
-import { projects } from "../../lib/validators/projects";
 import { z } from "zod";
+
+import { projects } from "lib/validators/projects";
 
 export interface IOutcome {
   id: number;
@@ -27,6 +28,30 @@ export interface IProject {
   contracts?: string[];
 
   providers?: string[];
+}
+
+export interface IProjectOrganization {
+  id: number;
+
+  name: string;
+
+  registeredName: string;
+
+  registeredAddress: string;
+
+  registrationNumber: string;
+
+  type: string;
+
+  status: string;
+
+  regions: string[];
+
+  users: string;
+
+  contracts: string;
+
+  projects: string;
 }
 
 export type ProjectFieldValues = z.infer<typeof projects.schema>;

@@ -1,9 +1,11 @@
-import Input from "./input";
 import { TextFieldProps } from "@mui/material";
-import search from "../../assets/images/icons/search.svg";
-import close from "../../assets/images/icons/close.svg";
-import darkClose from "../../assets/images/icons/dark-close.svg";
-import darkSearch from "../../assets/images/icons/dark-search.svg";
+
+import close from "assets/images/icons/close.svg";
+import darkClose from "assets/images/icons/dark-close.svg";
+import darkSearch from "assets/images/icons/dark-search.svg";
+import search from "assets/images/icons/search.svg";
+
+import Input from "./input";
 
 type IProps = TextFieldProps & {
   dark?: boolean;
@@ -13,12 +15,14 @@ type IProps = TextFieldProps & {
 
 const SearchInput = ({ dark, onClear, ...props }: IProps) => {
   return (
-    <div className="relative flex items-center flex-shrink-0">
-      <img
-        alt="search"
-        src={dark ? darkSearch : search}
-        className="absolute left-4 top-[18px]"
-      />
+    <div className="relative flex flex-shrink-0 items-center">
+      <button
+        type="submit"
+        className="absolute left-4 top-[16px] z-10"
+        disabled={!props.value}
+      >
+        <img alt="search" src={dark ? darkSearch : search} />
+      </button>
 
       <Input
         noHelperText
@@ -30,6 +34,7 @@ const SearchInput = ({ dark, onClear, ...props }: IProps) => {
 
       {!!props.value && (
         <button
+          type="button"
           onClick={onClear}
           className="flex items-center justify-center"
         >

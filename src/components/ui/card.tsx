@@ -12,7 +12,7 @@ const Card = ({ className, children }: ICardProp) => {
       className={classNames(
         className,
 
-        "bg-white bg-opacity-[30%] !rounded-[30px]",
+        "!rounded-[30px] bg-white bg-opacity-[30%]"
       )}
     >
       {children}

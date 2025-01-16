@@ -1,7 +1,12 @@
-import { contracts } from "../../lib/validators/contracts";
 import { z } from "zod";
 
-export type StatusType = "ACTIVE" | "INACTIVE" | "";
+import { contracts } from "lib/validators/contracts";
+
+import { File } from "./common";
+
+export type StatusType = "DRAFT" | "SIGNED" | "COMPLETED" | "CANCELLED" | "";
+
+export type StatusRecords = Exclude<StatusType, "CANCELLED" | "">;
 
 export type RateEnum = "Per outcome" | "If threshold reached";
 
@@ -10,41 +15,57 @@ export interface IContractParties {
 }
 
 export interface IContractOutcomeRates {
+  id: number;
+
   projectOutcomeId: number;
 
   rate: string | number;
 
   perOutcome: boolean;
 
-  threshold: string;
+  threshold: string | number;
+
+  outcomeId?: number;
 }
 
 export interface IContract {
-  id?: number;
-
-  projectId: number;
-
-  targetNoOfBenefeciaries: string;
-
-  document: string;
-
-  status: StatusType;
-
-  startDate: string;
-
-  endDate: string;
-
-  contractParties: IContractParties[];
-
-  contractOutcomeRates: IContractOutcomeRates[];
+  name: string;
 
   createdAt?: string;
 
-  updatedAt?: string;
+  createdBy?: number;
+
+  document?: File;
+
+  documentName?: string;
+
+  documentId?: number;
+
+  endDate: string;
+
+  id?: number;
+
+  outcomenames?: string[];
+
+  outcomes: IContractOutcomeRates[];
+
+  parties?: string[];
+
+  partyIds: number[];
 
   project?: string;
 
-  outcomes?: string; // Specify the type better if outcomes can have different types (e.g., number, boolean).
+  projectId: number;
+
+  startDate: string;
+
+  status: StatusType;
+
+  targetNoOfBenefeciaries: number | string;
+
+  updatedAt?: string;
+
+  updatedBy?: number;
 }
 
 export interface IContractFilters {
@@ -56,7 +77,7 @@ export interface IContractFilters {
 }
 
 export interface IContractDefaultValues {
-  contract?: IContract;
+  contract?: IContract | null;
 
   projectId?: number;
 }

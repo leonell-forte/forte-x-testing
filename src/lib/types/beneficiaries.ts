@@ -1,5 +1,11 @@
 import { z } from "zod";
-import { beneficiaries, beneficiaryStatus } from "../validators/beneficiaries";
+
+import {
+  beneficiaries,
+  beneficiaryStatus,
+  importBeneficiaries,
+} from "../validators/beneficiaries";
+import { Evidence } from "./evidence";
 
 export interface IBeneficiaries {
   id: number;
@@ -12,13 +18,13 @@ export interface IBeneficiaries {
 
   lastName: string;
 
-  phone: string;
+  phoneNumber: string;
 
   provider: string;
 
   cohortEndDate: string;
 
-  cohortName: string;
+  program: string;
 
   cohortStartDate: string;
 
@@ -50,6 +56,8 @@ export interface IBeneficiaries {
 
   educationLevel?: string;
 
+  evidences: Evidence[];
+
   languages?: string[];
 
   createdAt?: string;
@@ -73,10 +81,22 @@ export enum RiskLevelEnum {
 
 export type IBeneficiariesFieldValues = z.infer<typeof beneficiaries.schema>;
 
+export type IImportBeneficiariesFieldValues = z.infer<
+  typeof importBeneficiaries.schema
+>;
+
 export type BeneficiaryStatusUpdateField = z.infer<
   typeof beneficiaryStatus.schema
 >;
 
 export interface IBeneficiariesFilter {
   project?: string;
+
+  status?: string;
+
+  provider?: string;
+
+  riskLevel?: string;
+
+  startDate?: string;
 }

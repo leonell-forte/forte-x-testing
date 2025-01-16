@@ -1,7 +1,9 @@
 import { z } from "zod";
+
 import {
   IBeneficiaries,
   IBeneficiariesFieldValues,
+  RiskLevelEnum,
 } from "../types/beneficiaries";
 
 interface IBeneficiaryDefaultValue {
@@ -19,11 +21,11 @@ export const beneficiaries = {
 
       email: beneficiary?.email || "",
 
-      phone: beneficiary?.phone || "",
+      phone: beneficiary?.phoneNumber || "",
 
-      riskLevel: beneficiary?.riskLevel || null,
+      riskLevel: (beneficiary?.riskLevel.toLowerCase() as RiskLevelEnum) || "",
 
-      status: beneficiary?.status || "",
+      status: beneficiary?.status || "New",
 
       contractId: beneficiary?.contractId || 0,
 
@@ -31,11 +33,11 @@ export const beneficiaries = {
 
       providerId: beneficiary?.providerId || 0,
 
-      cohortStartDate: beneficiary?.cohortStartDate || "",
+      cohortStartDate: beneficiary?.cohortStartDate || null,
 
-      cohortEndDate: beneficiary?.cohortEndDate || "",
+      cohortEndDate: beneficiary?.cohortEndDate || null,
 
-      cohortName: beneficiary?.cohortName || "",
+      cohortName: beneficiary?.program || "",
 
       linkedinUrl: beneficiary?.linkedinUrl || "",
 
@@ -49,7 +51,11 @@ export const beneficiaries = {
 
       gender: beneficiary?.gender || "",
 
-      disabilityStatus: beneficiary?.disabilityStatus ? "yes" : "no",
+      disabilityStatus: !beneficiary
+        ? ""
+        : beneficiary?.disabilityStatus
+          ? "yes"
+          : "no",
 
       address: beneficiary?.address || "",
 
@@ -76,13 +82,9 @@ export const beneficiaries = {
 
     email: z.string().email(),
 
-    phone: z.string().min(1, { message: "Phone is required" }),
+    phone: z.string(),
 
-    riskLevel: z
-      .enum(["low", "medium", "high"], {
-        message: "Risk level is required",
-      })
-      .nullable(),
+    riskLevel: z.string(),
 
     status: z.string().min(1, { message: "Status is required" }),
 
@@ -90,13 +92,13 @@ export const beneficiaries = {
 
     projectId: z.number().min(1, { message: "Project is required" }),
 
-    providerId: z.number().min(1),
+    providerId: z.number().min(1, { message: "Provider is required" }),
 
-    cohortStartDate: z.string().min(1, { message: "Start date is required" }),
+    cohortStartDate: z.string().nullable(),
 
-    cohortEndDate: z.string().min(1, { message: "End date is required" }),
+    cohortEndDate: z.string().nullable(),
 
-    cohortName: z.string().min(1, { message: "Program is required" }),
+    cohortName: z.string(),
 
     linkedinUrl: z.string(),
 
@@ -104,27 +106,21 @@ export const beneficiaries = {
 
     otherUrl: z.string(),
 
-    birthdate: z.string().min(1, { message: "Birthdate is required" }),
+    birthdate: z.string(),
 
-    ethnicity: z.string().min(1, { message: "Ethnicity is required" }),
+    ethnicity: z.string(),
 
-    gender: z.string().min(1, { message: "Gender is required" }),
+    gender: z.string(),
 
-    disabilityStatus: z.enum(["yes", "no"]),
+    disabilityStatus: z.enum(["yes", "no", ""]),
 
-    address: z.string().min(1, { message: "Address is required" }),
+    address: z.string(),
 
-    socioeconomicStatus: z
-      .string()
-      .min(1, { message: "Socio-economic status is required" }),
+    socioeconomicStatus: z.string(),
 
-    educationLevel: z
-      .string()
-      .min(1, { message: "Highest education level is required" }),
+    educationLevel: z.string(),
 
-    languages: z
-      .array(z.string())
-      .min(1, { message: "Select at least one language" }),
+    languages: z.array(z.string()),
   }),
 };
 
@@ -135,5 +131,23 @@ export const beneficiaryStatus = {
 
   schema: z.object({
     status: z.string().min(1, "Status is a required field"),
+  }),
+};
+
+export const importBeneficiaries = {
+  defaultValue: {
+    file: undefined,
+
+    isOverwriteByEmailEnabled: false,
+  },
+
+  schema: z.object({
+    file: z
+      .custom<File>((value) => value instanceof File && value.size > 0, {
+        message: "Invalid file. Please upload a valid file.",
+      })
+      .nullable(),
+
+    isOverwriteByEmailEnabled: z.boolean(),
   }),
 };

@@ -1,17 +1,18 @@
-import { IOption } from "@/components/ui/dropdown";
+import { type ClassValue, clsx } from "clsx";
 import { format } from "date-fns";
-import { IContractParties } from "./types/contracts";
-import { IOrganization } from "./types/organizations";
+import { twMerge } from "tailwind-merge";
+
+import { IOption } from "components/ui/dropdown";
 
 export const filterBySearch = (
   list: Record<string, string>[],
-  search: string,
+  search: string
 ): any => {
   let filteredList: Record<string, string>[] = [];
 
   list.forEach((item) => {
     const isMatch = Object.values(item).some((item) =>
-      item.toLowerCase().includes(search.toLowerCase()),
+      item.toLowerCase().includes(search.toLowerCase())
     );
 
     if (isMatch) {
@@ -110,24 +111,41 @@ export const formatDate = (date: string | Date, dateFormat: string) => {
 export const findLabelFromOptions = (
   options: IOption[],
 
-  value: string,
+  value: string
 ) => {
-  const label = options.find((item) => item.value === value)?.label;
+  const label = options.find(
+    (item) => item.value?.toString() === value?.toString()
+  )?.label;
 
   return label;
 };
 
-export const extractPartiesNamesFromContract = (
-  contractParties: IContractParties[],
-  organizations: IOrganization[],
-) => {
-  return contractParties
-    .map((item) => {
-      const organization = organizations.find(
-        (org) => Number(org.id) === item.organizationId,
-      );
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
-      return organization?.name;
-    })
-    .join(", ");
-};
+export function formatErrorMessage(input: string) {
+  // Remove leading and trailing quotes if present
+  const unescapedInput = input?.replace(/^"|"$/g, "");
+
+  // Split the string into parts using unescaped quotes
+  const parts = unescapedInput.split('"');
+
+  const quotedWord = parts[0]; // Extract the quoted word
+  const rest = parts[1]; // Extract the rest of the sentence
+
+  // Capitalize the quoted word and the rest of the sentence
+  const capitalizedQuotedWord = `${quotedWord.charAt(0).toUpperCase()}${quotedWord.slice(1)}`;
+  const capitalizedRest = rest.charAt(0).toUpperCase() + rest.slice(1);
+
+  return `${capitalizedQuotedWord} ${capitalizedRest}`;
+}
+
+export function removeFirstTwoAndEquals(input: string) {
+  // Ensure input is a string before processing
+  if (typeof input !== "string") {
+    throw new Error("Input must be a string");
+  }
+  // Remove the first two characters and the '=' sign
+  return input.slice(2).replace("=", "");
+}

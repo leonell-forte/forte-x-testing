@@ -1,7 +1,7 @@
 import { api } from "../lib/axios/interceptor";
 import { DEFAULT_PAGE_SIZE } from "../lib/constants";
-import { generateODataQuery, IODataObject } from "../lib/utils";
 import { IProject, ProjectFieldValues } from "../lib/types/projects";
+import { IODataObject, generateODataQuery } from "../lib/utils";
 
 interface IProjectListProp {
   page?: number;
@@ -91,6 +91,20 @@ class ProjectsService {
     const response = await api.put("/projects", data);
 
     return response;
+  }
+
+  async getOrganizations(id: number) {
+    const response = await api.get(`/projects/${id}/organizations`);
+
+    return response.data;
+  }
+
+  async tagPartners(id: number, organizationIds: number[]) {
+    const response = await api.post(`/projects/${id}/organizations`, {
+      organizationIds,
+    });
+
+    return response.data;
   }
 }
 

@@ -1,14 +1,14 @@
-import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import { api } from "../lib/axios/interceptor";
-import { generateODataQuery, IODataObject } from "../lib/utils";
+import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import { IUser, UserFieldTypes } from "../lib/types/users";
+import { IODataObject, generateODataQuery } from "../lib/utils";
 
 class UserService {
   async list(
     page: number,
     search?: string,
     role?: string,
-    organization?: string[],
+    organization?: string[]
   ) {
     const params = new URLSearchParams();
 
@@ -22,6 +22,14 @@ class UserService {
       },
 
       "user.lastName": {
+        value: search!,
+
+        exact: false,
+
+        isSearch: true,
+      },
+
+      "user.email": {
         value: search!,
 
         exact: false,

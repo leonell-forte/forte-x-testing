@@ -1,6 +1,5 @@
-import Dialogue, {
-  IDialogueProps,
-} from "../../../../components/ui/dialogue/dialogue";
+import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
+
 import BeneficiariesForm from "./BeneficiariesForm";
 import Evidences from "./Evidences";
 
@@ -8,6 +7,8 @@ interface IBeneficiariesDialogueProps extends IDialogueProps {
   id?: number;
 
   projectId?: number;
+
+  editMode?: boolean;
 
   handleAddOrViewEvidence?: (id?: number) => void;
 }
@@ -17,6 +18,8 @@ const AddDialogue = ({
 
   projectId,
 
+  editMode,
+
   handleAddOrViewEvidence,
 
   ...props
@@ -25,11 +28,12 @@ const AddDialogue = ({
     <Dialogue
       {...props}
       handleClose={props.handleClose}
-      title={`${id ? "Edit" : "Add"} beneficiaries`}
+      title={`${id ? `Beneficiary ID #${id}` : "Add beneficiary"}`}
     >
-      <div className="space-y-5">
+      <div className="space-y-[22px]">
         <BeneficiariesForm
           id={id}
+          editMode={editMode}
           projectId={projectId}
           handleClose={props.handleClose}
         />

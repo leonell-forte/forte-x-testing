@@ -5,8 +5,9 @@ import {
   RadioGroup as RadioButtons,
 } from "@mui/material";
 import { ChangeEvent, useCallback } from "react";
-import radioChecked from "../../assets/images/icons/radio-checked.svg";
-import radioUnchecked from "../../assets/images/icons/radio-unchecked.svg";
+
+import radioChecked from "assets/images/icons/radio-checked.svg";
+import radioUnchecked from "assets/images/icons/radio-unchecked.svg";
 
 interface IRadioGroupProps {
   items: string[];
@@ -15,13 +16,20 @@ interface IRadioGroupProps {
 
   value?: string;
 
+  disabled?: boolean;
+
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const RadioGroup = ({
   items,
+
   className,
+
+  disabled,
+
   onChange,
+
   value,
 }: IRadioGroupProps) => {
   const renderIcons = useCallback(() => {
@@ -46,16 +54,19 @@ const RadioGroup = ({
                 checked={value === item}
                 control={
                   <Radio
+                    disabled={disabled}
                     icon={
                       <img
                         src={renderIcons().unchecked}
                         alt="unchecked"
+                        className={disabled ? "grayscale" : ""}
                       />
                     }
                     checkedIcon={
                       <img
                         src={renderIcons().checked}
                         alt="checked"
+                        className={disabled ? "grayscale" : ""}
                       />
                     }
                     onChange={onChange}
@@ -63,6 +74,11 @@ const RadioGroup = ({
                 }
                 label={item}
                 key={index}
+                sx={{
+                  "& .MuiFormControlLabel-label": {
+                    color: "white !important", // Set the label color to white
+                  },
+                }}
               />
             );
           })}

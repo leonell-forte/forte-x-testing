@@ -1,20 +1,21 @@
-import Button from "../../components/ui/button";
-import Dropdown from "../../components/ui/dropdown";
-import Pagination from "../../components/ui/pagination";
-import SearchInput from "../../components/ui/search-input";
-import Table from "../../components/ui/table";
-import { useMemo, useState } from "react";
-import pencil from "../../assets/images/icons/pencil.svg";
-import UserDialogue from "../../components/Dashboard/Users/Dialogues/UserDialogue";
 import { useQuery } from "@tanstack/react-query";
-import userService from "../../api/users";
-import organizationService from "../../api/organization";
-import { ROLES } from "../../lib/constants";
-import { useDebounce, usePageTitle } from "../../lib/hooks";
-import closeFilter from "../../assets/images/icons/close-filter.svg";
-import { IUser } from "../../lib/types/users";
-import { IOrganization } from "../../lib/types/organizations";
-import HorizontalScroller from "../../components/ui/horizontal-scroller";
+import organizationService from "api/organization";
+import userService from "api/users";
+import { useMemo, useState } from "react";
+
+import closeFilter from "assets/images/icons/close-filter.svg";
+
+import { ROLES } from "lib/constants";
+import { useDebounce, usePageTitle } from "lib/hooks";
+import { IOrganization } from "lib/types/organizations";
+import { IUser } from "lib/types/users";
+
+import UserDialogue from "components/Dashboard/Users/Dialogues/UserDialogue";
+import UsersTable from "components/tables/Users";
+import Button from "components/ui/button";
+import Dropdown from "components/ui/dropdown";
+import Pagination from "components/ui/pagination";
+import SearchInput from "components/ui/search-input";
 
 const UsersPage = () => {
   usePageTitle("Users");
@@ -34,7 +35,7 @@ const UsersPage = () => {
       setDebouncedSearch(search);
     },
     500,
-    [search],
+    [search]
   );
 
   const { data: userList, isLoading: userLoading } = useQuery({
@@ -58,19 +59,13 @@ const UsersPage = () => {
   const organizations = useMemo(
     () => organizationList?.items || [],
 
-    [organizationList],
+    [organizationList]
   );
 
   const handleRemoveFilters = () => {
     setRole("");
 
     setOrganization([]);
-  };
-
-  const handleEditUser = (user: IUser) => {
-    setSelectedUser(user.id!.toString());
-
-    setModal("user");
   };
 
   return (
@@ -88,7 +83,7 @@ const UsersPage = () => {
       )}
 
       <div className="space-y-2.5">
-        <div className="flex items-center justify-between w-full gap-4">
+        <div className="flex w-full flex-wrap items-center justify-between gap-4">
           <SearchInput
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -108,7 +103,7 @@ const UsersPage = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-[18px]">
+        <div className="flex flex-wrap items-center gap-[18px]">
           <p className="text-[20px] font-medium">Filter by</p>
 
           <Dropdown
@@ -139,93 +134,14 @@ const UsersPage = () => {
           />
 
           <button onClick={handleRemoveFilters}>
-            <img
-              src={closeFilter}
-              alt="close-filter"
-            />
+            <img src={closeFilter} alt="close-filter" />
           </button>
         </div>
 
         <div className="space-y-4">
-          <div className="overflow-scroll pr-4">
-            <Table.Container
-              isEmpty={!users.length}
-              isLoading={userLoading}
-            >
-              <Table.Head>
-                <Table.Row>
-                  {TABLE_HEADER.map((key, headerIndex) => {
-                    return <Table.Header key={headerIndex}>{key}</Table.Header>;
-                  })}
+          <UsersTable list={users} isLoading={userLoading} />
 
-                  <Table.Header></Table.Header>
-                </Table.Row>
-              </Table.Head>
-              <Table.Body>
-                {users.map((item: IUser, bodyIndex: number) => {
-                  const {
-                    id,
-                    firstName,
-                    lastName,
-                    email,
-                    phoneNumber,
-                    role,
-                    organization,
-                  } = item;
-
-                  return (
-                    <Table.Row key={bodyIndex}>
-                      <Table.Data>
-                        <p className="w-[120px] truncate">{firstName}</p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="w-[120px] truncate">{lastName}</p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="w-[190px] truncate">{email}</p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="w-[150px] truncate">{phoneNumber}</p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="w-[80px] truncate capitalize">{role}</p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="w-[150px] truncate">{organization}</p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <div className="flex justify-end">
-                          <Button
-                            eventName="Edit User"
-                            id={id}
-                            buttonType="default"
-                            type="button"
-                            onClick={() => handleEditUser(item)}
-                            className="p-[3px]"
-                          >
-                            <img
-                              alt="pencil"
-                              src={pencil}
-                            />
-                          </Button>
-                        </div>
-                      </Table.Data>
-                    </Table.Row>
-                  );
-                })}
-              </Table.Body>
-            </Table.Container>
-          </div>
-
-          <div className="flex justify-end items-center w-full">
-            <HorizontalScroller />
-
+          <div className="flex w-full items-center justify-end">
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}
@@ -239,12 +155,3 @@ const UsersPage = () => {
 };
 
 export default UsersPage;
-
-const TABLE_HEADER = [
-  "First name",
-  "Last name",
-  "Email",
-  "Phone",
-  "Role",
-  "Organization",
-];

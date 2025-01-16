@@ -1,38 +1,69 @@
-import Dropdown from "../../../../components/ui/dropdown";
-import Dialogue, {
-  IDialogueProps,
-} from "../../../../components/ui/dialogue/dialogue";
-import { ROLES } from "../../../../lib/constants";
-import { useState } from "react";
-import Button from "../../../../components/ui/button";
+import { useQuery } from "@tanstack/react-query";
+import organizationService from "api/organization";
+import { useMemo, useState } from "react";
+
+import Button from "components/ui/button";
+import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
+import Dropdown, { IOption } from "components/ui/dropdown";
 
 interface IProp extends IDialogueProps {
-  handleAdd?: () => void;
+  handleAdd?: (ids: number[]) => void;
+
+  isPending?: boolean;
 }
 
-const TagExistingDialogue = ({ ...props }: IProp) => {
+const TagExistingDialogue = ({ handleAdd, isPending, ...props }: IProp) => {
+  const { data, isLoading } = useQuery({
+    queryKey: ["organizations"],
+
+    queryFn: () =>
+      organizationService.list({
+        listAll: true,
+
+        page: 1,
+      }),
+  });
+
+  const organizations = useMemo(
+    () =>
+      data?.items.map(
+        (item) =>
+          ({
+            label: item.name,
+
+            value: item.id,
+          }) as IOption
+      ),
+    [data]
+  );
+
   const [values, setValues] = useState<string[]>([]);
 
   return (
-    <Dialogue {...props}>
+    <Dialogue center {...props}>
       <div className="space-y-6">
         <Dropdown
+          enableSearch
           value={values}
           handleSelect={(val) => setValues(val as string[])}
           isMultiSelect
           showAsTags
-          options={ROLES}
+          options={organizations as IOption[]}
+          loading={isLoading}
+          placeholder="Search and select"
         />
 
         <div className="flex justify-end gap-2.5">
-          <Button
-            onClick={props.handleClose}
-            buttonType="secondary"
-          >
+          <Button onClick={props.handleClose} buttonType="secondary">
             Cancel
           </Button>
 
-          <Button>Add</Button>
+          <Button
+            loading={isPending}
+            onClick={() => handleAdd?.(values.map((item) => Number(item)))}
+          >
+            Add
+          </Button>
         </div>
       </div>
     </Dialogue>

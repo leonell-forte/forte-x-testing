@@ -1,20 +1,20 @@
-import { useForm } from "react-hook-form";
-import Button from "../../../components/ui/button";
-import Dialogue, {
-  IDialogueProps,
-} from "../../../components/ui/dialogue/dialogue";
-import Dropdown from "../../../components/ui/dropdown";
-import Input from "../../../components/ui/input";
-import { ROLES } from "../../../lib/constants";
-import { users } from "../../../lib/validators/users";
 import { zodResolver } from "@hookform/resolvers/zod";
-import userService from "../../../api/users";
 import { useQuery } from "@tanstack/react-query";
+import userService from "api/users";
 import { useEffect, useState } from "react";
-import Spinner from "../../ui/spinner/spinner";
-import useUserMutation from "../../../lib/mutations/users";
-import { UserFieldTypes } from "../../../lib/types/users";
-import { IOrganization } from "../../../lib/types/organizations";
+import { useForm } from "react-hook-form";
+
+import { ROLES } from "lib/constants";
+import useUserMutation from "lib/mutations/users";
+import { IOrganization } from "lib/types/organizations";
+import { UserFieldTypes } from "lib/types/users";
+import { users } from "lib/validators/users";
+
+import Button from "components/ui/button";
+import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
+import Dropdown from "components/ui/dropdown";
+import Input from "components/ui/input";
+import Spinner from "components/ui/spinner/spinner";
 
 interface IUserDialogueProps extends IDialogueProps {
   userId?: string;
@@ -92,19 +92,13 @@ const ViewProfileDialogue = ({
       title={onEdit ? "Edit profile" : "Profile"}
     >
       {isLoading ? (
-        <div className="w-full h-[470px] flex items-center justify-center">
+        <div className="flex h-[470px] w-full items-center justify-center">
           <Spinner />
         </div>
       ) : (
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-2.5"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-2.5">
           <div className="flex items-start">
-            <label
-              htmlFor=""
-              className="w-[140px] pt-4"
-            >
+            <label htmlFor="" className="w-[140px] pt-4">
               Email
             </label>
 
@@ -121,10 +115,7 @@ const ViewProfileDialogue = ({
           </div>
 
           <div className="flex items-start">
-            <label
-              htmlFor=""
-              className="w-[140px] pt-4"
-            >
+            <label htmlFor="" className="w-[140px] pt-4">
               First name
             </label>
 
@@ -140,10 +131,7 @@ const ViewProfileDialogue = ({
           </div>
 
           <div className="flex items-start">
-            <label
-              htmlFor=""
-              className="w-[140px] pt-4"
-            >
+            <label htmlFor="" className="w-[140px] pt-4">
               Last name
             </label>
 
@@ -159,10 +147,7 @@ const ViewProfileDialogue = ({
           </div>
 
           <div className="flex items-start">
-            <label
-              htmlFor=""
-              className="w-[140px] pt-4"
-            >
+            <label htmlFor="" className="w-[140px] pt-4">
               Phone number
             </label>
 
@@ -178,10 +163,7 @@ const ViewProfileDialogue = ({
           </div>
 
           <div className="flex items-start">
-            <label
-              htmlFor=""
-              className="w-[140px] pt-4"
-            >
+            <label htmlFor="" className="w-[140px] pt-4">
               Organization
             </label>
 
@@ -189,7 +171,7 @@ const ViewProfileDialogue = ({
               disabled
               value={
                 organizations.find(
-                  (item) => item.id?.toString() === watch("organizationId"),
+                  (item) => item.id?.toString() === watch("organizationId")
                 )?.registeredName
               }
               options={organizations.map((item: IOrganization) => ({
@@ -205,10 +187,7 @@ const ViewProfileDialogue = ({
           </div>
 
           <div className="flex items-start">
-            <label
-              htmlFor=""
-              className="w-[140px] pt-4"
-            >
+            <label htmlFor="" className="w-[140px] pt-4">
               Role
             </label>
 
@@ -223,22 +202,16 @@ const ViewProfileDialogue = ({
             />
           </div>
 
-          <div className="flex justify-end gap-4 !mt-10">
+          <div className="!mt-10 flex justify-end gap-4">
             {!onEdit ? (
               <Button onClick={() => setOnEdit(true)}>Edit</Button>
             ) : (
               <>
-                <Button
-                  onClick={() => setOnEdit(false)}
-                  buttonType="secondary"
-                >
+                <Button onClick={() => setOnEdit(false)} buttonType="secondary">
                   Cancel
                 </Button>
 
-                <Button
-                  loading={isPending}
-                  type="submit"
-                >
+                <Button loading={isPending} type="submit">
                   Save
                 </Button>
               </>

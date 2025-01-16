@@ -1,29 +1,22 @@
-import Button from "../../components/ui/button";
-import Dropdown, { IOption } from "../../components/ui/dropdown";
-import SearchInput from "../../components/ui/search-input";
-import closeFilter from "../../assets/images/icons/close-filter.svg";
-import Table from "../../components/ui/table";
-import pencil from "../../assets/images/icons/pencil.svg";
-import bin from "../../assets/images/icons/bin.svg";
-import ContractDialogue from "../../components/Dashboard/Contracts/Dialogues/ContractDialogue";
-import { useCallback, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import contractService from "../../api/contract";
-import {
-  IContract,
-  IContractFilters,
-  StatusType,
-} from "../../lib/types/contracts";
-import { extractPartiesNamesFromContract, formatDate } from "../../lib/utils";
-import Pagination from "../../components/ui/pagination";
-import { useDebounce, usePageTitle } from "../../lib/hooks";
-import { DEFAULT_DATE_FORMAT, STATUS } from "../../lib/constants";
-import DatePicker from "../../components/ui/date-picker";
-import DeleteDialogue from "../../components/Dashboard/Contracts/Dialogues/DeleteDialogue";
-import HorizontalScroller from "../../components/ui/horizontal-scroller";
-import projectService from "../../api/projects";
-import { IProject } from "../../lib/types/projects";
-import organizationService from "../../api/organization";
+import contractService from "api/contract";
+import projectService from "api/projects";
+import { useCallback, useMemo, useState } from "react";
+
+import closeFilter from "assets/images/icons/close-filter.svg";
+
+import { CONTRACT_STATUS } from "lib/constants";
+import { useDebounce, usePageTitle } from "lib/hooks";
+import { IContract, IContractFilters, StatusType } from "lib/types/contracts";
+import { IProject } from "lib/types/projects";
+import { findLabelFromOptions } from "lib/utils";
+
+import ContractDialogue from "components/Dashboard/Contracts/Dialogues/ContractDialogue";
+import ContractsTable from "components/tables/Contracts";
+import Button from "components/ui/button";
+import Dropdown, { IOption } from "components/ui/dropdown";
+import Pagination from "components/ui/pagination";
+import SearchInput from "components/ui/search-input";
 
 const ContractsPage = () => {
   usePageTitle("Contracts");
@@ -51,7 +44,7 @@ const ContractsPage = () => {
 
     500,
 
-    [search],
+    [search]
   );
 
   const { data: contractList, isLoading } = useQuery({
@@ -69,19 +62,6 @@ const ContractsPage = () => {
       }),
   });
 
-  const { data: organizationList } = useQuery({
-    queryKey: ["organizations", page, debouncedSearch, filters],
-
-    queryFn: () =>
-      organizationService.list({
-        listAll: true,
-
-        page: 1,
-
-        filters: {},
-      }),
-  });
-
   const { data: projecrList, isLoading: isProjectLoading } = useQuery({
     queryKey: ["projects"],
 
@@ -89,9 +69,13 @@ const ContractsPage = () => {
   });
 
   const contracts: IContract[] = useMemo(
-    () => contractList?.items || [],
+    () =>
+      contractList?.items.map((item) => ({
+        ...item,
+        documentName: item.document!.toString(),
+      })) || [],
 
-    [contractList],
+    [contractList]
   );
 
   const projects: IOption[] = useMemo(
@@ -99,10 +83,10 @@ const ContractsPage = () => {
       projecrList?.items?.map((item: IProject) => ({
         label: item.name,
 
-        value: item.name,
+        value: item.id.toString(),
       })) || [],
 
-    [projecrList],
+    [projecrList]
   );
 
   const [modal, setModal] = useState<"contract" | "delete" | null>(null);
@@ -123,36 +107,15 @@ const ContractsPage = () => {
             handleClose={close}
           />
         );
-
-      case "delete":
-        return (
-          <DeleteDialogue
-            id={contractId!.toString()}
-            isVisible={modal === "delete"}
-            handleClose={close}
-          />
-        );
     }
   }, [modal, contractId]);
-
-  const handleEditContract = (id: number) => {
-    setModal("contract");
-
-    setContractId(id);
-  };
-
-  const handleDeleteContract = (id: number) => {
-    setModal("delete");
-
-    setContractId(id);
-  };
 
   return (
     <>
       {renderModal()}
 
       <div className="space-y-2.5">
-        <div className="flex items-center justify-between w-full gap-4">
+        <div className="flex w-full flex-wrap items-center justify-between gap-4">
           <SearchInput
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -163,7 +126,7 @@ const ContractsPage = () => {
 
           <div className="flex items-center gap-6">
             <Button
-              eventName="Add User"
+              eventName="Add Contract"
               onClick={() => setModal("contract")}
             >
               Add contract
@@ -171,14 +134,14 @@ const ContractsPage = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-[18px]">
-          <p className="text-[20px] font-medium flex-shrink-0">Filter by</p>
+        <div className="flex flex-wrap items-center gap-[18px]">
+          <p className="flex-shrink-0 text-[20px] font-medium">Filter by</p>
 
           <Dropdown
             noHelperText
             placeholder="Status"
             className="max-w-[166px]"
-            options={STATUS}
+            options={CONTRACT_STATUS}
             value={filters.status}
             handleSelect={(val) =>
               setFilters((prev) => ({ ...prev, status: val as StatusType }))
@@ -187,7 +150,7 @@ const ContractsPage = () => {
 
           <Dropdown
             noHelperText
-            value={filters.project}
+            value={findLabelFromOptions(projects, filters.project)}
             handleSelect={(val) =>
               setFilters((prev) => ({ ...prev, project: val as string }))
             }
@@ -197,7 +160,8 @@ const ContractsPage = () => {
             className="max-w-[166px]"
           />
 
-          <div className="max-w-[166px]">
+          {/* Temporarily comment out date filter */}
+          {/* <div className="max-w-[166px]">
             <DatePicker
               noHelperText
               value={new Date(filters.date)}
@@ -209,7 +173,7 @@ const ContractsPage = () => {
                 }));
               }}
             />
-          </div>
+          </div> */}
 
           <button
             onClick={() =>
@@ -222,134 +186,14 @@ const ContractsPage = () => {
               })
             }
           >
-            <img
-              src={closeFilter}
-              alt="close-filter"
-            />
+            <img src={closeFilter} alt="close-filter" />
           </button>
         </div>
 
-        <div className="space-y-[18px] overflow-scroll">
-          <div className="pr-4">
-            <Table.Container
-              isEmpty={!contracts.length}
-              isLoading={isLoading}
-            >
-              <Table.Head>
-                <Table.Row>
-                  {TABLE_HEADER.map((key, headerIndex) => {
-                    return <Table.Header key={headerIndex}>{key}</Table.Header>;
-                  })}
+        <div className="space-y-[18px]">
+          <ContractsTable list={contracts} isLoading={isLoading} />
 
-                  <Table.Header></Table.Header>
-                </Table.Row>
-              </Table.Head>
-
-              <Table.Body>
-                {contracts?.map((item, index) => {
-                  const {
-                    id,
-
-                    contractParties,
-
-                    project,
-
-                    status,
-
-                    outcomes,
-
-                    targetNoOfBenefeciaries,
-
-                    startDate,
-
-                    endDate,
-
-                    document,
-                  } = item;
-
-                  return (
-                    <Table.Row key={index}>
-                      {/* <Table.Data>
-                        <p className="w-[90px] truncate">Contract {id}</p>
-                      </Table.Data> */}
-
-                      <Table.Data>
-                        <p className="w-[150px] truncate">
-                          {extractPartiesNamesFromContract(
-                            contractParties,
-
-                            organizationList!.items,
-                          )}
-                        </p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="w-[100px] truncate capitalize">
-                          {status.toLowerCase()}
-                        </p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="w-[140px] truncate">{project}</p>
-                      </Table.Data>
-
-                      <Table.Data>{outcomes}</Table.Data>
-
-                      <Table.Data>{targetNoOfBenefeciaries}</Table.Data>
-
-                      <Table.Data>0</Table.Data>
-
-                      <Table.Data>
-                        {formatDate(startDate, DEFAULT_DATE_FORMAT)}
-                      </Table.Data>
-
-                      <Table.Data>
-                        {formatDate(endDate, DEFAULT_DATE_FORMAT)}
-                      </Table.Data>
-
-                      <Table.Data>{document}</Table.Data>
-
-                      <Table.Data>
-                        <div className="flex justify-end">
-                          <Button
-                            eventName="Edit Contract"
-                            id={id!.toString()}
-                            buttonType="default"
-                            type="button"
-                            onClick={() => handleEditContract(id!)}
-                            className="p-[3px]"
-                          >
-                            <img
-                              alt="pencil"
-                              src={pencil}
-                            />
-                          </Button>
-
-                          <Button
-                            eventName="Delete Contract"
-                            id={id!.toString()}
-                            buttonType="default"
-                            type="button"
-                            onClick={() => handleDeleteContract(id!)}
-                            className="p-[3px]"
-                          >
-                            <img
-                              alt="bin"
-                              src={bin}
-                            />
-                          </Button>
-                        </div>
-                      </Table.Data>
-                    </Table.Row>
-                  );
-                })}
-              </Table.Body>
-            </Table.Container>
-          </div>
-
-          <div className="flex justify-end items-center w-full">
-            <HorizontalScroller />
-
+          <div className="flex w-full items-center justify-end">
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}
@@ -363,16 +207,3 @@ const ContractsPage = () => {
 };
 
 export default ContractsPage;
-
-const TABLE_HEADER = [
-  // "Contract",
-  "Parties",
-  "Status",
-  "Project",
-  "Outcome(s)",
-  "Target beneficiaries",
-  "Actual beneficiaries ",
-  "Start date",
-  "End date",
-  "Document",
-];

@@ -1,18 +1,15 @@
-import { useCallback, useMemo, useState } from "react";
-import Button from "../../components/ui/button";
-import SearchInput from "../../components/ui/search-input";
-import Table from "../../components/ui/table";
-import Pagination from "../../components/ui/pagination";
-import pencil from "../../assets/images/icons/pencil.svg";
-import bin from "../../assets/images/icons/bin.svg";
-import ProjectDialogue from "../../components/Dashboard/Projects/Dialogues/ProjectDialogue";
 import { useQuery } from "@tanstack/react-query";
-import projectService from "../../api/projects";
-import DeleteDialogue from "../../components/Dashboard/Projects/Dialogues/DeleteDialogue";
-import { useDebounce, usePageTitle } from "../../lib/hooks";
-import { Link } from "react-router-dom";
-import { IProject } from "../../lib/types/projects";
-import HorizontalScroller from "../../components/ui/horizontal-scroller";
+import projectService from "api/projects";
+import { useCallback, useMemo, useState } from "react";
+
+import { useDebounce, usePageTitle } from "lib/hooks";
+import { IProject } from "lib/types/projects";
+
+import ProjectDialogue from "components/Dashboard/Projects/Dialogues/ProjectDialogue";
+import ProjectsTable from "components/tables/Projects";
+import Button from "components/ui/button";
+import Pagination from "components/ui/pagination";
+import SearchInput from "components/ui/search-input";
 
 const ProjectsPage = () => {
   usePageTitle("Projects");
@@ -30,7 +27,7 @@ const ProjectsPage = () => {
 
     500,
 
-    [search],
+    [search]
   );
 
   const { data: projectsList, isLoading: projectLoading } = useQuery({
@@ -43,18 +40,12 @@ const ProjectsPage = () => {
   const projects: IProject[] = useMemo(
     () => projectsList?.items || [],
 
-    [projectsList],
+    [projectsList]
   );
 
   const [modal, setModal] = useState<"project" | "delete" | null>(null);
 
   const [selectedProject, setSelectedProject] = useState<IProject | null>(null);
-
-  const handleEditUser = (item: IProject) => {
-    setModal("project");
-
-    setSelectedProject(item);
-  };
 
   const handleCloseModal = () => {
     setModal(null);
@@ -72,15 +63,6 @@ const ProjectsPage = () => {
             handleClose={handleCloseModal}
           />
         );
-
-      case "delete":
-        return (
-          <DeleteDialogue
-            isVisible={modal === "delete"}
-            project={selectedProject!}
-            handleClose={handleCloseModal}
-          />
-        );
     }
   }, [modal, selectedProject]);
 
@@ -89,7 +71,7 @@ const ProjectsPage = () => {
       {renderModal()}
 
       <div className="space-y-2.5">
-        <div className="flex justify-between items-center gap-4">
+        <div className="flex items-center justify-between gap-4">
           <SearchInput
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -97,105 +79,16 @@ const ProjectsPage = () => {
             onClear={() => setSearch("")}
           />
 
-          <Button
-            eventName="Add User"
-            onClick={() => setModal("project")}
-          >
+          <Button eventName="Add Project" onClick={() => setModal("project")}>
             Add project
           </Button>
         </div>
 
-        <div className="space-y-[18px] overflow-scroll ">
-          <div className="pr-4">
-            <Table.Container
-              isEmpty={!projects.length}
-              isLoading={projectLoading}
-            >
-              <Table.Head>
-                <Table.Row>
-                  {TABLE_HEADER.map((key, headerIndex) => {
-                    return <Table.Header key={headerIndex}>{key}</Table.Header>;
-                  })}
-
-                  <Table.Header></Table.Header>
-                </Table.Row>
-              </Table.Head>
-              <Table.Body>
-                {projects.map((item: IProject, bodyIndex: number) => {
-                  const { id, name, outcomes, contracts, providers } = item;
-                  return (
-                    <Table.Row key={bodyIndex}>
-                      <Table.Data>
-                        <Link to={`/projects/${id}`}>
-                          <p className="w-[220px] truncate">{name}</p>
-                        </Link>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="w-[220px] truncate">
-                          {providers?.map((item) => item).join(", ") || "-"}
-                        </p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="w-[220px] truncate">
-                          {outcomes?.map((item) => item.name).join(", ")}
-                        </p>
-                      </Table.Data>
-
-                      <Table.Data>
-                        <p className="w-[220px] truncate">
-                          {contracts?.map((item) => item).join(", ") || "-"}
-                        </p>
-                      </Table.Data>
-
-                      <Table.Data>-</Table.Data>
-
-                      <Table.Data>
-                        <div className="flex justify-end">
-                          <Button
-                            eventName="Edit User"
-                            // id={project}
-                            buttonType="default"
-                            type="button"
-                            onClick={() => handleEditUser(item)}
-                            className="p-[3px]"
-                          >
-                            <img
-                              alt="pencil"
-                              src={pencil}
-                            />
-                          </Button>
-
-                          <Button
-                            eventName="Edit User"
-                            id={id.toString()}
-                            buttonType="default"
-                            type="button"
-                            onClick={() => {
-                              setModal("delete");
-                              setSelectedProject(item);
-                            }}
-                            className="p-[3px]"
-                          >
-                            <img
-                              alt="pencil"
-                              src={bin}
-                            />
-                          </Button>
-                        </div>
-                      </Table.Data>
-                    </Table.Row>
-                  );
-                })}
-              </Table.Body>
-            </Table.Container>
-          </div>
+        <div className="space-y-[18px]">
+          <ProjectsTable list={projects} isLoading={projectLoading} />
 
           {!!projects.length && (
-            <div className="flex justify-end items-center w-full">
-              <HorizontalScroller />
-
+            <div className="flex w-full items-center justify-end">
               <Pagination
                 page={page}
                 onPageChange={(val) => setPage(val)}
@@ -210,11 +103,3 @@ const ProjectsPage = () => {
 };
 
 export default ProjectsPage;
-
-const TABLE_HEADER = [
-  "Projects",
-  "Partners",
-  "Outcomes",
-  "Contracts",
-  "Beneficiaries",
-];

@@ -1,14 +1,20 @@
-import { z } from "zod";
-import { login, password, signup } from "../lib/validators/auth";
-import { cookie } from "../lib/hooks";
-import { api } from "../lib/axios/interceptor";
 import axios from "axios";
+import { z } from "zod";
+
+import { UserData } from "lib/types/auth";
+import { ProfileType } from "lib/types/profile";
+import { LoginReturnType } from "lib/types/users";
+import { removeFirstTwoAndEquals } from "lib/utils";
+
+import { api } from "../lib/axios/interceptor";
+import { cookie } from "../lib/hooks";
+import { login, password, signup } from "../lib/validators/auth";
 
 class AuthService {
-  async login(body: z.infer<typeof login.schema>) {
+  async login(body: z.infer<typeof login.schema>): Promise<LoginReturnType> {
     const res = await api.post("/authentication/login", body);
 
-    return res;
+    return res.data.data;
   }
 
   async signup(body: z.infer<typeof signup.schema>, code: string = "") {
@@ -17,7 +23,7 @@ class AuthService {
 
       hasAgreedToTerms: body.agreeTerms ? true : false,
 
-      invitationCode: code,
+      invitationCode: removeFirstTwoAndEquals(code),
     };
 
     delete data.agreeTerms;
@@ -43,7 +49,7 @@ class AuthService {
     window.location.href = "/users";
   }
 
-  async getProfile() {
+  async getProfile(): Promise<ProfileType> {
     const response = await api.get(`/authentication/profile`);
 
     return response.data.data;
@@ -67,6 +73,14 @@ class AuthService {
     });
 
     return response;
+  }
+
+  async getProfileByInvitation(code: string): Promise<UserData> {
+    const response = await api.get(
+      `/authentication/profile/${removeFirstTwoAndEquals(code)}`
+    );
+
+    return response.data.data;
   }
 }
 

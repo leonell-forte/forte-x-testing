@@ -1,10 +1,11 @@
 "use client";
 
 import { TextField, TextFieldProps } from "@mui/material";
-import { forwardRef, useState } from "react";
-import eyeOpen from "../../assets/images/icons/eye-open.svg";
-import eyeClosed from "../../assets/images/icons/eye-closed.svg";
 import classNames from "classnames";
+import { forwardRef, useState } from "react";
+
+import eyeClosed from "assets/images/icons/eye-closed.svg";
+import eyeOpen from "assets/images/icons/eye-open.svg";
 
 type PropTypes = TextFieldProps & {
   dark?: boolean;
@@ -12,10 +13,16 @@ type PropTypes = TextFieldProps & {
   noHelperText?: boolean;
 
   small?: boolean;
+
+  min?: number;
+
+  wholeNumberOnly?: boolean;
+
+  accept?: string;
 };
 
 const Input = forwardRef<HTMLDivElement, PropTypes>(
-  ({ dark, small, noHelperText, ...props }, ref) => {
+  ({ dark, small, noHelperText, wholeNumberOnly, ...props }, ref) => {
     const [show, setShow] = useState(false);
 
     const { type } = props;
@@ -25,6 +32,20 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
         <TextField
           ref={ref}
           {...props}
+          onKeyDown={(e) => {
+            // prevents negative number if min is 0
+            if (props.min! >= 0 && type === "number" && e.key === "-") {
+              e.preventDefault();
+            }
+
+            if (
+              wholeNumberOnly &&
+              type === "number" &&
+              (e.key === "." || e.key === ",")
+            ) {
+              e.preventDefault();
+            }
+          }}
           type={type === "password" ? (show ? "text" : "password") : type}
           sx={{
             "& .MuiInputBase-input": {
@@ -33,12 +54,17 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
               }),
 
               ...(type === "search" && {
-                paddingLeft: "40px !important", // adjust padding for input text if needed
-                paddingRight: "40px",
+                paddingLeft: "48px !important", // adjust padding for input text if needed
+                paddingRight: "45px",
               }),
 
               ...(small && {
                 height: "10px",
+              }),
+
+              ...(type === "file" && {
+                opacity: 0,
+                cursor: "pointer",
               }),
             },
 
@@ -70,6 +96,12 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
               }),
             },
           }}
+          slotProps={{
+            htmlInput: {
+              ...(type === "number" && { min: props.min }), // Set minimum value for type="number"
+              accept: props.accept,
+            },
+          }}
           fullWidth
         />
 
@@ -79,15 +111,12 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
             onClick={() => setShow((prev) => !prev)}
             className="absolute right-4 top-4"
           >
-            <img
-              alt="eye"
-              src={show ? eyeOpen : eyeClosed}
-            />
+            <img alt="eye" src={show ? eyeOpen : eyeClosed} />
           </button>
         )}
       </div>
     );
-  },
+  }
 );
 
 export default Input;

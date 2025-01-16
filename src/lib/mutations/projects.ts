@@ -1,13 +1,20 @@
-import projectService from "../../api/projects";
-import { queryClient } from "../../components/QueryProvider";
-import { useAlert } from "../../lib/hooks";
-import { useMutation } from "@tanstack/react-query";
 import * as amplitude from "@amplitude/analytics-browser";
-import { IProject, ProjectFieldValues } from "../types/projects";
+import { useMutation } from "@tanstack/react-query";
+import projectService from "api/projects";
+
+import { useAlert } from "lib/hooks";
+
+import { queryClient } from "components/QueryProvider";
+
+import {
+  IProject,
+  IProjectOrganization,
+  ProjectFieldValues,
+} from "../types/projects";
 
 export const useProjectMutation = (
   projectId: string,
-  succesCallback?: () => void,
+  succesCallback?: () => void
 ) => {
   const { setAlert } = useAlert();
 
@@ -60,7 +67,7 @@ export const useProjectMutation = (
       });
 
       amplitude.track(
-        `${projectId ? "Update" : "Add"} Project Form Submission`,
+        `${projectId ? "Update" : "Add"} Project Form Submission`
       );
     },
 
@@ -77,7 +84,7 @@ export const useProjectMutation = (
 
       queryClient.setQueryData(
         ["specific-project", projectId],
-        context?.previousProject,
+        context?.previousProject
       );
     },
 
@@ -96,7 +103,7 @@ export const useProjectMutation = (
 export const useDeleteProjectMutation = (
   id: number,
 
-  successCallback?: () => void,
+  successCallback?: () => void
 ) => {
   const { setAlert } = useAlert();
 
@@ -124,7 +131,7 @@ export const useDeleteProjectMutation = (
 
             items: old.items.filter((item) => item.id !== id),
           };
-        },
+        }
       );
 
       successCallback?.();
@@ -160,4 +167,79 @@ export const useDeleteProjectMutation = (
   });
 
   return { deletProject, isPending };
+};
+
+export const useTagPartnerMutation = (
+  projectId: number,
+
+  successCallback?: () => void
+) => {
+  const { setAlert } = useAlert();
+
+  const { mutateAsync: tagPartners, isPending } = useMutation({
+    mutationFn: (organizationIds: number[]) =>
+      projectService.tagPartners(projectId, organizationIds),
+
+    onMutate: async () => {
+      await queryClient.cancelQueries({
+        queryKey: ["project-organizations", projectId],
+      });
+
+      const previousPartners = queryClient.getQueryData([
+        "project-organizations",
+        projectId,
+      ]);
+
+      return { previousPartners };
+    },
+
+    onSuccess: () => {
+      queryClient.setQueryData(
+        ["project-organizations"],
+        (old: { items: IProjectOrganization }) => {
+          return {
+            ...old,
+          };
+        }
+      );
+
+      successCallback?.();
+
+      setAlert({
+        status: "success",
+
+        message: `Partner tagged successfully`,
+
+        title: "Success!",
+      });
+
+      amplitude.track(`Project Tag Partner Form Submission`, {
+        id: projectId,
+      });
+    },
+
+    onError: (err: any, _, context) => {
+      setAlert({
+        status: "error",
+
+        title: `Failed tagging partner`,
+
+        message: err?.response?.data?.message,
+      });
+
+      queryClient.setQueryData(
+        ["project-organizations", projectId],
+
+        context?.previousPartners
+      );
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["project-organizations", projectId],
+      });
+    },
+  });
+
+  return { tagPartners, isPending };
 };

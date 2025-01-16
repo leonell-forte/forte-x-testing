@@ -1,15 +1,17 @@
-import React, { useState } from "react";
-import Input from "../ui/input";
-import Button from "../ui/button";
-import { useNavigate } from "react-router-dom";
-import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
-import { resetRequest } from "../../lib/validators/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
+import authService from "api/auth";
+import React, { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { z } from "zod";
+
+import { useAlert, useAppDispatch } from "lib/hooks";
+import { setEmail } from "lib/slice/auth";
+import { resetRequest } from "lib/validators/auth";
+
+import Button from "../ui/button";
+import Input from "../ui/input";
 import { ILoginProps } from "./types";
-import authService from "../../api/auth";
-import { useAlert, useAppDispatch } from "../../lib/hooks";
-import { setEmail } from "../../lib/slice/auth";
 
 const ResetRequestForm = ({ handleNext }: ILoginProps) => {
   const [loading, setLoading] = useState(false);
@@ -62,13 +64,10 @@ const ResetRequestForm = ({ handleNext }: ILoginProps) => {
     }
   };
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="text-center space-y-12"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-12 text-center">
       <div className="space-y-4">
         <div>
-          <p className="text-[24px] md:text-[32px] font-medium">
+          <p className="text-[24px] font-medium md:text-[32px]">
             Reset password
           </p>
 
@@ -95,17 +94,11 @@ const ResetRequestForm = ({ handleNext }: ILoginProps) => {
       </div>
 
       <div className="flex flex-col gap-4">
-        <Button
-          loading={loading}
-          type="submit"
-        >
+        <Button loading={loading} type="submit">
           Get 4-digit code
         </Button>
 
-        <Button
-          buttonType="tertiary"
-          onClick={() => navigate("/")}
-        >
+        <Button buttonType="tertiary" onClick={() => navigate("/")}>
           Go back
         </Button>
       </div>

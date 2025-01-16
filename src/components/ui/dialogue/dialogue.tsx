@@ -1,11 +1,14 @@
 "use client";
 
-import { ReactNode } from "react";
-import styles from "./styles.module.scss";
-import { motion } from "framer-motion";
-import { useEscapeKey } from "../../../lib/hooks";
-import close from "../../../assets/images/icons/close.svg";
 import classNames from "classnames";
+import { motion } from "framer-motion";
+import { ReactNode, useRef } from "react";
+
+import close from "assets/images/icons/close.svg";
+
+import { useEscapeKey, useOutsideClick } from "lib/hooks";
+
+import styles from "./styles.module.scss";
 
 export interface IDialogueProps {
   children?: ReactNode;
@@ -32,36 +35,40 @@ const Dialogue = ({
 }: IDialogueProps) => {
   useEscapeKey(handleClose!);
 
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useOutsideClick(containerRef, () => {
+    handleClose?.();
+  });
+
   return isVisible ? (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ type: "spring", duration: 0.4 }}
       className={classNames(
-        "w-screen overflow-scroll py-12 px-4 h-screen flex items-start justify-center bg-[#011217] fixed bg-opacity-[90%] top-0 left-0 z-50 !mt-0",
+        "fixed left-0 top-0 z-50 !mt-0 flex h-screen w-screen items-start justify-center overflow-scroll bg-[#011217] bg-opacity-[90%] px-4 py-12",
 
-        center && "items-center",
+        center && "items-center"
       )}
     >
       <div
+        ref={containerRef}
         className={classNames(
           styles["dialogue-content"],
 
-          title ? "p-10" : "px-10 pb-10",
+          title ? "p-10" : "px-10 pb-10"
         )}
       >
         <button
           type="button"
           onClick={handleClose}
-          className="absolute top-4 right-4"
+          className="absolute right-4 top-4"
         >
-          <img
-            alt="close"
-            src={close}
-          />
+          <img alt="close" src={close} />
         </button>
 
-        {title && <p className="font-semibold text-[20px]">{title}</p>}
+        {title && <p className="text-[20px] font-semibold">{title}</p>}
 
         <div className="mt-12">{children}</div>
       </div>

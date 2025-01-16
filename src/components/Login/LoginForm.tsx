@@ -1,17 +1,19 @@
-import Input from "../ui/input";
-import Checkbox from "../ui/checkbox";
-import Button from "../ui/button";
-import { z } from "zod";
-import { login } from "../../lib/validators/auth";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { cookie, useAppDispatch } from "../../lib/hooks";
-import { setEmail } from "../../lib/slice/auth";
-import { ILoginProps } from "./types";
-import { Link } from "react-router-dom";
 import * as amplitude from "@amplitude/analytics-browser";
-import authService from "../../api/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import authService from "api/auth";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
+import { z } from "zod";
+
+import { cookie, useAppDispatch } from "lib/hooks";
+import { setEmail, setRole } from "lib/slice/auth";
+import { login } from "lib/validators/auth";
+
+import Button from "../ui/button";
+import Checkbox from "../ui/checkbox";
+import Input from "../ui/input";
+import { ILoginProps } from "./types";
 
 const LoginForm = ({ handleNext }: ILoginProps) => {
   const [loading, setLoading] = useState(false);
@@ -42,11 +44,13 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
 
       amplitude.track("Login Form Submission");
 
-      cookie.set("access_token", res.data.data.token, { path: "/" });
+      cookie.set("access_token", res.token, { path: "/" });
 
       handleNext!();
 
       dispatch(setEmail(values.email));
+
+      dispatch(setRole(res.role));
     } catch (err) {
       console.log(err);
 
@@ -58,11 +62,8 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
 
   return (
     <div className="w-full">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="space-y-10 w-full"
-      >
-        <div className="flex flex-col w-full gap-[15px] mt-10">
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-10">
+        <div className="mt-10 flex w-full flex-col gap-[15px]">
           <Input
             onChange={(e) => setValue("email", e.target.value)}
             error={!!errors.email?.message || !!errors.password?.message}
@@ -91,46 +92,32 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
               }}
               label="Remember me"
             />
-            <Link
-              to="/forgot-password"
-              className="text-grey text-[12px] pt-1"
-            >
+            <Link to="/forgot-password" className="pt-1 text-[12px] text-grey">
               Forgot password?
             </Link>
           </div>
         </div>
 
-        <div className="w-full text-center space-y-[15px]">
-          <Button
-            type="submit"
-            fullWidth
-            loading={loading}
-          >
+        <div className="w-full space-y-[15px] text-center">
+          <Button type="submit" fullWidth loading={loading}>
             Continue
           </Button>
 
           <div className="flex items-center gap-4">
             <hr className="w-full" />
 
-            <p className="text-[14px] md:ext-[18px]">OR</p>
+            <p className="md:ext-[18px] text-[14px]">OR</p>
 
             <hr className="w-full" />
           </div>
 
-          <Button
-            type="button"
-            fullWidth
-            buttonType="secondary"
-          >
+          <Button type="button" fullWidth buttonType="secondary">
             Continue with Google{" "}
           </Button>
 
           <p className="text-center text-[14px]">
             Don&apos;t have an account?{" "}
-            <Link
-              className="font-bold"
-              to="/signup"
-            >
+            <Link className="font-bold" to="/signup">
               Sign up
             </Link>
           </p>

@@ -1,8 +1,13 @@
-import { useAlert } from "../hooks";
-import { useMutation } from "@tanstack/react-query";
-import beneficiariesService from "../../api/beneficiaries";
-import { queryClient } from "../../components/QueryProvider";
 import * as amplitude from "@amplitude/analytics-browser";
+import { useMutation } from "@tanstack/react-query";
+import beneficiariesService from "api/beneficiaries";
+import { format } from "date-fns";
+
+import { formatErrorMessage } from "lib/utils";
+
+import { queryClient } from "components/QueryProvider";
+
+import { useAlert } from "../hooks";
 import { IBeneficiaries } from "../types/beneficiaries";
 
 interface IBeneficiaryMutationProps {
@@ -41,13 +46,13 @@ export const useBeneficiaryMutation = ({
       setAlert({
         title: "Success!",
 
-        message: `Beneficiary added successfully`,
+        message: `Beneficiary ${beneficiaryId ? "updated" : "added"} successfully`,
 
         status: "success",
       });
 
       amplitude.track(
-        `${beneficiaryId ? "Update" : "Add"} Beneficiary Form Submission`,
+        `${beneficiaryId ? "Update" : "Add"} Beneficiary Form Submission`
       );
     },
 
@@ -55,7 +60,7 @@ export const useBeneficiaryMutation = ({
       setAlert({
         title: `Failed ${beneficiaryId ? "updating" : "adding"} beneficiary`,
 
-        message: err?.response?.data?.message,
+        message: formatErrorMessage(err?.response?.data?.data?.[0]),
 
         status: "error",
       });
@@ -63,7 +68,7 @@ export const useBeneficiaryMutation = ({
       queryClient.setQueryData(
         ["beneficiaries"],
 
-        context?.previousBeneficiaries,
+        context?.previousBeneficiaries
       );
     },
 
@@ -75,10 +80,68 @@ export const useBeneficiaryMutation = ({
   return { addBeneficiary, isPending };
 };
 
+export const useImportBeneficiaryMutation = ({
+  successCallback,
+}: IBeneficiaryMutationProps) => {
+  const { setAlert } = useAlert();
+
+  const { mutateAsync: importBeneficiaries, isPending } = useMutation({
+    mutationFn: beneficiariesService.importBeneficiaries,
+
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ["beneficiaries"] });
+
+      const previousBeneficiaries = queryClient.getQueryData(["beneficiaries"]);
+
+      return { previousBeneficiaries };
+    },
+
+    onSuccess: (addedBeneficiary) => {
+      queryClient.setQueryData(["beneficiaries"], () => {
+        return addedBeneficiary.data.data;
+      });
+
+      successCallback?.();
+
+      setAlert({
+        title: "Success!",
+
+        message: `Beneficiary imported successfully`,
+
+        status: "success",
+      });
+
+      amplitude.track(`Import Beneficiary Form Submission`);
+    },
+
+    onError: (err: any, newBeneficiary, context) => {
+      setAlert({
+        title: `Failed importing beneficiary`,
+
+        message: err?.response?.data?.message,
+
+        status: "error",
+      });
+
+      queryClient.setQueryData(
+        ["beneficiaries"],
+
+        context?.previousBeneficiaries
+      );
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["beneficiaries"] });
+    },
+  });
+
+  return { importBeneficiaries, isPending };
+};
+
 export const useDeleteBeneficiaryMutation = (
   id: number,
 
-  successCallback?: () => void,
+  successCallback?: () => void
 ) => {
   const { setAlert } = useAlert();
 
@@ -103,7 +166,7 @@ export const useDeleteBeneficiaryMutation = (
           ...old,
 
           itemss: old?.items?.filter((item) => item.id !== id),
-        }),
+        })
       );
 
       successCallback?.();
@@ -133,7 +196,7 @@ export const useDeleteBeneficiaryMutation = (
       queryClient.setQueryData(
         ["beneficiaries"],
 
-        context?.previousBeneficiaries,
+        context?.previousBeneficiaries
       );
     },
 
@@ -148,7 +211,7 @@ export const useDeleteBeneficiaryMutation = (
 export const useBulkStatusUpdateMutation = (
   status: string,
 
-  successCallback?: () => void,
+  successCallback?: () => void
 ) => {
   const { setAlert } = useAlert();
 
@@ -173,7 +236,7 @@ export const useBulkStatusUpdateMutation = (
           ...old,
 
           items: old?.items?.map((item) => ({ ...item, status })),
-        }),
+        })
       );
 
       successCallback?.();
@@ -201,7 +264,7 @@ export const useBulkStatusUpdateMutation = (
       queryClient.setQueryData(
         ["beneficiaries"],
 
-        context?.previousBeneficiaries,
+        context?.previousBeneficiaries
       );
     },
 
@@ -211,4 +274,70 @@ export const useBulkStatusUpdateMutation = (
   });
 
   return { updateStatus, isPending };
+};
+
+export const useExportEvidenceMutation = () => {
+  const { setAlert } = useAlert();
+
+  const { mutateAsync: exportEvidence, isPending } = useMutation({
+    mutationFn: beneficiariesService.bulkEvidenceExport,
+
+    onSuccess: (response) => {
+      const timestamp = format(new Date(), "MM_dd_yy-HH_mm");
+      const fileName = `Evidences_Export-${timestamp}.zip`;
+      const url = window.URL.createObjectURL(
+        new Blob([response.data], { type: "application/zip" })
+      );
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode?.removeChild(link);
+    },
+
+    onError: (err: any) => {
+      setAlert({
+        title: "Error",
+
+        message: err?.response?.data?.message,
+
+        status: "error",
+      });
+    },
+  });
+
+  return { exportEvidence, isPending };
+};
+
+export const useExportBeneficiaries = () => {
+  const { setAlert } = useAlert();
+
+  const { mutateAsync: exportBeneficiaries, isPending } = useMutation({
+    mutationFn: beneficiariesService.bulkExportBeneficiaries,
+
+    onSuccess: (response) => {
+      const timestamp = format(new Date(), "MM_dd_yy-HH_mm");
+      const fileName = `Beneficiaries_Export-${timestamp}.csv`;
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode?.removeChild(link);
+    },
+
+    onError: (err: any) => {
+      setAlert({
+        title: "Error",
+
+        message: err?.response?.data?.message,
+
+        status: "error",
+      });
+    },
+  });
+
+  return { exportBeneficiaries, isPending };
 };

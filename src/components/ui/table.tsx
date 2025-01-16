@@ -1,7 +1,8 @@
-import { TableHTMLAttributes, useRef } from "react";
-import Spinner from "./spinner/spinner";
 import classNames from "classnames";
-import useScroll from "./horizontal-scroller/useScroll";
+import { TableHTMLAttributes, useRef } from "react";
+
+import { ScrollArea, ScrollBar } from "./scroll-area/ScrollArea";
+import Spinner from "./spinner/spinner";
 
 interface ITableProp extends TableHTMLAttributes<HTMLTableElement> {}
 
@@ -29,32 +30,27 @@ const Table = {
   }: ITableContainerProp) => {
     const tableRef = useRef<HTMLDivElement>(null);
 
-    useScroll({ container: tableRef });
-
     return (
-      <div
-        ref={tableRef}
-        className="w-full pb-8 relative overflow-scroll hide-scroll"
-      >
-        <table
-          {...props}
-          className="w-full !rounded-t-[8px] overflow-hidden"
-        >
-          {children}
-        </table>
+      <ScrollArea className="w-full pb-8" type="auto">
+        <div ref={tableRef} className="hide-scroll relative w-full">
+          <table {...props} className="w-full overflow-hidden !rounded-t-[8px]">
+            {children}
+          </table>
 
-        {isEmpty && !isLoading && (
-          <div className="min-w-full flex items-center justify-center h-40 mx-auto">
-            <p>No data</p>
-          </div>
-        )}
+          {isEmpty && !isLoading && (
+            <div className="mx-auto flex h-40 min-w-full items-center justify-center">
+              <p>No data</p>
+            </div>
+          )}
 
-        {isLoading && (
-          <div className="w-full h-40 flex items-center justify-center">
-            <Spinner />
-          </div>
-        )}
-      </div>
+          {isLoading && (
+            <div className="flex h-40 w-full items-center justify-center">
+              <Spinner />
+            </div>
+          )}
+        </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
     );
   },
 
@@ -63,9 +59,9 @@ const Table = {
       <thead
         {...props}
         className={classNames(
-          "text-left bg-white text-[14px] font-medium truncate",
+          "truncate bg-white text-left text-[14px] font-medium",
 
-          props.className,
+          props.className
         )}
       >
         {children}
@@ -81,14 +77,16 @@ const Table = {
     return <tr className="w-full">{children}</tr>;
   },
 
-  Data: ({ children, className, ...props }: ITableCellProps) => {
+  Data: ({ children, className, small, ...props }: ITableCellProps) => {
     return (
       <td
         {...props}
         className={classNames(
-          "px-4 h-[56px] border-b max-w-[300px] truncate text-[14px] overflow-visible",
+          "h-[56px] max-w-[300px] overflow-visible truncate border-b px-8 text-[14px]",
 
-          className,
+          small && "!h-[52px] !px-4 !py-2",
+
+          className
         )}
       >
         {children}
@@ -100,7 +98,11 @@ const Table = {
     return (
       <th
         {...props}
-        className={classNames("!text-black px-4 py-5", small && "!py-3")}
+        className={classNames(
+          "px-8 py-5 !text-black",
+          small && "!h-[52px] !px-4 !py-2",
+          props.className
+        )}
       >
         {children}
       </th>

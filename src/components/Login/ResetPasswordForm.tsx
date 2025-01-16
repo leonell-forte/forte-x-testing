@@ -1,16 +1,18 @@
 "use client";
 
-import Input from "../ui/input";
-import Button from "../ui/button";
+import * as amplitude from "@amplitude/analytics-browser";
+import { zodResolver } from "@hookform/resolvers/zod";
+import authService from "api/auth";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
-import { password } from "../../lib/validators/auth";
-import { zodResolver } from "@hookform/resolvers/zod";
+
+import { useAlert } from "lib/hooks";
+import { password } from "lib/validators/auth";
+
+import Button from "../ui/button";
+import Input from "../ui/input";
 import { ILoginProps } from "./types";
-import * as amplitude from "@amplitude/analytics-browser";
-import { useState } from "react";
-import authService from "../../api/auth";
-import { useAlert } from "../../lib/hooks";
 
 interface IProps extends ILoginProps {
   handleBack?: () => void;
@@ -55,10 +57,7 @@ const ResetPasswordForm = ({ handleNext, handleBack }: IProps) => {
     }
   };
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="space-y-10"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
       <div className="text-center">
         <p className="text-[24px] md:text-[32px]">Create a new password</p>
 
@@ -104,19 +103,11 @@ const ResetPasswordForm = ({ handleNext, handleBack }: IProps) => {
       </div>
 
       <div className="space-y-4">
-        <Button
-          type="submit"
-          fullWidth
-          loading={loading}
-        >
+        <Button type="submit" fullWidth loading={loading}>
           Reset password
         </Button>
 
-        <Button
-          onClick={handleBack}
-          buttonType="secondary"
-          fullWidth
-        >
+        <Button onClick={handleBack} buttonType="secondary" fullWidth>
           Back
         </Button>
       </div>

@@ -26,10 +26,13 @@ const DatePicker = ({
 
   ...props
 }: IProps) => {
-  const isDateSelected = !!value; // Check if a date is selected
+  const isDateSelected = value?.toString() !== "Invalid Date"; // Check if a date is selected
 
   return (
-    <div className={classNames("relative w-full", !noHelperText && "pb-5")}>
+    <div
+      className={classNames("relative w-full", !noHelperText && "pb-5")}
+      onClick={(e) => e.stopPropagation()}
+    >
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Picker
           {...props}
@@ -63,20 +66,18 @@ const DatePicker = ({
                     color: error ? "#651A1A !important" : "#ffffff !important",
                   },
 
-                  "& input::placeholder": {
-                    color: error ? "#651A1A !important" : "white !important",
+                  // "& input::placeholder": {
+                  //   color: error ? "#651A1A !important" : "white !important",
 
-                    opacity: error ? 1 : 0.5,
-                  },
+                  //   opacity: error ? 1 : 0.5,
+                  // },
 
                   "& input": {
-                    color: error
-                      ? "#651A1A !important"
-                      : isDateSelected
-                      ? "white"
-                      : "#ffffff50",
+                    color: error ? "#651A1A !important" : "white",
 
-                    fontWeight: 300,
+                    opacity: isDateSelected ? 1 : 0.5,
+
+                    fontWeight: 500,
                   },
                 },
 
@@ -145,11 +146,11 @@ const DatePicker = ({
         />
 
         {helperText && (
-          <div className="pl-4 absolute">
+          <div className="absolute pl-4">
             <p
               className={classNames(
-                "text-white text-[12px] font-medium",
-                error && "!text-alert",
+                "text-[12px] font-medium text-white",
+                error && "!text-alert"
               )}
             >
               {helperText}

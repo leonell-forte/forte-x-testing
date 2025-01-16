@@ -1,6 +1,6 @@
 "use client";
 
-import { createTheme, ThemeProvider } from "@mui/material";
+import { ThemeProvider, createTheme } from "@mui/material";
 import React, { ReactNode } from "react";
 
 const theme = createTheme({
@@ -9,6 +9,7 @@ const theme = createTheme({
       styleOverrides: {
         root: ({ ownerState }) => ({
           // Primary Variant (default)
+
           "& input[type='search']::-webkit-search-cancel-button": {
             display: "none",
           },
@@ -145,6 +146,8 @@ const theme = createTheme({
           // Disabled Variant
           ...(ownerState.disabled && {
             "& .MuiOutlinedInput-root.Mui-disabled": {
+              height: "50px",
+
               "& .MuiInputBase-input": {
                 "-webkit-text-fill-color": "#fff !important", // Override text fill color
               },
@@ -152,14 +155,14 @@ const theme = createTheme({
             "& .MuiOutlinedInput-root": {
               borderRadius: "10px",
               "&.Mui-disabled fieldset": {
-                borderColor: "#fff",
+                borderColor: ownerState.error ? "#651A1A" : "#fff",
               },
             },
-            "& .MuiFormHelperText-root": {
-              position: "absolute",
-              bottom: -25,
-              color: "#787878 !important",
-            },
+            // "& .MuiFormHelperText-root": {
+            //   position: "absolute",
+            //   bottom: -25,
+            //   color: "#787878 !important",
+            // },
           }),
 
           ...(ownerState.multiline && {

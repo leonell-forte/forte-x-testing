@@ -1,12 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
-import auth from "./slice/auth";
+
 import alert from "./slice/alert";
-import scroll from "./slice/scroll";
+import auth from "./slice/auth";
+import evidence from "./slice/evidence";
 import layout from "./slice/layout";
+import scroll from "./slice/scroll";
 
 export const makeStore = () => {
   return configureStore({
-    reducer: { auth, alert, layout, scroll },
+    reducer: { auth, alert, layout, scroll, evidence },
   });
 };
 

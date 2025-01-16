@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import classNames from "classnames";
+import { useEffect, useState } from "react";
 
 interface IOTPInputProps {
   onChange: (value: string[]) => void;
@@ -42,12 +42,9 @@ const OTPInput = ({ onChange }: IOTPInputProps) => {
   }, [otp, onChange]);
 
   return (
-    <div className="flex gap-4 md:gap-[30px] w-fit mx-auto">
+    <div className="mx-auto flex w-fit gap-4 md:gap-[30px]">
       {otp.map((digit, index) => (
-        <div
-          key={index}
-          className="flex items-center justify-center"
-        >
+        <div key={index} className="flex items-center justify-center">
           <input
             key={index}
             id={`otp-input-${index}`}
@@ -56,9 +53,9 @@ const OTPInput = ({ onChange }: IOTPInputProps) => {
             onChange={(e) => handleChange(e.target.value, index)}
             maxLength={1}
             className={classNames(
-              "w-10 md:w-[76px] h-10 md:h-[76px] rounded-xl md:rounded-[20px] bg-white !bg-opacity-[50%] text-center text-[24px] md:text-[40px] text-forest-green outline-none",
+              "h-10 w-10 rounded-xl bg-white !bg-opacity-[50%] text-center text-[24px] text-forest-green outline-none md:h-[76px] md:w-[76px] md:rounded-[20px] md:text-[40px]",
 
-              digit && "!bg-mint",
+              digit && "!bg-mint"
             )}
           />
         </div>

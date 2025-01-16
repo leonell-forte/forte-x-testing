@@ -1,13 +1,17 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import OTPInput from "../ui/otp-input";
+
+import { REDIRECT_PATHS } from "lib/constants";
+import { useAppSelector } from "lib/hooks";
+import { UserRoleType } from "lib/types/users";
+
 import Button from "../ui/button";
+import OTPInput from "../ui/otp-input";
 import { ILoginProps } from "./types";
-import { useAppSelector } from "../../lib/hooks";
 
 const OTPForm = ({ handleNext }: ILoginProps) => {
-  const { email } = useAppSelector((state) => state.auth);
+  const { email, role } = useAppSelector((state) => state.auth);
 
   const [otp, setOtp] = useState<string[]>([]);
 
@@ -16,7 +20,7 @@ const OTPForm = ({ handleNext }: ILoginProps) => {
   const handleContinue = () => {
     sessionStorage.setItem("otp", otp.join(""));
 
-    handleNext!();
+    handleNext!(REDIRECT_PATHS[role as UserRoleType]);
   };
 
   return (
@@ -45,7 +49,7 @@ const OTPForm = ({ handleNext }: ILoginProps) => {
         Log in
       </Button>
 
-      <p className="text-center text-[14px] mt-[15px]">
+      <p className="mt-[15px] text-center text-[14px]">
         Didn&apos;t receive the email?{" "}
         <button className="font-bold">Resend code</button>
       </p>

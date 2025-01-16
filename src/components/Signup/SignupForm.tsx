@@ -1,26 +1,35 @@
 "use client";
 
-import { useState } from "react";
-import Input from "../ui/input";
-import Checkbox from "../ui/checkbox";
-import Button from "../ui/button";
-import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
-import { signup } from "../../lib/validators/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
+import authService from "api/auth";
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { Link, useSearchParams } from "react-router-dom";
-import authService from "../../api/auth";
-import { cookie, useAlert } from "../../lib/hooks";
+import { z } from "zod";
+
+import { REDIRECT_PATHS } from "lib/constants";
+import { cookie, useAlert } from "lib/hooks";
+import { UserRoleType } from "lib/types/users";
+import { signup } from "lib/validators/auth";
+
+import Spinner from "components/ui/spinner/spinner";
+
 import { ILoginProps } from "../Login/types";
+import Button from "../ui/button";
+import Checkbox from "../ui/checkbox";
+import Input from "../ui/input";
 
 const SignupForm = ({ handleNext }: ILoginProps) => {
-  const [loading, setLoading] = useState(false);
-
   const [params] = useSearchParams();
 
   const code = params.get("code") as string;
 
-  const { setAlert } = useAlert();
+  const { data, isLoading } = useQuery({
+    queryKey: ["invitation-profile"],
+
+    queryFn: () => authService.getProfileByInvitation(code),
+  });
 
   const {
     setValue,
@@ -29,12 +38,24 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
 
     formState: { errors },
 
+    reset,
+
     control,
   } = useForm<z.infer<typeof signup.schema>>({
     resolver: zodResolver(signup.schema),
 
-    defaultValues: signup.defaultValues,
+    defaultValues: signup.defaultValues(),
   });
+
+  useEffect(() => {
+    if (data) {
+      reset(signup.defaultValues(data));
+    }
+  }, [data, reset]);
+
+  const [loading, setLoading] = useState(false);
+
+  const { setAlert } = useAlert();
 
   const onSubmit = async (values: z.infer<typeof signup.schema>) => {
     setLoading(true);
@@ -44,7 +65,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
 
       cookie.set("access_token", res.data.data.token, { path: "/" });
 
-      handleNext!();
+      handleNext!(REDIRECT_PATHS?.[data?.role as UserRoleType]);
     } catch (err: any) {
       console.log(err);
 
@@ -61,13 +82,18 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
       setLoading(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex h-[600px] w-full items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
   return (
     <div className="w-full">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="space-y-5 w-full"
-      >
-        <div className="flex flex-col w-full gap-1">
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-5">
+        <div className="flex w-full flex-col gap-1">
           <Controller
             name="firstName"
             control={control}
@@ -103,6 +129,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
               <Input
                 {...field}
                 autoComplete="off"
+                disabled={!!data}
                 type="email"
                 label="Email"
                 error={!!errors.email?.message}
@@ -181,36 +208,25 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
           </div>
         </div>
 
-        <div className="w-full text-center space-y-[15px]">
-          <Button
-            type="submit"
-            fullWidth
-            loading={loading}
-          >
+        <div className="w-full space-y-[15px] text-center">
+          <Button type="submit" fullWidth loading={loading}>
             Continue
           </Button>
           <div className="flex items-center gap-4">
             <hr className="w-full" />
 
-            <p className="text-[14px] md:ext-[18px]">OR</p>
+            <p className="md:ext-[18px] text-[14px]">OR</p>
 
             <hr className="w-full" />
           </div>{" "}
-          <Button
-            type="button"
-            fullWidth
-            buttonType="secondary"
-          >
-            CONTINUE WITH GOOGLE{" "}
+          <Button type="button" fullWidth buttonType="secondary">
+            Continue with Google{" "}
           </Button>
         </div>
 
         <p className="text-center text-[14px]">
           Have an account?{" "}
-          <Link
-            className="font-bold"
-            to="/"
-          >
+          <Link className="font-bold" to="/">
             Log in
           </Link>
         </p>

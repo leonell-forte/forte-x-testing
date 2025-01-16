@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { UserData } from "lib/types/auth";
+
 export const login = {
   defaultValues: {
     email: "",
@@ -38,7 +40,7 @@ export const password = {
         .regex(/\d/, "Password must inlcude at least one number")
         .regex(
           /[!@#$%^&*(),.?":{}|<>]/,
-          "Password must include at least one special character",
+          "Password must include at least one special character"
         ),
       confirmPassword: z
         .string()
@@ -51,20 +53,22 @@ export const password = {
 };
 
 export const signup = {
-  defaultValues: {
-    firstName: "",
+  defaultValues: (data?: UserData) => {
+    return {
+      firstName: data?.firstName || "",
 
-    lastName: "",
+      lastName: data?.lastName || "",
 
-    email: "",
+      email: data?.email || "",
 
-    phoneNumber: "",
+      phoneNumber: data?.phoneNumber || "",
 
-    password: "",
+      password: "",
 
-    confirmPassword: "",
+      confirmPassword: "",
 
-    agreeTerms: "",
+      agreeTerms: "",
+    };
   },
   schema: z
     .object({
@@ -84,7 +88,7 @@ export const signup = {
         .regex(/\d/, "Password must contain at least one number")
         .regex(
           /[!@#$%^&*(),.?":{}|<>]/,
-          "Password must contain at least one special character",
+          "Password must contain at least one special character"
         ),
 
       confirmPassword: z.string().min(1, "Passwords do not match"),

@@ -1,11 +1,12 @@
-import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import { api } from "../lib/axios/interceptor";
+import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import {
   IBeneficiaries,
   IBeneficiariesFieldValues,
   IBeneficiariesFilter,
+  IImportBeneficiariesFieldValues,
 } from "../lib/types/beneficiaries";
-import { generateODataQuery, IODataObject } from "../lib/utils";
+import { IODataObject, generateODataQuery } from "../lib/utils";
 
 interface IBeneficiariesListProps {
   page?: number;
@@ -34,7 +35,31 @@ class BeneficiariesService {
     const params = new URLSearchParams();
 
     const filterData: IODataObject = {
-      "beneficiaries.firstName": {
+      "beneficiary.firstName": {
+        value: search!,
+
+        exact: false,
+
+        isSearch: true,
+      },
+
+      "beneficiary.lastName": {
+        value: search!,
+
+        exact: false,
+
+        isSearch: true,
+      },
+
+      "beneficiary.cohort_name": {
+        value: search!,
+
+        exact: false,
+
+        isSearch: true,
+      },
+
+      "beneficiary.email": {
         value: search!,
 
         exact: false,
@@ -46,6 +71,32 @@ class BeneficiariesService {
         value: filters?.project as string,
 
         exact: true,
+      },
+
+      "beneficiary.status": {
+        value: filters?.status as string,
+
+        exact: true,
+      },
+
+      "beneficiary.provider_id": {
+        value: filters?.provider?.toString() || "",
+
+        exact: true,
+      },
+
+      "beneficiary.risk_level": {
+        value: filters?.riskLevel || "",
+
+        exact: true,
+      },
+
+      "beneficiary.cohort_start_date": {
+        value: filters?.startDate || "",
+
+        exact: false,
+
+        isDate: true,
       },
     };
 
@@ -104,6 +155,42 @@ class BeneficiariesService {
 
   async bulkStatusUpdate(data: { ids: number[]; status: string }) {
     const response = api.patch("/beneficiaries/status", data);
+
+    return response;
+  }
+
+  async importBeneficiaries(values: IImportBeneficiariesFieldValues) {
+    const formData = new FormData();
+
+    formData.append("file", values.file!);
+
+    formData.append(
+      "isOverwriteByEmailEnabled",
+      values.isOverwriteByEmailEnabled.toString()
+    );
+    const response = await api.post("/beneficiaries/import", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    console.log(response);
+
+    return response;
+  }
+
+  async bulkEvidenceExport(data: { beneficiaryIds: number[] }) {
+    const response = api.post("/beneficiaries/evidences/download", data, {
+      responseType: "arraybuffer",
+    });
+
+    return response;
+  }
+
+  async bulkExportBeneficiaries(data: { beneficiaryIds: number[] }) {
+    const response = api.post("/beneficiaries/export", data, {
+      responseType: "arraybuffer",
+    });
 
     return response;
   }

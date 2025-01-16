@@ -1,14 +1,17 @@
-import Dropdown, { IOption } from "../../../components/ui/dropdown";
-import add from "../../../assets/images/icons/add.svg";
-import minus from "../../../assets/images/icons/minus.svg";
-import RadioGroup from "../../../components/ui/radio-group";
-import Input from "../../../components/ui/input";
 import { useQuery } from "@tanstack/react-query";
-import projectService from "../../../api/projects";
+import projectService from "api/projects";
 import { useMemo } from "react";
 import { Control, Controller } from "react-hook-form";
-import { ContractFieldValues, RateEnum } from "../../../lib/types/contracts";
-import { findLabelFromOptions } from "../../../lib/utils";
+
+import add from "assets/images/icons/add.svg";
+import minus from "assets/images/icons/minus.svg";
+
+import { ContractFieldValues, RateEnum } from "lib/types/contracts";
+import { findLabelFromOptions } from "lib/utils";
+
+import Dropdown, { IOption } from "components/ui/dropdown";
+import Input from "components/ui/input";
+import RadioGroup from "components/ui/radio-group";
 
 interface IContractOutcomeField {
   projectId: number;
@@ -19,15 +22,15 @@ interface IContractOutcomeField {
 
   perOutcome?: boolean;
 
-  isLast?: boolean;
+  disabled?: boolean;
 
-  handleDelete?: () => void;
+  handleDelete: (index: number) => void;
 
   handleSelectOutcome: (id: string) => void;
 
   handleRadioSelect: (value: RateEnum) => void;
 
-  handleAdd?: () => void;
+  handleAdd: (index: number) => void;
 }
 
 const ContractOutcomeField = ({
@@ -39,7 +42,7 @@ const ContractOutcomeField = ({
 
   perOutcome,
 
-  isLast,
+  disabled,
 
   handleDelete,
 
@@ -66,30 +69,27 @@ const ContractOutcomeField = ({
 
         value: item.id.toString(),
       })) || [],
-    [project],
+    [project]
   );
 
   return (
     <div className="space-y-1">
       <div className="flex gap-4">
-        <label
-          htmlFor=""
-          className="pt-4 min-w-[120px]"
-        >
-          Outcome
+        <label htmlFor="" className="min-w-[120px] pt-4">
+          Outcome {index + 1}
         </label>
 
         <Controller
-          name={`contractOutcomeRates.${index}.projectOutcomeId`}
+          name={`outcomeRates.${index}.outcomeId`}
           control={control}
           render={({ field, fieldState }) => {
             const { error } = fieldState;
 
             return (
               <Dropdown
-                disabled={!projectId}
+                disabled={!projectId || disabled}
                 loading={isProjectLoading}
-                value={findLabelFromOptions(outcomes, field.value.toString())}
+                value={findLabelFromOptions(outcomes, field.value?.toString())}
                 handleSelect={(val) => {
                   handleSelectOutcome(val as string);
                 }}
@@ -102,29 +102,25 @@ const ContractOutcomeField = ({
           }}
         />
 
-        <button
-          onClick={isLast ? handleAdd : handleDelete}
-          type="button"
-          className="!w-8 !h-8 bg-white rounded-full flex-shrink-0 text-forest-green flex items-center justify-center hover:scale-[1.05] transition-all hover:opacity-80 mt-3"
-        >
-          <img
-            src={isLast ? add : minus}
-            alt=""
-          />
-        </button>
+        {!disabled && (
+          <button
+            onClick={() => (!index ? handleAdd(index) : handleDelete(index))}
+            type="button"
+            className="mt-3 flex !h-8 !w-8 flex-shrink-0 items-center justify-center rounded-full bg-white text-forest-green transition-all hover:scale-[1.05] hover:opacity-80"
+          >
+            <img src={!index ? add : minus} alt="" />
+          </button>
+        )}
       </div>
 
       <div className="flex items-start gap-4">
-        <label
-          htmlFor=""
-          className="pt-4 min-w-[120px]"
-        >
+        <label htmlFor="" className="min-w-[120px] pt-4">
           Rate
         </label>
 
         <div className="w-full">
           <Controller
-            name={`contractOutcomeRates.${index}.rate`}
+            name={`outcomeRates.${index}.rate`}
             control={control}
             render={({ field, fieldState }) => {
               const { error } = fieldState;
@@ -132,7 +128,9 @@ const ContractOutcomeField = ({
               return (
                 <Input
                   {...field}
-                  placeholder="Mention here"
+                  min={0}
+                  disabled={disabled}
+                  placeholder="Rate"
                   type="number"
                   error={!!error?.message}
                   helperText={error?.message}
@@ -143,11 +141,12 @@ const ContractOutcomeField = ({
 
           <div className="flex flex-col gap-2 md:flex-row md:items-end">
             <Controller
-              name={`contractOutcomeRates.${index}.perOutcome`}
+              name={`outcomeRates.${index}.perOutcome`}
               control={control}
               render={({ field }) => {
                 return (
                   <RadioGroup
+                    disabled={disabled}
                     className="flex flex-col gap-4 md:w-[280px]"
                     items={["Per outcome", "If threshold reached"]}
                     value={field.value ? "Per outcome" : "If threshold reached"}
@@ -161,7 +160,7 @@ const ContractOutcomeField = ({
 
             <div className="w-full translate-y-7">
               <Controller
-                name={`contractOutcomeRates.${index}.threshold`}
+                name={`outcomeRates.${index}.threshold`}
                 control={control}
                 render={({ field, fieldState }) => {
                   const { error } = fieldState;

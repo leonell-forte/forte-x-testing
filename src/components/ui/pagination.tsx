@@ -2,7 +2,8 @@
 
 import classNames from "classnames";
 import { ChangeEvent, useMemo, useState } from "react";
-import arrow from "../../assets/images/icons/chevron.svg";
+
+import arrow from "assets/images/icons/chevron.svg";
 
 interface IPaginationProps {
   page: number;
@@ -54,7 +55,7 @@ const Pagination = ({
       <button
         type="button"
         onClick={handlePrev}
-        className="w-6 h-6 flex items-center justify-center"
+        className="flex h-6 w-6 items-center justify-center"
         disabled={page <= 1}
       >
         <img
@@ -63,9 +64,9 @@ const Pagination = ({
           className={classNames("rotate-[90deg]", page <= 1 && "opacity-[.2]")}
         />
       </button>
-      <div className="w-6 h-6 rounded-[4px] border border-mint flex items-center justify-center">
+      <div className="flex h-6 w-6 items-center justify-center rounded-[4px] border border-mint">
         <input
-          className="text-mint bg-transparent w-6 h-6 outline-none border-none text-center text-[14px] flex-shrink-0"
+          className="h-6 w-6 flex-shrink-0 border-none bg-transparent text-center text-[14px] text-mint outline-none"
           value={inputValue}
           type="text"
           onChange={handleInputChange}
@@ -75,7 +76,7 @@ const Pagination = ({
       <button
         type="button"
         onClick={handleNext}
-        className="w-6 h-6 flex items-center justify-center"
+        className="flex h-6 w-6 items-center justify-center"
         disabled={page >= pageCount}
       >
         <img
@@ -84,7 +85,7 @@ const Pagination = ({
           className={classNames(
             "rotate-[-90deg]",
 
-            page >= pageCount && "opacity-[.2]",
+            page >= pageCount && "opacity-[.2]"
           )}
         />
       </button>

@@ -1,10 +1,12 @@
-import Card from "../../components/ui/card";
-import jobs from "../../assets/images/login/spot-choiceofjobs.png";
-import ResetRequestForm from "../../components/Login/ResetRequestForm";
 import { useCallback, useState } from "react";
-import OTPForm from "../../components/Login/OTPForm";
-import ResetPasswordForm from "../../components/Login/ResetPasswordForm";
-import ResetSuccess from "../../components/Login/ResetSuccess";
+
+import jobs from "assets/images/login/spot-choiceofjobs.png";
+
+import OTPForm from "components/Login/OTPForm";
+import ResetPasswordForm from "components/Login/ResetPasswordForm";
+import ResetRequestForm from "components/Login/ResetRequestForm";
+import ResetSuccess from "components/Login/ResetSuccess";
+import Card from "components/ui/card";
 
 const ForgotPasswordPage = () => {
   const [step, setStep] = useState(0);
@@ -35,21 +37,18 @@ const ForgotPasswordPage = () => {
   }, []);
 
   return (
-    <div className="main-container grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-[99px] items-center h-[95vh] md:px-[86px] py-10">
+    <div className="main-container grid h-[95vh] grid-cols-1 items-center gap-10 py-10 md:gap-[99px] md:px-[86px] lg:grid-cols-2">
       <div className="hidden lg:block">
-        <div className="max-w-[437px] w-auto h-auto mx-auto md:mx-0">
-          <img
-            alt="jobs"
-            src={jobs}
-          />
+        <div className="mx-auto h-auto w-auto max-w-[437px] md:mx-0">
+          <img alt="jobs" src={jobs} />
         </div>
 
         <div className="space-y-6 text-center md:text-left">
-          <p className="text-[40px] md:text-[52px] font-famaime leading-[110%]">
+          <p className="font-famaime text-[40px] leading-[110%] md:text-[52px]">
             Providing the world’s talent with opportunity
           </p>
 
-          <p className="text-[18px] md:text-[20px] leading-[110%]">
+          <p className="text-[18px] leading-[110%] md:text-[20px]">
             We believe connecting talent with opportunity reduces hardship.
             We’re working towards a world free from financial stress, and where
             everyone has dignity and the freedom to choose their own path in
@@ -58,12 +57,12 @@ const ForgotPasswordPage = () => {
         </div>
       </div>
 
-      <Card className="px-10 py-24 max-h-[838px] h-full flex items-center">
-        <div className="max-w-[400px] mx-auto space-y-5 w-full">
+      <Card className="flex h-full max-h-[838px] items-center px-10 py-24">
+        <div className="mx-auto w-full max-w-[400px] space-y-5">
           <img
             alt="logo"
             src="/logo.png"
-            className="w-auto h-auto mx-auto max-w-[122px]"
+            className="mx-auto h-auto w-auto max-w-[122px]"
           />
 
           {renderStep(step)}

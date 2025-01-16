@@ -1,3 +1,3 @@
 export interface ILoginProps {
-  handleNext?: () => void;
+  handleNext?: (path?: string) => void;
 }

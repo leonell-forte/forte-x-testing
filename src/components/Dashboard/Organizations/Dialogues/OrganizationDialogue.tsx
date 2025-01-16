@@ -1,29 +1,30 @@
-import Input from "../../../../components/ui/input";
-import Dialogue, {
-  IDialogueProps,
-} from "../../../../components/ui/dialogue/dialogue";
-import Dropdown from "../../../../components/ui/dropdown";
-import Button from "../../../../components/ui/button";
-import { Controller, useForm } from "react-hook-form";
-import { organizations } from "../../../../lib/validators/organizations";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { REGIONS, STATUS, TYPES } from "../../../../lib/constants";
 import { useQuery } from "@tanstack/react-query";
-import organizationService from "../../../../api/organization";
+import organizationService from "api/organization";
 import { useEffect } from "react";
-import Spinner from "../../../../components/ui/spinner/spinner";
-import useOrganizationMutation from "../../../../lib/mutations/organizations";
-import {
-  OrganizationFieldTypes,
-  OrgTypes,
-} from "../../../../lib/types/organizations";
+import { Controller, useForm } from "react-hook-form";
+
+import { REGIONS, STATUS, TYPES } from "lib/constants";
+import useOrganizationMutation from "lib/mutations/organizations";
+import { OrgTypes, OrganizationFieldTypes } from "lib/types/organizations";
+import { organizations } from "lib/validators/organizations";
+
+import Button from "components/ui/button";
+import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
+import Dropdown from "components/ui/dropdown";
+import Input from "components/ui/input";
+import Spinner from "components/ui/spinner/spinner";
 
 interface IOrganizationDialogueProps extends IDialogueProps {
   orgId?: string;
+
+  addSuccessCallback?: (id: number) => void;
 }
 
 const OrganizationDialogue = ({
   handleClose,
+
+  addSuccessCallback,
 
   isVisible,
 
@@ -75,7 +76,11 @@ const OrganizationDialogue = ({
 
   const { addOrganization, isPending } = useOrganizationMutation({
     orgId,
-    successCallback: onClose,
+    successCallback: (id) => {
+      onClose();
+
+      addSuccessCallback?.(id);
+    },
   });
 
   const onSubmit = async (values: OrganizationFieldTypes) => {
@@ -89,19 +94,13 @@ const OrganizationDialogue = ({
       title={orgId ? "Edit organization" : "Add organization"}
     >
       {isLoading ? (
-        <div className="w-full h-[470px] flex items-center justify-center">
+        <div className="flex h-[470px] w-full items-center justify-center">
           <Spinner />
         </div>
       ) : (
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-1"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-1">
           <div className="flex items-start gap-4">
-            <label
-              htmlFor=""
-              className="pt-3 w-[200px]"
-            >
+            <label htmlFor="" className="w-[200px] pt-3">
               Organization
             </label>
 
@@ -122,10 +121,7 @@ const OrganizationDialogue = ({
           </div>
 
           <div className="flex items-start gap-4">
-            <label
-              htmlFor=""
-              className="pt-3 w-[200px]"
-            >
+            <label htmlFor="" className="w-[200px] pt-3">
               Registered name
             </label>
 
@@ -146,10 +142,7 @@ const OrganizationDialogue = ({
           </div>
 
           <div className="flex items-start gap-4">
-            <label
-              htmlFor=""
-              className="pt-3 w-[200px]"
-            >
+            <label htmlFor="" className="w-[200px] pt-3">
               Registration #
             </label>
 
@@ -170,10 +163,7 @@ const OrganizationDialogue = ({
           </div>
 
           <div className="flex items-start gap-4">
-            <label
-              htmlFor=""
-              className="w-[200px] pt-3.5"
-            >
+            <label htmlFor="" className="w-[200px] pt-3.5">
               Registered address
             </label>
 
@@ -193,7 +183,7 @@ const OrganizationDialogue = ({
                 }}
               />
 
-              <div className="flex flex-col md:flex-row w-full gap-1 md:gap-2">
+              <div className="flex w-full flex-col gap-1 md:flex-row md:gap-2">
                 <Controller
                   name="state"
                   control={control}
@@ -243,10 +233,7 @@ const OrganizationDialogue = ({
           </div>
 
           <div className="flex items-start gap-4">
-            <label
-              htmlFor=""
-              className="pt-3 w-[200px]"
-            >
+            <label htmlFor="" className="w-[200px] pt-3">
               Region
             </label>
 
@@ -275,10 +262,7 @@ const OrganizationDialogue = ({
           </div>
 
           <div className="flex items-start gap-4">
-            <label
-              htmlFor=""
-              className="pt-3 w-[200px]"
-            >
+            <label htmlFor="" className="w-[200px] pt-3">
               Type
             </label>
 
@@ -297,10 +281,7 @@ const OrganizationDialogue = ({
           </div>
 
           <div className="flex items-start gap-4">
-            <label
-              htmlFor=""
-              className="pt-3 w-[200px]"
-            >
+            <label htmlFor="" className="w-[200px] pt-3">
               Status
             </label>
 
@@ -319,18 +300,12 @@ const OrganizationDialogue = ({
             />
           </div>
 
-          <div className="flex justify-end gap-4 !mt-10">
-            <Button
-              onClick={onClose}
-              buttonType="secondary"
-            >
+          <div className="!mt-10 flex justify-end gap-4">
+            <Button onClick={onClose} buttonType="secondary">
               Cancel
             </Button>
 
-            <Button
-              loading={isPending}
-              type="submit"
-            >
+            <Button loading={isPending} type="submit">
               Save
             </Button>
           </div>
