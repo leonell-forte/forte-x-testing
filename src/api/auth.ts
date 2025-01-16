@@ -2,6 +2,7 @@ import axios from "axios";
 import { z } from "zod";
 
 import { ProfileType } from "lib/types/profile";
+import { removeFirstTwoAndEquals } from "lib/utils";
 
 import { api } from "../lib/axios/interceptor";
 import { cookie } from "../lib/hooks";
@@ -20,7 +21,7 @@ class AuthService {
 
       hasAgreedToTerms: body.agreeTerms ? true : false,
 
-      invitationCode: code,
+      invitationCode: removeFirstTwoAndEquals(code),
     };
 
     delete data.agreeTerms;
@@ -70,6 +71,14 @@ class AuthService {
     });
 
     return response;
+  }
+
+  async getProfileByInvitation(code: string) {
+    const response = await api.get(
+      `/authentication/profile/${removeFirstTwoAndEquals(code)}`
+    );
+
+    return response.data.data;
   }
 }
 

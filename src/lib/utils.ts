@@ -140,3 +140,12 @@ export function formatErrorMessage(input: string) {
 
   return `${capitalizedQuotedWord} ${capitalizedRest}`;
 }
+
+export function removeFirstTwoAndEquals(input: string) {
+  // Ensure input is a string before processing
+  if (typeof input !== "string") {
+    throw new Error("Input must be a string");
+  }
+  // Remove the first two characters and the '=' sign
+  return input.slice(2).replace("=", "");
+}

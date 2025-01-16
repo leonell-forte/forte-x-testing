@@ -1,8 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
 import authService from "api/auth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Link, useSearchParams } from "react-router-dom";
 import { z } from "zod";
@@ -10,19 +11,23 @@ import { z } from "zod";
 import { cookie, useAlert } from "lib/hooks";
 import { signup } from "lib/validators/auth";
 
+import Spinner from "components/ui/spinner/spinner";
+
 import { ILoginProps } from "../Login/types";
 import Button from "../ui/button";
 import Checkbox from "../ui/checkbox";
 import Input from "../ui/input";
 
 const SignupForm = ({ handleNext }: ILoginProps) => {
-  const [loading, setLoading] = useState(false);
-
   const [params] = useSearchParams();
 
   const code = params.get("code") as string;
 
-  const { setAlert } = useAlert();
+  const { data, isLoading } = useQuery({
+    queryKey: ["invitation-profile"],
+
+    queryFn: () => authService.getProfileByInvitation(code),
+  });
 
   const {
     setValue,
@@ -31,12 +36,24 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
 
     formState: { errors },
 
+    reset,
+
     control,
   } = useForm<z.infer<typeof signup.schema>>({
     resolver: zodResolver(signup.schema),
 
-    defaultValues: signup.defaultValues,
+    defaultValues: signup.defaultValues(),
   });
+
+  useEffect(() => {
+    if (data) {
+      reset(signup.defaultValues(data));
+    }
+  }, [data]);
+
+  const [loading, setLoading] = useState(false);
+
+  const { setAlert } = useAlert();
 
   const onSubmit = async (values: z.infer<typeof signup.schema>) => {
     setLoading(true);
@@ -63,6 +80,14 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
       setLoading(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex h-[600px] w-full items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
   return (
     <div className="w-full">
       <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-5">
@@ -102,6 +127,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
               <Input
                 {...field}
                 autoComplete="off"
+                disabled={!!data}
                 type="email"
                 label="Email"
                 error={!!errors.email?.message}
