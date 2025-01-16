@@ -64,15 +64,17 @@ const UserDropdown = ({ user }: IProp) => {
           onClick={() => setShowDropdown((prev) => !prev)}
           className="flex h-[42px] w-[80px] cursor-pointer items-center justify-between rounded-[50px] bg-white bg-opacity-[30%] pl-1.5 pr-4 transition-all hover:brightness-[.8] sm:w-[184px]"
         >
-          <div className="flex gap-1.5">
-            <div className="h-[28px] w-[28px] rounded-full bg-[#D9D9D9]"></div>
+          <div className="flex items-center gap-1.5">
+            <div className="h-[28px] w-[28px] flex-shrink-0 rounded-full bg-[#D9D9D9]"></div>
 
-            <div className="hidden items-center px-2 sm:flex">
-              <p className="font-medium text-forest-green">{user?.firstName}</p>
+            <div className="hidden w-full items-center sm:flex">
+              <p className="max-w-[100px] overflow-hidden text-ellipsis whitespace-nowrap font-medium text-forest-green">
+                {user?.firstName}
+              </p>
             </div>
           </div>
 
-          <div className="cursor-pointer px-1.5">
+          <div className="flex-shrink-0 cursor-pointer px-1.5">
             <img alt="arrow" src={arrow} />
           </div>
         </button>
