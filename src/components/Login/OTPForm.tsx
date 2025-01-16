@@ -2,14 +2,16 @@
 
 import { useMemo, useState } from "react";
 
+import { REDIRECT_PATHS } from "lib/constants";
 import { useAppSelector } from "lib/hooks";
+import { UserRoleType } from "lib/types/users";
 
 import Button from "../ui/button";
 import OTPInput from "../ui/otp-input";
 import { ILoginProps } from "./types";
 
 const OTPForm = ({ handleNext }: ILoginProps) => {
-  const { email } = useAppSelector((state) => state.auth);
+  const { email, role } = useAppSelector((state) => state.auth);
 
   const [otp, setOtp] = useState<string[]>([]);
 
@@ -18,7 +20,7 @@ const OTPForm = ({ handleNext }: ILoginProps) => {
   const handleContinue = () => {
     sessionStorage.setItem("otp", otp.join(""));
 
-    handleNext!();
+    handleNext!(REDIRECT_PATHS[role as UserRoleType]);
   };
 
   return (

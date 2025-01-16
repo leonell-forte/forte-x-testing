@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { z } from "zod";
 
 import { cookie, useAppDispatch } from "lib/hooks";
-import { setEmail } from "lib/slice/auth";
+import { setEmail, setRole } from "lib/slice/auth";
 import { login } from "lib/validators/auth";
 
 import Button from "../ui/button";
@@ -44,11 +44,13 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
 
       amplitude.track("Login Form Submission");
 
-      cookie.set("access_token", res.data.data.token, { path: "/" });
+      cookie.set("access_token", res.token, { path: "/" });
 
       handleNext!();
 
       dispatch(setEmail(values.email));
+
+      dispatch(setRole(res.role));
     } catch (err) {
       console.log(err);
 
