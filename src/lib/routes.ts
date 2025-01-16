@@ -58,7 +58,12 @@ export const PROTECTED_ROUTES: RouteConfig[] = [
 
     Component: OrganizationsPage,
 
-    restrictedRoles: ["provider"],
+    restrictedRoles: [
+      "provider.user",
+      "provider.owner",
+      "provider.admin",
+      "provider.readonly",
+    ],
   },
 
   {

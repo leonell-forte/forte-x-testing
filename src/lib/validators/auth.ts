@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { UserData } from "lib/types/auth";
+
 export const login = {
   defaultValues: {
     email: "",
@@ -51,20 +53,22 @@ export const password = {
 };
 
 export const signup = {
-  defaultValues: {
-    firstName: "",
+  defaultValues: (data?: UserData) => {
+    return {
+      firstName: data?.firstName || "",
 
-    lastName: "",
+      lastName: data?.lastName || "",
 
-    email: "",
+      email: data?.email || "",
 
-    phoneNumber: "",
+      phoneNumber: data?.phoneNumber || "",
 
-    password: "",
+      password: "",
 
-    confirmPassword: "",
+      confirmPassword: "",
 
-    agreeTerms: "",
+      agreeTerms: "",
+    };
   },
   schema: z
     .object({

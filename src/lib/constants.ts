@@ -14,7 +14,12 @@ export const MENUS = [
   {
     name: "organizations",
     link: "/organizations",
-    restrictedRoles: ["provider"],
+    restrictedRoles: [
+      "provider.user",
+      "provider.owner",
+      "provider.admin",
+      "provider.readonly",
+    ],
   },
   {
     name: "projects",
