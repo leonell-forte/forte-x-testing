@@ -1,6 +1,7 @@
 import axios from "axios";
 import { z } from "zod";
 
+import { UserData } from "lib/types/auth";
 import { ProfileType } from "lib/types/profile";
 import { removeFirstTwoAndEquals } from "lib/utils";
 
@@ -73,7 +74,7 @@ class AuthService {
     return response;
   }
 
-  async getProfileByInvitation(code: string) {
+  async getProfileByInvitation(code: string): Promise<UserData> {
     const response = await api.get(
       `/authentication/profile/${removeFirstTwoAndEquals(code)}`
     );
