@@ -8,8 +8,8 @@ import Card from "components/ui/card";
 const SignupPage = () => {
   const navigate = useNavigate();
 
-  const handleNextStep = () => {
-    navigate("/users");
+  const handleNextStep = (path?: string) => {
+    navigate(path || "/users");
   };
 
   return (

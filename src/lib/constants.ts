@@ -1,3 +1,5 @@
+import { UserRoleType } from "./types/users";
+
 export const DEFAULT_PAGE_SIZE = "10";
 
 export const MENUS = [
@@ -436,3 +438,13 @@ export const REGIONS = [
 ];
 
 export const DEFAULT_DATE_FORMAT = "dd-LL-yyyy";
+
+export const REDIRECT_PATHS: Record<UserRoleType, string> = {
+  "provider.user": "/beneficiaries",
+
+  "provider.admin": "/beneficiaries",
+
+  "provider.owner": "/beneficiaries",
+
+  "provider.readonly": "/beneficiaries",
+};

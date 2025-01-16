@@ -8,7 +8,9 @@ import { Controller, useForm } from "react-hook-form";
 import { Link, useSearchParams } from "react-router-dom";
 import { z } from "zod";
 
+import { REDIRECT_PATHS } from "lib/constants";
 import { cookie, useAlert } from "lib/hooks";
+import { UserRoleType } from "lib/types/users";
 import { signup } from "lib/validators/auth";
 
 import Spinner from "components/ui/spinner/spinner";
@@ -63,7 +65,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
 
       cookie.set("access_token", res.data.data.token, { path: "/" });
 
-      handleNext!();
+      handleNext!(REDIRECT_PATHS?.[data?.role as UserRoleType]);
     } catch (err: any) {
       console.log(err);
 

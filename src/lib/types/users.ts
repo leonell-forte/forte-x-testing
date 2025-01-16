@@ -25,3 +25,9 @@ export interface IUser {
 }
 
 export type UserFieldTypes = z.infer<typeof users.schema>;
+
+export type UserRoleType =
+  | "provider.user"
+  | "provider.admin"
+  | "provider.owner"
+  | "provider.readonly";
