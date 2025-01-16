@@ -49,7 +49,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
     if (data) {
       reset(signup.defaultValues(data));
     }
-  }, [data]);
+  }, [data, reset]);
 
   const [loading, setLoading] = useState(false);
 
