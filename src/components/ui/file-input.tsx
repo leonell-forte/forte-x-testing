@@ -6,6 +6,7 @@ import { ChangeEvent, useState } from "react";
 import loader from "assets/images/icons/loader.svg";
 import upload from "assets/images/icons/upload.svg";
 
+import { useAlert } from "lib/hooks";
 import { File as FileType } from "lib/types/common";
 
 import Input from "./input";
@@ -43,6 +44,8 @@ const FileInput = ({
 
   const [value, setValue] = useState(filename || "");
 
+  const { setAlert } = useAlert();
+
   const handleUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     setLoading(true);
 
@@ -57,8 +60,16 @@ const FileInput = ({
         onSuccess?.(res.data.data);
 
         setValue(res.data.data.filename);
-      } catch (err) {
+      } catch (err: any) {
         console.log(err);
+
+        setAlert({
+          title: "Failed uploading file",
+
+          message: err?.response?.data?.message,
+
+          status: "error",
+        });
       } finally {
         onUploadEnd?.();
         setLoading(false);
