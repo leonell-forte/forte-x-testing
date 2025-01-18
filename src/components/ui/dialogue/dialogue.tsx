@@ -62,7 +62,10 @@ const Dialogue = ({
       >
         <button
           type="button"
-          onClick={handleClose}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleClose?.();
+          }}
           className="absolute right-4 top-4"
         >
           <img alt="close" src={close} />
