@@ -34,7 +34,7 @@ export const PROTECTED_ROUTES: RouteConfig[] = [
 
     Component: UsersPage,
 
-    restrictedRoles: [],
+    restrictedRoles: ["provider.user", "provider.user"],
   },
 
   {
