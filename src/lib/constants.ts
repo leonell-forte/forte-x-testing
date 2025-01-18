@@ -32,7 +32,7 @@ export const MENUS = [
   {
     name: "users",
     link: "/users",
-    restrictedRoles: [],
+    restrictedRoles: ["provider.user", "provider.readonly"],
   },
 ];
 
