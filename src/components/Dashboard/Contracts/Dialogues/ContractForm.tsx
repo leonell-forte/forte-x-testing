@@ -485,7 +485,7 @@ const ContractForm = ({
 
       <div className="!mt-10 flex items-center justify-between">
         <div>
-          {contractDetails && !isDraft && !isAmmending && (
+          {contractDetails && !isAmmending && (
             <Button onClick={markContract} buttonType="secondary">
               {statusActions?.label}
             </Button>
