@@ -34,7 +34,7 @@ export const evidence = {
 
     status: z.string().min(1, "Status is a required field"),
 
-    outcomeId: z.string().min(1, "Outcome is a required field"),
+    outcomeId: z.string(),
 
     file: fileSchema.refine((file) => file.key !== "", {
       message: "File is a required field",

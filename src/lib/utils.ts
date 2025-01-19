@@ -126,7 +126,9 @@ export function cn(...inputs: ClassValue[]) {
 
 export function formatErrorMessage(input: string) {
   // Remove leading and trailing quotes if present
-  const unescapedInput = input?.replace(/^"|"$/g, "");
+  if (!input) return "";
+
+  const unescapedInput = input.replace(/^"|"$/g, "");
 
   // Split the string into parts using unescaped quotes
   const parts = unescapedInput.split('"');

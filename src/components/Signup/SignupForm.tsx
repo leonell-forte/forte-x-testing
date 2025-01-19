@@ -29,6 +29,8 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
     queryKey: ["invitation-profile"],
 
     queryFn: () => authService.getProfileByInvitation(code),
+
+    enabled: !!code,
   });
 
   const {
