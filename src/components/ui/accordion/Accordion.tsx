@@ -43,7 +43,7 @@ const AccordionContent = React.forwardRef<
     className="accordion-content overflow-hidden"
     {...props}
   >
-    <div className={cn("pb-6 pt-2", className)}>{children}</div>
+    <div className={cn("pb-4 pt-2", className)}>{children}</div>
   </AccordionPrimitive.Content>
 ));
 
@@ -52,11 +52,21 @@ type Props = {
   text: React.ReactNode;
   /** Text or element to display inside the accordion */
   children: React.ReactNode;
+  /** Set to true if accordion should be open by default */
+  defaultOpen?: boolean;
 };
 
-export default function Accordion({ text, children }: Props) {
+export default function Accordion({
+  text,
+  children,
+  defaultOpen = false,
+}: Props) {
   return (
-    <AccordionPrimitive.Root type="single" collapsible defaultValue="item">
+    <AccordionPrimitive.Root
+      type="single"
+      collapsible
+      {...(defaultOpen && { defaultValue: "item" })}
+    >
       <AccordionItem value="item">
         <AccordionTrigger>{text}</AccordionTrigger>
         <AccordionContent>{children}</AccordionContent>
