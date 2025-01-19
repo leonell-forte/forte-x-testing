@@ -32,6 +32,7 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
         <TextField
           ref={ref}
           {...props}
+          onWheel={(e) => (e.target as any).blur()}
           onKeyDown={(e) => {
             // prevents negative number if min is 0
             if (props.min! >= 0 && type === "number" && e.key === "-") {
