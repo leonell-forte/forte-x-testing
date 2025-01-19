@@ -58,6 +58,16 @@ const SearchResultsPage = () => {
 
   usePageTitle(`Showing results for "${query}"`);
 
+  const tables = [
+    "beneficiaries",
+    "contracts",
+    "organizations",
+    "projects",
+    "users",
+  ];
+
+  const firstTableWithResult = data?.find((item) => item.data.length > 0);
+
   return (
     <div className="h-full">
       {isLoading ? (
@@ -73,21 +83,31 @@ const SearchResultsPage = () => {
         </div>
       ) : (
         <div className="space-y-4 px-2">
-          {data?.map((item: SearchItem) => (
-            <div className="space-y-4" key={JSON.stringify(item)}>
-              <Accordion
-                text={
-                  <div className="text-2xl font-semibold">
-                    {startCase(item?.table)} {`(${item?.data?.length})`}
-                  </div>
-                }
-              >
-                {item?.data?.length === 0
-                  ? `No result found for "${query}" in ${item?.table}`
-                  : renderTable(item)}
-              </Accordion>
-            </div>
-          ))}
+          {tables.map((table) => {
+            const item = data?.find((x) => x.table === table) || {
+              table,
+              data: [],
+            };
+            return (
+              <div className="space-y-4" key={JSON.stringify(item)}>
+                <Accordion
+                  text={
+                    <div className="text-2xl font-semibold">
+                      {startCase(table)} {`(${item?.data?.length})`}
+                    </div>
+                  }
+                  defaultOpen={
+                    table === "beneficiaries" ||
+                    firstTableWithResult?.table === table
+                  }
+                >
+                  {item?.data?.length === 0
+                    ? `No result found for "${query}" in ${table}.`
+                    : renderTable(item)}
+                </Accordion>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
