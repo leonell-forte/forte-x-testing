@@ -18,7 +18,7 @@ export class EvidenceService {
 
       fileId: values.file?.id,
 
-      outcomeId: Number(values.outcomeId),
+      outcomeId: values.outcomeId ? Number(values.outcomeId) : null,
     };
 
     const response = await api.post(
