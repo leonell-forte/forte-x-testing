@@ -120,7 +120,7 @@ const ContractsPage = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="!w-[286px]"
-            placeholder="Search contract"
+            placeholder="Search contracts"
             onClear={() => setSearch("")}
           />
 
@@ -134,7 +134,7 @@ const ContractsPage = () => {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-[18px]">
+        <div className="flex flex-wrap items-center gap-[10px]">
           <p className="flex-shrink-0 text-[20px] font-medium">Filter by</p>
 
           <Dropdown
