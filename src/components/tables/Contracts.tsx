@@ -80,10 +80,14 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
           <Table.Head>
             <Table.Row>
               {TABLE_HEADER.map((key, headerIndex) => {
-                return <Table.Header key={headerIndex}>{key}</Table.Header>;
+                return (
+                  <Table.Header className="h-[64px] pl-5" key={headerIndex}>
+                    {key}
+                  </Table.Header>
+                );
               })}
 
-              <Table.Header></Table.Header>
+              <Table.Header className="h-[64px]"></Table.Header>
             </Table.Row>
           </Table.Head>
 
@@ -113,11 +117,11 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
 
               return (
                 <Table.Row key={index}>
-                  <Table.Data>
+                  <Table.Data className="pl-5">
                     <p className="w-[20px] truncate">{id}</p>
                   </Table.Data>
 
-                  <Table.Data>
+                  <Table.Data className="pl-5">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -130,37 +134,41 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
                     </button>
                   </Table.Data>
 
-                  <Table.Data>
+                  <Table.Data className="pl-5">
                     <p className="w-[150px] truncate">{parties?.join(", ")}</p>
                   </Table.Data>
 
-                  <Table.Data>
+                  <Table.Data className="pl-5">
                     <p className="w-[100px] truncate capitalize">
                       {status?.toLowerCase()}
                     </p>
                   </Table.Data>
 
-                  <Table.Data>
+                  <Table.Data className="pl-5">
                     <p className="w-[140px] truncate">{project}</p>
                   </Table.Data>
 
-                  <Table.Data>{outcomenames?.join(", ")}</Table.Data>
+                  <Table.Data className="pl-5">
+                    {outcomenames?.join(", ")}
+                  </Table.Data>
 
-                  <Table.Data>{targetNoOfBenefeciaries}</Table.Data>
+                  <Table.Data className="pl-5">
+                    {targetNoOfBenefeciaries}
+                  </Table.Data>
 
-                  <Table.Data>0</Table.Data>
+                  <Table.Data className="pl-5">0</Table.Data>
 
-                  <Table.Data>
+                  <Table.Data className="pl-5">
                     {formatDate(startDate, DEFAULT_DATE_FORMAT)}
                   </Table.Data>
 
-                  <Table.Data>
+                  <Table.Data className="pl-5">
                     {formatDate(endDate, DEFAULT_DATE_FORMAT)}
                   </Table.Data>
 
-                  <Table.Data>{documentName}</Table.Data>
+                  <Table.Data className="pl-5">{documentName}</Table.Data>
 
-                  <Table.Data>
+                  <Table.Data className="pl-5">
                     <div className="flex justify-end">
                       {status === "DRAFT" && (
                         <Button

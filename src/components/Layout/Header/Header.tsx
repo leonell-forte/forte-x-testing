@@ -38,13 +38,17 @@ const Header = ({ user }: IProp) => {
 
   return (
     <div className="flex w-screen items-center justify-between px-5 py-[22px] md:px-[30px]">
-      <div className="flex items-center gap-[70px]">
+      <div className="flex items-center gap-[80px]">
         <button onClick={handleClick} className="h-7 w-7 md:hidden">
           <img src={menu} alt="menu" />
         </button>
 
         <Link to="/users">
-          <img alt="logo" src="/logo.png" className="max-w-[98px]" />
+          <img
+            alt="logo"
+            src="/logo.png"
+            className="hidden max-w-[98px] md:block"
+          />
         </Link>
         {pageTitle && (
           <p className="hidden max-w-[400px] truncate text-[28px] font-semibold lg:block xl:max-w-[600px]">

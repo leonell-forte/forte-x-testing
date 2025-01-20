@@ -64,10 +64,17 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
           <Table.Head>
             <Table.Row>
               {TABLE_HEADER.map((key, headerIndex) => {
-                return <Table.Header key={headerIndex}>{key}</Table.Header>;
+                return (
+                  <Table.Header
+                    className="h-[64px] pl-[14px]"
+                    key={headerIndex}
+                  >
+                    {key}
+                  </Table.Header>
+                );
               })}
 
-              <Table.Header></Table.Header>
+              <Table.Header className="h-[64px]"></Table.Header>
             </Table.Row>
           </Table.Head>
           <Table.Body>
@@ -75,33 +82,33 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
               const { id, name, outcomes, contracts, providers } = item;
               return (
                 <Table.Row key={bodyIndex}>
-                  <Table.Data>
+                  <Table.Data className="pl-[14px]">
                     <Link to={`/projects/${id}`}>
                       <p className="w-[220px] truncate">{name}</p>
                     </Link>
                   </Table.Data>
 
-                  <Table.Data>
+                  <Table.Data className="pl-[14px]">
                     <p className="w-[220px] truncate">
                       {providers?.map((item) => item).join(", ") || "-"}
                     </p>
                   </Table.Data>
 
-                  <Table.Data>
+                  <Table.Data className="pl-[14px]">
                     <p className="w-[220px] truncate">
                       {outcomes?.map((item) => item.name).join(", ")}
                     </p>
                   </Table.Data>
 
-                  <Table.Data>
+                  <Table.Data className="pl-[14px]">
                     <p className="w-[220px] truncate">
                       {contracts?.map((item) => item).join(", ") || "-"}
                     </p>
                   </Table.Data>
 
-                  <Table.Data>-</Table.Data>
+                  <Table.Data className="pl-[14px]">-</Table.Data>
 
-                  <Table.Data>
+                  <Table.Data className="pl-[14px]">
                     <div className="flex justify-end">
                       <Button
                         eventName="Edit Project"
