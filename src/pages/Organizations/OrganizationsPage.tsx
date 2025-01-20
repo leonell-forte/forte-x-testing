@@ -116,7 +116,7 @@ const OrganizationsPage = () => {
             </Button>
           </div>
         </div>
-        <div className="flex flex-wrap items-center gap-[18px]">
+        <div className="flex flex-wrap items-center gap-[10px]">
           <p className="text-[20px] font-medium">Filter by</p>
 
           <Dropdown
@@ -128,7 +128,7 @@ const OrganizationsPage = () => {
               handleSelectFilter("region", val);
             }}
             placeholder="Region"
-            className="max-w-[166px]"
+            className="max-w-[184px]"
             options={REGIONS}
           />
 
@@ -139,7 +139,7 @@ const OrganizationsPage = () => {
               handleSelectFilter("status", val);
             }}
             placeholder="Status"
-            className="max-w-[166px]"
+            className="max-w-[184px]"
             options={STATUS}
           />
 
@@ -150,7 +150,7 @@ const OrganizationsPage = () => {
               handleSelectFilter("type", val);
             }}
             placeholder="Type"
-            className="max-w-[166px]"
+            className="max-w-[184px]"
             options={TYPES}
           />
 

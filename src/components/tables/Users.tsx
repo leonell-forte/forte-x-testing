@@ -57,10 +57,14 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
           <Table.Head>
             <Table.Row>
               {TABLE_HEADER.map((key, headerIndex) => {
-                return <Table.Header key={headerIndex}>{key}</Table.Header>;
+                return (
+                  <Table.Header className="h-[64px]" key={headerIndex}>
+                    {key}
+                  </Table.Header>
+                );
               })}
 
-              <Table.Header></Table.Header>
+              <Table.Header className="h-[64px]"></Table.Header>
             </Table.Row>
           </Table.Head>
           <Table.Body>

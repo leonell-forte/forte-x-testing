@@ -45,10 +45,17 @@ const OrganizationTable = ({ list, isLoading = false }: TOrganizationTable) => {
           <Table.Head>
             <Table.Row>
               {TABLE_HEADER.map((key, headerIndex) => {
-                return <Table.Header key={headerIndex}>{key}</Table.Header>;
+                return (
+                  <Table.Header
+                    className="h-[64px] pl-[18px]"
+                    key={headerIndex}
+                  >
+                    {key}
+                  </Table.Header>
+                );
               })}
 
-              <Table.Header></Table.Header>
+              <Table.Header className="h-[64px]"></Table.Header>
             </Table.Row>
           </Table.Head>
           <Table.Body>
@@ -70,49 +77,49 @@ const OrganizationTable = ({ list, isLoading = false }: TOrganizationTable) => {
               } = item;
               return (
                 <Table.Row key={bodyIndex}>
-                  <Table.Data>
+                  <Table.Data className="pl-[18px]">
                     <p className="w-[200px] truncate">{name}</p>
                   </Table.Data>
 
-                  <Table.Data>
+                  <Table.Data className="pl-[18px]">
                     <p className="w-[200px] truncate">{registeredName}</p>
                   </Table.Data>
 
-                  <Table.Data>
+                  <Table.Data className="pl-[18px]">
                     <p className="w-[250px] truncate">
                       {`${registeredAddress}, ${state} ${postalCode} ${country}`}
                     </p>
                   </Table.Data>
 
-                  <Table.Data>
+                  <Table.Data className="pl-[18px]">
                     <p className="w-[100px] truncate">{registrationNumber}</p>
                   </Table.Data>
 
-                  <Table.Data>
+                  <Table.Data className="pl-[18px]">
                     <p className="w-[120px] truncate">{regions?.join(", ")}</p>
                   </Table.Data>
 
-                  <Table.Data>
+                  <Table.Data className="pl-[18px]">
                     <p className="w-[60px] truncate capitalize">{type}</p>
                   </Table.Data>
 
-                  <Table.Data>
+                  <Table.Data className="pl-[18px]">
                     <p className="w-[55px] truncate capitalize">{status}</p>
                   </Table.Data>
 
-                  <Table.Data>
+                  <Table.Data className="pl-[18px]">
                     <p className="w-[35px] truncate">{noOfUsers}</p>
                   </Table.Data>
 
-                  <Table.Data>
+                  <Table.Data className="pl-[18px]">
                     <p className="w-[35px] truncate">{noOfProjects}</p>
                   </Table.Data>
 
-                  <Table.Data>
+                  <Table.Data className="pl-[18px]">
                     <p className="w-[35px] truncate">-</p>
                   </Table.Data>
 
-                  <Table.Data>
+                  <Table.Data className="pl-[18px]">
                     <Button
                       eventName="Edit User"
                       id={id}

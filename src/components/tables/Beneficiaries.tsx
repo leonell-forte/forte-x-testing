@@ -98,7 +98,7 @@ const BeneficiariesTable = ({
           <Table.Head>
             <Table.Row>
               {setChecked ? (
-                <Table.Header small className="!h-[60px] !pr-12">
+                <Table.Header small className="!h-[60px] !pl-[26px] !pr-12">
                   <Checkbox
                     checked={
                       list?.length !== 0 && selectedIds.length === list.length
@@ -175,7 +175,7 @@ const BeneficiariesTable = ({
 
                 email,
 
-                contractId,
+                contract,
 
                 id,
 
@@ -196,7 +196,7 @@ const BeneficiariesTable = ({
 
               return (
                 <Table.Row key={index}>
-                  <Table.Data small className="!h-[64px]">
+                  <Table.Data small className="!h-[64px] !pl-[26px]">
                     <div className="flex items-center gap-2">
                       {setChecked ? (
                         <div className="w-6">
@@ -230,7 +230,7 @@ const BeneficiariesTable = ({
                           setEditMode(false);
                         }}
                         className={cn(
-                          "outline-none",
+                          "w-[143px] truncate text-left outline-none",
                           setChecked ? "translate-x-[-8px]" : ""
                         )}
                       >
@@ -239,48 +239,54 @@ const BeneficiariesTable = ({
                     </div>
                   </Table.Data>
 
-                  <Table.Data small className="!h-[64px]">
-                    {lastName}
+                  <Table.Data small className="!h-[64px">
+                    <p className="w-[143px] truncate">{lastName}</p>
                   </Table.Data>
 
                   <Table.Data small className="!h-[64px]">
-                    {provider}
+                    <p className="w-[134px] truncate">{provider}</p>
                   </Table.Data>
 
                   <Table.Data small className="!h-[64px]">
-                    {email}
+                    <p className="w-[184px] truncate">{email}</p>
                   </Table.Data>
 
                   <Table.Data small className="!h-[64px]">
-                    {phoneNumber}
+                    <p className="w-[184px] truncate">{phoneNumber}</p>
                   </Table.Data>
 
                   <Table.Data small className="!h-[64px]">
-                    Contract {contractId}
+                    <p className="w-[134px] truncate">{contract}</p>
                   </Table.Data>
 
                   <Table.Data small className="!h-[64px]">
-                    {program}
+                    <p className="w-[134px] truncate">{program}</p>
                   </Table.Data>
 
                   <Table.Data small className="!h-[64px] capitalize">
-                    {riskLevel}
+                    <p className="w-[84px] truncate">{riskLevel}</p>
                   </Table.Data>
 
                   <Table.Data small className="!h-[64px]">
-                    {status}
+                    <p className="w-[134px] truncate">{status}</p>
                   </Table.Data>
 
                   <Table.Data small className="!h-[64px]">
-                    {formatDate(cohortStartDate, DEFAULT_DATE_FORMAT)}
+                    <p className="w-[84px] truncate">
+                      {formatDate(cohortStartDate, DEFAULT_DATE_FORMAT)}
+                    </p>
                   </Table.Data>
 
                   <Table.Data small className="!h-[64px]">
-                    {formatDate(cohortEndDate, DEFAULT_DATE_FORMAT)}
+                    <p className="w-[84px] truncate">
+                      {formatDate(cohortEndDate, DEFAULT_DATE_FORMAT)}
+                    </p>
                   </Table.Data>
 
                   <Table.Data small className="!h-[64px]">
-                    {evidences?.map((item) => item.file.filename).join(", ")}
+                    <p className="w-[234px] truncate">
+                      {evidences?.map((item) => item.file.filename).join(", ")}
+                    </p>{" "}
                   </Table.Data>
 
                   <Table.Data small className="!h-[64px]">

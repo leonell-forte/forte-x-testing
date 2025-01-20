@@ -89,10 +89,10 @@ const UserDropdown = ({ user }: IProp) => {
               : { height: 0, opacity: 0 }
           }
           transition={{ type: "spring", duration: 0.4, bounce: 0 }}
-          className="absolute left-0 top-12 w-full overflow-hidden rounded-[4px] bg-white"
+          className="absolute left-0 top-10 w-full overflow-hidden rounded-[8px] bg-white px-[10px] py-[9.5px]"
         >
           <button onClick={handleViewProfile} className="w-full text-left">
-            <li className="px-2.5 py-1.5 text-black transition-all hover:bg-grey">
+            <li className="flex h-[42px] items-center rounded-[8px] px-2.5 py-1.5 font-medium text-black transition-all hover:bg-mint">
               Profile
             </li>
           </button>
@@ -102,8 +102,8 @@ const UserDropdown = ({ user }: IProp) => {
             onClick={handleLogout}
             className="w-full text-left"
           >
-            <li className="px-2.5 py-1.5 text-black transition-all hover:bg-grey">
-              Log out
+            <li className="flex h-[42px] items-center rounded-[8px] px-2.5 py-1.5 font-medium text-black transition-all hover:bg-mint">
+              Logout
             </li>
           </button>
         </motion.ul>
