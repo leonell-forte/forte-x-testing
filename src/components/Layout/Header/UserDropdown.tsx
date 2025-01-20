@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import authService from "api/auth";
 import organizationService from "api/organization";
 import { motion } from "framer-motion";
-import { useMemo, useRef, useState } from "react";
+import { MouseEvent, useMemo, useRef, useState } from "react";
 
 import arrow from "assets/images/icons/chevron.svg";
 
@@ -40,7 +40,9 @@ const UserDropdown = ({ user }: IProp) => {
 
   useOutsideClick(dropdownRef, () => setShowDropdown(false));
 
-  const handleViewProfile = () => {
+  const handleViewProfile = (e: MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+
     setShowModal(true);
 
     setShowDropdown(false);
