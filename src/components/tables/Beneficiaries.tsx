@@ -98,7 +98,7 @@ const BeneficiariesTable = ({
           <Table.Head>
             <Table.Row>
               {setChecked ? (
-                <Table.Header small className="!h-[60px] !pr-12">
+                <Table.Header small className="!h-[60px] !pl-[26px] !pr-12">
                   <Checkbox
                     checked={
                       list?.length !== 0 && selectedIds.length === list.length
@@ -196,7 +196,7 @@ const BeneficiariesTable = ({
 
               return (
                 <Table.Row key={index}>
-                  <Table.Data small className="!h-[64px]">
+                  <Table.Data small className="!h-[64px] !pl-[26px]">
                     <div className="flex items-center gap-2">
                       {setChecked ? (
                         <div className="w-6">
