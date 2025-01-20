@@ -113,7 +113,6 @@ class BeneficiariesService {
     }
 
     const res = await api.get(`/beneficiaries?${params}`);
-    console.log(res.data);
 
     return res.data;
   }
