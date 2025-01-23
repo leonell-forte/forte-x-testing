@@ -2,7 +2,7 @@
 
 import { TextField, TextFieldProps } from "@mui/material";
 import classNames from "classnames";
-import { ChangeEvent, forwardRef, useState } from "react";
+import { forwardRef, useState } from "react";
 
 import eyeClosed from "assets/images/icons/eye-closed.svg";
 import eyeOpen from "assets/images/icons/eye-open.svg";
@@ -29,20 +29,11 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
 
     const { type } = props;
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-      if (pattern && !pattern.test(e.target.value)) {
-        return;
-      }
-
-      props.onChange?.(e.target.value as any);
-    };
-
     return (
       <div className={classNames("relative w-full", !noHelperText && "pb-5")}>
         <TextField
           ref={ref}
           {...props}
-          onChange={handleChange}
           onWheel={(e) => (e.target as any).blur()}
           onKeyDown={(e) => {
             // prevents negative number if min is 0
