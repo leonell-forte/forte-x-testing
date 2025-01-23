@@ -3,8 +3,6 @@ import RouteProvider from "components/RouteProvider";
 import "./App.css";
 import QueryProvider from "./components/QueryProvider";
 
-// Lazy load components
-
 function App() {
   return (
     <QueryProvider>
