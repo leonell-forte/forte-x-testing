@@ -16,6 +16,7 @@ import {
 } from "lib/constants";
 import { useAppDispatch } from "lib/hooks";
 import { useBeneficiaryMutation } from "lib/mutations/beneficiaries";
+import { PHONE_NUMBER } from "lib/regex";
 import { setSelectedData } from "lib/slice/evidence";
 import {
   DisabilityStatusEnum,
@@ -254,7 +255,7 @@ const BeneficiariesForm = ({
               render={({ field }) => (
                 <Input
                   {...field}
-                  type="number"
+                  pattern={PHONE_NUMBER}
                   disabled={!onEdit}
                   placeholder="Phone"
                   error={!!errors.phone?.message}
