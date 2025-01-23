@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { useLocation } from "react-router-dom";
 
 import { ProfileType } from "lib/types/profile";
 
@@ -17,6 +18,10 @@ const Layout = ({
   user?: ProfileType;
   isLoading?: boolean;
 }) => {
+  const publicRoutes = ["/", "/signup", "/forgot-password"];
+
+  const { pathname } = useLocation();
+
   if (isLoading) {
     return (
       <div className="flex h-screen w-screen items-center justify-center">
@@ -27,7 +32,7 @@ const Layout = ({
 
   return (
     <ScrollArea>
-      {user ? (
+      {!publicRoutes.includes(pathname) ? (
         <div className="flex h-screen w-screen flex-col">
           <Header user={user!} />
 

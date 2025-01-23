@@ -17,6 +17,8 @@ const RouteProvider = () => {
     queryFn: authService.getProfile,
 
     retry: 0,
+
+    refetchOnWindowFocus: false,
   });
 
   return (
