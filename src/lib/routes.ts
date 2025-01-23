@@ -22,13 +22,27 @@ const BeneficiariesPage = React.lazy(
   () => import("../pages/Beneficiaries/BeneficiariesPage")
 );
 
+const ErrorPage = React.lazy(() => import("../pages/404"));
+
+const LoginPage = React.lazy(() => import("../pages/Login/LoginPage"));
+
+const SignupPage = React.lazy(() => import("../pages/Signup/SignupPage"));
+
+const ForgotPasswordPage = React.lazy(
+  () => import("../pages/ForgotPassword/ForgotPasswordPage")
+);
+
+const ComponentsPage = React.lazy(
+  () => import("../pages/Components/ComponentsPage")
+);
+
 interface RouteConfig {
   link: string;
   Component: React.ComponentType;
-  restrictedRoles: string[]; // Define this as an array of strings
+  restrictedRoles?: string[]; // Define this as an array of strings
 }
 
-export const PROTECTED_ROUTES: RouteConfig[] = [
+export const ROUTES: RouteConfig[] = [
   {
     link: "/users",
 
@@ -89,23 +103,7 @@ export const PROTECTED_ROUTES: RouteConfig[] = [
 
     restrictedRoles: [],
   },
-];
 
-const ErrorPage = React.lazy(() => import("../pages/404"));
-
-const LoginPage = React.lazy(() => import("../pages/Login/LoginPage"));
-
-const SignupPage = React.lazy(() => import("../pages/Signup/SignupPage"));
-
-const ForgotPasswordPage = React.lazy(
-  () => import("../pages/ForgotPassword/ForgotPasswordPage")
-);
-
-const ComponentsPage = React.lazy(
-  () => import("../pages/Components/ComponentsPage")
-);
-
-export const PUBLIC_ROUTES = [
   {
     link: "*",
 
