@@ -40,7 +40,6 @@ interface RouteConfig {
   link: string;
   Component: React.ComponentType;
   restrictedRoles?: string[]; // Define this as an array of strings
-  isProtected?: boolean;
 }
 
 export const ROUTES: RouteConfig[] = [
@@ -50,8 +49,6 @@ export const ROUTES: RouteConfig[] = [
     Component: UsersPage,
 
     restrictedRoles: ["provider.user", "provider.user"],
-
-    isProtected: true,
   },
 
   {
@@ -60,8 +57,6 @@ export const ROUTES: RouteConfig[] = [
     Component: ProjectsPage,
 
     restrictedRoles: [],
-
-    isProtected: true,
   },
 
   {
@@ -70,8 +65,6 @@ export const ROUTES: RouteConfig[] = [
     Component: IndividualProjectsPage,
 
     restrictedRoles: [],
-
-    isProtected: true,
   },
 
   {
@@ -85,8 +78,6 @@ export const ROUTES: RouteConfig[] = [
       "provider.admin",
       "provider.readonly",
     ],
-
-    isProtected: true,
   },
 
   {
@@ -95,8 +86,6 @@ export const ROUTES: RouteConfig[] = [
     Component: ContractsPage,
 
     restrictedRoles: [],
-
-    isProtected: true,
   },
 
   {
@@ -105,8 +94,6 @@ export const ROUTES: RouteConfig[] = [
     Component: BeneficiariesPage,
 
     restrictedRoles: [],
-
-    isProtected: true,
   },
 
   {
@@ -115,43 +102,31 @@ export const ROUTES: RouteConfig[] = [
     Component: SearchResultsPage,
 
     restrictedRoles: [],
-
-    isProtected: true,
   },
 
   {
     link: "*",
 
     Component: ErrorPage,
-
-    isProtected: false,
   },
   {
     link: "/",
 
     Component: LoginPage,
-
-    isProtected: false,
   },
   {
     link: "/signup",
 
     Component: SignupPage,
-
-    isProtected: false,
   },
   {
     link: "/forgot-password",
 
     Component: ForgotPasswordPage,
-
-    isProtected: false,
   },
   {
     link: "/components",
 
     Component: ComponentsPage,
-
-    isProtected: false,
   },
 ];
