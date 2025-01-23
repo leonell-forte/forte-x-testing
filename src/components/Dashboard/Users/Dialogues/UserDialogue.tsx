@@ -6,6 +6,7 @@ import { Controller, useForm } from "react-hook-form";
 
 import { ROLES } from "lib/constants";
 import useUserMutation from "lib/mutations/users";
+import { PHONE_NUMBER } from "lib/regex";
 import { IOrganization } from "lib/types/organizations";
 import { UserFieldTypes } from "lib/types/users";
 import { users } from "lib/validators/users";
@@ -180,6 +181,7 @@ const UserDialogue = ({
                 return (
                   <Input
                     {...field}
+                    pattern={PHONE_NUMBER}
                     error={!!error?.message}
                     helperText={error?.message}
                     autoComplete="tel"
