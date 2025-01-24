@@ -39,7 +39,7 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
         return;
       }
 
-      props.onChange?.(e.target.value as any);
+      props.onChange?.(e);
     };
 
     return (
