@@ -53,7 +53,7 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
       )}
 
       <div className="pr-4">
-        <Table.Container isEmpty={!list} isLoading={isLoading}>
+        <Table.Container isEmpty={!list.length} isLoading={isLoading}>
           <Table.Head>
             <Table.Row>
               {TABLE_HEADER.map((key, headerIndex) => {

@@ -24,13 +24,13 @@ export const useProjectMutation = (
       : projectService.add,
 
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ["projects", 1] });
+      await queryClient.cancelQueries({ queryKey: ["projects"] });
 
       await queryClient.cancelQueries({
         queryKey: ["specific-project", projectId],
       });
 
-      const previousProjects = queryClient.getQueryData(["projects", 1]);
+      const previousProjects = queryClient.getQueryData(["projects"]);
 
       const previousProject = queryClient.getQueryData([
         "specific-project",
@@ -43,7 +43,7 @@ export const useProjectMutation = (
 
     onSuccess: (addedProject) => {
       if (!projectId) {
-        queryClient.setQueryData(["projects", 1], (old: any) => {
+        queryClient.setQueryData(["projects"], (old: any) => {
           return {
             ...old,
 
@@ -80,7 +80,7 @@ export const useProjectMutation = (
         message: err?.response?.data?.message,
       });
 
-      queryClient.setQueryData(["projects", 1], context?.previousProjects);
+      queryClient.setQueryData(["projects"], context?.previousProjects);
 
       queryClient.setQueryData(
         ["specific-project", projectId],
@@ -89,7 +89,7 @@ export const useProjectMutation = (
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["projects", 1] });
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
 
       queryClient.invalidateQueries({
         queryKey: ["specific-project", projectId],
@@ -111,7 +111,7 @@ export const useDeleteProjectMutation = (
     mutationFn: projectService.delete,
 
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ["projects", 1, ""] });
+      await queryClient.cancelQueries({ queryKey: ["projects"] });
 
       const previousProject = queryClient.getQueryData<IProject[]>([
         "projects",
@@ -123,7 +123,7 @@ export const useDeleteProjectMutation = (
 
     onSuccess: () => {
       queryClient.setQueryData(
-        ["projects", 1, ""],
+        ["projects"],
 
         (old: { items: IProject[] }) => {
           return {
@@ -158,11 +158,11 @@ export const useDeleteProjectMutation = (
         message: err?.response?.data?.message,
       });
 
-      queryClient.setQueryData(["projects", 1], context?.previousProject);
+      queryClient.setQueryData(["projects"], context?.previousProject);
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["projects", 1, ""] });
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
     },
   });
 

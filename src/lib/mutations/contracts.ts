@@ -33,7 +33,7 @@ const useContractMutation = ({ id, successCallback }: IContractMutation) => {
 
     onSuccess: (addedContract: ContractFieldValues) => {
       queryClient.setQueryData(
-        ["contracts", 1, ""],
+        ["contracts"],
 
         (old: { items: IContract[] }) => {
           return {
@@ -73,14 +73,14 @@ const useContractMutation = ({ id, successCallback }: IContractMutation) => {
       });
 
       queryClient.setQueryData(
-        ["contracts", 1, ""],
+        ["contracts"],
 
         context?.previousContracts
       );
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["contracts", 1, ""] });
+      queryClient.invalidateQueries({ queryKey: ["contracts"] });
     },
   });
 
