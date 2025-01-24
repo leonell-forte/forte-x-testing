@@ -2,10 +2,12 @@
 
 import { TextField, TextFieldProps } from "@mui/material";
 import classNames from "classnames";
-import { forwardRef, useState } from "react";
+import { ChangeEvent, forwardRef, useState } from "react";
 
 import eyeClosed from "assets/images/icons/eye-closed.svg";
 import eyeOpen from "assets/images/icons/eye-open.svg";
+
+import { PHONE_NUMBER } from "lib/regex";
 
 type PropTypes = TextFieldProps & {
   dark?: boolean;
@@ -20,20 +22,32 @@ type PropTypes = TextFieldProps & {
 
   accept?: string;
 
-  pattern?: RegExp;
+  phoneNUmber?: boolean;
 };
 
 const Input = forwardRef<HTMLDivElement, PropTypes>(
-  ({ dark, small, noHelperText, wholeNumberOnly, pattern, ...props }, ref) => {
+  (
+    { dark, small, noHelperText, wholeNumberOnly, phoneNUmber, ...props },
+    ref
+  ) => {
     const [show, setShow] = useState(false);
 
     const { type } = props;
+
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+      if (phoneNUmber && !PHONE_NUMBER.test(e.target.value)) {
+        return;
+      }
+
+      props.onChange?.(e.target.value as any);
+    };
 
     return (
       <div className={classNames("relative w-full", !noHelperText && "pb-5")}>
         <TextField
           ref={ref}
           {...props}
+          onChange={handleChange}
           onWheel={(e) => (e.target as any).blur()}
           onKeyDown={(e) => {
             // prevents negative number if min is 0
@@ -102,7 +116,6 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
           slotProps={{
             htmlInput: {
               ...(type === "number" && { min: props.min }), // Set minimum value for type="number"
-              pattern,
               accept: props.accept,
             },
           }}

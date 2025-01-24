@@ -55,7 +55,11 @@ const OutcomeField = ({
           {handleDelete && (
             <button
               type="button"
-              onClick={handleDelete}
+              onClick={(e) => {
+                e.stopPropagation();
+
+                handleDelete();
+              }}
               className="mt-2 flex !h-8 !w-8 flex-shrink-0 items-center justify-center rounded-full bg-white text-forest-green transition-all hover:scale-[1.05] hover:opacity-80"
             >
               <img src={minus} alt="" />
