@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
 
 import { useImportBeneficiaryMutation } from "lib/mutations/beneficiaries";
 import { IImportBeneficiariesFieldValues } from "lib/types/beneficiaries";
@@ -111,9 +110,13 @@ const ImportDialogue = ({ ...props }: IImportDialogueProps) => {
 
           <p className="font-semibold">
             Need help getting started?{" "}
-            <Link to="#" className="font-semibold text-mint">
+            <a
+              href="/beneficiaries-template.csv"
+              download="Import Beneficiaries Template.csv"
+              className="font-semibold text-mint"
+            >
               Download a basic CSV template here.
-            </Link>
+            </a>
           </p>
         </div>
 
