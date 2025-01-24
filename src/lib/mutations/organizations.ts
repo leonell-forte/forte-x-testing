@@ -27,16 +27,16 @@ const useOrganizationMutation = ({
       : organizationService.add,
 
     onMutate: async () => {
-      queryClient.cancelQueries({ queryKey: ["organizations", 1] });
+      queryClient.cancelQueries({ queryKey: ["organizations"] });
 
-      const prevOrganizations = queryClient.getQueryData(["organizations", 1]);
+      const prevOrganizations = queryClient.getQueryData(["organizations"]);
 
       return { prevOrganizations };
     },
 
     onSuccess: (addedOrg) => {
       if (!orgId) {
-        queryClient.setQueryData(["organizations", 1], (old: any) => {
+        queryClient.setQueryData(["organizations"], (old: any) => {
           return {
             ...old,
 
@@ -64,7 +64,7 @@ const useOrganizationMutation = ({
 
     onError: (err: any, newOrg, context) => {
       queryClient.setQueryData(
-        ["organizations", 1],
+        ["organizations"],
 
         context?.prevOrganizations
       );
@@ -79,7 +79,7 @@ const useOrganizationMutation = ({
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["organizations", 1] });
+      queryClient.invalidateQueries({ queryKey: ["organizations"] });
     },
   });
   return { addOrganization, isPending };

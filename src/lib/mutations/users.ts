@@ -35,7 +35,7 @@ const useUserMutation = ({
 
       const previousData = queryClient.getQueryData(["specific-user", userId]);
 
-      const previousUsers = queryClient.getQueryData(["users", 1]);
+      const previousUsers = queryClient.getQueryData(["users"]);
 
       return { previousData, previousUsers };
     },
@@ -84,7 +84,7 @@ const useUserMutation = ({
 
       queryClient.setQueryData(["profile"], context?.previousData);
 
-      queryClient.setQueryData(["users", 1], context?.previousUsers);
+      queryClient.setQueryData(["users"], context?.previousUsers);
     },
 
     onSettled: () => {
@@ -92,7 +92,7 @@ const useUserMutation = ({
 
       queryClient.invalidateQueries({ queryKey: ["profile"] });
 
-      queryClient.invalidateQueries({ queryKey: ["users", 1] });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
     },
   });
   return { addUser, isPending };
