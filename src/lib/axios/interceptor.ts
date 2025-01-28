@@ -39,6 +39,8 @@ api.interceptors.response.use(
     return response;
   },
   function (error) {
+    console.log(error);
+
     if (error.status === 401 && window.location.pathname !== "/") {
       window.location.href = "/";
     }
