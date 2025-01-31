@@ -7,7 +7,7 @@ import { formatErrorMessage } from "lib/utils";
 
 import { queryClient } from "components/QueryProvider";
 
-import { useAlert } from "../hooks";
+import { useAlert, usePage } from "../hooks";
 import { IBeneficiaries } from "../types/beneficiaries";
 
 interface IBeneficiaryMutationProps {
@@ -23,21 +23,40 @@ export const useBeneficiaryMutation = ({
 }: IBeneficiaryMutationProps) => {
   const { setAlert } = useAlert();
 
+  const { page } = usePage();
+
+  const beneficiaryQuery = [
+    "beneficiaries",
+    "",
+    +page,
+    {
+      project: "",
+
+      status: "",
+
+      provider: "",
+
+      riskLevel: "",
+
+      // startDate: "",
+    },
+  ];
+
   const { mutateAsync: addBeneficiary, isPending } = useMutation({
     mutationFn: beneficiaryId
       ? beneficiariesService.update
       : beneficiariesService.add,
 
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ["beneficiaries"] });
+      await queryClient.cancelQueries({ queryKey: beneficiaryQuery });
 
-      const previousBeneficiaries = queryClient.getQueryData(["beneficiaries"]);
+      const previousBeneficiaries = queryClient.getQueryData(beneficiaryQuery);
 
       return { previousBeneficiaries };
     },
 
     onSuccess: (addedBeneficiary) => {
-      queryClient.setQueryData(["beneficiaries"], () => {
+      queryClient.setQueryData(beneficiaryQuery, () => {
         return addedBeneficiary.data.data;
       });
 
@@ -66,14 +85,14 @@ export const useBeneficiaryMutation = ({
       });
 
       queryClient.setQueryData(
-        ["beneficiaries"],
+        beneficiaryQuery,
 
         context?.previousBeneficiaries
       );
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["beneficiaries"] });
+      queryClient.invalidateQueries({ queryKey: beneficiaryQuery });
     },
   });
 
@@ -85,19 +104,38 @@ export const useImportBeneficiaryMutation = ({
 }: IBeneficiaryMutationProps) => {
   const { setAlert } = useAlert();
 
+  const { page } = usePage();
+
+  const beneficiaryQuery = [
+    "beneficiaries",
+    "",
+    +page,
+    {
+      project: "",
+
+      status: "",
+
+      provider: "",
+
+      riskLevel: "",
+
+      // startDate: "",
+    },
+  ];
+
   const { mutateAsync: importBeneficiaries, isPending } = useMutation({
     mutationFn: beneficiariesService.importBeneficiaries,
 
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ["beneficiaries"] });
+      await queryClient.cancelQueries({ queryKey: beneficiaryQuery });
 
-      const previousBeneficiaries = queryClient.getQueryData(["beneficiaries"]);
+      const previousBeneficiaries = queryClient.getQueryData(beneficiaryQuery);
 
       return { previousBeneficiaries };
     },
 
     onSuccess: (addedBeneficiary) => {
-      queryClient.setQueryData(["beneficiaries"], () => {
+      queryClient.setQueryData(beneficiaryQuery, () => {
         return addedBeneficiary.data.data;
       });
 
@@ -124,14 +162,14 @@ export const useImportBeneficiaryMutation = ({
       });
 
       queryClient.setQueryData(
-        ["beneficiaries"],
+        beneficiaryQuery,
 
         context?.previousBeneficiaries
       );
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["beneficiaries"] });
+      queryClient.invalidateQueries({ queryKey: beneficiaryQuery });
     },
   });
 
@@ -145,11 +183,30 @@ export const useDeleteBeneficiaryMutation = (
 ) => {
   const { setAlert } = useAlert();
 
+  const { page, setPage } = usePage();
+
+  const beneficiaryQuery = [
+    "beneficiaries",
+    "",
+    +page,
+    {
+      project: "",
+
+      status: "",
+
+      provider: "",
+
+      riskLevel: "",
+
+      // startDate: "",
+    },
+  ];
+
   const { mutateAsync: deleteBeneficiary, isPending } = useMutation({
     mutationFn: beneficiariesService.delete,
 
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ["beneficiaries"] });
+      await queryClient.cancelQueries({ queryKey: beneficiaryQuery });
 
       const previousBeneficiaries = queryClient.getQueryData<IBeneficiaries[]>([
         "beneficiaries",
@@ -160,13 +217,20 @@ export const useDeleteBeneficiaryMutation = (
 
     onSuccess: () => {
       queryClient.setQueryData(
-        ["beneficiaries"],
+        beneficiaryQuery,
 
-        (old: { items: IBeneficiaries[] }) => ({
-          ...old,
+        (old: { items: IBeneficiaries[] }) => {
+          // sets page to previous page if current list is empty
+          if (old.items.length === 1 && +page !== 1) {
+            setPage(page - 1);
+          }
 
-          itemss: old?.items?.filter((item) => item.id !== id),
-        })
+          return {
+            ...old,
+
+            itemss: old?.items?.filter((item) => item.id !== id),
+          };
+        }
       );
 
       successCallback?.();
@@ -194,14 +258,14 @@ export const useDeleteBeneficiaryMutation = (
       });
 
       queryClient.setQueryData(
-        ["beneficiaries"],
+        beneficiaryQuery,
 
         context?.previousBeneficiaries
       );
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["beneficiaries"] });
+      queryClient.invalidateQueries({ queryKey: beneficiaryQuery });
     },
   });
 
@@ -215,11 +279,30 @@ export const useBulkStatusUpdateMutation = (
 ) => {
   const { setAlert } = useAlert();
 
+  const { page } = usePage();
+
+  const beneficiaryQuery = [
+    "beneficiaries",
+    "",
+    +page,
+    {
+      project: "",
+
+      status: "",
+
+      provider: "",
+
+      riskLevel: "",
+
+      // startDate: "",
+    },
+  ];
+
   const { mutateAsync: updateStatus, isPending } = useMutation({
     mutationFn: beneficiariesService.bulkStatusUpdate,
 
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ["beneficiaries"] });
+      await queryClient.cancelQueries({ queryKey: beneficiaryQuery });
 
       const previousBeneficiaries = queryClient.getQueryData<IBeneficiaries[]>([
         "beneficiaries",
@@ -230,7 +313,7 @@ export const useBulkStatusUpdateMutation = (
 
     onSuccess: () => {
       queryClient.setQueryData(
-        ["beneficiaries"],
+        beneficiaryQuery,
 
         (old: { items: IBeneficiaries[] }) => ({
           ...old,
@@ -262,14 +345,14 @@ export const useBulkStatusUpdateMutation = (
       });
 
       queryClient.setQueryData(
-        ["beneficiaries"],
+        beneficiaryQuery,
 
         context?.previousBeneficiaries
       );
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["beneficiaries"] });
+      queryClient.invalidateQueries({ queryKey: beneficiaryQuery });
     },
   });
 

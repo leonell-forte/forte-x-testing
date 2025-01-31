@@ -7,7 +7,7 @@ import { formatErrorMessage } from "lib/utils";
 
 import { queryClient } from "components/QueryProvider";
 
-import { useAlert } from "../hooks";
+import { useAlert, usePage } from "../hooks";
 
 interface IContractMutation {
   id?: number;
@@ -18,13 +18,28 @@ interface IContractMutation {
 const useContractMutation = ({ id, successCallback }: IContractMutation) => {
   const { setAlert } = useAlert();
 
+  const { page } = usePage();
+
+  const contractQuery = [
+    "contracts",
+    +page || 1,
+    "",
+    {
+      status: "",
+
+      project: "",
+
+      date: "",
+    },
+  ];
+
   const { mutateAsync: addContract, isPending } = useMutation({
     mutationFn: id
       ? (values: ContractFieldValues) => contractService.update({ ...values })
       : contractService.add,
 
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ["contracts"] });
+      await queryClient.cancelQueries({ queryKey: contractQuery });
 
       const previousContracts = queryClient.getQueryData(["projects"]);
 
@@ -33,7 +48,7 @@ const useContractMutation = ({ id, successCallback }: IContractMutation) => {
 
     onSuccess: (addedContract: ContractFieldValues) => {
       queryClient.setQueryData(
-        ["contracts"],
+        contractQuery,
 
         (old: { items: IContract[] }) => {
           return {
@@ -73,14 +88,14 @@ const useContractMutation = ({ id, successCallback }: IContractMutation) => {
       });
 
       queryClient.setQueryData(
-        ["contracts"],
+        contractQuery,
 
         context?.previousContracts
       );
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["contracts"] });
+      queryClient.invalidateQueries({ queryKey: contractQuery });
     },
   });
 
@@ -93,11 +108,26 @@ export const useDeleteContractMutation = (
 ) => {
   const { setAlert } = useAlert();
 
+  const { page, setPage } = usePage();
+
+  const contractQuery = [
+    "contracts",
+    +page || 1,
+    "",
+    {
+      status: "",
+
+      project: "",
+
+      date: "",
+    },
+  ];
+
   const { mutateAsync: deleteContract, isPending } = useMutation({
     mutationFn: (id: string) => contractService.delete(id),
 
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ["contracts"] });
+      await queryClient.cancelQueries({ queryKey: contractQuery });
 
       const previousContracts = queryClient.getQueryData<IContract[]>([
         "contracts",
@@ -108,9 +138,14 @@ export const useDeleteContractMutation = (
 
     onSuccess: () => {
       queryClient.setQueryData(
-        ["contracts"],
+        contractQuery,
 
         (old: { items: IContract[] }) => {
+          // sets page to previous page if current list is empty
+          if (old?.items.length === 1 && +page !== 1) {
+            setPage(page - 1);
+          }
+
           return {
             ...old,
 
@@ -145,11 +180,11 @@ export const useDeleteContractMutation = (
         message: err?.response?.data?.message,
       });
 
-      queryClient.setQueryData(["contracts"], context?.previousContracts);
+      queryClient.setQueryData(contractQuery, context?.previousContracts);
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["contracts"] });
+      queryClient.invalidateQueries({ queryKey: contractQuery });
     },
   });
 

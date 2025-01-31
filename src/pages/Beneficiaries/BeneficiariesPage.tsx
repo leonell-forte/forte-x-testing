@@ -7,7 +7,7 @@ import { useCallback, useMemo, useState } from "react";
 import closeFilter from "assets/images/icons/close-filter.svg";
 
 import { BENEFICIARY_STATUS, RISK_LEVEL } from "lib/constants";
-import { useDebounce, usePageTitle } from "lib/hooks";
+import { useDebounce, usePage, usePageTitle } from "lib/hooks";
 import {
   useExportBeneficiaries,
   useExportEvidenceMutation,
@@ -61,7 +61,7 @@ const BeneficiariesPage = () => {
     [search]
   );
 
-  const [page, setPage] = useState(1);
+  const { page, setPage } = usePage();
 
   const [modal, setModal] = useState<ModalLabelTypes>("");
 

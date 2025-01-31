@@ -42,7 +42,7 @@ const RouteProvider = () => {
                       key={index}
                       path={link}
                       element={
-                        restrictedRoles?.includes(user?.role!) ? (
+                        restrictedRoles?.includes(user?.role || "") ? (
                           <div className="flex items-center justify-center pt-24">
                             <div className="text-center">
                               <p className="text-[40px] font-bold">404</p>
