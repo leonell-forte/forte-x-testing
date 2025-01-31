@@ -2,7 +2,7 @@ import * as amplitude from "@amplitude/analytics-browser";
 import { useMutation } from "@tanstack/react-query";
 import projectService from "api/projects";
 
-import { useAlert } from "lib/hooks";
+import { useAlert, usePage } from "lib/hooks";
 
 import { queryClient } from "components/QueryProvider";
 
@@ -18,19 +18,27 @@ export const useProjectMutation = (
 ) => {
   const { setAlert } = useAlert();
 
+  const { page } = usePage();
+
   const { mutateAsync: addProject, isPending } = useMutation({
     mutationFn: projectId
       ? (values: ProjectFieldValues) => projectService.update(values)
       : projectService.add,
 
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ["projects"] });
+      await queryClient.cancelQueries({
+        queryKey: ["projects", +page || 1, ""],
+      });
 
       await queryClient.cancelQueries({
         queryKey: ["specific-project", projectId],
       });
 
-      const previousProjects = queryClient.getQueryData(["projects"]);
+      const previousProjects = queryClient.getQueryData([
+        "projects",
+        +page || 1,
+        "",
+      ]);
 
       const previousProject = queryClient.getQueryData([
         "specific-project",
@@ -43,13 +51,16 @@ export const useProjectMutation = (
 
     onSuccess: (addedProject) => {
       if (!projectId) {
-        queryClient.setQueryData(["projects"], (old: any) => {
-          return {
-            ...old,
+        queryClient.setQueryData(
+          ["projects", +page || 1, ""],
+          (old: { items: IProject[] }) => {
+            return {
+              ...old,
 
-            items: [...(old?.items || []), addedProject.data.data],
-          };
-        });
+              items: [...(old?.items || []), addedProject.data.data],
+            };
+          }
+        );
 
         queryClient.setQueryData(["specific-project", projectId], () => {
           return addedProject;
@@ -80,7 +91,10 @@ export const useProjectMutation = (
         message: err?.response?.data?.message,
       });
 
-      queryClient.setQueryData(["projects"], context?.previousProjects);
+      queryClient.setQueryData(
+        ["projects", +page || 1, ""],
+        context?.previousProjects
+      );
 
       queryClient.setQueryData(
         ["specific-project", projectId],
@@ -89,7 +103,7 @@ export const useProjectMutation = (
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["projects"] });
+      queryClient.invalidateQueries({ queryKey: ["projects", +page || 1, ""] });
 
       queryClient.invalidateQueries({
         queryKey: ["specific-project", projectId],
@@ -107,15 +121,20 @@ export const useDeleteProjectMutation = (
 ) => {
   const { setAlert } = useAlert();
 
+  const { page, setPage } = usePage();
+
   const { mutateAsync: deletProject, isPending } = useMutation({
     mutationFn: projectService.delete,
 
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ["projects"] });
+      await queryClient.cancelQueries({
+        queryKey: ["projects", +page || 1, ""],
+      });
 
       const previousProject = queryClient.getQueryData<IProject[]>([
         "projects",
-        1,
+        +page || 1,
+        "",
       ]);
 
       return { previousProject };
@@ -123,9 +142,14 @@ export const useDeleteProjectMutation = (
 
     onSuccess: () => {
       queryClient.setQueryData(
-        ["projects"],
+        ["projects", +page || 1, ""],
 
         (old: { items: IProject[] }) => {
+          // sets page to previous page if list from current page is empty (except page 1)
+          if (old.items.length === 1 && page !== 1) {
+            setPage(page - 1);
+          }
+
           return {
             ...old,
 
@@ -158,11 +182,14 @@ export const useDeleteProjectMutation = (
         message: err?.response?.data?.message,
       });
 
-      queryClient.setQueryData(["projects"], context?.previousProject);
+      queryClient.setQueryData(
+        ["projects", +page || 1, ""],
+        context?.previousProject
+      );
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["projects"] });
+      queryClient.invalidateQueries({ queryKey: ["projects", +page || 1, ""] });
     },
   });
 

@@ -1,7 +1,7 @@
 "use client";
 
 import classNames from "classnames";
-import { ChangeEvent, useMemo, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 
 import arrow from "assets/images/icons/chevron.svg";
 
@@ -19,6 +19,10 @@ const Pagination = ({
   onPageChange,
 }: IPaginationProps) => {
   const [inputValue, setInputValue] = useState<string>(String(page));
+
+  useEffect(() => {
+    setInputValue(page.toString());
+  }, [page]);
 
   const handlePrev = () => {
     onPageChange(page - 1);

@@ -1,5 +1,6 @@
 import { MutableRefObject, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector, useStore } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 import Cookies from "universal-cookie";
 
 import { IAlert, setToast } from "./slice/alert";
@@ -99,6 +100,26 @@ export const usePageTitle = (title?: string) => {
   }, [dispatch, title]);
 
   return { pageTitle };
+};
+
+export const usePage = () => {
+  const [params, setParams] = useSearchParams();
+
+  const page = params.get("page") || "1";
+
+  const setPage = useCallback(
+    (page: number) => {
+      setParams((prev) => {
+        const newParams = new URLSearchParams(prev);
+        newParams.set("page", page.toString());
+
+        return newParams;
+      });
+    },
+    [setParams]
+  );
+
+  return { page: Number(page), setPage };
 };
 
 const BREAKPOINTS = {

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import projectService from "api/projects";
 import { useCallback, useMemo, useState } from "react";
 
-import { useDebounce, usePageTitle } from "lib/hooks";
+import { useDebounce, usePage, usePageTitle } from "lib/hooks";
 import { IProject } from "lib/types/projects";
 
 import ProjectDialogue from "components/Dashboard/Projects/Dialogues/ProjectDialogue";
@@ -13,8 +13,6 @@ import SearchInput from "components/ui/search-input";
 
 const ProjectsPage = () => {
   usePageTitle("Projects");
-
-  const [page, setPage] = useState(1);
 
   const [search, setSearch] = useState("");
 
@@ -29,6 +27,8 @@ const ProjectsPage = () => {
 
     [search]
   );
+
+  const { page, setPage } = usePage();
 
   const { data: projectsList, isLoading: projectLoading } = useQuery({
     queryKey: ["projects", page, debouncedSearch],

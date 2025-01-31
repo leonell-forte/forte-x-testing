@@ -49,7 +49,7 @@ const useUserMutation = ({
         return addedUser.data.data;
       });
 
-      queryClient.setQueryData(["users", 1], (old: { items: IUser[] }) => {
+      queryClient.setQueryData(["users"], (old: { items: IUser[] }) => {
         return [...(old?.items || []), addedUser.data.data];
       });
 
