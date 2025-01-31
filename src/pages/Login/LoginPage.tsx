@@ -36,7 +36,11 @@ const LoginPage = () => {
           return <LoginForm handleNext={handleNextStep} />;
 
         case 1:
-          return <OTPForm handleNext={(path) => navigate(path || "/users")} />;
+          return (
+            <OTPForm
+              handleNext={(path) => navigate(path || "/beneficiaries")}
+            />
+          );
       }
     },
     [navigate]
