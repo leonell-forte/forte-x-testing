@@ -107,7 +107,11 @@ const ContractOutcomeField = ({
             onClick={(e) => {
               e.stopPropagation();
 
-              !index ? handleAdd(index) : handleDelete(index);
+              if (!index) {
+                handleAdd(index);
+              } else {
+                handleDelete(index);
+              }
             }}
             type="button"
             className="mt-3 flex !h-8 !w-8 flex-shrink-0 items-center justify-center rounded-full bg-white text-forest-green transition-all hover:scale-[1.05] hover:opacity-80"
