@@ -1,7 +1,7 @@
 "use client";
 
 import classNames from "classnames";
-import { ChangeEvent, useMemo, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 
 import arrow from "assets/images/icons/chevron.svg";
 
@@ -19,6 +19,10 @@ const Pagination = ({
   onPageChange,
 }: IPaginationProps) => {
   const [inputValue, setInputValue] = useState<string>(String(page));
+
+  useEffect(() => {
+    setInputValue(page.toString());
+  }, [page]);
 
   const handlePrev = () => {
     onPageChange(page - 1);
@@ -64,14 +68,17 @@ const Pagination = ({
           className={classNames("rotate-[90deg]", page <= 1 && "opacity-[.2]")}
         />
       </button>
-      <div className="flex h-6 w-6 items-center justify-center rounded-[4px] border border-mint">
-        <input
-          className="h-6 w-6 flex-shrink-0 border-none bg-transparent text-center text-[14px] text-mint outline-none"
-          value={inputValue}
-          type="text"
-          onChange={handleInputChange}
-          onBlur={handleBlur}
-        />
+      <div className="flex items-center gap-1.5">
+        <div className="flex h-6 w-6 items-center justify-center rounded-[4px] border border-mint">
+          <input
+            className="h-6 w-6 flex-shrink-0 border-none bg-transparent text-center text-[14px] text-mint outline-none"
+            value={inputValue}
+            type="text"
+            onChange={handleInputChange}
+            onBlur={handleBlur}
+          />
+        </div>
+        <span className="text-[14px] text-gray-200"> of {pageCount}</span>
       </div>
       <button
         type="button"

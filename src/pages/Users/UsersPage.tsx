@@ -6,7 +6,7 @@ import { useMemo, useState } from "react";
 import closeFilter from "assets/images/icons/close-filter.svg";
 
 import { ROLES } from "lib/constants";
-import { useDebounce, usePageTitle } from "lib/hooks";
+import { useDebounce, usePage, usePageTitle } from "lib/hooks";
 import { IOrganization } from "lib/types/organizations";
 import { IUser } from "lib/types/users";
 
@@ -20,7 +20,7 @@ import SearchInput from "components/ui/search-input";
 const UsersPage = () => {
   usePageTitle("Users");
 
-  const [page, setPage] = useState(1);
+  const { page, setPage } = usePage();
 
   const [search, setSearch] = useState("");
 
@@ -145,7 +145,7 @@ const UsersPage = () => {
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}
-              total={userList?.totalSize}
+              total={userList?.totalSize as number}
             />
           </div>
         </div>

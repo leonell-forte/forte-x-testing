@@ -6,7 +6,7 @@ import { useCallback, useMemo, useState } from "react";
 import closeFilter from "assets/images/icons/close-filter.svg";
 
 import { CONTRACT_STATUS } from "lib/constants";
-import { useDebounce, usePageTitle } from "lib/hooks";
+import { useDebounce, usePage, usePageTitle } from "lib/hooks";
 import { IContract, IContractFilters, StatusType } from "lib/types/contracts";
 import { IProject } from "lib/types/projects";
 import { findLabelFromOptions } from "lib/utils";
@@ -21,7 +21,7 @@ import SearchInput from "components/ui/search-input";
 const ContractsPage = () => {
   usePageTitle("Contracts");
 
-  const [page, setPage] = useState(1);
+  const { page, setPage } = usePage();
 
   const [search, setSearch] = useState("");
 
