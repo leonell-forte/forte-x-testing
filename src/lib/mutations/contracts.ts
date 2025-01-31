@@ -141,6 +141,7 @@ export const useDeleteContractMutation = (
         contractQuery,
 
         (old: { items: IContract[] }) => {
+          // sets page to previous page if current list is empty
           if (old?.items.length === 1 && +page !== 1) {
             setPage(page - 1);
           }
