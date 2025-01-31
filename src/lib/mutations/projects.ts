@@ -20,6 +20,8 @@ export const useProjectMutation = (
 
   const { page } = usePage();
 
+  const projectQuery = ["projects", +page || 1, ""];
+
   const { mutateAsync: addProject, isPending } = useMutation({
     mutationFn: projectId
       ? (values: ProjectFieldValues) => projectService.update(values)
@@ -27,18 +29,14 @@ export const useProjectMutation = (
 
     onMutate: async () => {
       await queryClient.cancelQueries({
-        queryKey: ["projects", +page || 1, ""],
+        queryKey: projectQuery,
       });
 
       await queryClient.cancelQueries({
         queryKey: ["specific-project", projectId],
       });
 
-      const previousProjects = queryClient.getQueryData([
-        "projects",
-        +page || 1,
-        "",
-      ]);
+      const previousProjects = queryClient.getQueryData(projectQuery);
 
       const previousProject = queryClient.getQueryData([
         "specific-project",
@@ -51,16 +49,13 @@ export const useProjectMutation = (
 
     onSuccess: (addedProject) => {
       if (!projectId) {
-        queryClient.setQueryData(
-          ["projects", +page || 1, ""],
-          (old: { items: IProject[] }) => {
-            return {
-              ...old,
+        queryClient.setQueryData(projectQuery, (old: { items: IProject[] }) => {
+          return {
+            ...old,
 
-              items: [...(old?.items || []), addedProject.data.data],
-            };
-          }
-        );
+            items: [...(old?.items || []), addedProject.data.data],
+          };
+        });
 
         queryClient.setQueryData(["specific-project", projectId], () => {
           return addedProject;
@@ -91,10 +86,7 @@ export const useProjectMutation = (
         message: err?.response?.data?.message,
       });
 
-      queryClient.setQueryData(
-        ["projects", +page || 1, ""],
-        context?.previousProjects
-      );
+      queryClient.setQueryData(projectQuery, context?.previousProjects);
 
       queryClient.setQueryData(
         ["specific-project", projectId],
@@ -103,7 +95,7 @@ export const useProjectMutation = (
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["projects", +page || 1, ""] });
+      queryClient.invalidateQueries({ queryKey: projectQuery });
 
       queryClient.invalidateQueries({
         queryKey: ["specific-project", projectId],
@@ -123,26 +115,25 @@ export const useDeleteProjectMutation = (
 
   const { page, setPage } = usePage();
 
+  const projectQuery = ["projects", +page || 1, ""];
+
   const { mutateAsync: deletProject, isPending } = useMutation({
     mutationFn: projectService.delete,
 
     onMutate: async () => {
       await queryClient.cancelQueries({
-        queryKey: ["projects", +page || 1, ""],
+        queryKey: projectQuery,
       });
 
-      const previousProject = queryClient.getQueryData<IProject[]>([
-        "projects",
-        +page || 1,
-        "",
-      ]);
+      const previousProject =
+        queryClient.getQueryData<IProject[]>(projectQuery);
 
       return { previousProject };
     },
 
     onSuccess: () => {
       queryClient.setQueryData(
-        ["projects", +page || 1, ""],
+        projectQuery,
 
         (old: { items: IProject[] }) => {
           // sets page to previous page if list from current page is empty (except page 1)
@@ -182,14 +173,11 @@ export const useDeleteProjectMutation = (
         message: err?.response?.data?.message,
       });
 
-      queryClient.setQueryData(
-        ["projects", +page || 1, ""],
-        context?.previousProject
-      );
+      queryClient.setQueryData(projectQuery, context?.previousProject);
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["projects", +page || 1, ""] });
+      queryClient.invalidateQueries({ queryKey: projectQuery });
     },
   });
 
