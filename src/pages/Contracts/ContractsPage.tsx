@@ -190,10 +190,10 @@ const ContractsPage = () => {
           </button>
         </div>
 
-        <div className="space-y-[18px]">
+        <div>
           <ContractsTable list={contracts} isLoading={isLoading} />
 
-          <div className="flex w-full items-center justify-end">
+          <div className="mt-[18px] flex w-full items-center justify-end">
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}

@@ -337,14 +337,14 @@ const BeneficiariesPage = () => {
           </div>
         </div>
 
-        <div className="space-y-[18px]">
+        <div>
           <BeneficiariesTable
             list={beneficiariesList?.items || []}
             isLoading={isLoading}
             setChecked={setSelectedIds}
           />
 
-          <div className="flex w-full items-center justify-end">
+          <div className="mt-[18px] flex w-full items-center justify-end">
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}
