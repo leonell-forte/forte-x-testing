@@ -128,13 +128,18 @@ const BeneficiariesForm = ({
 
   const contracts: IOption[] = useMemo(
     () =>
-      contractList?.items.map((item) => ({
-        label: item.name,
+      contractList?.items
+        .filter((y) =>
+          organizationList?.items.some((z) =>
+            String(y.partyIds).includes(String(z.id))
+          )
+        )
+        .map((item) => ({
+          label: item.name,
 
-        value: item.id!.toString(),
-      })) || [],
-
-    [contractList]
+          value: item.id!.toString(),
+        })) || [],
+    [organizationList, contractList]
   );
 
   const selectedContract = watch("contractId");
@@ -336,7 +341,6 @@ const BeneficiariesForm = ({
                   )}
                   handleSelect={(val) => {
                     setValue("contractId", Number(val));
-
                     setValue(
                       "providerId",
                       Number(
