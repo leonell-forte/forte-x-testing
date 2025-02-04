@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import userService from "api/users";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -7,6 +7,7 @@ import { Controller, useForm } from "react-hook-form";
 import { ROLES } from "lib/constants";
 import useUserMutation from "lib/mutations/users";
 import { IOrganization } from "lib/types/organizations";
+import { ProfileType } from "lib/types/profile";
 import { UserFieldTypes } from "lib/types/users";
 import { users } from "lib/validators/users";
 
@@ -31,6 +32,9 @@ const UserDialogue = ({
 
   userId,
 }: IUserDialogueProps) => {
+  const qc = useQueryClient();
+  const profile = qc.getQueryData(["profile"]) as ProfileType;
+
   const { data: userData, isLoading } = useQuery({
     queryKey: ["specific-user", userId],
 
@@ -241,13 +245,15 @@ const UserDialogue = ({
                 return (
                   <Dropdown
                     value={
-                      ROLES.find((item) => item.value === field.value)?.label
+                      ROLES.find((item) => field.value.includes(item.value))
+                        ?.label
                     }
                     handleSelect={(val) => setValue("role", val as string)}
                     options={ROLES}
                     placeholder="Role"
                     error={!!error?.message}
                     helperText={error?.message}
+                    disabled={Number(profile?.id) === Number(userData?.id)}
                   />
                 );
               }}
