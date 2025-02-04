@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import { motion } from "framer-motion";
+import { useCallback, useEffect } from "react";
 
 import close from "assets/images/icons/close.svg";
 import success from "assets/images/icons/success.svg";
@@ -22,9 +23,19 @@ const Alert = () => {
     }
   };
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setAlert({ status: "", message: "", title: "" });
-  };
+  }, [setAlert]);
+
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => {
+        handleClose();
+      }, 5000); // 5 seconds
+
+      return () => clearTimeout(timer);
+    }
+  }, [message, handleClose]);
 
   return (
     <div
