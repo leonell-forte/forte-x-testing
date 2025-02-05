@@ -56,7 +56,12 @@ const ROLES: Record<
   ],
   "provider.owner": [],
   "provider.admin": [],
-  "provider.user": [],
+  "provider.user": [
+    Beneficiaries.NAVIGATE,
+    Projects.NAVIGATE,
+    Contracts.NAVIGATE,
+    Users.NAVIGATE,
+  ],
   "read-only": [Beneficiaries.NAVIGATE, Projects.NAVIGATE, Contracts.NAVIGATE],
 };
 

@@ -6,7 +6,8 @@ import { useMemo, useState } from "react";
 import closeFilter from "assets/images/icons/close-filter.svg";
 
 import { ROLES } from "lib/constants";
-import { useDebounce, usePage, usePageTitle } from "lib/hooks";
+import { useDebounce, usePage, usePageTitle, useProfile } from "lib/hooks";
+import { Users, isAuthorized } from "lib/role-permissions";
 import { IOrganization } from "lib/types/organizations";
 import { IUser } from "lib/types/users";
 
@@ -18,6 +19,8 @@ import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
 
 const UsersPage = () => {
+  const currentUser = useProfile();
+
   usePageTitle("Users");
 
   const { page, setPage } = usePage();
@@ -91,16 +94,18 @@ const UsersPage = () => {
             onClear={() => setSearch("")}
           />
 
-          <div className="flex items-center gap-6">
-            <Button
-              eventName="Add User"
-              onClick={() => {
-                setModal("user");
-              }}
-            >
-              Add user
-            </Button>
-          </div>
+          {isAuthorized(currentUser?.role, [Users.CREATE]) && (
+            <div className="flex items-center gap-6">
+              <Button
+                eventName="Add User"
+                onClick={() => {
+                  setModal("user");
+                }}
+              >
+                Add user
+              </Button>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-wrap items-center gap-[18px]">
