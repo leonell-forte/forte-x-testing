@@ -3,7 +3,9 @@ import authService from "api/auth";
 import { Suspense } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
+import { isAuthorized } from "lib/role-permissions";
 import { ROUTES } from "lib/routes";
+import { UserRoleType } from "lib/types/users";
 
 import AlertProvider from "./AlertProvider";
 import Layout from "./Dashboard/Layout";
@@ -35,14 +37,20 @@ const RouteProvider = () => {
             >
               <Routes>
                 {ROUTES.map((item, index) => {
-                  const { link, Component, restrictedRoles } = item;
+                  const { link, Component, permissions } = item;
 
                   return (
                     <Route
                       key={index}
                       path={link}
                       element={
-                        restrictedRoles?.includes(user?.role || "") ? (
+                        !permissions.length ||
+                        isAuthorized(
+                          user?.role as UserRoleType,
+                          permissions
+                        ) ? (
+                          <Component />
+                        ) : (
                           <div className="flex items-center justify-center pt-24">
                             <div className="text-center">
                               <p className="text-[40px] font-bold">404</p>
@@ -52,8 +60,6 @@ const RouteProvider = () => {
                               </p>
                             </div>
                           </div>
-                        ) : (
-                          <Component />
                         )
                       }
                     />

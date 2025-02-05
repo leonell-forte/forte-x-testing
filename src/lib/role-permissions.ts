@@ -5,6 +5,7 @@ export enum Beneficiaries {
   UPDATE = "update:beneficiary",
   IMPORT = "import:beneficiary",
   DELETE = "delete:beneficiary",
+  NAVIGATE = "navigate:beneficiary",
 }
 
 export enum Users {
@@ -12,6 +13,7 @@ export enum Users {
   UPDATE = "update:user",
   IMPORT = "import:user",
   DELETE = "delete:user",
+  NAVIGATE = "navigate:user",
 }
 
 export enum Organizations {
@@ -20,6 +22,7 @@ export enum Organizations {
   IMPORT = "import:organization",
   DELETE = "delete:organization",
   LIST = "list:organization",
+  NAVIGATE = "navigate:organization",
 }
 
 export enum Contracts {
@@ -28,6 +31,7 @@ export enum Contracts {
   IMPORT = "import:contract",
   DELETE = "delete:contract",
   LIST = "list:contract",
+  NAVIGATE = "navigate:contract",
 }
 
 export enum Projects {
@@ -36,6 +40,7 @@ export enum Projects {
   IMPORT = "import:project",
   DELETE = "delete:project",
   LIST = "list:project",
+  NAVIGATE = "navigate:project",
 }
 
 const ROLES: Record<
@@ -52,7 +57,7 @@ const ROLES: Record<
   "provider.owner": [],
   "provider.admin": [],
   "provider.user": [],
-  "read-only": [],
+  "read-only": [Beneficiaries.NAVIGATE, Projects.NAVIGATE, Contracts.NAVIGATE],
 };
 
 type Permission = (typeof ROLES)[UserRoleType] extends (infer U)[] ? U : never;

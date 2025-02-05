@@ -55,7 +55,7 @@ const ContractDialogue = ({
             isAuthorized(currentUser?.role, [Contracts.UPDATE])
         : true
     );
-  }, [contractDetails?.status, id]);
+  }, [contractDetails?.status, id, currentUser?.role]);
 
   const renderComponent = (component: Component) => {
     switch (component) {

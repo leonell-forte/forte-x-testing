@@ -1,3 +1,10 @@
+import {
+  Beneficiaries,
+  Contracts,
+  Organizations,
+  Projects,
+  Users,
+} from "./role-permissions";
 import { UserRoleType } from "./types/users";
 
 export const DEFAULT_PAGE_SIZE = "10";
@@ -6,33 +13,28 @@ export const MENUS = [
   {
     name: "beneficiaries",
     link: "/beneficiaries",
-    restrictedRoles: [],
+    permissions: [Beneficiaries.NAVIGATE],
   },
   {
     name: "contracts",
     link: "/contracts",
-    restrictedRoles: [],
+    permissions: [Contracts.NAVIGATE],
   },
   {
     name: "organizations",
     link: "/organizations",
-    restrictedRoles: [
-      "provider.user",
-      "provider.owner",
-      "provider.admin",
-      "read-only",
-    ],
+    permissions: [Organizations.NAVIGATE],
   },
   {
     name: "projects",
     link: "/projects",
-    restrictedRoles: [],
+    permissions: [Projects.NAVIGATE],
   },
 
   {
     name: "users",
     link: "/users",
-    restrictedRoles: ["provider.user", "read-only"],
+    permissions: [Users.NAVIGATE],
   },
 ];
 
