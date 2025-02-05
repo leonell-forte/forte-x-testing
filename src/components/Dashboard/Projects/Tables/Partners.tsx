@@ -2,7 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import projectService from "api/projects";
 import { useMemo, useState } from "react";
 
+import { useProfile } from "lib/hooks";
 import { useTagPartnerMutation } from "lib/mutations/projects";
+import { Projects, isAuthorized } from "lib/role-permissions";
 import { IProjectOrganization } from "lib/types/projects";
 
 import Button from "components/ui/button";
@@ -19,6 +21,8 @@ interface IProps {
 }
 
 const Partners = ({ projectId }: IProps) => {
+  const currentUser = useProfile();
+
   const { data, isLoading } = useQuery<{ items: IProjectOrganization[] }>({
     queryKey: ["project-organizations", projectId],
 
@@ -79,13 +83,17 @@ const Partners = ({ projectId }: IProps) => {
         <div className="flex items-center justify-between">
           <p className="text-[24px] font-semibold">Partners</p>
 
-          <div className="flex gap-2.5">
-            <Button onClick={() => setModal("tag")} buttonType="secondary">
-              Tag existing partner
-            </Button>
+          {isAuthorized(currentUser?.role, [Projects.UPDATE]) && (
+            <div className="flex gap-2.5">
+              <Button onClick={() => setModal("tag")} buttonType="secondary">
+                Tag existing partner
+              </Button>
 
-            <Button onClick={() => setModal("partner")}>Add new partner</Button>
-          </div>
+              <Button onClick={() => setModal("partner")}>
+                Add new partner
+              </Button>
+            </div>
+          )}
         </div>
 
         <Table.Container isEmpty={!partners?.length} isLoading={isLoading}>

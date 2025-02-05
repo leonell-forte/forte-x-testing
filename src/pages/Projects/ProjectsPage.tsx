@@ -2,7 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import projectService from "api/projects";
 import { useCallback, useMemo, useState } from "react";
 
-import { useDebounce, usePage, usePageTitle } from "lib/hooks";
+import { useDebounce, usePage, usePageTitle, useProfile } from "lib/hooks";
+import { Projects, isAuthorized } from "lib/role-permissions";
 import { IProject } from "lib/types/projects";
 
 import ProjectDialogue from "components/Dashboard/Projects/Dialogues/ProjectDialogue";
@@ -12,6 +13,8 @@ import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
 
 const ProjectsPage = () => {
+  const currentUser = useProfile();
+
   usePageTitle("Projects");
 
   const [search, setSearch] = useState("");
@@ -79,9 +82,11 @@ const ProjectsPage = () => {
             onClear={() => setSearch("")}
           />
 
-          <Button eventName="Add Project" onClick={() => setModal("project")}>
-            Add project
-          </Button>
+          {isAuthorized(currentUser?.role, [Projects.CREATE]) && (
+            <Button eventName="Add Project" onClick={() => setModal("project")}>
+              Add project
+            </Button>
+          )}
         </div>
 
         <div>

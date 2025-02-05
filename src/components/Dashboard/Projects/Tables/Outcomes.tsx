@@ -7,8 +7,9 @@ import { Controller, useForm } from "react-hook-form";
 
 import pencil from "assets/images/icons/pencil.svg";
 
-import { usePageTitle } from "lib/hooks";
+import { usePageTitle, useProfile } from "lib/hooks";
 import { useProjectMutation } from "lib/mutations/projects";
+import { Projects, isAuthorized } from "lib/role-permissions";
 import { ProjectFieldValues } from "lib/types/projects";
 import { projects } from "lib/validators/projects";
 
@@ -21,6 +22,8 @@ interface IProps {
 }
 
 const Outcomes = ({ id }: IProps) => {
+  const currentUser = useProfile();
+
   const { data: project, isLoading } = useQuery({
     queryKey: ["specific-project", id],
 
@@ -151,26 +154,31 @@ const Outcomes = ({ id }: IProps) => {
                 </Table.Data>
 
                 <Table.Data small className="py-1">
-                  <div className="flex justify-end gap-1.5">
-                    {onEdit ? (
-                      <>
-                        <Button onClick={closeEdit} buttonType="tertiary">
-                          Cancel
-                        </Button>
+                  {isAuthorized(currentUser?.role, [Projects.UPDATE]) && (
+                    <div className="flex justify-end gap-1.5">
+                      {onEdit ? (
+                        <>
+                          <Button onClick={closeEdit} buttonType="tertiary">
+                            Cancel
+                          </Button>
 
-                        <Button
-                          loading={isPending}
-                          onClick={handleSubmit(onSubmit)}
+                          <Button
+                            loading={isPending}
+                            onClick={handleSubmit(onSubmit)}
+                          >
+                            Save
+                          </Button>
+                        </>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => setEditIndex(index)}
                         >
-                          Save
-                        </Button>
-                      </>
-                    ) : (
-                      <button type="button" onClick={() => setEditIndex(index)}>
-                        <img src={pencil} alt="" />
-                      </button>
-                    )}
-                  </div>
+                          <img src={pencil} alt="" />
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </Table.Data>
               </Table.Row>
             );

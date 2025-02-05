@@ -2,6 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import beneficiariesService from "api/beneficiaries";
 import { useState } from "react";
 
+import { useProfile } from "lib/hooks";
+import { Projects, isAuthorized } from "lib/role-permissions";
+
 import Button from "components/ui/button";
 import Table from "components/ui/table";
 
@@ -16,6 +19,7 @@ interface IProps {
 }
 
 const Beneficiaries = ({ id }: IProps) => {
+  const currentUser = useProfile();
   const { data, isLoading } = useQuery({
     queryKey: ["beneficiaries", id],
 
@@ -63,19 +67,21 @@ const Beneficiaries = ({ id }: IProps) => {
         <div className="flex items-center justify-between">
           <p className="text-[24px] font-semibold">Beneficiaries</p>
 
-          <div className="flex gap-2.5">
-            <Button
-              eventName="Import Beneficiaries"
-              onClick={() => setModal("import")}
-              buttonType="secondary"
-            >
-              Import beneficiaries
-            </Button>
+          {isAuthorized(currentUser?.role, [Projects.UPDATE]) && (
+            <div className="flex gap-2.5">
+              <Button
+                eventName="Import Beneficiaries"
+                onClick={() => setModal("import")}
+                buttonType="secondary"
+              >
+                Import beneficiaries
+              </Button>
 
-            <Button onClick={() => setModal("beneficiaries")}>
-              Add new beneficiaries
-            </Button>
-          </div>
+              <Button onClick={() => setModal("beneficiaries")}>
+                Add new beneficiaries
+              </Button>
+            </div>
+          )}
         </div>
 
         <Table.Container isLoading={isLoading} isEmpty={!data?.items.length}>
