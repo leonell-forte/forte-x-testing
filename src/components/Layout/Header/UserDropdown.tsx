@@ -6,7 +6,8 @@ import { MouseEvent, useMemo, useRef, useState } from "react";
 
 import arrow from "assets/images/icons/chevron.svg";
 
-import { useOutsideClick } from "lib/hooks";
+import { useOutsideClick, useProfile } from "lib/hooks";
+import { Organizations, isAuthorized } from "lib/role-permissions";
 import { ProfileType } from "lib/types/profile";
 
 import ViewProfileDialogue from "./ViewProfileDialogue";
@@ -18,10 +19,14 @@ interface IProp {
 const UserDropdown = ({ user }: IProp) => {
   const [showModal, setShowModal] = useState(false);
 
+  const profile = useProfile();
+
   const { data: organizationList } = useQuery({
     queryKey: ["organizations"],
 
     queryFn: () => organizationService.list({ page: 1, listAll: true }),
+
+    enabled: isAuthorized(profile?.role, [Organizations.LIST]),
   });
 
   const [showDropdown, setShowDropdown] = useState(false);

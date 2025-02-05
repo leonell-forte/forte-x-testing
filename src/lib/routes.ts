@@ -48,7 +48,7 @@ export const ROUTES: RouteConfig[] = [
 
     Component: UsersPage,
 
-    restrictedRoles: ["provider.user", "provider.user"],
+    restrictedRoles: ["provider.user", "read-only"],
   },
 
   {
@@ -76,7 +76,7 @@ export const ROUTES: RouteConfig[] = [
       "provider.user",
       "provider.owner",
       "provider.admin",
-      "provider.readonly",
+      "read-only",
     ],
   },
 

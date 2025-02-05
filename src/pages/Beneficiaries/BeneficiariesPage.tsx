@@ -7,11 +7,16 @@ import { useCallback, useMemo, useState } from "react";
 import closeFilter from "assets/images/icons/close-filter.svg";
 
 import { BENEFICIARY_STATUS, RISK_LEVEL } from "lib/constants";
-import { useDebounce, usePage, usePageTitle } from "lib/hooks";
+import { useDebounce, usePage, usePageTitle, useProfile } from "lib/hooks";
 import {
   useExportBeneficiaries,
   useExportEvidenceMutation,
 } from "lib/mutations/beneficiaries";
+import {
+  Beneficiaries,
+  Organizations,
+  isAuthorized,
+} from "lib/role-permissions";
 import { IBeneficiariesFilter } from "lib/types/beneficiaries";
 import { findLabelFromOptions } from "lib/utils";
 
@@ -33,6 +38,7 @@ type ModalLabelTypes =
   | "";
 
 const BeneficiariesPage = () => {
+  const user = useProfile();
   usePageTitle("Beneficiaries");
 
   const [search, setSearch] = useState("");
@@ -95,6 +101,8 @@ const BeneficiariesPage = () => {
 
         filters: { type: "provider" },
       }),
+
+    enabled: isAuthorized(user?.role, [Organizations.LIST]),
   });
 
   const projects: IOption[] = useMemo(
@@ -196,13 +204,7 @@ const BeneficiariesPage = () => {
           <div className="space-x-2.5">
             {selectedIds.length > 0 ? (
               <>
-                <Button
-                  onClick={() => setModal("update status")}
-                  buttonType="secondary"
-                  eventName="Update Beneficiary Status"
-                >
-                  Update status
-                </Button>
+                {isAuthorized(user?.role, [Beneficiaries.UPDATE])}
                 <Button
                   onClick={handleDownloadEvidence}
                   buttonType="secondary"
@@ -220,23 +222,28 @@ const BeneficiariesPage = () => {
               </>
             ) : (
               <>
-                <Button
-                  eventName="Import Beneficiaries"
-                  buttonType="secondary"
-                  onClick={() => setModal("import")}
-                >
-                  Import beneficiaries
-                </Button>
-                <Button
-                  eventName="Add Beneficiary"
-                  onClick={() => {
-                    setModal("beneficiaries");
+                {isAuthorized(user?.role, [Beneficiaries.IMPORT]) && (
+                  <Button
+                    eventName="Import Beneficiaries"
+                    buttonType="secondary"
+                    onClick={() => setModal("import")}
+                  >
+                    Import beneficiaries
+                  </Button>
+                )}
 
-                    setEditMode(true);
-                  }}
-                >
-                  Add beneficiary
-                </Button>
+                {isAuthorized(user?.role, [Beneficiaries.CREATE]) && (
+                  <Button
+                    eventName="Add Beneficiary"
+                    onClick={() => {
+                      setModal("beneficiaries");
+
+                      setEditMode(true);
+                    }}
+                  >
+                    Add beneficiary
+                  </Button>
+                )}
               </>
             )}
           </div>
@@ -269,21 +276,23 @@ const BeneficiariesPage = () => {
               }
             />
 
-            <Dropdown
-              noHelperText
-              loading={orgLoading}
-              options={organizations}
-              placeholder="Provider"
-              className="max-w-[166px]"
-              value={findLabelFromOptions(
-                organizations,
+            {isAuthorized(user?.role, [Organizations.LIST]) && (
+              <Dropdown
+                noHelperText
+                loading={orgLoading}
+                options={organizations}
+                placeholder="Provider"
+                className="max-w-[166px]"
+                value={findLabelFromOptions(
+                  organizations,
 
-                filters.provider as string
-              )}
-              handleSelect={(val) => {
-                setFilters((prev) => ({ ...prev, provider: val as string }));
-              }}
-            />
+                  filters.provider as string
+                )}
+                handleSelect={(val) => {
+                  setFilters((prev) => ({ ...prev, provider: val as string }));
+                }}
+              />
+            )}
 
             <Dropdown
               noHelperText

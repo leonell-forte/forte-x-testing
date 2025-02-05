@@ -20,7 +20,7 @@ export const MENUS = [
       "provider.user",
       "provider.owner",
       "provider.admin",
-      "provider.readonly",
+      "read-only",
     ],
   },
   {
@@ -32,7 +32,7 @@ export const MENUS = [
   {
     name: "users",
     link: "/users",
-    restrictedRoles: ["provider.user", "provider.readonly"],
+    restrictedRoles: ["provider.user", "read-only"],
   },
 ];
 
@@ -51,7 +51,7 @@ export const ROLES = [
   },
   {
     label: "Read only",
-    value: "readonly",
+    value: "read-only",
   },
 ];
 
@@ -446,7 +446,7 @@ export const REDIRECT_PATHS: Record<UserRoleType, string> = {
 
   "provider.owner": "/beneficiaries",
 
-  "provider.readonly": "/beneficiaries",
+  "read-only": "/beneficiaries",
 
   admin: "/beneficiaries",
 };

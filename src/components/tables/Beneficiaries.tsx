@@ -5,6 +5,8 @@ import bin from "assets/images/icons/bin.svg";
 import pencil from "assets/images/icons/pencil.svg";
 
 import { DEFAULT_DATE_FORMAT } from "lib/constants";
+import { useProfile } from "lib/hooks";
+import { Beneficiaries, isAuthorized } from "lib/role-permissions";
 import { IBeneficiaries } from "lib/types/beneficiaries";
 import { cn, formatDate } from "lib/utils";
 
@@ -32,6 +34,7 @@ const BeneficiariesTable = ({
   isLoading = false,
   setChecked,
 }: TBeneficiariesTable) => {
+  const user = useProfile();
   const [modal, setModal] = useState<ModalLabelTypes>("");
   const [editMode, setEditMode] = useState(false);
 
@@ -147,12 +150,10 @@ const BeneficiariesTable = ({
               </Table.Header>
 
               <Table.Header small className="!h-[60px] !pr-12">
-                {" "}
                 Start date
               </Table.Header>
 
               <Table.Header small className="!h-[60px] !pr-12">
-                {" "}
                 End date
               </Table.Header>
 
@@ -290,35 +291,40 @@ const BeneficiariesTable = ({
                   </Table.Data>
 
                   <Table.Data small className="!h-[64px]">
-                    <div className="flex justify-end">
-                      <Button
-                        eventName="Update Beneficiary"
-                        id={id?.toString()}
-                        buttonType="default"
-                        type="button"
-                        className="p-[3px]"
-                        onClick={() => {
-                          setModal("beneficiaries");
+                    {isAuthorized(user?.role, [
+                      Beneficiaries.UPDATE,
+                      Beneficiaries.DELETE,
+                    ]) && (
+                      <div className="flex justify-end">
+                        <Button
+                          eventName="Update Beneficiary"
+                          id={id?.toString()}
+                          buttonType="default"
+                          type="button"
+                          className="p-[3px]"
+                          onClick={() => {
+                            setModal("beneficiaries");
 
-                          setBeneficiaryId(id);
+                            setBeneficiaryId(id);
 
-                          setEditMode(true);
-                        }}
-                      >
-                        <img alt="pencil" src={pencil} />
-                      </Button>
+                            setEditMode(true);
+                          }}
+                        >
+                          <img alt="pencil" src={pencil} />
+                        </Button>
 
-                      <Button
-                        eventName="Delete Beneficiary"
-                        id={id.toString()}
-                        buttonType="default"
-                        type="button"
-                        onClick={() => handleDelete(id)}
-                        className="p-[3px]"
-                      >
-                        <img alt="pencil" src={bin} />
-                      </Button>
-                    </div>
+                        <Button
+                          eventName="Delete Beneficiary"
+                          id={id.toString()}
+                          buttonType="default"
+                          type="button"
+                          onClick={() => handleDelete(id)}
+                          className="p-[3px]"
+                        >
+                          <img alt="pencil" src={bin} />
+                        </Button>
+                      </div>
+                    )}
                   </Table.Data>
                 </Table.Row>
               );

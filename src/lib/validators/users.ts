@@ -15,7 +15,7 @@ export const users = {
 
       organizationId: user?.organization?.toString() || "",
 
-      role: user?.role || "",
+      role: user?.role,
     };
 
     if (user) {
