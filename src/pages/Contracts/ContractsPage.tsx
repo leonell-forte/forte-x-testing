@@ -6,7 +6,8 @@ import { useCallback, useMemo, useState } from "react";
 import closeFilter from "assets/images/icons/close-filter.svg";
 
 import { CONTRACT_STATUS } from "lib/constants";
-import { useDebounce, usePage, usePageTitle } from "lib/hooks";
+import { useDebounce, usePage, usePageTitle, useProfile } from "lib/hooks";
+import { Contracts, isAuthorized } from "lib/role-permissions";
 import { IContract, IContractFilters, StatusType } from "lib/types/contracts";
 import { IProject } from "lib/types/projects";
 import { findLabelFromOptions } from "lib/utils";
@@ -19,6 +20,7 @@ import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
 
 const ContractsPage = () => {
+  const currentUser = useProfile();
   usePageTitle("Contracts");
 
   const { page, setPage } = usePage();
@@ -124,14 +126,16 @@ const ContractsPage = () => {
             onClear={() => setSearch("")}
           />
 
-          <div className="flex items-center gap-6">
-            <Button
-              eventName="Add Contract"
-              onClick={() => setModal("contract")}
-            >
-              Add contract
-            </Button>
-          </div>
+          {isAuthorized(currentUser?.role, [Contracts.CREATE]) && (
+            <div className="flex items-center gap-6">
+              <Button
+                eventName="Add Contract"
+                onClick={() => setModal("contract")}
+              >
+                Add contract
+              </Button>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-wrap items-center gap-[10px]">

@@ -4,6 +4,8 @@ import bin from "assets/images/icons/bin.svg";
 import pencil from "assets/images/icons/pencil.svg";
 
 import { DEFAULT_DATE_FORMAT } from "lib/constants";
+import { useProfile } from "lib/hooks";
+import { Contracts, isAuthorized } from "lib/role-permissions";
 import { IContract } from "lib/types/contracts";
 import { formatDate } from "lib/utils";
 
@@ -18,6 +20,8 @@ type TContractsTable = {
 };
 
 const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
+  const currentUser = useProfile();
+
   const [contractId, setContractId] = useState<number | null>(null);
 
   const contracts: IContract[] = useMemo(
@@ -170,29 +174,32 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
 
                   <Table.Data className="pl-5">
                     <div className="flex justify-end">
-                      {status === "DRAFT" && (
+                      {isAuthorized(currentUser?.role, [Contracts.UPDATE]) &&
+                        status === "DRAFT" && (
+                          <Button
+                            eventName="Edit Contract"
+                            id={id?.toString()}
+                            buttonType="default"
+                            type="button"
+                            onClick={() => handleEditContract(id!)}
+                            className="p-[3px]"
+                          >
+                            <img alt="pencil" src={pencil} />
+                          </Button>
+                        )}
+
+                      {isAuthorized(currentUser?.role, [Contracts.DELETE]) && (
                         <Button
-                          eventName="Edit Contract"
+                          eventName="Delete Contract"
                           id={id?.toString()}
                           buttonType="default"
                           type="button"
-                          onClick={() => handleEditContract(id!)}
+                          onClick={() => handleDeleteContract(id!)}
                           className="p-[3px]"
                         >
-                          <img alt="pencil" src={pencil} />
+                          <img alt="bin" src={bin} />
                         </Button>
                       )}
-
-                      <Button
-                        eventName="Delete Contract"
-                        id={id?.toString()}
-                        buttonType="default"
-                        type="button"
-                        onClick={() => handleDeleteContract(id!)}
-                        className="p-[3px]"
-                      >
-                        <img alt="bin" src={bin} />
-                      </Button>
                     </div>
                   </Table.Data>
                 </Table.Row>

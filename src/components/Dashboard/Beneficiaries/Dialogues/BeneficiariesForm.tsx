@@ -14,8 +14,9 @@ import {
   LANGUAGES,
   RISK_LEVEL,
 } from "lib/constants";
-import { useAppDispatch } from "lib/hooks";
+import { useAppDispatch, useProfile } from "lib/hooks";
 import { useBeneficiaryMutation } from "lib/mutations/beneficiaries";
+import { Beneficiaries, isAuthorized } from "lib/role-permissions";
 import { setSelectedData } from "lib/slice/evidence";
 import {
   DisabilityStatusEnum,
@@ -49,6 +50,8 @@ const BeneficiariesForm = ({
 
   editMode,
 }: IProps) => {
+  const currentUser = useProfile();
+
   const dispatch = useAppDispatch();
 
   const [onEdit, setOnEdit] = useState(editMode);
@@ -778,21 +781,23 @@ const BeneficiariesForm = ({
         </div>
       </div>
 
-      <div className="flex justify-end gap-4 pt-6">
-        {onEdit ? (
-          <>
-            <Button buttonType="secondary" onClick={() => setOnEdit(false)}>
-              Cancel
-            </Button>
+      {isAuthorized(currentUser?.role, [Beneficiaries.UPDATE]) && (
+        <div className="flex justify-end gap-4 pt-6">
+          {onEdit ? (
+            <>
+              <Button buttonType="secondary" onClick={() => setOnEdit(false)}>
+                Cancel
+              </Button>
 
-            <Button type="submit" loading={isPending}>
-              Save
-            </Button>
-          </>
-        ) : (
-          <Button onClick={() => setOnEdit(true)}>Edit details</Button>
-        )}
-      </div>
+              <Button type="submit" loading={isPending}>
+                Save
+              </Button>
+            </>
+          ) : (
+            <Button onClick={() => setOnEdit(true)}>Edit details</Button>
+          )}
+        </div>
+      )}
     </form>
   );
 };

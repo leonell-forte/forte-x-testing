@@ -22,11 +22,24 @@ export enum Organizations {
   LIST = "list:organization",
 }
 
+export enum Contracts {
+  CREATE = "create:contract",
+  UPDATE = "update:contract",
+  IMPORT = "import:contract",
+  DELETE = "delete:contract",
+  LIST = "list:contract",
+}
+
 const ROLES: Record<
   UserRoleType,
-  Array<Beneficiaries | Users | Organizations>
+  Array<Beneficiaries | Users | Organizations | Contracts>
 > = {
-  admin: [...Object.values(Beneficiaries), ...Object.values(Users)],
+  admin: [
+    ...Object.values(Beneficiaries),
+    ...Object.values(Users),
+    ...Object.values(Organizations),
+    ...Object.values(Contracts),
+  ],
   "provider.owner": [],
   "provider.admin": [],
   "provider.user": [],
