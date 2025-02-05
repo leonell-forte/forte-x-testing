@@ -43,7 +43,7 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
     };
 
     return (
-      <div className={classNames("relative w-full", !noHelperText && "pb-5")}>
+      <div className={classNames("relative w-full")}>
         <TextField
           ref={ref}
           {...props}

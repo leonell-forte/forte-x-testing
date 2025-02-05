@@ -30,7 +30,7 @@ const DatePicker = ({
 
   return (
     <div
-      className={classNames("relative w-full", !noHelperText && "pb-5")}
+      className={classNames("relative w-full")}
       onClick={(e) => e.stopPropagation()}
     >
       <LocalizationProvider dateAdapter={AdapterDateFns}>
