@@ -22,6 +22,8 @@ export interface IBeneficiaries {
 
   phoneNumber: string;
 
+  phone: string;
+
   provider: string;
 
   cohortEndDate: string;
