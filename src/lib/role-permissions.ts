@@ -72,7 +72,7 @@ const ROLES: Record<
     Contracts.NAVIGATE,
     Users.NAVIGATE,
   ],
-  "read-only": [
+  "provider.read-only": [
     Beneficiaries.NAVIGATE,
     Projects.NAVIGATE,
     Contracts.NAVIGATE,

@@ -448,7 +448,7 @@ export const REDIRECT_PATHS: Record<UserRoleType, string> = {
 
   "provider.owner": "/beneficiaries",
 
-  "read-only": "/beneficiaries",
+  "provider.read-only": "/beneficiaries",
 
   admin: "/beneficiaries",
 };

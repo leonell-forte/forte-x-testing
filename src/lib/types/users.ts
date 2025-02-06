@@ -6,7 +6,7 @@ export type UserRoleType =
   | "provider.user"
   | "provider.admin"
   | "provider.owner"
-  | "read-only"
+  | "provider.read-only"
   | "admin";
 
 export interface IUser {
