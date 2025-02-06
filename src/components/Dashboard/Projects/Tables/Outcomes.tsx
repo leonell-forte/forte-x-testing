@@ -7,9 +7,9 @@ import { Controller, useForm } from "react-hook-form";
 
 import pencil from "assets/images/icons/pencil.svg";
 
-import { usePageTitle, useProfile } from "lib/hooks";
+import { usePageTitle } from "lib/hooks";
 import { useProjectMutation } from "lib/mutations/projects";
-import { Projects, isAuthorized } from "lib/role-permissions";
+import { IsAuthorized, Projects } from "lib/role-permissions";
 import { ProjectFieldValues } from "lib/types/projects";
 import { projects } from "lib/validators/projects";
 
@@ -22,8 +22,6 @@ interface IProps {
 }
 
 const Outcomes = ({ id }: IProps) => {
-  const currentUser = useProfile();
-
   const { data: project, isLoading } = useQuery({
     queryKey: ["specific-project", id],
 
@@ -154,7 +152,7 @@ const Outcomes = ({ id }: IProps) => {
                 </Table.Data>
 
                 <Table.Data small className="py-1">
-                  {isAuthorized(currentUser?.role, [Projects.UPDATE]) && (
+                  {IsAuthorized([Projects.UPDATE]) && (
                     <div className="flex justify-end gap-1.5">
                       {onEdit ? (
                         <>

@@ -4,8 +4,7 @@ import bin from "assets/images/icons/bin.svg";
 import pencil from "assets/images/icons/pencil.svg";
 
 import { DEFAULT_DATE_FORMAT } from "lib/constants";
-import { useProfile } from "lib/hooks";
-import { Contracts, isAuthorized } from "lib/role-permissions";
+import { Contracts, IsAuthorized } from "lib/role-permissions";
 import { IContract } from "lib/types/contracts";
 import { formatDate } from "lib/utils";
 
@@ -20,8 +19,6 @@ type TContractsTable = {
 };
 
 const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
-  const currentUser = useProfile();
-
   const [contractId, setContractId] = useState<number | null>(null);
 
   const contracts: IContract[] = useMemo(
@@ -174,7 +171,7 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
 
                   <Table.Data className="pl-5">
                     <div className="flex justify-end">
-                      {isAuthorized(currentUser?.role, [Contracts.UPDATE]) &&
+                      {IsAuthorized([Contracts.UPDATE]) &&
                         status === "DRAFT" && (
                           <Button
                             eventName="Edit Contract"
@@ -188,7 +185,7 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
                           </Button>
                         )}
 
-                      {isAuthorized(currentUser?.role, [Contracts.DELETE]) && (
+                      {IsAuthorized([Contracts.DELETE]) && (
                         <Button
                           eventName="Delete Contract"
                           id={id?.toString()}

@@ -3,9 +3,8 @@ import authService from "api/auth";
 import { Suspense } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
-import { isAuthorized } from "lib/role-permissions";
+import { IsAuthorized } from "lib/role-permissions";
 import { ROUTES } from "lib/routes";
-import { UserRoleType } from "lib/types/users";
 
 import AlertProvider from "./AlertProvider";
 import Layout from "./Dashboard/Layout";
@@ -44,11 +43,7 @@ const RouteProvider = () => {
                       key={index}
                       path={link}
                       element={
-                        !permissions.length ||
-                        isAuthorized(
-                          user?.role as UserRoleType,
-                          permissions
-                        ) ? (
+                        !permissions.length || IsAuthorized(permissions) ? (
                           <Component />
                         ) : (
                           <div className="flex items-center justify-center pt-24">

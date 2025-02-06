@@ -14,9 +14,9 @@ import {
   LANGUAGES,
   RISK_LEVEL,
 } from "lib/constants";
-import { useAppDispatch, useProfile } from "lib/hooks";
+import { useAppDispatch } from "lib/hooks";
 import { useBeneficiaryMutation } from "lib/mutations/beneficiaries";
-import { Beneficiaries, isAuthorized } from "lib/role-permissions";
+import { Beneficiaries, IsAuthorized } from "lib/role-permissions";
 import { setSelectedData } from "lib/slice/evidence";
 import {
   DisabilityStatusEnum,
@@ -50,8 +50,6 @@ const BeneficiariesForm = ({
 
   editMode,
 }: IProps) => {
-  const currentUser = useProfile();
-
   const dispatch = useAppDispatch();
 
   const [onEdit, setOnEdit] = useState(editMode);
@@ -781,7 +779,7 @@ const BeneficiariesForm = ({
         </div>
       </div>
 
-      {isAuthorized(currentUser?.role, [Beneficiaries.UPDATE]) && (
+      {IsAuthorized([Beneficiaries.UPDATE]) && (
         <div className="flex justify-end gap-4 pt-6">
           {onEdit ? (
             <>

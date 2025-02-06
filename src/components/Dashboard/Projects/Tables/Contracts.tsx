@@ -4,8 +4,7 @@ import { useState } from "react";
 
 import pencil from "assets/images/icons/pencil.svg";
 
-import { useProfile } from "lib/hooks";
-import { Projects, isAuthorized } from "lib/role-permissions";
+import { IsAuthorized, Projects } from "lib/role-permissions";
 import { formatDate } from "lib/utils";
 
 import Button from "components/ui/button";
@@ -21,8 +20,6 @@ interface IProps {
 }
 
 const Contracts = ({ projectId }: IProps) => {
-  const currentUser = useProfile();
-
   const { data: contractList, isLoading } = useQuery({
     queryKey: ["contracts", 1, ""],
 
@@ -85,7 +82,7 @@ const Contracts = ({ projectId }: IProps) => {
         <div className="flex items-center justify-between">
           <p className="text-[24px] font-semibold">Contracts</p>
 
-          {isAuthorized(currentUser?.role, [Projects.UPDATE]) && (
+          {IsAuthorized([Projects.UPDATE]) && (
             <div className="flex gap-2.5">
               <Button onClick={() => setModal("contract")}>
                 Add new contract

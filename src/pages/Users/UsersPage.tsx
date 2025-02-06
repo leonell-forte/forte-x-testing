@@ -6,8 +6,8 @@ import { useMemo, useState } from "react";
 import closeFilter from "assets/images/icons/close-filter.svg";
 
 import { ROLES } from "lib/constants";
-import { useDebounce, usePage, usePageTitle, useProfile } from "lib/hooks";
-import { Users, isAuthorized } from "lib/role-permissions";
+import { useDebounce, usePage, usePageTitle } from "lib/hooks";
+import { IsAuthorized, Users } from "lib/role-permissions";
 import { IOrganization } from "lib/types/organizations";
 import { IUser } from "lib/types/users";
 
@@ -19,8 +19,6 @@ import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
 
 const UsersPage = () => {
-  const currentUser = useProfile();
-
   usePageTitle("Users");
 
   const { page, setPage } = usePage();
@@ -94,7 +92,7 @@ const UsersPage = () => {
             onClear={() => setSearch("")}
           />
 
-          {isAuthorized(currentUser?.role, [Users.CREATE]) && (
+          {IsAuthorized([Users.CREATE]) && (
             <div className="flex items-center gap-6">
               <Button
                 eventName="Add User"

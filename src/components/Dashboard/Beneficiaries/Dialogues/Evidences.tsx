@@ -7,8 +7,8 @@ import add from "assets/images/icons/add.svg";
 import download from "assets/images/icons/download.svg";
 
 import { EVIDENCE_STATUS } from "lib/constants";
-import { useAppSelector, useProfile } from "lib/hooks";
-import { Beneficiaries, isAuthorized } from "lib/role-permissions";
+import { useAppSelector } from "lib/hooks";
+import { Beneficiaries, IsAuthorized } from "lib/role-permissions";
 import { findLabelFromOptions } from "lib/utils";
 
 import Button from "components/ui/button";
@@ -19,8 +19,6 @@ interface IProps {
 }
 
 const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
-  const currentUser = useProfile();
-
   const { beneficiaryId } = useAppSelector((state) => state.evidence);
 
   const { data: evidenceList, isLoading } = useQuery({
@@ -33,7 +31,7 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
 
   return (
     <div className="space-y-[30px]">
-      {isAuthorized(currentUser?.role, [Beneficiaries.UPDATE]) && (
+      {IsAuthorized([Beneficiaries.UPDATE]) && (
         <div className="flex items-center gap-12">
           <p className="text-[20px] font-semibold">Evidence</p>
 
@@ -107,7 +105,7 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
         </Table.Body>
       </Table.Container>
 
-      {isAuthorized(currentUser?.role, [Beneficiaries.UPDATE]) && (
+      {IsAuthorized([Beneficiaries.UPDATE]) && (
         <div className="flex justify-end gap-4">
           <Button buttonType="secondary">Reject beneficiary</Button>
 

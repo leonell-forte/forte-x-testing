@@ -8,17 +8,11 @@ import { Link, useLocation } from "react-router-dom";
 import close from "assets/images/icons/close.svg";
 
 import { MENUS } from "lib/constants";
-import {
-  useAppDispatch,
-  useAppSelector,
-  useProfile,
-  useScreenSize,
-} from "lib/hooks";
-import { isAuthorized } from "lib/role-permissions";
+import { useAppDispatch, useAppSelector, useScreenSize } from "lib/hooks";
+import { IsAuthorized } from "lib/role-permissions";
 import { setShowSidePanel } from "lib/slice/layout";
 
 const SidePanel = () => {
-  const currentUser = useProfile();
   const dispatch = useAppDispatch();
 
   const { isMobile } = useScreenSize();
@@ -38,9 +32,8 @@ const SidePanel = () => {
   };
 
   const filteredMenu = useMemo(
-    () =>
-      MENUS.filter((item) => isAuthorized(currentUser?.role, item.permissions)),
-    [currentUser?.role]
+    () => MENUS.filter((item) => IsAuthorized(item.permissions)),
+    []
   );
 
   return (

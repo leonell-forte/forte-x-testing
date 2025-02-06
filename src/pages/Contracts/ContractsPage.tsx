@@ -6,8 +6,8 @@ import { useCallback, useMemo, useState } from "react";
 import closeFilter from "assets/images/icons/close-filter.svg";
 
 import { CONTRACT_STATUS } from "lib/constants";
-import { useDebounce, usePage, usePageTitle, useProfile } from "lib/hooks";
-import { Contracts, isAuthorized } from "lib/role-permissions";
+import { useDebounce, usePage, usePageTitle } from "lib/hooks";
+import { Contracts, IsAuthorized } from "lib/role-permissions";
 import { IContract, IContractFilters, StatusType } from "lib/types/contracts";
 import { IProject } from "lib/types/projects";
 import { findLabelFromOptions } from "lib/utils";
@@ -20,7 +20,6 @@ import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
 
 const ContractsPage = () => {
-  const currentUser = useProfile();
   usePageTitle("Contracts");
 
   const { page, setPage } = usePage();
@@ -126,7 +125,7 @@ const ContractsPage = () => {
             onClear={() => setSearch("")}
           />
 
-          {isAuthorized(currentUser?.role, [Contracts.CREATE]) && (
+          {IsAuthorized([Contracts.CREATE]) && (
             <div className="flex items-center gap-6">
               <Button
                 eventName="Add Contract"

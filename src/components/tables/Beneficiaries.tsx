@@ -5,8 +5,7 @@ import bin from "assets/images/icons/bin.svg";
 import pencil from "assets/images/icons/pencil.svg";
 
 import { DEFAULT_DATE_FORMAT } from "lib/constants";
-import { useProfile } from "lib/hooks";
-import { Beneficiaries, isAuthorized } from "lib/role-permissions";
+import { Beneficiaries, IsAuthorized } from "lib/role-permissions";
 import { IBeneficiaries } from "lib/types/beneficiaries";
 import { cn, formatDate } from "lib/utils";
 
@@ -34,7 +33,6 @@ const BeneficiariesTable = ({
   isLoading = false,
   setChecked,
 }: TBeneficiariesTable) => {
-  const user = useProfile();
   const [modal, setModal] = useState<ModalLabelTypes>("");
   const [editMode, setEditMode] = useState(false);
 
@@ -291,7 +289,7 @@ const BeneficiariesTable = ({
                   </Table.Data>
 
                   <Table.Data small className="!h-[64px]">
-                    {isAuthorized(user?.role, [
+                    {IsAuthorized([
                       Beneficiaries.UPDATE,
                       Beneficiaries.DELETE,
                     ]) && (

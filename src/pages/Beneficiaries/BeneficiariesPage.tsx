@@ -7,15 +7,15 @@ import { useCallback, useMemo, useState } from "react";
 import closeFilter from "assets/images/icons/close-filter.svg";
 
 import { BENEFICIARY_STATUS, RISK_LEVEL } from "lib/constants";
-import { useDebounce, usePage, usePageTitle, useProfile } from "lib/hooks";
+import { useDebounce, usePage, usePageTitle } from "lib/hooks";
 import {
   useExportBeneficiaries,
   useExportEvidenceMutation,
 } from "lib/mutations/beneficiaries";
 import {
   Beneficiaries,
+  IsAuthorized,
   Organizations,
-  isAuthorized,
 } from "lib/role-permissions";
 import { IBeneficiariesFilter } from "lib/types/beneficiaries";
 import { findLabelFromOptions } from "lib/utils";
@@ -38,7 +38,6 @@ type ModalLabelTypes =
   | "";
 
 const BeneficiariesPage = () => {
-  const user = useProfile();
   usePageTitle("Beneficiaries");
 
   const [search, setSearch] = useState("");
@@ -102,7 +101,7 @@ const BeneficiariesPage = () => {
         filters: { type: "provider" },
       }),
 
-    enabled: isAuthorized(user?.role, [Organizations.LIST]),
+    enabled: IsAuthorized([Organizations.LIST]),
   });
 
   const projects: IOption[] = useMemo(
@@ -204,7 +203,7 @@ const BeneficiariesPage = () => {
           <div className="space-x-2.5">
             {selectedIds.length > 0 ? (
               <>
-                {isAuthorized(user?.role, [Beneficiaries.UPDATE])}
+                {IsAuthorized([Beneficiaries.UPDATE])}
                 <Button
                   onClick={handleDownloadEvidence}
                   buttonType="secondary"
@@ -222,7 +221,7 @@ const BeneficiariesPage = () => {
               </>
             ) : (
               <>
-                {isAuthorized(user?.role, [Beneficiaries.IMPORT]) && (
+                {IsAuthorized([Beneficiaries.IMPORT]) && (
                   <Button
                     eventName="Import Beneficiaries"
                     buttonType="secondary"
@@ -232,7 +231,7 @@ const BeneficiariesPage = () => {
                   </Button>
                 )}
 
-                {isAuthorized(user?.role, [Beneficiaries.CREATE]) && (
+                {IsAuthorized([Beneficiaries.CREATE]) && (
                   <Button
                     eventName="Add Beneficiary"
                     onClick={() => {
@@ -276,7 +275,7 @@ const BeneficiariesPage = () => {
               }
             />
 
-            {isAuthorized(user?.role, [Organizations.LIST]) && (
+            {IsAuthorized([Organizations.LIST]) && (
               <Dropdown
                 noHelperText
                 loading={orgLoading}

@@ -6,9 +6,8 @@ import { useEffect, useMemo, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 
 import { CONTRACT_STATUS } from "lib/constants";
-import { useProfile } from "lib/hooks";
 import useContractMutation from "lib/mutations/contracts";
-import { Contracts, isAuthorized } from "lib/role-permissions";
+import { Contracts, IsAuthorized } from "lib/role-permissions";
 import {
   ContractFieldValues,
   IContract,
@@ -54,8 +53,6 @@ const ContractForm = ({
 
   markContract,
 }: IContractForm) => {
-  const currentUser = useProfile();
-
   const [isAmmending, setIsAmmending] = useState(false);
 
   const {
@@ -488,7 +485,7 @@ const ContractForm = ({
       )}
 
       <div className="!mt-10 flex items-center justify-between">
-        {isAuthorized(currentUser?.role, [Contracts.UPDATE]) && (
+        {IsAuthorized([Contracts.UPDATE]) && (
           <div>
             {contractDetails && !isAmmending && (
               <Button onClick={markContract} buttonType="secondary">
@@ -499,7 +496,7 @@ const ContractForm = ({
         )}
 
         {!isCompleted &&
-          isAuthorized(currentUser?.role, [Contracts.UPDATE]) &&
+          IsAuthorized([Contracts.UPDATE]) &&
           (!onEdit ? (
             <Button onClick={() => handleEdit(true)}>
               {isSigned ? "Amend" : "Edit"}
