@@ -48,6 +48,13 @@ const ROLES: Record<
   UserRoleType,
   Array<Beneficiaries | Users | Organizations | Contracts | Projects>
 > = {
+  owner: [
+    ...Object.values(Beneficiaries),
+    ...Object.values(Users),
+    ...Object.values(Organizations),
+    ...Object.values(Contracts),
+    ...Object.values(Projects),
+  ],
   admin: [
     ...Object.values(Beneficiaries),
     ...Object.values(Users),
