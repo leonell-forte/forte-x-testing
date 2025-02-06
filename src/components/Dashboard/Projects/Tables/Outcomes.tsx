@@ -9,6 +9,7 @@ import pencil from "assets/images/icons/pencil.svg";
 
 import { usePageTitle } from "lib/hooks";
 import { useProjectMutation } from "lib/mutations/projects";
+import { IsAuthorized, Projects } from "lib/role-permissions";
 import { ProjectFieldValues } from "lib/types/projects";
 import { projects } from "lib/validators/projects";
 
@@ -151,26 +152,31 @@ const Outcomes = ({ id }: IProps) => {
                 </Table.Data>
 
                 <Table.Data small className="py-1">
-                  <div className="flex justify-end gap-1.5">
-                    {onEdit ? (
-                      <>
-                        <Button onClick={closeEdit} buttonType="tertiary">
-                          Cancel
-                        </Button>
+                  {IsAuthorized([Projects.UPDATE]) && (
+                    <div className="flex justify-end gap-1.5">
+                      {onEdit ? (
+                        <>
+                          <Button onClick={closeEdit} buttonType="tertiary">
+                            Cancel
+                          </Button>
 
-                        <Button
-                          loading={isPending}
-                          onClick={handleSubmit(onSubmit)}
+                          <Button
+                            loading={isPending}
+                            onClick={handleSubmit(onSubmit)}
+                          >
+                            Save
+                          </Button>
+                        </>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => setEditIndex(index)}
                         >
-                          Save
-                        </Button>
-                      </>
-                    ) : (
-                      <button type="button" onClick={() => setEditIndex(index)}>
-                        <img src={pencil} alt="" />
-                      </button>
-                    )}
-                  </div>
+                          <img src={pencil} alt="" />
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </Table.Data>
               </Table.Row>
             );

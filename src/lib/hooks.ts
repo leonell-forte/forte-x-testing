@@ -3,9 +3,12 @@ import { useDispatch, useSelector, useStore } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import Cookies from "universal-cookie";
 
+import { queryClient } from "components/QueryProvider";
+
 import { IAlert, setToast } from "./slice/alert";
 import { setTitle } from "./slice/layout";
 import type { AppDispatch, AppStore, RootState } from "./store";
+import { IUser } from "./types/users";
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
@@ -15,6 +18,14 @@ export const useAppSelector = useSelector.withTypes<RootState>();
 export const useAppStore = useStore.withTypes<AppStore>();
 
 export const cookie = new Cookies();
+
+export const useProfile = (): IUser | null => {
+  const user: IUser | undefined = queryClient.getQueryData(["profile"]);
+
+  if (!user) return null;
+
+  return user;
+};
 
 export const useOutsideClick = (
   ref: MutableRefObject<HTMLElement | null>,

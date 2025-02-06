@@ -1,3 +1,10 @@
+import {
+  Beneficiaries,
+  Contracts,
+  Organizations,
+  Projects,
+  Users,
+} from "./role-permissions";
 import { UserRoleType } from "./types/users";
 
 export const DEFAULT_PAGE_SIZE = "10";
@@ -6,33 +13,28 @@ export const MENUS = [
   {
     name: "beneficiaries",
     link: "/beneficiaries",
-    restrictedRoles: [],
+    permissions: [Beneficiaries.NAVIGATE],
   },
   {
     name: "contracts",
     link: "/contracts",
-    restrictedRoles: [],
+    permissions: [Contracts.NAVIGATE],
   },
   {
     name: "organizations",
     link: "/organizations",
-    restrictedRoles: [
-      "provider.user",
-      "provider.owner",
-      "provider.admin",
-      "provider.readonly",
-    ],
+    permissions: [Organizations.NAVIGATE],
   },
   {
     name: "projects",
     link: "/projects",
-    restrictedRoles: [],
+    permissions: [Projects.NAVIGATE],
   },
 
   {
     name: "users",
     link: "/users",
-    restrictedRoles: ["provider.user", "provider.readonly"],
+    permissions: [Users.NAVIGATE],
   },
 ];
 
@@ -51,7 +53,7 @@ export const ROLES = [
   },
   {
     label: "Read only",
-    value: "readonly",
+    value: "read-only",
   },
 ];
 
@@ -446,7 +448,7 @@ export const REDIRECT_PATHS: Record<UserRoleType, string> = {
 
   "provider.owner": "/beneficiaries",
 
-  "provider.readonly": "/beneficiaries",
+  "provider.read-only": "/beneficiaries",
 
   admin: "/beneficiaries",
 };

@@ -8,6 +8,7 @@ import download from "assets/images/icons/download.svg";
 
 import { EVIDENCE_STATUS } from "lib/constants";
 import { useAppSelector } from "lib/hooks";
+import { Beneficiaries, IsAuthorized } from "lib/role-permissions";
 import { findLabelFromOptions } from "lib/utils";
 
 import Button from "components/ui/button";
@@ -30,25 +31,27 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
 
   return (
     <div className="space-y-[30px]">
-      <div className="flex items-center gap-12">
-        <p className="text-[20px] font-semibold">Evidence</p>
+      {IsAuthorized([Beneficiaries.UPDATE]) && (
+        <div className="flex items-center gap-12">
+          <p className="text-[20px] font-semibold">Evidence</p>
 
-        <div className="flex w-full items-center gap-4">
-          <hr className="w-full" />
+          <div className="flex w-full items-center gap-4">
+            <hr className="w-full" />
 
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
 
-              handleAddOrViewEvidence?.();
-            }}
-            className="flex !h-8 !w-8 flex-shrink-0 items-center justify-center rounded-full bg-white text-forest-green transition-all hover:scale-[1.05] hover:opacity-80"
-          >
-            <img src={add} alt="add" />
-          </button>
+                handleAddOrViewEvidence?.();
+              }}
+              className="flex !h-8 !w-8 flex-shrink-0 items-center justify-center rounded-full bg-white text-forest-green transition-all hover:scale-[1.05] hover:opacity-80"
+            >
+              <img src={add} alt="add" />
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
       <Table.Container isEmpty={!evidences.length} isLoading={isLoading}>
         <Table.Head>
@@ -102,11 +105,13 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
         </Table.Body>
       </Table.Container>
 
-      <div className="flex justify-end gap-4">
-        <Button buttonType="secondary">Reject beneficiary</Button>
+      {IsAuthorized([Beneficiaries.UPDATE]) && (
+        <div className="flex justify-end gap-4">
+          <Button buttonType="secondary">Reject beneficiary</Button>
 
-        <Button>Accept beneficiary</Button>
-      </div>
+          <Button>Accept beneficiary</Button>
+        </div>
+      )}
     </div>
   );
 };

@@ -7,6 +7,7 @@ import closeFilter from "assets/images/icons/close-filter.svg";
 
 import { ROLES } from "lib/constants";
 import { useDebounce, usePage, usePageTitle } from "lib/hooks";
+import { IsAuthorized, Users } from "lib/role-permissions";
 import { IOrganization } from "lib/types/organizations";
 import { IUser } from "lib/types/users";
 
@@ -91,16 +92,18 @@ const UsersPage = () => {
             onClear={() => setSearch("")}
           />
 
-          <div className="flex items-center gap-6">
-            <Button
-              eventName="Add User"
-              onClick={() => {
-                setModal("user");
-              }}
-            >
-              Add user
-            </Button>
-          </div>
+          {IsAuthorized([Users.CREATE]) && (
+            <div className="flex items-center gap-6">
+              <Button
+                eventName="Add User"
+                onClick={() => {
+                  setModal("user");
+                }}
+              >
+                Add user
+              </Button>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-wrap items-center gap-[18px]">

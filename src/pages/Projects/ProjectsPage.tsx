@@ -3,6 +3,7 @@ import projectService from "api/projects";
 import { useCallback, useMemo, useState } from "react";
 
 import { useDebounce, usePage, usePageTitle } from "lib/hooks";
+import { IsAuthorized, Projects } from "lib/role-permissions";
 import { IProject } from "lib/types/projects";
 
 import ProjectDialogue from "components/Dashboard/Projects/Dialogues/ProjectDialogue";
@@ -79,9 +80,11 @@ const ProjectsPage = () => {
             onClear={() => setSearch("")}
           />
 
-          <Button eventName="Add Project" onClick={() => setModal("project")}>
-            Add project
-          </Button>
+          {IsAuthorized([Projects.CREATE]) && (
+            <Button eventName="Add Project" onClick={() => setModal("project")}>
+              Add project
+            </Button>
+          )}
         </div>
 
         <div>

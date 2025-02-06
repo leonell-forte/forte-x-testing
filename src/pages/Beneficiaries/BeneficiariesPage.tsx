@@ -12,6 +12,11 @@ import {
   useExportBeneficiaries,
   useExportEvidenceMutation,
 } from "lib/mutations/beneficiaries";
+import {
+  Beneficiaries,
+  IsAuthorized,
+  Organizations,
+} from "lib/role-permissions";
 import { IBeneficiariesFilter } from "lib/types/beneficiaries";
 import { findLabelFromOptions } from "lib/utils";
 
@@ -95,6 +100,8 @@ const BeneficiariesPage = () => {
 
         filters: { type: "provider" },
       }),
+
+    enabled: IsAuthorized([Organizations.LIST]),
   });
 
   const projects: IOption[] = useMemo(
@@ -196,13 +203,7 @@ const BeneficiariesPage = () => {
           <div className="space-x-2.5">
             {selectedIds.length > 0 ? (
               <>
-                <Button
-                  onClick={() => setModal("update status")}
-                  buttonType="secondary"
-                  eventName="Update Beneficiary Status"
-                >
-                  Update status
-                </Button>
+                {IsAuthorized([Beneficiaries.UPDATE])}
                 <Button
                   onClick={handleDownloadEvidence}
                   buttonType="secondary"
@@ -220,23 +221,28 @@ const BeneficiariesPage = () => {
               </>
             ) : (
               <>
-                <Button
-                  eventName="Import Beneficiaries"
-                  buttonType="secondary"
-                  onClick={() => setModal("import")}
-                >
-                  Import beneficiaries
-                </Button>
-                <Button
-                  eventName="Add Beneficiary"
-                  onClick={() => {
-                    setModal("beneficiaries");
+                {IsAuthorized([Beneficiaries.IMPORT]) && (
+                  <Button
+                    eventName="Import Beneficiaries"
+                    buttonType="secondary"
+                    onClick={() => setModal("import")}
+                  >
+                    Import beneficiaries
+                  </Button>
+                )}
 
-                    setEditMode(true);
-                  }}
-                >
-                  Add beneficiary
-                </Button>
+                {IsAuthorized([Beneficiaries.CREATE]) && (
+                  <Button
+                    eventName="Add Beneficiary"
+                    onClick={() => {
+                      setModal("beneficiaries");
+
+                      setEditMode(true);
+                    }}
+                  >
+                    Add beneficiary
+                  </Button>
+                )}
               </>
             )}
           </div>
@@ -269,21 +275,23 @@ const BeneficiariesPage = () => {
               }
             />
 
-            <Dropdown
-              noHelperText
-              loading={orgLoading}
-              options={organizations}
-              placeholder="Provider"
-              className="max-w-[166px]"
-              value={findLabelFromOptions(
-                organizations,
+            {IsAuthorized([Organizations.LIST]) && (
+              <Dropdown
+                noHelperText
+                loading={orgLoading}
+                options={organizations}
+                placeholder="Provider"
+                className="max-w-[166px]"
+                value={findLabelFromOptions(
+                  organizations,
 
-                filters.provider as string
-              )}
-              handleSelect={(val) => {
-                setFilters((prev) => ({ ...prev, provider: val as string }));
-              }}
-            />
+                  filters.provider as string
+                )}
+                handleSelect={(val) => {
+                  setFilters((prev) => ({ ...prev, provider: val as string }));
+                }}
+              />
+            )}
 
             <Dropdown
               noHelperText

@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import pencil from "assets/images/icons/pencil.svg";
 
+import { IsAuthorized, Projects } from "lib/role-permissions";
 import { formatDate } from "lib/utils";
 
 import Button from "components/ui/button";
@@ -81,11 +82,13 @@ const Contracts = ({ projectId }: IProps) => {
         <div className="flex items-center justify-between">
           <p className="text-[24px] font-semibold">Contracts</p>
 
-          <div className="flex gap-2.5">
-            <Button onClick={() => setModal("contract")}>
-              Add new contract
-            </Button>
-          </div>
+          {IsAuthorized([Projects.UPDATE]) && (
+            <div className="flex gap-2.5">
+              <Button onClick={() => setModal("contract")}>
+                Add new contract
+              </Button>
+            </div>
+          )}
         </div>
 
         <Table.Container

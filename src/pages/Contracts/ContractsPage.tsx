@@ -7,6 +7,7 @@ import closeFilter from "assets/images/icons/close-filter.svg";
 
 import { CONTRACT_STATUS } from "lib/constants";
 import { useDebounce, usePage, usePageTitle } from "lib/hooks";
+import { Contracts, IsAuthorized } from "lib/role-permissions";
 import { IContract, IContractFilters, StatusType } from "lib/types/contracts";
 import { IProject } from "lib/types/projects";
 import { findLabelFromOptions } from "lib/utils";
@@ -124,14 +125,16 @@ const ContractsPage = () => {
             onClear={() => setSearch("")}
           />
 
-          <div className="flex items-center gap-6">
-            <Button
-              eventName="Add Contract"
-              onClick={() => setModal("contract")}
-            >
-              Add contract
-            </Button>
-          </div>
+          {IsAuthorized([Contracts.CREATE]) && (
+            <div className="flex items-center gap-6">
+              <Button
+                eventName="Add Contract"
+                onClick={() => setModal("contract")}
+              >
+                Add contract
+              </Button>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-wrap items-center gap-[10px]">

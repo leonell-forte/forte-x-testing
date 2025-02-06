@@ -2,6 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import contractService from "api/contract";
 import { useCallback, useEffect, useState } from "react";
 
+import { Contracts, IsAuthorized } from "lib/role-permissions";
+
 import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
 import Spinner from "components/ui/spinner/spinner";
 
@@ -44,7 +46,12 @@ const ContractDialogue = ({
   useEffect(() => {
     // determines if form is on edit mode or not. if id is present and contract has draft status, it should automatically have edit mode on.
     // if id is not present, edit mode should automatically be on for adding contract.
-    setOnEdit(id ? contractDetails?.status === "DRAFT" : true);
+    setOnEdit(
+      id
+        ? contractDetails?.status === "DRAFT" &&
+            IsAuthorized([Contracts.UPDATE])
+        : true
+    );
   }, [contractDetails?.status, id]);
 
   const renderComponent = (component: Component) => {

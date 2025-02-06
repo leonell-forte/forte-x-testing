@@ -16,6 +16,7 @@ import {
 } from "lib/constants";
 import { useAppDispatch } from "lib/hooks";
 import { useBeneficiaryMutation } from "lib/mutations/beneficiaries";
+import { Beneficiaries, IsAuthorized } from "lib/role-permissions";
 import { setSelectedData } from "lib/slice/evidence";
 import {
   DisabilityStatusEnum,
@@ -778,21 +779,23 @@ const BeneficiariesForm = ({
         </div>
       </div>
 
-      <div className="flex justify-end gap-4 pt-6">
-        {onEdit ? (
-          <>
-            <Button buttonType="secondary" onClick={() => setOnEdit(false)}>
-              Cancel
-            </Button>
+      {IsAuthorized([Beneficiaries.UPDATE]) && (
+        <div className="flex justify-end gap-4 pt-6">
+          {onEdit ? (
+            <>
+              <Button buttonType="secondary" onClick={() => setOnEdit(false)}>
+                Cancel
+              </Button>
 
-            <Button type="submit" loading={isPending}>
-              Save
-            </Button>
-          </>
-        ) : (
-          <Button onClick={() => setOnEdit(true)}>Edit details</Button>
-        )}
-      </div>
+              <Button type="submit" loading={isPending}>
+                Save
+              </Button>
+            </>
+          ) : (
+            <Button onClick={() => setOnEdit(true)}>Edit details</Button>
+          )}
+        </div>
+      )}
     </form>
   );
 };
