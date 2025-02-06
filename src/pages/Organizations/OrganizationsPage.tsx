@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import closeFilter from "assets/images/icons/close-filter.svg";
 
 import { REGIONS, STATUS, TYPES } from "lib/constants";
-import { useDebounce, usePageTitle } from "lib/hooks";
+import { useDebounce, usePage, usePageTitle } from "lib/hooks";
 import { IFilters, IOrganization } from "lib/types/organizations";
 
 import OrganizationDialogue from "components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
@@ -20,7 +20,7 @@ const OrganizationsPage = () => {
 
   const [modal, setModal] = useState<"org" | null>(null);
 
-  const [page, setPage] = useState(1);
+  const { page, setPage } = usePage();
 
   const [search, setSearch] = useState("");
 
