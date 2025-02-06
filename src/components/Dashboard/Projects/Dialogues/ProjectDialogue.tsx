@@ -80,7 +80,7 @@ const ProjectDialogue = ({
         message: "Description is a required field",
       });
     }
-  }, [errors, append]);
+  }, [errors, append, setError]);
 
   const handleAddOutcome = () => {
     append({ name: "", description: "" });
