@@ -177,7 +177,9 @@ export const useDeleteContractMutation = (
 
         title: `Failed deleting contract`,
 
-        message: err?.response?.data?.message,
+        message:
+          formatErrorMessage(err?.response?.data?.data?.[0]) ||
+          err?.response?.data?.message,
       });
 
       queryClient.setQueryData(contractQuery, context?.previousContracts);

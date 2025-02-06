@@ -132,12 +132,16 @@ export function formatErrorMessage(input: string) {
 
   // Split the string into parts using unescaped quotes
   const parts = unescapedInput.split('"');
+  if (parts.length < 2) return input; // Return original input if not formatted as expected
 
-  const quotedWord = parts[0]; // Extract the quoted word
-  const rest = parts[1]; // Extract the rest of the sentence
+  let quotedWord = parts[0]; // Extract the quoted word
+  let rest = parts[1]; // Extract the rest of the sentence
+
+  // Separate PascalCase words with spaces
+  quotedWord = quotedWord.replace(/([a-z])([A-Z])/g, "$1 $2");
 
   // Capitalize the quoted word and the rest of the sentence
-  const capitalizedQuotedWord = `${quotedWord.charAt(0).toUpperCase()}${quotedWord.slice(1)}`;
+  const capitalizedQuotedWord = `${quotedWord.charAt(0).toUpperCase()}${quotedWord.slice(1).toLowerCase()}`;
   const capitalizedRest = rest.charAt(0).toUpperCase() + rest.slice(1);
 
   return `${capitalizedQuotedWord} ${capitalizedRest}`;

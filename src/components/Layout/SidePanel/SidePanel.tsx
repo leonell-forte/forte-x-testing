@@ -9,14 +9,10 @@ import close from "assets/images/icons/close.svg";
 
 import { MENUS } from "lib/constants";
 import { useAppDispatch, useAppSelector, useScreenSize } from "lib/hooks";
+import { IsAuthorized } from "lib/role-permissions";
 import { setShowSidePanel } from "lib/slice/layout";
-import { RolesTypes } from "lib/types/common";
 
-interface IProps {
-  role: RolesTypes;
-}
-
-const SidePanel = ({ role }: IProps) => {
+const SidePanel = () => {
   const dispatch = useAppDispatch();
 
   const { isMobile } = useScreenSize();
@@ -36,8 +32,8 @@ const SidePanel = ({ role }: IProps) => {
   };
 
   const filteredMenu = useMemo(
-    () => MENUS.filter((item) => !item.restrictedRoles.includes(role)),
-    [role]
+    () => MENUS.filter((item) => IsAuthorized(item.permissions)),
+    []
   );
 
   return (

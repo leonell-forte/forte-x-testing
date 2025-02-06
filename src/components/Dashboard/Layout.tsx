@@ -37,7 +37,7 @@ const Layout = ({
           <Header user={user!} />
 
           <div className="flex flex-1 gap-4 px-5 pb-4">
-            <SidePanel role={user?.role || "user"} />
+            <SidePanel />
 
             <div className="relative w-full flex-1 overflow-hidden rounded-[10px] bg-white bg-opacity-[30%] p-[17px]">
               {children}

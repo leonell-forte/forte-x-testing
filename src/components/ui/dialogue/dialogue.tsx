@@ -47,7 +47,7 @@ const Dialogue = ({
       animate={{ opacity: 1 }}
       transition={{ type: "spring", duration: 0.4 }}
       className={classNames(
-        "fixed left-0 top-0 z-50 !mt-0 flex h-screen w-screen items-start justify-center overflow-scroll bg-[#011217] bg-opacity-[90%] px-4 py-12",
+        "fixed left-0 top-0 z-50 !mt-0 flex h-screen w-screen items-start justify-center overflow-y-auto bg-[#011217] bg-opacity-[90%] px-4 py-12",
 
         center && "items-center"
       )}

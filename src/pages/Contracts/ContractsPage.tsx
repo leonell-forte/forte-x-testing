@@ -7,6 +7,7 @@ import closeFilter from "assets/images/icons/close-filter.svg";
 
 import { CONTRACT_STATUS } from "lib/constants";
 import { useDebounce, usePage, usePageTitle } from "lib/hooks";
+import { Contracts, IsAuthorized } from "lib/role-permissions";
 import { IContract, IContractFilters, StatusType } from "lib/types/contracts";
 import { IProject } from "lib/types/projects";
 import { findLabelFromOptions } from "lib/utils";
@@ -124,14 +125,16 @@ const ContractsPage = () => {
             onClear={() => setSearch("")}
           />
 
-          <div className="flex items-center gap-6">
-            <Button
-              eventName="Add Contract"
-              onClick={() => setModal("contract")}
-            >
-              Add contract
-            </Button>
-          </div>
+          {IsAuthorized([Contracts.CREATE]) && (
+            <div className="flex items-center gap-6">
+              <Button
+                eventName="Add Contract"
+                onClick={() => setModal("contract")}
+              >
+                Add contract
+              </Button>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-wrap items-center gap-[10px]">
@@ -190,10 +193,10 @@ const ContractsPage = () => {
           </button>
         </div>
 
-        <div className="space-y-[18px]">
+        <div>
           <ContractsTable list={contracts} isLoading={isLoading} />
 
-          <div className="flex w-full items-center justify-end">
+          <div className="mt-[18px] flex w-full items-center justify-end">
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}

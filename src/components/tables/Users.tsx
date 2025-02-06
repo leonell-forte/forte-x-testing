@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 
 import pencil from "assets/images/icons/pencil.svg";
 
+import { IsAuthorized, Users } from "lib/role-permissions";
 import { IUser } from "lib/types/users";
 
 import UserDialogue from "components/Dashboard/Users/Dialogues/UserDialogue";
@@ -106,18 +107,20 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
                   </Table.Data>
 
                   <Table.Data>
-                    <div className="flex justify-end">
-                      <Button
-                        eventName="Edit User"
-                        id={id}
-                        buttonType="default"
-                        type="button"
-                        onClick={() => handleEditUser(item)}
-                        className="p-[3px]"
-                      >
-                        <img alt="pencil" src={pencil} />
-                      </Button>
-                    </div>
+                    {IsAuthorized([Users.UPDATE]) && (
+                      <div className="flex justify-end">
+                        <Button
+                          eventName="Edit User"
+                          id={id}
+                          buttonType="default"
+                          type="button"
+                          onClick={() => handleEditUser(item)}
+                          className="p-[3px]"
+                        >
+                          <img alt="pencil" src={pencil} />
+                        </Button>
+                      </div>
+                    )}
                   </Table.Data>
                 </Table.Row>
               );

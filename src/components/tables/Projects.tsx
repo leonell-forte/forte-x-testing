@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import bin from "assets/images/icons/bin.svg";
 import pencil from "assets/images/icons/pencil.svg";
 
+import { IsAuthorized, Projects } from "lib/role-permissions";
 import { IProject } from "lib/types/projects";
 
 import DeleteDialogue from "components/Dashboard/Projects/Dialogues/DeleteDialogue";
@@ -110,30 +111,34 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
 
                   <Table.Data className="pl-[14px]">
                     <div className="flex justify-end">
-                      <Button
-                        eventName="Edit Project"
-                        id={id.toString()}
-                        buttonType="default"
-                        type="button"
-                        onClick={() => handleEditUser(item)}
-                        className="p-[3px]"
-                      >
-                        <img alt="pencil" src={pencil} />
-                      </Button>
+                      {IsAuthorized([Projects.UPDATE]) && (
+                        <Button
+                          eventName="Edit Project"
+                          id={id.toString()}
+                          buttonType="default"
+                          type="button"
+                          onClick={() => handleEditUser(item)}
+                          className="p-[3px]"
+                        >
+                          <img alt="pencil" src={pencil} />
+                        </Button>
+                      )}
 
-                      <Button
-                        eventName="Edit User"
-                        id={id.toString()}
-                        buttonType="default"
-                        type="button"
-                        onClick={() => {
-                          setModal("delete");
-                          setSelectedProject(item);
-                        }}
-                        className="p-[3px]"
-                      >
-                        <img alt="pencil" src={bin} />
-                      </Button>
+                      {IsAuthorized([Projects.DELETE]) && (
+                        <Button
+                          eventName="Delete Project"
+                          id={id.toString()}
+                          buttonType="default"
+                          type="button"
+                          onClick={() => {
+                            setModal("delete");
+                            setSelectedProject(item);
+                          }}
+                          className="p-[3px]"
+                        >
+                          <img alt="pencil" src={bin} />
+                        </Button>
+                      )}
                     </div>
                   </Table.Data>
                 </Table.Row>

@@ -3,6 +3,7 @@ import projectService from "api/projects";
 import { useMemo, useState } from "react";
 
 import { useTagPartnerMutation } from "lib/mutations/projects";
+import { IsAuthorized, Projects } from "lib/role-permissions";
 import { IProjectOrganization } from "lib/types/projects";
 
 import Button from "components/ui/button";
@@ -79,13 +80,17 @@ const Partners = ({ projectId }: IProps) => {
         <div className="flex items-center justify-between">
           <p className="text-[24px] font-semibold">Partners</p>
 
-          <div className="flex gap-2.5">
-            <Button onClick={() => setModal("tag")} buttonType="secondary">
-              Tag existing partner
-            </Button>
+          {IsAuthorized([Projects.UPDATE]) && (
+            <div className="flex gap-2.5">
+              <Button onClick={() => setModal("tag")} buttonType="secondary">
+                Tag existing partner
+              </Button>
 
-            <Button onClick={() => setModal("partner")}>Add new partner</Button>
-          </div>
+              <Button onClick={() => setModal("partner")}>
+                Add new partner
+              </Button>
+            </div>
+          )}
         </div>
 
         <Table.Container isEmpty={!partners?.length} isLoading={isLoading}>

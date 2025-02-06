@@ -245,7 +245,7 @@ const UserDialogue = ({
                 return (
                   <Dropdown
                     value={
-                      ROLES.find((item) => field.value.includes(item.value))
+                      ROLES.find((item) => field.value?.includes(item.value))
                         ?.label
                     }
                     handleSelect={(val) => setValue("role", val as string)}

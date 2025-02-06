@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import projectService from "api/projects";
 
 import { useAlert, usePage } from "lib/hooks";
+import { formatErrorMessage } from "lib/utils";
 
 import { queryClient } from "components/QueryProvider";
 
@@ -83,7 +84,9 @@ export const useProjectMutation = (
 
         title: `Failed ${projectId ? "updating" : "adding"} project`,
 
-        message: err?.response?.data?.message,
+        message:
+          formatErrorMessage(err?.response?.data?.data?.[0]) ||
+          err?.response?.data?.message,
       });
 
       queryClient.setQueryData(projectQuery, context?.previousProjects);

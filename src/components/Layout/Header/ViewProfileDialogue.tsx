@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { ROLES } from "lib/constants";
+import { useProfile } from "lib/hooks";
 import useUserMutation from "lib/mutations/users";
 import { IOrganization } from "lib/types/organizations";
 import { UserFieldTypes } from "lib/types/users";
@@ -31,6 +32,8 @@ const ViewProfileDialogue = ({
 
   userId,
 }: IUserDialogueProps) => {
+  const currentUser = useProfile();
+
   const [onEdit, setOnEdit] = useState(false);
 
   const { data: userData, isLoading } = useQuery({
@@ -172,7 +175,7 @@ const ViewProfileDialogue = ({
               value={
                 organizations.find(
                   (item) => item.id?.toString() === watch("organizationId")
-                )?.registeredName
+                )?.registeredName || currentUser?.organization
               }
               options={organizations.map((item: IOrganization) => ({
                 label: item.registeredName,

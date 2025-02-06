@@ -2,6 +2,14 @@ import React from "react";
 
 import SearchResultsPage from "pages/Search/SearchResultsPage";
 
+import {
+  Beneficiaries,
+  Contracts,
+  Organizations,
+  Projects,
+  Users,
+} from "./role-permissions";
+
 const UsersPage = React.lazy(() => import("../pages/Users/UsersPage"));
 
 const ProjectsPage = React.lazy(() => import("../pages/Projects/ProjectsPage"));
@@ -39,7 +47,9 @@ const ComponentsPage = React.lazy(
 interface RouteConfig {
   link: string;
   Component: React.ComponentType;
-  restrictedRoles?: string[]; // Define this as an array of strings
+  permissions: Array<
+    Beneficiaries | Users | Organizations | Contracts | Projects
+  >;
 }
 
 export const ROUTES: RouteConfig[] = [
@@ -48,7 +58,7 @@ export const ROUTES: RouteConfig[] = [
 
     Component: UsersPage,
 
-    restrictedRoles: ["provider.user", "provider.user"],
+    permissions: [Users.NAVIGATE],
   },
 
   {
@@ -56,7 +66,7 @@ export const ROUTES: RouteConfig[] = [
 
     Component: ProjectsPage,
 
-    restrictedRoles: [],
+    permissions: [Projects.NAVIGATE],
   },
 
   {
@@ -64,7 +74,7 @@ export const ROUTES: RouteConfig[] = [
 
     Component: IndividualProjectsPage,
 
-    restrictedRoles: [],
+    permissions: [Projects.NAVIGATE],
   },
 
   {
@@ -72,12 +82,7 @@ export const ROUTES: RouteConfig[] = [
 
     Component: OrganizationsPage,
 
-    restrictedRoles: [
-      "provider.user",
-      "provider.owner",
-      "provider.admin",
-      "provider.readonly",
-    ],
+    permissions: [Organizations.NAVIGATE],
   },
 
   {
@@ -85,7 +90,7 @@ export const ROUTES: RouteConfig[] = [
 
     Component: ContractsPage,
 
-    restrictedRoles: [],
+    permissions: [Contracts.NAVIGATE],
   },
 
   {
@@ -93,7 +98,7 @@ export const ROUTES: RouteConfig[] = [
 
     Component: BeneficiariesPage,
 
-    restrictedRoles: [],
+    permissions: [Beneficiaries.NAVIGATE],
   },
 
   {
@@ -101,32 +106,42 @@ export const ROUTES: RouteConfig[] = [
 
     Component: SearchResultsPage,
 
-    restrictedRoles: [],
+    permissions: [],
   },
 
   {
     link: "*",
 
     Component: ErrorPage,
+
+    permissions: [],
   },
   {
     link: "/",
 
     Component: LoginPage,
+
+    permissions: [],
   },
   {
     link: "/signup",
 
     Component: SignupPage,
+
+    permissions: [],
   },
   {
     link: "/forgot-password",
 
     Component: ForgotPasswordPage,
+
+    permissions: [],
   },
   {
     link: "/components",
 
     Component: ComponentsPage,
+
+    permissions: [],
   },
 ];
