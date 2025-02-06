@@ -39,6 +39,8 @@ const ProjectDialogue = ({
   const {
     formState: { errors },
 
+    setError,
+
     handleSubmit,
 
     reset,
@@ -64,8 +66,21 @@ const ProjectDialogue = ({
   }, [project, reset]);
 
   useEffect(() => {
-    if (errors?.outcomes?.type === "too_small") {
+    console.log(errors);
+
+    if (
+      errors?.outcomes?.type === "too_small" ||
+      errors?.outcomes?.root?.type === "too_small"
+    ) {
       append({ name: "", description: "" });
+
+      setError("outcomes.0.name", {
+        message: "Outcome name is a required field",
+      });
+
+      setError("outcomes.0.description", {
+        message: "Description is a required field",
+      });
     }
   }, [errors, append]);
 
