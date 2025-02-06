@@ -28,7 +28,7 @@ const contractOutcomeSchema = z
     },
 
     {
-      message: "Threshold is required when perOutcome is true",
+      message: "Threshold is required when per outcome is not selected",
 
       path: ["threshold"], // Points to the 'threshold' field for the error
     }
@@ -87,7 +87,7 @@ export const contracts = {
   schema: z.object({
     id: z.number().optional(),
 
-    name: z.string().min(1, "Contract ame is a required field"),
+    name: z.string().min(1, "Contract name is a required field"),
 
     partyIds: z.array(z.number()).min(1, "Please select at least one"),
 

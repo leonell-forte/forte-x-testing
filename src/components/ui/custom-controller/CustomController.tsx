@@ -1,39 +1,58 @@
-import { useMemo } from "react";
+import { get, isEqual } from "lodash";
 import {
   Control,
   Controller,
   ControllerProps,
-  FieldValues,
   useFormContext,
 } from "react-hook-form";
 
 import Tooltip from "../tooltip/Tooltip";
 
-type CustomProps<T> = {
+type CustomProps = {
   name: string;
   control: Control<any>;
 } & Omit<ControllerProps, "control">;
 
-export default function CustomerController<T extends FieldValues>({
+type ObjectWithMessage = { message: string; [key: string]: any };
+
+function getFirstMessageProperty(
+  obj: Record<string, any>
+): ObjectWithMessage | null {
+  const findMessage = (o: Record<string, any>): ObjectWithMessage | null => {
+    if (typeof o !== "object" || o === null) return null;
+
+    if ("message" in o) return o as ObjectWithMessage;
+
+    for (const key in o) {
+      const result = findMessage(o[key]);
+      if (result) return result;
+    }
+
+    return null;
+  };
+
+  return findMessage(obj);
+}
+
+export default function CustomerController({
   name,
   control,
   ...props
-}: CustomProps<T>) {
+}: CustomProps) {
   const {
     formState: { errors },
   } = useFormContext();
 
-  const error = errors[name]?.message as string;
+  const err = get(errors, name);
+  const result = getFirstMessageProperty(errors);
 
-  const isFirstIndex = useMemo(() => {
-    const mapper = Object.keys(errors);
-    return mapper.findIndex((x) => x === name) === 0;
-  }, [errors, name]);
-
-  if (name.includes("outcomeRates")) console.log(errors);
+  const isFirstIndex = isEqual(err, result);
 
   return (
-    <Tooltip content={error} open={Boolean(error) && isFirstIndex}>
+    <Tooltip
+      content={result?.message}
+      open={Boolean(result?.message) && isFirstIndex}
+    >
       <div className="w-full">
         <Controller control={control} {...props} name={name} />
       </div>
