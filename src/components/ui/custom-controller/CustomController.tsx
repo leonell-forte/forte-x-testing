@@ -30,6 +30,8 @@ export default function CustomerController<T extends FieldValues>({
     return mapper.findIndex((x) => x === name) === 0;
   }, [errors, name]);
 
+  if (name.includes("outcomeRates")) console.log(errors);
+
   return (
     <Tooltip content={error} open={Boolean(error) && isFirstIndex}>
       <div className="w-full">

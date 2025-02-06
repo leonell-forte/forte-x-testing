@@ -65,6 +65,9 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
           }}
           type={type === "password" ? (show ? "text" : "password") : type}
           sx={{
+            "& .Mui-disabled": {
+              cursor: "not-allowed",
+            },
             "& .MuiInputBase-input": {
               ...(type === "password" && {
                 paddingRight: "50px",

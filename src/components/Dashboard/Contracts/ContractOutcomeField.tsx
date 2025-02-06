@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import projectService from "api/projects";
 import { useMemo } from "react";
-import { Control, Controller } from "react-hook-form";
+import { Control } from "react-hook-form";
 
 import add from "assets/images/icons/add.svg";
 import minus from "assets/images/icons/minus.svg";
@@ -9,6 +9,7 @@ import minus from "assets/images/icons/minus.svg";
 import { ContractFieldValues, RateEnum } from "lib/types/contracts";
 import { findLabelFromOptions } from "lib/utils";
 
+import Controller from "components/ui/custom-controller/CustomController";
 import Dropdown, { IOption } from "components/ui/dropdown";
 import Input from "components/ui/input";
 import RadioGroup from "components/ui/radio-group";
@@ -73,7 +74,7 @@ const ContractOutcomeField = ({
   );
 
   return (
-    <div className="space-y-1">
+    <div className="space-y-4">
       <div className="flex gap-4">
         <label htmlFor="" className="min-w-[120px] pt-4">
           Outcome {index + 1}
@@ -95,8 +96,6 @@ const ContractOutcomeField = ({
                 }}
                 options={outcomes}
                 placeholder="Outcome"
-                error={!!error?.message}
-                helperText={error?.message}
               />
             );
           }}
@@ -126,7 +125,7 @@ const ContractOutcomeField = ({
           Rate
         </label>
 
-        <div className="w-full">
+        <div className="w-full space-y-4">
           <Controller
             name={`outcomeRates.${index}.rate`}
             control={control}
@@ -140,8 +139,6 @@ const ContractOutcomeField = ({
                   disabled={disabled}
                   placeholder="Rate"
                   type="number"
-                  error={!!error?.message}
-                  helperText={error?.message}
                 />
               );
             }}
@@ -166,7 +163,7 @@ const ContractOutcomeField = ({
               }}
             />
 
-            <div className="w-full translate-y-7">
+            <div className="w-full">
               <Controller
                 name={`outcomeRates.${index}.threshold`}
                 control={control}
@@ -177,8 +174,6 @@ const ContractOutcomeField = ({
                     <Input
                       {...field}
                       disabled={perOutcome}
-                      error={!!error}
-                      helperText={error?.message}
                       placeholder="Threshold"
                     />
                   );

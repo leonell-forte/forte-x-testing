@@ -87,7 +87,9 @@ export const contracts = {
   schema: z.object({
     id: z.number().optional(),
 
-    name: z.string().min(1, "Name is a required field"),
+    name: z.string().min(1, "Contract ame is a required field"),
+
+    partyIds: z.array(z.number()).min(1, "Please select at least one"),
 
     projectId: z.number().min(1, { message: "Project is a required field" }),
 
@@ -96,8 +98,6 @@ export const contracts = {
     }),
 
     documentId: z.number().min(1, { message: "Document is a required field" }),
-
-    partyIds: z.array(z.number()).min(1, "Party is a required field"),
 
     status: z.enum(["DRAFT", "SIGNED", "COMPLETED", "CANCELLED", ""]),
 

@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import organizationService from "api/organization";
 import projectService from "api/projects";
 import { useEffect, useMemo, useState } from "react";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 
 import { CONTRACT_STATUS } from "lib/constants";
 import useContractMutation from "lib/mutations/contracts";
@@ -19,9 +19,11 @@ import { findLabelFromOptions, formatDate } from "lib/utils";
 import { contracts } from "lib/validators/contracts";
 
 import Button from "components/ui/button";
+import Controller from "components/ui/custom-controller/CustomController";
 import DatePicker from "components/ui/date-picker";
 import Dropdown, { IOption } from "components/ui/dropdown";
 import FileInput from "components/ui/file-input";
+import { Form } from "components/ui/form/Form";
 import Input from "components/ui/input";
 
 import ContractOutcomeField from "../ContractOutcomeField";
@@ -55,6 +57,16 @@ const ContractForm = ({
 }: IContractForm) => {
   const [isAmmending, setIsAmmending] = useState(false);
 
+  const form = useForm<ContractFieldValues>({
+    resolver: zodResolver(contracts.schema),
+
+    defaultValues: contracts.defaultValues({
+      contract: contractDetails,
+
+      projectId,
+    }),
+  });
+
   const {
     watch,
 
@@ -69,15 +81,7 @@ const ContractForm = ({
     reset,
 
     formState: { errors },
-  } = useForm<ContractFieldValues>({
-    resolver: zodResolver(contracts.schema),
-
-    defaultValues: contracts.defaultValues({
-      contract: contractDetails,
-
-      projectId,
-    }),
-  });
+  } = form;
 
   // sets contract form default values
   useEffect(() => {
@@ -164,7 +168,7 @@ const ContractForm = ({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-1">
+    <Form form={form} onSubmit={onSubmit} className="space-y-1">
       {isAmmending ? (
         <div className="space-y-1">
           <label>Please upload ammended contract</label>
@@ -180,14 +184,12 @@ const ContractForm = ({
                   setError("documentId", { message: "" });
                 }}
                 placeholder="Document"
-                error={!!errors.documentId?.message}
-                helperText={errors.documentId?.message}
               />
             )}
           />
         </div>
       ) : (
-        <>
+        <div className="space-y-4">
           <div className="flex items-start gap-4">
             <label htmlFor="" className="w-[120px] flex-shrink-0 pt-3">
               Contract name
@@ -201,8 +203,6 @@ const ContractForm = ({
                   {...field}
                   disabled={!onEdit || isSigned}
                   placeholder="Contract name"
-                  error={!!errors.name?.message}
-                  helperText={errors.name?.message}
                 />
               )}
             />
@@ -223,7 +223,7 @@ const ContractForm = ({
                     enableSearch
                     loading={orgLoading}
                     showAsTags
-                    value={field.value.map((item) => item.toString())}
+                    value={field.value.map((item: number) => item.toString())}
                     options={organizations}
                     handleSelect={(val) => {
                       setValue(
@@ -233,8 +233,6 @@ const ContractForm = ({
 
                       setError("partyIds", { message: "" });
                     }}
-                    error={!!errors.partyIds?.message}
-                    helperText={errors.partyIds?.message}
                     isMultiSelect
                     placeholder="Parties"
                   />
@@ -268,8 +266,6 @@ const ContractForm = ({
                       (item) => item.value !== "completed"
                     )}
                     placeholder="Status"
-                    error={!!errors.status?.message}
-                    helperText={errors.status?.message}
                   />
                 );
               }}
@@ -314,8 +310,6 @@ const ContractForm = ({
                       setError("projectId", { message: "" });
                     }}
                     placeholder="Project"
-                    error={!!errors.projectId?.message}
-                    helperText={errors.projectId?.message}
                   />
                 );
               }}
@@ -338,8 +332,6 @@ const ContractForm = ({
                   disabled={!onEdit}
                   placeholder="Number of beneficiaries"
                   type="number"
-                  error={!!errors.targetNoOfBenefeciaries?.message}
-                  helperText={errors.targetNoOfBenefeciaries?.message}
                 />
               )}
             />
@@ -364,8 +356,6 @@ const ContractForm = ({
                     setError("documentId", { message: "" });
                   }}
                   placeholder="Document"
-                  error={!!errors.documentId?.message}
-                  helperText={errors.documentId?.message}
                 />
               )}
             />
@@ -391,8 +381,6 @@ const ContractForm = ({
 
                         setError("startDate", { message: "" });
                       }}
-                      error={!!errors.startDate?.message}
-                      helperText={errors.startDate?.message}
                     />
                   );
                 }}
@@ -417,8 +405,6 @@ const ContractForm = ({
 
                       setError("endDate", { message: "" });
                     }}
-                    error={!!errors.endDate?.message}
-                    helperText={errors.endDate?.message}
                   />
                 )}
               />
@@ -481,7 +467,7 @@ const ContractForm = ({
               );
             })}
           </div>
-        </>
+        </div>
       )}
 
       <div className="!mt-10 flex items-center justify-between">
@@ -545,7 +531,7 @@ const ContractForm = ({
             </div>
           ))}
       </div>
-    </form>
+    </Form>
   );
 };
 
