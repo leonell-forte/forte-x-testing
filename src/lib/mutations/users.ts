@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import userService from "api/users";
 
 import { IUser, UserFieldTypes } from "lib/types/users";
+import { formatErrorMessage } from "lib/utils";
 
 import { queryClient } from "components/QueryProvider";
 
@@ -74,7 +75,9 @@ const useUserMutation = ({
 
         title: `Failed ${userId ? "updating" : "adding"} user`,
 
-        message: err?.response?.data?.message,
+        message:
+          formatErrorMessage(err?.response?.data?.data?.[0]) ||
+          err?.response?.data?.message,
       });
 
       queryClient.setQueryData(
