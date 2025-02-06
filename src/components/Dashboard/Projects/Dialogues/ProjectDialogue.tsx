@@ -66,8 +66,6 @@ const ProjectDialogue = ({
   }, [project, reset]);
 
   useEffect(() => {
-    console.log(errors);
-
     if (
       errors?.outcomes?.type === "too_small" ||
       errors?.outcomes?.root?.type === "too_small"
