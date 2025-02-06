@@ -76,11 +76,7 @@ const ContractForm = ({
 
     setError,
 
-    handleSubmit,
-
     reset,
-
-    formState: { errors },
   } = form;
 
   // sets contract form default values

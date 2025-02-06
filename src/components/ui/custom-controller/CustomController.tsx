@@ -34,7 +34,7 @@ function getFirstMessageProperty(
   return findMessage(obj);
 }
 
-export default function CustomerController({
+export default function CustomController({
   name,
   control,
   ...props
