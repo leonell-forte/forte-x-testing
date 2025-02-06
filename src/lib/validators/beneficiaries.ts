@@ -21,7 +21,7 @@ export const beneficiaries = {
 
       email: beneficiary?.email || "",
 
-      phone: beneficiary?.phoneNumber || "",
+      phone: beneficiary?.phone || "",
 
       riskLevel: (beneficiary?.riskLevel.toLowerCase() as RiskLevelEnum) || "",
 
