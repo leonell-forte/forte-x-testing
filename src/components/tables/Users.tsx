@@ -80,6 +80,10 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
                 organization,
               } = item;
 
+              const formattedRole = (role?.split(".")?.[1] || role)
+                ?.split("-")
+                .join(" ");
+
               return (
                 <Table.Row key={bodyIndex}>
                   <Table.Data>
@@ -99,7 +103,9 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
                   </Table.Data>
 
                   <Table.Data>
-                    <p className="w-[80px] truncate capitalize">{role}</p>
+                    <p className="w-[80px] truncate capitalize">
+                      {formattedRole}
+                    </p>
                   </Table.Data>
 
                   <Table.Data>
