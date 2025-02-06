@@ -54,15 +54,30 @@ const ROLES: Record<
     ...Object.values(Contracts),
     ...Object.values(Projects),
   ],
-  "provider.owner": [],
-  "provider.admin": [],
+  "provider.owner": [
+    ...Object.values(Beneficiaries),
+    ...Object.values(Contracts),
+    ...Object.values(Projects),
+    ...Object.values(Users),
+  ],
+  "provider.admin": [
+    ...Object.values(Beneficiaries),
+    ...Object.values(Contracts),
+    ...Object.values(Projects),
+    ...Object.values(Users),
+  ],
   "provider.user": [
     Beneficiaries.NAVIGATE,
     Projects.NAVIGATE,
     Contracts.NAVIGATE,
     Users.NAVIGATE,
   ],
-  "read-only": [Beneficiaries.NAVIGATE, Projects.NAVIGATE, Contracts.NAVIGATE],
+  "read-only": [
+    Beneficiaries.NAVIGATE,
+    Projects.NAVIGATE,
+    Contracts.NAVIGATE,
+    Organizations.LIST,
+  ],
 };
 
 type Permission = (typeof ROLES)[UserRoleType] extends (infer U)[] ? U : never;
@@ -73,5 +88,5 @@ export const isAuthorized = (
 ): boolean => {
   if (!role) return false;
 
-  return ROLES[role].some((item: Permission) => permissions.includes(item));
+  return ROLES?.[role]?.some((item: Permission) => permissions.includes(item));
 };
