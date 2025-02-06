@@ -7,6 +7,7 @@ export type UserRoleType =
   | "provider.admin"
   | "provider.owner"
   | "provider.read-only"
+  | "funder.owner"
   | "owner"
   | "admin";
 
