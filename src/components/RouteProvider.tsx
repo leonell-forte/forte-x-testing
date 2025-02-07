@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import authService from "api/auth";
-import { Suspense, useEffect } from "react";
+import { Suspense } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
 import { IsAuthorized } from "lib/role-permissions";

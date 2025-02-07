@@ -157,6 +157,6 @@ export const ROUTES: RouteConfig[] = [
   },
 ];
 
-export const publicRoutes = ROUTES.map((route) => {
-  if (route.public) return route.link;
-}).filter(Boolean);
+export const publicRoutes = ROUTES.filter((route) => route.public).map(
+  (route) => route.link
+);
