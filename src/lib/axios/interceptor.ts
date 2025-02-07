@@ -1,5 +1,7 @@
 import axios from "axios";
 
+import { publicRoutes } from "lib/routes";
+
 import { cookie } from "../hooks";
 
 export const api = axios.create({
@@ -41,7 +43,11 @@ api.interceptors.response.use(
   function (error) {
     console.log(error);
 
-    if (error.status === 401 && window.location.pathname !== "/") {
+    if (
+      error.status === 401 &&
+      !publicRoutes.includes(window.location.pathname)
+      // prevents from redirecting to login page if using a public route
+    ) {
       window.location.href = "/";
     }
 
