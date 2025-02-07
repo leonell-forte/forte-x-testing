@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import userService from "api/users";
 import { useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import { ROLES } from "lib/constants";
 import useUserMutation from "lib/mutations/users";
@@ -12,8 +12,10 @@ import { UserFieldTypes } from "lib/types/users";
 import { users } from "lib/validators/users";
 
 import Button from "components/ui/button";
+import Controller from "components/ui/custom-controller/CustomController";
 import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
 import Dropdown from "components/ui/dropdown";
+import { Form } from "components/ui/form/Form";
 import Input from "components/ui/input";
 import Spinner from "components/ui/spinner/spinner";
 
@@ -43,19 +45,17 @@ const UserDialogue = ({
     enabled: !!userId,
   });
 
-  const {
-    handleSubmit,
-
-    setValue,
-
-    reset,
-
-    control,
-  } = useForm<UserFieldTypes>({
+  const form = useForm<UserFieldTypes>({
     resolver: zodResolver(users.schema),
 
     defaultValues: users.defaultValues(),
   });
+
+  const {
+    reset,
+
+    control,
+  } = form;
 
   useEffect(() => {
     // sets default value of the form
@@ -96,7 +96,7 @@ const UserDialogue = ({
           <Spinner />
         </div>
       ) : (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-2.5">
+        <Form form={form} onSubmit={onSubmit} className="space-y-4">
           <div className="flex items-start">
             <label htmlFor="" className="w-[140px] pt-3">
               Email
@@ -105,18 +105,9 @@ const UserDialogue = ({
             <Controller
               name="email"
               control={control}
-              render={({ field, fieldState }) => {
-                const { error } = fieldState;
-
+              render={({ field }) => {
                 return (
-                  <Input
-                    {...field}
-                    error={!!error?.message}
-                    helperText={error?.message}
-                    type="email"
-                    autoComplete="email"
-                    placeholder="Email"
-                  />
+                  <Input {...field} autoComplete="email" placeholder="Email" />
                 );
               }}
             />
@@ -130,14 +121,10 @@ const UserDialogue = ({
             <Controller
               name="firstName"
               control={control}
-              render={({ field, fieldState }) => {
-                const { error } = fieldState;
-
+              render={({ field }) => {
                 return (
                   <Input
                     {...field}
-                    error={!!error?.message}
-                    helperText={error?.message}
                     autoComplete="given-name"
                     placeholder="First name"
                   />
@@ -154,14 +141,10 @@ const UserDialogue = ({
             <Controller
               name="lastName"
               control={control}
-              render={({ field, fieldState }) => {
-                const { error } = fieldState;
-
+              render={({ field }) => {
                 return (
                   <Input
                     {...field}
-                    error={!!error?.message}
-                    helperText={error?.message}
                     autoComplete="family-name"
                     placeholder="Last name"
                   />
@@ -178,15 +161,11 @@ const UserDialogue = ({
             <Controller
               name="phoneNumber"
               control={control}
-              render={({ field, fieldState }) => {
-                const { error } = fieldState;
-
+              render={({ field }) => {
                 return (
                   <Input
                     {...field}
                     phoneNUmber
-                    error={!!error?.message}
-                    helperText={error?.message}
                     autoComplete="tel"
                     placeholder="Phone number"
                   />
@@ -203,9 +182,7 @@ const UserDialogue = ({
             <Controller
               name="organizationId"
               control={control}
-              render={({ field, fieldState }) => {
-                const { error } = fieldState;
-
+              render={({ field }) => {
                 return (
                   <Dropdown
                     enableSearch
@@ -216,15 +193,10 @@ const UserDialogue = ({
                     }
                     options={organizations.map((item: IOrganization) => ({
                       label: item.registeredName,
-                      value: item.id!.toString(),
+                      value: String(item.id),
                     }))}
-                    handleSelect={(val) =>
-                      setValue("organizationId", val.toString())
-                    }
+                    handleSelect={(val) => field.onChange(val)}
                     placeholder="Organization"
-                    error={!!error?.message}
-                    helperText={error?.message}
-                    readOnly
                   />
                 );
               }}
@@ -239,20 +211,16 @@ const UserDialogue = ({
             <Controller
               name="role"
               control={control}
-              render={({ field, fieldState }) => {
-                const { error } = fieldState;
-
+              render={({ field }) => {
                 return (
                   <Dropdown
                     value={
                       ROLES.find((item) => field.value?.includes(item.value))
                         ?.label
                     }
-                    handleSelect={(val) => setValue("role", val as string)}
+                    handleSelect={(val) => field.onChange(val)}
                     options={ROLES}
                     placeholder="Role"
-                    error={!!error?.message}
-                    helperText={error?.message}
                     disabled={Number(profile?.id) === Number(userData?.id)}
                   />
                 );
@@ -269,7 +237,7 @@ const UserDialogue = ({
               Save
             </Button>
           </div>
-        </form>
+        </Form>
       )}
     </Dialogue>
   );

@@ -12,15 +12,10 @@ export const login = {
   },
 
   schema: z.object({
-    email: z.string().email("Incorrect email or password"),
+    email: z.string().min(1, "Please enter your email").email("Invalid email"),
 
-    password: z
-      .string()
-      .min(8, "Incorrect email or password")
-      .regex(/[a-z]/, "Incorrect email or password")
-      .regex(/[A-Z]/, "Incorrect email or password")
-      .regex(/\d/, "Incorrect email or password")
-      .regex(/[!@#$%^&*(),.?":{}|<>]/, "Incorrect email or password"),
+    password: z.string().min(1, "Please enter your password"),
+
     remember: z.boolean(),
   }),
 };
@@ -76,9 +71,12 @@ export const signup = {
 
       lastName: z.string().min(1, "Last name is a required field"),
 
-      email: z.string().email({ message: "Invalid email address" }),
+      email: z
+        .string()
+        .min(1, "Email is a required field")
+        .email("Invalid email"),
 
-      phoneNumber: z.string().min(1, "Invalid phone number"),
+      phoneNumber: z.string().min(1, "Phone number is a required field"),
 
       password: z
         .string()

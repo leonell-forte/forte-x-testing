@@ -48,6 +48,8 @@ export default function CustomController({
 
   const isFirstIndex = isEqual(err, result);
 
+  console.log(errors);
+
   return (
     <Tooltip
       content={result?.message}
