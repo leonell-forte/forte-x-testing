@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { useLocation } from "react-router-dom";
 
+import { publicRoutes } from "lib/routes";
 import { ProfileType } from "lib/types/profile";
 
 import { ScrollArea } from "components/ui/scroll-area/ScrollArea";
@@ -18,8 +19,6 @@ const Layout = ({
   user?: ProfileType;
   isLoading?: boolean;
 }) => {
-  const publicRoutes = ["/", "/signup", "/forgot-password"];
-
   const { pathname } = useLocation();
 
   if (isLoading) {

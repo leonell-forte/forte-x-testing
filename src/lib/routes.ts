@@ -44,12 +44,13 @@ const ComponentsPage = React.lazy(
   () => import("../pages/Components/ComponentsPage")
 );
 
-interface RouteConfig {
+export interface RouteConfig {
   link: string;
   Component: React.ComponentType;
   permissions: Array<
     Beneficiaries | Users | Organizations | Contracts | Projects
   >;
+  public?: boolean;
 }
 
 export const ROUTES: RouteConfig[] = [
@@ -115,6 +116,8 @@ export const ROUTES: RouteConfig[] = [
     Component: ErrorPage,
 
     permissions: [],
+
+    public: true,
   },
   {
     link: "/",
@@ -122,6 +125,8 @@ export const ROUTES: RouteConfig[] = [
     Component: LoginPage,
 
     permissions: [],
+
+    public: true,
   },
   {
     link: "/signup",
@@ -129,6 +134,8 @@ export const ROUTES: RouteConfig[] = [
     Component: SignupPage,
 
     permissions: [],
+
+    public: true,
   },
   {
     link: "/forgot-password",
@@ -136,6 +143,8 @@ export const ROUTES: RouteConfig[] = [
     Component: ForgotPasswordPage,
 
     permissions: [],
+
+    public: true,
   },
   {
     link: "/components",
@@ -143,5 +152,11 @@ export const ROUTES: RouteConfig[] = [
     Component: ComponentsPage,
 
     permissions: [],
+
+    public: true,
   },
 ];
+
+export const publicRoutes = ROUTES.filter((route) => route.public).map(
+  (route) => route.link
+);

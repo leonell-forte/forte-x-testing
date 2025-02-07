@@ -4,7 +4,6 @@ import { z } from "zod";
 import { UserData } from "lib/types/auth";
 import { ProfileType } from "lib/types/profile";
 import { LoginReturnType } from "lib/types/users";
-import { removeFirstTwoAndEquals } from "lib/utils";
 
 import { api } from "../lib/axios/interceptor";
 import { cookie } from "../lib/hooks";
@@ -23,7 +22,7 @@ class AuthService {
 
       hasAgreedToTerms: body.agreeTerms ? true : false,
 
-      invitationCode: removeFirstTwoAndEquals(code),
+      invitationCode: code,
     };
 
     delete data.agreeTerms;
@@ -76,9 +75,7 @@ class AuthService {
   }
 
   async getProfileByInvitation(code: string): Promise<UserData> {
-    const response = await api.get(
-      `/authentication/profile/${removeFirstTwoAndEquals(code)}`
-    );
+    const response = await api.get(`/authentication/profile/${code}`);
 
     return response.data.data;
   }
