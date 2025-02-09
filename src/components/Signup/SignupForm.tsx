@@ -221,7 +221,12 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
 
             <hr className="w-full" />
           </div>{" "}
-          <Button type="button" fullWidth buttonType="secondary">
+          <Button
+            type="button"
+            fullWidth
+            buttonType="secondary"
+            onClick={() => authService.googleSignup(code)}
+          >
             Continue with Google{" "}
           </Button>
         </div>
