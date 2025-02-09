@@ -49,8 +49,6 @@ const ProjectDialogue = ({
 
     setError,
 
-    handleSubmit,
-
     reset,
 
     control,
