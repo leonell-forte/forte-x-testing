@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import authService from "api/auth";
 import { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Link, useSearchParams } from "react-router-dom";
 import { z } from "zod";
 
@@ -13,6 +13,8 @@ import { cookie, useAlert } from "lib/hooks";
 import { UserRoleType } from "lib/types/users";
 import { signup } from "lib/validators/auth";
 
+import Controller from "components/ui/custom-controller/CustomController";
+import { Form } from "components/ui/form/Form";
 import Spinner from "components/ui/spinner/spinner";
 
 import { ILoginProps } from "../Login/types";
@@ -33,21 +35,21 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
     enabled: !!code,
   });
 
+  const form = useForm<z.infer<typeof signup.schema>>({
+    resolver: zodResolver(signup.schema),
+
+    defaultValues: signup.defaultValues(),
+  });
+
   const {
     setValue,
-
-    handleSubmit,
 
     formState: { errors },
 
     reset,
 
     control,
-  } = useForm<z.infer<typeof signup.schema>>({
-    resolver: zodResolver(signup.schema),
-
-    defaultValues: signup.defaultValues(),
-  });
+  } = form;
 
   useEffect(() => {
     if (data) {
@@ -94,19 +96,13 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
   }
   return (
     <div className="w-full">
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-5">
-        <div className="flex w-full flex-col gap-1">
+      <Form form={form} onSubmit={onSubmit} className="w-full space-y-5">
+        <div className="flex w-full flex-col gap-4">
           <Controller
             name="firstName"
             control={control}
             render={({ field }) => (
-              <Input
-                {...field}
-                autoComplete="given-name"
-                label="First name"
-                error={!!errors.firstName?.message}
-                helperText={errors.firstName?.message}
-              />
+              <Input {...field} autoComplete="given-name" label="First name" />
             )}
           />
 
@@ -114,13 +110,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
             name="lastName"
             control={control}
             render={({ field }) => (
-              <Input
-                {...field}
-                autoComplete="family-name"
-                label="Last name"
-                error={!!errors.lastName?.message}
-                helperText={errors.lastName?.message}
-              />
+              <Input {...field} autoComplete="family-name" label="Last name" />
             )}
           />
 
@@ -134,8 +124,6 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
                 disabled={!!data}
                 type="email"
                 label="Email"
-                error={!!errors.email?.message}
-                helperText={errors.email?.message}
               />
             )}
           />
@@ -144,13 +132,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
             name="phoneNumber"
             control={control}
             render={({ field }) => (
-              <Input
-                {...field}
-                autoComplete="tel"
-                label="Phone number"
-                error={!!errors.phoneNumber?.message}
-                helperText={errors.phoneNumber?.message}
-              />
+              <Input {...field} autoComplete="tel" label="Phone number" />
             )}
           />
 
@@ -158,13 +140,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
             name="password"
             control={control}
             render={({ field }) => (
-              <Input
-                {...field}
-                label="Password"
-                type="password"
-                error={!!errors.password?.message}
-                helperText={errors.password?.message}
-              />
+              <Input {...field} label="Password" type="password" />
             )}
           />
 
@@ -172,13 +148,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
             name="confirmPassword"
             control={control}
             render={({ field }) => (
-              <Input
-                {...field}
-                label="Re-enter password"
-                type="password"
-                error={!!errors.confirmPassword?.message}
-                helperText={errors.confirmPassword?.message}
-              />
+              <Input {...field} label="Re-enter password" type="password" />
             )}
           />
 
@@ -237,7 +207,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
             Log in
           </Link>
         </p>
-      </form>
+      </Form>
     </div>
   );
 };

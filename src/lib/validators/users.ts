@@ -15,7 +15,7 @@ export const users = {
 
       organizationId: user?.organization?.toString() || "",
 
-      role: user?.role,
+      role: user?.role || "",
     };
 
     if (user) {
@@ -27,11 +27,14 @@ export const users = {
   schema: z.object({
     id: z.string().optional(),
 
+    email: z
+      .string()
+      .min(1, "Email is required")
+      .email({ message: "Invalid email" }),
+
     firstName: z.string().min(1, "First name is a required field"),
 
     lastName: z.string().min(1, "Last name is a required field"),
-
-    email: z.string().email(),
 
     phoneNumber: z.string().min(1, "Phone number is a required field"),
 

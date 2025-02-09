@@ -1,7 +1,6 @@
-import { Controller } from "react-hook-form";
-
 import minus from "assets/images/icons/minus.svg";
 
+import Controller from "components/ui/custom-controller/CustomController";
 import Input from "components/ui/input";
 
 interface IOutcomeFieldProps {
@@ -43,12 +42,7 @@ const OutcomeField = ({
             name={`outcomes.${index}.name`}
             control={control}
             render={({ field }) => (
-              <Input
-                {...field}
-                placeholder="Enter outcome name"
-                error={!!nameError}
-                helperText={nameError}
-              />
+              <Input {...field} placeholder="Enter outcome name" />
             )}
           />
 
@@ -81,8 +75,6 @@ const OutcomeField = ({
               {...field}
               multiline
               placeholder="Enter outcome description"
-              error={!!descriptionError}
-              helperText={descriptionError}
             />
           )}
         />

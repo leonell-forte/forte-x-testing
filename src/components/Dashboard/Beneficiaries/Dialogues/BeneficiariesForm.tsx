@@ -4,7 +4,7 @@ import beneficiariesService from "api/beneficiaries";
 import contractService from "api/contract";
 import organizationService from "api/organization";
 import { useEffect, useMemo, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import {
   BENEFICIARY_STATUS,
@@ -27,8 +27,10 @@ import { findLabelFromOptions } from "lib/utils";
 import { beneficiaries } from "lib/validators/beneficiaries";
 
 import Button from "components/ui/button";
+import Controller from "components/ui/custom-controller/CustomController";
 import DatePicker from "components/ui/date-picker";
 import Dropdown, { IOption } from "components/ui/dropdown";
+import { Form } from "components/ui/form/Form";
 import Input from "components/ui/input";
 
 interface IProps {
@@ -54,12 +56,14 @@ const BeneficiariesForm = ({
 
   const [onEdit, setOnEdit] = useState(editMode);
 
+  const form = useForm<IBeneficiariesFieldValues>({
+    resolver: zodResolver(beneficiaries.schema),
+
+    defaultValues: beneficiaries.defaultValues({ projectId }),
+  });
+
   const {
     control,
-
-    handleSubmit,
-
-    formState: { errors },
 
     setValue,
 
@@ -68,11 +72,7 @@ const BeneficiariesForm = ({
     watch,
 
     reset,
-  } = useForm<IBeneficiariesFieldValues>({
-    resolver: zodResolver(beneficiaries.schema),
-
-    defaultValues: beneficiaries.defaultValues({ projectId }),
-  });
+  } = form;
 
   const { data: beneficiaryData } = useQuery({
     queryKey: ["specific-beneficiary", id],
@@ -186,9 +186,9 @@ const BeneficiariesForm = ({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="">
+    <Form form={form} onSubmit={onSubmit}>
       <div className="space-y-6">
-        <div className="grid grid-cols-1 gap-x-6 gap-y-1 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-2">
           <div className="flex items-start">
             <label htmlFor="" className="min-w-[140px] pt-3">
               First name
@@ -198,13 +198,7 @@ const BeneficiariesForm = ({
               control={control}
               name="firstName"
               render={({ field }) => (
-                <Input
-                  {...field}
-                  disabled={!onEdit}
-                  placeholder="First name"
-                  error={!!errors.firstName?.message}
-                  helperText={errors.firstName?.message}
-                />
+                <Input {...field} disabled={!onEdit} placeholder="First name" />
               )}
             />
           </div>
@@ -218,13 +212,7 @@ const BeneficiariesForm = ({
               control={control}
               name="lastName"
               render={({ field }) => (
-                <Input
-                  {...field}
-                  disabled={!onEdit}
-                  placeholder="Last name"
-                  error={!!errors.lastName?.message}
-                  helperText={errors.lastName?.message}
-                />
+                <Input {...field} disabled={!onEdit} placeholder="Last name" />
               )}
             />
           </div>
@@ -238,13 +226,7 @@ const BeneficiariesForm = ({
               control={control}
               name="email"
               render={({ field }) => (
-                <Input
-                  {...field}
-                  disabled={!onEdit}
-                  placeholder="Email"
-                  error={!!errors.email?.message}
-                  helperText={errors.email?.message}
-                />
+                <Input {...field} disabled={!onEdit} placeholder="Email" />
               )}
             />
           </div>
@@ -263,8 +245,6 @@ const BeneficiariesForm = ({
                   phoneNUmber
                   disabled={!onEdit}
                   placeholder="Phone"
-                  error={!!errors.phone?.message}
-                  helperText={errors.phone?.message}
                 />
               )}
             />
@@ -280,7 +260,7 @@ const BeneficiariesForm = ({
               name="status"
               render={({ field }) => (
                 <Dropdown
-                  value={field.value}
+                  value={field.value || ""}
                   disabled={!onEdit}
                   handleSelect={(val) => {
                     setValue("status", val as string);
@@ -289,8 +269,6 @@ const BeneficiariesForm = ({
                   }}
                   options={BENEFICIARY_STATUS}
                   placeholder="Status"
-                  error={!!errors.status?.message}
-                  helperText={errors.status?.message}
                 />
               )}
             />
@@ -315,8 +293,6 @@ const BeneficiariesForm = ({
                   disabled={!onEdit}
                   options={RISK_LEVEL}
                   placeholder="Risk level"
-                  error={!!errors.riskLevel?.message}
-                  helperText={errors.riskLevel?.message}
                 />
               )}
             />
@@ -338,7 +314,7 @@ const BeneficiariesForm = ({
                   value={findLabelFromOptions(
                     contracts,
 
-                    field.value.toString()
+                    (field.value || "").toString()
                   )}
                   handleSelect={(val) => {
                     setValue("contractId", Number(val));
@@ -373,8 +349,6 @@ const BeneficiariesForm = ({
                   }}
                   options={contracts}
                   placeholder="Contract"
-                  error={!!errors.contractId?.message}
-                  helperText={errors.contractId?.message}
                 />
               )}
             />
@@ -397,8 +371,6 @@ const BeneficiariesForm = ({
 
                     field.value.toString()
                   )}
-                  error={!!errors.providerId?.message}
-                  helperText={errors.providerId?.message}
                 />
               )}
             />
@@ -417,20 +389,18 @@ const BeneficiariesForm = ({
                   (item) => item.id === watch("contractId")
                 )?.project
               }
-              error={!!errors.projectId?.message}
-              helperText={errors.projectId?.message}
             />
           </div>
         </div>
 
-        <div className="!mt-0 flex items-center">
+        <div className="flex items-center">
           <p className="w-[190px] text-[20px] font-semibold">Cohort</p>
 
           <hr className="w-full" />
         </div>
 
-        <div className="space-y-1">
-          <div className="grid grid-cols-1 gap-x-6 gap-y-1 md:grid-cols-2">
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-2">
             <div className="flex items-start">
               <label htmlFor="" className="min-w-[140px] pt-3">
                 Start date
@@ -449,8 +419,6 @@ const BeneficiariesForm = ({
 
                       setError("cohortStartDate", { message: "" });
                     }}
-                    error={!!errors?.cohortStartDate?.message}
-                    helperText={errors?.cohortStartDate?.message}
                   />
                 )}
               />
@@ -474,8 +442,6 @@ const BeneficiariesForm = ({
 
                       setError("cohortEndDate", { message: "" });
                     }}
-                    error={!!errors?.cohortEndDate?.message}
-                    helperText={errors?.cohortEndDate?.message}
                   />
                 )}
               />
@@ -491,25 +457,19 @@ const BeneficiariesForm = ({
               control={control}
               name="cohortName"
               render={({ field }) => (
-                <Input
-                  {...field}
-                  disabled={!onEdit}
-                  placeholder="Program"
-                  error={!!errors.cohortName?.message}
-                  helperText={errors.cohortName?.message}
-                />
+                <Input {...field} disabled={!onEdit} placeholder="Program" />
               )}
             />
           </div>
         </div>
 
-        <div className="!mt-0 flex items-center">
+        <div className="flex items-center">
           <p className="w-[190px] text-[20px] font-semibold">Social media</p>
 
           <hr className="w-full" />
         </div>
 
-        <div>
+        <div className="space-y-4">
           <div className="grid grid-cols-1 gap-x-6 md:grid-cols-2">
             <div className="flex items-start">
               <label htmlFor="" className="min-w-[140px] pt-3">
@@ -524,8 +484,6 @@ const BeneficiariesForm = ({
                     {...field}
                     disabled={!onEdit}
                     placeholder="Linkedin link"
-                    error={!!errors.linkedinUrl?.message}
-                    helperText={errors.linkedinUrl?.message}
                   />
                 )}
               />
@@ -544,8 +502,6 @@ const BeneficiariesForm = ({
                     {...field}
                     disabled={!onEdit}
                     placeholder="Github link"
-                    error={!!errors.githubUrl?.message}
-                    helperText={errors.githubUrl?.message}
                   />
                 )}
               />
@@ -561,26 +517,20 @@ const BeneficiariesForm = ({
               control={control}
               name="otherUrl"
               render={({ field }) => (
-                <Input
-                  {...field}
-                  disabled={!onEdit}
-                  placeholder="Other"
-                  error={!!errors.otherUrl?.message}
-                  helperText={errors.otherUrl?.message}
-                />
+                <Input {...field} disabled={!onEdit} placeholder="Other" />
               )}
             />
           </div>
         </div>
 
-        <div className="!mt-0 flex items-center">
+        <div className="flex items-center">
           <p className="w-[190px] text-[20px] font-semibold">Demographics</p>
 
           <hr className="w-full" />
         </div>
 
-        <div className="space-y-1">
-          <div className="grid grid-cols-1 gap-x-6 gap-y-1 md:grid-cols-2">
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-2">
             <div className="flex items-start">
               <label htmlFor="" className="min-w-[140px] pt-3">
                 Date of birth
@@ -598,8 +548,6 @@ const BeneficiariesForm = ({
 
                       setError("birthdate", { message: "" });
                     }}
-                    error={!!errors?.birthdate?.message}
-                    helperText={errors?.birthdate?.message}
                   />
                 )}
               />
@@ -618,8 +566,6 @@ const BeneficiariesForm = ({
                     {...field}
                     disabled={!onEdit}
                     placeholder="Ethnicity"
-                    error={!!errors.ethnicity?.message}
-                    helperText={errors.ethnicity?.message}
                   />
                 )}
               />
@@ -644,8 +590,6 @@ const BeneficiariesForm = ({
                     }}
                     options={GENDER}
                     placeholder="Gender"
-                    error={!!errors.gender?.message}
-                    helperText={errors.gender?.message}
                   />
                 )}
               />
@@ -670,8 +614,6 @@ const BeneficiariesForm = ({
                     }}
                     options={CONFIRM}
                     placeholder="Disability status"
-                    error={!!errors.disabilityStatus?.message}
-                    helperText={errors.disabilityStatus?.message}
                   />
                 )}
               />
@@ -687,13 +629,7 @@ const BeneficiariesForm = ({
               control={control}
               name="address"
               render={({ field }) => (
-                <Input
-                  {...field}
-                  disabled={!onEdit}
-                  placeholder="Address"
-                  error={!!errors.address?.message}
-                  helperText={errors.address?.message}
-                />
+                <Input {...field} disabled={!onEdit} placeholder="Address" />
               )}
             />
           </div>
@@ -711,8 +647,6 @@ const BeneficiariesForm = ({
                   {...field}
                   disabled={!onEdit}
                   placeholder="Socio-economic status"
-                  error={!!errors.socioeconomicStatus?.message}
-                  helperText={errors.socioeconomicStatus?.message}
                 />
               )}
             />
@@ -737,8 +671,6 @@ const BeneficiariesForm = ({
                   disabled={!onEdit}
                   options={HIGHEST_EDUCATION_LEVEL}
                   placeholder="Highest education level"
-                  error={!!errors.educationLevel?.message}
-                  helperText={errors.educationLevel?.message}
                 />
               )}
             />
@@ -770,8 +702,6 @@ const BeneficiariesForm = ({
                     value: item,
                   }))}
                   placeholder="Select"
-                  error={!!errors.languages?.message}
-                  helperText={errors.languages?.message}
                 />
               )}
             />
@@ -796,7 +726,7 @@ const BeneficiariesForm = ({
           )}
         </div>
       )}
-    </form>
+    </Form>
   );
 };
 
