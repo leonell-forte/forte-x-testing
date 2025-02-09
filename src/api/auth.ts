@@ -32,6 +32,13 @@ class AuthService {
     return res;
   }
 
+  async googleSignup(code: string) {
+    const response = await api.post(`/authentication/signup-google/${code}`);
+    console.log(response);
+
+    return response;
+  }
+
   async logout() {
     cookie.remove("access_token", { path: "/" });
 

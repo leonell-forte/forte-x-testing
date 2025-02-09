@@ -94,9 +94,7 @@ const Dropdown = ({
       className={classNames(
         "relative w-full",
 
-        className,
-
-        !noHelperText && "pb-5"
+        className
       )}
     >
       <div
@@ -176,7 +174,7 @@ const Dropdown = ({
           initial={{ opacity: 0 }}
           animate={showList ? { opacity: 1 } : { opacity: 0, display: "none" }}
           transition={{ type: "spring", duration: 0.2, bounce: 0 }}
-          className="hide-scroll absolute left-0 top-[100%] z-20 max-h-[400px] w-full min-w-[300px] space-y-2 overflow-hidden overflow-y-scroll rounded-[4px] bg-white/90 p-2.5 shadow-md"
+          className="hide-scroll absolute left-0 top-[100%] z-[999] max-h-[400px] w-full min-w-[300px] space-y-2 overflow-hidden overflow-y-scroll rounded-[4px] bg-white/90 p-2.5 shadow-md"
         >
           {enableSearch && (
             <SearchInput

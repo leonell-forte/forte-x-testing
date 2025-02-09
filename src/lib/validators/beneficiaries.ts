@@ -76,11 +76,14 @@ export const beneficiaries = {
   schema: z.object({
     id: z.number().optional(),
 
-    firstName: z.string().min(1, { message: "Firstname is required" }),
+    firstName: z.string().min(1, { message: "First name is required" }),
 
-    lastName: z.string().min(1, { message: "Lastname is required" }),
+    lastName: z.string().min(1, { message: "Last name is required" }),
 
-    email: z.string().email(),
+    email: z
+      .string()
+      .min(1, "Email is required")
+      .email({ message: "Invalid email" }),
 
     phone: z.string(),
 
@@ -90,9 +93,9 @@ export const beneficiaries = {
 
     contractId: z.number().min(1, { message: "Contract is required" }),
 
-    projectId: z.number().min(1, { message: "Project is required" }),
-
     providerId: z.number().min(1, { message: "Provider is required" }),
+
+    projectId: z.number().min(1, { message: "Project is required" }),
 
     cohortStartDate: z.string().nullable(),
 

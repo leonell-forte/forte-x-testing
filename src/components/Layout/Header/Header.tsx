@@ -34,7 +34,7 @@ const Header = ({ user }: IProp) => {
       return;
     }
     setQ(params.query);
-  }, [params]);
+  }, [params.query]);
 
   return (
     <div className="flex w-screen items-center justify-between px-5 py-[22px] md:px-[30px]">

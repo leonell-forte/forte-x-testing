@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import projectService from "api/projects";
 import { useEffect } from "react";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 
 import add from "assets/images/icons/add.svg";
 
@@ -11,7 +11,9 @@ import { ProjectFieldValues } from "lib/types/projects";
 import { projects } from "lib/validators/projects";
 
 import Button from "components/ui/button";
+import Controller from "components/ui/custom-controller/CustomController";
 import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
+import { Form } from "components/ui/form/Form";
 import Input from "components/ui/input";
 import Spinner from "components/ui/spinner/spinner";
 
@@ -36,21 +38,21 @@ const ProjectDialogue = ({
     enabled: !!projectId,
   });
 
+  const form = useForm<ProjectFieldValues>({
+    resolver: zodResolver(projects.schema),
+
+    defaultValues: projects.defaultValues(),
+  });
+
   const {
     formState: { errors },
 
     setError,
 
-    handleSubmit,
-
     reset,
 
     control,
-  } = useForm<ProjectFieldValues>({
-    resolver: zodResolver(projects.schema),
-
-    defaultValues: projects.defaultValues(),
-  });
+  } = form;
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -110,7 +112,7 @@ const ProjectDialogue = ({
           <Spinner />
         </div>
       ) : (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-[22px]">
+        <Form form={form} onSubmit={onSubmit} className="space-y-[22px]">
           <div className="flex items-start">
             <label htmlFor="" className="w-[180px] pt-3">
               Project name
@@ -120,12 +122,7 @@ const ProjectDialogue = ({
               name="name"
               control={control}
               render={({ field }) => (
-                <Input
-                  {...field}
-                  placeholder="Project name"
-                  error={!!errors.name?.message}
-                  helperText={errors.name?.message}
-                />
+                <Input {...field} placeholder="Project name" />
               )}
             />
           </div>
@@ -173,7 +170,7 @@ const ProjectDialogue = ({
               Save
             </Button>
           </div>
-        </form>
+        </Form>
       )}
     </Dialogue>
   );
