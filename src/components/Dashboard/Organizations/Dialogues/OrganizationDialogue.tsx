@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import organizationService from "api/organization";
 import { useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import { REGIONS, STATUS, TYPES } from "lib/constants";
 import useOrganizationMutation from "lib/mutations/organizations";
@@ -10,8 +10,10 @@ import { OrgTypes, OrganizationFieldTypes } from "lib/types/organizations";
 import { organizations } from "lib/validators/organizations";
 
 import Button from "components/ui/button";
+import Controller from "components/ui/custom-controller/CustomController";
 import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
 import Dropdown from "components/ui/dropdown";
+import { Form } from "components/ui/form/Form";
 import Input from "components/ui/input";
 import Spinner from "components/ui/spinner/spinner";
 
@@ -38,9 +40,13 @@ const OrganizationDialogue = ({
     enabled: !!orgId,
   });
 
-  const {
-    handleSubmit,
+  const form = useForm<OrganizationFieldTypes>({
+    resolver: zodResolver(organizations.schema),
 
+    defaultValues: organizations.defaultValues(),
+  });
+
+  const {
     watch,
 
     setValue,
@@ -50,13 +56,7 @@ const OrganizationDialogue = ({
     reset,
 
     control,
-
-    formState: { errors },
-  } = useForm<OrganizationFieldTypes>({
-    resolver: zodResolver(organizations.schema),
-
-    defaultValues: organizations.defaultValues(),
-  });
+  } = form;
 
   // prefill initial value from selected org
 
@@ -98,7 +98,7 @@ const OrganizationDialogue = ({
           <Spinner />
         </div>
       ) : (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-1">
+        <Form form={form} onSubmit={onSubmit} className="space-y-4">
           <div className="flex items-start gap-4">
             <label htmlFor="" className="w-[200px] pt-3">
               Organization
@@ -108,14 +108,7 @@ const OrganizationDialogue = ({
               name="name"
               control={control}
               render={({ field }) => {
-                return (
-                  <Input
-                    {...field}
-                    error={!!errors.name?.message}
-                    helperText={errors.name?.message}
-                    placeholder="Organization name"
-                  />
-                );
+                return <Input {...field} placeholder="Organization name" />;
               }}
             />
           </div>
@@ -129,14 +122,7 @@ const OrganizationDialogue = ({
               name="registeredName"
               control={control}
               render={({ field }) => {
-                return (
-                  <Input
-                    {...field}
-                    error={!!errors.registeredName?.message}
-                    helperText={errors.registeredName?.message}
-                    placeholder="Registered name"
-                  />
-                );
+                return <Input {...field} placeholder="Registered name" />;
               }}
             />
           </div>
@@ -150,14 +136,7 @@ const OrganizationDialogue = ({
               name="registrationNumber"
               control={control}
               render={({ field }) => {
-                return (
-                  <Input
-                    {...field}
-                    error={!!errors.registrationNumber?.message}
-                    helperText={errors.registrationNumber?.message}
-                    placeholder="Registration number"
-                  />
-                );
+                return <Input {...field} placeholder="Registration number" />;
               }}
             />
           </div>
@@ -167,19 +146,12 @@ const OrganizationDialogue = ({
               Registered address
             </label>
 
-            <div className="w-full space-y-1">
+            <div className="w-full space-y-4">
               <Controller
                 name="registeredAddress"
                 control={control}
                 render={({ field }) => {
-                  return (
-                    <Input
-                      {...field}
-                      error={!!errors.registeredAddress?.message}
-                      helperText={errors.registeredAddress?.message}
-                      placeholder="Registered address"
-                    />
-                  );
+                  return <Input {...field} placeholder="Registered address" />;
                 }}
               />
 
@@ -188,14 +160,7 @@ const OrganizationDialogue = ({
                   name="state"
                   control={control}
                   render={({ field }) => {
-                    return (
-                      <Input
-                        {...field}
-                        error={!!errors.state?.message}
-                        helperText={errors.state?.message}
-                        placeholder="State"
-                      />
-                    );
+                    return <Input {...field} placeholder="State" />;
                   }}
                 />
 
@@ -203,14 +168,7 @@ const OrganizationDialogue = ({
                   name="postalCode"
                   control={control}
                   render={({ field }) => {
-                    return (
-                      <Input
-                        {...field}
-                        error={!!errors.postalCode?.message}
-                        helperText={errors.postalCode?.message}
-                        placeholder="Postal code"
-                      />
-                    );
+                    return <Input {...field} placeholder="Postal code" />;
                   }}
                 />
 
@@ -218,14 +176,7 @@ const OrganizationDialogue = ({
                   name="country"
                   control={control}
                   render={({ field }) => {
-                    return (
-                      <Input
-                        {...field}
-                        error={!!errors.country?.message}
-                        helperText={errors.country?.message}
-                        placeholder="Country"
-                      />
-                    );
+                    return <Input {...field} placeholder="Country" />;
                   }}
                 />
               </div>
@@ -253,8 +204,6 @@ const OrganizationDialogue = ({
                     }}
                     options={REGIONS}
                     placeholder="Select region"
-                    error={!!errors.regions?.message}
-                    helperText={errors.regions?.message}
                   />
                 );
               }}
@@ -265,18 +214,25 @@ const OrganizationDialogue = ({
             <label htmlFor="" className="w-[200px] pt-3">
               Type
             </label>
+            <Controller
+              name="type"
+              control={control}
+              render={() => {
+                return (
+                  <Dropdown
+                    value={
+                      TYPES.find((item) => item.value === watch("type"))?.label
+                    }
+                    handleSelect={(val) => {
+                      setError("type", { message: "" });
 
-            <Dropdown
-              value={TYPES.find((item) => item.value === watch("type"))?.label}
-              handleSelect={(val) => {
-                setError("type", { message: "" });
-
-                setValue("type", val as OrgTypes);
+                      setValue("type", val as OrgTypes);
+                    }}
+                    options={TYPES}
+                    placeholder="Select type"
+                  />
+                );
               }}
-              options={TYPES}
-              placeholder="Select type"
-              error={!!errors.type?.message}
-              helperText={errors.type?.message}
             />
           </div>
 
@@ -285,18 +241,25 @@ const OrganizationDialogue = ({
               Status
             </label>
 
-            <Dropdown
-              value={
-                STATUS.find((item) => item.value === watch("status"))?.label
-              }
-              handleSelect={(val) => {
-                setError("status", { message: "" });
-                setValue("status", val as string);
+            <Controller
+              name="status"
+              control={control}
+              render={() => {
+                return (
+                  <Dropdown
+                    value={
+                      STATUS.find((item) => item.value === watch("status"))
+                        ?.label
+                    }
+                    handleSelect={(val) => {
+                      setError("status", { message: "" });
+                      setValue("status", val as string);
+                    }}
+                    options={STATUS}
+                    placeholder="Select status"
+                  />
+                );
               }}
-              options={STATUS}
-              placeholder="Select status"
-              error={!!errors.status?.message}
-              helperText={errors.status?.message}
             />
           </div>
 
@@ -309,7 +272,7 @@ const OrganizationDialogue = ({
               Save
             </Button>
           </div>
-        </form>
+        </Form>
       )}
     </Dialogue>
   );

@@ -141,59 +141,43 @@ const Partners = ({ projectId }: IProps) => {
                   </Table.Data>
 
                   <Table.Data small className="h-[56px] py-1">
-                    {onEdit ? <Input noHelperText /> : <p>{registeredName}</p>}
+                    {onEdit ? <Input /> : <p>{registeredName}</p>}
+                  </Table.Data>
+
+                  <Table.Data small className="h-[56px] py-1">
+                    {onEdit ? <Input /> : <p>{registeredAddress}</p>}
+                  </Table.Data>
+
+                  <Table.Data small className="h-[56px] py-1">
+                    {onEdit ? <Input /> : <p>{registrationNumber}</p>}
+                  </Table.Data>
+
+                  <Table.Data small className="h-[56px] py-1">
+                    {onEdit ? <Input /> : <p>{regions?.join(", ")}</p>}
+                  </Table.Data>
+
+                  <Table.Data small className="h-[56px] py-1">
+                    {onEdit ? <Input /> : <p className="capitalize">{type}</p>}
                   </Table.Data>
 
                   <Table.Data small className="h-[56px] py-1">
                     {onEdit ? (
-                      <Input noHelperText />
-                    ) : (
-                      <p>{registeredAddress}</p>
-                    )}
-                  </Table.Data>
-
-                  <Table.Data small className="h-[56px] py-1">
-                    {onEdit ? (
-                      <Input noHelperText />
-                    ) : (
-                      <p>{registrationNumber}</p>
-                    )}
-                  </Table.Data>
-
-                  <Table.Data small className="h-[56px] py-1">
-                    {onEdit ? (
-                      <Input noHelperText />
-                    ) : (
-                      <p>{regions?.join(", ")}</p>
-                    )}
-                  </Table.Data>
-
-                  <Table.Data small className="h-[56px] py-1">
-                    {onEdit ? (
-                      <Input noHelperText />
-                    ) : (
-                      <p className="capitalize">{type}</p>
-                    )}
-                  </Table.Data>
-
-                  <Table.Data small className="h-[56px] py-1">
-                    {onEdit ? (
-                      <Input noHelperText />
+                      <Input />
                     ) : (
                       <p className="capitalize">{status}</p>
                     )}
                   </Table.Data>
 
                   <Table.Data small className="h-[56px] py-1">
-                    {onEdit ? <Input noHelperText /> : <p>{users}</p>}
+                    {onEdit ? <Input /> : <p>{users}</p>}
                   </Table.Data>
 
                   <Table.Data small className="h-[56px] py-1">
-                    {onEdit ? <Input noHelperText /> : <p>{projects}</p>}
+                    {onEdit ? <Input /> : <p>{projects}</p>}
                   </Table.Data>
 
                   <Table.Data small className="h-[56px] py-1">
-                    {onEdit ? <Input noHelperText /> : <p>{contracts}</p>}
+                    {onEdit ? <Input /> : <p>{contracts}</p>}
                   </Table.Data>
 
                   <Table.Data small></Table.Data>

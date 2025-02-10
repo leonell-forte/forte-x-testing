@@ -10,6 +10,9 @@ import { cookie, useAppDispatch } from "lib/hooks";
 import { setEmail, setRole } from "lib/slice/auth";
 import { login } from "lib/validators/auth";
 
+import Controller from "components/ui/custom-controller/CustomController";
+import { Form } from "components/ui/form/Form";
+
 import Button from "../ui/button";
 import Checkbox from "../ui/checkbox";
 import Input from "../ui/input";
@@ -20,21 +23,21 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
 
   const dispatch = useAppDispatch();
 
-  const {
-    handleSubmit,
-
-    getValues,
-
-    formState: { errors },
-
-    setValue,
-
-    setError,
-  } = useForm<z.infer<typeof login.schema>>({
+  const form = useForm<z.infer<typeof login.schema>>({
     resolver: zodResolver(login.schema),
 
     defaultValues: login.defaultValues,
   });
+
+  const {
+    control,
+
+    getValues,
+
+    setValue,
+
+    setError,
+  } = form;
 
   const onSubmit = async (values: z.infer<typeof login.schema>) => {
     setLoading(true);
@@ -62,24 +65,33 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
 
   return (
     <div className="w-full">
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-10">
+      <Form form={form} onSubmit={onSubmit} className="w-full space-y-10">
         <div className="mt-10 flex w-full flex-col gap-[15px]">
-          <Input
-            onChange={(e) => setValue("email", e.target.value)}
-            error={!!errors.email?.message || !!errors.password?.message}
-            autoCapitalize="email"
-            label="Email"
-            type="email"
-            autoComplete="off"
+          <Controller
+            name="email"
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                autoCapitalize="email"
+                label="Email"
+                type="email"
+                autoComplete="off"
+              />
+            )}
           />
 
-          <Input
-            onChange={(e) => setValue("password", e.target.value)}
-            error={!!errors.email?.message || !!errors.password?.message}
-            helperText={errors.email?.message || errors.password?.message}
-            label="Password"
-            type="password"
-            autoComplete="off"
+          <Controller
+            name="password"
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                label="Password"
+                type="password"
+                autoComplete="off"
+              />
+            )}
           />
 
           <div className="flex items-center justify-between pl-1">
@@ -122,7 +134,7 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
             </Link>
           </p>
         </div>
-      </form>
+      </Form>
     </div>
   );
 };

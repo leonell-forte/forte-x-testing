@@ -12,8 +12,6 @@ import { PHONE_NUMBER } from "lib/regex";
 type PropTypes = TextFieldProps & {
   dark?: boolean;
 
-  noHelperText?: boolean;
-
   small?: boolean;
 
   min?: number;
@@ -26,10 +24,7 @@ type PropTypes = TextFieldProps & {
 };
 
 const Input = forwardRef<HTMLDivElement, PropTypes>(
-  (
-    { dark, small, noHelperText, wholeNumberOnly, phoneNUmber, ...props },
-    ref
-  ) => {
+  ({ dark, small, wholeNumberOnly, phoneNUmber, ...props }, ref) => {
     const [show, setShow] = useState(false);
 
     const { type } = props;
@@ -43,7 +38,7 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
     };
 
     return (
-      <div className={classNames("relative w-full", !noHelperText && "pb-5")}>
+      <div className={classNames("relative w-full")}>
         <TextField
           ref={ref}
           {...props}
@@ -65,6 +60,9 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
           }}
           type={type === "password" ? (show ? "text" : "password") : type}
           sx={{
+            "& .Mui-disabled": {
+              cursor: "not-allowed",
+            },
             "& .MuiInputBase-input": {
               ...(type === "password" && {
                 paddingRight: "50px",

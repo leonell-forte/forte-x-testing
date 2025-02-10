@@ -20,7 +20,7 @@ export interface IUser {
 
   email: string;
 
-  role?: UserRoleType;
+  role?: UserRoleType | "";
 
   phoneNumber: string;
 
