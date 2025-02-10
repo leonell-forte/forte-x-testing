@@ -155,3 +155,10 @@ export function removeFirstTwoAndEquals(input: string) {
   // Remove the first two characters and the '=' sign
   return input.slice(2).replace("=", "");
 }
+
+export const formatInvitationCode = (input: string) => {
+  if (input.startsWith("3D")) {
+    input = input.slice(2); // Remove "3D" from the beginning
+  }
+  return input.replace(/[ =]/g, ""); // Remove spaces and "="
+};
