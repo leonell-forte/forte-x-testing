@@ -51,9 +51,9 @@ export const organizations = {
 
     state: z.string().min(1, "State is required"),
 
-    country: z.string().min(1, "Country is required"),
-
     postalCode: z.string().min(1, "Postal code is required"),
+
+    country: z.string().min(1, "Country is required"),
 
     regions: z.array(z.string()).min(1, "Region is a required field"),
 

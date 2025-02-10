@@ -12,8 +12,6 @@ import { PHONE_NUMBER } from "lib/regex";
 type PropTypes = TextFieldProps & {
   dark?: boolean;
 
-  noHelperText?: boolean;
-
   small?: boolean;
 
   min?: number;
@@ -26,10 +24,7 @@ type PropTypes = TextFieldProps & {
 };
 
 const Input = forwardRef<HTMLDivElement, PropTypes>(
-  (
-    { dark, small, noHelperText, wholeNumberOnly, phoneNUmber, ...props },
-    ref
-  ) => {
+  ({ dark, small, wholeNumberOnly, phoneNUmber, ...props }, ref) => {
     const [show, setShow] = useState(false);
 
     const { type } = props;

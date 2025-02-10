@@ -253,7 +253,6 @@ const BeneficiariesPage = () => {
             <p className="flex-shrink-0 text-[20px] font-medium">Filter by</p>
 
             <Dropdown
-              noHelperText
               value={findLabelFromOptions(projects, filters.project as string)}
               loading={projectLoading}
               options={projects}
@@ -265,7 +264,6 @@ const BeneficiariesPage = () => {
             />
 
             <Dropdown
-              noHelperText
               options={BENEFICIARY_STATUS}
               placeholder="Status"
               className="max-w-[166px]"
@@ -277,7 +275,6 @@ const BeneficiariesPage = () => {
 
             {IsAuthorized([Organizations.LIST]) && (
               <Dropdown
-                noHelperText
                 loading={orgLoading}
                 options={organizations}
                 placeholder="Provider"
@@ -294,7 +291,6 @@ const BeneficiariesPage = () => {
             )}
 
             <Dropdown
-              noHelperText
               options={RISK_LEVEL}
               placeholder="Risk Level"
               className="max-w-[166px]"
@@ -305,7 +301,7 @@ const BeneficiariesPage = () => {
             />
 
             {/* <Dropdown
-              noHelperText
+              
               options={[]}
               placeholder="Program"
               className="max-w-[166px]"
@@ -314,7 +310,7 @@ const BeneficiariesPage = () => {
             {/* removing for now
             <div className="max-w-[166px]">
               <DatePicker
-                noHelperText
+                
                 value={new Date(filters.startDate as string)}
                 onChange={(date) => {
                   setFilters((prev) => ({
