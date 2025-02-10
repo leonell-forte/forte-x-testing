@@ -1,7 +1,8 @@
 import * as amplitude from "@amplitude/analytics-browser";
 import { zodResolver } from "@hookform/resolvers/zod";
 import authService from "api/auth";
-import { useState } from "react";
+import { add } from "date-fns";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { z } from "zod";
@@ -32,12 +33,14 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
   const {
     control,
 
-    getValues,
-
     setValue,
 
     setError,
+
+    watch,
   } = form;
+
+  const [isRemember, email] = watch(["remember", "email"]);
 
   const onSubmit = async (values: z.infer<typeof login.schema>) => {
     setLoading(true);
@@ -54,6 +57,16 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
       dispatch(setEmail(values.email));
 
       dispatch(setRole(res.role));
+
+      if (isRemember) {
+        const currentDate = new Date();
+
+        // Add 30 days to the current date for cookie expiry
+        const futureDate = add(currentDate, { days: 30 });
+        cookie.set("user-email", email, { expires: futureDate });
+        return;
+      }
+      cookie.remove("user-email");
     } catch (err) {
       console.log(err);
 
@@ -62,6 +75,15 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
       setLoading(false);
     }
   };
+
+  const userEmail = cookie.get("user-email");
+
+  useEffect(() => {
+    if (userEmail) {
+      setValue("email", userEmail);
+      setValue("remember", true);
+    }
+  }, [userEmail, setValue]);
 
   return (
     <div className="w-full">
@@ -95,16 +117,22 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
           />
 
           <div className="flex items-center justify-between pl-1">
-            <Checkbox
-              value={getValues("remember")}
-              onChange={(e) => {
-                console.log(e.target.checked);
-
-                setValue("remember", e.target.checked);
-              }}
-              label="Remember me"
+            <Controller
+              name="remember"
+              control={control}
+              render={({ field }) => (
+                <Checkbox
+                  checked={field.value}
+                  onChange={(e) => field.onChange(e.target.checked)}
+                  label="Remember me"
+                />
+              )}
             />
-            <Link to="/forgot-password" className="pt-1 text-[12px] text-grey">
+
+            <Link
+              to="/forgot-password"
+              className="link-hover flex-shrink-0 whitespace-normal pt-1 text-[12px] text-grey"
+            >
               Forgot password?
             </Link>
           </div>
