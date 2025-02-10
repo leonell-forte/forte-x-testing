@@ -25,7 +25,6 @@ const SearchInput = ({ dark, onClear, ...props }: IProps) => {
       </button>
 
       <Input
-        noHelperText
         dark={dark}
         {...props}
         placeholder={props.placeholder || "Search"}

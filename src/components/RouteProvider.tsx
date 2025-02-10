@@ -8,6 +8,7 @@ import { ROUTES } from "lib/routes";
 
 import AlertProvider from "./AlertProvider";
 import Layout from "./Dashboard/Layout";
+import { SearchConsole } from "./Layout/Header/SearchConsole";
 import Providers from "./Providers";
 import Spinner from "./ui/spinner/spinner";
 
@@ -43,19 +44,22 @@ const RouteProvider = () => {
                       key={index}
                       path={link}
                       element={
-                        !permissions.length || IsAuthorized(permissions) ? (
-                          <Component />
-                        ) : (
-                          <div className="flex items-center justify-center pt-24">
-                            <div className="text-center">
-                              <p className="text-[40px] font-bold">404</p>
+                        <>
+                          <SearchConsole />
+                          {!permissions.length || IsAuthorized(permissions) ? (
+                            <Component />
+                          ) : (
+                            <div className="flex items-center justify-center pt-24">
+                              <div className="text-center">
+                                <p className="text-[40px] font-bold">404</p>
 
-                              <p className="text-[24px] font-medium">
-                                Page not found
-                              </p>
+                                <p className="text-[24px] font-medium">
+                                  Page not found
+                                </p>
+                              </div>
                             </div>
-                          </div>
-                        )
+                          )}
+                        </>
                       }
                     />
                   );

@@ -117,7 +117,7 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
                       <div className="flex justify-end">
                         <Button
                           eventName="Edit User"
-                          id={id}
+                          id={String(id)}
                           buttonType="default"
                           type="button"
                           onClick={() => handleEditUser(item)}

@@ -8,10 +8,6 @@ interface IOutcomeFieldProps {
 
   handleDelete?: () => void;
 
-  nameError?: string;
-
-  descriptionError?: string;
-
   index: number;
 
   control: any;
@@ -21,10 +17,6 @@ const OutcomeField = ({
   handleDelete,
 
   count,
-
-  nameError,
-
-  descriptionError,
 
   index,
 
