@@ -122,7 +122,7 @@ const OrganizationTable = ({ list, isLoading = false }: TOrganizationTable) => {
                   <Table.Data className="pl-[18px]">
                     <Button
                       eventName="Edit User"
-                      id={id}
+                      id={String(id)}
                       buttonType="default"
                       type="button"
                       onClick={() => handleEditOrg(id!)}

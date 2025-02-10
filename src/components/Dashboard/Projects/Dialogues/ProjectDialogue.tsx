@@ -149,10 +149,6 @@ const ProjectDialogue = ({
                   index={index}
                   count={index + 1}
                   key={item.id}
-                  nameError={errors.outcomes?.[index]?.name?.message}
-                  descriptionError={
-                    errors.outcomes?.[index]?.description?.message
-                  }
                   handleDelete={() => {
                     remove(index);
                   }}

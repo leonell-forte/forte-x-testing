@@ -141,7 +141,6 @@ const ContractsPage = () => {
           <p className="flex-shrink-0 text-[20px] font-medium">Filter by</p>
 
           <Dropdown
-            noHelperText
             placeholder="Status"
             className="max-w-[166px]"
             options={CONTRACT_STATUS}
@@ -152,7 +151,6 @@ const ContractsPage = () => {
           />
 
           <Dropdown
-            noHelperText
             value={findLabelFromOptions(projects, filters.project)}
             handleSelect={(val) =>
               setFilters((prev) => ({ ...prev, project: val as string }))
@@ -166,7 +164,7 @@ const ContractsPage = () => {
           {/* Temporarily comment out date filter */}
           {/* <div className="max-w-[166px]">
             <DatePicker
-              noHelperText
+              
               value={new Date(filters.date)}
               onChange={(date) => {
                 setFilters((prev) => ({

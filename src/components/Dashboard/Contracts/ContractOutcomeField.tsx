@@ -83,7 +83,7 @@ const ContractOutcomeField = ({
         <Controller
           name={`outcomeRates.${index}.outcomeId`}
           control={control}
-          render={({ field, fieldState }) => {
+          render={({ field }) => {
             return (
               <Dropdown
                 disabled={!projectId || disabled}
@@ -127,7 +127,7 @@ const ContractOutcomeField = ({
           <Controller
             name={`outcomeRates.${index}.rate`}
             control={control}
-            render={({ field, fieldState }) => {
+            render={({ field }) => {
               return (
                 <Input
                   {...field}
@@ -163,7 +163,7 @@ const ContractOutcomeField = ({
               <Controller
                 name={`outcomeRates.${index}.threshold`}
                 control={control}
-                render={({ field, fieldState }) => {
+                render={({ field }) => {
                   return (
                     <Input
                       {...field}

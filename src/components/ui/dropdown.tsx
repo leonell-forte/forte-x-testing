@@ -35,8 +35,6 @@ interface IDropdownProp extends InputHTMLAttributes<HTMLInputElement> {
 
   helperText?: string;
 
-  noHelperText?: boolean;
-
   showAsTags?: boolean;
 
   enableSearch?: boolean;
@@ -56,8 +54,6 @@ const Dropdown = ({
   error,
 
   helperText,
-
-  noHelperText,
 
   showAsTags,
 

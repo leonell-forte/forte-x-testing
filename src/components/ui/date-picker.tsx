@@ -11,16 +11,12 @@ interface IProps extends DatePickerProps<Date> {
   helperText?: string | ReactNode;
 
   error?: boolean;
-
-  noHelperText?: boolean;
 }
 
 const DatePicker = ({
   helperText,
 
   error,
-
-  noHelperText,
 
   value,
 

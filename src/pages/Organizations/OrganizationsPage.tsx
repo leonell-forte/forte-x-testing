@@ -121,7 +121,6 @@ const OrganizationsPage = () => {
 
           <Dropdown
             enableSearch
-            noHelperText
             isMultiSelect
             value={filters.region}
             handleSelect={(val) => {
@@ -133,7 +132,6 @@ const OrganizationsPage = () => {
           />
 
           <Dropdown
-            noHelperText
             value={filters.status}
             handleSelect={(val) => {
               handleSelectFilter("status", val);
@@ -144,7 +142,6 @@ const OrganizationsPage = () => {
           />
 
           <Dropdown
-            noHelperText
             value={filters.type}
             handleSelect={(val) => {
               handleSelectFilter("type", val);

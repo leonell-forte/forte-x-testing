@@ -46,8 +46,6 @@ const Outcomes = ({ id }: IProps) => {
   };
 
   const {
-    formState: { errors },
-
     handleSubmit,
 
     reset,
@@ -112,15 +110,7 @@ const Outcomes = ({ id }: IProps) => {
                     <Controller
                       name={`outcomes.${index}.name`}
                       control={control}
-                      render={({ field }) => (
-                        <Input
-                          small
-                          {...field}
-                          noHelperText
-                          error={!!errors.outcomes?.[index]?.name?.message}
-                          helperText={errors.outcomes?.[index]?.name?.message}
-                        />
-                      )}
+                      render={({ field }) => <Input small {...field} />}
                     />
                   ) : (
                     <p>{name}</p>
@@ -132,19 +122,7 @@ const Outcomes = ({ id }: IProps) => {
                     <Controller
                       name={`outcomes.${index}.description`}
                       control={control}
-                      render={({ field }) => (
-                        <Input
-                          small
-                          {...field}
-                          noHelperText
-                          error={
-                            !!errors.outcomes?.[index]?.description?.message
-                          }
-                          helperText={
-                            errors.outcomes?.[index]?.description?.message
-                          }
-                        />
-                      )}
+                      render={({ field }) => <Input small {...field} />}
                     />
                   ) : (
                     <p>{description}</p>
