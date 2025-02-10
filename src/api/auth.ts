@@ -4,6 +4,7 @@ import { z } from "zod";
 import { UserData } from "lib/types/auth";
 import { ProfileType } from "lib/types/profile";
 import { LoginReturnType } from "lib/types/users";
+import { formatInvitationCode } from "lib/utils";
 
 import { api } from "../lib/axios/interceptor";
 import { cookie } from "../lib/hooks";
@@ -22,7 +23,7 @@ class AuthService {
 
       hasAgreedToTerms: body.agreeTerms ? true : false,
 
-      invitationCode: code,
+      invitationCode: formatInvitationCode(code),
     };
 
     delete data.agreeTerms;
@@ -33,8 +34,9 @@ class AuthService {
   }
 
   async googleSignup(code: string) {
-    const response = await api.post(`/authentication/signup-google/${code}`);
-    console.log(response);
+    const response = await api.post(
+      `/authentication/signup-google/${formatInvitationCode(code)}`
+    );
 
     return response;
   }
