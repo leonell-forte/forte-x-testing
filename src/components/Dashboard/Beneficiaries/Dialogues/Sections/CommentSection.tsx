@@ -106,7 +106,7 @@ const CommentSection = ({ id: evidenceId }: { id: number }) => {
         onSubmit={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          handleSubmit();
+          if (comment.length) handleSubmit();
         }}
       >
         <Input

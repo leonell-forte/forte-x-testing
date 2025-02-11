@@ -52,6 +52,8 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
 
       cookie.set("access_token", res.token, { path: "/" });
 
+      cookie.set("refresh_token", res?.refreshToken, { path: "/" });
+
       handleNext!();
 
       dispatch(setEmail(values.email));

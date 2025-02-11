@@ -24,7 +24,7 @@ type PropTypes = TextFieldProps & {
 };
 
 const Input = forwardRef<HTMLDivElement, PropTypes>(
-  ({ dark, small, wholeNumberOnly, phoneNUmber, ...props }, ref) => {
+  ({ dark, small, wholeNumberOnly, phoneNUmber, name, ...props }, ref) => {
     const [show, setShow] = useState(false);
 
     const { type } = props;
@@ -40,6 +40,8 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
     return (
       <div className={classNames("relative w-full")}>
         <TextField
+          id={name}
+          name={name}
           ref={ref}
           {...props}
           onChange={handleChange}
@@ -62,6 +64,9 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
           sx={{
             "& .Mui-disabled": {
               cursor: "not-allowed",
+              "::placeholder": {
+                color: "red",
+              },
             },
             "& .MuiInputBase-input": {
               ...(type === "password" && {
