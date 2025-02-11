@@ -64,9 +64,6 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
           sx={{
             "& .Mui-disabled": {
               cursor: "not-allowed",
-              "::placeholder": {
-                color: "red",
-              },
             },
             "& .MuiInputBase-input": {
               ...(type === "password" && {
