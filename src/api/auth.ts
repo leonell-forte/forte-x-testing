@@ -44,6 +44,8 @@ class AuthService {
   async logout() {
     cookie.remove("access_token", { path: "/" });
 
+    cookie.remove("refresh_token", { path: "/" });
+
     window.location.href = "/";
   }
 
