@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import authService from "api/auth";
 import organizationService from "api/organization";
 import userService from "api/users";
 import { useMemo, useState } from "react";
@@ -106,8 +105,6 @@ const UsersPage = () => {
             </div>
           )}
         </div>
-
-        <button onClick={authService.getRefreshedToken}> refresh</button>
 
         <div className="flex flex-wrap items-center gap-[18px]">
           <p className="text-[20px] font-medium">Filter by</p>

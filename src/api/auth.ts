@@ -94,13 +94,14 @@ class AuthService {
   async getRefreshedToken() {
     const refreshToken = cookie.get("refresh_token");
 
-    const { email } = <IUser>queryClient.getQueryData(["profile"]);
+    const { email } = queryClient.getQueryData(["profile"]) as IUser;
 
-    const res = await api.post('authentication/refresh-token',{refreshToken,email})
+    const res = await api.post("authentication/refresh-token", {
+      refreshToken,
+      email,
+    });
 
-    return res.data.data
-    
-
+    return res.data.data;
   }
 }
 
