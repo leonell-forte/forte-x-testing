@@ -78,7 +78,9 @@ const Pagination = ({
             onBlur={handleBlur}
           />
         </div>
-        <span className="text-[14px] text-gray-200"> of {pageCount}</span>
+        {!isNaN(pageCount) && !!pageCount && (
+          <span className="text-[14px] text-gray-200"> of {pageCount}</span>
+        )}
       </div>
       <button
         type="button"
