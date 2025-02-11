@@ -17,9 +17,9 @@ const Alert = () => {
   const variants = (status: boolean) => {
     switch (status) {
       case true:
-        return { x: 0 };
+        return { x: 0, opacity: 1 };
       case false:
-        return { x: 595 };
+        return { x: 595, opacity: 0 };
     }
   };
 
