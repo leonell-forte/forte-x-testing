@@ -10,22 +10,14 @@ export const api = axios.create({
   headers: { Accept: "application/json" },
 });
 
-// Track token refresh state
-let isRefreshing = false;
+let refreshPromise: Promise<string> | null = null;
 let refreshSubscribers: ((token: string) => void)[] = [];
 
-// Function to store failed requests and retry after getting new token
 const onTokenRefreshed = (newToken: string) => {
   refreshSubscribers.forEach((callback) => callback(newToken));
   refreshSubscribers = [];
 };
 
-// Function to add requests to the queue
-const addRefreshSubscriber = (callback: (token: string) => void) => {
-  refreshSubscribers.push(callback);
-};
-
-// Request Interceptor: Attach Access Token to Requests
 api.interceptors.request.use(
   (config) => {
     const token = cookie.get("access_token");
@@ -37,9 +29,8 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response Interceptor: Handle 401 Errors
 api.interceptors.response.use(
-  (response) => response, // Pass successful responses
+  (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
@@ -50,34 +41,33 @@ api.interceptors.response.use(
     ) {
       originalRequest._retry = true;
 
-      if (!isRefreshing) {
-        isRefreshing = true;
-
-        try {
-          const newToken = await authService.getRefreshedToken();
-          if (newToken) {
-            cookie.set("access_token", newToken);
+      if (!refreshPromise) {
+        refreshPromise = authService
+          .getRefreshedToken()
+          .then((newToken) => {
+            cookie.set("access_token", newToken, { path: "/" });
             api.defaults.headers["Authorization"] = `Bearer ${newToken}`;
             onTokenRefreshed(newToken);
-          }
-        } catch (refreshError) {
-          console.error("Token refresh failed", refreshError);
-          cookie.remove("access_token");
-          cookie.remove("refresh_token");
-          window.location.href = "/";
-          return Promise.reject(refreshError);
-        } finally {
-          isRefreshing = false;
-        }
+            return newToken;
+          })
+          .catch((refreshError) => {
+            console.error("Token refresh failed", refreshError);
+            cookie.remove("access_token");
+            cookie.remove("refresh_token");
+            window.location.href = "/"; // Or redirect to login
+            return Promise.reject({ ...refreshError, config: originalRequest }); // Propagate the error
+          })
+          .finally(() => {
+            refreshPromise = null;
+          });
       }
 
-      // Queue the request until token is refreshed
-      return new Promise((resolve) => {
-        addRefreshSubscriber((newToken: string) => {
+      return refreshPromise
+        .then((newToken) => {
           originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
-          resolve(api(originalRequest));
-        });
-      });
+          return api(originalRequest);
+        })
+        .catch((refreshError) => Promise.reject(refreshError)); // Propagate refresh errors to subsequent calls
     }
 
     return Promise.reject(error);
