@@ -36,7 +36,7 @@ export interface IUser {
 export type UserFieldTypes = z.infer<typeof users.schema>;
 
 export type LoginReturnType = {
-  expiryDate: string;
+  refreshToken: string;
 
   role: UserRoleType;
 
