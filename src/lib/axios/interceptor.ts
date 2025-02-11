@@ -1,3 +1,4 @@
+import authService from "api/auth";
 import axios from "axios";
 
 import { publicRoutes } from "lib/routes";
@@ -6,53 +7,79 @@ import { cookie } from "../hooks";
 
 export const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
-
-  headers: {
-    Accept: "application/json",
-  },
+  headers: { Accept: "application/json" },
 });
 
-api.interceptors.request.use(
-  function (config) {
-    // Do something before request is sent
-    const token = cookie.get("access_token");
+// Track token refresh state
+let isRefreshing = false;
+let refreshSubscribers: ((token: string) => void)[] = [];
 
+// Function to store failed requests and retry after getting new token
+const onTokenRefreshed = (newToken: string) => {
+  refreshSubscribers.forEach((callback) => callback(newToken));
+  refreshSubscribers = [];
+};
+
+// Function to add requests to the queue
+const addRefreshSubscriber = (callback: (token: string) => void) => {
+  refreshSubscribers.push(callback);
+};
+
+// Request Interceptor: Attach Access Token to Requests
+api.interceptors.request.use(
+  (config) => {
+    const token = cookie.get("access_token");
     if (token) {
-      // Add the token to the request headers
       config.headers["Authorization"] = `Bearer ${token}`;
     }
     return config;
   },
-  function (error) {
-    console.log(error);
-
-    // Do something with request error
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Add a response interceptor
+// Response Interceptor: Handle 401 Errors
 api.interceptors.response.use(
-  function (response) {
-    // Any status code that lie within the range of 2xx cause this function to trigger
-    // Do something with response data
-    // console.log(response);
-
-    return response;
-  },
-  function (error) {
-    console.log(error);
+  (response) => response, // Pass successful responses
+  async (error) => {
+    const originalRequest = error.config;
 
     if (
-      error.status === 401 &&
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
       !publicRoutes.includes(window.location.pathname)
-      // prevents from redirecting to login page if using a public route
     ) {
-      window.location.href = "/";
+      originalRequest._retry = true;
+
+      if (!isRefreshing) {
+        isRefreshing = true;
+
+        try {
+          const newToken = await authService.getRefreshedToken();
+          if (newToken) {
+            cookie.set("access_token", newToken);
+            api.defaults.headers["Authorization"] = `Bearer ${newToken}`;
+            onTokenRefreshed(newToken);
+          }
+        } catch (refreshError) {
+          console.error("Token refresh failed", refreshError);
+          cookie.remove("access_token");
+          cookie.remove("refresh_token");
+          window.location.href = "/";
+          return Promise.reject(refreshError);
+        } finally {
+          isRefreshing = false;
+        }
+      }
+
+      // Queue the request until token is refreshed
+      return new Promise((resolve) => {
+        addRefreshSubscriber((newToken: string) => {
+          originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
+          resolve(api(originalRequest));
+        });
+      });
     }
 
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
-    // Do something with response error
     return Promise.reject(error);
   }
 );

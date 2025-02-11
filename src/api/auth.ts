@@ -3,8 +3,10 @@ import { z } from "zod";
 
 import { UserData } from "lib/types/auth";
 import { ProfileType } from "lib/types/profile";
-import { LoginReturnType } from "lib/types/users";
+import { IUser, LoginReturnType } from "lib/types/users";
 import { formatInvitationCode } from "lib/utils";
+
+import { queryClient } from "components/QueryProvider";
 
 import { api } from "../lib/axios/interceptor";
 import { cookie } from "../lib/hooks";
@@ -87,6 +89,18 @@ class AuthService {
     const response = await api.get(`/authentication/profile/${code}`);
 
     return response.data.data;
+  }
+
+  async getRefreshedToken() {
+    const refreshToken = cookie.get("refresh_token");
+
+    const { email } = <IUser>queryClient.getQueryData(["profile"]);
+
+    const res = await api.post('authentication/refresh-token',{refreshToken,email})
+
+    return res.data.data
+    
+
   }
 }
 
