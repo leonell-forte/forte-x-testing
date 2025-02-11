@@ -108,7 +108,6 @@ const UserDialogue = ({
               );
             }}
           />
-
           <Controller
             name="firstName"
             label="First name"
@@ -124,7 +123,6 @@ const UserDialogue = ({
               );
             }}
           />
-
           <Controller
             name="lastName"
             label="Last name"
@@ -140,7 +138,6 @@ const UserDialogue = ({
               );
             }}
           />
-
           <Controller
             name="phoneNumber"
             label="Phone number"
@@ -157,7 +154,6 @@ const UserDialogue = ({
               );
             }}
           />
-
           <Controller
             name="organizationId"
             label="Organization"

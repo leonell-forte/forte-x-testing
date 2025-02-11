@@ -196,7 +196,9 @@ const ViewProfileDialogue = ({
 
             <Dropdown
               disabled
-              value={ROLES.find((item) => item.value === watch("role"))?.label}
+              value={
+                ROLES.find((item) => watch("role").includes(item.value))?.label
+              }
               handleSelect={(val) => setValue("role", val as string)}
               options={ROLES}
               placeholder="Select role"
