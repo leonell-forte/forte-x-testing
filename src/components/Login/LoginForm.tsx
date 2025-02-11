@@ -64,8 +64,7 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
         const currentDate = new Date();
 
         // Add 30 days to the current date for cookie expiry
-        // set to 5 minutes for QA testing
-        const futureDate = add(currentDate, { minutes: 5 });
+        const futureDate = add(currentDate, { days: 30 });
         cookie.set("user-email", email, { expires: futureDate });
         return;
       }
