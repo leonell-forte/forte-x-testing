@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import evidenceService from "api/evidence";
 import projectService from "api/projects";
 import { useEffect, useMemo, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import loader from "assets/images/icons/loader.svg";
 
@@ -15,9 +15,11 @@ import { findLabelFromOptions } from "lib/utils";
 import { evidence } from "lib/validators/evidence";
 
 import Button from "components/ui/button";
+import Controller from "components/ui/custom-controller/CustomController";
 import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
 import Dropdown, { IOption } from "components/ui/dropdown";
 import FileInput from "components/ui/file-input";
+import { Form } from "components/ui/form/Form";
 import Input from "components/ui/input";
 import Spinner from "components/ui/spinner/spinner";
 
@@ -64,9 +66,13 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
     [project]
   );
 
-  const {
-    handleSubmit,
+  const form = useForm({
+    resolver: zodResolver(evidence.schema),
 
+    defaultValues: evidence.defaultValues(evidenceData),
+  });
+
+  const {
     control,
 
     setValue,
@@ -78,11 +84,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
     reset,
 
     watch,
-  } = useForm({
-    resolver: zodResolver(evidence.schema),
-
-    defaultValues: evidence.defaultValues(evidenceData),
-  });
+  } = form;
 
   const file = watch("file");
 
@@ -114,86 +116,67 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
           </div>
         ) : (
           <>
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className="space-y-[30px]"
-              id="evidences-form"
-            >
-              <div className="space-y-[1px]">
-                <div className="space-y-[1px]">
-                  <div className="flex items-start gap-4">
-                    <label htmlFor="" className="w-[120px] flex-shrink-0 pt-3">
-                      Description
-                    </label>
+            <Form form={form} onSubmit={onSubmit} id="evidences-form">
+              <div className="space-y-4">
+                <div className="space-y-4">
+                  <Controller
+                    label="Description"
+                    required
+                    control={control}
+                    name="description"
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        disabled={!onEdit}
+                        placeholder="Description"
+                      />
+                    )}
+                  />
 
-                    <Controller
-                      control={control}
-                      name="description"
-                      render={({ field }) => (
-                        <Input
-                          {...field}
-                          disabled={!onEdit}
-                          placeholder="Description"
-                          error={!!errors.description?.message}
-                          helperText={errors.description?.message}
-                        />
-                      )}
-                    />
-                  </div>
+                  <Controller
+                    label="Outcome"
+                    control={control}
+                    name="outcomeId"
+                    render={({ field }) => (
+                      <Dropdown
+                        disabled={!onEdit}
+                        loading={isProjectLoading}
+                        value={findLabelFromOptions(
+                          outcomes,
+                          field.value?.toString()
+                        )}
+                        handleSelect={(val) => {
+                          setValue("outcomeId", val as string);
+                        }}
+                        options={outcomes}
+                        placeholder="Outcome"
+                        error={!!errors.outcomeId?.message}
+                        helperText={errors.outcomeId?.message}
+                      />
+                    )}
+                  />
 
-                  <div className="flex items-start gap-4">
-                    <label htmlFor="" className="w-[120px] flex-shrink-0 pt-3">
-                      Outcome
-                    </label>
+                  <Controller
+                    label="Status"
+                    required
+                    control={control}
+                    name="status"
+                    render={({ field }) => (
+                      <Dropdown
+                        disabled={!id || !onEdit}
+                        value={field.value}
+                        handleSelect={(val) => {
+                          setValue("status", val as string);
 
-                    <Controller
-                      control={control}
-                      name="outcomeId"
-                      render={({ field }) => (
-                        <Dropdown
-                          disabled={!onEdit}
-                          loading={isProjectLoading}
-                          value={findLabelFromOptions(
-                            outcomes,
-                            field.value?.toString()
-                          )}
-                          handleSelect={(val) => {
-                            setValue("outcomeId", val as string);
-                          }}
-                          options={outcomes}
-                          placeholder="Outcome"
-                          error={!!errors.outcomeId?.message}
-                          helperText={errors.outcomeId?.message}
-                        />
-                      )}
-                    />
-                  </div>
-
-                  <div className="flex items-start gap-4">
-                    <label htmlFor="" className="w-[120px] flex-shrink-0 pt-3">
-                      Status
-                    </label>
-
-                    <Controller
-                      control={control}
-                      name="status"
-                      render={({ field }) => (
-                        <Dropdown
-                          disabled={!id || !onEdit}
-                          value={field.value}
-                          handleSelect={(val) => {
-                            setValue("status", val as string);
-
-                            setError("status", { message: "" });
-                          }}
-                          placeholder="Status"
-                          options={EVIDENCE_STATUS}
-                          error={!!errors.status?.message}
-                          helperText={errors.status?.message}
-                        />
-                      )}
-                    />
-                  </div>
+                          setError("status", { message: "" });
+                        }}
+                        placeholder="Status"
+                        options={EVIDENCE_STATUS}
+                        error={!!errors.status?.message}
+                        helperText={errors.status?.message}
+                      />
+                    )}
+                  />
                 </div>
                 {!!file.id && (
                   <div className="flex flex-col items-center">
@@ -220,12 +203,9 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
 
                     {!uploading && onEdit && (
                       <div className="relative px-6 py-3 text-center">
-                        <p className="font-semibold text-mint">
-                          Replace document
-                        </p>
-
                         <div className="absolute top-0 cursor-pointer opacity-0">
                           <Controller
+                            label="Replace document"
                             control={control}
                             name="file"
                             render={() => (
@@ -239,8 +219,6 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
 
                                   setError("file", { message: "" });
                                 }}
-                                error={!!errors.file?.id?.message}
-                                helperText={errors.file?.id?.message}
                               />
                             )}
                           />
@@ -251,33 +229,27 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
                 )}
 
                 {!file.id && (
-                  <div className="flex items-start gap-x-4">
-                    <label htmlFor="" className="w-[120px] flex-shrink-0 pt-3">
-                      File
-                    </label>
+                  <Controller
+                    label="File"
+                    required
+                    control={control}
+                    name="file"
+                    render={() => (
+                      <FileInput
+                        accept=".pdf"
+                        disabled={!onEdit}
+                        placeholder="Upload file"
+                        onSuccess={(data) => {
+                          setValue("file", data);
 
-                    <Controller
-                      control={control}
-                      name="file"
-                      render={() => (
-                        <FileInput
-                          accept=".pdf"
-                          disabled={!onEdit}
-                          placeholder="Upload file"
-                          onSuccess={(data) => {
-                            setValue("file", data);
-
-                            setError("file", { message: "" });
-                          }}
-                          error={!!errors.file?.message}
-                          helperText={errors.file?.message}
-                        />
-                      )}
-                    />
-                  </div>
+                          setError("file", { message: "" });
+                        }}
+                      />
+                    )}
+                  />
                 )}
               </div>
-            </form>
+            </Form>
           </>
         )}
 

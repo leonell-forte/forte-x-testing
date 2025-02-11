@@ -76,11 +76,9 @@ const ContractOutcomeField = ({
   return (
     <div className="space-y-4">
       <div className="flex gap-4">
-        <label htmlFor="" className="min-w-[120px] pt-4">
-          Outcome {index + 1}
-        </label>
-
         <Controller
+          label={`Outcome ${index + 1}`}
+          required
           name={`outcomeRates.${index}.outcomeId`}
           control={control}
           render={({ field }) => {
@@ -118,62 +116,58 @@ const ContractOutcomeField = ({
         )}
       </div>
 
-      <div className="flex items-start gap-4">
-        <label htmlFor="" className="min-w-[120px] pt-4">
-          Rate
-        </label>
+      <div className="w-full space-y-4">
+        <Controller
+          label="Rate"
+          required
+          name={`outcomeRates.${index}.rate`}
+          control={control}
+          render={({ field }) => {
+            return (
+              <Input
+                {...field}
+                min={0}
+                disabled={disabled}
+                placeholder="Rate"
+                type="number"
+              />
+            );
+          }}
+        />
 
-        <div className="w-full space-y-4">
+        <div className="flex flex-col gap-2 md:flex-row md:items-end">
           <Controller
-            name={`outcomeRates.${index}.rate`}
+            name={`outcomeRates.${index}.perOutcome`}
             control={control}
             render={({ field }) => {
               return (
-                <Input
-                  {...field}
-                  min={0}
+                <RadioGroup
                   disabled={disabled}
-                  placeholder="Rate"
-                  type="number"
+                  className="flex flex-col gap-4 md:w-[280px]"
+                  items={["Per outcome", "If threshold reached"]}
+                  value={field.value ? "Per outcome" : "If threshold reached"}
+                  onChange={(e) => {
+                    handleRadioSelect(e.target.value as RateEnum);
+                  }}
                 />
               );
             }}
           />
 
-          <div className="flex flex-col gap-2 md:flex-row md:items-end">
+          <div className="w-full">
             <Controller
-              name={`outcomeRates.${index}.perOutcome`}
+              name={`outcomeRates.${index}.threshold`}
               control={control}
               render={({ field }) => {
                 return (
-                  <RadioGroup
-                    disabled={disabled}
-                    className="flex flex-col gap-4 md:w-[280px]"
-                    items={["Per outcome", "If threshold reached"]}
-                    value={field.value ? "Per outcome" : "If threshold reached"}
-                    onChange={(e) => {
-                      handleRadioSelect(e.target.value as RateEnum);
-                    }}
+                  <Input
+                    {...field}
+                    disabled={perOutcome}
+                    placeholder="Threshold"
                   />
                 );
               }}
             />
-
-            <div className="w-full">
-              <Controller
-                name={`outcomeRates.${index}.threshold`}
-                control={control}
-                render={({ field }) => {
-                  return (
-                    <Input
-                      {...field}
-                      disabled={perOutcome}
-                      placeholder="Threshold"
-                    />
-                  );
-                }}
-              />
-            </div>
           </div>
         </div>
       </div>

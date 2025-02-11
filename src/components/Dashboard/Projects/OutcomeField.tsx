@@ -25,12 +25,10 @@ const OutcomeField = ({
   return (
     <div className="space-y-[22px]">
       <div className="flex">
-        <label htmlFor="" className="w-[180px] pt-3">
-          Outcome {count} name
-        </label>
-
         <div className="flex w-full gap-[17px]">
           <Controller
+            label={`Outcome ${count}`}
+            required
             name={`outcomes.${index}.name`}
             control={control}
             render={({ field }) => (
@@ -53,24 +51,15 @@ const OutcomeField = ({
           )}
         </div>
       </div>
-
-      <div className="flex">
-        <label htmlFor="" className="mt-3.5 w-[180px]">
-          Description
-        </label>
-
-        <Controller
-          name={`outcomes.${index}.description`}
-          control={control}
-          render={({ field }) => (
-            <Input
-              {...field}
-              multiline
-              placeholder="Enter outcome description"
-            />
-          )}
-        />
-      </div>
+      <Controller
+        label="Description"
+        required
+        name={`outcomes.${index}.description`}
+        control={control}
+        render={({ field }) => (
+          <Input {...field} multiline placeholder="Enter outcome description" />
+        )}
+      />
     </div>
   );
 };

@@ -6,11 +6,16 @@ import {
   useFormContext,
 } from "react-hook-form";
 
+import { cn } from "lib/utils";
+
 import Tooltip from "../tooltip/Tooltip";
 
 type CustomProps = {
   name: string;
   control: Control<any>;
+  label?: string;
+  labelClassName?: string;
+  required?: boolean;
 } & Omit<ControllerProps, "control">;
 
 type ObjectWithMessage = { message: string; [key: string]: any };
@@ -37,6 +42,9 @@ function getFirstMessageProperty(
 export default function CustomController({
   name,
   control,
+  label,
+  labelClassName,
+  required = false,
   ...props
 }: CustomProps) {
   const {
@@ -53,7 +61,13 @@ export default function CustomController({
       content={result?.message}
       open={Boolean(result?.message) && isFirstIndex}
     >
-      <div className="w-full">
+      <div className="flex w-full items-center">
+        {label && (
+          <label htmlFor={name} className={cn("min-w-[140px]", labelClassName)}>
+            {label}
+            <span className="text-lg font-bold">{required ? "*" : ""}</span>
+          </label>
+        )}
         <Controller control={control} {...props} name={name} />
       </div>
     </Tooltip>

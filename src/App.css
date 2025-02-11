@@ -81,3 +81,7 @@ input:-webkit-autofill:active {
 .MuiStack-root {
   padding: 0 !important;
 }
+
+[data-radix-popper-content-wrapper] {
+  margin-top: 0px !important;
+}
