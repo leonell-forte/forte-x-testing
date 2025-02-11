@@ -58,6 +58,8 @@ class AuthService {
   }
 
   async getProfile(): Promise<ProfileType> {
+    if (!cookie.get("access_token")) throw new Error();
+
     const response = await api.get(`/authentication/profile`);
 
     return response.data.data;
