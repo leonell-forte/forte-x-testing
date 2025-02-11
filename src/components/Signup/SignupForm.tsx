@@ -102,7 +102,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
             name="firstName"
             control={control}
             render={({ field }) => (
-              <Input {...field} autoComplete="given-name" label="First name" />
+              <Input {...field} autoComplete="given-name" label="First name*" />
             )}
           />
 
@@ -110,7 +110,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
             name="lastName"
             control={control}
             render={({ field }) => (
-              <Input {...field} autoComplete="family-name" label="Last name" />
+              <Input {...field} autoComplete="family-name" label="Last name*" />
             )}
           />
 
@@ -123,7 +123,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
                 autoComplete="off"
                 disabled={!!data}
                 type="email"
-                label="Email"
+                label="Email*"
               />
             )}
           />
@@ -132,7 +132,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
             name="phoneNumber"
             control={control}
             render={({ field }) => (
-              <Input {...field} autoComplete="tel" label="Phone number" />
+              <Input {...field} autoComplete="tel" label="Phone number*" />
             )}
           />
 
@@ -140,7 +140,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
             name="password"
             control={control}
             render={({ field }) => (
-              <Input {...field} label="Password" type="password" />
+              <Input {...field} label="Password*" type="password" />
             )}
           />
 
@@ -148,7 +148,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
             name="confirmPassword"
             control={control}
             render={({ field }) => (
-              <Input {...field} label="Re-enter password" type="password" />
+              <Input {...field} label="Re-enter password*" type="password" />
             )}
           />
 
