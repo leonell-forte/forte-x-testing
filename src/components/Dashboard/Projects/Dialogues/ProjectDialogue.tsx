@@ -113,19 +113,15 @@ const ProjectDialogue = ({
         </div>
       ) : (
         <Form form={form} onSubmit={onSubmit} className="space-y-[22px]">
-          <div className="flex items-start">
-            <label htmlFor="" className="w-[180px] pt-3">
-              Project name
-            </label>
-
-            <Controller
-              name="name"
-              control={control}
-              render={({ field }) => (
-                <Input {...field} placeholder="Project name" />
-              )}
-            />
-          </div>
+          <Controller
+            label=" Project name"
+            required
+            name="name"
+            control={control}
+            render={({ field }) => (
+              <Input {...field} placeholder="Project name" />
+            )}
+          />
 
           <div className="flex w-full items-center gap-4">
             <p className="w-[190px]">Outcomes</p>

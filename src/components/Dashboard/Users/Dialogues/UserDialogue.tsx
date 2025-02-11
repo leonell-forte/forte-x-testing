@@ -97,137 +97,112 @@ const UserDialogue = ({
         </div>
       ) : (
         <Form form={form} onSubmit={onSubmit} className="space-y-4">
-          <div className="flex items-start">
-            <label htmlFor="" className="w-[140px] pt-3">
-              Email
-            </label>
+          <Controller
+            name="email"
+            label="Email"
+            required
+            control={control}
+            render={({ field }) => {
+              return (
+                <Input {...field} autoComplete="email" placeholder="Email" />
+              );
+            }}
+          />
 
-            <Controller
-              name="email"
-              control={control}
-              render={({ field }) => {
-                return (
-                  <Input {...field} autoComplete="email" placeholder="Email" />
-                );
-              }}
-            />
-          </div>
+          <Controller
+            name="firstName"
+            label="First name"
+            required
+            control={control}
+            render={({ field }) => {
+              return (
+                <Input
+                  {...field}
+                  autoComplete="given-name"
+                  placeholder="First name"
+                />
+              );
+            }}
+          />
 
-          <div className="flex items-start">
-            <label htmlFor="" className="w-[140px] pt-3">
-              First name
-            </label>
+          <Controller
+            name="lastName"
+            label="Last name"
+            required
+            control={control}
+            render={({ field }) => {
+              return (
+                <Input
+                  {...field}
+                  autoComplete="family-name"
+                  placeholder="Last name"
+                />
+              );
+            }}
+          />
 
-            <Controller
-              name="firstName"
-              control={control}
-              render={({ field }) => {
-                return (
-                  <Input
-                    {...field}
-                    autoComplete="given-name"
-                    placeholder="First name"
-                  />
-                );
-              }}
-            />
-          </div>
+          <Controller
+            name="phoneNumber"
+            label="Phone number"
+            required
+            control={control}
+            render={({ field }) => {
+              return (
+                <Input
+                  {...field}
+                  phoneNUmber
+                  autoComplete="tel"
+                  placeholder="Phone number"
+                />
+              );
+            }}
+          />
 
-          <div className="flex items-start">
-            <label htmlFor="" className="w-[140px] pt-3">
-              Last name
-            </label>
+          <Controller
+            name="organizationId"
+            label="Organization"
+            required
+            control={control}
+            render={({ field }) => {
+              return (
+                <Dropdown
+                  enableSearch
+                  value={
+                    organizations.find(
+                      (item) => item.id?.toString() === field.value
+                    )?.registeredName
+                  }
+                  options={organizations.map((item: IOrganization) => ({
+                    label: item.registeredName,
+                    value: String(item.id),
+                  }))}
+                  handleSelect={(val) => field.onChange(val)}
+                  placeholder="Organization"
+                />
+              );
+            }}
+          />
 
-            <Controller
-              name="lastName"
-              control={control}
-              render={({ field }) => {
-                return (
-                  <Input
-                    {...field}
-                    autoComplete="family-name"
-                    placeholder="Last name"
-                  />
-                );
-              }}
-            />
-          </div>
-
-          <div className="flex items-start">
-            <label htmlFor="" className="w-[140px] pt-3">
-              Phone number
-            </label>
-
-            <Controller
-              name="phoneNumber"
-              control={control}
-              render={({ field }) => {
-                return (
-                  <Input
-                    {...field}
-                    phoneNUmber
-                    autoComplete="tel"
-                    placeholder="Phone number"
-                  />
-                );
-              }}
-            />
-          </div>
-
-          <div className="flex items-start">
-            <label htmlFor="" className="w-[140px] pt-3">
-              Organization
-            </label>
-
-            <Controller
-              name="organizationId"
-              control={control}
-              render={({ field }) => {
-                return (
-                  <Dropdown
-                    enableSearch
-                    value={
-                      organizations.find(
-                        (item) => item.id?.toString() === field.value
-                      )?.registeredName
-                    }
-                    options={organizations.map((item: IOrganization) => ({
-                      label: item.registeredName,
-                      value: String(item.id),
-                    }))}
-                    handleSelect={(val) => field.onChange(val)}
-                    placeholder="Organization"
-                  />
-                );
-              }}
-            />
-          </div>
-
-          <div className="flex items-start">
-            <label htmlFor="" className="w-[140px] pt-3">
-              Role
-            </label>
-
-            <Controller
-              name="role"
-              control={control}
-              render={({ field }) => {
-                return (
-                  <Dropdown
-                    value={
-                      ROLES.find((item) => field.value?.includes(item.value))
-                        ?.label
-                    }
-                    handleSelect={(val) => field.onChange(val)}
-                    options={ROLES}
-                    placeholder="Role"
-                    disabled={Number(profile?.id) === Number(userData?.id)}
-                  />
-                );
-              }}
-            />
-          </div>
-
+          <Controller
+            name="role"
+            label="Role"
+            required
+            control={control}
+            render={({ field }) => {
+              return (
+                <Dropdown
+                  value={
+                    ROLES.find((item) => field.value?.includes(item.value))
+                      ?.label
+                  }
+                  handleSelect={(val) => field.onChange(val)}
+                  options={ROLES}
+                  placeholder="Role"
+                  disabled={Number(profile?.id) === Number(userData?.id)}
+                />
+              );
+            }}
+          />
           <div className="!mt-10 flex justify-end gap-4">
             <Button onClick={close} buttonType="secondary">
               Cancel
