@@ -82,7 +82,7 @@ const Button = ({
         }
       }}
     >
-      {loading ? "loading..." : children}
+      {loading ? "Loading..." : children}
     </ButtonComponent>
   );
 };
