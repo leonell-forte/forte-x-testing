@@ -189,208 +189,175 @@ const BeneficiariesForm = ({
     <Form form={form} onSubmit={onSubmit}>
       <div className="space-y-6">
         <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-2">
-          <div className="flex items-start">
-            <label htmlFor="" className="min-w-[140px] pt-3">
-              First name
-            </label>
+          <Controller
+            name="firstName"
+            label="First name"
+            required
+            control={control}
+            render={({ field }) => (
+              <Input {...field} disabled={!onEdit} placeholder="First name" />
+            )}
+          />
 
-            <Controller
-              control={control}
-              name="firstName"
-              render={({ field }) => (
-                <Input {...field} disabled={!onEdit} placeholder="First name" />
-              )}
-            />
-          </div>
+          <Controller
+            label="Last name"
+            required
+            control={control}
+            name="lastName"
+            render={({ field }) => (
+              <Input {...field} disabled={!onEdit} placeholder="Last name" />
+            )}
+          />
 
-          <div className="flex items-start">
-            <label htmlFor="" className="min-w-[140px] pt-3">
-              Last name
-            </label>
+          <Controller
+            label="Email"
+            required
+            control={control}
+            name="email"
+            render={({ field }) => (
+              <Input {...field} disabled={!onEdit} placeholder="Email" />
+            )}
+          />
 
-            <Controller
-              control={control}
-              name="lastName"
-              render={({ field }) => (
-                <Input {...field} disabled={!onEdit} placeholder="Last name" />
-              )}
-            />
-          </div>
+          <Controller
+            label="Phone"
+            control={control}
+            name="phone"
+            render={({ field }) => (
+              <Input
+                {...field}
+                phoneNUmber
+                disabled={!onEdit}
+                placeholder="Phone"
+              />
+            )}
+          />
 
-          <div className="flex items-start">
-            <label htmlFor="" className="min-w-[140px] pt-3">
-              Email
-            </label>
+          <Controller
+            label="Status"
+            required
+            control={control}
+            name="status"
+            render={({ field }) => (
+              <Dropdown
+                value={field.value || ""}
+                disabled={!onEdit}
+                handleSelect={(val) => {
+                  setValue("status", val as string);
 
-            <Controller
-              control={control}
-              name="email"
-              render={({ field }) => (
-                <Input {...field} disabled={!onEdit} placeholder="Email" />
-              )}
-            />
-          </div>
+                  setError("status", { message: "" });
+                }}
+                options={BENEFICIARY_STATUS}
+                placeholder="Status"
+              />
+            )}
+          />
 
-          <div className="flex items-start">
-            <label htmlFor="" className="min-w-[140px] pt-3">
-              Phone
-            </label>
+          <Controller
+            label="Risk level"
+            control={control}
+            name="riskLevel"
+            render={({ field }) => (
+              <Dropdown
+                value={field.value as string}
+                handleSelect={(val) => {
+                  setValue("riskLevel", val as RiskLevelEnum);
 
-            <Controller
-              control={control}
-              name="phone"
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  phoneNUmber
-                  disabled={!onEdit}
-                  placeholder="Phone"
-                />
-              )}
-            />
-          </div>
+                  setError("riskLevel", { message: "" });
+                }}
+                disabled={!onEdit}
+                options={RISK_LEVEL}
+                placeholder="Risk level"
+              />
+            )}
+          />
 
-          <div className="flex items-start">
-            <label htmlFor="" className="min-w-[140px] pt-3">
-              Status
-            </label>
+          <Controller
+            label="Contract"
+            required
+            control={control}
+            name="contractId"
+            render={({ field }) => (
+              <Dropdown
+                enableSearch
+                disabled={!onEdit}
+                loading={contractsLoading}
+                value={findLabelFromOptions(
+                  contracts,
 
-            <Controller
-              control={control}
-              name="status"
-              render={({ field }) => (
-                <Dropdown
-                  value={field.value || ""}
-                  disabled={!onEdit}
-                  handleSelect={(val) => {
-                    setValue("status", val as string);
+                  (field.value || "").toString()
+                )}
+                handleSelect={(val) => {
+                  setValue("contractId", Number(val));
+                  setValue(
+                    "providerId",
+                    Number(
+                      organizationList?.items.filter((org) => {
+                        const contract = contractList?.items.find(
+                          (contract) => contract.id === Number(val)
+                        );
 
-                    setError("status", { message: "" });
-                  }}
-                  options={BENEFICIARY_STATUS}
-                  placeholder="Status"
-                />
-              )}
-            />
-          </div>
+                        return contract?.partyIds.some(
+                          (item) => Number(item) === Number(org.id)
+                        );
+                      })[0].id
+                    )
+                  );
 
-          <div className="flex items-start">
-            <label htmlFor="" className="min-w-[140px] pt-3">
-              Risk level
-            </label>
+                  setValue(
+                    "projectId",
 
-            <Controller
-              control={control}
-              name="riskLevel"
-              render={({ field }) => (
-                <Dropdown
-                  value={field.value as string}
-                  handleSelect={(val) => {
-                    setValue("riskLevel", val as RiskLevelEnum);
+                    contractList?.items.find((item) => item.id === Number(val))
+                      ?.projectId as number
+                  );
 
-                    setError("riskLevel", { message: "" });
-                  }}
-                  disabled={!onEdit}
-                  options={RISK_LEVEL}
-                  placeholder="Risk level"
-                />
-              )}
-            />
-          </div>
+                  setError("contractId", { message: "" });
 
-          <div className="flex items-start">
-            <label htmlFor="" className="min-w-[140px] pt-3">
-              Contract
-            </label>
+                  setError("projectId", { message: "" });
 
-            <Controller
-              control={control}
-              name="contractId"
-              render={({ field }) => (
-                <Dropdown
-                  enableSearch
-                  disabled={!onEdit}
-                  loading={contractsLoading}
-                  value={findLabelFromOptions(
-                    contracts,
+                  setError("providerId", { message: "" });
+                }}
+                options={contracts}
+                placeholder="Contract"
+              />
+            )}
+          />
 
-                    (field.value || "").toString()
-                  )}
-                  handleSelect={(val) => {
-                    setValue("contractId", Number(val));
-                    setValue(
-                      "providerId",
-                      Number(
-                        organizationList?.items.filter((org) => {
-                          const contract = contractList?.items.find(
-                            (contract) => contract.id === Number(val)
-                          );
+          <Controller
+            label="Provider"
+            required
+            control={control}
+            name="providerId"
+            render={({ field }) => (
+              <Input
+                disabled
+                placeholder="Provider"
+                value={findLabelFromOptions(
+                  organizations,
 
-                          return contract?.partyIds.some(
-                            (item) => Number(item) === Number(org.id)
-                          );
-                        })[0].id
-                      )
-                    );
+                  field.value.toString()
+                )}
+              />
+            )}
+          />
 
-                    setValue(
-                      "projectId",
-
-                      contractList?.items.find(
-                        (item) => item.id === Number(val)
-                      )?.projectId as number
-                    );
-
-                    setError("contractId", { message: "" });
-
-                    setError("projectId", { message: "" });
-
-                    setError("providerId", { message: "" });
-                  }}
-                  options={contracts}
-                  placeholder="Contract"
-                />
-              )}
-            />
-          </div>
-
-          <div className="flex items-start">
-            <label htmlFor="" className="min-w-[140px] pt-3">
-              Provider
-            </label>
-
-            <Controller
-              control={control}
-              name="providerId"
-              render={({ field }) => (
-                <Input
-                  disabled
-                  placeholder="Provider"
-                  value={findLabelFromOptions(
-                    organizations,
-
-                    field.value.toString()
-                  )}
-                />
-              )}
-            />
-          </div>
-
-          <div className="flex items-start">
-            <label htmlFor="" className="min-w-[140px] pt-3">
-              Project
-            </label>
-
-            <Input
-              disabled
-              placeholder="Project"
-              value={
-                contractList?.items.find(
-                  (item) => item.id === watch("contractId")
-                )?.project
-              }
-            />
-          </div>
+          <Controller
+            label="Project"
+            required
+            control={control}
+            name="projectId"
+            render={() => (
+              <Input
+                disabled
+                placeholder="Project"
+                value={
+                  contractList?.items.find(
+                    (item) => item.id === watch("contractId")
+                  )?.project
+                }
+              />
+            )}
+          />
         </div>
 
         <div className="flex items-center">
@@ -401,66 +368,51 @@ const BeneficiariesForm = ({
 
         <div className="space-y-4">
           <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-2">
-            <div className="flex items-start">
-              <label htmlFor="" className="min-w-[140px] pt-3">
-                Start date
-              </label>
+            <Controller
+              label="Start date"
+              control={control}
+              name="cohortStartDate"
+              render={({ field }) => (
+                <DatePicker
+                  maxDate={new Date(watch("cohortEndDate") || "")}
+                  disabled={!onEdit}
+                  value={new Date(field.value || "")}
+                  onChange={(date) => {
+                    setValue("cohortStartDate", date!.toISOString());
 
-              <Controller
-                control={control}
-                name="cohortStartDate"
-                render={({ field }) => (
-                  <DatePicker
-                    maxDate={new Date(watch("cohortEndDate") || "")}
-                    disabled={!onEdit}
-                    value={new Date(field.value || "")}
-                    onChange={(date) => {
-                      setValue("cohortStartDate", date!.toISOString());
-
-                      setError("cohortStartDate", { message: "" });
-                    }}
-                  />
-                )}
-              />
-            </div>
-
-            <div className="flex items-start">
-              <label htmlFor="" className="min-w-[140px] pt-3">
-                End date
-              </label>
-
-              <Controller
-                control={control}
-                name="cohortEndDate"
-                render={({ field }) => (
-                  <DatePicker
-                    disabled={!onEdit}
-                    minDate={new Date(watch("cohortStartDate") || "")}
-                    value={new Date(field.value || "")}
-                    onChange={(date) => {
-                      setValue("cohortEndDate", date!.toISOString());
-
-                      setError("cohortEndDate", { message: "" });
-                    }}
-                  />
-                )}
-              />
-            </div>
-          </div>
-
-          <div className="flex items-start">
-            <label htmlFor="" className="min-w-[140px] pt-3">
-              Program
-            </label>
+                    setError("cohortStartDate", { message: "" });
+                  }}
+                />
+              )}
+            />
 
             <Controller
+              label="End date"
               control={control}
-              name="cohortName"
+              name="cohortEndDate"
               render={({ field }) => (
-                <Input {...field} disabled={!onEdit} placeholder="Program" />
+                <DatePicker
+                  disabled={!onEdit}
+                  minDate={new Date(watch("cohortStartDate") || "")}
+                  value={new Date(field.value || "")}
+                  onChange={(date) => {
+                    setValue("cohortEndDate", date!.toISOString());
+
+                    setError("cohortEndDate", { message: "" });
+                  }}
+                />
               )}
             />
           </div>
+
+          <Controller
+            label="Program"
+            control={control}
+            name="cohortName"
+            render={({ field }) => (
+              <Input {...field} disabled={!onEdit} placeholder="Program" />
+            )}
+          />
         </div>
 
         <div className="flex items-center">
@@ -471,56 +423,41 @@ const BeneficiariesForm = ({
 
         <div className="space-y-4">
           <div className="grid grid-cols-1 gap-x-6 md:grid-cols-2">
-            <div className="flex items-start">
-              <label htmlFor="" className="min-w-[140px] pt-3">
-                Linkedin
-              </label>
-
-              <Controller
-                control={control}
-                name="linkedinUrl"
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    disabled={!onEdit}
-                    placeholder="Linkedin link"
-                  />
-                )}
-              />
-            </div>
-
-            <div className="flex items-start">
-              <label htmlFor="" className="min-w-[140px] pt-3">
-                Github
-              </label>
-
-              <Controller
-                control={control}
-                name="githubUrl"
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    disabled={!onEdit}
-                    placeholder="Github link"
-                  />
-                )}
-              />
-            </div>
-          </div>
-
-          <div className="flex items-start">
-            <label htmlFor="" className="min-w-[140px] pt-3">
-              Other
-            </label>
+            <Controller
+              label="Linkedin"
+              control={control}
+              name="linkedinUrl"
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  disabled={!onEdit}
+                  placeholder="Linkedin link"
+                />
+              )}
+            />
 
             <Controller
+              label="Github"
               control={control}
-              name="otherUrl"
+              name="githubUrl"
               render={({ field }) => (
-                <Input {...field} disabled={!onEdit} placeholder="Other" />
+                <Input
+                  {...field}
+                  disabled={!onEdit}
+                  placeholder="Github link"
+                />
               )}
             />
           </div>
+
+          <Controller
+            label="Other"
+            control={control}
+            name="otherUrl"
+            render={({ field }) => (
+              <Input {...field} disabled={!onEdit} placeholder="Other" />
+            )}
+          />
         </div>
 
         <div className="flex items-center">
@@ -531,182 +468,138 @@ const BeneficiariesForm = ({
 
         <div className="space-y-4">
           <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-2">
-            <div className="flex items-start">
-              <label htmlFor="" className="min-w-[140px] pt-3">
-                Date of birth
-              </label>
-
-              <Controller
-                control={control}
-                name="birthdate"
-                render={({ field }) => (
-                  <DatePicker
-                    disabled={!onEdit}
-                    value={new Date(field.value)}
-                    onChange={(date) => {
-                      setValue("birthdate", date!.toISOString());
-
-                      setError("birthdate", { message: "" });
-                    }}
-                  />
-                )}
-              />
-            </div>
-
-            <div className="flex items-start">
-              <label htmlFor="" className="min-w-[140px] pt-3">
-                Ethnicity
-              </label>
-
-              <Controller
-                control={control}
-                name="ethnicity"
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    disabled={!onEdit}
-                    placeholder="Ethnicity"
-                  />
-                )}
-              />
-            </div>
-
-            <div className="flex items-start">
-              <label htmlFor="" className="min-w-[140px] pt-3">
-                Gender
-              </label>
-
-              <Controller
-                control={control}
-                name="gender"
-                render={({ field }) => (
-                  <Dropdown
-                    disabled={!onEdit}
-                    value={field.value}
-                    handleSelect={(val) => {
-                      setValue("gender", val as string);
-
-                      setError("gender", { message: "" });
-                    }}
-                    options={GENDER}
-                    placeholder="Gender"
-                  />
-                )}
-              />
-            </div>
-
-            <div className="flex items-start">
-              <label htmlFor="" className="min-w-[140px] pt-3">
-                Disability status
-              </label>
-
-              <Controller
-                control={control}
-                name="disabilityStatus"
-                render={({ field }) => (
-                  <Dropdown
-                    disabled={!onEdit}
-                    value={field.value}
-                    handleSelect={(val) => {
-                      setValue("disabilityStatus", val as DisabilityStatusEnum);
-
-                      setError("disabilityStatus", { message: "" });
-                    }}
-                    options={CONFIRM}
-                    placeholder="Disability status"
-                  />
-                )}
-              />
-            </div>
-          </div>
-
-          <div className="flex items-start">
-            <label htmlFor="" className="min-w-[140px] pt-3">
-              Address
-            </label>
-
             <Controller
+              label="Date of birth"
               control={control}
-              name="address"
+              name="birthdate"
               render={({ field }) => (
-                <Input {...field} disabled={!onEdit} placeholder="Address" />
-              )}
-            />
-          </div>
-
-          <div className="flex items-start">
-            <label htmlFor="" className="min-w-[140px] pt-3">
-              Socio-economic status
-            </label>
-
-            <Controller
-              control={control}
-              name="socioeconomicStatus"
-              render={({ field }) => (
-                <Input
-                  {...field}
+                <DatePicker
                   disabled={!onEdit}
-                  placeholder="Socio-economic status"
-                />
-              )}
-            />
-          </div>
+                  value={new Date(field.value)}
+                  onChange={(date) => {
+                    setValue("birthdate", date!.toISOString());
 
-          <div className="flex items-start">
-            <label htmlFor="" className="min-w-[140px] pt-3">
-              Highest education level
-            </label>
-
-            <Controller
-              control={control}
-              name="educationLevel"
-              render={({ field }) => (
-                <Dropdown
-                  value={field.value}
-                  handleSelect={(val) => {
-                    setValue("educationLevel", val as string);
-
-                    setError("educationLevel", { message: "" });
+                    setError("birthdate", { message: "" });
                   }}
-                  disabled={!onEdit}
-                  options={HIGHEST_EDUCATION_LEVEL}
-                  placeholder="Highest education level"
                 />
               )}
             />
-          </div>
-
-          <div className="flex items-start">
-            <label htmlFor="" className="min-w-[140px] pt-3">
-              Language(s) spoken
-            </label>
 
             <Controller
+              label="Ethnicity"
               control={control}
-              name="languages"
+              name="ethnicity"
+              render={({ field }) => (
+                <Input {...field} disabled={!onEdit} placeholder="Ethnicity" />
+              )}
+            />
+
+            <Controller
+              label="Gender"
+              control={control}
+              name="gender"
               render={({ field }) => (
                 <Dropdown
                   disabled={!onEdit}
-                  enableSearch
-                  isMultiSelect
-                  showAsTags
                   value={field.value}
                   handleSelect={(val) => {
-                    setValue("languages", val as string[]);
+                    setValue("gender", val as string);
 
-                    setError("languages", { message: "" });
+                    setError("gender", { message: "" });
                   }}
-                  options={LANGUAGES.map((item) => ({
-                    label: item,
-
-                    value: item,
-                  }))}
-                  placeholder="Select"
+                  options={GENDER}
+                  placeholder="Gender"
                 />
               )}
             />
           </div>
+
+          <Controller
+            label="Disability status"
+            control={control}
+            name="disabilityStatus"
+            render={({ field }) => (
+              <Dropdown
+                disabled={!onEdit}
+                value={field.value}
+                handleSelect={(val) => {
+                  setValue("disabilityStatus", val as DisabilityStatusEnum);
+
+                  setError("disabilityStatus", { message: "" });
+                }}
+                options={CONFIRM}
+                placeholder="Disability status"
+              />
+            )}
+          />
         </div>
+
+        <Controller
+          label="Address"
+          control={control}
+          name="address"
+          render={({ field }) => (
+            <Input {...field} disabled={!onEdit} placeholder="Address" />
+          )}
+        />
+
+        <Controller
+          label="Socio-economic status"
+          control={control}
+          name="socioeconomicStatus"
+          render={({ field }) => (
+            <Input
+              {...field}
+              disabled={!onEdit}
+              placeholder="Socio-economic status"
+            />
+          )}
+        />
+
+        <Controller
+          label="Highest education level"
+          control={control}
+          name="educationLevel"
+          render={({ field }) => (
+            <Dropdown
+              value={field.value}
+              handleSelect={(val) => {
+                setValue("educationLevel", val as string);
+
+                setError("educationLevel", { message: "" });
+              }}
+              disabled={!onEdit}
+              options={HIGHEST_EDUCATION_LEVEL}
+              placeholder="Highest education level"
+            />
+          )}
+        />
+
+        <Controller
+          label="Language(s) spoken"
+          control={control}
+          name="languages"
+          render={({ field }) => (
+            <Dropdown
+              disabled={!onEdit}
+              enableSearch
+              isMultiSelect
+              showAsTags
+              value={field.value}
+              handleSelect={(val) => {
+                setValue("languages", val as string[]);
+
+                setError("languages", { message: "" });
+              }}
+              options={LANGUAGES.map((item) => ({
+                label: item,
+
+                value: item,
+              }))}
+              placeholder="Select"
+            />
+          )}
+        />
       </div>
 
       {IsAuthorized([Beneficiaries.UPDATE]) && (

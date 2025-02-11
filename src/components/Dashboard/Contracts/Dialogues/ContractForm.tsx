@@ -167,8 +167,9 @@ const ContractForm = ({
     <Form form={form} onSubmit={onSubmit} className="space-y-1">
       {isAmmending ? (
         <div className="space-y-1">
-          <label>Please upload ammended contract</label>
           <Controller
+            label="Please upload ammended contract"
+            required
             name="documentId"
             control={control}
             render={() => (
@@ -186,227 +187,187 @@ const ContractForm = ({
         </div>
       ) : (
         <div className="space-y-4">
-          <div className="flex items-start gap-4">
-            <label htmlFor="" className="w-[120px] flex-shrink-0 pt-3">
-              Contract name
-            </label>
-
-            <Controller
-              name="name"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  disabled={!onEdit || isSigned}
-                  placeholder="Contract name"
-                />
-              )}
-            />
-          </div>
-
-          <div className="flex items-start gap-4">
-            <label htmlFor="" className="min-w-[120px] pt-4">
-              Parties
-            </label>
-
-            <Controller
-              name="partyIds"
-              control={control}
-              render={({ field }) => {
-                return (
-                  <Dropdown
-                    disabled={!onEdit}
-                    enableSearch
-                    loading={orgLoading}
-                    showAsTags
-                    value={field.value.map((item: number) => item.toString())}
-                    options={organizations}
-                    handleSelect={(val) => {
-                      setValue(
-                        "partyIds",
-                        (val as string[]).map((item) => Number(item))
-                      );
-
-                      setError("partyIds", { message: "" });
-                    }}
-                    isMultiSelect
-                    placeholder="Parties"
-                  />
-                );
-              }}
-            />
-          </div>
-
-          <div className="flex items-start gap-4">
-            <label htmlFor="" className="min-w-[120px] pt-4">
-              Status
-            </label>
-
-            <Controller
-              name="status"
-              control={control}
-              render={({ field }) => {
-                return (
-                  <Dropdown
-                    disabled={!onEdit}
-                    value={field.value.toLowerCase()}
-                    handleSelect={(val) => {
-                      setValue(
-                        "status",
-                        val.toString().toUpperCase() as StatusType
-                      );
-
-                      setError("status", { message: "" });
-                    }}
-                    options={CONTRACT_STATUS.filter(
-                      (item) => item.value !== "completed"
-                    )}
-                    placeholder="Status"
-                  />
-                );
-              }}
-            />
-          </div>
-
-          <div className="flex items-start gap-4">
-            <label htmlFor="" className="min-w-[120px] pt-4">
-              Project
-            </label>
-
-            <Controller
-              name="projectId"
-              control={control}
-              render={({ field }) => {
-                return (
-                  <Dropdown
-                    disabled={!!projectId || !onEdit}
-                    loading={projectLoading}
-                    enableSearch
-                    value={findLabelFromOptions(
-                      projects,
-
-                      field.value.toString()
-                    )}
-                    options={projects}
-                    handleSelect={(val) => {
-                      setValue("projectId", Number(val));
-
-                      setValue("outcomeRates", [
-                        {
-                          outcomeId: 0,
-
-                          rate: "",
-
-                          perOutcome: true,
-
-                          threshold: "",
-                        },
-                      ]);
-
-                      setError("projectId", { message: "" });
-                    }}
-                    placeholder="Project"
-                  />
-                );
-              }}
-            />
-          </div>
-
-          <div className="flex items-start gap-4">
-            <label htmlFor="" className="w-[120px] flex-shrink-0 pt-1">
-              Target number of beneficiaries
-            </label>
-
-            <Controller
-              name="targetNoOfBenefeciaries"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  wholeNumberOnly
-                  min={0}
-                  disabled={!onEdit}
-                  placeholder="Number of beneficiaries"
-                  type="number"
-                />
-              )}
-            />
-          </div>
-
-          <div className="flex items-start gap-4">
-            <label htmlFor="" className="min-w-[120px] pt-4">
-              Document
-            </label>
-
-            <Controller
-              name="documentId"
-              control={control}
-              render={() => (
-                <FileInput
-                  disabled={!onEdit || isSigned}
-                  filename={contractDetails?.document?.filename || ""}
-                  accept=".pdf"
-                  onSuccess={(data) => {
-                    setValue("documentId", data.id);
-
-                    setError("documentId", { message: "" });
-                  }}
-                  placeholder="Document"
-                />
-              )}
-            />
-          </div>
-
-          <div className="grid grid-cols-1 gap-1 md:grid-cols-2 md:gap-6">
-            <div className="flex items-start gap-4">
-              <label htmlFor="" className="min-w-[120px] pt-4">
-                Start date
-              </label>
-
-              <Controller
-                name="startDate"
-                control={control}
-                render={({ field }) => {
-                  return (
-                    <DatePicker
-                      disabled={!onEdit}
-                      maxDate={new Date(watch("endDate"))}
-                      value={new Date(field.value)}
-                      onChange={(date) => {
-                        setValue("startDate", formatDate(date!, "LL-dd-yyyy"));
-
-                        setError("startDate", { message: "" });
-                      }}
-                    />
-                  );
-                }}
+          <Controller
+            label="Contract name"
+            name="name"
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                disabled={!onEdit || isSigned}
+                placeholder="Contract name"
               />
-            </div>
+            )}
+          />
+          <Controller
+            label="Parties"
+            required
+            name="partyIds"
+            control={control}
+            render={({ field }) => {
+              return (
+                <Dropdown
+                  disabled={!onEdit}
+                  enableSearch
+                  loading={orgLoading}
+                  showAsTags
+                  value={field.value.map((item: number) => item.toString())}
+                  options={organizations}
+                  handleSelect={(val) => {
+                    setValue(
+                      "partyIds",
+                      (val as string[]).map((item) => Number(item))
+                    );
 
-            <div className="flex items-start gap-4">
-              <label htmlFor="" className="min-w-[120px] pt-4">
-                End date
-              </label>
+                    setError("partyIds", { message: "" });
+                  }}
+                  isMultiSelect
+                  placeholder="Parties"
+                />
+              );
+            }}
+          />
+          <Controller
+            label="Status"
+            name="status"
+            control={control}
+            render={({ field }) => {
+              return (
+                <Dropdown
+                  disabled={!onEdit}
+                  value={field.value.toLowerCase()}
+                  handleSelect={(val) => {
+                    setValue(
+                      "status",
+                      val.toString().toUpperCase() as StatusType
+                    );
 
-              <Controller
-                name="endDate"
-                control={control}
-                render={({ field }) => (
+                    setError("status", { message: "" });
+                  }}
+                  options={CONTRACT_STATUS.filter(
+                    (item) => item.value !== "completed"
+                  )}
+                  placeholder="Status"
+                />
+              );
+            }}
+          />
+          <Controller
+            label="Project"
+            required
+            name="projectId"
+            control={control}
+            render={({ field }) => {
+              return (
+                <Dropdown
+                  disabled={!!projectId || !onEdit}
+                  loading={projectLoading}
+                  enableSearch
+                  value={findLabelFromOptions(
+                    projects,
+
+                    field.value.toString()
+                  )}
+                  options={projects}
+                  handleSelect={(val) => {
+                    setValue("projectId", Number(val));
+
+                    setValue("outcomeRates", [
+                      {
+                        outcomeId: 0,
+
+                        rate: "",
+
+                        perOutcome: true,
+
+                        threshold: "",
+                      },
+                    ]);
+
+                    setError("projectId", { message: "" });
+                  }}
+                  placeholder="Project"
+                />
+              );
+            }}
+          />
+          <Controller
+            label="Target number of beneficiaries"
+            labelClassName="w-[150px]"
+            required
+            name="targetNoOfBenefeciaries"
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                wholeNumberOnly
+                min={0}
+                disabled={!onEdit}
+                placeholder="Number of beneficiaries"
+                type="number"
+              />
+            )}
+          />
+          <Controller
+            label="Document"
+            required
+            name="documentId"
+            control={control}
+            render={() => (
+              <FileInput
+                disabled={!onEdit || isSigned}
+                filename={contractDetails?.document?.filename || ""}
+                accept=".pdf"
+                onSuccess={(data) => {
+                  setValue("documentId", data.id);
+
+                  setError("documentId", { message: "" });
+                }}
+                placeholder="Document"
+              />
+            )}
+          />
+          <div className="grid grid-cols-1 gap-1 md:grid-cols-2 md:gap-6">
+            <Controller
+              required
+              label="Start date"
+              name="startDate"
+              control={control}
+              render={({ field }) => {
+                return (
                   <DatePicker
                     disabled={!onEdit}
-                    minDate={new Date(watch("startDate"))}
+                    maxDate={new Date(watch("endDate"))}
                     value={new Date(field.value)}
                     onChange={(date) => {
-                      setValue("endDate", formatDate(date!, "LL-dd-yyyy"));
+                      setValue("startDate", formatDate(date!, "LL-dd-yyyy"));
 
-                      setError("endDate", { message: "" });
+                      setError("startDate", { message: "" });
                     }}
                   />
-                )}
-              />
-            </div>
-          </div>
+                );
+              }}
+            />
 
+            <Controller
+              label="End date"
+              required
+              name="endDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  disabled={!onEdit}
+                  minDate={new Date(watch("startDate"))}
+                  value={new Date(field.value)}
+                  onChange={(date) => {
+                    setValue("endDate", formatDate(date!, "LL-dd-yyyy"));
+
+                    setError("endDate", { message: "" });
+                  }}
+                />
+              )}
+            />
+          </div>
           <div className="space-y-10">
             {fields.map((item, index) => {
               return (
