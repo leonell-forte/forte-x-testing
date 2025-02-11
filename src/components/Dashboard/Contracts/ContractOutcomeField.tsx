@@ -73,6 +73,8 @@ const ContractOutcomeField = ({
     [project]
   );
 
+  console.log(outcomes);
+
   return (
     <div className="space-y-4">
       <div className="flex gap-4">
@@ -90,7 +92,9 @@ const ContractOutcomeField = ({
                 handleSelect={(val) => {
                   handleSelectOutcome(val as string);
                 }}
-                options={outcomes}
+                options={outcomes.sort((a, b) =>
+                  a.label.localeCompare(b.label)
+                )}
                 placeholder="Outcome"
               />
             );
