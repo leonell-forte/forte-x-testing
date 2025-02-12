@@ -88,7 +88,7 @@ const UserDropdown = ({ user }: IProp) => {
           initial={{ height: 0 }}
           animate={
             showDropdown
-              ? { opacity: 1, height: "fit-content" }
+              ? { opacity: 1, height: 102 }
               : { height: 0, opacity: 0 }
           }
           transition={{ type: "spring", duration: 0.4, bounce: 0 }}
