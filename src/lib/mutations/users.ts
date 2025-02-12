@@ -46,9 +46,12 @@ const useUserMutation = ({
         return addedUser.data.data;
       });
 
-      queryClient.setQueryData(["profile"], () => {
-        return addedUser.data.data;
-      });
+      // to prevent upating profile when adding user
+      if (isProfile && userId) {
+        queryClient.setQueryData(["profile"], (prev: IUser) => {
+          return addedUser.data.data;
+        });
+      }
 
       queryClient.setQueryData(["users"], (old: { items: IUser[] }) => {
         return [...(old?.items || []), addedUser.data.data];
