@@ -106,12 +106,12 @@ const UserDialogue = ({
 
   const organizationId = watch("organizationId");
 
-  const isForteOrg = useMemo(
-    // eslint-disable-next-line
-    () =>
-      organizations.find((org) => org.id == organizationId)?.type === "forte",
-    [organizationId, organizations]
-  );
+  const isForteOrg = useMemo(() => {
+    return organizations.some(
+      // eslint-disable-next-line
+      (org) => org.id == organizationId && org.type === "forte"
+    );
+  }, [organizationId, organizations]);
 
   const filteredRoles = useMemo(
     () =>
@@ -119,7 +119,7 @@ const UserDialogue = ({
         if (isForteOrg) return role.value !== "read-only";
         return true;
       }),
-    [ROLES, isForteOrg]
+    [isForteOrg]
   );
 
   return (

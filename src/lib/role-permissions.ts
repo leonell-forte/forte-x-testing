@@ -62,6 +62,13 @@ const ROLES: Record<
     ...Object.values(Contracts),
     ...Object.values(Projects),
   ],
+  user: [
+    Beneficiaries.NAVIGATE,
+    Projects.NAVIGATE,
+    Contracts.NAVIGATE,
+    Users.NAVIGATE,
+    Users.UPDATE,
+  ],
   "provider.owner": [
     ...Object.values(Beneficiaries),
     ...Object.values(Contracts),
