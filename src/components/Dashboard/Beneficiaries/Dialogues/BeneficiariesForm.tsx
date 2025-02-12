@@ -325,7 +325,6 @@ const BeneficiariesForm = ({
 
           <Controller
             label="Provider"
-            required
             control={control}
             name="providerId"
             render={({ field }) => (
@@ -343,7 +342,6 @@ const BeneficiariesForm = ({
 
           <Controller
             label="Project"
-            required
             control={control}
             name="projectId"
             render={() => (
