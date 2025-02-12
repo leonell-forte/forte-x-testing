@@ -170,7 +170,10 @@ const ViewProfileDialogue = ({
                       (item) => item.id?.toString() === field.value
                     )?.registeredName
                   }
-                  options={[]}
+                  options={organizations.map((item: IOrganization) => ({
+                    label: item.registeredName,
+                    value: String(item.id),
+                  }))}
                   placeholder="Organization"
                   disabled
                 />
