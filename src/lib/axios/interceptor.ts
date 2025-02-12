@@ -35,9 +35,9 @@ api.interceptors.response.use(
     const originalRequest = error.config;
 
     if (
-      error.response?.status === 401 &&
-      !originalRequest._retry &&
-      !publicRoutes.includes(window.location.pathname)
+      error.response?.status === 401
+      // !originalRequest._retry &&
+      // !publicRoutes.includes(window.location.pathname)
     ) {
       originalRequest._retry = true;
 
@@ -52,8 +52,8 @@ api.interceptors.response.use(
           })
           .catch((refreshError) => {
             console.error("Token refresh failed", refreshError);
-            cookie.remove("access_token");
-            cookie.remove("refresh_token");
+            cookie.remove("access_token", { path: "/" });
+            cookie.remove("refresh_token", { path: "/" });
             window.location.href = "/"; // Or redirect to login
             return Promise.reject({ ...refreshError, config: originalRequest }); // Propagate the error
           })

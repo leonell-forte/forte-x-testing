@@ -50,13 +50,12 @@ class AuthService {
   }
 
   async check() {
-    await axios.get(`${process.env.REACT_APP_API_URL}/authentication/check`, {
-      headers: {
-        Authorization: `Bearer ${cookie.get("access_token")}`,
-      },
-    });
-
-    window.location.href = "/users";
+    await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate async delay
+    const token = cookie.get("access_token");
+    if (token) {
+      window.location.href = "/users";
+      return true;
+    }
   }
 
   async getProfile(): Promise<ProfileType> {
