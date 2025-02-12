@@ -162,6 +162,7 @@ const ViewProfileDialogue = ({
 
           <Controller
             control={control}
+            required
             render={({ field }) => {
               return (
                 <Dropdown
@@ -185,6 +186,7 @@ const ViewProfileDialogue = ({
 
           <Controller
             control={control}
+            required
             render={({ field }) => {
               return (
                 <Dropdown
