@@ -56,6 +56,8 @@ const UserDialogue = ({
     reset,
 
     control,
+
+    watch,
   } = form;
 
   useEffect(() => {
@@ -101,6 +103,24 @@ const UserDialogue = ({
       return "You cannot change an owner's role.";
     return "You cannot change your own role.";
   }, [myRole, userData]);
+
+  const organizationId = watch("organizationId");
+
+  const isForteOrg = useMemo(
+    // eslint-disable-next-line
+    () =>
+      organizations.find((org) => org.id == organizationId)?.type === "forte",
+    [organizationId, organizations]
+  );
+
+  const filteredRoles = useMemo(
+    () =>
+      ROLES.filter((role) => {
+        if (isForteOrg) return role.value !== "read-only";
+        return true;
+      }),
+    [ROLES, isForteOrg]
+  );
 
   return (
     <Dialogue
@@ -210,7 +230,7 @@ const UserDialogue = ({
                           ?.label
                       }
                       handleSelect={(val) => field.onChange(val)}
-                      options={ROLES}
+                      options={filteredRoles}
                       placeholder="Role"
                       disabled={!canEditRole}
                     />

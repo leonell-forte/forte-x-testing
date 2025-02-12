@@ -34,7 +34,7 @@ export interface IOrganization {
   registrationNumber?: string;
 }
 
-export type OrgTypes = "funder" | "provider";
+export type OrgTypes = "funder" | "provider" | "forte";
 
 export interface IFilters {
   region?: string[];
