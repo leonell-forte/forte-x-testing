@@ -194,13 +194,15 @@ const ContractsPage = () => {
         <div>
           <ContractsTable list={contracts} isLoading={isLoading} />
 
-          <div className="mt-[18px] flex w-full items-center justify-end">
-            <Pagination
-              page={page}
-              onPageChange={(val) => setPage(val)}
-              total={contractList?.totalSize as number}
-            />
-          </div>
+          {!!contracts.length && (
+            <div className="mt-[18px] flex w-full items-center justify-end">
+              <Pagination
+                page={page}
+                onPageChange={(val) => setPage(val)}
+                total={contractList?.totalSize as number}
+              />
+            </div>
+          )}
         </div>
       </div>
     </>

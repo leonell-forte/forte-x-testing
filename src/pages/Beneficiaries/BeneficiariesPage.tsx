@@ -348,13 +348,15 @@ const BeneficiariesPage = () => {
             setChecked={setSelectedIds}
           />
 
-          <div className="mt-[18px] flex w-full items-center justify-end">
-            <Pagination
-              page={page}
-              onPageChange={(val) => setPage(val)}
-              total={beneficiariesList?.totalSize as number}
-            />
-          </div>
+          {!!beneficiariesList?.items.length && (
+            <div className="mt-[18px] flex w-full items-center justify-end">
+              <Pagination
+                page={page}
+                onPageChange={(val) => setPage(val)}
+                total={beneficiariesList?.totalSize as number}
+              />
+            </div>
+          )}
         </div>
       </div>
     </>
