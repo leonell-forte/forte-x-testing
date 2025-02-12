@@ -348,7 +348,7 @@ const BeneficiariesPage = () => {
             setChecked={setSelectedIds}
           />
 
-          {!!beneficiariesList?.items.length && (
+          {!!beneficiariesList?.items?.length && (
             <div className="mt-[18px] flex w-full items-center justify-end">
               <Pagination
                 page={page}

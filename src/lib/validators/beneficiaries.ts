@@ -23,7 +23,7 @@ export const beneficiaries = {
 
       phone: beneficiary?.phone || "",
 
-      riskLevel: (beneficiary?.riskLevel.toLowerCase() as RiskLevelEnum) || "",
+      riskLevel: (beneficiary?.riskLevel?.toLowerCase() as RiskLevelEnum) || "",
 
       status: beneficiary?.status || "New",
 
