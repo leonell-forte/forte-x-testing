@@ -51,7 +51,10 @@ const ImportDialogue = ({ ...props }: IImportDialogueProps) => {
 
                 <li>Last name</li>
 
-                <li>Provider name</li>
+                <li>
+                  Contract ID (You can find the Contract ID on the Contracts
+                  page).
+                </li>
 
                 <li>Email</li>
               </ul>
