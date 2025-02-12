@@ -2,6 +2,7 @@
 
 import { TextField, TextFieldProps } from "@mui/material";
 import classNames from "classnames";
+import { color } from "framer-motion";
 import { ChangeEvent, forwardRef, useState } from "react";
 
 import eyeClosed from "assets/images/icons/eye-closed.svg";
@@ -71,6 +72,11 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
             "& .Mui-disabled": {
               cursor: "not-allowed",
             },
+
+            "& .MuiFormLabel-root": {
+              lineHeight: "120%",
+            },
+
             "& .MuiInputBase-input": {
               ...(type === "password" && {
                 paddingRight: "50px",
