@@ -202,25 +202,21 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
                     </div>
 
                     {!uploading && onEdit && (
-                      <div className="relative px-6 py-3 text-center">
-                        <div className="absolute top-0 cursor-pointer opacity-0">
-                          <Controller
-                            label="Replace document"
-                            control={control}
-                            name="file"
-                            render={() => (
-                              <FileInput
-                                disabled={!onEdit}
-                                accept=".pdf"
-                                onUploadStart={() => setUploading(true)}
-                                onUploadEnd={() => setUploading(false)}
-                                onSuccess={(data) => {
-                                  setValue("file", data);
+                      <div className="relative flex justify-center px-6 py-3 text-center">
+                        <p className="pointer-events-none absolute truncate text-center font-semibold text-mint">
+                          Replace document
+                        </p>
+                        <div className="opacity-0">
+                          <FileInput
+                            disabled={!onEdit}
+                            accept=".pdf"
+                            onUploadStart={() => setUploading(true)}
+                            onUploadEnd={() => setUploading(false)}
+                            onSuccess={(data) => {
+                              setValue("file", data);
 
-                                  setError("file", { message: "" });
-                                }}
-                              />
-                            )}
+                              setError("file", { message: "" });
+                            }}
                           />
                         </div>
                       </div>
@@ -267,7 +263,10 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
               <Button onClick={() => setOnEdit(true)}>Edit</Button>
             ) : (
               <div className="space-x-4">
-                <Button buttonType="secondary" onClick={() => setOnEdit(false)}>
+                <Button
+                  buttonType="secondary"
+                  onClick={() => props.handleClose?.()}
+                >
                   Cancel
                 </Button>
 
