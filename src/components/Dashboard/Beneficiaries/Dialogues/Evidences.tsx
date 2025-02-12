@@ -11,7 +11,6 @@ import { useAppSelector } from "lib/hooks";
 import { Beneficiaries, IsAuthorized } from "lib/role-permissions";
 import { findLabelFromOptions } from "lib/utils";
 
-import Button from "components/ui/button";
 import Table from "components/ui/table";
 
 interface IProps {
@@ -104,14 +103,6 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
           })}
         </Table.Body>
       </Table.Container>
-
-      {IsAuthorized([Beneficiaries.UPDATE]) && (
-        <div className="flex justify-end gap-4">
-          <Button buttonType="secondary">Reject beneficiary</Button>
-
-          <Button>Accept beneficiary</Button>
-        </div>
-      )}
     </div>
   );
 };

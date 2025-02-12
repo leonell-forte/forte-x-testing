@@ -60,6 +60,12 @@ export const useBeneficiaryMutation = ({
         return addedBeneficiary.data.data;
       });
 
+      queryClient.setQueryData(
+        ["specific-beneficiary", beneficiaryId],
+
+        () => addedBeneficiary.data.data
+      );
+
       successCallback?.();
 
       setAlert({
