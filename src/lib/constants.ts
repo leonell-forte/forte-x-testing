@@ -455,4 +455,6 @@ export const REDIRECT_PATHS: Record<UserRoleType, string> = {
   owner: "/beneficiaries",
 
   admin: "/beneficiaries",
+
+  user: "/beneficiaries",
 };

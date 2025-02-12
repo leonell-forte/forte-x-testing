@@ -201,7 +201,7 @@ const BeneficiariesPage = () => {
           />
 
           <div className="space-x-2.5">
-            {selectedIds.length > 0 ? (
+            {selectedIds.length > 0 && IsAuthorized([Beneficiaries.EXECUTE]) ? (
               <>
                 {IsAuthorized([Beneficiaries.UPDATE])}
                 <Button
