@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import organizationService from "api/organization";
 import projectService from "api/projects";
+import { addDays, subDays } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 
@@ -337,7 +338,7 @@ const ContractForm = ({
                 return (
                   <DatePicker
                     disabled={!onEdit}
-                    maxDate={new Date(watch("endDate"))}
+                    maxDate={subDays(new Date(watch("endDate")), 1)}
                     value={new Date(field.value)}
                     onChange={(date) => {
                       setValue("startDate", formatDate(date!, "LL-dd-yyyy"));
@@ -357,7 +358,7 @@ const ContractForm = ({
               render={({ field }) => (
                 <DatePicker
                   disabled={!onEdit}
-                  minDate={new Date(watch("startDate"))}
+                  minDate={addDays(new Date(watch("startDate")), 1)}
                   value={new Date(field.value)}
                   onChange={(date) => {
                     setValue("endDate", formatDate(date!, "LL-dd-yyyy"));
