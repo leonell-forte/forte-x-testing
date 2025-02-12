@@ -1,8 +1,6 @@
 import authService from "api/auth";
 import axios from "axios";
 
-import { publicRoutes } from "lib/routes";
-
 import { cookie } from "../hooks";
 
 export const api = axios.create({
