@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import userService from "api/users";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
 import { ROLES } from "lib/constants";
@@ -36,6 +36,7 @@ const UserDialogue = ({
 }: IUserDialogueProps) => {
   const qc = useQueryClient();
   const profile = qc.getQueryData(["profile"]) as ProfileType;
+  const myRole = profile.role;
 
   const { data: userData, isLoading } = useQuery({
     queryKey: ["specific-user", userId],
@@ -84,6 +85,14 @@ const UserDialogue = ({
   const onSubmit = async (values: UserFieldTypes) => {
     await addUser(values);
   };
+
+  const canEditRole = useMemo(() => {
+    if (!userData) return true;
+    if (myRole.includes("admin") && userData.role?.includes("owner"))
+      return false;
+    if (myRole.includes("owner") || myRole.includes("admin")) return true;
+    return false;
+  }, [myRole, userData]);
 
   return (
     <Dialogue
@@ -194,7 +203,7 @@ const UserDialogue = ({
                   handleSelect={(val) => field.onChange(val)}
                   options={ROLES}
                   placeholder="Role"
-                  disabled={Number(profile?.id) === Number(userData?.id)}
+                  disabled={!canEditRole}
                 />
               );
             }}
