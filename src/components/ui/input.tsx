@@ -2,7 +2,6 @@
 
 import { TextField, TextFieldProps } from "@mui/material";
 import classNames from "classnames";
-import { color } from "framer-motion";
 import { ChangeEvent, forwardRef, useState } from "react";
 
 import eyeClosed from "assets/images/icons/eye-closed.svg";
