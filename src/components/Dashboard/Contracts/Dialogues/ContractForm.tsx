@@ -190,6 +190,7 @@ const ContractForm = ({
         <div className="space-y-4">
           <Controller
             label="Contract name"
+            required
             name="name"
             control={control}
             render={({ field }) => (
