@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
-import beneficiariesService from "api/beneficiaries";
 import contractService from "api/contract";
 import organizationService from "api/organization";
 import { useEffect, useMemo, useState } from "react";
@@ -20,6 +19,7 @@ import { Beneficiaries, IsAuthorized } from "lib/role-permissions";
 import { setSelectedData } from "lib/slice/evidence";
 import {
   DisabilityStatusEnum,
+  IBeneficiaries,
   IBeneficiariesFieldValues,
   RiskLevelEnum,
 } from "lib/types/beneficiaries";
@@ -41,6 +41,8 @@ interface IProps {
   editMode?: boolean;
 
   handleClose?: () => void;
+
+  beneficiaryData?: IBeneficiaries;
 }
 
 const BeneficiariesForm = ({
@@ -51,6 +53,8 @@ const BeneficiariesForm = ({
   handleClose,
 
   editMode,
+
+  beneficiaryData,
 }: IProps) => {
   const dispatch = useAppDispatch();
 
@@ -73,14 +77,6 @@ const BeneficiariesForm = ({
 
     reset,
   } = form;
-
-  const { data: beneficiaryData } = useQuery({
-    queryKey: ["specific-beneficiary", id],
-
-    queryFn: () => beneficiariesService.getOne(id),
-
-    enabled: !!id,
-  });
 
   useEffect(() => {
     if (beneficiaryData) {

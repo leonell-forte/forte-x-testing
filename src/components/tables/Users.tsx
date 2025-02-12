@@ -47,11 +47,7 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
       if (!profile?.role?.includes("user")) {
         return IsAuthorized([Users.UPDATE]);
       }
-      if (
-        profile?.role?.includes("user") &&
-        IsAuthorized([Users.UPDATE]) &&
-        String(profile.id) === id
-      ) {
+      if (profile?.role?.includes("user") && String(profile.id) === id) {
         return true;
       }
     },

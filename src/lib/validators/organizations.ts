@@ -57,7 +57,7 @@ export const organizations = {
 
     regions: z.array(z.string()).min(1, "Region is a required field"),
 
-    type: z.enum(["funder", "provider"], {
+    type: z.enum(["funder", "provider", "forte"], {
       message: "Type is a required field",
     }),
 

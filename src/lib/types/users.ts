@@ -9,7 +9,8 @@ export type UserRoleType =
   | "provider.read-only"
   | "funder.owner"
   | "owner"
-  | "admin";
+  | "admin"
+  | "user";
 
 export interface IUser {
   id?: string;

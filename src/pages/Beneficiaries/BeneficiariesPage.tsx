@@ -201,7 +201,7 @@ const BeneficiariesPage = () => {
           />
 
           <div className="space-x-2.5">
-            {selectedIds.length > 0 ? (
+            {selectedIds.length > 0 && IsAuthorized([Beneficiaries.EXECUTE]) ? (
               <>
                 {IsAuthorized([Beneficiaries.UPDATE])}
                 <Button
@@ -348,7 +348,7 @@ const BeneficiariesPage = () => {
             setChecked={setSelectedIds}
           />
 
-          {!!beneficiariesList?.items.length && (
+          {!!beneficiariesList?.items?.length && (
             <div className="mt-[18px] flex w-full items-center justify-end">
               <Pagination
                 page={page}
