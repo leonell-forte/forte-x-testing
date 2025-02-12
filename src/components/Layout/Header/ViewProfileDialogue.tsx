@@ -5,15 +5,16 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { ROLES } from "lib/constants";
-import { useProfile } from "lib/hooks";
 import useUserMutation from "lib/mutations/users";
 import { IOrganization } from "lib/types/organizations";
 import { UserFieldTypes } from "lib/types/users";
 import { users } from "lib/validators/users";
 
 import Button from "components/ui/button";
+import Controller from "components/ui/custom-controller/CustomController";
 import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
 import Dropdown from "components/ui/dropdown";
+import { Form } from "components/ui/form/Form";
 import Input from "components/ui/input";
 import Spinner from "components/ui/spinner/spinner";
 
@@ -32,8 +33,6 @@ const ViewProfileDialogue = ({
 
   userId,
 }: IUserDialogueProps) => {
-  const currentUser = useProfile();
-
   const [onEdit, setOnEdit] = useState(false);
 
   const { data: userData, isLoading } = useQuery({
@@ -44,21 +43,13 @@ const ViewProfileDialogue = ({
     enabled: !!userId,
   });
 
-  const {
-    handleSubmit,
-
-    formState: { errors },
-
-    setValue,
-
-    watch,
-
-    reset,
-  } = useForm<UserFieldTypes>({
+  const form = useForm<UserFieldTypes>({
     resolver: zodResolver(users.schema),
 
     defaultValues: users.defaultValues(),
   });
+
+  const { reset, control } = form;
 
   useEffect(() => {
     // sets default value of the form
@@ -99,113 +90,117 @@ const ViewProfileDialogue = ({
           <Spinner />
         </div>
       ) : (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-2.5">
-          <div className="flex items-start">
-            <label htmlFor="" className="w-[140px] pt-4">
-              Email
-            </label>
+        <Form form={form} onSubmit={onSubmit} className="space-y-4">
+          <Controller
+            control={control}
+            render={({ field }) => {
+              return (
+                <Input
+                  {...field}
+                  disabled
+                  autoComplete="email"
+                  placeholder="Email"
+                />
+              );
+            }}
+            name="email"
+            label="Email"
+            required
+          />
 
-            <Input
-              disabled
-              value={watch("email")}
-              onChange={(e) => setValue("email", e.target.value)}
-              error={!!errors.email?.message}
-              helperText={errors.email?.message}
-              type="email"
-              autoComplete="email"
-              placeholder="email@email.com"
-            />
-          </div>
+          <Controller
+            control={control}
+            render={({ field }) => {
+              return (
+                <Input
+                  {...field}
+                  disabled={!onEdit}
+                  autoComplete="given-name"
+                  placeholder="First name"
+                />
+              );
+            }}
+            name="firstName"
+            label="First name"
+            required
+          />
 
-          <div className="flex items-start">
-            <label htmlFor="" className="w-[140px] pt-4">
-              First name
-            </label>
+          <Controller
+            control={control}
+            render={({ field }) => {
+              return (
+                <Input
+                  {...field}
+                  disabled={!onEdit}
+                  autoComplete="family-name"
+                  placeholder="Last name"
+                />
+              );
+            }}
+            name="lastName"
+            label="Last name"
+            required
+          />
 
-            <Input
-              disabled={!onEdit}
-              value={watch("firstName")}
-              onChange={(e) => setValue("firstName", e.target.value)}
-              error={!!errors.firstName?.message}
-              helperText={errors.firstName?.message}
-              autoComplete="given-name"
-              placeholder="James"
-            />
-          </div>
+          <Controller
+            control={control}
+            render={({ field }) => {
+              return (
+                <Input
+                  {...field}
+                  disabled={!onEdit}
+                  phoneNUmber
+                  autoComplete="tel"
+                  placeholder="Phone number"
+                />
+              );
+            }}
+            name="phoneNumber"
+            label="Phone number"
+            required
+          />
 
-          <div className="flex items-start">
-            <label htmlFor="" className="w-[140px] pt-4">
-              Last name
-            </label>
+          <Controller
+            control={control}
+            render={({ field }) => {
+              return (
+                <Dropdown
+                  value={
+                    organizations.find(
+                      (item) => item.id?.toString() === field.value
+                    )?.registeredName
+                  }
+                  options={organizations.map((item: IOrganization) => ({
+                    label: item.registeredName,
+                    value: String(item.id),
+                  }))}
+                  placeholder="Organization"
+                  disabled
+                />
+              );
+            }}
+            name="organizationId"
+            label="Organization"
+          />
 
-            <Input
-              disabled={!onEdit}
-              value={watch("lastName")}
-              onChange={(e) => setValue("lastName", e.target.value)}
-              error={!!errors.lastName?.message}
-              helperText={errors.lastName?.message}
-              autoComplete="family-name"
-              placeholder="Potter"
-            />
-          </div>
-
-          <div className="flex items-start">
-            <label htmlFor="" className="w-[140px] pt-4">
-              Phone number
-            </label>
-
-            <Input
-              disabled={!onEdit}
-              value={watch("phoneNumber")}
-              onChange={(e) => setValue("phoneNumber", e.target.value)}
-              error={!!errors.phoneNumber?.message}
-              helperText={errors.phoneNumber?.message}
-              autoComplete="tel"
-              placeholder="+61 4567323423"
-            />
-          </div>
-
-          <div className="flex items-start">
-            <label htmlFor="" className="w-[140px] pt-4">
-              Organization
-            </label>
-
-            <Dropdown
-              disabled
-              value={
-                organizations.find(
-                  (item) => item.id?.toString() === watch("organizationId")
-                )?.registeredName || currentUser?.organization
-              }
-              options={organizations.map((item: IOrganization) => ({
-                label: item.registeredName,
-                value: item.id!.toString(),
-              }))}
-              handleSelect={(val) => setValue("organizationId", val.toString())}
-              placeholder="Select organization"
-              error={!!errors.organizationId?.message}
-              helperText={errors.organizationId?.message}
-              readOnly
-            />
-          </div>
-
-          <div className="flex items-start">
-            <label htmlFor="" className="w-[140px] pt-4">
-              Role
-            </label>
-
-            <Dropdown
-              disabled
-              value={
-                ROLES.find((item) => watch("role").includes(item.value))?.label
-              }
-              handleSelect={(val) => setValue("role", val as string)}
-              options={ROLES}
-              placeholder="Select role"
-              error={!!errors.role?.message}
-              helperText={errors.role?.message}
-            />
-          </div>
+          <Controller
+            control={control}
+            render={({ field }) => {
+              return (
+                <Dropdown
+                  value={
+                    ROLES.find((item) => field.value?.includes(item.value))
+                      ?.label
+                  }
+                  options={[]}
+                  placeholder="Role"
+                  disabled
+                />
+              );
+            }}
+            name="role"
+            label="Role"
+          />
 
           <div className="!mt-10 flex justify-end gap-4">
             {!onEdit ? (
@@ -222,7 +217,7 @@ const ViewProfileDialogue = ({
               </>
             )}
           </div>
-        </form>
+        </Form>
       )}
     </Dialogue>
   );

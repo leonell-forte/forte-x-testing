@@ -73,7 +73,7 @@ const ContractsPage = () => {
     () =>
       contractList?.items.map((item) => ({
         ...item,
-        documentName: item.document!.toString(),
+        documentName: item.document?.toString(),
       })) || [],
 
     [contractList]
