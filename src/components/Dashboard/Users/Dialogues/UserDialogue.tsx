@@ -18,6 +18,7 @@ import Dropdown from "components/ui/dropdown";
 import { Form } from "components/ui/form/Form";
 import Input from "components/ui/input";
 import Spinner from "components/ui/spinner/spinner";
+import Tooltip from "components/ui/tooltip/Tooltip";
 
 interface IUserDialogueProps extends IDialogueProps {
   userId?: string;
@@ -92,6 +93,13 @@ const UserDialogue = ({
       return false;
     if (myRole.includes("owner") || myRole.includes("admin")) return true;
     return false;
+  }, [myRole, userData]);
+
+  const tooltipMsg = useMemo(() => {
+    if (!userData) return "";
+    if (myRole.includes("admin") && userData.role?.includes("owner"))
+      return "You cannot change an owner's role.";
+    return "You cannot change your own role.";
   }, [myRole, userData]);
 
   return (
@@ -187,27 +195,30 @@ const UserDialogue = ({
               );
             }}
           />
-
-          <Controller
-            name="role"
-            label="Role"
-            required
-            control={control}
-            render={({ field }) => {
-              return (
-                <Dropdown
-                  value={
-                    ROLES.find((item) => field.value?.includes(item.value))
-                      ?.label
-                  }
-                  handleSelect={(val) => field.onChange(val)}
-                  options={ROLES}
-                  placeholder="Role"
-                  disabled={!canEditRole}
-                />
-              );
-            }}
-          />
+          <Tooltip content={tooltipMsg} {...(canEditRole && { open: false })}>
+            <div>
+              <Controller
+                name="role"
+                label="Role"
+                required
+                control={control}
+                render={({ field }) => {
+                  return (
+                    <Dropdown
+                      value={
+                        ROLES.find((item) => field.value?.includes(item.value))
+                          ?.label
+                      }
+                      handleSelect={(val) => field.onChange(val)}
+                      options={ROLES}
+                      placeholder="Role"
+                      disabled={!canEditRole}
+                    />
+                  );
+                }}
+              />
+            </div>
+          </Tooltip>
           <div className="!mt-10 flex justify-end gap-4">
             <Button onClick={close} buttonType="secondary">
               Cancel

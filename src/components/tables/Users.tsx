@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import organizationService from "api/organization";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import pencil from "assets/images/icons/pencil.svg";
 
+import { useProfile } from "lib/hooks";
 import { IsAuthorized, Users } from "lib/role-permissions";
 import { IUser } from "lib/types/users";
 
@@ -23,6 +24,8 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
     queryFn: () => organizationService.list({ page: 1, listAll: true }),
   });
 
+  const profile = useProfile();
+
   const [modal, setModal] = useState<"user" | null>(null);
 
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
@@ -38,6 +41,22 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
 
     setModal("user");
   };
+
+  const showEdit = useCallback(
+    (id: string) => {
+      if (!profile?.role?.includes("user")) {
+        return IsAuthorized([Users.UPDATE]);
+      }
+      if (
+        profile?.role?.includes("user") &&
+        IsAuthorized([Users.UPDATE]) &&
+        String(profile.id) === id
+      ) {
+        return true;
+      }
+    },
+    [profile]
+  );
 
   return (
     <>
@@ -113,7 +132,7 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
                   </Table.Data>
 
                   <Table.Data>
-                    {IsAuthorized([Users.UPDATE]) && (
+                    {showEdit(String(id)) && (
                       <div className="flex justify-end">
                         <Button
                           eventName="Edit User"
