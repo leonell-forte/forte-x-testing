@@ -1,13 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import userService from "api/users";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
 import { ROLES } from "lib/constants";
+import { useProfile } from "lib/hooks";
 import useUserMutation from "lib/mutations/users";
 import { IOrganization } from "lib/types/organizations";
-import { ProfileType } from "lib/types/profile";
 import { UserFieldTypes } from "lib/types/users";
 import { users } from "lib/validators/users";
 
@@ -35,9 +35,8 @@ const UserDialogue = ({
 
   userId,
 }: IUserDialogueProps) => {
-  const qc = useQueryClient();
-  const profile = qc.getQueryData(["profile"]) as ProfileType;
-  const myRole = profile.role;
+  const profile = useProfile();
+  const myRole = profile?.role;
 
   const { data: userData, isLoading } = useQuery({
     queryKey: ["specific-user", userId],
@@ -88,6 +87,7 @@ const UserDialogue = ({
   };
 
   const canEditRole = useMemo(() => {
+    if (!myRole) return false;
     if (!userData) return true;
     if (myRole.includes("admin") && userData.role?.includes("owner"))
       return false;
@@ -96,7 +96,7 @@ const UserDialogue = ({
   }, [myRole, userData]);
 
   const tooltipMsg = useMemo(() => {
-    if (!userData) return "";
+    if (!userData || !myRole) return "";
     if (myRole.includes("admin") && userData.role?.includes("owner"))
       return "You cannot change an owner's role.";
     return "You cannot change your own role.";
