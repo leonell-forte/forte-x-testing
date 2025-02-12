@@ -7,6 +7,7 @@ export enum Beneficiaries {
   IMPORT = "import:beneficiary",
   DELETE = "delete:beneficiary",
   NAVIGATE = "navigate:beneficiary",
+  EXECUTE = "execute:beneficiary",
 }
 
 export enum Users {
@@ -67,7 +68,6 @@ const ROLES: Record<
     Projects.NAVIGATE,
     Contracts.NAVIGATE,
     Users.NAVIGATE,
-    Users.UPDATE,
   ],
   "provider.owner": [
     ...Object.values(Beneficiaries),
@@ -86,7 +86,6 @@ const ROLES: Record<
     Projects.NAVIGATE,
     Contracts.NAVIGATE,
     Users.NAVIGATE,
-    Users.UPDATE,
   ],
   "provider.read-only": [
     Beneficiaries.NAVIGATE,
