@@ -43,6 +43,12 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
           id={name}
           name={name}
           ref={ref}
+          slotProps={{
+            htmlInput: {
+              ...(type === "number" && { min: props.min }), // Set minimum value for type="number"
+              accept: props.accept,
+            },
+          }}
           {...props}
           onChange={handleChange}
           onWheel={(e) => (e.target as any).blur()}
@@ -111,12 +117,6 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
                   color: "black",
                 },
               }),
-            },
-          }}
-          slotProps={{
-            htmlInput: {
-              ...(type === "number" && { min: props.min }), // Set minimum value for type="number"
-              accept: props.accept,
             },
           }}
           fullWidth

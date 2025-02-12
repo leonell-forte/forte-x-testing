@@ -142,13 +142,15 @@ const UsersPage = () => {
         <div className="space-y-4">
           <UsersTable list={users} isLoading={userLoading} />
 
-          <div className="flex w-full items-center justify-end">
-            <Pagination
-              page={page}
-              onPageChange={(val) => setPage(val)}
-              total={userList?.totalSize as number}
-            />
-          </div>
+          {!!users.length && (
+            <div className="flex w-full items-center justify-end">
+              <Pagination
+                page={page}
+                onPageChange={(val) => setPage(val)}
+                total={userList?.totalSize as number}
+              />
+            </div>
+          )}
         </div>
       </div>
     </>

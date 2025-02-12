@@ -36,6 +36,12 @@ const Pagination = ({
 
   const pageCount = useMemo(() => Math.ceil(total / limit), [total, limit]);
 
+  const [prevTotal, setPrevTotal] = useState(1);
+
+  useEffect(() => {
+    if (!isNaN(pageCount)) setPrevTotal(pageCount);
+  }, [pageCount]);
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     if (/^\d*$/.test(value)) {
@@ -78,9 +84,10 @@ const Pagination = ({
             onBlur={handleBlur}
           />
         </div>
-        {!isNaN(pageCount) && !!pageCount && (
-          <span className="text-[14px] text-gray-200"> of {pageCount}</span>
-        )}
+
+        <span className="text-[14px] text-gray-200">
+          of {!isNaN(pageCount) ? pageCount : prevTotal}
+        </span>
       </div>
       <button
         type="button"
