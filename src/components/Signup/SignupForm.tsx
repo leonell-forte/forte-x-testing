@@ -70,9 +70,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
       cookie.set("refresh_token", res.data.data.refreshToken, { path: "/" });
       cookie.set("access_token", res.data.data.token, { path: "/" });
 
-      handleNext!(
-        REDIRECT_PATHS?.[data?.role as Exclude<UserRoleType | "", "">]
-      );
+      handleNext!(REDIRECT_PATHS?.[data?.role as UserRoleType]);
     } catch (err: any) {
       console.log(err);
 

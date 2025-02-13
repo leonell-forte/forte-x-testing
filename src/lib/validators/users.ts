@@ -15,7 +15,7 @@ export const users = {
 
       organizationId: user?.organization?.toString() || "",
 
-      role: user?.role || "",
+      role: (user?.role || "") as IUser["role"],
     };
 
     if (user) {
@@ -40,6 +40,8 @@ export const users = {
 
     organizationId: z.string().min(1, "Organization is a required field"),
 
-    role: z.enum(UserRoleValues, { message: "Role is a required field" }),
+    role: z.enum(UserRoleValues, {
+      message: "Role is a required field",
+    }),
   }),
 };
