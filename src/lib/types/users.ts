@@ -2,15 +2,19 @@ import { z } from "zod";
 
 import { users } from "lib/validators/users";
 
-export type UserRoleType =
-  | "provider.user"
-  | "provider.admin"
-  | "provider.owner"
-  | "provider.read-only"
-  | "funder.owner"
-  | "owner"
-  | "admin"
-  | "user";
+export const UserRoleValues = [
+  "provider.user",
+  "provider.admin",
+  "provider.owner",
+  "provider.read-only",
+  "funder.owner",
+  "owner",
+  "admin",
+  "user",
+  "",
+] as const;
+
+export type UserRoleType = (typeof UserRoleValues)[number];
 
 export interface IUser {
   id?: string;

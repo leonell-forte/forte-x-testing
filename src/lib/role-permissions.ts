@@ -46,7 +46,7 @@ export enum Projects {
 }
 
 const ROLES: Record<
-  UserRoleType,
+  Exclude<UserRoleType | "", "">,
   Array<Beneficiaries | Users | Organizations | Contracts | Projects>
 > = {
   owner: [
@@ -102,7 +102,12 @@ const ROLES: Record<
   ],
 };
 
-type Permission = (typeof ROLES)[UserRoleType] extends (infer U)[] ? U : never;
+type Permission = (typeof ROLES)[Exclude<
+  UserRoleType | "",
+  ""
+>] extends (infer U)[]
+  ? U
+  : never;
 
 export const IsAuthorized = (permissions: Permission[]): boolean => {
   const currentUser = useProfile();

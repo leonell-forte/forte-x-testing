@@ -69,7 +69,9 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
 
       cookie.set("access_token", res.data.data.token, { path: "/" });
 
-      handleNext!(REDIRECT_PATHS?.[data?.role as UserRoleType]);
+      handleNext!(
+        REDIRECT_PATHS?.[data?.role as Exclude<UserRoleType | "", "">]
+      );
     } catch (err: any) {
       console.log(err);
 

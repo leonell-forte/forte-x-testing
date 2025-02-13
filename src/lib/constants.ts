@@ -441,7 +441,7 @@ export const REGIONS = [
 
 export const DEFAULT_DATE_FORMAT = "dd/LL/yyyy";
 
-export const REDIRECT_PATHS: Record<UserRoleType, string> = {
+export const REDIRECT_PATHS: Record<Exclude<UserRoleType | "", "">, string> = {
   "provider.user": "/beneficiaries",
 
   "provider.admin": "/beneficiaries",

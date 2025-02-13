@@ -105,6 +105,21 @@ const UserDialogue = ({
   }, [myRole, userData]);
 
   const organizationId = watch("organizationId");
+  const isReadOnly = watch("role") === "provider.read-only";
+
+  const filteredOrg = useMemo(
+    () =>
+      organizations
+        .map((item: IOrganization) => ({
+          label: item.registeredName,
+          value: String(item.id),
+        }))
+        .filter((org) => {
+          if (isReadOnly) return org.label !== "Forte Global";
+          return true;
+        }),
+    [organizations, isReadOnly]
+  );
 
   const isForteOrg = useMemo(() => {
     return organizations.some(
@@ -205,10 +220,7 @@ const UserDialogue = ({
                       (item) => item.id?.toString() === field.value
                     )?.registeredName
                   }
-                  options={organizations.map((item: IOrganization) => ({
-                    label: item.registeredName,
-                    value: String(item.id),
-                  }))}
+                  options={filteredOrg}
                   handleSelect={(val) => field.onChange(val)}
                   placeholder="Organization"
                 />

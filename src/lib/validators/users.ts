@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { IUser } from "../types/users";
+import { IUser, UserRoleValues } from "../types/users";
 
 export const users = {
   defaultValues: (user?: IUser) => {
@@ -40,6 +40,6 @@ export const users = {
 
     organizationId: z.string().min(1, "Organization is a required field"),
 
-    role: z.string().min(1, "Role is a required field"),
+    role: z.enum(UserRoleValues, { message: "Role is a required field" }),
   }),
 };
