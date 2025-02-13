@@ -271,13 +271,13 @@ const BeneficiariesTable = ({
                   </Table.Data>
 
                   <Table.Data small className="!h-[64px]">
-                    <p className="w-[84px] truncate">
+                    <p className="w-[104px] truncate">
                       {formatDate(cohortStartDate || "", DEFAULT_DATE_FORMAT)}
                     </p>
                   </Table.Data>
 
                   <Table.Data small className="!h-[64px]">
-                    <p className="w-[84px] truncate">
+                    <p className="w-[104px] truncate">
                       {formatDate(cohortEndDate || "", DEFAULT_DATE_FORMAT)}
                     </p>
                   </Table.Data>

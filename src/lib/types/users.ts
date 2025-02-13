@@ -11,7 +11,6 @@ export const UserRoleValues = [
   "owner",
   "admin",
   "user",
-  "",
 ] as const;
 
 export type UserRoleType = (typeof UserRoleValues)[number];
@@ -25,7 +24,7 @@ export interface IUser {
 
   email: string;
 
-  role?: UserRoleType | "";
+  role?: UserRoleType;
 
   phoneNumber: string;
 

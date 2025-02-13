@@ -24,7 +24,7 @@ const OTPForm = ({ handleNext }: ILoginProps) => {
 
     queryClient.invalidateQueries({ queryKey: ["profile"] });
 
-    handleNext!(REDIRECT_PATHS[role as Exclude<UserRoleType | "", "">]);
+    handleNext!(REDIRECT_PATHS[role as UserRoleType]);
   };
 
   return (
