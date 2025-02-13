@@ -58,6 +58,8 @@ const UserDialogue = ({
     control,
 
     watch,
+
+    setValue,
   } = form;
 
   useEffect(() => {
@@ -107,18 +109,28 @@ const UserDialogue = ({
   const organizationId = watch("organizationId");
   const isReadOnly = watch("role").includes("read-only");
 
+  const isNonForteUser = useMemo(
+    () => profile?.organization !== "Forte",
+    [profile]
+  );
+
+  const userOrganization = useMemo(
+    () => organizations.find((x) => x.name === profile?.organization),
+    [profile, organizations]
+  );
+
   const filteredOrg = useMemo(
     () =>
       organizations
         .filter((org) => {
-          if (isReadOnly) return org.type !== "forte";
+          if (isReadOnly || isNonForteUser) return org.type !== "forte";
           return true;
         })
         .map((item: IOrganization) => ({
           label: item.registeredName,
           value: String(item.id),
         })),
-    [organizations, isReadOnly]
+    [organizations, isReadOnly, isNonForteUser]
   );
 
   const isForteOrg = useMemo(() => {
@@ -132,10 +144,17 @@ const UserDialogue = ({
     () =>
       ROLES.filter((role) => {
         if (isForteOrg) return role.value !== "read-only";
+        if (isNonForteUser) return role.value !== "owner";
         return true;
       }),
-    [isForteOrg]
+    [isForteOrg, isNonForteUser]
   );
+
+  useEffect(() => {
+    if (isNonForteUser && userOrganization?.id) {
+      setValue("organizationId", String(userOrganization.id));
+    }
+  }, [isNonForteUser, profile, userOrganization, setValue]);
 
   return (
     <Dialogue
@@ -214,6 +233,7 @@ const UserDialogue = ({
             render={({ field }) => {
               return (
                 <Dropdown
+                  disabled={isNonForteUser}
                   enableSearch
                   value={
                     organizations.find(

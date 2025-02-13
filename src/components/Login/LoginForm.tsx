@@ -11,6 +11,7 @@ import { cookie, useAppDispatch } from "lib/hooks";
 import { setEmail, setRole } from "lib/slice/auth";
 import { login } from "lib/validators/auth";
 
+import { queryClient } from "components/QueryProvider";
 import Controller from "components/ui/custom-controller/CustomController";
 import { Form } from "components/ui/form/Form";
 
@@ -53,6 +54,8 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
       cookie.set("access_token", res.token, { path: "/" });
 
       cookie.set("refresh_token", res?.refreshToken, { path: "/" });
+
+      queryClient.invalidateQueries({ queryKey: ["profile"] }); // to remove OTP temp
 
       handleNext!();
 
