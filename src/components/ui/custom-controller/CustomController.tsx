@@ -51,6 +51,8 @@ export default function CustomController({
     formState: { errors },
   } = useFormContext();
 
+  console.log(errors);
+
   const err = get(errors, name);
   const result = getFirstMessageProperty(errors);
 

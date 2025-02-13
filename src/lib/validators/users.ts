@@ -4,6 +4,7 @@ import { IUser, UserRoleValues } from "../types/users";
 
 export const users = {
   defaultValues: (user?: IUser) => {
+    console.log(user);
     let data: IUser = {
       firstName: user?.firstName || "",
 

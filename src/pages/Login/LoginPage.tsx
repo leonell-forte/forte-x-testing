@@ -23,17 +23,21 @@ const LoginPage = () => {
 
   const navigate = useNavigate();
 
-  const [step, setStep] = useState(0);
+  const [step] = useState(0);
 
-  const handleNextStep = () => {
-    setStep((prev) => prev + 1);
-  };
+  // const handleNextStep = () => {
+  //   setStep((prev) => prev + 1);
+  // };
 
   const renderStep = useCallback(
     (step: number) => {
       switch (step) {
         case 0:
-          return <LoginForm handleNext={handleNextStep} />;
+          return (
+            <LoginForm
+              handleNext={(path) => navigate(path || "/beneficiaries")} // remove OTP form temporarily
+            />
+          );
 
         case 1:
           return (

@@ -63,12 +63,7 @@ const ROLES: Record<
     ...Object.values(Contracts),
     ...Object.values(Projects),
   ],
-  user: [
-    Beneficiaries.NAVIGATE,
-    Projects.NAVIGATE,
-    Contracts.NAVIGATE,
-    Users.NAVIGATE,
-  ],
+  user: [Beneficiaries.NAVIGATE, Projects.NAVIGATE, Contracts.NAVIGATE],
   "provider.owner": [
     ...Object.values(Beneficiaries),
     ...Object.values(Contracts),
@@ -85,7 +80,6 @@ const ROLES: Record<
     Beneficiaries.NAVIGATE,
     Projects.NAVIGATE,
     Contracts.NAVIGATE,
-    Users.NAVIGATE,
   ],
   "provider.read-only": [
     Beneficiaries.NAVIGATE,
