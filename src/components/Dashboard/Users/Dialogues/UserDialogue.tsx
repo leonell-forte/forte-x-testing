@@ -105,19 +105,19 @@ const UserDialogue = ({
   }, [myRole, userData]);
 
   const organizationId = watch("organizationId");
-  const isReadOnly = watch("role") === "provider.read-only";
+  const isReadOnly = watch("role").includes("read-only");
 
   const filteredOrg = useMemo(
     () =>
       organizations
+        .filter((org) => {
+          if (isReadOnly) return org.type !== "forte";
+          return true;
+        })
         .map((item: IOrganization) => ({
           label: item.registeredName,
           value: String(item.id),
-        }))
-        .filter((org) => {
-          if (isReadOnly) return org.label !== "Forte Global";
-          return true;
-        }),
+        })),
     [organizations, isReadOnly]
   );
 

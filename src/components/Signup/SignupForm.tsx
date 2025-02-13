@@ -67,6 +67,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
     try {
       const res = await authService.signup(values, code);
 
+      cookie.set("refresh_token", res.data.data.refreshToken, { path: "/" });
       cookie.set("access_token", res.data.data.token, { path: "/" });
 
       handleNext!(
