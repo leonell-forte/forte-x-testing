@@ -26,6 +26,7 @@ import {
 import { findLabelFromOptions } from "lib/utils";
 import { beneficiaries } from "lib/validators/beneficiaries";
 
+import { useConfirmPrompt } from "components/ui/alert/confirm-prompt";
 import Button from "components/ui/button";
 import Controller from "components/ui/custom-controller/CustomController";
 import DatePicker from "components/ui/date-picker";
@@ -180,6 +181,8 @@ const BeneficiariesForm = ({
   const onSubmit = async (values: IBeneficiariesFieldValues) => {
     await addBeneficiary(values);
   };
+
+  const { setShowPrompt } = useConfirmPrompt();
 
   return (
     <Form form={form} onSubmit={onSubmit}>
@@ -600,7 +603,16 @@ const BeneficiariesForm = ({
         <div className="flex justify-end gap-4 pt-6">
           {onEdit ? (
             <>
-              <Button buttonType="secondary" onClick={() => setOnEdit(false)}>
+              <Button
+                buttonType="secondary"
+                onClick={() => {
+                  if (beneficiaryData) {
+                    setOnEdit(false);
+                    return;
+                  }
+                  setShowPrompt(true);
+                }}
+              >
                 Cancel
               </Button>
 

@@ -9,6 +9,7 @@ import useOrganizationMutation from "lib/mutations/organizations";
 import { OrgTypes, OrganizationFieldTypes } from "lib/types/organizations";
 import { organizations } from "lib/validators/organizations";
 
+import { useConfirmPrompt } from "components/ui/alert/confirm-prompt";
 import Button from "components/ui/button";
 import Controller from "components/ui/custom-controller/CustomController";
 import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
@@ -87,8 +88,11 @@ const OrganizationDialogue = ({
     await addOrganization(values);
   };
 
+  const { setShowPrompt } = useConfirmPrompt();
+
   return (
     <Dialogue
+      confirmBeforeLeave
       isVisible={isVisible}
       handleClose={onClose}
       title={orgId ? "Edit organization" : "Add organization"}
@@ -240,7 +244,7 @@ const OrganizationDialogue = ({
           />
 
           <div className="!mt-10 flex justify-end gap-4">
-            <Button onClick={onClose} buttonType="secondary">
+            <Button onClick={() => setShowPrompt(true)} buttonType="secondary">
               Cancel
             </Button>
 

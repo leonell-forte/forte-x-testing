@@ -90,6 +90,7 @@ const ContractDialogue = ({
 
   return (
     <Dialogue
+      confirmBeforeLeave
       center={component === "mark"}
       isVisible={isVisible}
       handleClose={handleClose}

@@ -91,6 +91,7 @@ const AddDialogue = ({
   return (
     <Dialogue
       {...props}
+      confirmBeforeLeave
       handleClose={props.handleClose}
       title={`${id ? `Beneficiary ID #${id}` : "Add beneficiary"}`}
     >

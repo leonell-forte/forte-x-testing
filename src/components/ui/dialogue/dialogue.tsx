@@ -8,6 +8,7 @@ import close from "assets/images/icons/close.svg";
 
 import { useEscapeKey, useOutsideClick } from "lib/hooks";
 
+import ConfirmPrompt, { useConfirmPrompt } from "../alert/confirm-prompt";
 import styles from "./styles.module.scss";
 
 export interface IDialogueProps {
@@ -20,6 +21,8 @@ export interface IDialogueProps {
   handleClose?: () => void;
 
   center?: boolean;
+
+  confirmBeforeLeave?: boolean;
 }
 
 const Dialogue = ({
@@ -32,50 +35,70 @@ const Dialogue = ({
   handleClose,
 
   center,
-}: IDialogueProps) => {
-  useEscapeKey(handleClose!);
 
+  confirmBeforeLeave,
+}: IDialogueProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useOutsideClick(containerRef, () => {
+  const { setShowPrompt } = useConfirmPrompt();
+
+  const closeDialogue = () => {
+    if (confirmBeforeLeave) {
+      setShowPrompt(true);
+      return;
+    }
     handleClose?.();
+  };
+
+  useEscapeKey(closeDialogue!);
+
+  useOutsideClick(containerRef, () => {
+    closeDialogue?.();
   });
 
   return isVisible ? (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ type: "spring", duration: 0.4 }}
-      className={classNames(
-        "fixed left-0 top-0 z-50 !mt-0 flex h-screen w-screen items-start justify-center overflow-y-auto bg-[#011217] bg-opacity-[90%] px-4 py-12",
-
-        center && "items-center"
-      )}
-    >
-      <div
-        ref={containerRef}
+    <>
+      <ConfirmPrompt
+        confirmLeave={() => {
+          setShowPrompt(false);
+          handleClose?.();
+        }}
+      />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ type: "spring", duration: 0.4 }}
         className={classNames(
-          styles["dialogue-content"],
+          "fixed left-0 top-0 z-40 !mt-0 flex h-screen w-screen items-start justify-center overflow-y-auto bg-[#011217] bg-opacity-[90%] px-4 py-12",
 
-          title ? "p-10" : "px-10 pb-10"
+          center && "items-center"
         )}
       >
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleClose?.();
-          }}
-          className="absolute right-4 top-4"
+        <div
+          ref={containerRef}
+          className={classNames(
+            styles["dialogue-content"],
+
+            title ? "p-10" : "px-10 pb-10"
+          )}
         >
-          <img alt="close" src={close} />
-        </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              closeDialogue?.();
+            }}
+            className="absolute right-4 top-4"
+          >
+            <img alt="close" src={close} />
+          </button>
 
-        {title && <p className="text-[20px] font-semibold">{title}</p>}
+          {title && <p className="text-[20px] font-semibold">{title}</p>}
 
-        <div className="mt-12">{children}</div>
-      </div>
-    </motion.div>
+          <div className="mt-12">{children}</div>
+        </div>
+      </motion.div>
+    </>
   ) : (
     <></>
   );
