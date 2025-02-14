@@ -63,7 +63,9 @@ const ROLES: Record<
     ...Object.values(Contracts),
     ...Object.values(Projects),
   ],
+
   user: [Beneficiaries.NAVIGATE, Projects.NAVIGATE, Contracts.NAVIGATE],
+
   "provider.owner": [
     ...Object.values(Beneficiaries),
     ...Object.values(Contracts),
@@ -85,12 +87,10 @@ const ROLES: Record<
     Beneficiaries.NAVIGATE,
     Projects.NAVIGATE,
     Contracts.NAVIGATE,
-    Organizations.LIST,
   ],
   "funder.owner": [
     ...Object.values(Beneficiaries),
     ...Object.values(Users),
-    ...Object.values(Organizations),
     ...Object.values(Contracts),
     ...Object.values(Projects),
   ],
@@ -109,7 +109,6 @@ const ROLES: Record<
     Beneficiaries.NAVIGATE,
     Projects.NAVIGATE,
     Contracts.NAVIGATE,
-    Organizations.LIST,
   ],
 };
 

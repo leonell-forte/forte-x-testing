@@ -7,7 +7,6 @@ import { MouseEvent, useMemo, useRef, useState } from "react";
 import arrow from "assets/images/icons/chevron.svg";
 
 import { useOutsideClick } from "lib/hooks";
-import { IsAuthorized, Organizations } from "lib/role-permissions";
 import { ProfileType } from "lib/types/profile";
 
 import ViewProfileDialogue from "./ViewProfileDialogue";
@@ -23,8 +22,6 @@ const UserDropdown = ({ user }: IProp) => {
     queryKey: ["organizations"],
 
     queryFn: () => organizationService.list({ page: 1, listAll: true }),
-
-    enabled: IsAuthorized([Organizations.LIST]),
   });
 
   const [showDropdown, setShowDropdown] = useState(false);
@@ -64,7 +61,7 @@ const UserDropdown = ({ user }: IProp) => {
         />
       )}
 
-      <div ref={dropdownRef} className="relative z-40">
+      <div ref={dropdownRef} className="relative z-30">
         <button
           onClick={() => setShowDropdown((prev) => !prev)}
           className="flex h-[42px] w-[80px] cursor-pointer items-center justify-between rounded-[50px] bg-white bg-opacity-[30%] pl-1.5 pr-4 transition-all hover:brightness-[.8] sm:w-[184px]"
