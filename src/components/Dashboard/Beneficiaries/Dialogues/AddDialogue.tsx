@@ -113,7 +113,7 @@ const AddDialogue = ({
             <Evidences handleAddOrViewEvidence={handleAddOrViewEvidence} />
           )}
 
-          {IsAuthorized([Beneficiaries.UPDATE]) && !isStatusFinalized && (
+          {id && IsAuthorized([Beneficiaries.UPDATE]) && !isStatusFinalized && (
             <div className="flex justify-end gap-4">
               <Button
                 loading={loadingStatus === "Rejected"}
