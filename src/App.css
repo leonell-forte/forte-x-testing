@@ -12,7 +12,7 @@
 @font-face {
   font-family: "TWKLausanne";
   src: url("./assets/fonts//TWKLausanne-450.ttf") format("truetype");
-  font-weight: 400;
+  font-weight: 450;
   font-style: normal;
 }
 
@@ -26,7 +26,7 @@
 @font-face {
   font-family: "FAMAime";
   src: url("./assets/fonts//FAMAime-Regular.woff") format("woff");
-  font-weight: 400;
+  font-weight: 450;
   font-style: normal;
 }
 
@@ -39,11 +39,11 @@
 }
 
 body {
-  @apply w-screen;
+  @apply w-screen overflow-x-hidden;
 }
 
 .link {
-  @apply text-mint;
+  @apply text-mint transition duration-300 hover:text-[#35BD86];
 }
 
 .link-hover {
@@ -51,8 +51,12 @@ body {
 }
 
 .main-container {
-  @apply mx-auto px-5;
+  @apply mx-auto px-0 lg:px-14;
   max-width: 1440px;
+}
+
+.card {
+  background-color: rgba(48, 241, 255, 10%);
 }
 
 /* Hide the spinner in number input */

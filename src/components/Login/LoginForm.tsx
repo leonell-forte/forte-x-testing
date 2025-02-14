@@ -92,7 +92,7 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
 
   return (
     <div className="w-full">
-      <Form form={form} onSubmit={onSubmit} className="w-full space-y-10">
+      <Form form={form} onSubmit={onSubmit} className="w-full space-y-12">
         <div className="mt-10 flex w-full flex-col gap-[15px]">
           <Controller
             name="email"
@@ -143,7 +143,7 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
           </div>
         </div>
 
-        <div className="w-full space-y-[15px] text-center">
+        <div className="mx-auto w-full max-w-[22rem] space-y-[15px] text-center">
           <Button type="submit" fullWidth loading={loading}>
             Continue
           </Button>
@@ -151,7 +151,7 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
           <div className="flex items-center gap-4">
             <hr className="w-full" />
 
-            <p className="md:ext-[18px] text-[14px]">OR</p>
+            <p className="text-[14px]">OR</p>
 
             <hr className="w-full" />
           </div>
@@ -159,13 +159,6 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
           <Button type="button" fullWidth buttonType="secondary">
             Continue with Google{" "}
           </Button>
-
-          <p className="text-center text-[14px]">
-            Don&apos;t have an account?{" "}
-            <Link className="font-bold" to="/signup">
-              Sign up
-            </Link>
-          </p>
         </div>
       </Form>
     </div>

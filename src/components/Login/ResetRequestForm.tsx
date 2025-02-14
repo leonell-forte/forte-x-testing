@@ -64,7 +64,10 @@ const ResetRequestForm = ({ handleNext }: ILoginProps) => {
     }
   };
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-12 text-center">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-full space-y-12 text-center"
+    >
       <div className="space-y-4">
         <div>
           <p className="text-[24px] font-medium md:text-[32px]">
@@ -93,7 +96,7 @@ const ResetRequestForm = ({ handleNext }: ILoginProps) => {
         />
       </div>
 
-      <div className="flex flex-col gap-4">
+      <div className="mx-auto flex max-w-[22rem] flex-col gap-4">
         <Button loading={loading} type="submit">
           Get 4-digit code
         </Button>

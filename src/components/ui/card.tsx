@@ -1,5 +1,6 @@
-import classNames from "classnames";
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
+
+import { cn } from "lib/utils";
 
 interface ICardProp {
   children: ReactNode;
@@ -9,10 +10,9 @@ interface ICardProp {
 const Card = ({ className, children }: ICardProp) => {
   return (
     <div
-      className={classNames(
+      className={cn(
         className,
-
-        "!rounded-[30px] bg-white bg-opacity-[30%]"
+        "card rounded-0 bg-white/20 shadow backdrop-blur-xl lg:rounded-[30px]"
       )}
     >
       {children}

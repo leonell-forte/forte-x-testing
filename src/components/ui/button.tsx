@@ -26,7 +26,11 @@ const Button = ({
       borderRadius: "100px",
       boxShadow: "none",
       color: disabled ? "#787878" : "#0A312A",
-      fontWeight: "600",
+      fontWeight: "450",
+      "&:hover": {
+        backgroundColor: "#42ECA8",
+      },
+      transitionDuration: "500ms",
     },
 
     secondary: {
@@ -37,7 +41,7 @@ const Button = ({
       height: "44px",
       boxShadow: "none",
       color: disabled ? "#787878" : active ? "#42ECA8" : "#ffffff",
-      fontWeight: "600",
+      fontWeight: "450",
     },
 
     tertiary: {
@@ -46,7 +50,7 @@ const Button = ({
       height: "44px",
       boxShadow: "none",
       color: disabled ? "#787878" : active ? "#42ECA8" : "#ffffff",
-      fontWeight: "600",
+      fontWeight: "450",
     },
     default: {
       backgroundColor: "transparent",
@@ -54,7 +58,7 @@ const Button = ({
       height: "auto",
       boxShadow: "none",
       color: "black",
-      fontWeight: "600",
+      fontWeight: "450",
     },
   };
   const { id } = props;

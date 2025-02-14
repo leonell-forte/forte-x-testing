@@ -37,13 +37,13 @@ const ForgotPasswordPage = () => {
   }, []);
 
   return (
-    <div className="main-container grid h-[95vh] grid-cols-1 items-center gap-10 py-10 md:gap-[99px] md:px-[86px] lg:grid-cols-2">
+    <div className="main-container grid min-h-screen grid-cols-1 items-center gap-12 px-10 lg:grid-cols-2 lg:py-10 xl:gap-[70px]">
       <div className="hidden lg:block">
         <div className="mx-auto h-auto w-auto max-w-[437px] md:mx-0">
           <img alt="jobs" src={jobs} />
         </div>
 
-        <div className="space-y-6 text-center md:text-left">
+        <div className="max-w-xs space-y-6 text-center md:max-w-full md:text-left">
           <p className="font-famaime text-[40px] leading-[110%] md:text-[52px]">
             Providing the world’s talent with opportunity
           </p>
@@ -57,8 +57,8 @@ const ForgotPasswordPage = () => {
         </div>
       </div>
 
-      <Card className="flex h-full max-h-[838px] items-center px-10 py-24">
-        <div className="mx-auto w-full max-w-[400px] space-y-5">
+      <Card className="mx-auto flex h-full w-full items-center px-4 pb-24 pt-4 md:px-10 md:pt-24 lg:max-h-[838px] lg:w-full lg:max-w-[580px] lg:pt-12">
+        <div className="mx-auto w-full max-w-[450px] space-y-12">
           <img
             alt="logo"
             src="/logo.png"
