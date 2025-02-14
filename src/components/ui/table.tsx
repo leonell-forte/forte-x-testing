@@ -6,6 +6,8 @@ import Spinner from "./spinner/spinner";
 
 interface ITableProp extends TableHTMLAttributes<HTMLTableElement> {}
 
+interface ITableRowProps extends TableHTMLAttributes<HTMLTableRowElement> {}
+
 interface ITableHeadProps extends TableHTMLAttributes<HTMLHeadElement> {}
 
 interface ITableContainerProp extends ITableProp {
@@ -73,8 +75,19 @@ const Table = {
     return <tbody>{children}</tbody>;
   },
 
-  Row: ({ children }: ITableProp) => {
-    return <tr className="w-full">{children}</tr>;
+  Row: ({ children, onClick }: ITableRowProps) => {
+    return (
+      <tr
+        className={classNames(
+          "w-full",
+          onClick &&
+            "cursor-pointer transition-all hover:bg-slate-50 hover:bg-opacity-5"
+        )}
+        onClick={onClick}
+      >
+        {children}
+      </tr>
+    );
   },
 
   Data: ({ children, className, small, ...props }: ITableCellProps) => {

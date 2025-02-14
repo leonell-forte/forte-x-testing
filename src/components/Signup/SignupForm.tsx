@@ -97,8 +97,8 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
   }
   return (
     <div className="w-full">
-      <Form form={form} onSubmit={onSubmit} className="w-full space-y-5">
-        <div className="flex w-full flex-col gap-4">
+      <Form form={form} onSubmit={onSubmit} className="w-full space-y-12">
+        <div className="mt-10 flex w-full flex-col gap-[15px]">
           <Controller
             name="firstName"
             control={control}
@@ -173,7 +173,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
                     target="_blank"
                   >
                     {" "}
-                    Privacy Policy
+                    Forte&rsquo;s Privacy Policy
                   </Link>{" "}
                 </>
               }
@@ -181,14 +181,14 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
           </div>
         </div>
 
-        <div className="w-full space-y-[15px] text-center">
+        <div className="mx-auto w-full max-w-[22rem] space-y-[15px] text-center">
           <Button type="submit" fullWidth loading={loading}>
             Continue
           </Button>
           <div className="flex items-center gap-4">
             <hr className="w-full" />
 
-            <p className="md:ext-[18px] text-[14px]">OR</p>
+            <p className="text-[14px]">OR</p>
 
             <hr className="w-full" />
           </div>{" "}

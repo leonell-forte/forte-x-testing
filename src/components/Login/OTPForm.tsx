@@ -42,21 +42,22 @@ const OTPForm = ({ handleNext }: ILoginProps) => {
       <div className="my-10">
         <OTPInput onChange={(value) => setOtp(value)} />
       </div>
+      <div className="mx-auto w-full max-w-[22rem] space-y-[15px] text-center">
+        <Button
+          type="button"
+          eventName="OTP"
+          onClick={handleContinue}
+          disabled={!isComplete}
+          fullWidth
+        >
+          Log in
+        </Button>
 
-      <Button
-        type="button"
-        eventName="OTP"
-        onClick={handleContinue}
-        disabled={!isComplete}
-        fullWidth
-      >
-        Log in
-      </Button>
-
-      <p className="mt-[15px] text-center text-[14px]">
-        Didn&apos;t receive the email?{" "}
-        <button className="font-bold">Resend code</button>
-      </p>
+        <p className="mt-[15px] text-center text-[14px]">
+          Didn&apos;t receive the email?{" "}
+          <button className="font-bold">Resend code</button>
+        </p>
+      </div>
     </div>
   );
 };

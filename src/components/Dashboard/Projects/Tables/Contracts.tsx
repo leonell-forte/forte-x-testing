@@ -130,7 +130,14 @@ const Contracts = ({ projectId }: IProps) => {
               } = item;
 
               return (
-                <Table.Row key={index}>
+                <Table.Row
+                  onClick={(e) => {
+                    e.stopPropagation();
+
+                    handleEdit(id!.toString());
+                  }}
+                  key={index}
+                >
                   <Table.Data small className="h-[56px] w-[100px] py-1">
                     {id}
                   </Table.Data>
@@ -167,7 +174,12 @@ const Contracts = ({ projectId }: IProps) => {
                     <div className="flex justify-end gap-1.5">
                       <button
                         type="button"
-                        onClick={() => handleEdit(id!.toString())}
+                        onClick={(e) => {
+                          e.stopPropagation();
+
+                          handleEdit(id!.toString());
+                        }}
+                        className="flex-shrink-0"
                       >
                         <img src={pencil} alt="" />
                       </button>

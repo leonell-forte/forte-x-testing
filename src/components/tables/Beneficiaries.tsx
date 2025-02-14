@@ -194,7 +194,18 @@ const BeneficiariesTable = ({
               } = item;
 
               return (
-                <Table.Row key={index}>
+                <Table.Row
+                  key={index}
+                  onClick={(e) => {
+                    e.stopPropagation();
+
+                    setBeneficiaryId(id);
+
+                    setModal("beneficiaries");
+
+                    setEditMode(false);
+                  }}
+                >
                   <Table.Data small className="!h-[64px] !pl-[26px]">
                     <div className="flex items-center gap-2">
                       {setChecked ? (
@@ -218,23 +229,14 @@ const BeneficiariesTable = ({
                           />
                         </div>
                       ) : null}
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-
-                          setBeneficiaryId(id);
-
-                          setModal("beneficiaries");
-
-                          setEditMode(false);
-                        }}
+                      <p
                         className={cn(
                           "w-[143px] truncate text-left outline-none",
                           setChecked ? "translate-x-[-8px]" : ""
                         )}
                       >
                         {firstName}
-                      </button>
+                      </p>
                     </div>
                   </Table.Data>
 

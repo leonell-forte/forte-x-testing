@@ -100,7 +100,14 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
                 .join(" ");
 
               return (
-                <Table.Row key={bodyIndex}>
+                <Table.Row
+                  onClick={(e) => {
+                    e.stopPropagation();
+
+                    handleEditUser(item);
+                  }}
+                  key={bodyIndex}
+                >
                   <Table.Data>
                     <p className="w-[120px] truncate">{firstName}</p>
                   </Table.Data>

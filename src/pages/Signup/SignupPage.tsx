@@ -9,18 +9,18 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="main-container grid h-[95vh] grid-cols-1 items-center gap-10 py-10 md:gap-[99px] md:px-[86px] lg:grid-cols-2">
+    <div className="main-container grid min-h-screen grid-cols-1 items-center gap-12 px-10 lg:grid-cols-2 lg:py-10 xl:gap-[70px]">
       <div className="hidden lg:block">
         <div className="mx-auto h-auto w-auto max-w-[437px] md:mx-0">
           <img alt="jobs" src={skills} />
         </div>
 
-        <div className="space-y-6 text-center md:text-left">
+        <div className="max-w-xs space-y-6 text-center md:max-w-full md:text-left">
           <p className="font-famaime text-[40px] leading-[110%] md:text-[52px]">
-            Unlocking Human <br /> Potential
+            World-class workforce development made simple.
           </p>
 
-          <p className="text-[18px] leading-[110%] md:text-[24px]">
+          <p className="text-[18px] leading-[110%] md:text-[20px]">
             We’re building a future of work that works for everyone <br />- by
             funding effective training at no cost to students, and no risk to
             governments.
@@ -28,8 +28,8 @@ const SignupPage = () => {
         </div>
       </div>
 
-      <Card className="flex h-fit items-center px-10 py-12 md:py-[74px]">
-        <div className="mx-auto w-full max-w-[400px] space-y-12">
+      <Card className="mx-auto flex h-full w-full items-center px-4 py-8 md:px-10 lg:w-full lg:max-w-[580px]">
+        <div className="mx-auto w-full max-w-[350px] space-y-5 md:max-w-[450px]">
           <img
             alt="logo"
             src="/logo.png"

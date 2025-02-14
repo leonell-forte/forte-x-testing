@@ -102,7 +102,7 @@ const ResetPasswordForm = ({ handleNext, handleBack }: IProps) => {
         />
       </div>
 
-      <div className="space-y-4">
+      <div className="mx-auto w-full max-w-[22rem] space-y-4">
         <Button type="submit" fullWidth loading={loading}>
           Reset password
         </Button>

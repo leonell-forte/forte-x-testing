@@ -4,12 +4,9 @@ import {
   Checkbox as MuiCheckbox,
 } from "@mui/material";
 import classNames from "classnames";
-import { ReactNode, useCallback } from "react";
-
-import check from "assets/images/icons/checkbox-checked.svg";
-import checkedDisabled from "assets/images/icons/checkbox-disabled-checked.svg";
-import unCheckedDisabled from "assets/images/icons/checkbox-disabled-unchecked.svg";
-import unChecked from "assets/images/icons/checkbox-unchecked.svg";
+import { ReactNode } from "react";
+import { MdCheckBox as Checked } from "react-icons/md";
+import { MdCheckBoxOutlineBlank as Unchecked } from "react-icons/md";
 
 interface ICheckboxProps extends CheckboxProps {
   label?: string | ReactNode;
@@ -25,39 +22,19 @@ const Checkbox = ({
   labelClass,
   ...props
 }: ICheckboxProps) => {
-  const { disabled } = props;
-
-  const renderIcons = useCallback(() => {
-    let checked, unchecked;
-
-    if (disabled) {
-      checked = checkedDisabled;
-      unchecked = unCheckedDisabled;
-    } else {
-      checked = check;
-      unchecked = unChecked;
-    }
-
-    return { checked, unchecked };
-  }, [disabled]);
   return (
-    <div className="relative">
+    <div className="relative pl-[3px]">
       <FormControlLabel
         control={
           <MuiCheckbox
             sx={{
               fontSize: "12px",
+              paddingBlock: 0,
+              paddingLeft: "8px",
+              paddingRight: "4px",
             }}
-            icon={
-              <img
-                src={renderIcons().unchecked}
-                alt="unchecked"
-                className="w-4"
-              />
-            }
-            checkedIcon={
-              <img src={renderIcons().checked} alt="checked" className="w-4" />
-            }
+            icon={<Unchecked className="text-xl" />}
+            checkedIcon={<Checked className="text-xl" />}
             {...props}
             className="flex-shrink-0"
           />
