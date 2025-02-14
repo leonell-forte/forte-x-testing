@@ -117,22 +117,22 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
               } = item;
 
               return (
-                <Table.Row key={index}>
+                <Table.Row
+                  onClick={(e) => {
+                    e.stopPropagation();
+
+                    handleEditContract(id!);
+                  }}
+                  key={index}
+                >
                   <Table.Data className="pl-5">
                     <p className="w-[20px] truncate">{id}</p>
                   </Table.Data>
 
                   <Table.Data className="pl-5">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-
-                        handleEditContract(id!);
-                      }}
-                      className="w-[150px] truncate text-left outline-none"
-                    >
+                    <p className="w-[150px] truncate text-left outline-none">
                       {name}
-                    </button>
+                    </p>
                   </Table.Data>
 
                   <Table.Data className="pl-5">

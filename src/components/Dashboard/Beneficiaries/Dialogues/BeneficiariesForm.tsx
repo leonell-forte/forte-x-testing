@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import contractService from "api/contract";
 import organizationService from "api/organization";
-import { useEffect, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
 import {
@@ -39,7 +39,9 @@ interface IProps {
 
   projectId?: number;
 
-  editMode?: boolean;
+  onEdit?: boolean;
+
+  setOnEdit: Dispatch<SetStateAction<boolean>>;
 
   handleClose?: () => void;
 
@@ -53,13 +55,13 @@ const BeneficiariesForm = ({
 
   handleClose,
 
-  editMode,
+  onEdit,
+
+  setOnEdit,
 
   beneficiaryData,
 }: IProps) => {
   const dispatch = useAppDispatch();
-
-  const [onEdit, setOnEdit] = useState(editMode);
 
   const form = useForm<IBeneficiariesFieldValues>({
     resolver: zodResolver(beneficiaries.schema),

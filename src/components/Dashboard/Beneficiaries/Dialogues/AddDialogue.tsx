@@ -38,6 +38,8 @@ const AddDialogue = ({
 }: IBeneficiariesDialogueProps) => {
   const { setAlert } = useAlert();
 
+  const [onEdit, setOnEdit] = useState<boolean>(!!editMode);
+
   const [loadingStatus, setLoadingStatus] = useState<
     "Accepted" | "Rejected" | null
   >(null);
@@ -91,7 +93,7 @@ const AddDialogue = ({
   return (
     <Dialogue
       {...props}
-      confirmBeforeLeave
+      confirmBeforeLeave={onEdit}
       handleClose={props.handleClose}
       title={`${id ? `Beneficiary ID #${id}` : "Add beneficiary"}`}
     >
@@ -103,7 +105,8 @@ const AddDialogue = ({
         <div className="space-y-[22px]">
           <BeneficiariesForm
             id={id}
-            editMode={editMode}
+            onEdit={onEdit}
+            setOnEdit={setOnEdit}
             projectId={projectId}
             handleClose={props.handleClose}
             beneficiaryData={beneficiaryData}

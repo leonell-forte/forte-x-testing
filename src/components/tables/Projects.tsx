@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import bin from "assets/images/icons/bin.svg";
 import pencil from "assets/images/icons/pencil.svg";
@@ -18,6 +18,8 @@ type TProjectTable = {
 };
 
 const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
+  const navigate = useNavigate();
+
   const [modal, setModal] = useState<"project" | "delete" | null>(null);
 
   const [selectedProject, setSelectedProject] = useState<IProject | null>(null);
@@ -82,11 +84,16 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
             {list.map((item: IProject, bodyIndex: number) => {
               const { id, name, outcomes, contracts, providers } = item;
               return (
-                <Table.Row key={bodyIndex}>
+                <Table.Row
+                  onClick={(e) => {
+                    e.stopPropagation();
+
+                    navigate(`/projects/${id}`);
+                  }}
+                  key={bodyIndex}
+                >
                   <Table.Data className="pl-[14px]">
-                    <Link to={`/projects/${id}`}>
-                      <p className="w-[220px] truncate">{name}</p>
-                    </Link>
+                    <p className="w-[220px] truncate">{name}</p>
                   </Table.Data>
 
                   <Table.Data className="pl-[14px]">

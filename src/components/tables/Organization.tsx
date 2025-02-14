@@ -76,7 +76,14 @@ const OrganizationTable = ({ list, isLoading = false }: TOrganizationTable) => {
                 country,
               } = item;
               return (
-                <Table.Row key={bodyIndex}>
+                <Table.Row
+                  onClick={(e) => {
+                    e.stopPropagation();
+
+                    handleEditOrg(id!);
+                  }}
+                  key={bodyIndex}
+                >
                   <Table.Data className="pl-[18px]">
                     <p className="w-[200px] truncate">{name}</p>
                   </Table.Data>
