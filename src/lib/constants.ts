@@ -452,6 +452,12 @@ export const REDIRECT_PATHS: Record<UserRoleType, string> = {
 
   "funder.owner": "/beneficiaries",
 
+  "funder.admin": "/beneficiaries",
+
+  "funder.user": "/beneficiaries",
+
+  "funder.read-only": "/beneficiaries",
+
   owner: "/beneficiaries",
 
   admin: "/beneficiaries",

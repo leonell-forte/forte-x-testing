@@ -94,6 +94,23 @@ const ROLES: Record<
     ...Object.values(Contracts),
     ...Object.values(Projects),
   ],
+  "funder.admin": [
+    ...Object.values(Beneficiaries),
+    ...Object.values(Contracts),
+    ...Object.values(Projects),
+    ...Object.values(Users),
+  ],
+  "funder.user": [
+    Beneficiaries.NAVIGATE,
+    Projects.NAVIGATE,
+    Contracts.NAVIGATE,
+  ],
+  "funder.read-only": [
+    Beneficiaries.NAVIGATE,
+    Projects.NAVIGATE,
+    Contracts.NAVIGATE,
+    Organizations.LIST,
+  ],
 };
 
 type Permission = (typeof ROLES)[UserRoleType] extends (infer U)[] ? U : never;
