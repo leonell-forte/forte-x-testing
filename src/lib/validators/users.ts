@@ -40,7 +40,7 @@ export const users = {
 
     organizationId: z.string().min(1, "Organization is a required field"),
 
-    role: z.enum(UserRoleValues, {
+    role: z.enum([...UserRoleValues, "read-only"], {
       message: "Role is a required field",
     }),
   }),
