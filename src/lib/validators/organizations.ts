@@ -41,13 +41,13 @@ export const organizations = {
 
     registeredName: z.string().min(1, "Registered name is a required field."),
 
-    registeredAddress: z
-      .string()
-      .min(1, "Registered address is a required field."),
-
     registrationNumber: z
       .string()
       .min(1, "Registration number is a required field"),
+
+    registeredAddress: z
+      .string()
+      .min(1, "Registered address is a required field."),
 
     state: z.string().min(1, "State is required"),
 
