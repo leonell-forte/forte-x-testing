@@ -5,3 +5,11 @@
   box-shadow: 0px 20px 20px 0px #00000014;
   box-shadow: 0px 0px 2px 0px #0000001f;
 }
+
+.confirm-prompt {
+  @apply relative flex w-full flex-col items-center justify-center gap-6 bg-white bg-opacity-[30%] px-12 py-10 text-center;
+  border-radius: 8px;
+  max-width: 500px;
+  box-shadow: 0px 20px 20px 0px #00000014;
+  box-shadow: 0px 0px 2px 0px #0000001f;
+}

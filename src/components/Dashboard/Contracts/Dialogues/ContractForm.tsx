@@ -19,6 +19,7 @@ import { IProject } from "lib/types/projects";
 import { findLabelFromOptions, formatDate } from "lib/utils";
 import { contracts } from "lib/validators/contracts";
 
+import { useConfirmPrompt } from "components/ui/alert/confirm-prompt";
 import Button from "components/ui/button";
 import Controller from "components/ui/custom-controller/CustomController";
 import DatePicker from "components/ui/date-picker";
@@ -163,6 +164,8 @@ const ContractForm = ({
   const onSubmit = async (values: ContractFieldValues) => {
     await addContract(values);
   };
+
+  const { setShowPrompt } = useConfirmPrompt();
 
   return (
     <Form form={form} onSubmit={onSubmit} className="space-y-1">
@@ -466,7 +469,10 @@ const ContractForm = ({
                   Cancel
                 </Button>
               ) : (
-                <Button onClick={handleClose} buttonType="secondary">
+                <Button
+                  onClick={() => setShowPrompt(true)}
+                  buttonType="secondary"
+                >
                   Cancel
                 </Button>
               )}

@@ -91,6 +91,7 @@ const AddDialogue = ({
   return (
     <Dialogue
       {...props}
+      confirmBeforeLeave
       handleClose={props.handleClose}
       title={`${id ? `Beneficiary ID #${id}` : "Add beneficiary"}`}
     >
@@ -112,7 +113,7 @@ const AddDialogue = ({
             <Evidences handleAddOrViewEvidence={handleAddOrViewEvidence} />
           )}
 
-          {IsAuthorized([Beneficiaries.UPDATE]) && !isStatusFinalized && (
+          {id && IsAuthorized([Beneficiaries.UPDATE]) && !isStatusFinalized && (
             <div className="flex justify-end gap-4">
               <Button
                 loading={loadingStatus === "Rejected"}

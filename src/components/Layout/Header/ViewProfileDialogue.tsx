@@ -81,6 +81,7 @@ const ViewProfileDialogue = ({
 
   return (
     <Dialogue
+      confirmBeforeLeave
       isVisible={isVisible}
       handleClose={close}
       title={onEdit ? "Edit profile" : "Profile"}

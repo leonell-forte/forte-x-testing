@@ -11,6 +11,7 @@ import { IOrganization } from "lib/types/organizations";
 import { UserFieldTypes } from "lib/types/users";
 import { users } from "lib/validators/users";
 
+import { useConfirmPrompt } from "components/ui/alert/confirm-prompt";
 import Button from "components/ui/button";
 import Controller from "components/ui/custom-controller/CustomController";
 import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
@@ -37,6 +38,7 @@ const UserDialogue = ({
 }: IUserDialogueProps) => {
   const profile = useProfile();
   const myRole = profile?.role;
+  const { setShowPrompt } = useConfirmPrompt();
 
   const { data: userData, isLoading } = useQuery({
     queryKey: ["specific-user", userId],
@@ -156,8 +158,11 @@ const UserDialogue = ({
     }
   }, [isNonForteUser, profile, userOrganization, setValue]);
 
+  console.log(watch("role"));
+
   return (
     <Dialogue
+      confirmBeforeLeave
       isVisible={isVisible}
       handleClose={close}
       title={userId ? "Edit user" : "Add user"}
@@ -272,7 +277,7 @@ const UserDialogue = ({
             </div>
           </Tooltip>
           <div className="!mt-10 flex justify-end gap-4">
-            <Button onClick={close} buttonType="secondary">
+            <Button onClick={() => setShowPrompt(true)} buttonType="secondary">
               Cancel
             </Button>
 

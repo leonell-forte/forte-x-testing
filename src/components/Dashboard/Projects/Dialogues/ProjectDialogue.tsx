@@ -10,6 +10,7 @@ import { useProjectMutation } from "lib/mutations/projects";
 import { ProjectFieldValues } from "lib/types/projects";
 import { projects } from "lib/validators/projects";
 
+import { useConfirmPrompt } from "components/ui/alert/confirm-prompt";
 import Button from "components/ui/button";
 import Controller from "components/ui/custom-controller/CustomController";
 import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
@@ -101,8 +102,11 @@ const ProjectDialogue = ({
     await addProject(values);
   };
 
+  const { setShowPrompt } = useConfirmPrompt();
+
   return (
     <Dialogue
+      confirmBeforeLeave
       isVisible={isVisible}
       handleClose={close}
       title={project ? "Edit project" : "Add project"}
@@ -154,7 +158,7 @@ const ProjectDialogue = ({
           </div>
 
           <div className="!mt-10 flex justify-end gap-4">
-            <Button onClick={close} buttonType="secondary">
+            <Button onClick={() => setShowPrompt(true)} buttonType="secondary">
               Cancel
             </Button>
 

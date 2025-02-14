@@ -1,15 +1,11 @@
-import { useNavigate } from "react-router-dom";
-
 import skills from "assets/images/signup/spot-future-skills.png";
 
 import SignupForm from "components/Signup/SignupForm";
 import Card from "components/ui/card";
 
 const SignupPage = () => {
-  const navigate = useNavigate();
-
   const handleNextStep = (path?: string) => {
-    navigate(path || "/users");
+    window.location.href = path || "/beneficiaries";
   };
 
   return (
