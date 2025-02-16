@@ -209,7 +209,10 @@ const BeneficiariesTable = ({
                   <Table.Data small className="!h-[64px] !pl-[26px]">
                     <div className="flex items-center gap-2">
                       {setChecked ? (
-                        <div className="w-6">
+                        <div
+                          className="w-6"
+                          onClick={(e) => e.stopPropagation()}
+                        >
                           <Checkbox
                             labelClass="text-[14px]"
                             checked={selectedIds.includes(id)}
