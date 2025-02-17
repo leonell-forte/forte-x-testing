@@ -130,6 +130,7 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
                   checked={field.value}
                   onChange={(e) => field.onChange(e.target.checked)}
                   label="Remember me"
+                  white
                 />
               )}
             />

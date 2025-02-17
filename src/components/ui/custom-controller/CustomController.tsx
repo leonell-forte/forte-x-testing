@@ -1,4 +1,5 @@
 import { get, isEqual } from "lodash";
+import { ComponentPropsWithoutRef } from "react";
 import {
   Control,
   Controller,
@@ -16,6 +17,11 @@ type CustomProps = {
   label?: string;
   labelClassName?: string;
   required?: boolean;
+  tooltip?: Pick<
+    ComponentPropsWithoutRef<typeof Tooltip>,
+    "position" | "offset"
+  >;
+  containerClassName?: string;
 } & Omit<ControllerProps, "control">;
 
 type ObjectWithMessage = { message: string; [key: string]: any };
@@ -45,6 +51,8 @@ export default function CustomController({
   label,
   labelClassName,
   required = false,
+  tooltip,
+  containerClassName,
   ...props
 }: CustomProps) {
   const {
@@ -60,8 +68,9 @@ export default function CustomController({
     <Tooltip
       content={result?.message}
       open={Boolean(result?.message) && isFirstIndex}
+      {...(tooltip && tooltip)}
     >
-      <div className="flex w-full items-center">
+      <div className={cn("flex w-full items-center", containerClassName)}>
         {label && (
           <label htmlFor={name} className={cn("min-w-[140px]", labelClassName)}>
             {label}
