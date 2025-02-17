@@ -14,6 +14,7 @@ export const UserRoleValues = [
   "owner",
   "admin",
   "user",
+  "read-only",
 ] as const;
 
 export type UserRoleType = (typeof UserRoleValues)[number];
