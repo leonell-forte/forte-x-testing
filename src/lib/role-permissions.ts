@@ -64,51 +64,100 @@ const ROLES: Record<
     ...Object.values(Projects),
   ],
 
-  user: [Beneficiaries.NAVIGATE, Projects.NAVIGATE, Contracts.NAVIGATE],
+  user: [
+    ...Object.values(Beneficiaries),
+    ...Object.values(Contracts),
+    ...Object.values(Organizations),
+    ...Object.values(Projects),
+    Users.NAVIGATE,
+  ],
+
+  "read-only": [
+    Beneficiaries.NAVIGATE,
+    Projects.NAVIGATE,
+    Projects.LIST,
+    Contracts.NAVIGATE,
+    Contracts.LIST,
+    Organizations.NAVIGATE,
+    Organizations.LIST,
+  ],
 
   "provider.owner": [
     ...Object.values(Beneficiaries),
     ...Object.values(Contracts),
     ...Object.values(Projects),
     ...Object.values(Users),
+    Organizations.NAVIGATE,
+    Organizations.LIST,
+    Organizations.UPDATE,
+    Organizations.DELETE,
   ],
+
   "provider.admin": [
     ...Object.values(Beneficiaries),
     ...Object.values(Contracts),
     ...Object.values(Projects),
     ...Object.values(Users),
+    Organizations.NAVIGATE,
+    Organizations.LIST,
+    Organizations.UPDATE,
   ],
+
   "provider.user": [
-    Beneficiaries.NAVIGATE,
-    Projects.NAVIGATE,
-    Contracts.NAVIGATE,
+    ...Object.values(Beneficiaries),
+    ...Object.values(Contracts),
+    ...Object.values(Projects),
+    Organizations.NAVIGATE,
+    Organizations.LIST,
   ],
+
   "provider.read-only": [
     Beneficiaries.NAVIGATE,
     Projects.NAVIGATE,
+    Projects.LIST,
     Contracts.NAVIGATE,
+    Contracts.LIST,
+    Organizations.NAVIGATE,
+    Organizations.LIST,
   ],
+
   "funder.owner": [
     ...Object.values(Beneficiaries),
     ...Object.values(Users),
     ...Object.values(Contracts),
     ...Object.values(Projects),
+    Organizations.NAVIGATE,
+    Organizations.LIST,
+    Organizations.UPDATE,
+    Organizations.DELETE,
   ],
+
   "funder.admin": [
     ...Object.values(Beneficiaries),
     ...Object.values(Contracts),
     ...Object.values(Projects),
     ...Object.values(Users),
+    Organizations.NAVIGATE,
+    Organizations.UPDATE,
+    Organizations.LIST,
   ],
+
   "funder.user": [
-    Beneficiaries.NAVIGATE,
-    Projects.NAVIGATE,
-    Contracts.NAVIGATE,
+    ...Object.values(Beneficiaries),
+    ...Object.values(Contracts),
+    ...Object.values(Projects),
+    Organizations.NAVIGATE,
+    Organizations.LIST,
   ],
+
   "funder.read-only": [
     Beneficiaries.NAVIGATE,
-    Projects.NAVIGATE,
+    Contracts.LIST,
     Contracts.NAVIGATE,
+    Organizations.LIST,
+    Organizations.NAVIGATE,
+    Projects.LIST,
+    Projects.NAVIGATE,
   ],
 };
 
