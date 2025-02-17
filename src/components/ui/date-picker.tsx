@@ -7,6 +7,8 @@ import {
 import classNames from "classnames";
 import { ReactNode } from "react";
 
+import { DEFAULT_DATE_FORMAT } from "lib/constants";
+
 interface IProps extends DatePickerProps<Date> {
   helperText?: string | ReactNode;
 
@@ -33,7 +35,7 @@ const DatePicker = ({
         <Picker
           {...props}
           value={value}
-          format="dd/LL/yyyy"
+          format={DEFAULT_DATE_FORMAT}
           slotProps={{
             textField: {
               sx: {
