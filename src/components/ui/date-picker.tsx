@@ -1,11 +1,14 @@
+import { InputAdornment } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import {
-  DatePickerProps,
-  DatePicker as Picker,
-} from "@mui/x-date-pickers/DatePicker";
+  MobileDatePickerProps as DatePickerProps,
+  MobileDatePicker as Picker,
+} from "@mui/x-date-pickers/MobileDatePicker";
+import { enUS } from "@mui/x-date-pickers/locales";
 import classNames from "classnames";
 import { ReactNode } from "react";
+import { HiCalendar } from "react-icons/hi";
 
 import { DEFAULT_DATE_FORMAT } from "lib/constants";
 
@@ -14,6 +17,9 @@ interface IProps extends DatePickerProps<Date> {
 
   error?: boolean;
 }
+
+const usLocale =
+  enUS.components.MuiLocalizationProvider.defaultProps.localeText;
 
 const DatePicker = ({
   helperText,
@@ -31,13 +37,28 @@ const DatePicker = ({
       className={classNames("relative w-full")}
       onClick={(e) => e.stopPropagation()}
     >
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <LocalizationProvider
+        dateAdapter={AdapterDateFns}
+        localeText={{
+          ...usLocale,
+          fieldMonthPlaceholder: (params) =>
+            params.contentType === "letter" ? "MMM" : "MM",
+        }}
+      >
         <Picker
           {...props}
           value={value}
           format={DEFAULT_DATE_FORMAT}
+          className="w-full"
           slotProps={{
             textField: {
+              InputProps: {
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <HiCalendar />
+                  </InputAdornment>
+                ),
+              },
               sx: {
                 "& .MuiOutlinedInput-root": {
                   borderRadius: "10px",
@@ -79,6 +100,10 @@ const DatePicker = ({
                   },
                 },
 
+                "& .MuiInputBase-readOnly": {
+                  cursor: "pointer !important",
+                },
+
                 "& .MuiInputLabel-root": {
                   color: error ? "#651A1A !important" : "#ffffff !important",
 
@@ -93,12 +118,11 @@ const DatePicker = ({
               },
             },
 
-            popper: {
+            mobilePaper: {
               sx: {
-                "& .MuiPaper-root": {
-                  backgroundColor: "#222", // Calendar background color
-
-                  color: "#fff", // Text color inside the calendar
+                "& .MuiDialogContent-root": {
+                  background:
+                    "linear-gradient(36.06deg, #03677E 16.85%, #208C72 100.23%)",
                 },
 
                 "& .MuiTypography-root": {
@@ -106,11 +130,9 @@ const DatePicker = ({
                 },
 
                 "& .MuiPickersDay-today": {
-                  backgroundColor: "#222! important", // Calendar background color
+                  color: "#42ECA8 !important", // Text color inside the calendar
 
-                  color: "#fff !important", // Text color inside the calendar
-
-                  border: "1px solid white !important",
+                  border: "1px solid #42ECA8 !important",
                 },
 
                 "& .MuiPickersYear-yearButton": {
@@ -119,6 +141,10 @@ const DatePicker = ({
 
                     color: "#fff", // Text color for selected day
                   },
+                },
+
+                "& .MuiButton-colorPrimary": {
+                  color: "#fff !important",
                 },
               },
             },

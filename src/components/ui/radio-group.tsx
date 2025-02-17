@@ -55,6 +55,7 @@ const RadioGroup = ({
                 control={
                   <Radio
                     disabled={disabled}
+                    size="small"
                     icon={
                       <img
                         src={renderIcons().unchecked}
@@ -76,7 +77,11 @@ const RadioGroup = ({
                 key={index}
                 sx={{
                   "& .MuiFormControlLabel-label": {
-                    color: "white !important", // Set the label color to white
+                    color: "white !important",
+                    fontSize: 14,
+                  },
+                  "& .MuiRadio-root ": {
+                    width: "2rem",
                   },
                 }}
               />

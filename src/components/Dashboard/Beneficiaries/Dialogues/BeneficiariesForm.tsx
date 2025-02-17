@@ -359,8 +359,8 @@ const BeneficiariesForm = ({
           />
         </div>
 
-        <div className="flex items-center">
-          <p className="w-[190px] text-[20px] font-semibold">Cohort</p>
+        <div className="flex items-center gap-5">
+          <p className="heading w-fit whitespace-nowrap">Cohort</p>
 
           <hr className="w-full" />
         </div>
@@ -377,7 +377,7 @@ const BeneficiariesForm = ({
                   disabled={!onEdit}
                   value={new Date(field.value || "")}
                   onChange={(date) => {
-                    setValue("cohortStartDate", date!.toISOString());
+                    setValue("cohortStartDate", date ? date.toISOString() : "");
 
                     setError("cohortStartDate", { message: "" });
                   }}
@@ -395,7 +395,7 @@ const BeneficiariesForm = ({
                   minDate={new Date(watch("cohortStartDate") || "")}
                   value={new Date(field.value || "")}
                   onChange={(date) => {
-                    setValue("cohortEndDate", date!.toISOString());
+                    setValue("cohortEndDate", date ? date.toISOString() : "");
 
                     setError("cohortEndDate", { message: "" });
                   }}
@@ -414,41 +414,33 @@ const BeneficiariesForm = ({
           />
         </div>
 
-        <div className="flex items-center">
-          <p className="w-[190px] text-[20px] font-semibold">Social media</p>
+        <div className="flex items-center gap-5">
+          <p className="heading w-fit whitespace-nowrap">Social media</p>
 
           <hr className="w-full" />
         </div>
 
         <div className="space-y-4">
-          <div className="grid grid-cols-1 gap-x-6 md:grid-cols-2">
-            <Controller
-              label="Linkedin"
-              control={control}
-              name="linkedinUrl"
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  disabled={!onEdit}
-                  placeholder="Linkedin link"
-                />
-              )}
-            />
-
-            <Controller
-              label="Github"
-              control={control}
-              name="githubUrl"
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  disabled={!onEdit}
-                  placeholder="Github link"
-                />
-              )}
-            />
-          </div>
-
+          <Controller
+            label="Linkedin"
+            control={control}
+            name="linkedinUrl"
+            render={({ field }) => (
+              <Input
+                {...field}
+                disabled={!onEdit}
+                placeholder="Linkedin link"
+              />
+            )}
+          />
+          <Controller
+            label="Github"
+            control={control}
+            name="githubUrl"
+            render={({ field }) => (
+              <Input {...field} disabled={!onEdit} placeholder="Github link" />
+            )}
+          />
           <Controller
             label="Other"
             control={control}
@@ -459,8 +451,8 @@ const BeneficiariesForm = ({
           />
         </div>
 
-        <div className="flex items-center">
-          <p className="w-[190px] text-[20px] font-semibold">Demographics</p>
+        <div className="flex items-center gap-5">
+          <p className="heading w-fit whitespace-nowrap">Demographics</p>
 
           <hr className="w-full" />
         </div>
@@ -476,7 +468,7 @@ const BeneficiariesForm = ({
                   disabled={!onEdit}
                   value={new Date(field.value)}
                   onChange={(date) => {
-                    setValue("birthdate", date!.toISOString());
+                    setValue("birthdate", date ? date.toISOString() : "");
 
                     setError("birthdate", { message: "" });
                   }}
@@ -492,7 +484,8 @@ const BeneficiariesForm = ({
                 <Input {...field} disabled={!onEdit} placeholder="Ethnicity" />
               )}
             />
-
+          </div>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <Controller
               label="Gender"
               control={control}
@@ -511,26 +504,25 @@ const BeneficiariesForm = ({
                 />
               )}
             />
+            <Controller
+              label="Disability status"
+              control={control}
+              name="disabilityStatus"
+              render={({ field }) => (
+                <Dropdown
+                  disabled={!onEdit}
+                  value={field.value}
+                  handleSelect={(val) => {
+                    setValue("disabilityStatus", val as DisabilityStatusEnum);
+
+                    setError("disabilityStatus", { message: "" });
+                  }}
+                  options={CONFIRM}
+                  placeholder="Disability status"
+                />
+              )}
+            />
           </div>
-
-          <Controller
-            label="Disability status"
-            control={control}
-            name="disabilityStatus"
-            render={({ field }) => (
-              <Dropdown
-                disabled={!onEdit}
-                value={field.value}
-                handleSelect={(val) => {
-                  setValue("disabilityStatus", val as DisabilityStatusEnum);
-
-                  setError("disabilityStatus", { message: "" });
-                }}
-                options={CONFIRM}
-                placeholder="Disability status"
-              />
-            )}
-          />
         </div>
 
         <Controller

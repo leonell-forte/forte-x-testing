@@ -298,7 +298,7 @@ const ContractForm = ({
           />
           <Controller
             label="Target number of beneficiaries"
-            labelClassName="w-[150px]"
+            labelClassName="md:w-[150px]"
             required
             name="targetNoOfBenefeciaries"
             control={control}

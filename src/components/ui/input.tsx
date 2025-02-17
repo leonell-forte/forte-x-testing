@@ -98,6 +98,7 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
 
             "& .MuiOutlinedInput-root": {
               borderRadius: "10px",
+              padding: 0,
 
               ...(dark && {
                 color: "black",

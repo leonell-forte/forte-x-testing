@@ -1,4 +1,4 @@
-import minus from "assets/images/icons/minus.svg";
+import { HiMinusCircle } from "react-icons/hi";
 
 import Controller from "components/ui/custom-controller/CustomController";
 import Input from "components/ui/input";
@@ -44,9 +44,9 @@ const OutcomeField = ({
 
                 handleDelete();
               }}
-              className="mt-2 flex !h-8 !w-8 flex-shrink-0 items-center justify-center rounded-full bg-white text-forest-green transition-all hover:scale-[1.05] hover:opacity-80"
+              className="mt-[27px] transition-all hover:scale-[1.05] hover:opacity-80 md:mt-0"
             >
-              <img src={minus} alt="" />
+              <HiMinusCircle className="h-auto w-8 text-white" />
             </button>
           )}
         </div>

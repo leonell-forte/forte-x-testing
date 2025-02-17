@@ -15,7 +15,7 @@ const theme = createTheme({
           },
 
           "& .MuiInputBase-input": {
-            height: 17.03,
+            padding: 14,
           },
 
           ...(ownerState.color === "primary" && {
@@ -149,13 +149,16 @@ const theme = createTheme({
               height: "50px",
 
               "& .MuiInputBase-input": {
-                "-webkit-text-fill-color": "#fff !important", // Override text fill color
+                "-webkit-text-fill-color": "#787878 !important", // Override text fill color
+              },
+              "& > fieldset": {
+                borderColor: "#787878 !important", // Override border fill color
               },
             },
             "& .MuiOutlinedInput-root": {
               borderRadius: "10px",
               "&.Mui-disabled fieldset": {
-                borderColor: ownerState.error ? "#651A1A" : "#fff",
+                borderColor: ownerState.error ? "#787878" : "#fff",
               },
             },
             // "& .MuiFormHelperText-root": {

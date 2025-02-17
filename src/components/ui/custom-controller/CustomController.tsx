@@ -70,11 +70,16 @@ export default function CustomController({
       open={Boolean(result?.message) && isFirstIndex}
       {...(tooltip && tooltip)}
     >
-      <div className={cn("flex w-full items-center", containerClassName)}>
+      <div
+        className={cn(
+          "flex w-full flex-col gap-y-1.5 md:flex-row md:items-center",
+          containerClassName
+        )}
+      >
         {label && (
           <label htmlFor={name} className={cn("min-w-[140px]", labelClassName)}>
             {label}
-            <span className="text-lg font-bold">{required ? "*" : ""}</span>
+            {required ? "*" : ""}
           </label>
         )}
         <Controller control={control} {...props} name={name} />

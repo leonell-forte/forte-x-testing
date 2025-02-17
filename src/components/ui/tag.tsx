@@ -1,7 +1,7 @@
-import classNames from "classnames";
 import { MouseEvent } from "react";
+import { HiX } from "react-icons/hi";
 
-import close from "assets/images/icons/close.svg";
+import { cn } from "lib/utils";
 
 interface ITagProps {
   label?: string;
@@ -16,17 +16,17 @@ interface ITagProps {
 const Tag = ({ label, dark, handleRemove, disabled }: ITagProps) => {
   return (
     <div
-      className={classNames(
-        "z-10 flex h-8 w-fit items-center gap-2.5 rounded-[4px] bg-white bg-opacity-[30%] px-2.5",
+      className={cn(
+        "z-10 flex w-fit items-center gap-1.5 rounded-[4px] bg-opacity-[30%] px-2.5 py-1 text-sm",
 
-        dark && "!bg-forest-green"
+        dark ? "bg-[#546F6A] transition hover:bg-forest-green" : "bg-white"
       )}
     >
       <span>{label}</span>
 
       {!disabled && (
         <button type="button" onClick={handleRemove}>
-          <img alt="close" src={close} />
+          <HiX />
         </button>
       )}
     </div>

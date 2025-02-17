@@ -117,11 +117,12 @@ const AddDialogue = ({
           )}
 
           {id && IsAuthorized([Beneficiaries.UPDATE]) && !isStatusFinalized && (
-            <div className="flex justify-end gap-4">
+            <div className="flex w-full flex-col items-center justify-center gap-4 sm:flex-row sm:justify-end">
               <Button
                 loading={loadingStatus === "Rejected"}
                 onClick={() => updateStatus("Rejected")}
                 buttonType="secondary"
+                className="w-full"
               >
                 Reject beneficiary
               </Button>
@@ -129,6 +130,7 @@ const AddDialogue = ({
               <Button
                 loading={loadingStatus === "Accepted"}
                 onClick={() => updateStatus("Accepted")}
+                className="w-full"
               >
                 Accept beneficiary
               </Button>

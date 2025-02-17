@@ -52,7 +52,7 @@ const Checkbox = ({
               fontSize: "12px",
               paddingBlock: 0,
               paddingLeft: "8px",
-              paddingRight: "4px",
+              paddingRight: white ? "4px" : "8px",
             }}
             {...(white
               ? {

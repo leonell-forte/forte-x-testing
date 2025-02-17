@@ -54,7 +54,7 @@ const Alert = () => {
         <div className="relative flex items-start gap-6 px-10 py-9">
           {status === "success" && <img src={success} alt="" />}
           <div className="space-y-2">
-            {title && <p className="text-[20px] font-semibold">{title}</p>}
+            {title && <p className="heading">{title}</p>}
             {message && <p className="text-[14px]">{message}</p>}
           </div>
           <button

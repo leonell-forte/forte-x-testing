@@ -1,6 +1,6 @@
 .dialogue-content {
-  @apply bg-white bg-opacity-[30%] w-full relative;
-  border-radius: 8px;
+  @apply relative w-full backdrop-blur-md;
+  background-color: rgba(48, 241, 255, 10%);
   max-width: 750px;
   box-shadow: 0px 20px 20px 0px #00000014;
   box-shadow: 0px 0px 2px 0px #0000001f;

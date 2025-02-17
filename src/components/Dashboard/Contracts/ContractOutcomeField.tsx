@@ -2,9 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import projectService from "api/projects";
 import { useMemo } from "react";
 import { Control } from "react-hook-form";
-
-import add from "assets/images/icons/add.svg";
-import minus from "assets/images/icons/minus.svg";
+import { HiMinusCircle, HiPlusCircle } from "react-icons/hi";
 
 import { ContractFieldValues, RateEnum } from "lib/types/contracts";
 import { findLabelFromOptions } from "lib/utils";
@@ -73,8 +71,6 @@ const ContractOutcomeField = ({
     [project]
   );
 
-  console.log(outcomes);
-
   return (
     <div className="space-y-4">
       <div className="flex gap-4">
@@ -113,9 +109,13 @@ const ContractOutcomeField = ({
               }
             }}
             type="button"
-            className="mt-3 flex !h-8 !w-8 flex-shrink-0 items-center justify-center rounded-full bg-white text-forest-green transition-all hover:scale-[1.05] hover:opacity-80"
+            className="mt-[27px] transition-all hover:scale-[1.05] hover:opacity-80 md:mt-0"
           >
-            <img src={!index ? add : minus} alt="" />
+            {!index ? (
+              <HiPlusCircle className="h-auto w-8 text-white" />
+            ) : (
+              <HiMinusCircle className="h-auto w-8 text-white" />
+            )}
           </button>
         )}
       </div>

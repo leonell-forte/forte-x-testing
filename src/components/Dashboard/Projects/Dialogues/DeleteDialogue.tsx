@@ -24,11 +24,14 @@ const DeleteDialogue = ({
   };
 
   return (
-    <Dialogue center isVisible={isVisible} handleClose={handleClose}>
-      <div className="text-center">
-        <p className="text-[24px] font-semibold">
-          Are you sure you want to delete this project?
-        </p>
+    <Dialogue
+      center
+      isVisible={isVisible}
+      handleClose={handleClose}
+      canFullScreen={false}
+    >
+      <div>
+        <p className="heading">Are you sure you want to delete this project?</p>
 
         <div className="mt-10 flex justify-end gap-2">
           <Button onClick={handleClose} buttonType="secondary">

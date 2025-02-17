@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import evidenceService from "api/evidence";
 import { useMemo } from "react";
+import { HiPlusCircle } from "react-icons/hi";
 import { Link } from "react-router-dom";
 
-import add from "assets/images/icons/add.svg";
 import download from "assets/images/icons/download.svg";
 
 import { EVIDENCE_STATUS } from "lib/constants";
@@ -31,22 +31,21 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
   return (
     <div className="space-y-[30px]">
       {IsAuthorized([Beneficiaries.UPDATE]) && (
-        <div className="flex items-center gap-12">
-          <p className="text-[20px] font-semibold">Evidence</p>
+        <div className="flex items-center gap-5">
+          <p className="heading w-fit whitespace-nowrap">Evidence</p>
 
-          <div className="flex w-full items-center gap-4">
+          <div className="flex w-full items-center gap-5">
             <hr className="w-full" />
 
             <button
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-
                 handleAddOrViewEvidence?.();
               }}
-              className="flex !h-8 !w-8 flex-shrink-0 items-center justify-center rounded-full bg-white text-forest-green transition-all hover:scale-[1.05] hover:opacity-80"
+              className="transition-all hover:scale-[1.05] hover:opacity-80"
             >
-              <img src={add} alt="add" />
+              <HiPlusCircle className="h-auto w-8 text-white" />
             </button>
           </div>
         </div>

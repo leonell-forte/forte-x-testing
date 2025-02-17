@@ -3,8 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import projectService from "api/projects";
 import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-
-import add from "assets/images/icons/add.svg";
+import { HiPlusCircle } from "react-icons/hi";
 
 import { useProjectMutation } from "lib/mutations/projects";
 import { ProjectFieldValues } from "lib/types/projects";
@@ -127,17 +126,17 @@ const ProjectDialogue = ({
             )}
           />
 
-          <div className="flex w-full items-center gap-4">
-            <p className="w-[190px]">Outcomes</p>
+          <div className="flex items-center gap-5">
+            <p className="heading w-fit whitespace-nowrap">Outcomes</p>
 
             <hr className="w-full" />
 
             <button
               type="button"
               onClick={handleAddOutcome}
-              className="flex !h-8 !w-8 flex-shrink-0 items-center justify-center rounded-full bg-white text-forest-green transition-all hover:scale-[1.05] hover:opacity-80"
+              className="transition-all hover:scale-[1.05] hover:opacity-80 md:mt-0"
             >
-              <img src={add} alt="" />
+              <HiPlusCircle className="h-auto w-8 text-white" />
             </button>
           </div>
 

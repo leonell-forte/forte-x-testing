@@ -20,7 +20,7 @@ const DeleteDialogue = ({ id, ...props }: IDeleteDialogueProp) => {
   return (
     <Dialogue center {...props}>
       <div className="text-left">
-        <p className="text-[20px] font-semibold">
+        <p className="heading">
           Are you sure you want to delete this contract?
         </p>
         <p className="text-[14px] font-medium">
