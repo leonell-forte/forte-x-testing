@@ -4,15 +4,21 @@ import {
   Checkbox as MuiCheckbox,
 } from "@mui/material";
 import classNames from "classnames";
-import { ReactNode } from "react";
+import { ReactNode, useCallback } from "react";
 import { MdCheckBox as Checked } from "react-icons/md";
 import { MdCheckBoxOutlineBlank as Unchecked } from "react-icons/md";
+
+import check from "assets/images/icons/checkbox-checked.svg";
+import checkedDisabled from "assets/images/icons/checkbox-disabled-checked.svg";
+import unCheckedDisabled from "assets/images/icons/checkbox-disabled-unchecked.svg";
+import unChecked from "assets/images/icons/checkbox-unchecked.svg";
 
 interface ICheckboxProps extends CheckboxProps {
   label?: string | ReactNode;
   helperText?: string | ReactNode;
   dark?: boolean;
   labelClass?: string;
+  white?: boolean;
 }
 
 const Checkbox = ({
@@ -20,8 +26,23 @@ const Checkbox = ({
   helperText,
   dark,
   labelClass,
+  disabled,
+  white = false,
   ...props
 }: ICheckboxProps) => {
+  const renderIcons = useCallback(() => {
+    let checked, unchecked;
+
+    if (disabled) {
+      checked = checkedDisabled;
+      unchecked = unCheckedDisabled;
+    } else {
+      checked = check;
+      unchecked = unChecked;
+    }
+
+    return { checked, unchecked };
+  }, [disabled]);
   return (
     <div className="relative pl-[3px]">
       <FormControlLabel
@@ -33,8 +54,27 @@ const Checkbox = ({
               paddingLeft: "8px",
               paddingRight: "4px",
             }}
-            icon={<Unchecked className="text-xl" />}
-            checkedIcon={<Checked className="text-xl" />}
+            {...(white
+              ? {
+                  icon: <Unchecked className="text-xl" />,
+                  checkedIcon: <Checked className="text-xl" />,
+                }
+              : {
+                  icon: (
+                    <img
+                      src={renderIcons().unchecked}
+                      alt="unchecked"
+                      className="w-4"
+                    />
+                  ),
+                  checkedIcon: (
+                    <img
+                      src={renderIcons().checked}
+                      alt="checked"
+                      className="w-4"
+                    />
+                  ),
+                })}
             {...props}
             className="flex-shrink-0"
           />

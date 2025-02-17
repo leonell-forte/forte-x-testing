@@ -42,10 +42,6 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
   });
 
   const {
-    setValue,
-
-    formState: { errors },
-
     reset,
 
     control,
@@ -152,33 +148,41 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
               <Input {...field} label="Re-enter password*" type="password" />
             )}
           />
-
-          <div className="flex items-center justify-between">
-            <Checkbox
-              labelClass="font-medium"
-              helperText={errors.agreeTerms?.message}
-              onChange={(e) => {
-                if (e.target.checked) {
-                  setValue("agreeTerms", "true");
-                } else {
-                  setValue("agreeTerms", "");
+          <Controller
+            tooltip={{
+              position: "top",
+              offset: "start",
+            }}
+            name="agreeTerms"
+            containerClassName="w-fit"
+            control={control}
+            render={({ field }) => (
+              <Checkbox
+                white
+                labelClass="font-medium"
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    field.onChange("true");
+                    return;
+                  }
+                  field.onChange("");
+                }}
+                label={
+                  <>
+                    I agree to
+                    <Link
+                      to="https://forteglobal.com/privacy-policy"
+                      className="link"
+                      target="_blank"
+                    >
+                      {" "}
+                      Forte&rsquo;s Privacy Policy
+                    </Link>{" "}
+                  </>
                 }
-              }}
-              label={
-                <>
-                  I agree to
-                  <Link
-                    to="https://forteglobal.com/privacy-policy"
-                    className="link"
-                    target="_blank"
-                  >
-                    {" "}
-                    Forte&rsquo;s Privacy Policy
-                  </Link>{" "}
-                </>
-              }
-            />
-          </div>
+              />
+            )}
+          />
         </div>
 
         <div className="mx-auto w-full max-w-[22rem] space-y-[15px] text-center">
