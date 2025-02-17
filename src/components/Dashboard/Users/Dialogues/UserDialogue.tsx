@@ -108,9 +108,6 @@ const UserDialogue = ({
     return "You cannot change your own role.";
   }, [myRole, userData]);
 
-  const organizationId = watch("organizationId");
-  const isReadOnly = watch("role").includes("read-only");
-
   const isNonForteUser = useMemo(
     () => profile?.organization !== "Forte",
     [profile]
@@ -125,31 +122,23 @@ const UserDialogue = ({
     () =>
       organizations
         .filter((org) => {
-          if (isReadOnly || isNonForteUser) return org.type !== "forte";
+          if (isNonForteUser) return org.type !== "forte";
           return true;
         })
         .map((item: IOrganization) => ({
           label: item.registeredName,
           value: String(item.id),
         })),
-    [organizations, isReadOnly, isNonForteUser]
+    [organizations, isNonForteUser]
   );
-
-  const isForteOrg = useMemo(() => {
-    return organizations.some(
-      // eslint-disable-next-line
-      (org) => org.id == organizationId && org.type === "forte"
-    );
-  }, [organizationId, organizations]);
 
   const filteredRoles = useMemo(
     () =>
       ROLES.filter((role) => {
-        if (isForteOrg) return role.value !== "read-only";
         if (isNonForteUser) return role.value !== "owner";
         return true;
       }),
-    [isForteOrg, isNonForteUser]
+    [isNonForteUser]
   );
 
   useEffect(() => {
