@@ -108,7 +108,11 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
   };
 
   return (
-    <Dialogue {...props} title={id ? `Evidence ID ${id}` : "Add evidence"}>
+    <Dialogue
+      {...props}
+      title={id ? `Evidence ID ${id}` : "Add evidence"}
+      confirmBeforeLeave={onEdit}
+    >
       <div className="space-y-[30px]">
         {evidenceLoading ? (
           <div className="flex h-[470px] w-full items-center justify-center">
