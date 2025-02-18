@@ -57,7 +57,7 @@ const ForgotPasswordPage = () => {
         </div>
       </div>
 
-      <Card className="mx-auto flex h-full w-full items-center px-4 pb-24 pt-4 md:px-10 md:pt-24 lg:max-h-[838px] lg:w-full lg:max-w-[580px] lg:pt-12">
+      <Card className="mx-auto flex h-full w-full items-center px-4 pb-24 pt-4 md:px-10 md:pt-24 lg:max-h-[838px] lg:w-full lg:min-w-[580px] lg:max-w-[580px] lg:pt-12">
         <div className="mx-auto w-full max-w-[450px] space-y-12">
           <img
             alt="logo"
