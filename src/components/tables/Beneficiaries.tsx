@@ -95,7 +95,7 @@ const BeneficiariesTable = ({
   return (
     <>
       {renderDialog()}
-      <div className="min-[1300px]:hidden">
+      <div className="min-[1350px]:hidden">
         <Cards.Container isLoading={isLoading}>
           {list.map((item, index) => {
             const {
@@ -212,7 +212,7 @@ const BeneficiariesTable = ({
           })}
         </Cards.Container>
       </div>
-      <div className="hidden min-[1300px]:block">
+      <div className="hidden min-[1350px]:block">
         <Table.Container isLoading={isLoading} isEmpty={!list?.length}>
           <Table.Head>
             <Table.Row>
