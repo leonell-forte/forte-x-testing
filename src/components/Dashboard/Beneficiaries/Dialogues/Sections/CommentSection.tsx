@@ -121,7 +121,7 @@ const CommentSection = ({ id: evidenceId }: { id: number }) => {
                     type="submit"
                     form="comments-form"
                     className={classNames(
-                      "mx-1.5 text-[12px] font-medium transition",
+                      "mr-3.5 text-[12px] font-medium transition",
                       comment.length === 0
                         ? "cursor-not-allowed text-mint/50"
                         : "text-mint hover:text-mint/70"

@@ -128,7 +128,7 @@ const ContractForm = ({
     [projectsList]
   );
 
-  const { isSigned, isCompleted, isDraft } = useMemo(() => {
+  const { isSigned, isCompleted, isDraft, isCancelled } = useMemo(() => {
     const status = contractDetails?.status;
 
     return {
@@ -137,6 +137,8 @@ const ContractForm = ({
       isCompleted: status === "COMPLETED",
 
       isDraft: status === "DRAFT",
+
+      isCancelled: status === "CANCELLED",
     };
   }, [contractDetails?.status]);
 
@@ -298,7 +300,7 @@ const ContractForm = ({
           />
           <Controller
             label="Target number of beneficiaries"
-            labelClassName="w-[150px]"
+            labelClassName="md:w-[150px]"
             required
             name="targetNoOfBenefeciaries"
             control={control}
@@ -435,7 +437,7 @@ const ContractForm = ({
       <div className="!mt-10 flex items-center justify-between">
         {IsAuthorized([Contracts.UPDATE]) && (
           <div>
-            {contractDetails && !isAmmending && (
+            {contractDetails && !isAmmending && !isCancelled && (
               <Button onClick={markContract} buttonType="secondary">
                 {statusActions?.label}
               </Button>

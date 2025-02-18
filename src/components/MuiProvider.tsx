@@ -14,13 +14,17 @@ const theme = createTheme({
             display: "none",
           },
 
+          " input::placeholder": {
+            fontWeight: 300,
+          },
+
           "& .MuiInputBase-input": {
-            height: 17.03,
+            padding: "0.625rem 0.875rem",
           },
 
           ...(ownerState.color === "primary" && {
             "& .MuiOutlinedInput-root": {
-              borderRadius: "10px",
+              borderRadius: "0.5rem",
 
               color: "white",
 
@@ -52,7 +56,7 @@ const theme = createTheme({
           // Success Variant
           ...(ownerState.color === "success" && {
             "& .MuiOutlinedInput-root": {
-              borderRadius: "10px",
+              borderRadius: "0.5rem",
 
               color: "white",
 
@@ -90,8 +94,6 @@ const theme = createTheme({
           // Error Variant
           ...(ownerState.error && {
             "& .MuiOutlinedInput-root": {
-              height: "50px",
-
               borderRadius: "10px !important",
 
               color: "#651A1A !important",
@@ -146,16 +148,17 @@ const theme = createTheme({
           // Disabled Variant
           ...(ownerState.disabled && {
             "& .MuiOutlinedInput-root.Mui-disabled": {
-              height: "50px",
-
               "& .MuiInputBase-input": {
-                "-webkit-text-fill-color": "#fff !important", // Override text fill color
+                "-webkit-text-fill-color": "#787878 !important", // Override text fill color
+              },
+              "& > fieldset": {
+                borderColor: "#787878 !important", // Override border fill color
               },
             },
             "& .MuiOutlinedInput-root": {
-              borderRadius: "10px",
+              borderRadius: "0.5rem",
               "&.Mui-disabled fieldset": {
-                borderColor: ownerState.error ? "#651A1A" : "#fff",
+                borderColor: ownerState.error ? "#787878" : "#fff",
               },
             },
             // "& .MuiFormHelperText-root": {

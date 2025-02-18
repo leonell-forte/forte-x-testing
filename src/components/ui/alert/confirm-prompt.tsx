@@ -38,9 +38,7 @@ const ConfirmPrompt = ({ confirmLeave }: IConfirmPrompt) => {
     >
       <div className={styles["confirm-prompt"]}>
         <div className="space-y-3">
-          <p className="text-[20px] font-semibold">
-            Are you sure you want to leave?
-          </p>
+          <p className="heading">Are you sure you want to leave?</p>
           <p className="text-[14px]">
             You have unsaved changes. If you navigate away now, all unsaved data
             will be lost.

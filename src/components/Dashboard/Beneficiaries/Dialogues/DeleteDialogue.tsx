@@ -20,11 +20,12 @@ const DeleteDialogue = ({ id, ...props }: IDeleteDialogueProp) => {
   return (
     <Dialogue
       center
+      canFullScreen={false}
       isVisible={props.isVisible}
       handleClose={props.handleClose}
     >
       <div className="text-left">
-        <p className="text-[20px] font-semibold">
+        <p className="heading">
           Are you sure that you want to delete this beneficiary?
         </p>
         <p className="text-[14px] font-medium">

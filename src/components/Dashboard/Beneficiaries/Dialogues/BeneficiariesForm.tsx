@@ -196,7 +196,7 @@ const BeneficiariesForm = ({
             required
             control={control}
             render={({ field }) => (
-              <Input {...field} disabled={!onEdit} placeholder="First name" />
+              <Input {...field} readOnly={!onEdit} placeholder="First name" />
             )}
           />
 
@@ -206,7 +206,7 @@ const BeneficiariesForm = ({
             control={control}
             name="lastName"
             render={({ field }) => (
-              <Input {...field} disabled={!onEdit} placeholder="Last name" />
+              <Input {...field} readOnly={!onEdit} placeholder="Last name" />
             )}
           />
 
@@ -216,7 +216,7 @@ const BeneficiariesForm = ({
             control={control}
             name="email"
             render={({ field }) => (
-              <Input {...field} disabled={!onEdit} placeholder="Email" />
+              <Input {...field} readOnly={!onEdit} placeholder="Email" />
             )}
           />
 
@@ -228,7 +228,7 @@ const BeneficiariesForm = ({
               <Input
                 {...field}
                 phoneNUmber
-                disabled={!onEdit}
+                readOnly={!onEdit}
                 placeholder="Phone"
               />
             )}
@@ -242,7 +242,7 @@ const BeneficiariesForm = ({
             render={({ field }) => (
               <Dropdown
                 value={field.value || ""}
-                disabled={!onEdit}
+                readOnly={!onEdit}
                 handleSelect={(val) => {
                   setValue("status", val as string);
 
@@ -266,7 +266,7 @@ const BeneficiariesForm = ({
 
                   setError("riskLevel", { message: "" });
                 }}
-                disabled={!onEdit}
+                readOnly={!onEdit}
                 options={RISK_LEVEL}
                 placeholder="Risk level"
               />
@@ -281,7 +281,7 @@ const BeneficiariesForm = ({
             render={({ field }) => (
               <Dropdown
                 enableSearch
-                disabled={!onEdit}
+                readOnly={!onEdit}
                 loading={contractsLoading}
                 value={findLabelFromOptions(
                   contracts,
@@ -359,8 +359,8 @@ const BeneficiariesForm = ({
           />
         </div>
 
-        <div className="flex items-center">
-          <p className="w-[190px] text-[20px] font-semibold">Cohort</p>
+        <div className="flex items-center gap-5">
+          <p className="heading w-fit whitespace-nowrap">Cohort</p>
 
           <hr className="w-full" />
         </div>
@@ -374,10 +374,10 @@ const BeneficiariesForm = ({
               render={({ field }) => (
                 <DatePicker
                   maxDate={new Date(watch("cohortEndDate") || "")}
-                  disabled={!onEdit}
+                  readOnly={!onEdit}
                   value={new Date(field.value || "")}
                   onChange={(date) => {
-                    setValue("cohortStartDate", date!.toISOString());
+                    setValue("cohortStartDate", date ? date.toISOString() : "");
 
                     setError("cohortStartDate", { message: "" });
                   }}
@@ -391,11 +391,11 @@ const BeneficiariesForm = ({
               name="cohortEndDate"
               render={({ field }) => (
                 <DatePicker
-                  disabled={!onEdit}
+                  readOnly={!onEdit}
                   minDate={new Date(watch("cohortStartDate") || "")}
                   value={new Date(field.value || "")}
                   onChange={(date) => {
-                    setValue("cohortEndDate", date!.toISOString());
+                    setValue("cohortEndDate", date ? date.toISOString() : "");
 
                     setError("cohortEndDate", { message: "" });
                   }}
@@ -409,58 +409,50 @@ const BeneficiariesForm = ({
             control={control}
             name="cohortName"
             render={({ field }) => (
-              <Input {...field} disabled={!onEdit} placeholder="Program" />
+              <Input {...field} readOnly={!onEdit} placeholder="Program" />
             )}
           />
         </div>
 
-        <div className="flex items-center">
-          <p className="w-[190px] text-[20px] font-semibold">Social media</p>
+        <div className="flex items-center gap-5">
+          <p className="heading w-fit whitespace-nowrap">Social media</p>
 
           <hr className="w-full" />
         </div>
 
         <div className="space-y-4">
-          <div className="grid grid-cols-1 gap-x-6 md:grid-cols-2">
-            <Controller
-              label="Linkedin"
-              control={control}
-              name="linkedinUrl"
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  disabled={!onEdit}
-                  placeholder="Linkedin link"
-                />
-              )}
-            />
-
-            <Controller
-              label="Github"
-              control={control}
-              name="githubUrl"
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  disabled={!onEdit}
-                  placeholder="Github link"
-                />
-              )}
-            />
-          </div>
-
+          <Controller
+            label="Linkedin"
+            control={control}
+            name="linkedinUrl"
+            render={({ field }) => (
+              <Input
+                {...field}
+                readOnly={!onEdit}
+                placeholder="Linkedin link"
+              />
+            )}
+          />
+          <Controller
+            label="Github"
+            control={control}
+            name="githubUrl"
+            render={({ field }) => (
+              <Input {...field} readOnly={!onEdit} placeholder="Github link" />
+            )}
+          />
           <Controller
             label="Other"
             control={control}
             name="otherUrl"
             render={({ field }) => (
-              <Input {...field} disabled={!onEdit} placeholder="Other" />
+              <Input {...field} readOnly={!onEdit} placeholder="Other" />
             )}
           />
         </div>
 
-        <div className="flex items-center">
-          <p className="w-[190px] text-[20px] font-semibold">Demographics</p>
+        <div className="flex items-center gap-5">
+          <p className="heading w-fit whitespace-nowrap">Demographics</p>
 
           <hr className="w-full" />
         </div>
@@ -473,10 +465,10 @@ const BeneficiariesForm = ({
               name="birthdate"
               render={({ field }) => (
                 <DatePicker
-                  disabled={!onEdit}
+                  readOnly={!onEdit}
                   value={new Date(field.value)}
                   onChange={(date) => {
-                    setValue("birthdate", date!.toISOString());
+                    setValue("birthdate", date ? date.toISOString() : "");
 
                     setError("birthdate", { message: "" });
                   }}
@@ -489,17 +481,18 @@ const BeneficiariesForm = ({
               control={control}
               name="ethnicity"
               render={({ field }) => (
-                <Input {...field} disabled={!onEdit} placeholder="Ethnicity" />
+                <Input {...field} readOnly={!onEdit} placeholder="Ethnicity" />
               )}
             />
-
+          </div>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <Controller
               label="Gender"
               control={control}
               name="gender"
               render={({ field }) => (
                 <Dropdown
-                  disabled={!onEdit}
+                  readOnly={!onEdit}
                   value={field.value}
                   handleSelect={(val) => {
                     setValue("gender", val as string);
@@ -511,26 +504,25 @@ const BeneficiariesForm = ({
                 />
               )}
             />
+            <Controller
+              label="Disability status"
+              control={control}
+              name="disabilityStatus"
+              render={({ field }) => (
+                <Dropdown
+                  readOnly={!onEdit}
+                  value={field.value}
+                  handleSelect={(val) => {
+                    setValue("disabilityStatus", val as DisabilityStatusEnum);
+
+                    setError("disabilityStatus", { message: "" });
+                  }}
+                  options={CONFIRM}
+                  placeholder="Disability status"
+                />
+              )}
+            />
           </div>
-
-          <Controller
-            label="Disability status"
-            control={control}
-            name="disabilityStatus"
-            render={({ field }) => (
-              <Dropdown
-                disabled={!onEdit}
-                value={field.value}
-                handleSelect={(val) => {
-                  setValue("disabilityStatus", val as DisabilityStatusEnum);
-
-                  setError("disabilityStatus", { message: "" });
-                }}
-                options={CONFIRM}
-                placeholder="Disability status"
-              />
-            )}
-          />
         </div>
 
         <Controller
@@ -538,7 +530,7 @@ const BeneficiariesForm = ({
           control={control}
           name="address"
           render={({ field }) => (
-            <Input {...field} disabled={!onEdit} placeholder="Address" />
+            <Input {...field} readOnly={!onEdit} placeholder="Address" />
           )}
         />
 
@@ -549,7 +541,7 @@ const BeneficiariesForm = ({
           render={({ field }) => (
             <Input
               {...field}
-              disabled={!onEdit}
+              readOnly={!onEdit}
               placeholder="Socio-economic status"
             />
           )}
@@ -567,7 +559,7 @@ const BeneficiariesForm = ({
 
                 setError("educationLevel", { message: "" });
               }}
-              disabled={!onEdit}
+              readOnly={!onEdit}
               options={HIGHEST_EDUCATION_LEVEL}
               placeholder="Highest education level"
             />
@@ -580,7 +572,7 @@ const BeneficiariesForm = ({
           name="languages"
           render={({ field }) => (
             <Dropdown
-              disabled={!onEdit}
+              readOnly={!onEdit}
               enableSearch
               isMultiSelect
               showAsTags

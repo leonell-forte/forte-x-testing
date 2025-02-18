@@ -7,8 +7,8 @@ import { IsAuthorized, Projects } from "lib/role-permissions";
 import { IProjectOrganization } from "lib/types/projects";
 
 import Button from "components/ui/button";
-import Input from "components/ui/input";
 import Table from "components/ui/table";
+import Cards from "components/ui/table-card";
 
 import OrganizationDialogue from "../../Organizations/Dialogues/OrganizationDialogue";
 import TagExistingDialogue from "../Dialogues/TagExistingDialogue";
@@ -26,11 +26,12 @@ const Partners = ({ projectId }: IProps) => {
     queryFn: () => projectService.getOrganizations(projectId),
   });
 
-  const [editIndex] = useState<number | null>(null);
+  const [orgId, setOrgId] = useState<number | null>(null);
 
   const [modal, setModal] = useState<ModalLabelType>("");
 
   const close = () => {
+    setOrgId(null);
     setModal("");
   };
 
@@ -51,6 +52,7 @@ const Partners = ({ projectId }: IProps) => {
       case "partner":
         return (
           <OrganizationDialogue
+            orgId={orgId?.toString()}
             isVisible={modal === "partner"}
             handleClose={close}
             addSuccessCallback={(id) => {
@@ -77,11 +79,11 @@ const Partners = ({ projectId }: IProps) => {
       {renderModal(modal)}
 
       <div className="space-y-2.5">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
           <p className="text-[24px] font-semibold">Partners</p>
 
           {IsAuthorized([Projects.UPDATE]) && (
-            <div className="flex gap-2.5">
+            <div className="flex w-full flex-col gap-2.5 sm:w-auto sm:flex-row">
               <Button onClick={() => setModal("tag")} buttonType="secondary">
                 Tag existing partner
               </Button>
@@ -93,22 +95,11 @@ const Partners = ({ projectId }: IProps) => {
           )}
         </div>
 
-        <Table.Container isEmpty={!partners?.length} isLoading={isLoading}>
-          <Table.Head>
-            <Table.Row>
-              {HEADERS.map((item, index) => {
-                return (
-                  <Table.Header small key={index}>
-                    {item}
-                  </Table.Header>
-                );
-              })}
-
-              <Table.Header small></Table.Header>
-            </Table.Row>
-          </Table.Head>
-
-          <Table.Body>
+        <div className="lg:hidden">
+          <Cards.Container
+            isLoading={isLoading}
+            className="!grid-cols-1 md:!grid-cols-2"
+          >
             {partners?.map((item, index) => {
               const {
                 name,
@@ -130,87 +121,114 @@ const Partners = ({ projectId }: IProps) => {
                 projects,
 
                 contracts,
+
+                id,
               } = item;
-
-              const onEdit = index === editIndex;
-
               return (
-                <Table.Row key={index}>
-                  <Table.Data small className="h-[56px] py-1">
-                    {name}
-                  </Table.Data>
-
-                  <Table.Data small className="h-[56px] py-1">
-                    {onEdit ? <Input /> : <p>{registeredName}</p>}
-                  </Table.Data>
-
-                  <Table.Data small className="h-[56px] py-1">
-                    {onEdit ? <Input /> : <p>{registeredAddress}</p>}
-                  </Table.Data>
-
-                  <Table.Data small className="h-[56px] py-1">
-                    {onEdit ? <Input /> : <p>{registrationNumber}</p>}
-                  </Table.Data>
-
-                  <Table.Data small className="h-[56px] py-1">
-                    {onEdit ? <Input /> : <p>{regions?.join(", ")}</p>}
-                  </Table.Data>
-
-                  <Table.Data small className="h-[56px] py-1">
-                    {onEdit ? <Input /> : <p className="capitalize">{type}</p>}
-                  </Table.Data>
-
-                  <Table.Data small className="h-[56px] py-1">
-                    {onEdit ? (
-                      <Input />
-                    ) : (
-                      <p className="capitalize">{status}</p>
-                    )}
-                  </Table.Data>
-
-                  <Table.Data small className="h-[56px] py-1">
-                    {onEdit ? <Input /> : <p>{users}</p>}
-                  </Table.Data>
-
-                  <Table.Data small className="h-[56px] py-1">
-                    {onEdit ? <Input /> : <p>{projects}</p>}
-                  </Table.Data>
-
-                  <Table.Data small className="h-[56px] py-1">
-                    {onEdit ? <Input /> : <p>{contracts}</p>}
-                  </Table.Data>
-
-                  <Table.Data small></Table.Data>
-
-                  {/* <Table.Data small className="h-[56px] py-1">
-                    <div className="flex justify-end gap-1.5">
-                      {onEdit ? (
-                        <>
-                          <Button
-                            onClick={() => setEditIndex(null)}
-                            buttonType="tertiary"
-                          >
-                            Cancel
-                          </Button>
-
-                          <Button>Save</Button>
-                        </>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => setEditIndex(index)}
-                          className="flex-shrink-0"
-                        >
-                          <img src={pencil} alt="" />
-                        </button>
-                      )}
-                    </div>
-                  </Table.Data> */}
-                </Table.Row>
+                <Cards.Card
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setModal("partner");
+                    setOrgId(id);
+                  }}
+                  key={index}
+                  title={name}
+                >
+                  <Cards.Group cols={2}>
+                    <Cards.Details
+                      label="Registered name"
+                      value={registeredName}
+                    />
+                    <Cards.Details
+                      label="Registered address"
+                      value={registeredAddress}
+                    />
+                    <Cards.Details
+                      label="Registration"
+                      value={registrationNumber}
+                    />
+                    <Cards.Details label="Regions" value={regions.join(", ")} />
+                    <Cards.Details label="Type" value={type} capitalize />
+                    <Cards.Details label="Status" value={status} capitalize />
+                    <Cards.Details label="Users" value={users} />
+                    <Cards.Details label="Projects" value={projects} />
+                    <Cards.Details label="Contracts" value={contracts} />
+                  </Cards.Group>
+                </Cards.Card>
               );
             })}
-          </Table.Body>
-        </Table.Container>
+          </Cards.Container>
+        </div>
+        <div className="hidden lg:block">
+          <Table.Container isEmpty={!partners?.length} isLoading={isLoading}>
+            <Table.Head>
+              <Table.Row>
+                {HEADERS.map((item, index) => {
+                  return <Table.Header key={index}>{item}</Table.Header>;
+                })}
+              </Table.Row>
+            </Table.Head>
+
+            <Table.Body>
+              {partners?.map((item, index) => {
+                const {
+                  name,
+
+                  registeredName,
+
+                  registeredAddress,
+
+                  registrationNumber,
+
+                  regions,
+
+                  type,
+
+                  status,
+
+                  users,
+
+                  projects,
+
+                  contracts,
+
+                  id,
+                } = item;
+
+                return (
+                  <Table.Row
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setModal("partner");
+                      setOrgId(id);
+                    }}
+                    key={index}
+                  >
+                    <Table.Data>{name}</Table.Data>
+
+                    <Table.Data>{registeredName}</Table.Data>
+
+                    <Table.Data>{registeredAddress}</Table.Data>
+
+                    <Table.Data>{registrationNumber}</Table.Data>
+
+                    <Table.Data>{regions?.join(", ")}</Table.Data>
+
+                    <Table.Data className="capitalize">{type}</Table.Data>
+
+                    <Table.Data className="capitalize">{status}</Table.Data>
+
+                    <Table.Data>{users}</Table.Data>
+
+                    <Table.Data>{projects}</Table.Data>
+
+                    <Table.Data>{contracts}</Table.Data>
+                  </Table.Row>
+                );
+              })}
+            </Table.Body>
+          </Table.Container>
+        </div>
       </div>
     </>
   );

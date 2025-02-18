@@ -69,7 +69,7 @@ const Button = ({
       sx={variants[(buttonType as keyof typeof variants) || "primary"]}
       {...props}
       className={classNames(
-        "h-11 gap-[10px] !px-6 !normal-case",
+        "h-11 gap-[10px] truncate !px-6 !normal-case",
 
         props.className
       )}

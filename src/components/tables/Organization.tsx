@@ -1,12 +1,10 @@
 import { useState } from "react";
 
-import pencil from "assets/images/icons/pencil.svg";
-
 import { IOrganization } from "lib/types/organizations";
 
 import OrganizationDialogue from "components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
-import Button from "components/ui/button";
 import Table from "components/ui/table";
+import Cards from "components/ui/table-card";
 
 type TOrganizationTable = {
   list: IOrganization[];
@@ -39,23 +37,54 @@ const OrganizationTable = ({ list, isLoading = false }: TOrganizationTable) => {
           handleClose={close}
         />
       )}
+      <div className="table-breakpoint:hidden">
+        <Cards.Container isLoading={isLoading}>
+          {list.map((item, index) => {
+            const {
+              id,
+              name,
+              registeredName,
+              regions,
+              type,
+              status,
+              registrationNumber,
+            } = item;
+            return (
+              <Cards.Card
+                onClick={(e) => {
+                  e.stopPropagation();
 
-      <div className="pr-4">
+                  handleEditOrg(id!);
+                }}
+                isLoading={isLoading}
+                key={index}
+                title={name}
+              >
+                <Cards.Group cols={2}>
+                  <Cards.Details
+                    label="Registered name"
+                    value={registeredName}
+                  />
+                  <Cards.Details
+                    label="Registration number"
+                    value={registrationNumber}
+                  />
+                  <Cards.Details label="Regions" value={regions.join(", ")} />
+                  <Cards.Details label="Type" value={type} capitalize />
+                  <Cards.Details label="Status" value={status} capitalize />
+                </Cards.Group>
+              </Cards.Card>
+            );
+          })}
+        </Cards.Container>
+      </div>
+      <div className="hidden table-breakpoint:block">
         <Table.Container isEmpty={!list} isLoading={isLoading}>
           <Table.Head>
             <Table.Row>
               {TABLE_HEADER.map((key, headerIndex) => {
-                return (
-                  <Table.Header
-                    className="h-[64px] pl-[18px]"
-                    key={headerIndex}
-                  >
-                    {key}
-                  </Table.Header>
-                );
+                return <Table.Header key={headerIndex}>{key}</Table.Header>;
               })}
-
-              <Table.Header className="h-[64px]"></Table.Header>
             </Table.Row>
           </Table.Head>
           <Table.Body>
@@ -67,13 +96,7 @@ const OrganizationTable = ({ list, isLoading = false }: TOrganizationTable) => {
                 regions,
                 type,
                 status,
-                registeredAddress,
                 registrationNumber,
-                noOfProjects,
-                noOfUsers,
-                state,
-                postalCode,
-                country,
               } = item;
               return (
                 <Table.Row
@@ -84,59 +107,26 @@ const OrganizationTable = ({ list, isLoading = false }: TOrganizationTable) => {
                   }}
                   key={bodyIndex}
                 >
-                  <Table.Data className="pl-[18px]">
-                    <p className="w-[200px] truncate">{name}</p>
+                  <Table.Data className="w-[140px]">{name}</Table.Data>
+
+                  <Table.Data className="w-[180px]">
+                    {registeredName}
                   </Table.Data>
 
-                  <Table.Data className="pl-[18px]">
-                    <p className="w-[200px] truncate">{registeredName}</p>
+                  <Table.Data className="w-[100px]">
+                    {registrationNumber}
                   </Table.Data>
 
-                  <Table.Data className="pl-[18px]">
-                    <p className="w-[250px] truncate">
-                      {`${registeredAddress}, ${state} ${postalCode} ${country}`}
-                    </p>
+                  <Table.Data className="w-[260px]">
+                    {regions?.join(", ")}
                   </Table.Data>
 
-                  <Table.Data className="pl-[18px]">
-                    <p className="w-[100px] truncate">{registrationNumber}</p>
+                  <Table.Data className="w-[140px] capitalize">
+                    {type}
                   </Table.Data>
 
-                  <Table.Data className="pl-[18px]">
-                    <p className="w-[120px] truncate">{regions?.join(", ")}</p>
-                  </Table.Data>
-
-                  <Table.Data className="pl-[18px]">
-                    <p className="w-[60px] truncate capitalize">{type}</p>
-                  </Table.Data>
-
-                  <Table.Data className="pl-[18px]">
-                    <p className="w-[55px] truncate capitalize">{status}</p>
-                  </Table.Data>
-
-                  <Table.Data className="pl-[18px]">
-                    <p className="w-[35px] truncate">{noOfUsers}</p>
-                  </Table.Data>
-
-                  <Table.Data className="pl-[18px]">
-                    <p className="w-[35px] truncate">{noOfProjects}</p>
-                  </Table.Data>
-
-                  <Table.Data className="pl-[18px]">
-                    <p className="w-[35px] truncate">-</p>
-                  </Table.Data>
-
-                  <Table.Data className="pl-[18px]">
-                    <Button
-                      eventName="Edit User"
-                      id={String(id)}
-                      buttonType="default"
-                      type="button"
-                      onClick={() => handleEditOrg(id!)}
-                      className="p-[3px]"
-                    >
-                      <img alt="pencil" src={pencil} />
-                    </Button>
+                  <Table.Data className="w-[100px]">
+                    <p className="truncate capitalize">{status}</p>
                   </Table.Data>
                 </Table.Row>
               );
@@ -153,12 +143,8 @@ export default OrganizationTable;
 const TABLE_HEADER = [
   "Organization",
   "Registered Name",
-  "Registered Address",
   "Registration",
   "Region",
   "Type",
   "Status",
-  "Users",
-  "Projects",
-  "Contracts",
 ];

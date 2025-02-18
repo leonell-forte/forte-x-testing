@@ -12,8 +12,6 @@ import { PHONE_NUMBER } from "lib/regex";
 type PropTypes = TextFieldProps & {
   dark?: boolean;
 
-  small?: boolean;
-
   min?: number;
 
   wholeNumberOnly?: boolean;
@@ -21,10 +19,15 @@ type PropTypes = TextFieldProps & {
   accept?: string;
 
   phoneNUmber?: boolean;
+
+  readOnly?: boolean;
 };
 
 const Input = forwardRef<HTMLDivElement, PropTypes>(
-  ({ dark, small, wholeNumberOnly, phoneNUmber, name, ...props }, ref) => {
+  (
+    { dark, wholeNumberOnly, phoneNUmber, name, readOnly = false, ...props },
+    ref
+  ) => {
     const [show, setShow] = useState(false);
 
     const { type } = props;
@@ -47,6 +50,7 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
             htmlInput: {
               ...(type === "number" && { min: props.min }), // Set minimum value for type="number"
               accept: props.accept,
+              readOnly,
             },
           }}
           {...props}
@@ -82,12 +86,9 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
               }),
 
               ...(type === "search" && {
+                height: "22px",
                 paddingLeft: "48px !important", // adjust padding for input text if needed
                 paddingRight: "45px",
-              }),
-
-              ...(small && {
-                height: "10px",
               }),
 
               ...(type === "file" && {
@@ -97,7 +98,8 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
             },
 
             "& .MuiOutlinedInput-root": {
-              borderRadius: "10px",
+              borderRadius: "0.5rem",
+              padding: 0,
 
               ...(dark && {
                 color: "black",
@@ -131,7 +133,7 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
           <button
             type="button"
             onClick={() => setShow((prev) => !prev)}
-            className="absolute right-4 top-4"
+            className="absolute right-4 top-3.5 w-4"
           >
             <img alt="eye" src={show ? eyeOpen : eyeClosed} />
           </button>

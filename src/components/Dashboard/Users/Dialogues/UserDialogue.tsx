@@ -59,8 +59,6 @@ const UserDialogue = ({
 
     control,
 
-    watch,
-
     setValue,
   } = form;
 
@@ -146,8 +144,6 @@ const UserDialogue = ({
       setValue("organizationId", String(userOrganization.id));
     }
   }, [isNonForteUser, profile, userOrganization, setValue]);
-
-  console.log(watch("role"));
 
   return (
     <Dialogue

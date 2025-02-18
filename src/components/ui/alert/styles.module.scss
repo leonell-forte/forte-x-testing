@@ -7,7 +7,8 @@
 }
 
 .confirm-prompt {
-  @apply relative flex w-full flex-col items-center justify-center gap-6 bg-white bg-opacity-[30%] px-12 py-10 text-center;
+  @apply relative mx-4 flex w-full flex-col items-center justify-center gap-6 px-6 py-10 text-center backdrop-blur md:mx-0 md:px-12;
+  background-color: rgba(48, 241, 255, 10%);
   border-radius: 8px;
   max-width: 500px;
   box-shadow: 0px 20px 20px 0px #00000014;

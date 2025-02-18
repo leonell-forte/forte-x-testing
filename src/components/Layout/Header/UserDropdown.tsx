@@ -64,12 +64,12 @@ const UserDropdown = ({ user }: IProp) => {
       <div ref={dropdownRef} className="relative z-30">
         <button
           onClick={() => setShowDropdown((prev) => !prev)}
-          className="flex h-[42px] w-[80px] cursor-pointer items-center justify-between rounded-[50px] bg-white bg-opacity-[30%] pl-1.5 pr-4 transition-all hover:brightness-[.8] sm:w-[184px]"
+          className="flex h-[42px] w-[80px] cursor-pointer items-center justify-between rounded-[50px] bg-white bg-opacity-[30%] pl-1.5 pr-4 transition-all hover:brightness-[.8] md:w-[184px]"
         >
           <div className="flex items-center gap-1.5">
             <div className="h-[28px] w-[28px] flex-shrink-0 rounded-full bg-[#D9D9D9]"></div>
 
-            <div className="hidden w-full items-center sm:flex">
+            <div className="hidden w-full items-center md:flex">
               <p className="max-w-[100px] overflow-hidden text-ellipsis whitespace-nowrap font-medium text-forest-green">
                 {user?.firstName}
               </p>

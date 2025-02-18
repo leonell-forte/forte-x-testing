@@ -6,6 +6,7 @@ import { InputHTMLAttributes, useMemo, useRef, useState } from "react";
 import arrow from "assets/images/icons/chevron.svg";
 
 import { useOutsideClick } from "lib/hooks";
+import { cn } from "lib/utils";
 
 import Checkbox from "./checkbox";
 import SearchInput from "./search-input";
@@ -96,25 +97,24 @@ const Dropdown = ({
       <div
         ref={dropdownRef}
         className={classNames(
-          "relative h-[50px] w-full cursor-pointer rounded-[8px] border border-white",
+          "relative w-full cursor-pointer rounded-lg border border-white px-3.5 py-2.5",
 
           className,
-          error && "!border-alert",
-          showAsTags && "!h-fit"
+          error && "!border-alert"
+          // showAsTags ? "p-3.5" : "px-3.5 py-2.5"
+          // small ? "h-11" : "h-[50px]"
         )}
       >
         <button
-          disabled={props.disabled}
+          disabled={props.disabled || props?.readOnly}
           type="button"
           onClick={() => setShowList((prev) => !prev)}
           className={classNames(
-            "relative flex h-full min-h-[50px] w-full items-center justify-between px-4 outline-none",
-
-            showAsTags && "!items-start py-[9px]"
+            "relative flex h-full w-full items-center gap-2.5 outline-none"
           )}
         >
           {showAsTags && isMultiSelect ? (
-            <div className="flex max-w-[95%] flex-wrap gap-2">
+            <div className="flex w-[80%] flex-1 flex-shrink flex-wrap gap-2 truncate text-ellipsis">
               {props.value?.length ? (
                 (props.value as string[]).map((item, index) => {
                   const label = options?.find(
@@ -141,7 +141,7 @@ const Dropdown = ({
                 })
               ) : (
                 <input
-                  className="pointer-events-none mt-1 w-[90%] border-none bg-transparent font-medium outline-none placeholder:font-medium placeholder:text-white/50"
+                  className="pointer-events-none w-[90%] truncate border-none bg-transparent font-medium outline-none placeholder:font-medium placeholder:text-white/50"
                   type="text"
                   {...props}
                 />
@@ -151,7 +151,7 @@ const Dropdown = ({
             <input
               type="text"
               className={classNames(
-                "pointer-events-none w-[90%] border-none bg-transparent font-medium outline-none placeholder:font-medium placeholder:text-white/50 disabled:text-white",
+                "pointer-events-none w-[80%] flex-1 flex-shrink truncate text-ellipsis border-none bg-transparent font-medium outline-none placeholder:font-medium placeholder:text-white/50 disabled:text-white",
 
                 error && "placeholder:!text-[#fff]/50"
               )}
@@ -161,16 +161,21 @@ const Dropdown = ({
             />
           )}
 
-          <div className="absolute right-3 top-[22px]">
-            <img alt="arrow" src={arrow} />
-          </div>
+          <img
+            alt="arrow"
+            src={arrow}
+            className={classNames(
+              "flex-shrink-0 transition-all",
+              showList && "rotate-180"
+            )}
+          />
         </button>
 
         <motion.ul
           initial={{ opacity: 0 }}
           animate={showList ? { opacity: 1 } : { opacity: 0, display: "none" }}
           transition={{ type: "spring", duration: 0.2, bounce: 0 }}
-          className="hide-scroll absolute left-0 top-[100%] z-[999] max-h-[400px] w-full min-w-[300px] space-y-2 overflow-hidden overflow-y-scroll rounded-[4px] bg-white/90 p-2.5 shadow-md"
+          className="hide-scroll absolute left-0 top-[100%] z-[999] mt-1.5 max-h-[400px] w-full min-w-[300px] space-y-2 overflow-hidden overflow-y-scroll rounded-[4px] bg-white/90 p-3.5 shadow-md backdrop-blur-lg"
         >
           {enableSearch && (
             <SearchInput
@@ -188,11 +193,13 @@ const Dropdown = ({
             ) : (
               optionList.map((item, index) => {
                 const { label, value } = item;
+                const isSelected =
+                  props?.value === label || props?.value === value;
 
                 return isMultiSelect ? (
                   <div key={index} className="px-2.5 py-1.5">
                     <Checkbox
-                      labelClass="text-[16px] font-medium"
+                      labelClass="text-[14px]"
                       checked={props?.value?.includes(value)}
                       onChange={() => {
                         let newValue;
@@ -222,7 +229,12 @@ const Dropdown = ({
                     key={index}
                     className="w-full text-left"
                   >
-                    <li className="truncate rounded-[8px] px-4 py-3 font-medium text-black transition-all hover:bg-mint">
+                    <li
+                      className={cn(
+                        "truncate rounded-[8px] p-2 text-sm text-black transition duration-500",
+                        isSelected ? "bg-mint" : "hover:text-mint"
+                      )}
+                    >
                       {label}
                     </li>
                   </button>

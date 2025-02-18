@@ -42,7 +42,7 @@ const ImportDialogue = ({ ...props }: IImportDialogueProps) => {
     <Dialogue {...props} title="Import beneficiaries">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-6">
-          <div className="grid grid-cols-2 divide-x">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:divide-x">
             <div className="space-y-2 pr-5">
               <p>Your CSV must include columns for:</p>
 
@@ -76,7 +76,7 @@ const ImportDialogue = ({ ...props }: IImportDialogueProps) => {
               </ul>
             </div>
 
-            <div className="space-y-2 pl-5">
+            <div className="space-y-2 md:pl-6">
               <label htmlFor="">Upload CSV</label>
 
               {/* <Input placeholder="Upload your file here" /> */}
@@ -105,13 +105,13 @@ const ImportDialogue = ({ ...props }: IImportDialogueProps) => {
                 onChange={(e) => {
                   setValue("isOverwriteByEmailEnabled", e.target.checked);
                 }}
-                labelClass="text-[16px] leading-[120%]"
+                labelClass="text-[14px]"
                 label="Overwrite existing beneficiaries with the same email."
               />
             </div>
           </div>
 
-          <p className="font-semibold">
+          <p className="text-sm">
             Need help getting started?{" "}
             <a
               href="/beneficiaries-template.csv"

@@ -31,13 +31,13 @@ const Layout = ({
 
   return !publicRoutes.includes(pathname) ? (
     <ScrollArea>
-      <div className="flex h-screen w-screen flex-col">
+      <div className="flex min-h-screen w-screen flex-col">
         <Header user={user!} />
 
-        <div className="flex flex-1 gap-4 px-5 pb-4">
+        <div className="flex flex-grow gap-4 px-5 pb-4">
           <SidePanel />
 
-          <div className="relative w-full flex-1 overflow-hidden rounded-[10px] bg-white bg-opacity-[30%] p-[17px]">
+          <div className="relative flex-1 rounded-lg bg-panel p-[17px]">
             {children}
           </div>
         </div>

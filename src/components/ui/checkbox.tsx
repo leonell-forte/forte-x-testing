@@ -44,15 +44,17 @@ const Checkbox = ({
     return { checked, unchecked };
   }, [disabled]);
   return (
-    <div className="relative pl-[3px]">
+    <div className="relative pl-[2px]">
       <FormControlLabel
+        onClick={(e) => e.stopPropagation()}
         control={
           <MuiCheckbox
             sx={{
               fontSize: "12px",
               paddingBlock: 0,
               paddingLeft: "8px",
-              paddingRight: "4px",
+              paddingRight: white ? "4px" : "8px",
+              marginInline: "0px !important",
             }}
             {...(white
               ? {

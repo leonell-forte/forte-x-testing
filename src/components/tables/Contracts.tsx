@@ -1,17 +1,15 @@
 import { useCallback, useMemo, useState } from "react";
 
 import bin from "assets/images/icons/bin.svg";
-import pencil from "assets/images/icons/pencil.svg";
 
-import { DEFAULT_DATE_FORMAT } from "lib/constants";
 import { Contracts, IsAuthorized } from "lib/role-permissions";
 import { IContract } from "lib/types/contracts";
-import { formatDate } from "lib/utils";
 
 import ContractDialogue from "components/Dashboard/Contracts/Dialogues/ContractDialogue";
 import DeleteDialogue from "components/Dashboard/Contracts/Dialogues/DeleteDialogue";
 import Button from "components/ui/button";
 import Table from "components/ui/table";
+import Cards from "components/ui/table-card";
 
 type TContractsTable = {
   list: IContract[];
@@ -76,19 +74,75 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
   return (
     <>
       {renderDialog()}
-      <div className="pr-4">
+      <div className="table-breakpoint:hidden">
+        <Cards.Container isLoading={isLoading}>
+          {contracts.map((item, index) => {
+            const {
+              id,
+
+              name,
+
+              project,
+
+              status,
+
+              parties,
+
+              documentName,
+            } = item;
+            return (
+              <Cards.Card
+                onClick={
+                  IsAuthorized([Contracts.UPDATE])
+                    ? (e) => {
+                        e.stopPropagation();
+
+                        handleEditContract(id!);
+                      }
+                    : undefined
+                }
+                title={`Contract ID: ${id}`}
+                key={index}
+              >
+                <Cards.Group cols={2}>
+                  <Cards.Details label="Name" value={name} />
+                  <Cards.Details label="Parties" value={parties?.join(", ")} />
+                  <Cards.Details
+                    label="Status"
+                    value={status?.toLowerCase()}
+                    capitalize
+                  />
+                  <Cards.Details label="Project" value={project} />
+                  <Cards.Details label="Document" value={documentName} />
+                </Cards.Group>
+
+                <div className="absolute bottom-3 right-0">
+                  {IsAuthorized([Contracts.DELETE]) && (
+                    <Button
+                      eventName="Delete Contract"
+                      id={id?.toString()}
+                      buttonType="default"
+                      type="button"
+                      onClick={() => handleDeleteContract(id!)}
+                    >
+                      <img alt="bin" src={bin} />
+                    </Button>
+                  )}
+                </div>
+              </Cards.Card>
+            );
+          })}
+        </Cards.Container>
+      </div>
+      <div className="hidden table-breakpoint:block">
         <Table.Container isEmpty={!contracts.length} isLoading={isLoading}>
           <Table.Head>
             <Table.Row>
               {TABLE_HEADER.map((key, headerIndex) => {
-                return (
-                  <Table.Header className="h-[64px] pl-5" key={headerIndex}>
-                    {key}
-                  </Table.Header>
-                );
+                return <Table.Header key={headerIndex}>{key}</Table.Header>;
               })}
 
-              <Table.Header className="h-[64px]"></Table.Header>
+              <Table.Header></Table.Header>
             </Table.Row>
           </Table.Head>
 
@@ -105,87 +159,41 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
 
                 parties,
 
-                targetNoOfBenefeciaries,
-
-                startDate,
-
-                endDate,
-
                 documentName,
-
-                outcomenames,
               } = item;
 
               return (
                 <Table.Row
-                  onClick={(e) => {
-                    e.stopPropagation();
+                  onClick={
+                    IsAuthorized([Contracts.UPDATE])
+                      ? (e) => {
+                          e.stopPropagation();
 
-                    handleEditContract(id!);
-                  }}
+                          handleEditContract(id!);
+                        }
+                      : undefined
+                  }
                   key={index}
                 >
-                  <Table.Data className="pl-5">
-                    <p className="w-[20px] truncate">{id}</p>
+                  <Table.Data className="w-[40px]">{id}</Table.Data>
+
+                  <Table.Data className="w-[120px]">{name}</Table.Data>
+
+                  <Table.Data className="w-[140px]">
+                    {parties?.join(", ")}
                   </Table.Data>
 
-                  <Table.Data className="pl-5">
-                    <p className="w-[150px] truncate text-left outline-none">
-                      {name}
-                    </p>
+                  <Table.Data className="w-[90px] capitalize">
+                    {status?.toLowerCase()}
                   </Table.Data>
 
-                  <Table.Data className="pl-5">
-                    <p className="w-[150px] truncate">{parties?.join(", ")}</p>
-                  </Table.Data>
+                  <Table.Data className="w-[120px]">{project}</Table.Data>
 
-                  <Table.Data className="pl-5">
-                    <p className="w-[100px] truncate capitalize">
-                      {status?.toLowerCase()}
-                    </p>
-                  </Table.Data>
+                  <Table.Data className="w-[190px]">{documentName}</Table.Data>
 
-                  <Table.Data className="pl-5">
-                    <p className="w-[140px] truncate">{project}</p>
-                  </Table.Data>
-
-                  <Table.Data className="pl-5">
-                    {outcomenames?.join(", ")}
-                  </Table.Data>
-
-                  <Table.Data className="pl-5">
-                    {targetNoOfBenefeciaries}
-                  </Table.Data>
-
-                  <Table.Data className="pl-5">0</Table.Data>
-
-                  <Table.Data className="pl-5">
-                    {formatDate(startDate, DEFAULT_DATE_FORMAT)}
-                  </Table.Data>
-
-                  <Table.Data className="pl-5">
-                    {formatDate(endDate, DEFAULT_DATE_FORMAT)}
-                  </Table.Data>
-
-                  <Table.Data className="pl-5">{documentName}</Table.Data>
-
-                  <Table.Data className="pl-5">
-                    <div className="flex justify-end">
-                      {IsAuthorized([Contracts.UPDATE]) &&
-                        status === "DRAFT" && (
-                          <Button
-                            eventName="Edit Contract"
-                            id={id?.toString()}
-                            buttonType="default"
-                            type="button"
-                            onClick={() => handleEditContract(id!)}
-                            className="p-[3px]"
-                          >
-                            <img alt="pencil" src={pencil} />
-                          </Button>
-                        )}
-
-                      {IsAuthorized([Contracts.DELETE]) && (
+                  <Table.Data className="ml-auto w-[40px]">
+                    {IsAuthorized([Contracts.DELETE]) && (
+                      <div className="flex justify-end">
                         <Button
                           eventName="Delete Contract"
                           id={id?.toString()}
@@ -196,8 +204,8 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
                         >
                           <img alt="bin" src={bin} />
                         </Button>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </Table.Data>
                 </Table.Row>
               );
@@ -211,16 +219,4 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
 
 export default ContractsTable;
 
-const TABLE_HEADER = [
-  "ID",
-  "Name",
-  "Parties",
-  "Status",
-  "Project",
-  "Outcome(s)",
-  "Target beneficiaries",
-  "Actual beneficiaries ",
-  "Start date",
-  "End date",
-  "Document",
-];
+const TABLE_HEADER = ["ID", "Name", "Parties", "Status", "Project", "Document"];

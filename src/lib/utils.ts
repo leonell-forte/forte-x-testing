@@ -103,7 +103,7 @@ export const formatDate = (date: string | Date, dateFormat: string) => {
 
   if (isNaN(parsedDate.getTime())) {
     // Return an empty string if the date is invalid
-    return "";
+    return "-";
   }
   return format(parsedDate, dateFormat);
 };
@@ -162,3 +162,7 @@ export const formatInvitationCode = (input: string) => {
   }
   return input.replace(/[ =]/g, ""); // Remove spaces and "="
 };
+
+export function separateCamelCase(str: string) {
+  return str.replace(/([a-z])([A-Z])/g, "$1 $2");
+}

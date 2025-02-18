@@ -98,7 +98,7 @@ const MarkAsCompleted = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="text-left">
-      <p className="text-[20px] font-semibold">
+      <p className="heading">
         {isDraft
           ? `Are you sure you want to mark ${contractDetails.name} as signed?`
           : `Are you sure you want to mark ${contractDetails.name} as ${next}?`}

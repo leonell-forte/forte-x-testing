@@ -69,7 +69,7 @@ export interface IContract {
 }
 
 export interface IContractFilters {
-  status: StatusType;
+  status: StatusType | string;
 
   project: string;
 

@@ -23,6 +23,10 @@ export interface IDialogueProps {
   center?: boolean;
 
   confirmBeforeLeave?: boolean;
+
+  canFullScreen?: boolean;
+
+  hideClose?: boolean;
 }
 
 const Dialogue = ({
@@ -37,6 +41,10 @@ const Dialogue = ({
   center,
 
   confirmBeforeLeave,
+
+  canFullScreen = true,
+
+  hideClose,
 }: IDialogueProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -50,10 +58,10 @@ const Dialogue = ({
     handleClose?.();
   };
 
-  useEscapeKey(closeDialogue!);
+  useEscapeKey(!hideClose ? closeDialogue : undefined);
 
   useOutsideClick(containerRef, () => {
-    closeDialogue?.();
+    if (!hideClose) closeDialogue?.();
   });
 
   return isVisible ? (
@@ -69,7 +77,7 @@ const Dialogue = ({
         animate={{ opacity: 1 }}
         transition={{ type: "spring", duration: 0.4 }}
         className={classNames(
-          "fixed left-0 top-0 z-40 !mt-0 flex h-screen w-screen items-start justify-center overflow-y-auto bg-[#011217] bg-opacity-[90%] px-4 py-12",
+          "fixed left-0 top-0 z-40 !mt-0 flex h-screen w-screen items-start justify-center overflow-y-auto bg-[#011217] bg-opacity-[90%] px-0 py-0 md:px-4 md:py-12",
 
           center && "items-center"
         )}
@@ -79,19 +87,24 @@ const Dialogue = ({
           className={classNames(
             styles["dialogue-content"],
 
-            title ? "p-10" : "px-10 pb-10"
+            title ? "p-10" : "px-10 pb-10",
+            canFullScreen
+              ? "min-h-screen rounded-none md:min-h-max md:rounded-lg"
+              : "mx-4 h-auto rounded-lg md:mx-0"
           )}
         >
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              closeDialogue?.();
-            }}
-            className="absolute right-4 top-4"
-          >
-            <img alt="close" src={close} />
-          </button>
+          {!hideClose && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                closeDialogue?.();
+              }}
+              className="absolute right-4 top-4"
+            >
+              <img alt="close" src={close} />
+            </button>
+          )}
 
           {title && <p className="text-[20px] font-semibold">{title}</p>}
 

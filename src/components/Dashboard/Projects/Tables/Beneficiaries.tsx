@@ -6,6 +6,7 @@ import { IsAuthorized, Projects } from "lib/role-permissions";
 
 import Button from "components/ui/button";
 import Table from "components/ui/table";
+import Cards from "components/ui/table-card";
 
 import BeneficiariesDialogue from "../../Beneficiaries/Dialogues/BeneficiariesDialogue";
 import ImportDialogue from "../../Beneficiaries/Dialogues/ImportDialogue";
@@ -62,11 +63,11 @@ const Beneficiaries = ({ id }: IProps) => {
       {renderModal(modal)}
 
       <div className="space-y-2.5">
-        <div className="flex items-center justify-between">
+        <div className="flex w-full flex-col items-start justify-between sm:flex-row sm:items-center">
           <p className="text-[24px] font-semibold">Beneficiaries</p>
 
           {IsAuthorized([Projects.UPDATE]) && (
-            <div className="flex gap-2.5">
+            <div className="flex w-full flex-col gap-2.5 sm:w-auto sm:flex-row">
               <Button
                 eventName="Import Beneficiaries"
                 onClick={() => setModal("import")}
@@ -82,20 +83,8 @@ const Beneficiaries = ({ id }: IProps) => {
           )}
         </div>
 
-        <Table.Container isLoading={isLoading} isEmpty={!data?.items.length}>
-          <Table.Head>
-            <Table.Row>
-              {HEADERS.map((item, index) => {
-                return (
-                  <Table.Header small key={index}>
-                    {item}
-                  </Table.Header>
-                );
-              })}
-            </Table.Row>
-          </Table.Head>
-
-          <Table.Body>
+        <div className="lg:hidden">
+          <Cards.Container isLoading={isLoading}>
             {data?.items.map((item, index) => {
               const {
                 firstName,
@@ -106,47 +95,76 @@ const Beneficiaries = ({ id }: IProps) => {
 
                 email,
 
-                contractId,
-
                 program,
 
                 phoneNumber,
+
+                contract,
               } = item;
-
               return (
-                <Table.Row key={index}>
-                  <Table.Data small className="h-[56px] py-1">
-                    {firstName}
-                  </Table.Data>
-
-                  <Table.Data small className="h-[56px] py-1">
-                    {lastName}
-                  </Table.Data>
-
-                  <Table.Data small className="h-[56px] py-1">
-                    {provider}
-                  </Table.Data>
-
-                  <Table.Data small className="h-[56px] py-1">
-                    {email}
-                  </Table.Data>
-
-                  <Table.Data small className="h-[56px] py-1">
-                    {phoneNumber}
-                  </Table.Data>
-
-                  <Table.Data small className="h-[56px] py-1">
-                    Contaract {contractId}
-                  </Table.Data>
-
-                  <Table.Data small className="h-[56px] py-1">
-                    {program}
-                  </Table.Data>
-                </Table.Row>
+                <Cards.Card title={`${firstName} ${lastName}`} key={index}>
+                  <Cards.Group cols={2}>
+                    <Cards.Details label="Provider" value={provider} />
+                    <Cards.Details label="Email" value={email} />
+                    <Cards.Details label="Phone number" value={phoneNumber} />
+                    <Cards.Details label="Contract" value={contract} />
+                    <Cards.Details label="Program" value={program} />
+                  </Cards.Group>
+                </Cards.Card>
               );
             })}
-          </Table.Body>
-        </Table.Container>
+          </Cards.Container>
+        </div>
+
+        <div className="hidden lg:block">
+          <Table.Container isLoading={isLoading} isEmpty={!data?.items.length}>
+            <Table.Head>
+              <Table.Row>
+                {HEADERS.map((item, index) => {
+                  return <Table.Header key={index}>{item}</Table.Header>;
+                })}
+              </Table.Row>
+            </Table.Head>
+
+            <Table.Body>
+              {data?.items.map((item, index) => {
+                const {
+                  firstName,
+
+                  lastName,
+
+                  provider,
+
+                  email,
+
+                  program,
+
+                  phoneNumber,
+
+                  contract,
+                } = item;
+
+                return (
+                  <Table.Row key={index}>
+                    <Table.Data>{firstName}</Table.Data>
+
+                    <Table.Data>{lastName}</Table.Data>
+
+                    <Table.Data>{provider}</Table.Data>
+
+                    <Table.Data>{email}</Table.Data>
+
+                    <Table.Data>{phoneNumber}</Table.Data>
+
+                    <Table.Data>{contract}</Table.Data>
+
+                    <Table.Data>{program}</Table.Data>
+                  </Table.Row>
+                );
+              })}
+            </Table.Body>
+          </Table.Container>
+        </div>
       </div>
     </>
   );

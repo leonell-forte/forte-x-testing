@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import evidenceService from "api/evidence";
 import { useMemo } from "react";
+import { HiPlusCircle } from "react-icons/hi";
 import { Link } from "react-router-dom";
 
-import add from "assets/images/icons/add.svg";
 import download from "assets/images/icons/download.svg";
 
 import { EVIDENCE_STATUS } from "lib/constants";
@@ -12,6 +12,7 @@ import { Beneficiaries, IsAuthorized } from "lib/role-permissions";
 import { findLabelFromOptions } from "lib/utils";
 
 import Table from "components/ui/table";
+import Cards from "components/ui/table-card";
 
 interface IProps {
   handleAddOrViewEvidence?: (id?: number) => void;
@@ -31,78 +32,127 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
   return (
     <div className="space-y-[30px]">
       {IsAuthorized([Beneficiaries.UPDATE]) && (
-        <div className="flex items-center gap-12">
-          <p className="text-[20px] font-semibold">Evidence</p>
+        <div className="flex items-center gap-5">
+          <p className="heading w-fit whitespace-nowrap">Evidence</p>
 
-          <div className="flex w-full items-center gap-4">
+          <div className="flex w-full items-center gap-5">
             <hr className="w-full" />
 
             <button
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-
                 handleAddOrViewEvidence?.();
               }}
-              className="flex !h-8 !w-8 flex-shrink-0 items-center justify-center rounded-full bg-white text-forest-green transition-all hover:scale-[1.05] hover:opacity-80"
+              className="transition-all hover:scale-[1.05] hover:opacity-80"
             >
-              <img src={add} alt="add" />
+              <HiPlusCircle className="h-auto w-8 text-white" />
             </button>
           </div>
         </div>
       )}
 
-      <Table.Container isEmpty={!evidences.length} isLoading={isLoading}>
-        <Table.Head>
-          <Table.Row>
-            {HEADERS.map((item, index) => {
-              return <Table.Header key={index}>{item}</Table.Header>;
-            })}
-
-            <Table.Header></Table.Header>
-          </Table.Row>
-        </Table.Head>
-
-        <Table.Body>
+      <div className="md:hidden">
+        <Cards.Container>
           {evidences.map((item, index) => {
             const { file, outcome, description, status, id } = item;
+
             return (
-              <Table.Row key={index}>
-                <Table.Data className="max-w-[150px]">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleAddOrViewEvidence?.(id);
-                    }}
-                    className="link underline"
-                  >
-                    {file?.filename}
-                  </button>
-                </Table.Data>
-
-                <Table.Data>{outcome?.name} </Table.Data>
-
-                <Table.Data className="max-w-[100px]">{description}</Table.Data>
-
-                <Table.Data className="max-w-[100px]">
-                  <span>{findLabelFromOptions(EVIDENCE_STATUS, status)}</span>
-                </Table.Data>
-
-                <Table.Data>
-                  <Link
-                    to={file?.fileUrl}
-                    download
-                    target="_blank"
-                    type="button"
-                  >
-                    <img src={download} alt="download" className="min-w-4" />
-                  </Link>
-                </Table.Data>
-              </Table.Row>
+              <Cards.Card
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleAddOrViewEvidence?.(id);
+                }}
+                key={index}
+              >
+                <div className="space-y-2">
+                  <p className="font-semibold">{file?.filename}</p>
+                  <Cards.Group>
+                    <Cards.Details label="Outcome" value={outcome.name} />
+                    <Cards.Details label="Description" value={description} />
+                    <Cards.Details label="Status" value={status} capitalize />
+                  </Cards.Group>
+                  <div className="absolute bottom-4 right-4">
+                    <Link
+                      to={file?.fileUrl}
+                      download
+                      target="_blank"
+                      type="button"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <img
+                        src={download}
+                        alt="download"
+                        className="flex-shrink-0"
+                      />
+                    </Link>
+                  </div>
+                </div>
+              </Cards.Card>
             );
           })}
-        </Table.Body>
-      </Table.Container>
+        </Cards.Container>
+      </div>
+
+      <div className="hidden md:block">
+        <Table.Container isEmpty={!evidences.length} isLoading={isLoading}>
+          <Table.Head>
+            <Table.Row>
+              {HEADERS.map((item, index) => {
+                return <Table.Header key={index}>{item}</Table.Header>;
+              })}
+
+              <Table.Header></Table.Header>
+            </Table.Row>
+          </Table.Head>
+
+          <Table.Body>
+            {evidences.map((item, index) => {
+              const { file, outcome, description, status, id } = item;
+              return (
+                <Table.Row key={index}>
+                  <Table.Data className="w-[140px]">
+                    <p
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddOrViewEvidence?.(id);
+                      }}
+                      className="link cursor-pointer truncate underline"
+                    >
+                      {file?.filename}
+                    </p>
+                  </Table.Data>
+
+                  <Table.Data className="w-[100px]">
+                    {outcome?.name}{" "}
+                  </Table.Data>
+
+                  <Table.Data className="w-[140px]">{description}</Table.Data>
+
+                  <Table.Data className="w-[120px]">
+                    <span>{findLabelFromOptions(EVIDENCE_STATUS, status)}</span>
+                  </Table.Data>
+
+                  <Table.Data>
+                    <Link
+                      to={file?.fileUrl}
+                      download
+                      target="_blank"
+                      type="button"
+                    >
+                      <img
+                        src={download}
+                        alt="download"
+                        className="flex-shrink-0"
+                      />
+                    </Link>
+                  </Table.Data>
+                </Table.Row>
+              );
+            })}
+          </Table.Body>
+        </Table.Container>
+      </div>
     </div>
   );
 };

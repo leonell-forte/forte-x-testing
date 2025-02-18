@@ -71,12 +71,12 @@ const ProjectsPage = () => {
     <>
       {renderModal()}
 
-      <div className="space-y-2.5">
-        <div className="flex items-center justify-between gap-4">
+      <div className="flex h-full flex-col space-y-2.5">
+        <div className="flex flex-col items-start justify-between gap-2.5 sm:flex-row">
           <SearchInput
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="max-w-[286px]"
+            containerClass="md:max-w-[286px]"
             onClear={() => setSearch("")}
           />
 
@@ -87,11 +87,11 @@ const ProjectsPage = () => {
           )}
         </div>
 
-        <div>
+        <div className="flex h-full flex-col justify-between gap-4">
           <ProjectsTable list={projects} isLoading={projectLoading} />
 
           {!!projects.length && (
-            <div className="mt-[18px] flex w-full items-center justify-end">
+            <div className="flex w-full items-center justify-end">
               <Pagination
                 page={page}
                 onPageChange={(val) => setPage(val)}

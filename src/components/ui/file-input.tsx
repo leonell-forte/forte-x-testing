@@ -79,7 +79,7 @@ const FileInput = ({
   };
 
   return (
-    <div className="relative w-full cursor-pointer">
+    <div className="relative flex w-full cursor-pointer items-center">
       <Input
         color="primary"
         type="file"
@@ -94,19 +94,15 @@ const FileInput = ({
         <img
           src={loader}
           alt="loader"
-          className="absolute right-3 top-3.5 w-6 animate-spin"
+          className="absolute right-4 w-4 animate-spin"
         />
       ) : (
-        <img
-          src={upload}
-          alt="upload"
-          className="absolute right-4 top-4 h-[18px] w-4"
-        />
+        <img src={upload} alt="upload" className="absolute right-4 w-3.5" />
       )}
 
       <div
         className={classNames(
-          "pointer-events-none absolute left-4 top-3.5",
+          "pointer-events-none absolute left-4 text-sm",
           value ? "text-white" : "text-white/50"
         )}
       >

@@ -24,6 +24,8 @@ interface IOrganizationDialogueProps extends IDialogueProps {
   addSuccessCallback?: (id: number) => void;
 }
 
+const labelClass = "min-w-[160px]";
+
 const OrganizationDialogue = ({
   handleClose,
 
@@ -105,6 +107,7 @@ const OrganizationDialogue = ({
         <Form form={form} onSubmit={onSubmit} className="space-y-4">
           <Controller
             required
+            labelClassName={labelClass}
             label="Organization"
             name="name"
             control={control}
@@ -114,6 +117,7 @@ const OrganizationDialogue = ({
           />
 
           <Controller
+            labelClassName={labelClass}
             label="Registered name"
             required
             name="registeredName"
@@ -124,6 +128,7 @@ const OrganizationDialogue = ({
           />
 
           <Controller
+            labelClassName={labelClass}
             label="Registration #"
             required
             name="registrationNumber"
@@ -133,13 +138,14 @@ const OrganizationDialogue = ({
             }}
           />
 
-          <div className="flex items-start gap-4">
-            <label htmlFor="" className="w-[150px] pt-3.5">
+          <div className="flex w-full flex-col gap-5 gap-y-1.5 md:flex-row md:items-center">
+            <label htmlFor="" className="min-w-[140px]">
               Registered address*
             </label>
 
             <div className="w-full space-y-4">
               <Controller
+                labelClassName={labelClass}
                 name="registeredAddress"
                 control={control}
                 render={({ field }) => {
@@ -147,7 +153,7 @@ const OrganizationDialogue = ({
                 }}
               />
 
-              <div className="flex w-full flex-col gap-1 md:flex-row md:gap-2">
+              <div className="flex w-full items-center gap-4 md:gap-2">
                 <Controller
                   name="state"
                   control={control}
@@ -176,6 +182,7 @@ const OrganizationDialogue = ({
           </div>
 
           <Controller
+            labelClassName={labelClass}
             label="Region"
             required
             name="regions"
@@ -199,6 +206,7 @@ const OrganizationDialogue = ({
           />
 
           <Controller
+            labelClassName={labelClass}
             label="Type"
             required
             name="type"
@@ -222,6 +230,7 @@ const OrganizationDialogue = ({
           />
 
           <Controller
+            labelClassName={labelClass}
             label="Status"
             required
             name="status"

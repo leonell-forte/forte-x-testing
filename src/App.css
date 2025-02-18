@@ -42,21 +42,25 @@ body {
   @apply w-screen overflow-x-hidden;
 }
 
-.link {
-  @apply text-mint transition duration-300 hover:text-[#35BD86];
+input,
+textarea {
+  @apply truncate !text-sm font-light;
 }
 
-.link-hover {
-  @apply transition hover:text-mint;
+input:read-only {
+  cursor: default;
 }
 
-.main-container {
-  @apply mx-auto px-0 lg:px-14;
-  max-width: 1440px;
+input::placeholder,
+input,
+textarea::placeholder,
+textarea {
+  font-weight: 300 !important;
 }
 
-.card {
-  background-color: rgba(48, 241, 255, 10%);
+input:disabled {
+  color: #787878;
+  -webkit-text-fill-color: #787878;
 }
 
 /* Hide the spinner in number input */
@@ -78,6 +82,11 @@ input:-webkit-autofill:active {
   transition: background-color 5000s ease-in-out 0s;
 }
 
+label {
+  @apply !text-sm;
+  font-weight: 450;
+}
+
 .hide-scroll::-webkit-scrollbar {
   display: none;
 }
@@ -88,4 +97,30 @@ input:-webkit-autofill:active {
 
 [data-radix-popper-content-wrapper] {
   margin-top: 0px !important;
+}
+
+.heading {
+  @apply text-lg;
+  font-weight: 450;
+}
+
+.link {
+  @apply text-mint transition duration-300 hover:text-[#35BD86];
+}
+
+.link-hover {
+  @apply transition hover:text-mint;
+}
+
+.main-container {
+  @apply mx-auto px-0 lg:px-14;
+  max-width: 1440px;
+}
+
+.card {
+  background-color: rgba(48, 241, 255, 10%);
+}
+
+button {
+  outline: none;
 }
