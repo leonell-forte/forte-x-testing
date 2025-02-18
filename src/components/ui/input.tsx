@@ -72,6 +72,13 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
           }}
           type={type === "password" ? (show ? "text" : "password") : type}
           sx={{
+            "& .MuiInputLabel-root": {
+              top: "-15%",
+            },
+            "& .MuiInputLabel-root.Mui-focused, & .MuiInputLabel-root.MuiFormLabel-filled":
+              {
+                top: "5%",
+              },
             "& .Mui-disabled": {
               cursor: "not-allowed",
             },
