@@ -109,7 +109,7 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
                   <Cards.Details label="Parties" value={parties?.join(", ")} />
                   <Cards.Details
                     label="Status"
-                    value={status.toLowerCase()}
+                    value={status?.toLowerCase()}
                     capitalize
                   />
                   <Cards.Details label="Project" value={project} />
