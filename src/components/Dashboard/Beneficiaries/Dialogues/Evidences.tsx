@@ -11,7 +11,6 @@ import { useAppSelector } from "lib/hooks";
 import { Beneficiaries, IsAuthorized } from "lib/role-permissions";
 import { findLabelFromOptions } from "lib/utils";
 
-import Button from "components/ui/button";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
 
