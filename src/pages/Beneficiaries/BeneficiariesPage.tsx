@@ -113,7 +113,9 @@ const BeneficiariesPage = () => {
     useExportBeneficiaries();
 
   const handleExportBeneficiaries = () => {
-    exportBeneficiaries({ beneficiaryIds: selectedIds });
+    exportBeneficiaries({
+      beneficiaryIds: selectedIds.length ? selectedIds : [-1],
+    });
   };
 
   const renderModal = useCallback(() => {
@@ -213,7 +215,7 @@ const BeneficiariesPage = () => {
             </div>
           </div>
 
-          <div className="grid w-full flex-shrink-0 grid-cols-1 gap-2.5 sm:grid-cols-2 md:w-auto">
+          <div className="flex w-full flex-shrink-0 grid-cols-1 flex-wrap gap-2.5 md:w-auto">
             {selectedIds.length > 0 && IsAuthorized([Beneficiaries.EXECUTE]) ? (
               <>
                 {IsAuthorized([Beneficiaries.UPDATE])}
@@ -234,6 +236,15 @@ const BeneficiariesPage = () => {
               </>
             ) : (
               <>
+                {IsAuthorized([Beneficiaries.EXECUTE]) && (
+                  <Button
+                    onClick={handleExportBeneficiaries}
+                    buttonType="secondary"
+                    disabled={isExportingBeneficiaries}
+                  >
+                    Export CSV
+                  </Button>
+                )}
                 {IsAuthorized([Beneficiaries.IMPORT]) && (
                   <Button
                     eventName="Import Beneficiaries"
