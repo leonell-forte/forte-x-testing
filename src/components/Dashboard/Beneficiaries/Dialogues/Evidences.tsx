@@ -11,7 +11,9 @@ import { useAppSelector } from "lib/hooks";
 import { Beneficiaries, IsAuthorized } from "lib/role-permissions";
 import { findLabelFromOptions } from "lib/utils";
 
+import Button from "components/ui/button";
 import Table from "components/ui/table";
+import Cards from "components/ui/table-card";
 
 interface IProps {
   handleAddOrViewEvidence?: (id?: number) => void;
@@ -51,61 +53,107 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
         </div>
       )}
 
-      <Table.Container isEmpty={!evidences.length} isLoading={isLoading}>
-        <Table.Head>
-          <Table.Row>
-            {HEADERS.map((item, index) => {
-              return <Table.Header key={index}>{item}</Table.Header>;
-            })}
-
-            <Table.Header></Table.Header>
-          </Table.Row>
-        </Table.Head>
-
-        <Table.Body>
+      <div className="md:hidden">
+        <Cards.Container>
           {evidences.map((item, index) => {
             const { file, outcome, description, status, id } = item;
+
             return (
-              <Table.Row key={index}>
-                <Table.Data className="w-[140px]">
-                  <p
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleAddOrViewEvidence?.(id);
-                    }}
-                    className="link cursor-pointer truncate underline"
-                  >
-                    {file?.filename}
-                  </p>
-                </Table.Data>
-
-                <Table.Data className="w-[100px]">{outcome?.name} </Table.Data>
-
-                <Table.Data className="w-[140px]">{description}</Table.Data>
-
-                <Table.Data className="w-[120px]">
-                  <span>{findLabelFromOptions(EVIDENCE_STATUS, status)}</span>
-                </Table.Data>
-
-                <Table.Data>
-                  <Link
-                    to={file?.fileUrl}
-                    download
-                    target="_blank"
-                    type="button"
-                  >
-                    <img
-                      src={download}
-                      alt="download"
-                      className="flex-shrink-0"
-                    />
-                  </Link>
-                </Table.Data>
-              </Table.Row>
+              <Cards.Card
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleAddOrViewEvidence?.(id);
+                }}
+                key={index}
+              >
+                <div className="space-y-2">
+                  <p className="font-semibold">{file?.filename}</p>
+                  <Cards.Group>
+                    <Cards.Details label="Outcome" value={outcome.name} />
+                    <Cards.Details label="Description" value={description} />
+                    <Cards.Details label="Status" value={status} capitalize />
+                  </Cards.Group>
+                  <div className="absolute bottom-4 right-4">
+                    <Link
+                      to={file?.fileUrl}
+                      download
+                      target="_blank"
+                      type="button"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <img
+                        src={download}
+                        alt="download"
+                        className="flex-shrink-0"
+                      />
+                    </Link>
+                  </div>
+                </div>
+              </Cards.Card>
             );
           })}
-        </Table.Body>
-      </Table.Container>
+        </Cards.Container>
+      </div>
+
+      <div className="hidden md:block">
+        <Table.Container isEmpty={!evidences.length} isLoading={isLoading}>
+          <Table.Head>
+            <Table.Row>
+              {HEADERS.map((item, index) => {
+                return <Table.Header key={index}>{item}</Table.Header>;
+              })}
+
+              <Table.Header></Table.Header>
+            </Table.Row>
+          </Table.Head>
+
+          <Table.Body>
+            {evidences.map((item, index) => {
+              const { file, outcome, description, status, id } = item;
+              return (
+                <Table.Row key={index}>
+                  <Table.Data className="w-[140px]">
+                    <p
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddOrViewEvidence?.(id);
+                      }}
+                      className="link cursor-pointer truncate underline"
+                    >
+                      {file?.filename}
+                    </p>
+                  </Table.Data>
+
+                  <Table.Data className="w-[100px]">
+                    {outcome?.name}{" "}
+                  </Table.Data>
+
+                  <Table.Data className="w-[140px]">{description}</Table.Data>
+
+                  <Table.Data className="w-[120px]">
+                    <span>{findLabelFromOptions(EVIDENCE_STATUS, status)}</span>
+                  </Table.Data>
+
+                  <Table.Data>
+                    <Link
+                      to={file?.fileUrl}
+                      download
+                      target="_blank"
+                      type="button"
+                    >
+                      <img
+                        src={download}
+                        alt="download"
+                        className="flex-shrink-0"
+                      />
+                    </Link>
+                  </Table.Data>
+                </Table.Row>
+              );
+            })}
+          </Table.Body>
+        </Table.Container>
+      </div>
     </div>
   );
 };

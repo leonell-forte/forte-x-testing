@@ -86,6 +86,7 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
               }),
 
               ...(type === "search" && {
+                height: "22px",
                 paddingLeft: "48px !important", // adjust padding for input text if needed
                 paddingRight: "45px",
               }),
@@ -132,7 +133,7 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
           <button
             type="button"
             onClick={() => setShow((prev) => !prev)}
-            className="absolute right-4 top-4"
+            className="absolute right-4 top-3.5 w-4"
           >
             <img alt="eye" src={show ? eyeOpen : eyeClosed} />
           </button>

@@ -72,7 +72,7 @@ const ProjectsPage = () => {
       {renderModal()}
 
       <div className="flex h-full flex-col space-y-2.5">
-        <div className="flex flex-col justify-between gap-2.5 sm:flex-row">
+        <div className="flex flex-col items-start justify-between gap-2.5 sm:flex-row">
           <SearchInput
             value={search}
             onChange={(e) => setSearch(e.target.value)}

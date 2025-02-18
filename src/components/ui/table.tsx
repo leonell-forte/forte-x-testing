@@ -34,7 +34,7 @@ const Table = {
         <div ref={tableRef} className="hide-scroll relative w-full">
           <table
             {...props}
-            className="w-full overflow-hidden !rounded-t-[10px]"
+            className="w-full overflow-hidden !rounded-t-[.5em]"
           >
             {children}
           </table>

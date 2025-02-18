@@ -36,7 +36,7 @@ const Cards = {
               variant="rectangular"
               width="100%"
               height={150}
-              className="rounded-lg"
+              className="rounded-[.5em]"
               sx={{
                 backgroundColor: "#ffffff20",
               }}
@@ -61,7 +61,7 @@ const Cards = {
     return (
       <div
         className={classNames(
-          "relative animate-fadeIn overflow-hidden rounded-lg bg-panel p-4 text-[14px] transition-all",
+          "relative animate-fadeIn overflow-hidden rounded-[.5em] bg-panel p-4 text-[14px] transition-all",
           className,
           props.onClick && "cursor-pointer hover:brightness-75"
         )}

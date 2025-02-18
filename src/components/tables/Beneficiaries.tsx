@@ -317,7 +317,7 @@ const BeneficiariesTable = ({
                       ) : null}
                       <p
                         className={cn(
-                          "truncate text-left font-[300] outline-none",
+                          "translate-y-[1px] truncate text-left font-[300] outline-none",
                           setChecked ? "translate-x-[-8px]" : ""
                         )}
                       >
