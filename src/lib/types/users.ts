@@ -19,6 +19,8 @@ export const UserRoleValues = [
 
 export type UserRoleType = (typeof UserRoleValues)[number];
 
+export type UserStatus = "active" | "inactive";
+
 export interface IUser {
   id?: string;
 

@@ -100,7 +100,7 @@ export const signup = {
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: "Passwords do not match",
-      path: ["confirm_password"], // This will cause the error to appear under the confirm_password field
+      path: ["confirmPassword"],
     }),
 };
 
