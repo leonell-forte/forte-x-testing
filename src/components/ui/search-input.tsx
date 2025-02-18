@@ -1,4 +1,5 @@
 import { TextFieldProps } from "@mui/material";
+import classNames from "classnames";
 
 import close from "assets/images/icons/close.svg";
 import darkClose from "assets/images/icons/dark-close.svg";
@@ -11,14 +12,21 @@ type IProps = TextFieldProps & {
   dark?: boolean;
 
   onClear?: () => void;
+
+  containerClass?: string;
 };
 
-const SearchInput = ({ dark, onClear, ...props }: IProps) => {
+const SearchInput = ({ dark, onClear, containerClass, ...props }: IProps) => {
   return (
-    <div className="relative flex flex-shrink-0 items-center">
+    <div
+      className={classNames(
+        "relative flex flex-shrink-0 items-center",
+        containerClass
+      )}
+    >
       <button
         type="submit"
-        className="absolute left-4 top-[16px] z-10"
+        className="absolute left-4 z-10"
         disabled={!props.value}
       >
         <img alt="search" src={dark ? darkSearch : search} />
@@ -26,9 +34,9 @@ const SearchInput = ({ dark, onClear, ...props }: IProps) => {
 
       <Input
         dark={dark}
-        {...props}
         placeholder={props.placeholder || "Search"}
         type="search"
+        {...props}
       />
 
       {!!props.value && (
@@ -40,7 +48,7 @@ const SearchInput = ({ dark, onClear, ...props }: IProps) => {
           <img
             alt="search"
             src={dark ? darkClose : close}
-            className="absolute right-[15.33px] top-[19.8px]"
+            className="absolute right-[15.33px]"
           />
         </button>
       )}

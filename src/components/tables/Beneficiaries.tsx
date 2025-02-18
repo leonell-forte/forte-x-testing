@@ -1,8 +1,8 @@
 import React from "react";
 import { ChangeEvent, useCallback, useState } from "react";
+import { Link } from "react-router-dom";
 
 import bin from "assets/images/icons/bin.svg";
-import pencil from "assets/images/icons/pencil.svg";
 
 import { DEFAULT_DATE_FORMAT } from "lib/constants";
 import { Beneficiaries, IsAuthorized } from "lib/role-permissions";
@@ -14,6 +14,7 @@ import DeleteDialogue from "components/Dashboard/Beneficiaries/Dialogues/DeleteD
 import Button from "components/ui/button";
 import Checkbox from "components/ui/checkbox";
 import Table from "components/ui/table";
+import Cards from "components/ui/table-card";
 
 type ModalLabelTypes =
   | "beneficiaries"
@@ -94,72 +95,160 @@ const BeneficiariesTable = ({
   return (
     <>
       {renderDialog()}
-      <div className="pr-4">
+      <div className="min-[1300px]:hidden">
+        <Cards.Container isLoading={isLoading}>
+          {list.map((item, index) => {
+            const {
+              firstName,
+
+              lastName,
+
+              provider,
+
+              email,
+
+              id,
+
+              cohortEndDate,
+
+              cohortStartDate,
+
+              status,
+
+              evidences,
+
+              phoneNumber,
+            } = item;
+
+            return (
+              <Cards.Card
+                onClick={(e) => {
+                  e.stopPropagation();
+
+                  setBeneficiaryId(id);
+
+                  setModal("beneficiaries");
+
+                  setEditMode(false);
+                }}
+                key={index}
+                title={`${firstName} ${lastName}`}
+              >
+                {setChecked && (
+                  <div className="absolute right-[2px] top-4">
+                    <Checkbox
+                      checked={selectedIds.includes(id)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedIds((prev) => [...prev, id]);
+                          setChecked((prev) => [...prev, id]);
+                        } else {
+                          setSelectedIds((prev) =>
+                            prev.filter((item) => item !== id)
+                          );
+                          setChecked((prev) =>
+                            prev.filter((item) => item !== id)
+                          );
+                        }
+                      }}
+                    />
+                  </div>
+                )}
+
+                <Cards.Group cols={2} className="w-[85%]">
+                  <Cards.Details label="Email" value={email} />
+                  <Cards.Details label="Phone number" value={phoneNumber} />
+                  <Cards.Details label="Provider" value={provider} />
+                  <Cards.Details label="Status" value={status} capitalize />
+                  <Cards.Details
+                    label="Start date"
+                    value={formatDate(
+                      cohortStartDate || "",
+                      DEFAULT_DATE_FORMAT
+                    )}
+                  />
+                  <Cards.Details
+                    label="End date"
+                    value={formatDate(cohortEndDate || "", DEFAULT_DATE_FORMAT)}
+                  />
+                </Cards.Group>
+
+                <div className="mt-4 flex w-[85%] flex-col">
+                  <p className="text-[12px] text-gray-400">Evidences</p>
+                  {!evidences.length
+                    ? "No uploaded evidence yet"
+                    : evidences?.map((item, index) => {
+                        return (
+                          <Link
+                            key={index}
+                            className="truncate underline-offset-4 hover:underline"
+                            target="_blank"
+                            to={item.file.fileUrl}
+                            download
+                          >
+                            {item.file.filename}
+                          </Link>
+                        );
+                      })}
+                </div>
+
+                <div className="absolute bottom-3 right-0">
+                  {IsAuthorized([Beneficiaries.DELETE]) && (
+                    <div className="flex justify-end">
+                      <Button
+                        eventName="Delete Beneficiary"
+                        id={id.toString()}
+                        buttonType="default"
+                        type="button"
+                        onClick={() => handleDelete(id)}
+                      >
+                        <img alt="pencil" src={bin} />
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </Cards.Card>
+            );
+          })}
+        </Cards.Container>
+      </div>
+      <div className="hidden min-[1300px]:block">
         <Table.Container isLoading={isLoading} isEmpty={!list?.length}>
           <Table.Head>
             <Table.Row>
               {setChecked ? (
-                <Table.Header small className="!h-[60px] !pl-[26px] !pr-12">
+                <Table.Header className="!pl-2">
                   <Checkbox
+                    dark
                     checked={
                       list?.length !== 0 && selectedIds.length === list.length
                     }
                     label="First name"
-                    labelClass="!text-black text-[14px]"
+                    labelClass="!text-black text-[14px] font-[450] pl-1"
                     onChange={handleSelectAll}
                   />
                 </Table.Header>
               ) : (
-                <Table.Header small className="!h-[60px] !pr-12">
-                  First Name
-                </Table.Header>
+                <Table.Header>First Name</Table.Header>
               )}
 
-              <Table.Header small className="!h-[60px] !pr-12">
-                Last name
-              </Table.Header>
+              <Table.Header>Last name</Table.Header>
 
-              <Table.Header small className="!h-[60px] !pr-12">
-                Provider
-              </Table.Header>
+              <Table.Header>Email</Table.Header>
 
-              <Table.Header small className="!h-[60px] !pr-12">
-                Email
-              </Table.Header>
+              <Table.Header>Phone number</Table.Header>
 
-              <Table.Header small className="!h-[60px] !pr-12">
-                Phone number
-              </Table.Header>
+              <Table.Header>Provider</Table.Header>
 
-              <Table.Header small className="!h-[60px] !pr-12">
-                Contract
-              </Table.Header>
+              <Table.Header>Status</Table.Header>
 
-              <Table.Header small className="!h-[60px] !pr-12">
-                Program
-              </Table.Header>
+              <Table.Header>Start date</Table.Header>
 
-              <Table.Header small className="!h-[60px] !pr-12">
-                Risk level
-              </Table.Header>
+              <Table.Header>End date</Table.Header>
 
-              <Table.Header small className="!h-[60px] !pr-12">
-                Status
-              </Table.Header>
+              <Table.Header>Evidence</Table.Header>
 
-              <Table.Header small className="!h-[60px] !pr-12">
-                Start date
-              </Table.Header>
-
-              <Table.Header small className="!h-[60px] !pr-12">
-                End date
-              </Table.Header>
-
-              <Table.Header small className="!h-[60px] !pr-12">
-                Evidence
-              </Table.Header>
-
-              <Table.Header small className="!h-[60px] !pr-12"></Table.Header>
+              <Table.Header></Table.Header>
             </Table.Row>
           </Table.Head>
 
@@ -174,17 +263,11 @@ const BeneficiariesTable = ({
 
                 email,
 
-                contract,
-
                 id,
 
                 cohortEndDate,
 
-                program,
-
                 cohortStartDate,
-
-                riskLevel,
 
                 status,
 
@@ -206,7 +289,7 @@ const BeneficiariesTable = ({
                     setEditMode(false);
                   }}
                 >
-                  <Table.Data small className="!h-[64px] !pl-[26px]">
+                  <Table.Data className="w-[100px] !pl-2">
                     <div className="flex items-center gap-2">
                       {setChecked ? (
                         <div
@@ -234,7 +317,7 @@ const BeneficiariesTable = ({
                       ) : null}
                       <p
                         className={cn(
-                          "w-[143px] truncate text-left outline-none",
+                          "truncate text-left font-[300] outline-none",
                           setChecked ? "translate-x-[-8px]" : ""
                         )}
                       >
@@ -243,86 +326,37 @@ const BeneficiariesTable = ({
                     </div>
                   </Table.Data>
 
-                  <Table.Data small className="!h-[64px">
-                    <p className="w-[143px] truncate">{lastName}</p>
+                  <Table.Data className="w-[100px]">{lastName}</Table.Data>
+
+                  <Table.Data className="w-[130px]">{email}</Table.Data>
+
+                  <Table.Data className="w-[120px]">{phoneNumber}</Table.Data>
+
+                  <Table.Data className="w-[140px]">{provider}</Table.Data>
+
+                  <Table.Data className="w-[90px]">{status}</Table.Data>
+
+                  <Table.Data className="w-[110px]">
+                    {formatDate(cohortStartDate || "", DEFAULT_DATE_FORMAT)}
                   </Table.Data>
 
-                  <Table.Data small className="!h-[64px]">
-                    <p className="w-[134px] truncate">{provider}</p>
+                  <Table.Data className="w-[110px]">
+                    {formatDate(cohortEndDate || "", DEFAULT_DATE_FORMAT)}
                   </Table.Data>
 
-                  <Table.Data small className="!h-[64px]">
-                    <p className="w-[184px] truncate">{email}</p>
+                  <Table.Data className="w-[150px]">
+                    {evidences?.map((item) => item.file.filename).join(", ")}
                   </Table.Data>
 
-                  <Table.Data small className="!h-[64px]">
-                    <p className="w-[184px] truncate">{phoneNumber}</p>
-                  </Table.Data>
-
-                  <Table.Data small className="!h-[64px]">
-                    <p className="w-[134px] truncate">{contract}</p>
-                  </Table.Data>
-
-                  <Table.Data small className="!h-[64px]">
-                    <p className="w-[134px] truncate">{program}</p>
-                  </Table.Data>
-
-                  <Table.Data small className="!h-[64px] capitalize">
-                    <p className="w-[84px] truncate">{riskLevel}</p>
-                  </Table.Data>
-
-                  <Table.Data small className="!h-[64px]">
-                    <p className="w-[134px] truncate">{status}</p>
-                  </Table.Data>
-
-                  <Table.Data small className="!h-[64px]">
-                    <p className="w-[104px] truncate">
-                      {formatDate(cohortStartDate || "", DEFAULT_DATE_FORMAT)}
-                    </p>
-                  </Table.Data>
-
-                  <Table.Data small className="!h-[64px]">
-                    <p className="w-[104px] truncate">
-                      {formatDate(cohortEndDate || "", DEFAULT_DATE_FORMAT)}
-                    </p>
-                  </Table.Data>
-
-                  <Table.Data small className="!h-[64px]">
-                    <p className="w-[234px] truncate">
-                      {evidences?.map((item) => item.file.filename).join(", ")}
-                    </p>{" "}
-                  </Table.Data>
-
-                  <Table.Data small className="!h-[64px]">
-                    {IsAuthorized([
-                      Beneficiaries.UPDATE,
-                      Beneficiaries.DELETE,
-                    ]) && (
+                  <Table.Data className="ml-auto w-[50px]">
+                    {IsAuthorized([Beneficiaries.DELETE]) && (
                       <div className="flex justify-end">
-                        <Button
-                          eventName="Update Beneficiary"
-                          id={id?.toString()}
-                          buttonType="default"
-                          type="button"
-                          className="p-[3px]"
-                          onClick={() => {
-                            setModal("beneficiaries");
-
-                            setBeneficiaryId(id);
-
-                            setEditMode(true);
-                          }}
-                        >
-                          <img alt="pencil" src={pencil} />
-                        </Button>
-
                         <Button
                           eventName="Delete Beneficiary"
                           id={id.toString()}
                           buttonType="default"
                           type="button"
                           onClick={() => handleDelete(id)}
-                          className="p-[3px]"
                         >
                           <img alt="pencil" src={bin} />
                         </Button>

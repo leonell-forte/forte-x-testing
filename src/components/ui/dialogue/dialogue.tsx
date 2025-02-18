@@ -25,6 +25,8 @@ export interface IDialogueProps {
   confirmBeforeLeave?: boolean;
 
   canFullScreen?: boolean;
+
+  hideClose?: boolean;
 }
 
 const Dialogue = ({
@@ -41,6 +43,8 @@ const Dialogue = ({
   confirmBeforeLeave,
 
   canFullScreen = true,
+
+  hideClose,
 }: IDialogueProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -54,10 +58,10 @@ const Dialogue = ({
     handleClose?.();
   };
 
-  useEscapeKey(closeDialogue!);
+  useEscapeKey(!hideClose ? closeDialogue : undefined);
 
   useOutsideClick(containerRef, () => {
-    closeDialogue?.();
+    if (!hideClose) closeDialogue?.();
   });
 
   return isVisible ? (
@@ -89,22 +93,20 @@ const Dialogue = ({
               : "mx-4 h-auto rounded-lg md:mx-0"
           )}
         >
-          <div className="flex items-center justify-between">
-            {title && (
-              <>
-                <p className="heading">{title}</p>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    closeDialogue?.();
-                  }}
-                >
-                  <img alt="close" src={close} />
-                </button>
-              </>
-            )}
-          </div>
+          {!hideClose && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                closeDialogue?.();
+              }}
+              className="absolute right-4 top-4"
+            >
+              <img alt="close" src={close} />
+            </button>
+          )}
+
+          {title && <p className="text-[20px] font-semibold">{title}</p>}
 
           <div className="mt-12">{children}</div>
         </div>

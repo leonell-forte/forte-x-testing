@@ -147,8 +147,6 @@ const UserDialogue = ({
     }
   }, [isNonForteUser, profile, userOrganization, setValue]);
 
-  console.log(watch("role"));
-
   return (
     <Dialogue
       confirmBeforeLeave

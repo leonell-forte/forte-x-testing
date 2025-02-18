@@ -11,6 +11,7 @@ import DeleteDialogue from "components/Dashboard/Projects/Dialogues/DeleteDialog
 import ProjectDialogue from "components/Dashboard/Projects/Dialogues/ProjectDialogue";
 import Button from "components/ui/button";
 import Table from "components/ui/table";
+import Cards from "components/ui/table-card";
 
 type TProjectTable = {
   list: IProject[];
@@ -62,27 +63,90 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
     <>
       {renderDialog()}
 
-      <div className="pr-4">
+      <div className="table-breakpoint:hidden">
+        <Cards.Container isLoading={isLoading}>
+          {list.map((item, index) => {
+            const { id, name, outcomes, providers } = item;
+
+            return (
+              <Cards.Card
+                onClick={(e) => {
+                  e.stopPropagation();
+
+                  navigate(`/projects/${id}`);
+                }}
+                key={index}
+                title={name}
+              >
+                <div className="flex items-end gap-2.5">
+                  <div className="w-full overflow-hidden">
+                    <p className="truncate">
+                      {providers?.map((item) => item).join(", ") || "-"}
+                    </p>
+                    <p className="truncate">
+                      {outcomes.map((item) => item.name).join(", ")}
+                    </p>
+                  </div>
+                  <div className="flex">
+                    {IsAuthorized([Projects.UPDATE]) && (
+                      <Button
+                        eventName="Edit Project"
+                        id={id.toString()}
+                        buttonType="default"
+                        type="button"
+                        onClick={() => handleEditUser(item)}
+                        className="!mx-[-12px]"
+                      >
+                        <img
+                          alt="pencil"
+                          src={pencil}
+                          className="h-3.5 sm:h-auto"
+                        />
+                      </Button>
+                    )}
+
+                    {IsAuthorized([Projects.DELETE]) && (
+                      <Button
+                        eventName="Delete Project"
+                        id={id.toString()}
+                        buttonType="default"
+                        type="button"
+                        onClick={() => {
+                          setModal("delete");
+                          setSelectedProject(item);
+                        }}
+                        className="!mx-[-12px]"
+                      >
+                        <img
+                          alt="pencil"
+                          src={bin}
+                          className="h-3.5 sm:h-auto"
+                        />
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </Cards.Card>
+            );
+          })}
+        </Cards.Container>
+      </div>
+
+      <div className="hidden table-breakpoint:block">
         <Table.Container isEmpty={!list.length} isLoading={isLoading}>
           <Table.Head>
             <Table.Row>
               {TABLE_HEADER.map((key, headerIndex) => {
-                return (
-                  <Table.Header
-                    className="h-[64px] pl-[14px]"
-                    key={headerIndex}
-                  >
-                    {key}
-                  </Table.Header>
-                );
+                return <Table.Header key={headerIndex}>{key}</Table.Header>;
               })}
 
-              <Table.Header className="h-[64px]"></Table.Header>
+              <Table.Header></Table.Header>
             </Table.Row>
           </Table.Head>
           <Table.Body>
             {list.map((item: IProject, bodyIndex: number) => {
-              const { id, name, outcomes, contracts, providers } = item;
+              const { id, name, outcomes, providers } = item;
+
               return (
                 <Table.Row
                   onClick={(e) => {
@@ -92,31 +156,17 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
                   }}
                   key={bodyIndex}
                 >
-                  <Table.Data className="pl-[14px]">
-                    <p className="w-[220px] truncate">{name}</p>
+                  <Table.Data className="w-[220px]">{name}</Table.Data>
+
+                  <Table.Data className="w-[220px]">
+                    {providers?.map((item) => item).join(", ") || "-"}
                   </Table.Data>
 
-                  <Table.Data className="pl-[14px]">
-                    <p className="w-[220px] truncate">
-                      {providers?.map((item) => item).join(", ") || "-"}
-                    </p>
+                  <Table.Data className="w-[220px]">
+                    {outcomes.map((item) => item.name).join(", ")}
                   </Table.Data>
 
-                  <Table.Data className="pl-[14px]">
-                    <p className="w-[220px] truncate">
-                      {outcomes?.map((item) => item.name).join(", ")}
-                    </p>
-                  </Table.Data>
-
-                  <Table.Data className="pl-[14px]">
-                    <p className="w-[220px] truncate">
-                      {contracts?.map((item) => item).join(", ") || "-"}
-                    </p>
-                  </Table.Data>
-
-                  <Table.Data className="pl-[14px]">-</Table.Data>
-
-                  <Table.Data className="pl-[14px]">
+                  <Table.Data>
                     <div className="flex justify-end">
                       {IsAuthorized([Projects.UPDATE]) && (
                         <Button
@@ -125,7 +175,7 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
                           buttonType="default"
                           type="button"
                           onClick={() => handleEditUser(item)}
-                          className="p-[3px]"
+                          className="!mx-[-12px]"
                         >
                           <img alt="pencil" src={pencil} />
                         </Button>
@@ -141,7 +191,7 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
                             setModal("delete");
                             setSelectedProject(item);
                           }}
-                          className="p-[3px]"
+                          className="!mx-[-12px]"
                         >
                           <img alt="pencil" src={bin} />
                         </Button>
@@ -160,10 +210,4 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
 
 export default ProjectsTable;
 
-const TABLE_HEADER = [
-  "Projects",
-  "Partners",
-  "Outcomes",
-  "Contracts",
-  "Beneficiaries",
-];
+const TABLE_HEADER = ["Project", "Partners", "Outcomes"];

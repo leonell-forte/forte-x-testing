@@ -196,7 +196,7 @@ const BeneficiariesForm = ({
             required
             control={control}
             render={({ field }) => (
-              <Input {...field} disabled={!onEdit} placeholder="First name" />
+              <Input {...field} readOnly={!onEdit} placeholder="First name" />
             )}
           />
 
@@ -206,7 +206,7 @@ const BeneficiariesForm = ({
             control={control}
             name="lastName"
             render={({ field }) => (
-              <Input {...field} disabled={!onEdit} placeholder="Last name" />
+              <Input {...field} readOnly={!onEdit} placeholder="Last name" />
             )}
           />
 
@@ -216,7 +216,7 @@ const BeneficiariesForm = ({
             control={control}
             name="email"
             render={({ field }) => (
-              <Input {...field} disabled={!onEdit} placeholder="Email" />
+              <Input {...field} readOnly={!onEdit} placeholder="Email" />
             )}
           />
 
@@ -228,7 +228,7 @@ const BeneficiariesForm = ({
               <Input
                 {...field}
                 phoneNUmber
-                disabled={!onEdit}
+                readOnly={!onEdit}
                 placeholder="Phone"
               />
             )}
@@ -242,7 +242,7 @@ const BeneficiariesForm = ({
             render={({ field }) => (
               <Dropdown
                 value={field.value || ""}
-                disabled={!onEdit}
+                readOnly={!onEdit}
                 handleSelect={(val) => {
                   setValue("status", val as string);
 
@@ -266,7 +266,7 @@ const BeneficiariesForm = ({
 
                   setError("riskLevel", { message: "" });
                 }}
-                disabled={!onEdit}
+                readOnly={!onEdit}
                 options={RISK_LEVEL}
                 placeholder="Risk level"
               />
@@ -281,7 +281,7 @@ const BeneficiariesForm = ({
             render={({ field }) => (
               <Dropdown
                 enableSearch
-                disabled={!onEdit}
+                readOnly={!onEdit}
                 loading={contractsLoading}
                 value={findLabelFromOptions(
                   contracts,
@@ -374,7 +374,7 @@ const BeneficiariesForm = ({
               render={({ field }) => (
                 <DatePicker
                   maxDate={new Date(watch("cohortEndDate") || "")}
-                  disabled={!onEdit}
+                  readOnly={!onEdit}
                   value={new Date(field.value || "")}
                   onChange={(date) => {
                     setValue("cohortStartDate", date ? date.toISOString() : "");
@@ -391,7 +391,7 @@ const BeneficiariesForm = ({
               name="cohortEndDate"
               render={({ field }) => (
                 <DatePicker
-                  disabled={!onEdit}
+                  readOnly={!onEdit}
                   minDate={new Date(watch("cohortStartDate") || "")}
                   value={new Date(field.value || "")}
                   onChange={(date) => {
@@ -409,7 +409,7 @@ const BeneficiariesForm = ({
             control={control}
             name="cohortName"
             render={({ field }) => (
-              <Input {...field} disabled={!onEdit} placeholder="Program" />
+              <Input {...field} readOnly={!onEdit} placeholder="Program" />
             )}
           />
         </div>
@@ -428,7 +428,7 @@ const BeneficiariesForm = ({
             render={({ field }) => (
               <Input
                 {...field}
-                disabled={!onEdit}
+                readOnly={!onEdit}
                 placeholder="Linkedin link"
               />
             )}
@@ -438,7 +438,7 @@ const BeneficiariesForm = ({
             control={control}
             name="githubUrl"
             render={({ field }) => (
-              <Input {...field} disabled={!onEdit} placeholder="Github link" />
+              <Input {...field} readOnly={!onEdit} placeholder="Github link" />
             )}
           />
           <Controller
@@ -446,7 +446,7 @@ const BeneficiariesForm = ({
             control={control}
             name="otherUrl"
             render={({ field }) => (
-              <Input {...field} disabled={!onEdit} placeholder="Other" />
+              <Input {...field} readOnly={!onEdit} placeholder="Other" />
             )}
           />
         </div>
@@ -465,7 +465,7 @@ const BeneficiariesForm = ({
               name="birthdate"
               render={({ field }) => (
                 <DatePicker
-                  disabled={!onEdit}
+                  readOnly={!onEdit}
                   value={new Date(field.value)}
                   onChange={(date) => {
                     setValue("birthdate", date ? date.toISOString() : "");
@@ -481,7 +481,7 @@ const BeneficiariesForm = ({
               control={control}
               name="ethnicity"
               render={({ field }) => (
-                <Input {...field} disabled={!onEdit} placeholder="Ethnicity" />
+                <Input {...field} readOnly={!onEdit} placeholder="Ethnicity" />
               )}
             />
           </div>
@@ -492,7 +492,7 @@ const BeneficiariesForm = ({
               name="gender"
               render={({ field }) => (
                 <Dropdown
-                  disabled={!onEdit}
+                  readOnly={!onEdit}
                   value={field.value}
                   handleSelect={(val) => {
                     setValue("gender", val as string);
@@ -510,7 +510,7 @@ const BeneficiariesForm = ({
               name="disabilityStatus"
               render={({ field }) => (
                 <Dropdown
-                  disabled={!onEdit}
+                  readOnly={!onEdit}
                   value={field.value}
                   handleSelect={(val) => {
                     setValue("disabilityStatus", val as DisabilityStatusEnum);
@@ -530,7 +530,7 @@ const BeneficiariesForm = ({
           control={control}
           name="address"
           render={({ field }) => (
-            <Input {...field} disabled={!onEdit} placeholder="Address" />
+            <Input {...field} readOnly={!onEdit} placeholder="Address" />
           )}
         />
 
@@ -541,7 +541,7 @@ const BeneficiariesForm = ({
           render={({ field }) => (
             <Input
               {...field}
-              disabled={!onEdit}
+              readOnly={!onEdit}
               placeholder="Socio-economic status"
             />
           )}
@@ -559,7 +559,7 @@ const BeneficiariesForm = ({
 
                 setError("educationLevel", { message: "" });
               }}
-              disabled={!onEdit}
+              readOnly={!onEdit}
               options={HIGHEST_EDUCATION_LEVEL}
               placeholder="Highest education level"
             />
@@ -572,7 +572,7 @@ const BeneficiariesForm = ({
           name="languages"
           render={({ field }) => (
             <Dropdown
-              disabled={!onEdit}
+              readOnly={!onEdit}
               enableSearch
               isMultiSelect
               showAsTags

@@ -61,7 +61,7 @@ const DatePicker = ({
               },
               sx: {
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: "10px",
+                  borderRadius: "0.5rem",
 
                   "& fieldset": {
                     borderColor: error

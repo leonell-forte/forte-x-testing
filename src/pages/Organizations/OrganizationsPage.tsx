@@ -1,8 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import organizationService from "api/organization";
-import { useMemo, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 
 import closeFilter from "assets/images/icons/close-filter.svg";
+import filter from "assets/images/icons/filter.svg";
 
 import { REGIONS, STATUS, TYPES } from "lib/constants";
 import { useDebounce, usePage, usePageTitle } from "lib/hooks";
@@ -11,14 +18,23 @@ import { IFilters, IOrganization } from "lib/types/organizations";
 import OrganizationDialogue from "components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
 import OrganizationTable from "components/tables/Organization";
 import Button from "components/ui/button";
+import Dialogue from "components/ui/dialogue/dialogue";
 import Dropdown from "components/ui/dropdown";
 import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
 
+const initialFilters = {
+  region: [],
+
+  status: "",
+
+  type: "",
+};
+
 const OrganizationsPage = () => {
   usePageTitle("Organizations");
 
-  const [modal, setModal] = useState<"org" | null>(null);
+  const [modal, setModal] = useState<"org" | "filter" | null>(null);
 
   const { page, setPage } = usePage();
 
@@ -36,14 +52,6 @@ const OrganizationsPage = () => {
   );
 
   const [selectedOrg, setSelectedOrg] = useState("");
-
-  const initialFilters = {
-    region: [],
-
-    status: "",
-
-    type: "",
-  };
 
   const [filters, setFilters] = useState<IFilters>(initialFilters);
 
@@ -74,89 +82,85 @@ const OrganizationsPage = () => {
     setModal(null);
   };
 
-  const handleSelectFilter = (
-    key: keyof IFilters,
-    value: string | string[]
-  ) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-  };
+  const renderModal = useCallback(() => {
+    switch (modal) {
+      case "org":
+        return (
+          <OrganizationDialogue
+            orgId={selectedOrg}
+            isVisible={modal === "org"}
+            handleClose={close}
+          />
+        );
 
-  const handleRemoveFilters = () => {
-    setFilters(initialFilters);
-  };
+      case "filter":
+        return (
+          <Dialogue
+            hideClose
+            title="Filters"
+            isVisible={modal === "filter"}
+            handleClose={close}
+          >
+            <div className="space-y-6">
+              <Filters filters={filters} setFilters={setFilters} />
+              <div className="flex justify-end gap-2">
+                <Button
+                  buttonType="secondary"
+                  onClick={() => {
+                    setFilters(initialFilters);
+                  }}
+                >
+                  Clear
+                </Button>
+                <Button onClick={close}>Apply</Button>
+              </div>
+            </div>
+          </Dialogue>
+        );
+    }
+  }, [modal, filters, selectedOrg]);
 
   return (
     <>
-      {modal === "org" && (
-        <OrganizationDialogue
-          orgId={selectedOrg}
-          isVisible={modal === "org"}
-          handleClose={close}
-        />
-      )}
+      {renderModal()}
 
-      <div className="space-y-2.5">
-        <div className="flex w-full flex-wrap items-center justify-between gap-4">
-          <SearchInput
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="!w-[286px]"
-            placeholder="Search organizations"
-            onClear={() => setSearch("")}
-          />
-
-          <div className="flex items-center gap-6">
-            <Button
-              eventName="Add Organization"
-              onClick={() => {
-                setModal("org");
+      <div className="flex h-full flex-col space-y-2.5">
+        <div className="flex flex-col justify-between gap-2.5 sm:flex-row">
+          <div className="flex gap-2.5 md:flex-wrap">
+            <div className="w-full md:w-auto">
+              <SearchInput
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                containerClass="lg:max-w-[286px]"
+                placeholder="Search organizations"
+                onClear={() => setSearch("")}
+              />
+            </div>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setModal("filter");
               }}
+              className="flex-shrink-0 lg:hidden"
             >
-              Add organization
-            </Button>
+              <img src={filter} alt="filter" />
+            </button>
+            <div className="hidden lg:block">
+              <Filters filters={filters} setFilters={setFilters} />
+            </div>
           </div>
-        </div>
-        <div className="flex flex-wrap items-center gap-[10px]">
-          <p className="text-[20px] font-medium">Filter by</p>
 
-          <Dropdown
-            enableSearch
-            isMultiSelect
-            value={filters.region}
-            handleSelect={(val) => {
-              handleSelectFilter("region", val);
+          <Button
+            eventName="Add Organization"
+            onClick={() => {
+              setModal("org");
             }}
-            placeholder="Region"
-            className="max-w-[184px]"
-            options={REGIONS}
-          />
-
-          <Dropdown
-            value={filters.status}
-            handleSelect={(val) => {
-              handleSelectFilter("status", val);
-            }}
-            placeholder="Status"
-            className="max-w-[184px]"
-            options={STATUS}
-          />
-
-          <Dropdown
-            value={filters.type}
-            handleSelect={(val) => {
-              handleSelectFilter("type", val);
-            }}
-            placeholder="Type"
-            className="max-w-[184px]"
-            options={TYPES}
-          />
-
-          <button onClick={handleRemoveFilters}>
-            <img src={closeFilter} alt="close-filter" />
-          </button>
+          >
+            Add organization
+          </Button>
         </div>
 
-        <div className="space-y-4">
+        <div className="flex h-full flex-col justify-between gap-4">
           <OrganizationTable
             list={organizationList?.items || []}
             isLoading={orgLoading}
@@ -178,3 +182,66 @@ const OrganizationsPage = () => {
 };
 
 export default OrganizationsPage;
+
+interface IFilterProps {
+  filters: IFilters;
+
+  setFilters: Dispatch<SetStateAction<IFilters>>;
+}
+
+const Filters = ({ filters, setFilters }: IFilterProps) => {
+  const handleSelectFilter = (
+    key: keyof IFilters,
+    value: string | string[]
+  ) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleRemoveFilters = () => {
+    setFilters(initialFilters);
+  };
+  return (
+    <div className="grid w-full grid-cols-1 gap-2.5 lg:flex">
+      <div className="grid w-full grid-cols-1 gap-2.5 lg:flex">
+        <Dropdown
+          enableSearch
+          isMultiSelect
+          value={filters.region}
+          handleSelect={(val) => {
+            handleSelectFilter("region", val);
+          }}
+          placeholder="Region"
+          className="lg:max-w-[166px]"
+          options={REGIONS}
+        />
+
+        <Dropdown
+          value={filters.status}
+          handleSelect={(val) => {
+            handleSelectFilter("status", val);
+          }}
+          placeholder="Status"
+          className="lg:max-w-[166px]"
+          options={STATUS}
+        />
+      </div>
+
+      <Dropdown
+        value={filters.type}
+        handleSelect={(val) => {
+          handleSelectFilter("type", val);
+        }}
+        placeholder="Type"
+        className="lg:max-w-[166px]"
+        options={TYPES}
+      />
+
+      <button
+        onClick={handleRemoveFilters}
+        className="hidden flex-shrink-0 lg:block"
+      >
+        <img src={closeFilter} alt="close-filter" />
+      </button>
+    </div>
+  );
+};

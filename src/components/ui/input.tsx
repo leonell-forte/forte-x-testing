@@ -21,10 +21,23 @@ type PropTypes = TextFieldProps & {
   accept?: string;
 
   phoneNUmber?: boolean;
+
+  readOnly?: boolean;
 };
 
 const Input = forwardRef<HTMLDivElement, PropTypes>(
-  ({ dark, small, wholeNumberOnly, phoneNUmber, name, ...props }, ref) => {
+  (
+    {
+      dark,
+      small,
+      wholeNumberOnly,
+      phoneNUmber,
+      name,
+      readOnly = false,
+      ...props
+    },
+    ref
+  ) => {
     const [show, setShow] = useState(false);
 
     const { type } = props;
@@ -47,6 +60,7 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
             htmlInput: {
               ...(type === "number" && { min: props.min }), // Set minimum value for type="number"
               accept: props.accept,
+              readOnly,
             },
           }}
           {...props}
@@ -86,9 +100,9 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
                 paddingRight: "45px",
               }),
 
-              ...(small && {
-                height: "10px",
-              }),
+              // ...(small && {
+              //   height: "11px",
+              // }),
 
               ...(type === "file" && {
                 opacity: 0,
@@ -97,7 +111,7 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
             },
 
             "& .MuiOutlinedInput-root": {
-              borderRadius: "10px",
+              borderRadius: "0.5rem",
               padding: 0,
 
               ...(dark && {

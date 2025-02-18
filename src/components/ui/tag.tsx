@@ -17,7 +17,7 @@ const Tag = ({ label, dark, handleRemove, disabled }: ITagProps) => {
   return (
     <div
       className={cn(
-        "z-10 flex w-fit items-center gap-1.5 rounded-[4px] bg-opacity-[30%] px-2.5 py-1 text-sm",
+        "z-10 flex w-fit items-center gap-1.5 rounded-[4px] bg-opacity-[30%] px-2.5 py-0.5 text-xs",
 
         dark ? "bg-[#546F6A] transition hover:bg-forest-green" : "bg-white"
       )}

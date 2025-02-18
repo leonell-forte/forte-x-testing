@@ -47,6 +47,10 @@ textarea {
   @apply truncate !text-sm font-light;
 }
 
+input:read-only {
+  cursor: default;
+}
+
 input::placeholder,
 input,
 textarea::placeholder,
@@ -115,4 +119,8 @@ label {
 
 .card {
   background-color: rgba(48, 241, 255, 10%);
+}
+
+button {
+  outline: none;
 }

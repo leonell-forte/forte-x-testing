@@ -1,7 +1,6 @@
 import classNames from "classnames";
 import { TableHTMLAttributes, useRef } from "react";
 
-import { ScrollArea, ScrollBar } from "./scroll-area/ScrollArea";
 import Spinner from "./spinner/spinner";
 
 interface ITableProp extends TableHTMLAttributes<HTMLTableElement> {}
@@ -16,9 +15,7 @@ interface ITableContainerProp extends ITableProp {
   isLoading?: boolean;
 }
 
-interface ITableCellProps extends TableHTMLAttributes<HTMLTableCellElement> {
-  small?: boolean;
-}
+interface ITableCellProps extends TableHTMLAttributes<HTMLTableCellElement> {}
 
 const Table = {
   Container: ({
@@ -33,9 +30,12 @@ const Table = {
     const tableRef = useRef<HTMLDivElement>(null);
 
     return (
-      <ScrollArea className="w-full pb-8" type="auto">
+      <div className={classNames("w-full pb-8", props.className)}>
         <div ref={tableRef} className="hide-scroll relative w-full">
-          <table {...props} className="w-full overflow-hidden !rounded-t-[8px]">
+          <table
+            {...props}
+            className="w-full overflow-hidden !rounded-t-[10px]"
+          >
             {children}
           </table>
 
@@ -51,8 +51,7 @@ const Table = {
             </div>
           )}
         </div>
-        <ScrollBar orientation="horizontal" />
-      </ScrollArea>
+      </div>
     );
   },
 
@@ -90,30 +89,25 @@ const Table = {
     );
   },
 
-  Data: ({ children, className, small, ...props }: ITableCellProps) => {
+  Data: ({ children, className, ...props }: ITableCellProps) => {
     return (
       <td
+        className={"h-[50px] max-w-[300px] border-b text-[14px] font-[300]"}
         {...props}
-        className={classNames(
-          "h-[56px] max-w-[300px] overflow-visible truncate border-b px-8 text-[14px]",
-
-          small && "!h-[52px] !px-4 !py-2",
-
-          className
-        )}
       >
-        {children}
+        <div className={classNames(className, "truncate pl-[16px]")}>
+          {children}
+        </div>
       </td>
     );
   },
 
-  Header: ({ children, small, ...props }: ITableCellProps) => {
+  Header: ({ children, ...props }: ITableCellProps) => {
     return (
       <th
         {...props}
         className={classNames(
-          "px-8 py-5 !text-black",
-          small && "!h-[52px] !px-4 !py-2",
+          "h-[50px] truncate pl-[16px] font-[450] !text-black",
           props.className
         )}
       >

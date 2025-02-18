@@ -39,6 +39,8 @@ interface IDropdownProp extends InputHTMLAttributes<HTMLInputElement> {
   showAsTags?: boolean;
 
   enableSearch?: boolean;
+
+  small?: boolean;
 }
 
 const Dropdown = ({
@@ -59,6 +61,8 @@ const Dropdown = ({
   showAsTags,
 
   enableSearch,
+
+  small,
 
   ...props
 }: IDropdownProp) => {
@@ -97,15 +101,16 @@ const Dropdown = ({
       <div
         ref={dropdownRef}
         className={classNames(
-          "relative w-full cursor-pointer rounded-[8px] border border-white p-3.5",
+          "relative w-full cursor-pointer rounded-lg border border-white px-3.5 py-2.5",
 
           className,
-          error && "!border-alert",
-          showAsTags && "!h-fit"
+          error && "!border-alert"
+          // showAsTags ? "p-3.5" : "px-3.5 py-2.5"
+          // small ? "h-11" : "h-[50px]"
         )}
       >
         <button
-          disabled={props.disabled}
+          disabled={props.disabled || props?.readOnly}
           type="button"
           onClick={() => setShowList((prev) => !prev)}
           className={classNames(
@@ -140,7 +145,7 @@ const Dropdown = ({
                 })
               ) : (
                 <input
-                  className="pointer-events-none mt-1 w-[90%] border-none bg-transparent font-medium outline-none placeholder:font-medium placeholder:text-white/50"
+                  className="pointer-events-none w-[90%] truncate border-none bg-transparent font-medium outline-none placeholder:font-medium placeholder:text-white/50"
                   type="text"
                   {...props}
                 />
@@ -160,7 +165,14 @@ const Dropdown = ({
             />
           )}
 
-          <img alt="arrow" src={arrow} className="flex-shrink-0" />
+          <img
+            alt="arrow"
+            src={arrow}
+            className={classNames(
+              "flex-shrink-0 transition-all",
+              showList && "rotate-180"
+            )}
+          />
         </button>
 
         <motion.ul
@@ -169,15 +181,13 @@ const Dropdown = ({
           transition={{ type: "spring", duration: 0.2, bounce: 0 }}
           className="hide-scroll absolute left-0 top-[100%] z-[999] mt-1.5 max-h-[400px] w-full min-w-[300px] space-y-2 overflow-hidden overflow-y-scroll rounded-[4px] bg-white/90 p-3.5 shadow-md backdrop-blur-lg"
         >
-          <div className="sticky">
-            {enableSearch && (
-              <SearchInput
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                dark
-              />
-            )}
-          </div>
+          {enableSearch && (
+            <SearchInput
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              dark
+            />
+          )}
 
           <div>
             {loading ? (

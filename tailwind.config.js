@@ -6,6 +6,22 @@ module.exports = {
   ],
   theme: {
     extend: {
+      screens: {
+        sm: "640px",
+        md: "768px",
+        lg: "1024px",
+        xl: "1440px",
+        "table-breakpoint": "1200px",
+      },
+      keyframes: {
+        fadeIn: {
+          "0%": { opacity: 0, transform: "translateY(50px)" },
+          "100%": { opacity: 1, transform: "translateY(0)" },
+        },
+      },
+      animation: {
+        fadeIn: "fadeIn 0.7s cubic-bezier(0.4, 0, 0.2, 1)", // Custom easing
+      },
       backgroundImage: {
         "body-gradient":
           "linear-gradient(205.47deg, #229B83 8.69%, #094548 44.83%, #011217 80.96%)",
@@ -23,6 +39,7 @@ module.exports = {
         warning: "#EBBC46",
         success: "#42ECA8",
         disabled: "#787878",
+        panel: "rgba(48,241,255,10%)",
       },
       fontSize: {
         "heading-1": "42px",

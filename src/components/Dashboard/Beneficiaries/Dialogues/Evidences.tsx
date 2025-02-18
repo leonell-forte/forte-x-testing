@@ -67,23 +67,23 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
             const { file, outcome, description, status, id } = item;
             return (
               <Table.Row key={index}>
-                <Table.Data className="max-w-[150px]">
-                  <button
+                <Table.Data className="w-[140px]">
+                  <p
                     onClick={(e) => {
                       e.stopPropagation();
                       handleAddOrViewEvidence?.(id);
                     }}
-                    className="link underline"
+                    className="link cursor-pointer truncate underline"
                   >
                     {file?.filename}
-                  </button>
+                  </p>
                 </Table.Data>
 
-                <Table.Data>{outcome?.name} </Table.Data>
+                <Table.Data className="w-[100px]">{outcome?.name} </Table.Data>
 
-                <Table.Data className="max-w-[100px]">{description}</Table.Data>
+                <Table.Data className="w-[140px]">{description}</Table.Data>
 
-                <Table.Data className="max-w-[100px]">
+                <Table.Data className="w-[120px]">
                   <span>{findLabelFromOptions(EVIDENCE_STATUS, status)}</span>
                 </Table.Data>
 
@@ -94,7 +94,11 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
                     target="_blank"
                     type="button"
                   >
-                    <img src={download} alt="download" className="min-w-4" />
+                    <img
+                      src={download}
+                      alt="download"
+                      className="flex-shrink-0"
+                    />
                   </Link>
                 </Table.Data>
               </Table.Row>

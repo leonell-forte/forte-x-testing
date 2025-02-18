@@ -1,16 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import organizationService from "api/organization";
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
-import pencil from "assets/images/icons/pencil.svg";
-
-import { useProfile } from "lib/hooks";
 import { IsAuthorized, Users } from "lib/role-permissions";
 import { IUser } from "lib/types/users";
 
 import UserDialogue from "components/Dashboard/Users/Dialogues/UserDialogue";
-import Button from "components/ui/button";
 import Table from "components/ui/table";
+import Cards from "components/ui/table-card";
 
 type TUsersTable = {
   list: IUser[];
@@ -23,8 +20,6 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
 
     queryFn: () => organizationService.list({ page: 1, listAll: true }),
   });
-
-  const profile = useProfile();
 
   const [modal, setModal] = useState<"user" | null>(null);
 
@@ -42,18 +37,6 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
     setModal("user");
   };
 
-  const showEdit = useCallback(
-    (id: string) => {
-      if (!profile?.role?.includes("user")) {
-        return IsAuthorized([Users.UPDATE]);
-      }
-      if (profile?.role?.includes("user") && String(profile.id) === id) {
-        return true;
-      }
-    },
-    [profile]
-  );
-
   return (
     <>
       {modal === "user" && (
@@ -68,25 +51,55 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
         />
       )}
 
-      <div className="pr-4">
+      <div className="table-breakpoint:hidden">
+        <Cards.Container isLoading={isLoading}>
+          {list.map((item, index) => {
+            const {
+              firstName,
+              lastName,
+              email,
+              phoneNumber,
+              role,
+              organization,
+            } = item;
+
+            return (
+              <Cards.Card
+                title={`${firstName} ${lastName}`}
+                onClick={
+                  IsAuthorized([Users.UPDATE])
+                    ? (e) => {
+                        e.stopPropagation();
+                        handleEditUser(item);
+                      }
+                    : undefined
+                }
+                key={index}
+              >
+                <Cards.Group cols={2}>
+                  <Cards.Details label="Email" value={email} />
+                  <Cards.Details label="Phone number" value={phoneNumber} />
+                  <Cards.Details label="Role" value={role} capitalize />
+                  <Cards.Details label="Organization" value={organization} />
+                </Cards.Group>
+              </Cards.Card>
+            );
+          })}
+        </Cards.Container>
+      </div>
+
+      <div className="hidden table-breakpoint:block">
         <Table.Container isEmpty={!list.length} isLoading={isLoading}>
           <Table.Head>
             <Table.Row>
               {TABLE_HEADER.map((key, headerIndex) => {
-                return (
-                  <Table.Header className="h-[64px]" key={headerIndex}>
-                    {key}
-                  </Table.Header>
-                );
+                return <Table.Header key={headerIndex}>{key}</Table.Header>;
               })}
-
-              <Table.Header className="h-[64px]"></Table.Header>
             </Table.Row>
           </Table.Head>
           <Table.Body>
             {list.map((item: IUser, bodyIndex: number) => {
               const {
-                id,
                 firstName,
                 lastName,
                 email,
@@ -101,55 +114,29 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
 
               return (
                 <Table.Row
-                  onClick={(e) => {
-                    e.stopPropagation();
-
-                    handleEditUser(item);
-                  }}
+                  onClick={
+                    IsAuthorized([Users.UPDATE])
+                      ? (e) => {
+                          e.stopPropagation();
+                          handleEditUser(item);
+                        }
+                      : undefined
+                  }
                   key={bodyIndex}
                 >
-                  <Table.Data>
-                    <p className="w-[120px] truncate">{firstName}</p>
+                  <Table.Data className="w-[140px]">{firstName}</Table.Data>
+
+                  <Table.Data className="w-[140px]">{lastName}</Table.Data>
+
+                  <Table.Data className="w-[200px]">{email}</Table.Data>
+
+                  <Table.Data className="w-[100px]">{phoneNumber}</Table.Data>
+
+                  <Table.Data className="w-[80px] capitalize">
+                    {formattedRole}
                   </Table.Data>
 
-                  <Table.Data>
-                    <p className="w-[120px] truncate">{lastName}</p>
-                  </Table.Data>
-
-                  <Table.Data>
-                    <p className="w-[190px] truncate">{email}</p>
-                  </Table.Data>
-
-                  <Table.Data>
-                    <p className="w-[150px] truncate">{phoneNumber}</p>
-                  </Table.Data>
-
-                  <Table.Data>
-                    <p className="w-[80px] truncate capitalize">
-                      {formattedRole}
-                    </p>
-                  </Table.Data>
-
-                  <Table.Data>
-                    <p className="w-[150px] truncate">{organization}</p>
-                  </Table.Data>
-
-                  <Table.Data>
-                    {showEdit(String(id)) && (
-                      <div className="flex justify-end">
-                        <Button
-                          eventName="Edit User"
-                          id={String(id)}
-                          buttonType="default"
-                          type="button"
-                          onClick={() => handleEditUser(item)}
-                          className="p-[3px]"
-                        >
-                          <img alt="pencil" src={pencil} />
-                        </Button>
-                      </div>
-                    )}
-                  </Table.Data>
+                  <Table.Data>{organization}</Table.Data>
                 </Table.Row>
               );
             })}

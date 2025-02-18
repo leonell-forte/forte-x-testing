@@ -51,11 +51,11 @@ export const useOutsideClick = (
   return null;
 };
 
-export const useEscapeKey = (callback: () => void): void => {
+export const useEscapeKey = (callback?: () => void): void => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        callback();
+        callback?.();
       }
     };
 
