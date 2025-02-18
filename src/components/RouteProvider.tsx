@@ -6,6 +6,7 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { IsAuthorized } from "lib/role-permissions";
 import { ROUTES } from "lib/routes";
 
+import { useInactivityTimeout } from "../lib/useInactivityTimeout";
 import AlertProvider from "./AlertProvider";
 import Layout from "./Dashboard/Layout";
 import { SearchConsole } from "./Layout/Header/SearchConsole";
@@ -13,6 +14,7 @@ import Providers from "./Providers";
 import Spinner from "./ui/spinner/spinner";
 
 const RouteProvider = () => {
+  useInactivityTimeout();
   const { data: user, isLoading } = useQuery({
     queryKey: ["profile"],
 
