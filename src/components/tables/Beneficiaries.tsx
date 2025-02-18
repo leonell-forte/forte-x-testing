@@ -334,7 +334,9 @@ const BeneficiariesTable = ({
 
                   <Table.Data className="w-[140px]">{provider}</Table.Data>
 
-                  <Table.Data className="w-[90px]">{status}</Table.Data>
+                  <Table.Data className="w-[90px] capitalize">
+                    {status.toLowerCase()}
+                  </Table.Data>
 
                   <Table.Data className="w-[110px]">
                     {formatDate(cohortStartDate || "", DEFAULT_DATE_FORMAT)}
