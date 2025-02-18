@@ -224,7 +224,7 @@ const BeneficiariesTable = ({
                       list?.length !== 0 && selectedIds.length === list.length
                     }
                     label="First name"
-                    labelClass="!text-black text-[14px] font-[450] pl-1"
+                    labelClass="!text-black text-[14px] font-[450]"
                     onChange={handleSelectAll}
                   />
                 </Table.Header>
