@@ -37,7 +37,7 @@ const Layout = ({
         <div className="flex flex-grow gap-4 px-5 pb-4">
           <SidePanel />
 
-          <div className="bg-panel relative flex-1 rounded-lg p-[17px]">
+          <div className="relative flex-1 rounded-lg bg-panel p-[17px]">
             {children}
           </div>
         </div>

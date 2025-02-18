@@ -12,8 +12,6 @@ import { PHONE_NUMBER } from "lib/regex";
 type PropTypes = TextFieldProps & {
   dark?: boolean;
 
-  small?: boolean;
-
   min?: number;
 
   wholeNumberOnly?: boolean;
@@ -27,15 +25,7 @@ type PropTypes = TextFieldProps & {
 
 const Input = forwardRef<HTMLDivElement, PropTypes>(
   (
-    {
-      dark,
-      small,
-      wholeNumberOnly,
-      phoneNUmber,
-      name,
-      readOnly = false,
-      ...props
-    },
+    { dark, wholeNumberOnly, phoneNUmber, name, readOnly = false, ...props },
     ref
   ) => {
     const [show, setShow] = useState(false);
@@ -99,10 +89,6 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
                 paddingLeft: "48px !important", // adjust padding for input text if needed
                 paddingRight: "45px",
               }),
-
-              // ...(small && {
-              //   height: "11px",
-              // }),
 
               ...(type === "file" && {
                 opacity: 0,

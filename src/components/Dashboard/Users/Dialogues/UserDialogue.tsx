@@ -59,8 +59,6 @@ const UserDialogue = ({
 
     control,
 
-    watch,
-
     setValue,
   } = form;
 

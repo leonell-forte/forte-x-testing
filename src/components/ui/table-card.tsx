@@ -61,7 +61,7 @@ const Cards = {
     return (
       <div
         className={classNames(
-          "animate-fadeIn bg-panel relative overflow-hidden rounded-lg p-4 text-[14px] transition-all",
+          "relative animate-fadeIn overflow-hidden rounded-lg bg-panel p-4 text-[14px] transition-all",
           className,
           props.onClick && "cursor-pointer hover:brightness-75"
         )}

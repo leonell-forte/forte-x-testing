@@ -39,8 +39,6 @@ interface IDropdownProp extends InputHTMLAttributes<HTMLInputElement> {
   showAsTags?: boolean;
 
   enableSearch?: boolean;
-
-  small?: boolean;
 }
 
 const Dropdown = ({
@@ -61,8 +59,6 @@ const Dropdown = ({
   showAsTags,
 
   enableSearch,
-
-  small,
 
   ...props
 }: IDropdownProp) => {
