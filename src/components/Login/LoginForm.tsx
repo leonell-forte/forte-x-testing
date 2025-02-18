@@ -52,7 +52,6 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
       amplitude.track("Login Form Submission");
 
       cookie.set("access_token", res.token, { path: "/" });
-
       cookie.set("refresh_token", res?.refreshToken, { path: "/" });
 
       queryClient.invalidateQueries({ queryKey: ["profile"] }); // to remove OTP temp
