@@ -217,7 +217,7 @@ const BeneficiariesTable = ({
           <Table.Head>
             <Table.Row>
               {setChecked ? (
-                <Table.Header className="!pl-2">
+                <Table.Header className="!pl-4">
                   <Checkbox
                     dark
                     checked={
@@ -289,7 +289,7 @@ const BeneficiariesTable = ({
                     setEditMode(false);
                   }}
                 >
-                  <Table.Data className="w-[100px] !pl-2">
+                  <Table.Data className="w-[100px] !pl-4">
                     <div className="flex items-center gap-2">
                       {setChecked ? (
                         <div

@@ -54,6 +54,7 @@ const Checkbox = ({
               paddingBlock: 0,
               paddingLeft: "8px",
               paddingRight: white ? "4px" : "8px",
+              marginInline: "0px !important",
             }}
             {...(white
               ? {

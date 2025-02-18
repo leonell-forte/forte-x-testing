@@ -115,7 +115,7 @@ const ViewProfileDialogue = ({
               return (
                 <Input
                   {...field}
-                  disabled={!onEdit}
+                  readOnly={!onEdit}
                   autoComplete="given-name"
                   placeholder="First name"
                 />
@@ -132,7 +132,7 @@ const ViewProfileDialogue = ({
               return (
                 <Input
                   {...field}
-                  disabled={!onEdit}
+                  readOnly={!onEdit}
                   autoComplete="family-name"
                   placeholder="Last name"
                 />
@@ -149,7 +149,7 @@ const ViewProfileDialogue = ({
               return (
                 <Input
                   {...field}
-                  disabled={!onEdit}
+                  readOnly={!onEdit}
                   phoneNUmber
                   autoComplete="tel"
                   placeholder="Phone number"
