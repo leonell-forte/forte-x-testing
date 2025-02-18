@@ -80,9 +80,10 @@ const Cards = {
       <div
         className={classNames(
           "grid gap-2",
-          cols && `grid-cols-1 sm:!grid-cols-${cols}`,
+
           className
         )}
+        style={{ gridTemplateColumns: `repeat(${cols || 1}, minmax(0, 1fr))` }}
         {...props}
       >
         {children}
