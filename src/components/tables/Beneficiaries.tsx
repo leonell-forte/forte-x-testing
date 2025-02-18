@@ -174,7 +174,7 @@ const BeneficiariesTable = ({
                 </Cards.Group>
 
                 <div className="mt-4 flex w-[85%] flex-col">
-                  <p className="text-[12px] text-gray-400">Evidences</p>
+                  <p className="text-[12px]">Evidences</p>
                   {!evidences.length
                     ? "No uploaded evidence yet"
                     : evidences?.map((item, index) => {

@@ -94,7 +94,7 @@ const Cards = {
   Details: ({ label, value, capitalize }: Details) => {
     return (
       <div>
-        <p className="text-[12px] font-extralight text-gray-400">{label}</p>
+        <p className="text-[12px] font-extralight">{label}</p>
         <p className={classNames("truncate", capitalize && "capitalize")}>
           {value || "-"}
         </p>
