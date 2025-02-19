@@ -602,6 +602,12 @@ const BeneficiariesForm = ({
                 onClick={() => {
                   if (beneficiaryData) {
                     setOnEdit(false);
+                    reset(
+                      beneficiaries.defaultValues({
+                        beneficiary: beneficiaryData,
+                      })
+                    );
+
                     return;
                   }
                   setShowPrompt(true);
