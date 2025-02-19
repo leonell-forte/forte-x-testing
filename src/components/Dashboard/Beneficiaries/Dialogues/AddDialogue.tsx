@@ -36,6 +36,8 @@ const AddDialogue = ({
 
   ...props
 }: IBeneficiariesDialogueProps) => {
+  const [beneficiaryId, setBeneficiaryId] = useState(id);
+
   const { setAlert } = useAlert();
 
   const [onEdit, setOnEdit] = useState<boolean>(!!editMode);
@@ -45,15 +47,15 @@ const AddDialogue = ({
   >(null);
 
   const { data: beneficiaryData, isLoading } = useQuery({
-    queryKey: ["specific-beneficiary", id],
+    queryKey: ["specific-beneficiary", beneficiaryId],
 
-    queryFn: () => beneficiariesService.getOne(id),
+    queryFn: () => beneficiariesService.getOne(beneficiaryId),
 
-    enabled: !!id,
+    enabled: !!beneficiaryId,
   });
 
   const { addBeneficiary } = useBeneficiaryMutation({
-    beneficiaryId: id,
+    beneficiaryId,
 
     successCallback: props.handleClose,
   });
@@ -95,7 +97,7 @@ const AddDialogue = ({
       {...props}
       confirmBeforeLeave={onEdit}
       handleClose={props.handleClose}
-      title={`${id ? `Beneficiary ID #${id}` : "Add beneficiary"}`}
+      title={`${beneficiaryId ? `Beneficiary ID #${beneficiaryId}` : "Add beneficiary"}`}
     >
       {isLoading ? (
         <div className="flex h-[470px] w-full items-center justify-center">
@@ -108,11 +110,13 @@ const AddDialogue = ({
             onEdit={onEdit}
             setOnEdit={setOnEdit}
             projectId={projectId}
-            handleClose={props.handleClose}
+            handleSuccess={(id) => {
+              setBeneficiaryId(id);
+            }}
             beneficiaryData={beneficiaryData}
           />
 
-          {id && (
+          {beneficiaryId && (
             <Evidences handleAddOrViewEvidence={handleAddOrViewEvidence} />
           )}
 
