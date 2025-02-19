@@ -73,13 +73,11 @@ class AuthService {
     return response;
   }
 
-  async resetPassword(values: z.infer<typeof password.schema>) {
-    const otp = sessionStorage.getItem("otp");
-
+  async resetPassword(values: z.infer<typeof password.schema>, email: string) {
     const response = await api.put("/authentication/forget-password", {
       ...values,
 
-      otp,
+      email,
     });
 
     return response;

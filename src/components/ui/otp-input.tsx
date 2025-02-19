@@ -8,7 +8,7 @@ interface IOTPInputProps {
 }
 
 const OTPInput = ({ onChange }: IOTPInputProps) => {
-  const [otp, setOtp] = useState(Array(4).fill("")); // Change 4 to your desired OTP length
+  const [otp, setOtp] = useState(Array(6).fill("")); // Change 4 to your desired OTP length
 
   const handleChange = (value: string, index: number) => {
     const newOtp = [...otp];
@@ -42,7 +42,7 @@ const OTPInput = ({ onChange }: IOTPInputProps) => {
   }, [otp, onChange]);
 
   return (
-    <div className="mx-auto flex w-fit gap-4 md:gap-[30px]">
+    <div className="mx-auto flex w-fit gap-2 sm:gap-[10px]">
       {otp.map((digit, index) => (
         <div key={index} className="flex items-center justify-center">
           <input
@@ -53,7 +53,7 @@ const OTPInput = ({ onChange }: IOTPInputProps) => {
             onChange={(e) => handleChange(e.target.value, index)}
             maxLength={1}
             className={classNames(
-              "h-10 w-10 rounded-xl bg-white !bg-opacity-[50%] text-center text-[24px] text-forest-green outline-none md:h-[76px] md:w-[76px] md:rounded-[20px] md:text-[40px]",
+              "aspect-square w-full rounded-xl bg-white !bg-opacity-[50%] text-center !text-[24px] text-forest-green outline-none md:rounded-xl md:!text-[40px]",
 
               digit && "!bg-mint"
             )}

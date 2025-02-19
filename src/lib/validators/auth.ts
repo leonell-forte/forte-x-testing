@@ -40,6 +40,7 @@ export const password = {
       confirmPassword: z
         .string()
         .min(8, "Password must be at least 8 characters long"),
+      otp: z.string().min(6, "Please enter your otp"),
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: "Passwords do not match",

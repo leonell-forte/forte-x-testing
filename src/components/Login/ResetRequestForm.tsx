@@ -98,7 +98,7 @@ const ResetRequestForm = ({ handleNext }: ILoginProps) => {
 
       <div className="mx-auto flex max-w-[22rem] flex-col gap-4">
         <Button loading={loading} type="submit">
-          Get 4-digit code
+          Get 6-digit code
         </Button>
 
         <Button buttonType="tertiary" onClick={() => navigate("/")}>
