@@ -1,7 +1,6 @@
 "use client";
 
 import classNames from "classnames";
-import { motion } from "framer-motion";
 import { ReactNode, useRef } from "react";
 
 import close from "assets/images/icons/close.svg";
@@ -72,10 +71,7 @@ const Dialogue = ({
           handleClose?.();
         }}
       />
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ type: "spring", duration: 0.4 }}
+      <div
         className={classNames(
           "fixed left-0 top-0 z-40 !mt-0 flex h-screen w-screen items-start justify-center overflow-y-auto bg-[#011217] bg-opacity-[90%] px-0 py-0 md:px-4 md:py-12",
 
@@ -110,7 +106,7 @@ const Dialogue = ({
 
           <div className="mt-12">{children}</div>
         </div>
-      </motion.div>
+      </div>
     </>
   ) : (
     <></>
