@@ -93,9 +93,9 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
               }),
 
               ...(type === "search" && {
-                height: "22px",
-                paddingLeft: "48px !important", // adjust padding for input text if needed
-                paddingRight: "45px",
+                height: "21px",
+                paddingLeft: "40px !important", // adjust padding for input text if needed
+                paddingRight: "40px",
               }),
 
               ...(type === "file" && {

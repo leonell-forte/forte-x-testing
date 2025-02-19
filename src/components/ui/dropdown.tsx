@@ -2,8 +2,7 @@ import { capitalize } from "@mui/material";
 import classNames from "classnames";
 import { motion } from "framer-motion";
 import { InputHTMLAttributes, useMemo, useRef, useState } from "react";
-
-import arrow from "assets/images/icons/chevron.svg";
+import { HiChevronDown } from "react-icons/hi";
 
 import { useOutsideClick } from "lib/hooks";
 import { cn } from "lib/utils";
@@ -97,10 +96,10 @@ const Dropdown = ({
       <div
         ref={dropdownRef}
         className={classNames(
-          "relative w-full cursor-pointer rounded-lg border border-white px-3.5 py-2.5",
+          "relative w-full cursor-pointer rounded-lg border px-3.5 py-2.5",
 
           className,
-          error && "!border-alert"
+          props.disabled ? "border-disabled" : "border-white"
           // showAsTags ? "p-3.5" : "px-3.5 py-2.5"
           // small ? "h-11" : "h-[50px]"
         )}
@@ -161,12 +160,11 @@ const Dropdown = ({
             />
           )}
 
-          <img
-            alt="arrow"
-            src={arrow}
+          <HiChevronDown
             className={classNames(
-              "flex-shrink-0 transition-all",
-              showList && "rotate-180"
+              "h-auto w-[20px] flex-shrink-0 transition-all",
+              showList && "rotate-180",
+              props.disabled ? "fill-disabled" : "fill-white"
             )}
           />
         </button>

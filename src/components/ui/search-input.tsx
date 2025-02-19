@@ -1,10 +1,8 @@
 import { TextFieldProps } from "@mui/material";
 import classNames from "classnames";
+import { HiSearch, HiX } from "react-icons/hi";
 
-import close from "assets/images/icons/close.svg";
-import darkClose from "assets/images/icons/dark-close.svg";
-import darkSearch from "assets/images/icons/dark-search.svg";
-import search from "assets/images/icons/search.svg";
+import { cn } from "lib/utils";
 
 import Input from "./input";
 
@@ -29,7 +27,9 @@ const SearchInput = ({ dark, onClear, containerClass, ...props }: IProps) => {
         className="absolute left-4 z-10"
         disabled={!props.value}
       >
-        <img alt="search" src={dark ? darkSearch : search} />
+        <HiSearch
+          className={cn("h-auto w-[15px]", dark ? "fill-black" : "fill-white")}
+        />
       </button>
 
       <Input
@@ -48,10 +48,11 @@ const SearchInput = ({ dark, onClear, containerClass, ...props }: IProps) => {
           }}
           className="flex items-center justify-center"
         >
-          <img
-            alt="search"
-            src={dark ? darkClose : close}
-            className="absolute right-[15.33px]"
+          <HiX
+            className={cn(
+              "absolute right-[15.33px] w-[15px]",
+              dark ? "fill-black" : "fill-white"
+            )}
           />
         </button>
       )}

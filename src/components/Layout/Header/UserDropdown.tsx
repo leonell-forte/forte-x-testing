@@ -3,6 +3,7 @@ import authService from "api/auth";
 import organizationService from "api/organization";
 import { motion } from "framer-motion";
 import { MouseEvent, useMemo, useRef, useState } from "react";
+import { HiUser } from "react-icons/hi2";
 
 import arrow from "assets/images/icons/chevron.svg";
 
@@ -64,13 +65,15 @@ const UserDropdown = ({ user }: IProp) => {
       <div ref={dropdownRef} className="relative z-30">
         <button
           onClick={() => setShowDropdown((prev) => !prev)}
-          className="flex h-[42px] w-[80px] cursor-pointer items-center justify-between rounded-[50px] bg-white bg-opacity-[30%] pl-1.5 pr-4 transition-all hover:brightness-[.8] md:w-[184px]"
+          className="group hidden h-[37px] w-[184px] cursor-pointer items-center justify-between overflow-hidden rounded-[50px] bg-white bg-opacity-[30%] pl-1.5 pr-4 transition-all duration-500 hover:bg-panel md:flex"
         >
-          <div className="flex items-center gap-1.5">
-            <div className="h-[28px] w-[28px] flex-shrink-0 rounded-full bg-[#D9D9D9]"></div>
+          <div className="flex items-center gap-2.5">
+            <div className="-ml-1.5 flex h-[37px] w-[37px] flex-shrink-0 items-center rounded-full bg-mint">
+              <HiUser className="m-auto h-auto w-6" />
+            </div>
 
             <div className="hidden w-full items-center md:flex">
-              <p className="max-w-[100px] overflow-hidden text-ellipsis whitespace-nowrap font-medium text-forest-green">
+              <p className="max-w-[100px] overflow-hidden text-ellipsis whitespace-nowrap text-forest-green transition duration-500 group-hover:text-white">
                 {user?.firstName}
               </p>
             </div>
@@ -89,10 +92,10 @@ const UserDropdown = ({ user }: IProp) => {
               : { height: 0, opacity: 0 }
           }
           transition={{ type: "spring", duration: 0.4, bounce: 0 }}
-          className="absolute left-0 top-10 w-full overflow-hidden rounded-[8px] bg-white px-[10px] py-[9.5px]"
+          className="absolute left-0 top-12 w-full overflow-hidden rounded-[4px] bg-white p-2.5 shadow-md backdrop-blur-lg"
         >
           <button onClick={handleViewProfile} className="w-full text-left">
-            <li className="flex h-[42px] items-center rounded-[8px] px-2.5 py-1.5 font-medium text-black transition-all hover:bg-mint">
+            <li className="flex items-center p-2 text-black transition duration-500 hover:text-mint">
               Profile
             </li>
           </button>
@@ -102,7 +105,7 @@ const UserDropdown = ({ user }: IProp) => {
             onClick={handleLogout}
             className="w-full text-left"
           >
-            <li className="flex h-[42px] items-center rounded-[8px] px-2.5 py-1.5 font-medium text-black transition-all hover:bg-mint">
+            <li className="flex items-center rounded-[8px] p-2 text-black transition duration-500 hover:text-mint">
               Logout
             </li>
           </button>
