@@ -165,7 +165,12 @@ const UserDialogue = ({
             control={control}
             render={({ field }) => {
               return (
-                <Input {...field} autoComplete="email" placeholder="Email" />
+                <Input
+                  {...field}
+                  autoComplete="email"
+                  placeholder="Email"
+                  disabled={profile?.email === field.value}
+                />
               );
             }}
           />
