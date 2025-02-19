@@ -42,7 +42,10 @@ const SearchInput = ({ dark, onClear, containerClass, ...props }: IProps) => {
       {!!props.value && (
         <button
           type="button"
-          onClick={onClear}
+          onClick={(e) => {
+            e.stopPropagation();
+            onClear?.();
+          }}
           className="flex items-center justify-center"
         >
           <img
