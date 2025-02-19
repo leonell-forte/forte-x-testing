@@ -182,6 +182,7 @@ const Dropdown = ({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               dark
+              onClear={() => setSearch("")}
             />
           )}
 
