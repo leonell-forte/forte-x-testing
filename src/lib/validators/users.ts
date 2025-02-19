@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { IUser, UserRoleValues } from "../types/users";
+import { IUser, UserRoleValues, UserStatusValues } from "../types/users";
 
 export const users = {
   defaultValues: (user?: IUser) => {
@@ -16,6 +16,8 @@ export const users = {
       organizationId: user?.organization?.toString() || "",
 
       role: (user?.role || "") as IUser["role"],
+
+      status: user?.status || "invited",
     };
 
     if (user) {
@@ -40,8 +42,12 @@ export const users = {
 
     organizationId: z.string().min(1, "Organization is a required field"),
 
-    role: z.enum([...UserRoleValues, "read-only"], {
+    role: z.enum([...UserRoleValues], {
       message: "Role is a required field",
+    }),
+
+    status: z.enum([...UserStatusValues], {
+      message: "Status is a required field",
     }),
   }),
 };

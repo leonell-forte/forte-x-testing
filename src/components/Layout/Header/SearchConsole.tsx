@@ -41,9 +41,10 @@ export const SearchConsole = () => {
               e.preventDefault();
               navigate(`/search/${q}`);
             }}
+            className="search-console"
           >
             <SearchInput
-              className="!hidden flex-shrink-0 sm:!block md:w-[286px]"
+              containerClass="hidden sm:flex md:w-[286px]"
               value={q}
               onChange={(e) => setQ(e.target.value)}
               onClear={() => setQ("")}

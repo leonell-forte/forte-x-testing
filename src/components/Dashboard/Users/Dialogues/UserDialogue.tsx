@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { capitalize } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import userService from "api/users";
 import { useEffect, useMemo } from "react";
@@ -8,7 +9,7 @@ import { ROLES } from "lib/constants";
 import { useProfile } from "lib/hooks";
 import useUserMutation from "lib/mutations/users";
 import { IOrganization } from "lib/types/organizations";
-import { UserFieldTypes } from "lib/types/users";
+import { UserFieldTypes, UserStatusValues } from "lib/types/users";
 import { users } from "lib/validators/users";
 
 import { useConfirmPrompt } from "components/ui/alert/confirm-prompt";
@@ -213,7 +214,6 @@ const UserDialogue = ({
               return (
                 <Input
                   {...field}
-                  phoneNUmber
                   autoComplete="tel"
                   placeholder="Phone number"
                 />
@@ -266,6 +266,32 @@ const UserDialogue = ({
               />
             </div>
           </Tooltip>
+
+          <Controller
+            name="status"
+            label="Status"
+            required
+            control={control}
+            render={({ field }) => {
+              return (
+                <Dropdown
+                  value={[...UserStatusValues, "invited"].find((item) =>
+                    field.value?.includes(item)
+                  )}
+                  handleSelect={(val) => field.onChange(val)}
+                  options={UserStatusValues.filter(
+                    (item) => item !== "invited"
+                  ).map((item) => ({
+                    label: capitalize(item),
+                    value: item,
+                  }))}
+                  placeholder="Status"
+                  disabled={field.value === "invited"}
+                />
+              );
+            }}
+          />
+
           <div className="!mt-10 flex justify-end gap-4">
             <Button onClick={() => setShowPrompt(true)} buttonType="secondary">
               Cancel

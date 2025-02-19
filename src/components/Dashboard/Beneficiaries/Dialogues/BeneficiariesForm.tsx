@@ -43,7 +43,7 @@ interface IProps {
 
   setOnEdit: Dispatch<SetStateAction<boolean>>;
 
-  handleClose?: () => void;
+  handleSuccess?: (id?: number) => void;
 
   beneficiaryData?: IBeneficiaries;
 }
@@ -53,7 +53,7 @@ const BeneficiariesForm = ({
 
   projectId,
 
-  handleClose,
+  handleSuccess,
 
   onEdit,
 
@@ -168,16 +168,18 @@ const BeneficiariesForm = ({
     [organizationList, contractList, selectedContract]
   );
 
-  const close = () => {
+  const onSuccess = (id?: number) => {
     reset();
 
-    handleClose?.();
+    setOnEdit(false);
+
+    handleSuccess?.(id);
   };
 
   const { addBeneficiary, isPending } = useBeneficiaryMutation({
     beneficiaryId: id,
 
-    successCallback: close,
+    successCallback: (id) => onSuccess(id),
   });
 
   const onSubmit = async (values: IBeneficiariesFieldValues) => {
@@ -225,12 +227,7 @@ const BeneficiariesForm = ({
             control={control}
             name="phone"
             render={({ field }) => (
-              <Input
-                {...field}
-                phoneNUmber
-                readOnly={!onEdit}
-                placeholder="Phone"
-              />
+              <Input {...field} readOnly={!onEdit} placeholder="Phone" />
             )}
           />
 
@@ -602,6 +599,12 @@ const BeneficiariesForm = ({
                 onClick={() => {
                   if (beneficiaryData) {
                     setOnEdit(false);
+                    reset(
+                      beneficiaries.defaultValues({
+                        beneficiary: beneficiaryData,
+                      })
+                    );
+
                     return;
                   }
                   setShowPrompt(true);

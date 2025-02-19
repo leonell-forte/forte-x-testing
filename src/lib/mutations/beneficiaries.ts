@@ -13,7 +13,7 @@ import { IBeneficiaries } from "../types/beneficiaries";
 interface IBeneficiaryMutationProps {
   beneficiaryId?: number;
 
-  successCallback?: () => void;
+  successCallback?: (id?: number) => void;
 }
 
 export const useBeneficiaryMutation = ({
@@ -66,7 +66,7 @@ export const useBeneficiaryMutation = ({
         () => addedBeneficiary.data.data
       );
 
-      successCallback?.();
+      successCallback?.(addedBeneficiary.data.data?.id);
 
       setAlert({
         title: "Success!",

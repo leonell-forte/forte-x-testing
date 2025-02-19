@@ -244,7 +244,6 @@ const Filters = ({
           label: item.name,
           value: item.name,
         }))}
-        readOnly
         isMultiSelect
       />
 
