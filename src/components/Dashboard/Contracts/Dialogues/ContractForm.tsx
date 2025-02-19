@@ -79,6 +79,8 @@ const ContractForm = ({
     setError,
 
     reset,
+
+    formState: { isDirty },
   } = form;
 
   // sets contract form default values
@@ -472,7 +474,13 @@ const ContractForm = ({
                 </Button>
               ) : (
                 <Button
-                  onClick={() => setShowPrompt(true)}
+                  onClick={() => {
+                    if (isDirty) {
+                      setShowPrompt(true);
+                      return;
+                    }
+                    close();
+                  }}
                   buttonType="secondary"
                 >
                   Cancel

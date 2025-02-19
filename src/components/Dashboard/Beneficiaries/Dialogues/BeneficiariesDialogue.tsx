@@ -3,6 +3,7 @@ import { useState } from "react";
 import { IDialogueProps } from "components/ui/dialogue/dialogue";
 
 import AddDialogue from "./AddDialogue";
+import { BeneficiariesProvider } from "./BeneficiariesContext";
 import EvidencesDialogue from "./EvidencesDialogue";
 
 type ModalLabelType = "beneficiaries" | "evidence";
@@ -70,7 +71,7 @@ const BeneficiariesDialogue = ({
     }
   };
 
-  return renderModal(modal);
+  return <BeneficiariesProvider>{renderModal(modal)}</BeneficiariesProvider>;
 };
 
 export default BeneficiariesDialogue;

@@ -49,7 +49,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
   const { data: project, isLoading: isProjectLoading } = useQuery({
     queryKey: ["specific-project", projectId],
 
-    queryFn: () => projectService.getOne(projectId!.toString()),
+    queryFn: () => projectService.getOne(String(projectId || "")),
 
     enabled: !!projectId,
 
@@ -61,7 +61,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
       project?.outcomes.map((item) => ({
         label: item.name,
 
-        value: item.id.toString(),
+        value: String(item.id || ""),
       })) || [],
     [project]
   );
@@ -79,7 +79,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
 
     setError,
 
-    formState: { errors },
+    formState: { errors, isDirty },
 
     reset,
 
@@ -111,7 +111,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
     <Dialogue
       {...props}
       title={id ? `Evidence ID ${id}` : "Add evidence"}
-      confirmBeforeLeave={onEdit}
+      confirmBeforeLeave={isDirty}
     >
       <div className="space-y-[30px]">
         {evidenceLoading ? (
@@ -147,7 +147,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
                         loading={isProjectLoading}
                         value={findLabelFromOptions(
                           outcomes,
-                          field.value?.toString()
+                          String(field.value || "")
                         )}
                         handleSelect={(val) => {
                           setValue("outcomeId", val as string);

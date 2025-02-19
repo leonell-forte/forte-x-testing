@@ -59,6 +59,8 @@ const OrganizationDialogue = ({
     reset,
 
     control,
+
+    formState: { isDirty },
   } = form;
 
   // prefill initial value from selected org
@@ -94,7 +96,7 @@ const OrganizationDialogue = ({
 
   return (
     <Dialogue
-      confirmBeforeLeave
+      confirmBeforeLeave={isDirty}
       isVisible={isVisible}
       handleClose={onClose}
       title={orgId ? "Edit organization" : "Add organization"}
@@ -253,11 +255,20 @@ const OrganizationDialogue = ({
           />
 
           <div className="!mt-10 flex justify-end gap-4">
-            <Button onClick={() => setShowPrompt(true)} buttonType="secondary">
+            <Button
+              onClick={() => {
+                if (isDirty) {
+                  setShowPrompt(true);
+                  return;
+                }
+                onClose();
+              }}
+              buttonType="secondary"
+            >
               Cancel
             </Button>
 
-            <Button loading={isPending} type="submit">
+            <Button loading={isPending} type="submit" disabled={!isDirty}>
               Save
             </Button>
           </div>

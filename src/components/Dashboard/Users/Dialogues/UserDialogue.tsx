@@ -61,6 +61,8 @@ const UserDialogue = ({
     control,
 
     setValue,
+
+    formState: { isDirty },
   } = form;
 
   useEffect(() => {
@@ -134,10 +136,11 @@ const UserDialogue = ({
   const filteredRoles = useMemo(
     () =>
       ROLES.filter((role) => {
-        if (isNonForteUser) return role.value !== "owner";
+        if (isNonForteUser || myRole?.includes("admin"))
+          return role.value !== "owner";
         return true;
       }),
-    [isNonForteUser]
+    [isNonForteUser, myRole]
   );
 
   useEffect(() => {
@@ -148,7 +151,7 @@ const UserDialogue = ({
 
   return (
     <Dialogue
-      confirmBeforeLeave
+      confirmBeforeLeave={isDirty}
       isVisible={isVisible}
       handleClose={close}
       title={userId ? "Edit user" : "Add user"}
@@ -293,11 +296,20 @@ const UserDialogue = ({
           />
 
           <div className="!mt-10 flex justify-end gap-4">
-            <Button onClick={() => setShowPrompt(true)} buttonType="secondary">
+            <Button
+              onClick={() => {
+                if (isDirty) {
+                  setShowPrompt(true);
+                  return;
+                }
+                close();
+              }}
+              buttonType="secondary"
+            >
               Cancel
             </Button>
 
-            <Button loading={isPending} type="submit">
+            <Button loading={isPending} type="submit" disabled={!isDirty}>
               Save
             </Button>
           </div>
