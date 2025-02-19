@@ -40,7 +40,7 @@ class UserService {
       "user.role": {
         value: role!,
 
-        exact: true,
+        exact: false,
       },
 
       '"organization"."name"': {

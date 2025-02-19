@@ -61,7 +61,12 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
               phoneNumber,
               role,
               organization,
+              status,
             } = item;
+
+            const formattedRole = (role?.split(".")?.[1] || role)
+              ?.split("-")
+              .join(" ");
 
             return (
               <Cards.Card
@@ -79,7 +84,12 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
                 <Cards.Group cols={2}>
                   <Cards.Details label="Email" value={email} />
                   <Cards.Details label="Phone number" value={phoneNumber} />
-                  <Cards.Details label="Role" value={role} capitalize />
+                  <Cards.Details
+                    label="Role"
+                    value={formattedRole}
+                    capitalize
+                  />
+                  <Cards.Details label="Status" value={status} capitalize />
                   <Cards.Details label="Organization" value={organization} />
                 </Cards.Group>
               </Cards.Card>
@@ -106,6 +116,7 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
                 phoneNumber,
                 role,
                 organization,
+                status,
               } = item;
 
               const formattedRole = (role?.split(".")?.[1] || role)
@@ -136,6 +147,10 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
                     {formattedRole}
                   </Table.Data>
 
+                  <Table.Data className="w-[80px] capitalize">
+                    {status}
+                  </Table.Data>
+
                   <Table.Data>{organization}</Table.Data>
                 </Table.Row>
               );
@@ -155,5 +170,6 @@ const TABLE_HEADER = [
   "Email",
   "Phone",
   "Role",
+  "Status",
   "Organization",
 ];

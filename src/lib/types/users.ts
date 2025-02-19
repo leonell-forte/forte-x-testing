@@ -19,7 +19,9 @@ export const UserRoleValues = [
 
 export type UserRoleType = (typeof UserRoleValues)[number];
 
-export type UserStatus = "active" | "inactive";
+export const UserStatusValues = ["active", "suspended", "invited"] as const;
+
+export type UserStatus = (typeof UserStatusValues)[number];
 
 export interface IUser {
   id?: string;
@@ -41,6 +43,8 @@ export interface IUser {
   createdAt?: Date;
 
   updatedAt?: Date;
+
+  status?: UserStatus;
 }
 
 export type UserFieldTypes = z.infer<typeof users.schema>;
