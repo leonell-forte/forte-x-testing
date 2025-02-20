@@ -1,4 +1,5 @@
-import { useProfile } from "./hooks";
+import { useProfile } from "components/ProfileContext";
+
 import { UserRoleType } from "./types/users";
 
 export enum Beneficiaries {
@@ -164,7 +165,9 @@ const ROLES: Record<
 type Permission = (typeof ROLES)[UserRoleType] extends (infer U)[] ? U : never;
 
 export const IsAuthorized = (permissions: Permission[]): boolean => {
-  const currentUser = useProfile();
+  const { profile: currentUser } = useProfile();
+
+  if (permissions.length === 0) return true;
   if (!currentUser?.role) return false;
 
   return ROLES?.[currentUser.role]?.some((item: Permission) =>

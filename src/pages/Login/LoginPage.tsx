@@ -1,26 +1,15 @@
-import { useQuery } from "@tanstack/react-query";
-import authService from "api/auth";
 import { useCallback, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 import jobs from "assets/images/login/spot-choiceofjobs.png";
+
+import { cookie } from "lib/hooks";
 
 import LoginForm from "components/Login/LoginForm";
 import OTPForm from "components/Login/OTPForm";
 import Card from "components/ui/card";
-import Spinner from "components/ui/spinner/spinner";
 
-const LoginPage = () => {
-  const { isLoading } = useQuery({
-    queryKey: ["check"],
-
-    queryFn: authService.check,
-
-    retry: 1,
-
-    refetchOnWindowFocus: false,
-  });
-
+const Login = () => {
   const navigate = useNavigate();
 
   const [step] = useState(0);
@@ -49,13 +38,6 @@ const LoginPage = () => {
     },
     [navigate]
   );
-
-  if (isLoading)
-    return (
-      <div className="flex h-screen w-screen items-center justify-center">
-        <Spinner />
-      </div>
-    );
 
   return (
     <div className="main-container grid min-h-screen grid-cols-1 items-center gap-12 px-10 lg:grid-cols-2 lg:py-10 xl:gap-[70px]">
@@ -90,6 +72,12 @@ const LoginPage = () => {
       </Card>
     </div>
   );
+};
+
+const LoginPage = () => {
+  const token = cookie.get("access_token");
+  if (token) return <Navigate to="/beneficiaries" />;
+  return <Login />;
 };
 
 export default LoginPage;

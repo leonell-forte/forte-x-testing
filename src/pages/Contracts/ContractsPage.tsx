@@ -19,6 +19,7 @@ import { IContract, IContractFilters, StatusType } from "lib/types/contracts";
 import { IProject } from "lib/types/projects";
 import { findLabelFromOptions } from "lib/utils";
 
+import { ContractsProvider } from "components/Dashboard/Contracts/Dialogues/ContractContext";
 import ContractDialogue from "components/Dashboard/Contracts/Dialogues/ContractDialogue";
 import ContractsTable from "components/tables/Contracts";
 import Button from "components/ui/button";
@@ -133,7 +134,7 @@ const ContractsPage = () => {
   }, [modal, contractId, filters]);
 
   return (
-    <>
+    <ContractsProvider>
       {renderModal()}
 
       <div className="flex h-full flex-col space-y-2.5">
@@ -189,7 +190,7 @@ const ContractsPage = () => {
           )}
         </div>
       </div>
-    </>
+    </ContractsProvider>
   );
 };
 

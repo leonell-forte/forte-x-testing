@@ -5,6 +5,7 @@ import userService from "api/users";
 import { IUser, UserFieldTypes } from "lib/types/users";
 import { formatErrorMessage } from "lib/utils";
 
+import { refreshProfile } from "components/ProfileContext";
 import { queryClient } from "components/QueryProvider";
 
 import { useAlert } from "../hooks";
@@ -48,9 +49,7 @@ const useUserMutation = ({
 
       // to prevent upating profile when adding user
       if (isProfile && userId) {
-        queryClient.setQueryData(["profile"], () => {
-          return addedUser.data.data;
-        });
+        refreshProfile();
       }
 
       queryClient.setQueryData(["users"], (old: { items: IUser[] }) => {
@@ -88,16 +87,13 @@ const useUserMutation = ({
         context?.previousData
       );
 
-      queryClient.setQueryData(["profile"], context?.previousData);
-
       queryClient.setQueryData(["users"], context?.previousUsers);
     },
 
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["specific-user", userId] });
 
-      queryClient.invalidateQueries({ queryKey: ["profile"] });
-
+      refreshProfile();
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },
   });

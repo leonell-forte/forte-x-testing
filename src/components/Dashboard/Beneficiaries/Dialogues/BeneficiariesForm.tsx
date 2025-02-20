@@ -611,7 +611,7 @@ const BeneficiariesForm = ({
                 Cancel
               </Button>
 
-              <Button type="submit" loading={isPending}>
+              <Button type="submit" loading={isPending} disabled={!isDirty}>
                 Save
               </Button>
             </>

@@ -8,15 +8,14 @@ import { HiUser } from "react-icons/hi2";
 import arrow from "assets/images/icons/chevron.svg";
 
 import { useOutsideClick } from "lib/hooks";
-import { ProfileType } from "lib/types/profile";
+
+import { useProfile } from "components/ProfileContext";
 
 import ViewProfileDialogue from "./ViewProfileDialogue";
 
-interface IProp {
-  user: ProfileType;
-}
+const UserDropdown = () => {
+  const { profile: user } = useProfile();
 
-const UserDropdown = ({ user }: IProp) => {
   const [showModal, setShowModal] = useState(false);
 
   const { data: organizationList } = useQuery({
@@ -54,7 +53,7 @@ const UserDropdown = ({ user }: IProp) => {
       {showModal && user && (
         <ViewProfileDialogue
           organizations={organizations}
-          userId={user.id.toString()}
+          userId={String(user.id)}
           isVisible={showModal}
           handleClose={() => {
             setShowModal(false);

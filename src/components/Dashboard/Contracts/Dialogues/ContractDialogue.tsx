@@ -7,6 +7,7 @@ import { Contracts, IsAuthorized } from "lib/role-permissions";
 import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
 import Spinner from "components/ui/spinner/spinner";
 
+import { useContractsContext } from "./ContractContext";
 import ContractForm from "./ContractForm";
 import MarkContract from "./MarkContract";
 
@@ -27,6 +28,7 @@ const ContractDialogue = ({
 
   handleClose,
 }: IContractDialogueProps) => {
+  const { showPrompt } = useContractsContext();
   const { data: contractDetails, isLoading: contractDetailsLoading } = useQuery(
     {
       queryKey: ["specific-contract", id],
@@ -42,17 +44,6 @@ const ContractDialogue = ({
   const [onEdit, setOnEdit] = useState(false);
 
   const [component, setComponent] = useState<Component>("form");
-
-  useEffect(() => {
-    // determines if form is on edit mode or not. if id is present and contract has draft status, it should automatically have edit mode on.
-    // if id is not present, edit mode should automatically be on for adding contract.
-    setOnEdit(
-      id
-        ? contractDetails?.status === "DRAFT" &&
-            IsAuthorized([Contracts.UPDATE])
-        : true
-    );
-  }, [contractDetails?.status, id]);
 
   const renderComponent = (component: Component) => {
     switch (component) {
@@ -79,6 +70,8 @@ const ContractDialogue = ({
     }
   };
 
+  const canEdit = IsAuthorized([Contracts.UPDATE]);
+
   const renderTitle = useCallback(() => {
     switch (component) {
       case "form":
@@ -88,9 +81,15 @@ const ContractDialogue = ({
     }
   }, [component, id, onEdit]);
 
+  useEffect(() => {
+    // determines if form is on edit mode or not. if id is present and contract has draft status, it should automatically have edit mode on.
+    // if id is not present, edit mode should automatically be on for adding contract.
+    setOnEdit(id ? contractDetails?.status === "DRAFT" && canEdit : true);
+  }, [contractDetails?.status, id, canEdit]);
+
   return (
     <Dialogue
-      confirmBeforeLeave={onEdit}
+      confirmBeforeLeave={showPrompt}
       center={component === "mark"}
       isVisible={isVisible}
       handleClose={handleClose}

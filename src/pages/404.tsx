@@ -1,6 +1,6 @@
 const ErrorPage = () => {
   return (
-    <div className="flex h-screen items-center justify-center">
+    <div className="flex h-full items-center justify-center">
       <div className="text-center">
         <p className="text-[40px] font-bold">404</p>
 

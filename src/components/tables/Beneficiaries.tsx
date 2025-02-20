@@ -175,7 +175,7 @@ const BeneficiariesTable = ({
 
                 <div className="mt-4 flex w-[85%] flex-col">
                   <p className="text-[12px]">Evidences</p>
-                  {!evidences.length
+                  {!evidences?.length
                     ? "No uploaded evidence yet"
                     : evidences?.map((item, index) => {
                         return (
