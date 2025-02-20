@@ -54,6 +54,8 @@ class UserService {
 
     params.append("$pageNum", page.toString());
 
+    params.append("$orderBy", `"user"."createdAt" desc`);
+
     if (generateODataQuery(filter)) {
       params.append("$filter", generateODataQuery(filter));
     }

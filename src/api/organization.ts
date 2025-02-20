@@ -77,6 +77,8 @@ class OrganizationService {
       },
     };
 
+    params.append("$orderBy", '"organizations"."createdAt" desc');
+
     if (generateODataQuery(searchFilter)) {
       params.append("$filter", generateODataQuery(searchFilter));
     }

@@ -90,6 +90,9 @@ const OrganizationsPage = () => {
             orgId={selectedOrg}
             isVisible={modal === "org"}
             handleClose={close}
+            addSuccessCallback={() => {
+              setPage(1);
+            }}
           />
         );
 
@@ -118,7 +121,7 @@ const OrganizationsPage = () => {
           </Dialogue>
         );
     }
-  }, [modal, filters, selectedOrg]);
+  }, [modal, filters, selectedOrg, setPage]);
 
   return (
     <>

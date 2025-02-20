@@ -96,6 +96,8 @@ const BeneficiariesPage = () => {
     setModal("");
 
     setBeneficiaryId(null);
+
+    setPage(1);
   };
 
   // download evidence function

@@ -104,6 +104,8 @@ class BeneficiariesService {
 
     params.append("$pageSize", DEFAULT_PAGE_SIZE);
 
+    params.append("$orderBy", `"beneficiary"."createdAt" desc`);
+
     if (generateODataQuery(filterData)) {
       params.append("$filter", generateODataQuery(filterData));
     }

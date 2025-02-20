@@ -83,6 +83,8 @@ class ContractService {
 
     params.append("$pageNum", (page || 1).toString());
 
+    params.append("$orderBy", `"contract"."createdAt" desc`);
+
     if (listAll) {
       params.append("$listAll", "true");
     }
@@ -90,8 +92,6 @@ class ContractService {
     if (generateODataQuery(filtersData)) {
       params.append("$filter", generateODataQuery(filtersData));
     }
-
-    params.append("$orderBy", "contract.name asc");
 
     const res = await api.get(`/contracts?${params}`);
 

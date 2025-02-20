@@ -74,6 +74,8 @@ const UsersPage = () => {
   const close = () => {
     setSelectedUser(null);
     setModal(null);
+
+    setPage(1);
   };
 
   const handleRemoveFilters = () => {
@@ -128,6 +130,7 @@ const UsersPage = () => {
           </Dialogue>
         );
     }
+    // eslint-disable-next-line
   }, [modal, orgLoading, organization, organizations, role, selectedUser]);
 
   return (

@@ -104,8 +104,6 @@ const Dropdown = ({
 
           className,
           props.disabled ? "border-disabled" : "border-white"
-          // showAsTags ? "p-3.5" : "px-3.5 py-2.5"
-          // small ? "h-11" : "h-[50px]"
         )}
       >
         <button
@@ -234,6 +232,8 @@ const Dropdown = ({
                       handleSelect!(value);
 
                       setShowList(false);
+
+                      setFocused(false);
                     }}
                     key={index}
                     className="w-full text-left"
