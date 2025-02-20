@@ -6,12 +6,12 @@ import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
 import { ROLES } from "lib/constants";
-import { useProfile } from "lib/hooks";
 import useUserMutation from "lib/mutations/users";
 import { IOrganization } from "lib/types/organizations";
 import { UserFieldTypes, UserStatusValues } from "lib/types/users";
 import { users } from "lib/validators/users";
 
+import { useProfile } from "components/ProfileContext";
 import { useConfirmPrompt } from "components/ui/alert/confirm-prompt";
 import Button from "components/ui/button";
 import Controller from "components/ui/custom-controller/CustomController";
@@ -37,7 +37,7 @@ const UserDialogue = ({
 
   userId,
 }: IUserDialogueProps) => {
-  const profile = useProfile();
+  const { profile } = useProfile();
   const myRole = profile?.role;
   const { setShowPrompt } = useConfirmPrompt();
 

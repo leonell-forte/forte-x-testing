@@ -6,8 +6,7 @@ import { useMemo, useState } from "react";
 import { HiUser } from "react-icons/hi2";
 import { HiOutlineChevronUpDown as Chevron } from "react-icons/hi2";
 
-import { useProfile } from "lib/hooks";
-
+import { useProfile } from "components/ProfileContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,7 +17,7 @@ import {
 import ViewProfileDialogue from "./ViewProfileDialogue";
 
 const MobileUserDropdown = () => {
-  const profile = useProfile();
+  const { profile } = useProfile();
   const [showModal, setShowModal] = useState(false);
   const { data: organizationList } = useQuery({
     queryKey: ["organizations"],

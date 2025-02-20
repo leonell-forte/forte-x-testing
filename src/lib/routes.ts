@@ -30,8 +30,6 @@ const BeneficiariesPage = React.lazy(
   () => import("../pages/Beneficiaries/BeneficiariesPage")
 );
 
-const ErrorPage = React.lazy(() => import("../pages/404"));
-
 const LoginPage = React.lazy(() => import("../pages/Login/LoginPage"));
 
 const SignupPage = React.lazy(() => import("../pages/Signup/SignupPage"));
@@ -55,7 +53,7 @@ export interface RouteConfig {
 
 export const ROUTES: RouteConfig[] = [
   {
-    link: "/users",
+    link: "users",
 
     Component: UsersPage,
 
@@ -63,7 +61,7 @@ export const ROUTES: RouteConfig[] = [
   },
 
   {
-    link: "/projects",
+    link: "projects",
 
     Component: ProjectsPage,
 
@@ -71,7 +69,7 @@ export const ROUTES: RouteConfig[] = [
   },
 
   {
-    link: "/projects/:id",
+    link: "projects/:id",
 
     Component: IndividualProjectsPage,
 
@@ -79,7 +77,7 @@ export const ROUTES: RouteConfig[] = [
   },
 
   {
-    link: "/organizations",
+    link: "organizations",
 
     Component: OrganizationsPage,
 
@@ -87,7 +85,7 @@ export const ROUTES: RouteConfig[] = [
   },
 
   {
-    link: "/contracts",
+    link: "contracts",
 
     Component: ContractsPage,
 
@@ -95,7 +93,7 @@ export const ROUTES: RouteConfig[] = [
   },
 
   {
-    link: "/beneficiaries",
+    link: "beneficiaries",
 
     Component: BeneficiariesPage,
 
@@ -103,22 +101,13 @@ export const ROUTES: RouteConfig[] = [
   },
 
   {
-    link: "/search/:query",
+    link: "search/:query",
 
     Component: SearchResultsPage,
 
     permissions: [],
   },
 
-  {
-    link: "*",
-
-    Component: ErrorPage,
-
-    permissions: [],
-
-    public: true,
-  },
   {
     link: "/",
 

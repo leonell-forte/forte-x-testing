@@ -6,8 +6,6 @@ import { REDIRECT_PATHS } from "lib/constants";
 import { useAppSelector } from "lib/hooks";
 import { UserRoleType } from "lib/types/users";
 
-import { queryClient } from "components/QueryProvider";
-
 import Button from "../ui/button";
 import OTPInput from "../ui/otp-input";
 import { ILoginProps } from "./types";
@@ -21,8 +19,6 @@ const OTPForm = ({ handleNext }: ILoginProps) => {
 
   const handleContinue = () => {
     sessionStorage.setItem("otp", otp.join(""));
-
-    queryClient.invalidateQueries({ queryKey: ["profile"] });
 
     handleNext!(REDIRECT_PATHS[role as UserRoleType]);
   };

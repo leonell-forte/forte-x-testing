@@ -3,16 +3,11 @@ import { Link } from "react-router-dom";
 
 import { useAppDispatch, usePageTitle } from "lib/hooks";
 import { setShowSidePanel } from "lib/slice/layout";
-import { ProfileType } from "lib/types/profile";
 
 import { SearchConsoleMarker } from "./SearchConsole";
 import UserDropdown from "./UserDropdown";
 
-interface IProp {
-  user: ProfileType;
-}
-
-const Header = ({ user }: IProp) => {
+const Header = () => {
   const dispatch = useAppDispatch();
 
   const { pageTitle } = usePageTitle();
@@ -45,7 +40,7 @@ const Header = ({ user }: IProp) => {
       <div className="flex w-full items-end justify-end gap-4 lg:mt-2.5">
         <SearchConsoleMarker />
 
-        <UserDropdown user={user} />
+        <UserDropdown />
       </div>
     </div>
   );

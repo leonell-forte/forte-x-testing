@@ -30,6 +30,7 @@ import { Form } from "components/ui/form/Form";
 import Input from "components/ui/input";
 
 import ContractOutcomeField from "../ContractOutcomeField";
+import { useContractsContext } from "./ContractContext";
 
 interface IContractForm {
   contractDetails: IContract | null;
@@ -58,6 +59,8 @@ const ContractForm = ({
 
   markContract,
 }: IContractForm) => {
+  const { toShowPrompt } = useContractsContext();
+
   const { setPage } = usePage();
   const [isAmmending, setIsAmmending] = useState(false);
 
@@ -84,13 +87,6 @@ const ContractForm = ({
 
     formState: { isDirty },
   } = form;
-
-  // sets contract form default values
-  useEffect(() => {
-    if (contractDetails) {
-      reset(contracts.defaultValues({ contract: contractDetails }));
-    }
-  }, [contractDetails, reset]);
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -176,6 +172,17 @@ const ContractForm = ({
 
   const { setShowPrompt } = useConfirmPrompt();
 
+  // sets contract form default values
+  useEffect(() => {
+    if (contractDetails) {
+      reset(contracts.defaultValues({ contract: contractDetails }));
+    }
+  }, [contractDetails, reset]);
+
+  useEffect(() => {
+    toShowPrompt(isDirty);
+  }, [isDirty, toShowPrompt]);
+
   return (
     <Form form={form} onSubmit={onSubmit} className="space-y-1">
       {isAmmending ? (
@@ -185,13 +192,11 @@ const ContractForm = ({
             required
             name="documentId"
             control={control}
-            render={() => (
+            render={({ field }) => (
               <FileInput
                 accept=".pdf"
                 onSuccess={(data) => {
-                  setValue("documentId", data.id);
-
-                  setError("documentId", { message: "" });
+                  field.onChange(data.id);
                 }}
                 placeholder="Document"
               />
@@ -228,12 +233,9 @@ const ContractForm = ({
                   value={field.value.map((item: number) => item.toString())}
                   options={organizations}
                   handleSelect={(val) => {
-                    setValue(
-                      "partyIds",
+                    field.onChange(
                       (val as string[]).map((item) => Number(item))
                     );
-
-                    setError("partyIds", { message: "" });
                   }}
                   isMultiSelect
                   placeholder="Parties"
@@ -251,12 +253,7 @@ const ContractForm = ({
                   disabled={!onEdit}
                   value={field.value.toLowerCase()}
                   handleSelect={(val) => {
-                    setValue(
-                      "status",
-                      val.toString().toUpperCase() as StatusType
-                    );
-
-                    setError("status", { message: "" });
+                    field.onChange(val.toString().toUpperCase() as StatusType);
                   }}
                   options={CONTRACT_STATUS.filter(
                     (item) => item.value !== "completed"
@@ -284,7 +281,7 @@ const ContractForm = ({
                   )}
                   options={projects}
                   handleSelect={(val) => {
-                    setValue("projectId", Number(val));
+                    field.onChange(Number(val));
 
                     setValue("outcomeRates", [
                       {
@@ -297,8 +294,6 @@ const ContractForm = ({
                         threshold: "",
                       },
                     ]);
-
-                    setError("projectId", { message: "" });
                   }}
                   placeholder="Project"
                 />
@@ -327,15 +322,13 @@ const ContractForm = ({
             required
             name="documentId"
             control={control}
-            render={() => (
+            render={({ field }) => (
               <FileInput
                 disabled={!onEdit || isSigned}
                 filename={contractDetails?.document?.filename || ""}
                 accept=".pdf"
                 onSuccess={(data) => {
-                  setValue("documentId", data.id);
-
-                  setError("documentId", { message: "" });
+                  field.onChange(data.id);
                 }}
                 placeholder="Document"
               />
@@ -354,9 +347,7 @@ const ContractForm = ({
                     maxDate={subDays(new Date(watch("endDate")), 1)}
                     value={new Date(field.value)}
                     onChange={(date) => {
-                      setValue("startDate", formatDate(date!, "LL-dd-yyyy"));
-
-                      setError("startDate", { message: "" });
+                      field.onChange(formatDate(date!, "LL-dd-yyyy"));
                     }}
                   />
                 );
@@ -374,9 +365,7 @@ const ContractForm = ({
                   minDate={addDays(new Date(watch("startDate")), 1)}
                   value={new Date(field.value)}
                   onChange={(date) => {
-                    setValue("endDate", formatDate(date!, "LL-dd-yyyy"));
-
-                    setError("endDate", { message: "" });
+                    field.onChange(formatDate(date!, "LL-dd-yyyy"));
                   }}
                 />
               )}
@@ -504,7 +493,7 @@ const ContractForm = ({
                   Save
                 </Button>
               ) : (
-                <Button type="submit" loading={isPending}>
+                <Button type="submit" loading={isPending} disabled={!isDirty}>
                   Save
                 </Button>
               )}

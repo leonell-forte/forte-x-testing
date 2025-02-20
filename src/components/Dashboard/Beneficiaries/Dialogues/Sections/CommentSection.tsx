@@ -1,6 +1,5 @@
 import { InputAdornment } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import authService from "api/auth";
 import commentsService from "api/comments";
 import classNames from "classnames";
 import { useState } from "react";
@@ -12,18 +11,14 @@ import {
 } from "lib/mutations/comments";
 import { formatDate } from "lib/utils";
 
+import { useProfile } from "components/ProfileContext";
 import Input from "components/ui/input";
 import Spinner from "components/ui/spinner/spinner";
 
 const CommentSection = ({ id: evidenceId }: { id: number }) => {
   const [comment, setComment] = useState("");
   const { beneficiaryId } = useAppSelector((state) => state.evidence);
-
-  const { data: user } = useQuery({
-    queryKey: ["profile"],
-
-    queryFn: authService.getProfile,
-  });
+  const { profile: user } = useProfile();
 
   const { data: commentList, isLoading } = useQuery({
     queryKey: ["comments", beneficiaryId, evidenceId],
@@ -69,7 +64,7 @@ const CommentSection = ({ id: evidenceId }: { id: number }) => {
                     <div className="flex items-center gap-4">
                       <p>{name}</p>
 
-                      {user?.id === item.createdBy.id ? (
+                      {String(user?.id) === String(item.createdBy.id) ? (
                         <button
                           type="button"
                           className="text-mint transition-all hover:text-mint/70 hover:underline"
