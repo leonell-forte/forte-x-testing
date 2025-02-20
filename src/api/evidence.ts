@@ -66,6 +66,21 @@ export class EvidenceService {
 
     return response.data.data;
   }
+
+  async getFile(fileId: string, fileName?: string): Promise<any> {
+    const response = await api.get(`/files${fileId}`, { responseType: "blob" });
+    const file = new Blob([response.data], { type: "application/pdf" });
+    const fileURL = URL.createObjectURL(file);
+    const link = document.createElement("a");
+    if (fileName) {
+      link.href = fileURL;
+      link.download = fileName;
+      link.click();
+      return;
+    }
+
+    return fileURL;
+  }
 }
 
 const evidenceService = new EvidenceService();

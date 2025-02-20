@@ -134,18 +134,19 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
                   </Table.Data>
 
                   <Table.Data>
-                    <Link
-                      to={file?.fileUrl}
-                      download
-                      target="_blank"
+                    <button
                       type="button"
+                      onClick={() => {
+                        evidenceService.getFile(file.fileUrl, file.filename);
+                      }}
+                      className="mt-1.5"
                     >
                       <img
                         src={download}
                         alt="download"
                         className="flex-shrink-0"
                       />
-                    </Link>
+                    </button>
                   </Table.Data>
                 </Table.Row>
               );
