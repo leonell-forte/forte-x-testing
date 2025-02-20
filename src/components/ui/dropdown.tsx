@@ -204,7 +204,7 @@ const Dropdown = ({
               )}
             />
           </button>
-          {tooltip && isHovered && (
+          {tooltip && isHovered && props.disabled && (
             <div
               className="absolute z-[1000] rounded-md bg-slate-500/40 p-2"
               style={{
