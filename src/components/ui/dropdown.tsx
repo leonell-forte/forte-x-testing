@@ -8,7 +8,6 @@ import { useOutsideClick } from "lib/hooks";
 import { cn } from "lib/utils";
 
 import Checkbox from "./checkbox";
-import SearchInput from "./search-input";
 import Loader from "./spinner/spinner";
 import Tag from "./tag";
 
@@ -61,13 +60,18 @@ const Dropdown = ({
 
   ...props
 }: IDropdownProp) => {
+  const [focused, setFocused] = useState(false);
+
   const [showList, setShowList] = useState(false);
 
   const [search, setSearch] = useState("");
 
   const dropdownRef = useRef(null);
 
-  useOutsideClick(dropdownRef, () => setShowList(false));
+  useOutsideClick(dropdownRef, () => {
+    setFocused(false);
+    setShowList(false);
+  });
 
   const displayValue =
     isMultiSelect && Array.isArray(props.value)
@@ -107,56 +111,70 @@ const Dropdown = ({
         <button
           disabled={props.disabled || props?.readOnly}
           type="button"
-          onClick={() => setShowList((prev) => !prev)}
+          onClick={() => {
+            setShowList(true);
+            setFocused(true);
+          }}
           className={classNames(
             "relative flex h-full w-full items-center gap-2.5 outline-none"
           )}
         >
           {showAsTags && isMultiSelect ? (
             <div className="flex w-[80%] flex-1 flex-shrink flex-wrap gap-2 truncate text-ellipsis">
-              {props.value?.length ? (
-                (props.value as string[]).map((item, index) => {
-                  const label = options?.find(
-                    (option) => option.value === item
-                  )?.label;
+              {(props.value as string[]).map((item, index) => {
+                const label = options?.find(
+                  (option) => option.value === item
+                )?.label;
 
-                  return (
-                    <Tag
-                      disabled={props.disabled}
-                      dark
-                      handleRemove={(e) => {
-                        e.stopPropagation();
+                return (
+                  <Tag
+                    disabled={props.disabled}
+                    dark
+                    handleRemove={(e) => {
+                      e.stopPropagation();
 
-                        handleSelect!(
-                          (props.value as string[]).filter(
-                            (val) => val !== item
-                          )
-                        );
-                      }}
-                      key={index}
-                      label={label}
-                    />
-                  );
-                })
-              ) : (
-                <input
-                  className="pointer-events-none w-[90%] truncate border-none bg-transparent font-medium outline-none placeholder:font-medium placeholder:text-white/50"
-                  type="text"
-                  {...props}
-                />
-              )}
+                      handleSelect!(
+                        (props.value as string[]).filter((val) => val !== item)
+                      );
+                    }}
+                    key={index}
+                    label={label}
+                  />
+                );
+              })}
+              <input
+                type="text"
+                className={classNames(
+                  "w-[80%] flex-1 flex-shrink truncate text-ellipsis border-none bg-transparent font-medium outline-none placeholder:font-medium placeholder:text-white/50 disabled:text-white",
+
+                  error && "placeholder:!text-[#fff]/50"
+                )}
+                {...props}
+                value={
+                  focused && enableSearch
+                    ? search
+                    : capitalize(displayValue || "")
+                }
+                onChange={(e) => setSearch(e.target.value)}
+                readOnly={!enableSearch}
+              />
             </div>
           ) : (
             <input
               type="text"
               className={classNames(
-                "pointer-events-none w-[80%] flex-1 flex-shrink truncate text-ellipsis border-none bg-transparent font-medium outline-none placeholder:font-medium placeholder:text-white/50 disabled:text-white",
+                "w-[80%] flex-1 flex-shrink truncate text-ellipsis border-none bg-transparent font-medium outline-none placeholder:font-medium placeholder:text-white/50 disabled:text-white",
 
                 error && "placeholder:!text-[#fff]/50"
               )}
               {...props}
-              value={capitalize(displayValue || "")}
-              readOnly
+              value={
+                focused && enableSearch
+                  ? search
+                  : capitalize(displayValue || "")
+              }
+              onChange={(e) => setSearch(e.target.value)}
+              readOnly={!enableSearch}
             />
           )}
 
@@ -175,15 +193,6 @@ const Dropdown = ({
           transition={{ type: "spring", duration: 0.2, bounce: 0 }}
           className="hide-scroll absolute left-0 top-[100%] z-[999] mt-1.5 max-h-[400px] w-full min-w-[300px] space-y-2 overflow-hidden overflow-y-scroll rounded-[4px] bg-white/90 p-3.5 shadow-md backdrop-blur-lg"
         >
-          {enableSearch && (
-            <SearchInput
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              dark
-              onClear={() => setSearch("")}
-            />
-          )}
-
           <div>
             {loading ? (
               <div className="flex h-[100px] w-full items-center justify-center">
@@ -212,6 +221,7 @@ const Dropdown = ({
                         }
 
                         handleSelect!(newValue);
+                        setSearch("");
                       }}
                       dark
                       label={label}
