@@ -253,6 +253,7 @@ const UserDialogue = ({
                 required
                 control={control}
                 render={({ field }) => {
+                  const isOwnAccount = Number(userId) === Number(profile?.id);
                   return (
                     <Dropdown
                       value={
@@ -262,7 +263,8 @@ const UserDialogue = ({
                       handleSelect={(val) => field.onChange(val)}
                       options={filteredRoles}
                       placeholder="Role"
-                      disabled={!canEditRole}
+                      disabled={!canEditRole || isOwnAccount}
+                      tooltip="You cannot change your own role."
                     />
                   );
                 }}

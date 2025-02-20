@@ -37,8 +37,6 @@ const SidePanel = () => {
     []
   );
 
-  console.log(filteredMenu);
-
   return (
     <motion.div
       initial={variants[showSidePanel.toString() as "true" | "false"]}

@@ -37,6 +37,8 @@ interface IDropdownProp extends InputHTMLAttributes<HTMLInputElement> {
   showAsTags?: boolean;
 
   enableSearch?: boolean;
+
+  tooltip?: string;
 }
 
 const Dropdown = ({
@@ -58,6 +60,8 @@ const Dropdown = ({
 
   enableSearch,
 
+  tooltip,
+
   ...props
 }: IDropdownProp) => {
   const [focused, setFocused] = useState(false);
@@ -65,6 +69,10 @@ const Dropdown = ({
   const [showList, setShowList] = useState(false);
 
   const [search, setSearch] = useState("");
+
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  const [isHovered, setIsHovered] = useState(false);
 
   const dropdownRef = useRef(null);
 
@@ -99,6 +107,15 @@ const Dropdown = ({
     >
       <div
         ref={dropdownRef}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onMouseMove={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect();
+          setMousePos({
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top,
+          });
+        }}
         className={classNames(
           "relative w-full cursor-pointer rounded-lg border px-3.5 py-2.5",
 
@@ -106,40 +123,61 @@ const Dropdown = ({
           props.disabled ? "border-disabled" : "border-white"
         )}
       >
-        <button
-          disabled={props.disabled || props?.readOnly}
-          type="button"
-          onClick={() => {
-            setShowList(true);
-            setFocused(true);
-          }}
-          className={classNames(
-            "relative flex h-full w-full items-center gap-2.5 outline-none"
-          )}
-        >
-          {showAsTags && isMultiSelect ? (
-            <div className="flex w-[80%] flex-1 flex-shrink flex-wrap gap-2 truncate text-ellipsis">
-              {(props.value as string[]).map((item, index) => {
-                const label = options?.find(
-                  (option) => option.value === item
-                )?.label;
+        <div className="relative">
+          <button
+            disabled={props.disabled || props?.readOnly}
+            type="button"
+            onClick={() => {
+              setShowList(true);
+              setFocused(true);
+            }}
+            className={classNames(
+              "relative flex h-full w-full items-center gap-2.5 outline-none"
+            )}
+          >
+            {showAsTags && isMultiSelect ? (
+              <div className="flex w-[80%] flex-1 flex-shrink flex-wrap gap-2 truncate text-ellipsis">
+                {(props.value as string[]).map((item, index) => {
+                  const label = options?.find(
+                    (option) => option.value === item
+                  )?.label;
 
-                return (
-                  <Tag
-                    disabled={props.disabled}
-                    dark
-                    handleRemove={(e) => {
-                      e.stopPropagation();
+                  return (
+                    <Tag
+                      disabled={props.disabled}
+                      dark
+                      handleRemove={(e) => {
+                        e.stopPropagation();
 
-                      handleSelect!(
-                        (props.value as string[]).filter((val) => val !== item)
-                      );
-                    }}
-                    key={index}
-                    label={label}
-                  />
-                );
-              })}
+                        handleSelect!(
+                          (props.value as string[]).filter(
+                            (val) => val !== item
+                          )
+                        );
+                      }}
+                      key={index}
+                      label={label}
+                    />
+                  );
+                })}
+                <input
+                  type="text"
+                  className={classNames(
+                    "w-[80%] flex-1 flex-shrink truncate text-ellipsis border-none bg-transparent font-medium outline-none placeholder:font-medium placeholder:text-white/50 disabled:text-white",
+
+                    error && "placeholder:!text-[#fff]/50"
+                  )}
+                  {...props}
+                  value={
+                    focused && enableSearch
+                      ? search
+                      : capitalize(displayValue || "")
+                  }
+                  onChange={(e) => setSearch(e.target.value)}
+                  readOnly={!enableSearch}
+                />
+              </div>
+            ) : (
               <input
                 type="text"
                 className={classNames(
@@ -156,34 +194,30 @@ const Dropdown = ({
                 onChange={(e) => setSearch(e.target.value)}
                 readOnly={!enableSearch}
               />
-            </div>
-          ) : (
-            <input
-              type="text"
-              className={classNames(
-                "w-[80%] flex-1 flex-shrink truncate text-ellipsis border-none bg-transparent font-medium outline-none placeholder:font-medium placeholder:text-white/50 disabled:text-white",
-
-                error && "placeholder:!text-[#fff]/50"
-              )}
-              {...props}
-              value={
-                focused && enableSearch
-                  ? search
-                  : capitalize(displayValue || "")
-              }
-              onChange={(e) => setSearch(e.target.value)}
-              readOnly={!enableSearch}
-            />
-          )}
-
-          <HiChevronDown
-            className={classNames(
-              "h-auto w-[20px] flex-shrink-0 transition-all",
-              showList && "rotate-180",
-              props.disabled ? "fill-disabled" : "fill-white"
             )}
-          />
-        </button>
+
+            <HiChevronDown
+              className={classNames(
+                "h-auto w-[20px] flex-shrink-0 transition-all",
+                showList && "rotate-180",
+                props.disabled ? "fill-disabled" : "fill-white"
+              )}
+            />
+          </button>
+          {tooltip && isHovered && (
+            <div
+              className="absolute z-[1000] rounded-md bg-slate-500/40 p-2"
+              style={{
+                left: `${mousePos.x}px`,
+                top: `${mousePos.y - 40}px`,
+              }}
+            >
+              <p className="flex-shrink-0 whitespace-nowrap text-[10px]">
+                {tooltip}
+              </p>
+            </div>
+          )}
+        </div>
 
         <motion.ul
           initial={{ opacity: 0 }}
