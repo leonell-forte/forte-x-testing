@@ -2,7 +2,6 @@ import { useCallback, useState } from "react";
 
 import jobs from "assets/images/login/spot-choiceofjobs.png";
 
-import OTPForm from "components/Login/OTPForm";
 import ResetPasswordForm from "components/Login/ResetPasswordForm";
 import ResetRequestForm from "components/Login/ResetRequestForm";
 import ResetSuccess from "components/Login/ResetSuccess";
@@ -21,9 +20,6 @@ const ForgotPasswordPage = () => {
         return <ResetRequestForm handleNext={handleNextStep} />;
 
       case 1:
-        return <OTPForm handleNext={handleNextStep} />;
-
-      case 2:
         return (
           <ResetPasswordForm
             handleNext={handleNextStep}
@@ -31,7 +27,7 @@ const ForgotPasswordPage = () => {
           />
         );
 
-      case 3:
+      case 2:
         return <ResetSuccess />;
     }
   }, []);

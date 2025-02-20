@@ -12,6 +12,7 @@ import Button from "components/ui/button";
 import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
 import Spinner from "components/ui/spinner/spinner";
 
+import { useBeneficiariesContext } from "./BeneficiariesContext";
 import BeneficiariesForm from "./BeneficiariesForm";
 import Evidences from "./Evidences";
 
@@ -36,6 +37,8 @@ const AddDialogue = ({
 
   ...props
 }: IBeneficiariesDialogueProps) => {
+  const { showPrompt } = useBeneficiariesContext();
+
   const [beneficiaryId, setBeneficiaryId] = useState(id);
 
   const { setAlert } = useAlert();
@@ -95,7 +98,7 @@ const AddDialogue = ({
   return (
     <Dialogue
       {...props}
-      confirmBeforeLeave={onEdit}
+      confirmBeforeLeave={showPrompt}
       handleClose={props.handleClose}
       title={`${beneficiaryId ? `Beneficiary ID #${beneficiaryId}` : "Add beneficiary"}`}
     >
@@ -114,6 +117,7 @@ const AddDialogue = ({
               setBeneficiaryId(id);
             }}
             beneficiaryData={beneficiaryData}
+            handleClose={props.handleClose}
           />
 
           {beneficiaryId && (

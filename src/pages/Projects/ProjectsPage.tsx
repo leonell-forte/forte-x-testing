@@ -52,6 +52,8 @@ const ProjectsPage = () => {
     setModal(null);
 
     setSelectedProject(null);
+
+    setPage(1);
   };
 
   const renderModal = useCallback(() => {
@@ -65,6 +67,7 @@ const ProjectsPage = () => {
           />
         );
     }
+    // eslint-disable-next-line
   }, [modal, selectedProject]);
 
   return (

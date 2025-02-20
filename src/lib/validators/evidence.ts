@@ -10,7 +10,7 @@ export const evidence = {
 
       status: evidence?.status || "pending review",
 
-      outcomeId: evidence?.outcome?.id.toString() || "",
+      outcomeId: String(evidence?.outcome?.id) || "",
 
       file: evidence?.file || {
         id: 0, // Provide default values for required fields

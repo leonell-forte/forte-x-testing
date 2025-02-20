@@ -53,8 +53,6 @@ const useOrganizationMutation = ({
         title: "Success!",
       });
 
-      console.log(addedOrg);
-
       successCallback?.(addedOrg.data.data.id);
 
       amplitude.track(

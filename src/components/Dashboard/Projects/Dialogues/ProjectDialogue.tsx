@@ -45,7 +45,7 @@ const ProjectDialogue = ({
   });
 
   const {
-    formState: { errors },
+    formState: { errors, isDirty },
 
     setError,
 
@@ -105,7 +105,7 @@ const ProjectDialogue = ({
 
   return (
     <Dialogue
-      confirmBeforeLeave
+      confirmBeforeLeave={isDirty}
       isVisible={isVisible}
       handleClose={close}
       title={project ? "Edit project" : "Add project"}
@@ -157,11 +157,20 @@ const ProjectDialogue = ({
           </div>
 
           <div className="!mt-10 flex justify-end gap-4">
-            <Button onClick={() => setShowPrompt(true)} buttonType="secondary">
+            <Button
+              onClick={() => {
+                if (isDirty) {
+                  setShowPrompt(true);
+                  return;
+                }
+                close();
+              }}
+              buttonType="secondary"
+            >
               Cancel
             </Button>
 
-            <Button loading={isPending} type="submit">
+            <Button loading={isPending} type="submit" disabled={!isDirty}>
               Save
             </Button>
           </div>

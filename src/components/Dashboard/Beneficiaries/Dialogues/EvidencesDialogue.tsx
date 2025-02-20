@@ -46,10 +46,22 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
     enabled: !!id,
   });
 
+  const fileId = evidenceData?.file.fileUrl;
+
+  const { data: fileData, isLoading: isFileLoading } = useQuery({
+    queryKey: ["file", fileId],
+
+    queryFn: () => evidenceService.getFile(fileId || ""),
+
+    enabled: Boolean(fileId),
+
+    refetchOnWindowFocus: false,
+  });
+
   const { data: project, isLoading: isProjectLoading } = useQuery({
     queryKey: ["specific-project", projectId],
 
-    queryFn: () => projectService.getOne(projectId!.toString()),
+    queryFn: () => projectService.getOne(String(projectId || "")),
 
     enabled: !!projectId,
 
@@ -61,7 +73,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
       project?.outcomes.map((item) => ({
         label: item.name,
 
-        value: item.id.toString(),
+        value: String(item.id || ""),
       })) || [],
     [project]
   );
@@ -79,7 +91,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
 
     setError,
 
-    formState: { errors },
+    formState: { errors, isDirty },
 
     reset,
 
@@ -111,7 +123,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
     <Dialogue
       {...props}
       title={id ? `Evidence ID ${id}` : "Add evidence"}
-      confirmBeforeLeave={onEdit}
+      confirmBeforeLeave={isDirty}
     >
       <div className="space-y-[30px]">
         {evidenceLoading ? (
@@ -147,7 +159,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
                         loading={isProjectLoading}
                         value={findLabelFromOptions(
                           outcomes,
-                          field.value?.toString()
+                          String(field.value || "")
                         )}
                         handleSelect={(val) => {
                           setValue("outcomeId", val as string);
@@ -182,27 +194,32 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
                     )}
                   />
                 </div>
-                {!!file.id && (
+                {!!file.id && !isFileLoading ? (
                   <div className="flex flex-col items-center">
                     <div className="flex max-h-[644px] w-full max-w-[490px] items-center justify-center">
-                      <iframe
-                        src={
-                          file.fileUrl + "#navpanes=0&toolbar=0&view=Fit&page=1"
-                        }
-                        style={{ border: "none", background: "transparent" }}
-                        width="100%"
-                        height="600px"
-                        title={file.filename}
-                        className={uploading ? "opacity-[.4]" : ""}
-                      ></iframe>
-
-                      {uploading && (
-                        <img
-                          src={loader}
-                          alt="loader"
-                          className="absolute w-10 animate-spin"
+                      {fileData && (
+                        <iframe
+                          src={
+                            fileData + "#navpanes=0&toolbar=0&view=Fit&page=1"
+                          }
+                          style={{ border: "none", background: "transparent" }}
+                          width="100%"
+                          height="600px"
+                          title={file.filename}
+                          className={
+                            uploading || isFileLoading ? "opacity-[.4]" : ""
+                          }
                         />
                       )}
+
+                      {uploading ||
+                        (isFileLoading && (
+                          <img
+                            src={loader}
+                            alt="loader"
+                            className="absolute w-10 animate-spin"
+                          />
+                        ))}
                     </div>
 
                     {!uploading && onEdit && (
@@ -225,6 +242,10 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
                         </div>
                       </div>
                     )}
+                  </div>
+                ) : (
+                  <div className="flex h-[250px] w-full items-center justify-center">
+                    <Spinner />
                   </div>
                 )}
 

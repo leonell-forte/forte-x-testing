@@ -7,6 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 
 import { CONTRACT_STATUS } from "lib/constants";
+import { usePage } from "lib/hooks";
 import useContractMutation from "lib/mutations/contracts";
 import { Contracts, IsAuthorized } from "lib/role-permissions";
 import {
@@ -57,6 +58,7 @@ const ContractForm = ({
 
   markContract,
 }: IContractForm) => {
+  const { setPage } = usePage();
   const [isAmmending, setIsAmmending] = useState(false);
 
   const form = useForm<ContractFieldValues>({
@@ -79,6 +81,8 @@ const ContractForm = ({
     setError,
 
     reset,
+
+    formState: { isDirty },
   } = form;
 
   // sets contract form default values
@@ -160,7 +164,10 @@ const ContractForm = ({
 
   const { addContract, isPending } = useContractMutation({
     id: contractDetails?.id,
-    successCallback: close,
+    successCallback: () => {
+      close();
+      setPage(1);
+    },
   });
 
   const onSubmit = async (values: ContractFieldValues) => {
@@ -472,7 +479,13 @@ const ContractForm = ({
                 </Button>
               ) : (
                 <Button
-                  onClick={() => setShowPrompt(true)}
+                  onClick={() => {
+                    if (isDirty) {
+                      setShowPrompt(true);
+                      return;
+                    }
+                    close();
+                  }}
                   buttonType="secondary"
                 >
                   Cancel

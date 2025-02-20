@@ -7,8 +7,10 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { useAlert } from "lib/hooks";
+import { useAlert, useAppSelector } from "lib/hooks";
 import { password } from "lib/validators/auth";
+
+import OTPInput from "components/ui/otp-input";
 
 import Button from "../ui/button";
 import Input from "../ui/input";
@@ -19,6 +21,8 @@ interface IProps extends ILoginProps {
 }
 
 const ResetPasswordForm = ({ handleNext, handleBack }: IProps) => {
+  const { email } = useAppSelector((state) => state.auth);
+
   const [loading, setLoading] = useState(false);
 
   const { setAlert } = useAlert();
@@ -37,25 +41,21 @@ const ResetPasswordForm = ({ handleNext, handleBack }: IProps) => {
 
   const onSubmit = async (values: z.infer<typeof password.schema>) => {
     setLoading(true);
-
     try {
-      await authService.resetPassword(values);
-
+      await authService.resetPassword(values, email);
       handleNext!();
-
       amplitude.track("Reset Password Submission");
     } catch (err: any) {
       setAlert({
         status: "error",
-
         message: err.response.data.message,
-
         title: "Reset Password Failed",
       });
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
       <div className="text-center">
@@ -68,38 +68,55 @@ const ResetPasswordForm = ({ handleNext, handleBack }: IProps) => {
         </p>
       </div>
 
-      <div className="flex flex-col gap-[15px]">
-        <Controller
-          name="password"
-          control={control}
-          render={({ field }) => {
-            return (
-              <Input
-                {...field}
-                placeholder="New password"
-                type="password"
-                error={!!errors.password?.message}
-                helperText={errors.password?.message}
-              />
-            );
-          }}
-        />
-
-        <Controller
-          name="confirmPassword"
-          control={control}
-          render={({ field }) => {
-            return (
-              <Input
-                {...field}
-                type="password"
-                placeholder="Confirm new password"
-                error={!!errors?.confirmPassword?.message}
-                helperText={errors.confirmPassword?.message}
-              />
-            );
-          }}
-        />
+      <div className="space-y-10">
+        <div className="space-y-4 text-center">
+          <label htmlFor="" className="!text-[24px] font-medium">
+            Verification code
+          </label>
+          <Controller
+            control={control}
+            name="otp"
+            render={({ field }) => {
+              return (
+                <OTPInput
+                  onChange={(value) => field.onChange(value.join(""))}
+                />
+              );
+            }}
+          />
+        </div>
+        <div className="space-y-[15px]">
+          <Controller
+            name="password"
+            control={control}
+            render={({ field }) => {
+              return (
+                <Input
+                  {...field}
+                  placeholder="New password"
+                  type="password"
+                  error={!!errors.password?.message}
+                  helperText={errors.password?.message}
+                />
+              );
+            }}
+          />
+          <Controller
+            name="confirmPassword"
+            control={control}
+            render={({ field }) => {
+              return (
+                <Input
+                  {...field}
+                  type="password"
+                  placeholder="Confirm new password"
+                  error={!!errors?.confirmPassword?.message}
+                  helperText={errors.confirmPassword?.message}
+                />
+              );
+            }}
+          />
+        </div>
       </div>
 
       <div className="mx-auto w-full max-w-[22rem] space-y-4">

@@ -42,6 +42,8 @@ class ProjectsService {
 
     params.append("$pageSize", DEFAULT_PAGE_SIZE);
 
+    params.append("$orderBy", `"project"."createdAt" desc`);
+
     if (listAll) {
       params.append("$listAll", "true");
     }

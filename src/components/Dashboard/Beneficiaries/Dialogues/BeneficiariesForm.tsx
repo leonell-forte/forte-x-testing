@@ -18,10 +18,8 @@ import { useBeneficiaryMutation } from "lib/mutations/beneficiaries";
 import { Beneficiaries, IsAuthorized } from "lib/role-permissions";
 import { setSelectedData } from "lib/slice/evidence";
 import {
-  DisabilityStatusEnum,
   IBeneficiaries,
   IBeneficiariesFieldValues,
-  RiskLevelEnum,
 } from "lib/types/beneficiaries";
 import { findLabelFromOptions } from "lib/utils";
 import { beneficiaries } from "lib/validators/beneficiaries";
@@ -33,6 +31,8 @@ import DatePicker from "components/ui/date-picker";
 import Dropdown, { IOption } from "components/ui/dropdown";
 import { Form } from "components/ui/form/Form";
 import Input from "components/ui/input";
+
+import { useBeneficiariesContext } from "./BeneficiariesContext";
 
 interface IProps {
   id?: number;
@@ -46,6 +46,8 @@ interface IProps {
   handleSuccess?: (id?: number) => void;
 
   beneficiaryData?: IBeneficiaries;
+
+  handleClose?: () => void;
 }
 
 const BeneficiariesForm = ({
@@ -60,6 +62,8 @@ const BeneficiariesForm = ({
   setOnEdit,
 
   beneficiaryData,
+
+  handleClose,
 }: IProps) => {
   const dispatch = useAppDispatch();
 
@@ -79,13 +83,21 @@ const BeneficiariesForm = ({
     watch,
 
     reset,
+
+    formState: { isDirty },
   } = form;
+
+  const { toShowPrompt } = useBeneficiariesContext();
 
   useEffect(() => {
     if (beneficiaryData) {
       reset(beneficiaries.defaultValues({ beneficiary: beneficiaryData }));
     }
   }, [beneficiaryData, reset]);
+
+  useEffect(() => {
+    toShowPrompt(isDirty);
+  }, [isDirty, toShowPrompt]);
 
   const contract = watch("contractId");
 
@@ -241,9 +253,7 @@ const BeneficiariesForm = ({
                 value={field.value || ""}
                 readOnly={!onEdit}
                 handleSelect={(val) => {
-                  setValue("status", val as string);
-
-                  setError("status", { message: "" });
+                  field.onChange(val);
                 }}
                 options={BENEFICIARY_STATUS}
                 placeholder="Status"
@@ -259,7 +269,7 @@ const BeneficiariesForm = ({
               <Dropdown
                 value={field.value as string}
                 handleSelect={(val) => {
-                  setValue("riskLevel", val as RiskLevelEnum);
+                  field.onChange(val);
 
                   setError("riskLevel", { message: "" });
                 }}
@@ -286,7 +296,7 @@ const BeneficiariesForm = ({
                   (field.value || "").toString()
                 )}
                 handleSelect={(val) => {
-                  setValue("contractId", Number(val));
+                  field.onChange(Number(val));
                   setValue(
                     "providerId",
                     Number(
@@ -374,9 +384,7 @@ const BeneficiariesForm = ({
                   readOnly={!onEdit}
                   value={new Date(field.value || "")}
                   onChange={(date) => {
-                    setValue("cohortStartDate", date ? date.toISOString() : "");
-
-                    setError("cohortStartDate", { message: "" });
+                    field.onChange(date ? date.toISOString() : "");
                   }}
                 />
               )}
@@ -392,9 +400,7 @@ const BeneficiariesForm = ({
                   minDate={new Date(watch("cohortStartDate") || "")}
                   value={new Date(field.value || "")}
                   onChange={(date) => {
-                    setValue("cohortEndDate", date ? date.toISOString() : "");
-
-                    setError("cohortEndDate", { message: "" });
+                    field.onChange(date ? date.toISOString() : "");
                   }}
                 />
               )}
@@ -465,9 +471,7 @@ const BeneficiariesForm = ({
                   readOnly={!onEdit}
                   value={new Date(field.value)}
                   onChange={(date) => {
-                    setValue("birthdate", date ? date.toISOString() : "");
-
-                    setError("birthdate", { message: "" });
+                    field.onChange(date ? date.toISOString() : "");
                   }}
                 />
               )}
@@ -491,11 +495,7 @@ const BeneficiariesForm = ({
                 <Dropdown
                   readOnly={!onEdit}
                   value={field.value}
-                  handleSelect={(val) => {
-                    setValue("gender", val as string);
-
-                    setError("gender", { message: "" });
-                  }}
+                  handleSelect={(val) => field.onChange(val)}
                   options={GENDER}
                   placeholder="Gender"
                 />
@@ -510,9 +510,7 @@ const BeneficiariesForm = ({
                   readOnly={!onEdit}
                   value={field.value}
                   handleSelect={(val) => {
-                    setValue("disabilityStatus", val as DisabilityStatusEnum);
-
-                    setError("disabilityStatus", { message: "" });
+                    field.onChange(val);
                   }}
                   options={CONFIRM}
                   placeholder="Disability status"
@@ -552,9 +550,7 @@ const BeneficiariesForm = ({
             <Dropdown
               value={field.value}
               handleSelect={(val) => {
-                setValue("educationLevel", val as string);
-
-                setError("educationLevel", { message: "" });
+                field.onChange(val);
               }}
               readOnly={!onEdit}
               options={HIGHEST_EDUCATION_LEVEL}
@@ -575,9 +571,7 @@ const BeneficiariesForm = ({
               showAsTags
               value={field.value}
               handleSelect={(val) => {
-                setValue("languages", val as string[]);
-
-                setError("languages", { message: "" });
+                field.onChange(val);
               }}
               options={LANGUAGES.map((item) => ({
                 label: item,
@@ -607,7 +601,11 @@ const BeneficiariesForm = ({
 
                     return;
                   }
-                  setShowPrompt(true);
+                  if (isDirty) {
+                    setShowPrompt(true);
+                    return;
+                  }
+                  if (handleClose) handleClose();
                 }}
               >
                 Cancel
