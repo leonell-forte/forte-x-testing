@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { cookie } from "./hooks";
 
+// const INACTIVITY_TIMEOUT = 4 * 1000; // 4 seconds
 const INACTIVITY_TIMEOUT = 2 * 60 * 60 * 1000; // 2 hours
 
 const LAST_ACTIVITY_KEY = "lastUserActivity";
@@ -22,10 +23,13 @@ export const useInactivityTimeout = () => {
 
     const timeSinceLastActivity = Date.now() - parseInt(lastActivity);
     if (timeSinceLastActivity > INACTIVITY_TIMEOUT) {
-      cookie.remove("access_token", { path: "/" });
-      cookie.remove("refresh_token", { path: "/" });
-      localStorage.removeItem(LAST_ACTIVITY_KEY);
-      window.location.href = "/";
+      const isLoggedIn = !!cookie.get("access_token");
+      if (isLoggedIn) {
+        cookie.remove("access_token", { path: "/" });
+        cookie.remove("refresh_token", { path: "/" });
+        localStorage.removeItem(LAST_ACTIVITY_KEY);
+        window.location.href = "/";
+      }
     }
   };
 
