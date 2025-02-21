@@ -46,7 +46,7 @@ interface IProps {
 
   handleSuccess?: (id?: number) => void;
 
-  beneficiaryData?: IBeneficiaries;
+  beneficiaryData?: IBeneficiaries | null;
 
   handleClose?: () => void;
 }

@@ -116,7 +116,7 @@ const AddDialogue = ({
             handleSuccess={(id) => {
               setBeneficiaryId(id);
             }}
-            beneficiaryData={beneficiaryData}
+            beneficiaryData={id ? beneficiaryData : null}
             handleClose={props.handleClose}
           />
 
