@@ -262,7 +262,6 @@ const UserDialogue = ({
                       options={filteredRoles}
                       placeholder="Role"
                       disabled={!canEditRole || isOwnAccount}
-                      tooltip="You cannot change your own role."
                     />
                   );
                 }}

@@ -37,8 +37,6 @@ interface IDropdownProp extends InputHTMLAttributes<HTMLInputElement> {
   showAsTags?: boolean;
 
   enableSearch?: boolean;
-
-  tooltip?: string;
 }
 
 const Dropdown = ({
@@ -60,8 +58,6 @@ const Dropdown = ({
 
   enableSearch,
 
-  tooltip,
-
   ...props
 }: IDropdownProp) => {
   const [focused, setFocused] = useState(false);
@@ -69,10 +65,6 @@ const Dropdown = ({
   const [showList, setShowList] = useState(false);
 
   const [search, setSearch] = useState("");
-
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-
-  const [isHovered, setIsHovered] = useState(false);
 
   const dropdownRef = useRef(null);
 
@@ -107,15 +99,6 @@ const Dropdown = ({
     >
       <div
         ref={dropdownRef}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        onMouseMove={(e) => {
-          const rect = e.currentTarget.getBoundingClientRect();
-          setMousePos({
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top,
-          });
-        }}
         className={classNames(
           "relative w-full cursor-pointer rounded-lg border px-3.5 py-2.5",
 
@@ -204,19 +187,6 @@ const Dropdown = ({
               )}
             />
           </button>
-          {tooltip && isHovered && props.disabled && (
-            <div
-              className="absolute z-[1000] rounded-md bg-slate-500/40 p-2"
-              style={{
-                left: `${mousePos.x}px`,
-                top: `${mousePos.y - 40}px`,
-              }}
-            >
-              <p className="flex-shrink-0 whitespace-nowrap text-[10px]">
-                {tooltip}
-              </p>
-            </div>
-          )}
         </div>
 
         <motion.ul
