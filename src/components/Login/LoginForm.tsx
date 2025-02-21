@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { z } from "zod";
 
+import { ACCESS_TOKEN_EXPIRY } from "lib/constants";
 import { cookie, useAppDispatch } from "lib/hooks";
 import { setEmail, setRole } from "lib/slice/auth";
 import { login } from "lib/validators/auth";
@@ -50,7 +51,12 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
 
       amplitude.track("Login Form Submission");
 
-      cookie.set("access_token", res.token, { path: "/" });
+      cookie.set("access_token", res.token, {
+        path: "/",
+
+        expires: ACCESS_TOKEN_EXPIRY,
+      });
+
       cookie.set("refresh_token", res?.refreshToken, { path: "/" });
 
       handleNext!();
@@ -59,12 +65,16 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
 
       dispatch(setRole(res.role));
 
+      cookie.set("token-email", email, { path: "/" });
+
       if (isRemember) {
         const currentDate = new Date();
 
         // Add 30 days to the current date for cookie expiry
         const futureDate = add(currentDate, { days: 30 });
+
         cookie.set("user-email", email, { expires: futureDate });
+
         return;
       }
       cookie.remove("user-email");

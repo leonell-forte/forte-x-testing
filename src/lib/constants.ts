@@ -1,3 +1,5 @@
+import { add } from "date-fns";
+
 import {
   Beneficiaries,
   Contracts,
@@ -466,3 +468,5 @@ export const REDIRECT_PATHS: Record<UserRoleType, string> = {
 
   "read-only": "/beneficiaries",
 };
+
+export const ACCESS_TOKEN_EXPIRY = add(new Date(), { hours: 2 });

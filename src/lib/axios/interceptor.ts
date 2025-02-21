@@ -1,6 +1,8 @@
 import authService from "api/auth";
 import axios from "axios";
 
+import { ACCESS_TOKEN_EXPIRY } from "lib/constants";
+
 import { cookie } from "../hooks";
 
 export const api = axios.create({
@@ -44,14 +46,21 @@ api.interceptors.response.use(
         refreshPromise = authService
           .getRefreshedToken()
           .then((newToken) => {
-            cookie.set("access_token", newToken, { path: "/" });
+            cookie.set("access_token", newToken, {
+              path: "/",
+              expires: ACCESS_TOKEN_EXPIRY,
+            });
+
             api.defaults.headers["Authorization"] = `Bearer ${newToken}`;
+
             onTokenRefreshed(newToken);
+
             return newToken;
           })
           .catch((refreshError) => {
             // Handle refresh failure by clearing tokens and redirecting
             console.error("Token refresh failed", refreshError);
+
             cookie.remove("access_token", { path: "/" });
             cookie.remove("refresh_token", { path: "/" });
             window.location.href = "/"; // Or redirect to login

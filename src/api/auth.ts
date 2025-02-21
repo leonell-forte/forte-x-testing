@@ -92,7 +92,7 @@ class AuthService {
   async getRefreshedToken() {
     const refreshToken = cookie.get("refresh_token");
 
-    const email = cookie.get("user-email");
+    const email = cookie.get("token-email");
 
     const res = await api.post("authentication/refresh-token", {
       refreshToken,
