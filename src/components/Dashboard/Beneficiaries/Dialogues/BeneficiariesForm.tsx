@@ -30,6 +30,7 @@ import Controller from "components/ui/custom-controller/CustomController";
 import DatePicker from "components/ui/date-picker";
 import Dropdown, { IOption } from "components/ui/dropdown";
 import { Form } from "components/ui/form/Form";
+import InputMobile from "components/ui/form/InputMobile";
 import Input from "components/ui/input";
 
 import { useBeneficiariesContext } from "./BeneficiariesContext";
@@ -239,7 +240,7 @@ const BeneficiariesForm = ({
             control={control}
             name="phone"
             render={({ field }) => (
-              <Input {...field} readOnly={!onEdit} placeholder="Phone" />
+              <InputMobile {...field} readOnly={!onEdit} placeholder="Phone" />
             )}
           />
 

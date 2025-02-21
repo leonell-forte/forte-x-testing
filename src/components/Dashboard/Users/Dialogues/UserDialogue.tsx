@@ -18,6 +18,7 @@ import Controller from "components/ui/custom-controller/CustomController";
 import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
 import Dropdown from "components/ui/dropdown";
 import { Form } from "components/ui/form/Form";
+import InputMobile from "components/ui/form/InputMobile";
 import Input from "components/ui/input";
 import Spinner from "components/ui/spinner/spinner";
 import Tooltip from "components/ui/tooltip/Tooltip";
@@ -63,11 +64,12 @@ const UserDialogue = ({
     setValue,
 
     formState: { isDirty },
+
+    watch,
   } = form;
 
   useEffect(() => {
     // sets default value of the form
-
     if (userId) {
       reset(users.defaultValues(userData));
     }
@@ -149,6 +151,8 @@ const UserDialogue = ({
     }
   }, [isNonForteUser, profile, userOrganization, setValue]);
 
+  console.log(watch("phoneNumber"));
+
   return (
     <Dialogue
       confirmBeforeLeave={isDirty}
@@ -214,13 +218,7 @@ const UserDialogue = ({
             required
             control={control}
             render={({ field }) => {
-              return (
-                <Input
-                  {...field}
-                  autoComplete="tel"
-                  placeholder="Phone number"
-                />
-              );
+              return <InputMobile label="Phone number" {...field} />;
             }}
           />
           <Controller

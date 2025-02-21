@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { isPhoneValid } from "lib/isPhoneValid";
+
 import {
   IBeneficiaries,
   IBeneficiariesFieldValues,
@@ -21,7 +23,7 @@ export const beneficiaries = {
 
       email: beneficiary?.email || "",
 
-      phone: beneficiary?.phone || "",
+      phone: beneficiary?.phone || "+1",
 
       riskLevel: (beneficiary?.riskLevel?.toLowerCase() as RiskLevelEnum) || "",
 
@@ -85,7 +87,12 @@ export const beneficiaries = {
       .min(1, "Email is required")
       .email({ message: "Invalid email" }),
 
-    phone: z.string(),
+    phone: z
+      .string()
+      .refine((pn) => isPhoneValid(pn), {
+        message: "Invalid phone number",
+      })
+      .or(z.literal("+1")),
 
     riskLevel: z.string(),
 

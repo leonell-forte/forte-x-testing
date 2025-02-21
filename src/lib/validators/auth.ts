@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { isPhoneValid } from "lib/isPhoneValid";
 import { UserData } from "lib/types/auth";
 
 export const login = {
@@ -57,7 +58,7 @@ export const signup = {
 
       email: data?.email || "",
 
-      phoneNumber: data?.phoneNumber || "",
+      phoneNumber: data?.phoneNumber || "+1",
 
       password: "",
 
@@ -77,7 +78,12 @@ export const signup = {
         .min(1, "Email is a required field")
         .email("Invalid email"),
 
-      phoneNumber: z.string().min(1, "Phone number is a required field"),
+      phoneNumber: z
+        .string()
+        .min(1, "Phone number is a required field")
+        .refine((pn) => isPhoneValid(pn), {
+          message: "Invalid phone number",
+        }),
 
       password: z
         .string()
