@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { z } from "zod";
 
-import { ACCESS_TOKEN_EXPIRY } from "lib/constants";
 import { cookie, useAppDispatch } from "lib/hooks";
 import { setEmail, setRole } from "lib/slice/auth";
 import { login } from "lib/validators/auth";
@@ -54,7 +53,7 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
       cookie.set("access_token", res.token, {
         path: "/",
 
-        expires: ACCESS_TOKEN_EXPIRY,
+        expires: add(new Date(), { hours: 2 }),
       });
 
       cookie.set("refresh_token", res?.refreshToken, { path: "/" });

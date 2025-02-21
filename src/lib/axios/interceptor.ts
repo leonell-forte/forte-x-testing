@@ -1,7 +1,6 @@
 import authService from "api/auth";
 import axios from "axios";
-
-import { ACCESS_TOKEN_EXPIRY } from "lib/constants";
+import { add } from "date-fns";
 
 import { cookie } from "../hooks";
 
@@ -48,7 +47,7 @@ api.interceptors.response.use(
           .then((newToken) => {
             cookie.set("access_token", newToken, {
               path: "/",
-              expires: ACCESS_TOKEN_EXPIRY,
+              expires: add(new Date(), { hours: 2 }),
             });
 
             api.defaults.headers["Authorization"] = `Bearer ${newToken}`;
