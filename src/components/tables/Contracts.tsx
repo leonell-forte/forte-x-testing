@@ -107,7 +107,7 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
               >
                 <Cards.Group cols={2}>
                   <Cards.Details label="Name" value={name} />
-                  <Cards.Details label="Provider" value={provider.name} />
+                  <Cards.Details label="Provider" value={provider?.name} />
                   <Cards.Details
                     label="Status"
                     value={status?.toLowerCase()}
@@ -180,7 +180,9 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
 
                   <Table.Data className="w-[120px]">{name}</Table.Data>
 
-                  <Table.Data className="w-[140px]">{provider.name}</Table.Data>
+                  <Table.Data className="w-[140px]">
+                    {provider?.name}
+                  </Table.Data>
 
                   <Table.Data className="w-[90px] capitalize">
                     {status?.toLowerCase()}
