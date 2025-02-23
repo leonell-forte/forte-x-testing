@@ -18,6 +18,7 @@ import Controller from "components/ui/custom-controller/CustomController";
 import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
 import Dropdown from "components/ui/dropdown";
 import { Form } from "components/ui/form/Form";
+import InputMobile from "components/ui/form/InputMobile";
 import Input from "components/ui/input";
 import Spinner from "components/ui/spinner/spinner";
 import Tooltip from "components/ui/tooltip/Tooltip";
@@ -67,7 +68,6 @@ const UserDialogue = ({
 
   useEffect(() => {
     // sets default value of the form
-
     if (userId) {
       reset(users.defaultValues(userData));
     }
@@ -93,14 +93,17 @@ const UserDialogue = ({
     await addUser(values);
   };
 
+  const isOwnAccount = Number(userId) === Number(profile?.id);
+
   const canEditRole = useMemo(() => {
     if (!myRole) return false;
     if (!userData) return true;
+    if (isOwnAccount) return false;
     if (myRole.includes("admin") && userData.role?.includes("owner"))
       return false;
     if (myRole.includes("owner") || myRole.includes("admin")) return true;
     return false;
-  }, [myRole, userData]);
+  }, [myRole, userData, isOwnAccount]);
 
   const tooltipMsg = useMemo(() => {
     if (!userData || !myRole) return "";
@@ -214,13 +217,7 @@ const UserDialogue = ({
             required
             control={control}
             render={({ field }) => {
-              return (
-                <Input
-                  {...field}
-                  autoComplete="tel"
-                  placeholder="Phone number"
-                />
-              );
+              return <InputMobile label="Phone number" {...field} />;
             }}
           />
           <Controller
@@ -262,7 +259,7 @@ const UserDialogue = ({
                       handleSelect={(val) => field.onChange(val)}
                       options={filteredRoles}
                       placeholder="Role"
-                      disabled={!canEditRole}
+                      disabled={!canEditRole || isOwnAccount}
                     />
                   );
                 }}

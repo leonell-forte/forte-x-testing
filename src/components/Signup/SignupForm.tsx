@@ -15,6 +15,7 @@ import { signup } from "lib/validators/auth";
 
 import Controller from "components/ui/custom-controller/CustomController";
 import { Form } from "components/ui/form/Form";
+import InputMobile from "components/ui/form/InputMobile";
 import Spinner from "components/ui/spinner/spinner";
 
 import { ILoginProps } from "../Login/types";
@@ -129,7 +130,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
             name="phoneNumber"
             control={control}
             render={({ field }) => (
-              <Input {...field} autoComplete="tel" label="Phone number*" />
+              <InputMobile {...field} label="Phone number*" />
             )}
           />
 

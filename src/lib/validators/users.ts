@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { isPhoneValid } from "lib/isPhoneValid";
+
 import { IUser, UserRoleValues, UserStatusValues } from "../types/users";
 
 export const users = {
@@ -11,7 +13,7 @@ export const users = {
 
       email: user?.email || "",
 
-      phoneNumber: user?.phoneNumber || "",
+      phoneNumber: user?.phoneNumber || "+1",
 
       organizationId: user?.organization?.toString() || "",
 
@@ -38,7 +40,12 @@ export const users = {
 
     lastName: z.string().min(1, "Last name is a required field"),
 
-    phoneNumber: z.string().min(1, "Phone number is a required field"),
+    phoneNumber: z
+      .string()
+      .min(1, "Phone number is a required field")
+      .refine((pn) => isPhoneValid(pn), {
+        message: "Invalid phone number",
+      }),
 
     organizationId: z.string().min(1, "Organization is a required field"),
 

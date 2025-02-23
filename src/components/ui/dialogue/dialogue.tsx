@@ -60,6 +60,16 @@ const Dialogue = ({
   useEscapeKey(!hideClose ? closeDialogue : undefined);
 
   useOutsideClick(containerRef, () => {
+    const target = document.activeElement as HTMLElement;
+    // Ignore clicks on elements with these data attributes
+    if (
+      target.closest('[role="listbox"]') ||
+      target.closest('[role="combobox"]') ||
+      target.closest('[role="dialog"]') ||
+      target.closest("[data-radix-popper-content-wrapper]")
+    ) {
+      return;
+    }
     if (!hideClose) closeDialogue?.();
   });
 

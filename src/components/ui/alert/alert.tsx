@@ -10,6 +10,15 @@ import { IAlert } from "lib/slice/alert";
 
 import styles from "./styles.module.scss";
 
+// Helper function to safely render text with line breaks
+const renderMessage = (message: string) => {
+  return message.split("\n").map((text, i) => (
+    <p key={i} className="text-[14px]">
+      {text}
+    </p>
+  ));
+};
+
 const Alert = () => {
   const { alert, setAlert } = useAlert();
   const { status, message, title }: IAlert = alert;
@@ -55,7 +64,7 @@ const Alert = () => {
           {status === "success" && <img src={success} alt="" />}
           <div className="space-y-2">
             {title && <p className="heading">{title}</p>}
-            {message && <p className="text-[14px]">{message}</p>}
+            {message && renderMessage(message)}
           </div>
           <button
             className="absolute right-3 top-3"

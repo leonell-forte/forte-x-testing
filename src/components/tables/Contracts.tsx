@@ -87,7 +87,7 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
 
               status,
 
-              parties,
+              provider,
 
               documentName,
             } = item;
@@ -107,7 +107,7 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
               >
                 <Cards.Group cols={2}>
                   <Cards.Details label="Name" value={name} />
-                  <Cards.Details label="Parties" value={parties?.join(", ")} />
+                  <Cards.Details label="Provider" value={provider.name} />
                   <Cards.Details
                     label="Status"
                     value={status?.toLowerCase()}
@@ -158,7 +158,7 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
 
                 status,
 
-                parties,
+                provider,
 
                 documentName,
               } = item;
@@ -180,9 +180,7 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
 
                   <Table.Data className="w-[120px]">{name}</Table.Data>
 
-                  <Table.Data className="w-[140px]">
-                    {parties?.join(", ")}
-                  </Table.Data>
+                  <Table.Data className="w-[140px]">{provider.name}</Table.Data>
 
                   <Table.Data className="w-[90px] capitalize">
                     {status?.toLowerCase()}
@@ -220,4 +218,11 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
 
 export default ContractsTable;
 
-const TABLE_HEADER = ["ID", "Name", "Parties", "Status", "Project", "Document"];
+const TABLE_HEADER = [
+  "ID",
+  "Name",
+  "Provider",
+  "Status",
+  "Project",
+  "Document",
+];

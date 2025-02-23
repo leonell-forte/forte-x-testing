@@ -122,15 +122,12 @@ class ContractService {
     let body = {
       ...values,
 
-      partyIds: values.partyIds.map((item) => item.toString()),
-
-      contractOutcomeRates: values.outcomeRates.map((item) => ({
+      outcomeRates: values.outcomeRates.map((item) => ({
         ...item,
 
         threshold: Number(item.threshold),
       })),
     };
-    delete (body as any).outcomeRates;
 
     const response = await api.put("/contracts", body);
 

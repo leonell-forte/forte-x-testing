@@ -106,40 +106,61 @@ const Dropdown = ({
           props.disabled ? "border-disabled" : "border-white"
         )}
       >
-        <button
-          disabled={props.disabled || props?.readOnly}
-          type="button"
-          onClick={() => {
-            setShowList(true);
-            setFocused(true);
-          }}
-          className={classNames(
-            "relative flex h-full w-full items-center gap-2.5 outline-none"
-          )}
-        >
-          {showAsTags && isMultiSelect ? (
-            <div className="flex w-[80%] flex-1 flex-shrink flex-wrap gap-2 truncate text-ellipsis">
-              {(props.value as string[]).map((item, index) => {
-                const label = options?.find(
-                  (option) => option.value === item
-                )?.label;
+        <div className="relative">
+          <button
+            disabled={props.disabled || props?.readOnly}
+            type="button"
+            onClick={() => {
+              setShowList(true);
+              setFocused(true);
+            }}
+            className={classNames(
+              "relative flex h-full w-full items-center gap-2.5 outline-none"
+            )}
+          >
+            {showAsTags && isMultiSelect ? (
+              <div className="flex w-[80%] flex-1 flex-shrink flex-wrap gap-2 truncate text-ellipsis">
+                {(props.value as string[]).map((item, index) => {
+                  const label = options?.find(
+                    (option) => option.value === item
+                  )?.label;
 
-                return (
-                  <Tag
-                    disabled={props.disabled}
-                    dark
-                    handleRemove={(e) => {
-                      e.stopPropagation();
+                  return (
+                    <Tag
+                      disabled={props.disabled}
+                      dark
+                      handleRemove={(e) => {
+                        e.stopPropagation();
 
-                      handleSelect!(
-                        (props.value as string[]).filter((val) => val !== item)
-                      );
-                    }}
-                    key={index}
-                    label={label}
-                  />
-                );
-              })}
+                        handleSelect!(
+                          (props.value as string[]).filter(
+                            (val) => val !== item
+                          )
+                        );
+                      }}
+                      key={index}
+                      label={label}
+                    />
+                  );
+                })}
+                <input
+                  type="text"
+                  className={classNames(
+                    "w-[80%] flex-1 flex-shrink truncate text-ellipsis border-none bg-transparent font-medium outline-none placeholder:font-medium placeholder:text-white/50 disabled:text-white",
+
+                    error && "placeholder:!text-[#fff]/50"
+                  )}
+                  {...props}
+                  value={
+                    focused && enableSearch
+                      ? search
+                      : capitalize(displayValue || "")
+                  }
+                  onChange={(e) => setSearch(e.target.value)}
+                  readOnly={!enableSearch || props?.readOnly}
+                />
+              </div>
+            ) : (
               <input
                 type="text"
                 className={classNames(
@@ -154,36 +175,19 @@ const Dropdown = ({
                     : capitalize(displayValue || "")
                 }
                 onChange={(e) => setSearch(e.target.value)}
-                readOnly={!enableSearch}
+                readOnly={!enableSearch || props?.readOnly}
               />
-            </div>
-          ) : (
-            <input
-              type="text"
-              className={classNames(
-                "w-[80%] flex-1 flex-shrink truncate text-ellipsis border-none bg-transparent font-medium outline-none placeholder:font-medium placeholder:text-white/50 disabled:text-white",
-
-                error && "placeholder:!text-[#fff]/50"
-              )}
-              {...props}
-              value={
-                focused && enableSearch
-                  ? search
-                  : capitalize(displayValue || "")
-              }
-              onChange={(e) => setSearch(e.target.value)}
-              readOnly={!enableSearch}
-            />
-          )}
-
-          <HiChevronDown
-            className={classNames(
-              "h-auto w-[20px] flex-shrink-0 transition-all",
-              showList && "rotate-180",
-              props.disabled ? "fill-disabled" : "fill-white"
             )}
-          />
-        </button>
+
+            <HiChevronDown
+              className={classNames(
+                "h-auto w-[20px] flex-shrink-0 transition-all",
+                showList && "rotate-180",
+                props.disabled ? "fill-disabled" : "fill-white"
+              )}
+            />
+          </button>
+        </div>
 
         <motion.ul
           initial={{ opacity: 0 }}

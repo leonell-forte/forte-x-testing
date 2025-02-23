@@ -53,7 +53,7 @@ const OrganizationsPage = () => {
 
   const [selectedOrg, setSelectedOrg] = useState("");
 
-  const [filters, setFilters] = useState<IFilters>(initialFilters);
+  const [filters, setFilters] = useState<IFilters>(initialFilters as IFilters);
 
   const { data: organizationList, isLoading: orgLoading } = useQuery({
     queryKey: ["organizations", page, debouncedSearch, filters],
@@ -110,7 +110,7 @@ const OrganizationsPage = () => {
                 <Button
                   buttonType="secondary"
                   onClick={() => {
-                    setFilters(initialFilters);
+                    setFilters(initialFilters as IFilters);
                   }}
                 >
                   Clear
@@ -201,7 +201,7 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
   };
 
   const handleRemoveFilters = () => {
-    setFilters(initialFilters);
+    setFilters(initialFilters as IFilters);
   };
   return (
     <div className="grid w-full grid-cols-1 gap-2.5 lg:flex">

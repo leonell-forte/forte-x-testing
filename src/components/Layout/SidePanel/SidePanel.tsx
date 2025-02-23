@@ -37,8 +37,6 @@ const SidePanel = () => {
     []
   );
 
-  console.log(filteredMenu);
-
   return (
     <motion.div
       initial={variants[showSidePanel.toString() as "true" | "false"]}
@@ -66,15 +64,12 @@ const SidePanel = () => {
               const active = pathname.includes(link);
 
               return (
-                <Link
-                  key={index}
-                  to={link}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleClose();
-                  }}
-                >
+                <Link key={index} to={link}>
                   <li
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleClose();
+                    }}
                     className={classNames(
                       "px-2.5 py-3 text-lg capitalize transition-all lg:py-2.5 lg:text-base",
 

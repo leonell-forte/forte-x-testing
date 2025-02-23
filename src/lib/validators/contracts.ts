@@ -52,7 +52,7 @@ export const contracts = {
 
       endDate: contract?.endDate || "",
 
-      partyIds: contract?.partyIds || [],
+      providerId: contract?.provider.id || 0, // Changed from toString()
 
       outcomeRates: contract
         ? contract?.outcomes.map((item) => ({
@@ -89,7 +89,7 @@ export const contracts = {
 
     name: z.string().min(1, "Contract name is a required field"),
 
-    partyIds: z.array(z.number()).min(1, "Please select at least one"),
+    providerId: z.number().min(1, "Provider is a required field"), // Changed from string()
 
     projectId: z.number().min(1, { message: "Project is a required field" }),
 

@@ -21,9 +21,8 @@ const SignupPage = () => {
           </p>
 
           <p className="text-[18px] leading-[110%] md:text-[20px]">
-            We’re building a future of work that works for everyone <br />- by
-            funding effective training at no cost to students, and no risk to
-            governments.
+            From procurement to reporting, optimize your talent development with
+            Forte.
           </p>
         </div>
       </div>
