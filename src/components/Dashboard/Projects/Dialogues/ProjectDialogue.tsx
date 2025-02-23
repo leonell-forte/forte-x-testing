@@ -1,11 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
+import organizationService from "api/organization";
 import projectService from "api/projects";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { HiPlusCircle } from "react-icons/hi";
 
 import { useProjectMutation } from "lib/mutations/projects";
+import { IsAuthorized, Organizations } from "lib/role-permissions";
 import { ProjectFieldValues } from "lib/types/projects";
 import { projects } from "lib/validators/projects";
 
@@ -13,6 +15,7 @@ import { useConfirmPrompt } from "components/ui/alert/confirm-prompt";
 import Button from "components/ui/button";
 import Controller from "components/ui/custom-controller/CustomController";
 import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
+import Dropdown from "components/ui/dropdown";
 import { Form } from "components/ui/form/Form";
 import Input from "components/ui/input";
 import Spinner from "components/ui/spinner/spinner";
@@ -25,38 +28,53 @@ interface IProjectDialogueProps extends IDialogueProps {
 
 const ProjectDialogue = ({
   isVisible,
-
   handleClose,
-
   projectId,
 }: IProjectDialogueProps) => {
+  // Project query
   const { data: project, isLoading: projectLoading } = useQuery({
     queryKey: ["specific-project", projectId],
-
     queryFn: () => projectService.getOne(projectId!),
-
     enabled: !!projectId,
   });
 
+  // Organization data handling
+  const { data: { items: orgItems = [] } = {}, isLoading: orgLoading } =
+    useQuery({
+      queryKey: ["organizations"],
+      queryFn: () =>
+        organizationService.list({
+          listAll: true,
+          page: 1,
+          filters: { type: "funder" },
+        }),
+      enabled: IsAuthorized([Organizations.LIST]),
+    });
+
+  const organizations = useMemo(
+    () =>
+      orgItems.map((item) => ({
+        label: item.name,
+        value: item.id!.toString(),
+      })),
+    [orgItems]
+  );
+
+  // Form handling
   const form = useForm<ProjectFieldValues>({
     resolver: zodResolver(projects.schema),
-
     defaultValues: projects.defaultValues(),
   });
 
   const {
     formState: { errors, isDirty },
-
     setError,
-
     reset,
-
     control,
   } = form;
 
   const { fields, append, remove } = useFieldArray({
     control,
-
     name: "outcomes",
   });
 
@@ -90,7 +108,6 @@ const ProjectDialogue = ({
 
   const close = () => {
     reset();
-
     handleClose!();
   };
 
@@ -124,6 +141,28 @@ const ProjectDialogue = ({
             render={({ field }) => (
               <Input {...field} placeholder="Project name" />
             )}
+          />
+
+          <Controller
+            label="Funder"
+            required
+            name="funderId"
+            control={control}
+            render={({ field }) => {
+              return (
+                <Dropdown
+                  value={
+                    organizations.find(
+                      (org) => Number(org.value) === Number(field.value)
+                    )?.label
+                  }
+                  handleSelect={(val) => field.onChange(Number(val))}
+                  options={organizations}
+                  placeholder="Select funder"
+                  loading={orgLoading}
+                />
+              );
+            }}
           />
 
           <div className="flex items-center gap-5">

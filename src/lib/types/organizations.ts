@@ -41,7 +41,7 @@ export interface IFilters {
 
   status?: string;
 
-  type?: string;
+  type?: "funder" | "provider" | "forte" | "";
 }
 
 export type OrganizationFieldTypes = z.infer<typeof organizations.schema>;

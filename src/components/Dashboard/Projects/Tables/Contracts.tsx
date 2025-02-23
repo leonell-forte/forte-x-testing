@@ -98,7 +98,7 @@ const Contracts = ({ projectId }: IProps) => {
               const {
                 id,
 
-                parties,
+                provider,
 
                 name,
 
@@ -127,10 +127,7 @@ const Contracts = ({ projectId }: IProps) => {
                   title={name}
                 >
                   <Cards.Group cols={2}>
-                    <Cards.Details
-                      label="Parties"
-                      value={parties?.join(", ")}
-                    />
+                    <Cards.Details label="Provider" value={provider.name} />
                     <Cards.Details
                       label="Outcomes"
                       value={outcomenames?.join(", ")}
@@ -177,7 +174,7 @@ const Contracts = ({ projectId }: IProps) => {
                 const {
                   id,
 
-                  parties,
+                  provider,
 
                   name,
 
@@ -209,7 +206,7 @@ const Contracts = ({ projectId }: IProps) => {
                     <Table.Data className="w-[100px]">{name}</Table.Data>
 
                     <Table.Data className="w-[150px]">
-                      {parties?.join(", ")}
+                      {provider.name}
                     </Table.Data>
 
                     <Table.Data className="w-[150px]">

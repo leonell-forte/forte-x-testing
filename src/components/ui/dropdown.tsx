@@ -157,7 +157,7 @@ const Dropdown = ({
                       : capitalize(displayValue || "")
                   }
                   onChange={(e) => setSearch(e.target.value)}
-                  readOnly={!enableSearch}
+                  readOnly={!enableSearch || props?.readOnly}
                 />
               </div>
             ) : (
@@ -175,7 +175,7 @@ const Dropdown = ({
                     : capitalize(displayValue || "")
                 }
                 onChange={(e) => setSearch(e.target.value)}
-                readOnly={!enableSearch}
+                readOnly={!enableSearch || props?.readOnly}
               />
             )}
 

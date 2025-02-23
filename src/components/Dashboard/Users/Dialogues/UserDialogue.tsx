@@ -64,8 +64,6 @@ const UserDialogue = ({
     setValue,
 
     formState: { isDirty },
-
-    watch,
   } = form;
 
   useEffect(() => {
@@ -150,8 +148,6 @@ const UserDialogue = ({
       setValue("organizationId", String(userOrganization.id));
     }
   }, [isNonForteUser, profile, userOrganization, setValue]);
-
-  console.log(watch("phoneNumber"));
 
   return (
     <Dialogue

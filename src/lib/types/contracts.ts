@@ -49,9 +49,10 @@ export interface IContract {
 
   outcomes: IContractOutcomeRates[];
 
-  parties?: string[];
-
-  partyIds: number[];
+  provider: {
+    id: number;
+    name: string;
+  };
 
   project?: string;
 

@@ -144,7 +144,7 @@ const BeneficiariesForm = ({
       contractList?.items
         .filter((y) =>
           organizationList?.items.some((z) =>
-            String(y.partyIds).includes(String(z.id))
+            String(y.provider.id).includes(String(z.id))
           )
         )
         .map((item) => ({
@@ -168,9 +168,7 @@ const BeneficiariesForm = ({
             (contract) => contract.id === selectedContract
           );
 
-          return contract?.partyIds.some(
-            (item) => Number(item) === Number(org.id)
-          );
+          return contract?.provider.id === org.id;
         })
         .map((item) => ({
           label: item.name,
@@ -298,26 +296,16 @@ const BeneficiariesForm = ({
                 )}
                 handleSelect={(val) => {
                   field.onChange(Number(val));
-                  setValue(
-                    "providerId",
-                    Number(
-                      organizationList?.items.filter((org) => {
-                        const contract = contractList?.items.find(
-                          (contract) => contract.id === Number(val)
-                        );
-
-                        return contract?.partyIds.some(
-                          (item) => Number(item) === Number(org.id)
-                        );
-                      })[0].id
-                    )
+                  const contract = contractList?.items.find(
+                    (item) => item.id === Number(val)
                   );
+
+                  setValue("providerId", contract?.provider.id as number);
 
                   setValue(
                     "projectId",
 
-                    contractList?.items.find((item) => item.id === Number(val))
-                      ?.projectId as number
+                    contract?.projectId as number
                   );
 
                   setError("contractId", { message: "" });
