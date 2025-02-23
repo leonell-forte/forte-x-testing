@@ -93,14 +93,17 @@ const UserDialogue = ({
     await addUser(values);
   };
 
+  const isOwnAccount = Number(userId) === Number(profile?.id);
+
   const canEditRole = useMemo(() => {
     if (!myRole) return false;
     if (!userData) return true;
+    if (isOwnAccount) return false;
     if (myRole.includes("admin") && userData.role?.includes("owner"))
       return false;
     if (myRole.includes("owner") || myRole.includes("admin")) return true;
     return false;
-  }, [myRole, userData]);
+  }, [myRole, userData, isOwnAccount]);
 
   const tooltipMsg = useMemo(() => {
     if (!userData || !myRole) return "";
@@ -247,7 +250,6 @@ const UserDialogue = ({
                 required
                 control={control}
                 render={({ field }) => {
-                  const isOwnAccount = Number(userId) === Number(profile?.id);
                   return (
                     <Dropdown
                       value={
