@@ -68,7 +68,7 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
                 <div className="space-y-2">
                   <p className="font-semibold">{file?.filename}</p>
                   <Cards.Group>
-                    <Cards.Details label="Outcome" value={outcome.name} />
+                    <Cards.Details label="Outcome" value={outcome?.name} />
                     <Cards.Details label="Description" value={description} />
                     <Cards.Details label="Status" value={status} capitalize />
                   </Cards.Group>
