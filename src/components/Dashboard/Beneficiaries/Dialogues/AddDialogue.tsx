@@ -109,14 +109,14 @@ const AddDialogue = ({
       ) : (
         <div className="space-y-[22px]">
           <BeneficiariesForm
-            id={id}
+            id={beneficiaryId}
             onEdit={onEdit}
             setOnEdit={setOnEdit}
             projectId={projectId}
             handleSuccess={(id) => {
               setBeneficiaryId(id);
             }}
-            beneficiaryData={id ? beneficiaryData : null}
+            beneficiaryData={beneficiaryId ? beneficiaryData : null}
             handleClose={props.handleClose}
           />
 
