@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import beneficiariesService from "api/beneficiaries";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 import { useAlert } from "lib/hooks";
 import { useBeneficiaryMutation } from "lib/mutations/beneficiaries";
@@ -17,7 +17,9 @@ import BeneficiariesForm from "./BeneficiariesForm";
 import Evidences from "./Evidences";
 
 interface IBeneficiariesDialogueProps extends IDialogueProps {
-  id?: number;
+  beneficiaryId?: number;
+
+  setBeneficiaryId: Dispatch<SetStateAction<number>>;
 
   projectId?: number;
 
@@ -27,7 +29,9 @@ interface IBeneficiariesDialogueProps extends IDialogueProps {
 }
 
 const AddDialogue = ({
-  id,
+  beneficiaryId,
+
+  setBeneficiaryId,
 
   projectId,
 
@@ -38,8 +42,6 @@ const AddDialogue = ({
   ...props
 }: IBeneficiariesDialogueProps) => {
   const { showPrompt } = useBeneficiariesContext();
-
-  const [beneficiaryId, setBeneficiaryId] = useState(id);
 
   const { setAlert } = useAlert();
 
@@ -114,7 +116,7 @@ const AddDialogue = ({
             setOnEdit={setOnEdit}
             projectId={projectId}
             handleSuccess={(id) => {
-              setBeneficiaryId(id);
+              if (id) setBeneficiaryId(id);
             }}
             beneficiaryData={beneficiaryId ? beneficiaryData : null}
             handleClose={props.handleClose}
@@ -124,26 +126,28 @@ const AddDialogue = ({
             <Evidences handleAddOrViewEvidence={handleAddOrViewEvidence} />
           )}
 
-          {id && IsAuthorized([Beneficiaries.UPDATE]) && !isStatusFinalized && (
-            <div className="flex w-full flex-col items-center justify-center gap-4 sm:flex-row sm:justify-end">
-              <Button
-                loading={loadingStatus === "Rejected"}
-                onClick={() => updateStatus("Rejected")}
-                buttonType="secondary"
-                className="w-full"
-              >
-                Reject beneficiary
-              </Button>
+          {beneficiaryId &&
+            IsAuthorized([Beneficiaries.UPDATE]) &&
+            !isStatusFinalized && (
+              <div className="flex w-full flex-col items-center justify-center gap-4 sm:flex-row sm:justify-end">
+                <Button
+                  loading={loadingStatus === "Rejected"}
+                  onClick={() => updateStatus("Rejected")}
+                  buttonType="secondary"
+                  className="w-full"
+                >
+                  Reject beneficiary
+                </Button>
 
-              <Button
-                loading={loadingStatus === "Accepted"}
-                onClick={() => updateStatus("Accepted")}
-                className="w-full"
-              >
-                Accept beneficiary
-              </Button>
-            </div>
-          )}
+                <Button
+                  loading={loadingStatus === "Accepted"}
+                  onClick={() => updateStatus("Accepted")}
+                  className="w-full"
+                >
+                  Accept beneficiary
+                </Button>
+              </div>
+            )}
         </div>
       )}
     </Dialogue>

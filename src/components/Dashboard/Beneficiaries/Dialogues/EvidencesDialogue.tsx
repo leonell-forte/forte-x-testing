@@ -46,14 +46,34 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
     enabled: !!id,
   });
 
-  const fileId = evidenceData?.file.fileUrl;
+  const form = useForm({
+    resolver: zodResolver(evidence.schema),
+
+    defaultValues: evidence.defaultValues(evidenceData),
+  });
+
+  const {
+    control,
+
+    setValue,
+
+    setError,
+
+    formState: { errors, isDirty },
+
+    reset,
+
+    watch,
+  } = form;
+
+  const file = watch("file");
 
   const { data: fileData, isLoading: isFileLoading } = useQuery({
-    queryKey: ["file", fileId],
+    queryKey: ["file", file?.fileUrl],
 
-    queryFn: () => evidenceService.getFile(fileId || ""),
+    queryFn: () => evidenceService.getFile(file?.fileUrl || ""),
 
-    enabled: Boolean(fileId),
+    enabled: Boolean(file?.fileUrl),
 
     refetchOnWindowFocus: false,
   });
@@ -77,28 +97,6 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
       })) || [],
     [project]
   );
-
-  const form = useForm({
-    resolver: zodResolver(evidence.schema),
-
-    defaultValues: evidence.defaultValues(evidenceData),
-  });
-
-  const {
-    control,
-
-    setValue,
-
-    setError,
-
-    formState: { errors, isDirty },
-
-    reset,
-
-    watch,
-  } = form;
-
-  const file = watch("file");
 
   useEffect(() => {
     // prefills defaultvalue of evidence form
@@ -194,7 +192,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
                     )}
                   />
                 </div>
-                {!!file.id && !isFileLoading ? (
+                {!isFileLoading ? (
                   <div className="flex flex-col items-center">
                     <div className="flex max-h-[644px] w-full max-w-[490px] items-center justify-center">
                       {fileData && (
@@ -222,7 +220,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
                         ))}
                     </div>
 
-                    {!uploading && onEdit && (
+                    {fileData && onEdit && (
                       <div className="relative flex justify-center px-6 py-3 text-center">
                         <p className="pointer-events-none absolute truncate text-center font-semibold text-mint">
                           Replace document
