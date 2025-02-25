@@ -1,4 +1,5 @@
 import { api } from "../lib/axios/interceptor";
+import { ActivityLogs } from "../lib/types/activity-logs";
 import { AddEvidenceParams, Evidence } from "../lib/types/evidence";
 
 export class EvidenceService {
@@ -65,6 +66,16 @@ export class EvidenceService {
     );
 
     return response.data.data;
+  }
+
+  async getActivityLogs(
+    beneficiary: number,
+    evidence: number
+  ): Promise<ActivityLogs> {
+    const res = await api.get(
+      `/beneficiaries/${beneficiary}/evidences/${evidence}/activity-logs`
+    );
+    return res.data.items;
   }
 
   async getFile(fileId: string, fileName?: string): Promise<any> {

@@ -23,6 +23,7 @@ import { Form } from "components/ui/form/Form";
 import Input from "components/ui/input";
 import Spinner from "components/ui/spinner/spinner";
 
+import ActivityLogSection from "./Sections/ActivityLogSection";
 import CommentSection from "./Sections/CommentSection";
 
 interface IEvidencesDialogueProps extends IDialogueProps {
@@ -272,9 +273,9 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
           </>
         )}
 
-        {!!id && (
+        {!!id && beneficiaryId && (
           <div className="space-y-12">
-            {/* <ActivityLogSection /> */}
+            <ActivityLogSection beneficiaryId={beneficiaryId} evidenceId={id} />
 
             <CommentSection id={id} />
           </div>
