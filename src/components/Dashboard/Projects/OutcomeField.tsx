@@ -44,9 +44,9 @@ const OutcomeField = ({
 
                 handleDelete();
               }}
-              className="mt-[27px] transition-all hover:scale-[1.05] hover:opacity-80 md:mt-0"
+              className="group mt-[27px] md:mt-0"
             >
-              <HiMinusCircle className="h-auto w-8 text-white" />
+              <HiMinusCircle className="h-auto w-8 text-white transition-all group-hover:fill-mint" />
             </button>
           )}
         </div>

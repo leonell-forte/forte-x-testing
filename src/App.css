@@ -124,3 +124,10 @@ label {
 button {
   outline: none;
 }
+
+button.icon {
+  padding: 0 !important;
+  margin: 0 !important;
+  width: fit-content !important;
+  min-width: unset !important;
+}

@@ -20,11 +20,8 @@ import { ProfileProvider } from "./ProfileContext";
 import Providers from "./Providers";
 import Spinner from "./ui/spinner/spinner";
 
-const PrivateMapper = () => {
-  const token = cookie.get("access_token");
+const Admin = () => {
   const PRIV = ROUTES.filter((item) => !item?.public);
-  if (!token)
-    return <Navigate to="/" state={{ from: window.location.pathname }} />;
   return (
     <Routes>
       <Route path="*" element={<Layout />}>
@@ -44,6 +41,17 @@ const PrivateMapper = () => {
         <Route path="*" element={<ErrorPage />} />
       </Route>
     </Routes>
+  );
+};
+
+const PrivateMapper = () => {
+  const token = cookie.get("access_token");
+  if (!token)
+    return <Navigate to="/" state={{ from: window.location.pathname }} />;
+  return (
+    <ProfileProvider>
+      <Admin />
+    </ProfileProvider>
   );
 };
 
@@ -67,14 +75,7 @@ const RouteProvider = () => {
               {PUB.map(({ link, Component }) => (
                 <Route key={link} path={link} element={<Component />} />
               ))}
-              <Route
-                path="*"
-                element={
-                  <ProfileProvider>
-                    <PrivateMapper />
-                  </ProfileProvider>
-                }
-              />
+              <Route path="*" element={<PrivateMapper />} />
             </Routes>
           </Suspense>
         </AlertProvider>

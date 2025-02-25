@@ -1,8 +1,7 @@
 import { useCallback, useState } from "react";
+import { FaTrash as Trash } from "react-icons/fa6";
+import { RiPencilFill as Pencil } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
-
-import bin from "assets/images/icons/bin.svg";
-import pencil from "assets/images/icons/pencil.svg";
 
 import { IsAuthorized, Projects } from "lib/role-permissions";
 import { IProject } from "lib/types/projects";
@@ -87,7 +86,7 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
                       {outcomes.map((item) => item.name).join(", ")}
                     </p>
                   </div>
-                  <div className="flex">
+                  <div className="flex gap-6">
                     {IsAuthorized([Projects.UPDATE]) && (
                       <Button
                         eventName="Edit Project"
@@ -95,13 +94,9 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
                         buttonType="default"
                         type="button"
                         onClick={() => handleEditUser(item)}
-                        className="!mx-[-12px]"
+                        className="icon group"
                       >
-                        <img
-                          alt="pencil"
-                          src={pencil}
-                          className="h-3.5 sm:h-auto"
-                        />
+                        <Pencil className="h-auto w-5 transition-all group-hover:fill-mint" />
                       </Button>
                     )}
 
@@ -115,13 +110,9 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
                           setModal("delete");
                           setSelectedProject(item);
                         }}
-                        className="!mx-[-12px]"
+                        className="icon group"
                       >
-                        <img
-                          alt="pencil"
-                          src={bin}
-                          className="h-3.5 sm:h-auto"
-                        />
+                        <Trash className="h-auto w-4 transition-all group-hover:fill-mint" />
                       </Button>
                     )}
                   </div>
@@ -167,22 +158,24 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
                   </Table.Data>
 
                   <Table.Data>
-                    <div className="flex justify-end">
+                    <div className="flex justify-end gap-4 px-4">
                       {IsAuthorized([Projects.UPDATE]) && (
                         <Button
+                          disableRipple
                           eventName="Edit Project"
                           id={id.toString()}
                           buttonType="default"
                           type="button"
                           onClick={() => handleEditUser(item)}
-                          className="!mx-[-12px]"
+                          className="icon group"
                         >
-                          <img alt="pencil" src={pencil} />
+                          <Pencil className="h-auto w-5 transition-all group-hover:fill-mint" />
                         </Button>
                       )}
 
                       {IsAuthorized([Projects.DELETE]) && (
                         <Button
+                          disableRipple
                           eventName="Delete Project"
                           id={id.toString()}
                           buttonType="default"
@@ -191,9 +184,9 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
                             setModal("delete");
                             setSelectedProject(item);
                           }}
-                          className="!mx-[-12px]"
+                          className="icon group"
                         >
-                          <img alt="pencil" src={bin} />
+                          <Trash className="h-auto w-4 transition-all group-hover:fill-mint" />{" "}
                         </Button>
                       )}
                     </div>

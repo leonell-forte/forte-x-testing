@@ -173,9 +173,9 @@ const ProjectDialogue = ({
             <button
               type="button"
               onClick={handleAddOutcome}
-              className="transition-all hover:scale-[1.05] hover:opacity-80 md:mt-0"
+              className="group md:mt-0"
             >
-              <HiPlusCircle className="h-auto w-8 text-white" />
+              <HiPlusCircle className="h-auto w-8 text-white transition-all group-hover:fill-mint" />
             </button>
           </div>
 
