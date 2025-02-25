@@ -2,6 +2,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 
 import arrow from "assets/images/icons/arrow.svg";
 
+import { ContractsProvider } from "components/Dashboard/Contracts/Dialogues/ContractContext";
 import Beneficiaries from "components/Dashboard/Projects/Tables/Beneficiaries";
 import Contracts from "components/Dashboard/Projects/Tables/Contracts";
 import Outcomes from "components/Dashboard/Projects/Tables/Outcomes";
@@ -30,7 +31,9 @@ const IndividualProjectsPage = () => {
 
       <Outcomes id={id as string} />
 
-      <Contracts projectId={Number(id)} />
+      <ContractsProvider>
+        <Contracts projectId={Number(id)} />
+      </ContractsProvider>
 
       <Partners projectId={Number(id)} />
 

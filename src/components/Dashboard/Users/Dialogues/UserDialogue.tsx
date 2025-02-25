@@ -21,7 +21,7 @@ import { Form } from "components/ui/form/Form";
 import InputMobile from "components/ui/form/InputMobile";
 import Input from "components/ui/input";
 import Spinner from "components/ui/spinner/spinner";
-import Tooltip from "components/ui/tooltip/Tooltip";
+import { Tooltip } from "components/ui/tooltip/Tooltip";
 
 interface IUserDialogueProps extends IDialogueProps {
   userId?: string;
@@ -242,7 +242,11 @@ const UserDialogue = ({
               );
             }}
           />
-          <Tooltip content={tooltipMsg} {...(canEditRole && { open: false })}>
+          <Tooltip
+            title={tooltipMsg}
+            {...(canEditRole && { open: false })}
+            followCursor
+          >
             <div>
               <Controller
                 name="role"

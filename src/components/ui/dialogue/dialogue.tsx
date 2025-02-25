@@ -83,7 +83,7 @@ const Dialogue = ({
       />
       <div
         className={classNames(
-          "fixed left-0 top-0 z-40 !mt-0 flex h-screen w-screen items-start justify-center overflow-y-auto bg-[#011217] bg-opacity-[90%] px-0 py-0 md:px-4 md:py-12",
+          "fixed left-0 top-0 z-30 !mt-0 flex h-screen w-screen items-start justify-center overflow-y-auto bg-[#011217] bg-opacity-[90%] px-0 py-0 md:px-4 md:py-12",
 
           center && "items-center"
         )}

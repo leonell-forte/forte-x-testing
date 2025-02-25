@@ -120,7 +120,6 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
                 {...field}
                 autoComplete="off"
                 disabled={!!data}
-                type="email"
                 label="Email*"
               />
             )}
@@ -151,8 +150,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
           />
           <Controller
             tooltip={{
-              position: "top",
-              offset: "start",
+              placement: "top-start",
             }}
             name="agreeTerms"
             containerClassName="w-fit"
