@@ -69,6 +69,7 @@ const Partners = ({ projectId }: IProps) => {
             title="Add partners to project"
             handleAdd={onSubmit}
             isPending={isPending}
+            existingPartners={partners}
           />
         );
     }

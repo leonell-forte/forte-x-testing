@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import organizationService from "api/organization";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
+import { IProjectOrganization } from "lib/types/projects";
 
 import Button from "components/ui/button";
 import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
@@ -10,9 +12,16 @@ interface IProp extends IDialogueProps {
   handleAdd?: (ids: number[]) => void;
 
   isPending?: boolean;
+
+  existingPartners?: IProjectOrganization[];
 }
 
-const TagExistingDialogue = ({ handleAdd, isPending, ...props }: IProp) => {
+const TagExistingDialogue = ({
+  handleAdd,
+  isPending,
+  existingPartners,
+  ...props
+}: IProp) => {
   const { data, isLoading } = useQuery({
     queryKey: ["organizations"],
 
@@ -31,13 +40,20 @@ const TagExistingDialogue = ({ handleAdd, isPending, ...props }: IProp) => {
           ({
             label: item.name,
 
-            value: item.id,
+            value: String(item.id),
           }) as IOption
       ),
     [data]
   );
 
   const [values, setValues] = useState<string[]>([]);
+  console.log(values);
+
+  useEffect(() => {
+    if (existingPartners) {
+      setValues(existingPartners.map((item) => String(item.id)));
+    }
+  }, [existingPartners]);
 
   return (
     <Dialogue center {...props}>
@@ -60,7 +76,16 @@ const TagExistingDialogue = ({ handleAdd, isPending, ...props }: IProp) => {
 
           <Button
             loading={isPending}
-            onClick={() => handleAdd?.(values.map((item) => Number(item)))}
+            onClick={() =>
+              handleAdd?.(
+                values
+                  .map((item) => Number(item))
+                  .filter(
+                    (item) =>
+                      !existingPartners?.some((partner) => partner.id === item)
+                  )
+              )
+            }
           >
             Add
           </Button>
