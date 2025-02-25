@@ -107,7 +107,6 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
                 {...field}
                 autoCapitalize="email"
                 label="Email"
-                type="email"
                 autoComplete="off"
               />
             )}
