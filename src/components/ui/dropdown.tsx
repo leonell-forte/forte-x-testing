@@ -112,7 +112,7 @@ const Dropdown = ({
       <Popover
         open={showList}
         onOpenChange={(open) => {
-          if (focused && showList) return;
+          if ((focused && showList) || props.disabled) return;
           setShowList(open);
         }}
       >
