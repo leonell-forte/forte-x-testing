@@ -57,6 +57,7 @@ const ActivityLogSection = ({
 
     return changes;
   };
+  console.log(data);
 
   if (isLoading)
     return (
@@ -68,16 +69,23 @@ const ActivityLogSection = ({
   return (
     <div className="space-y-6">
       <p className="font-medium">Activity log</p>
-      <ul className="pl-6">
-        {data?.map((item, index) => {
-          const changes = renderChangeMessage(item);
-          return changes?.map((message, msgIndex) => (
-            <li key={`${index}-${msgIndex}`} className="list-disc text-[14px]">
-              {message}
-            </li>
-          ));
-        })}
-      </ul>
+      {data?.length === 1 ? (
+        <p className="text-[14px]">No activities at the moment</p>
+      ) : (
+        <ul className="pl-6">
+          {data?.map((item, index) => {
+            const changes = renderChangeMessage(item);
+            return changes?.map((message, msgIndex) => (
+              <li
+                key={`${index}-${msgIndex}`}
+                className="list-disc text-[14px]"
+              >
+                {message}
+              </li>
+            ));
+          })}
+        </ul>
+      )}
     </div>
   );
 };
