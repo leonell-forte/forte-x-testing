@@ -12,7 +12,7 @@ import styles from "./styles.module.scss";
 
 // Helper function to safely render text with line breaks
 const renderMessage = (message: string) => {
-  return message.split("\n").map((text, i) => (
+  return message?.split("\n").map((text, i) => (
     <p key={i} className="text-[14px]">
       {text}
     </p>

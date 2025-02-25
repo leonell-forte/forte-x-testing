@@ -75,6 +75,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
         status: "error",
 
         message:
+          err?.response?.data?.data?.[0] ||
           err?.response?.data?.data ||
           "An error has occurred. Please check if you used correct invitation link.",
 
