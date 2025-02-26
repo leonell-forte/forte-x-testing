@@ -161,16 +161,20 @@ export const useImportBeneficiaryMutation = ({
     },
 
     onError: (err: any, newBeneficiary, context) => {
-      const errorMessages = Object.values(err?.response?.data?.errorFields).map(
-        (item) => item as string
-      );
+      const errorMessages = err?.response?.data?.errorFields
+        ? Object.values(err?.response?.data?.errorFields).map(
+            (item) => item as string
+          )
+        : null;
 
       console.log(errorMessages);
 
       setAlert({
         title: `Failed importing beneficiary`,
 
-        message: errorMessages.join("\n"),
+        message: errorMessages
+          ? errorMessages.join("\n")
+          : err?.response?.data?.message,
 
         status: "error",
       });
