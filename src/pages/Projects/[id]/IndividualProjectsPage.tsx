@@ -6,7 +6,8 @@ import { ContractsProvider } from "components/Dashboard/Contracts/Dialogues/Cont
 import Beneficiaries from "components/Dashboard/Projects/Tables/Beneficiaries";
 import Contracts from "components/Dashboard/Projects/Tables/Contracts";
 import Outcomes from "components/Dashboard/Projects/Tables/Outcomes";
-import Partners from "components/Dashboard/Projects/Tables/Partners";
+
+// import Partners from "components/Dashboard/Projects/Tables/Partners";
 
 const IndividualProjectsPage = () => {
   // page title is set on the outcomes component
@@ -35,7 +36,8 @@ const IndividualProjectsPage = () => {
         <Contracts projectId={Number(id)} />
       </ContractsProvider>
 
-      <Partners projectId={Number(id)} />
+      {/* temporarily hide partners */}
+      {/* <Partners projectId={Number(id)} /> */}
 
       <Beneficiaries id={id} />
     </div>
