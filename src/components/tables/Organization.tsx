@@ -143,7 +143,7 @@ export default OrganizationTable;
 const TABLE_HEADER = [
   "Organization",
   "Registered Name",
-  "Registration",
+  "Registration Number",
   "Region",
   "Type",
   "Status",

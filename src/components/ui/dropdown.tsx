@@ -89,6 +89,26 @@ const Dropdown = ({
     [search, options]
   );
 
+  const onMultipleSelect = (
+    value: string,
+    e?: React.MouseEvent<HTMLDivElement>
+  ) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    let newValue;
+
+    if (props.value?.includes(value)) {
+      newValue = (props.value as string[]).filter((item) => item !== value);
+    } else {
+      newValue = [...(props.value as string[]), value];
+    }
+
+    handleSelect!(newValue);
+    setSearch("");
+  };
+
   useOutsideClick(dropdownRef, () => {
     setShowList(false);
     setFocused(false);
@@ -138,7 +158,7 @@ const Dropdown = ({
                 )}
               >
                 {showAsTags && isMultiSelect ? (
-                  <div className="flex w-[80%] flex-1 flex-shrink flex-wrap gap-2 truncate text-ellipsis">
+                  <div className="flex w-full flex-1 flex-shrink flex-wrap gap-2 truncate text-ellipsis pr-8">
                     {(props.value as string[]).map((item, index) => {
                       const label = options?.find(
                         (option) => option.value === item
@@ -165,7 +185,7 @@ const Dropdown = ({
                     <input
                       type="text"
                       className={classNames(
-                        "w-full flex-1 flex-shrink truncate text-ellipsis border-none bg-transparent pr-8 font-medium outline-none placeholder:font-medium placeholder:text-white/50 disabled:text-white",
+                        "w-full flex-1 flex-shrink truncate text-ellipsis whitespace-nowrap border-none bg-transparent pr-8 font-medium outline-none placeholder:font-medium placeholder:text-white/50 disabled:text-white",
 
                         error && "placeholder:!text-[#fff]/50",
 
@@ -250,25 +270,16 @@ const Dropdown = ({
                 props?.value === label || props?.value === value;
 
               return isMultiSelect ? (
-                <div key={index} className="px-2.5 py-1.5">
+                <div
+                  key={index}
+                  className="checkbox group px-2.5 py-1.5"
+                  role="button"
+                  onClick={(e) => onMultipleSelect(value, e)}
+                >
                   <Checkbox
-                    labelClass="text-[14px]"
+                    labelClass="text-[14px] group-hover:text-mint text-black transition duration-500"
                     checked={props?.value?.includes(value)}
-                    onChange={() => {
-                      let newValue;
-
-                      if (props.value?.includes(value)) {
-                        newValue = (props.value as string[]).filter(
-                          (item) => item !== value
-                        );
-                      } else {
-                        newValue = [...(props.value as string[]), value];
-                      }
-
-                      handleSelect!(newValue);
-                      setSearch("");
-                    }}
-                    dark
+                    onChange={() => onMultipleSelect(value)}
                     label={label}
                   />
                 </div>
