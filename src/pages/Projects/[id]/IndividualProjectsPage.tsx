@@ -35,7 +35,8 @@ const IndividualProjectsPage = () => {
         <Contracts projectId={Number(id)} />
       </ContractsProvider>
 
-      <Partners projectId={Number(id)} />
+      {/* temporarily hide partners */}
+      {/* <Partners projectId={Number(id)} /> */}
 
       <Beneficiaries id={id} />
     </div>
