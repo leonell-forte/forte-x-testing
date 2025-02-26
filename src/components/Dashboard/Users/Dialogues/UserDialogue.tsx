@@ -176,7 +176,9 @@ const UserDialogue = ({
                   {...field}
                   autoComplete="email"
                   placeholder="Email"
-                  disabled={profile?.email === field.value}
+                  // disabled={profile?.email === field.value} uncomment to disable if email is same as user's email
+                  // disables email on edit mode
+                  disabled={Boolean(userId)}
                 />
               );
             }}
