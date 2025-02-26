@@ -75,8 +75,8 @@ const ResetRequestForm = ({ handleNext }: ILoginProps) => {
           </p>
 
           <p className="text-[18px]">
-            Forgot your password? Enter your email and we’ll send you a 4-digit
-            code.
+            Forgot your password? Enter your email and we&apos;ll send you a
+            6-digit code.
           </p>
         </div>
 

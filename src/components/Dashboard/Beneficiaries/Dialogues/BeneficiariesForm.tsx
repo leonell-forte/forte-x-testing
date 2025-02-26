@@ -30,6 +30,7 @@ import Controller from "components/ui/custom-controller/CustomController";
 import DatePicker from "components/ui/date-picker";
 import Dropdown, { IOption } from "components/ui/dropdown";
 import { Form } from "components/ui/form/Form";
+import InputMobile from "components/ui/form/InputMobile";
 import Input from "components/ui/input";
 
 import { useBeneficiariesContext } from "./BeneficiariesContext";
@@ -45,7 +46,7 @@ interface IProps {
 
   handleSuccess?: (id?: number) => void;
 
-  beneficiaryData?: IBeneficiaries;
+  beneficiaryData?: IBeneficiaries | null;
 
   handleClose?: () => void;
 }
@@ -143,7 +144,7 @@ const BeneficiariesForm = ({
       contractList?.items
         .filter((y) =>
           organizationList?.items.some((z) =>
-            String(y.partyIds).includes(String(z.id))
+            String(y.provider.id).includes(String(z.id))
           )
         )
         .map((item) => ({
@@ -167,9 +168,7 @@ const BeneficiariesForm = ({
             (contract) => contract.id === selectedContract
           );
 
-          return contract?.partyIds.some(
-            (item) => Number(item) === Number(org.id)
-          );
+          return contract?.provider.id === org.id;
         })
         .map((item) => ({
           label: item.name,
@@ -239,7 +238,7 @@ const BeneficiariesForm = ({
             control={control}
             name="phone"
             render={({ field }) => (
-              <Input {...field} readOnly={!onEdit} placeholder="Phone" />
+              <InputMobile {...field} readOnly={!onEdit} placeholder="Phone" />
             )}
           />
 
@@ -297,26 +296,16 @@ const BeneficiariesForm = ({
                 )}
                 handleSelect={(val) => {
                   field.onChange(Number(val));
-                  setValue(
-                    "providerId",
-                    Number(
-                      organizationList?.items.filter((org) => {
-                        const contract = contractList?.items.find(
-                          (contract) => contract.id === Number(val)
-                        );
-
-                        return contract?.partyIds.some(
-                          (item) => Number(item) === Number(org.id)
-                        );
-                      })[0].id
-                    )
+                  const contract = contractList?.items.find(
+                    (item) => item.id === Number(val)
                   );
+
+                  setValue("providerId", contract?.provider.id as number);
 
                   setValue(
                     "projectId",
 
-                    contractList?.items.find((item) => item.id === Number(val))
-                      ?.projectId as number
+                    contract?.projectId as number
                   );
 
                   setError("contractId", { message: "" });

@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-
-import bin from "assets/images/icons/bin.svg";
+import { FaTrash as Trash } from "react-icons/fa6";
 
 import { Contracts, IsAuthorized } from "lib/role-permissions";
 import { IContract } from "lib/types/contracts";
@@ -87,7 +86,7 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
 
               status,
 
-              parties,
+              provider,
 
               documentName,
             } = item;
@@ -107,7 +106,7 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
               >
                 <Cards.Group cols={2}>
                   <Cards.Details label="Name" value={name} />
-                  <Cards.Details label="Parties" value={parties?.join(", ")} />
+                  <Cards.Details label="Provider" value={provider?.name} />
                   <Cards.Details
                     label="Status"
                     value={status?.toLowerCase()}
@@ -125,8 +124,9 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
                       buttonType="default"
                       type="button"
                       onClick={() => handleDeleteContract(id!)}
+                      className="group"
                     >
-                      <img alt="bin" src={bin} />
+                      <Trash className="h-auto w-4 transition-all group-hover:fill-mint" />
                     </Button>
                   )}
                 </div>
@@ -158,7 +158,7 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
 
                 status,
 
-                parties,
+                provider,
 
                 documentName,
               } = item;
@@ -181,7 +181,7 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
                   <Table.Data className="w-[120px]">{name}</Table.Data>
 
                   <Table.Data className="w-[140px]">
-                    {parties?.join(", ")}
+                    {provider?.name}
                   </Table.Data>
 
                   <Table.Data className="w-[90px] capitalize">
@@ -201,9 +201,9 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
                           buttonType="default"
                           type="button"
                           onClick={() => handleDeleteContract(id!)}
-                          className="p-[3px]"
+                          className="group p-[3px]"
                         >
-                          <img alt="bin" src={bin} />
+                          <Trash className="h-auto w-5 transition-all group-hover:fill-mint" />
                         </Button>
                       </div>
                     )}
@@ -220,4 +220,11 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
 
 export default ContractsTable;
 
-const TABLE_HEADER = ["ID", "Name", "Parties", "Status", "Project", "Document"];
+const TABLE_HEADER = [
+  "ID",
+  "Name",
+  "Provider",
+  "Status",
+  "Project",
+  "Document",
+];

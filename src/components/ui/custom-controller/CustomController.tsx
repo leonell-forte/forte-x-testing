@@ -1,3 +1,4 @@
+import { Tooltip as Prim } from "@mui/material";
 import { get, isEqual } from "lodash";
 import { ComponentPropsWithoutRef } from "react";
 import {
@@ -9,7 +10,7 @@ import {
 
 import { cn } from "lib/utils";
 
-import Tooltip from "../tooltip/Tooltip";
+import { AlertIcon, Tooltip } from "../tooltip/Tooltip";
 
 type CustomProps = {
   name: string;
@@ -17,10 +18,7 @@ type CustomProps = {
   label?: string;
   labelClassName?: string;
   required?: boolean;
-  tooltip?: Pick<
-    ComponentPropsWithoutRef<typeof Tooltip>,
-    "position" | "offset"
-  >;
+  tooltip?: Partial<ComponentPropsWithoutRef<typeof Prim>>;
   containerClassName?: string;
 } & Omit<ControllerProps, "control">;
 
@@ -66,7 +64,14 @@ export default function CustomController({
 
   return (
     <Tooltip
-      content={result?.message}
+      title={
+        <>
+          <div className="flex items-center gap-1.5">
+            <AlertIcon />
+            <div className="flex-1 text-sm text-black">{result?.message}</div>
+          </div>
+        </>
+      }
       open={Boolean(result?.message) && isFirstIndex}
       {...(tooltip && tooltip)}
     >

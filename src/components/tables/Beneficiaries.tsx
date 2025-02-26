@@ -1,8 +1,7 @@
 import React from "react";
 import { ChangeEvent, useCallback, useState } from "react";
+import { FaTrash as Trash } from "react-icons/fa6";
 import { Link } from "react-router-dom";
-
-import bin from "assets/images/icons/bin.svg";
 
 import { DEFAULT_DATE_FORMAT } from "lib/constants";
 import { Beneficiaries, IsAuthorized } from "lib/role-permissions";
@@ -201,8 +200,9 @@ const BeneficiariesTable = ({
                         buttonType="default"
                         type="button"
                         onClick={() => handleDelete(id)}
+                        className="group"
                       >
-                        <img alt="pencil" src={bin} />
+                        <Trash className="h-auto w-4 transition-all group-hover:fill-mint" />
                       </Button>
                     </div>
                   )}
@@ -359,8 +359,9 @@ const BeneficiariesTable = ({
                           buttonType="default"
                           type="button"
                           onClick={() => handleDelete(id)}
+                          className="group"
                         >
-                          <img alt="pencil" src={bin} />
+                          <Trash className="h-auto w-5 transition-all group-hover:fill-mint" />
                         </Button>
                       </div>
                     )}

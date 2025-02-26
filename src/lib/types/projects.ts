@@ -28,6 +28,8 @@ export interface IProject {
   contracts?: string[];
 
   providers?: string[];
+
+  funderId?: number;
 }
 
 export interface IProjectOrganization {

@@ -7,9 +7,8 @@ import {
   useMemo,
   useState,
 } from "react";
-
-import closeFilter from "assets/images/icons/close-filter.svg";
-import filter from "assets/images/icons/filter.svg";
+import { BiSlider as SliderIcon } from "react-icons/bi";
+import { TbFilterX as FilterIcon } from "react-icons/tb";
 
 import { REGIONS, STATUS, TYPES } from "lib/constants";
 import { useDebounce, usePage, usePageTitle } from "lib/hooks";
@@ -53,7 +52,7 @@ const OrganizationsPage = () => {
 
   const [selectedOrg, setSelectedOrg] = useState("");
 
-  const [filters, setFilters] = useState<IFilters>(initialFilters);
+  const [filters, setFilters] = useState<IFilters>(initialFilters as IFilters);
 
   const { data: organizationList, isLoading: orgLoading } = useQuery({
     queryKey: ["organizations", page, debouncedSearch, filters],
@@ -110,7 +109,7 @@ const OrganizationsPage = () => {
                 <Button
                   buttonType="secondary"
                   onClick={() => {
-                    setFilters(initialFilters);
+                    setFilters(initialFilters as IFilters);
                   }}
                 >
                   Clear
@@ -144,9 +143,9 @@ const OrganizationsPage = () => {
                 e.stopPropagation();
                 setModal("filter");
               }}
-              className="flex-shrink-0 lg:hidden"
+              className="group flex-shrink-0 lg:hidden"
             >
-              <img src={filter} alt="filter" />
+              <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
             </button>
             <div className="hidden lg:block">
               <Filters filters={filters} setFilters={setFilters} />
@@ -201,7 +200,7 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
   };
 
   const handleRemoveFilters = () => {
-    setFilters(initialFilters);
+    setFilters(initialFilters as IFilters);
   };
   return (
     <div className="grid w-full grid-cols-1 gap-2.5 lg:flex">
@@ -241,9 +240,9 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
 
       <button
         onClick={handleRemoveFilters}
-        className="hidden flex-shrink-0 lg:block"
+        className="group hidden flex-shrink-0 lg:block"
       >
-        <img src={closeFilter} alt="close-filter" />
+        <FilterIcon className="h-auto w-5 fill-white transition-all group-hover:fill-mint group-hover:stroke-mint" />
       </button>
     </div>
   );

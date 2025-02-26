@@ -97,7 +97,12 @@ const ContractForm = ({
   const { data: organizationList, isLoading: orgLoading } = useQuery({
     queryKey: ["organizations"],
 
-    queryFn: () => organizationService.list({ page: 1, listAll: true }),
+    queryFn: () =>
+      organizationService.list({
+        page: 1,
+        listAll: true,
+        filters: { type: "provider" },
+      }),
   });
 
   const { data: projectsList, isLoading: projectLoading } = useQuery({
@@ -219,9 +224,9 @@ const ContractForm = ({
             )}
           />
           <Controller
-            label="Parties"
+            label="Provider"
             required
-            name="partyIds"
+            name="providerId"
             control={control}
             render={({ field }) => {
               return (
@@ -229,16 +234,16 @@ const ContractForm = ({
                   disabled={!onEdit}
                   enableSearch
                   loading={orgLoading}
-                  showAsTags
-                  value={field.value.map((item: number) => item.toString())}
+                  value={
+                    organizations.find(
+                      (item) => Number(item.value) === Number(field.value)
+                    )?.label
+                  }
                   options={organizations}
                   handleSelect={(val) => {
-                    field.onChange(
-                      (val as string[]).map((item) => Number(item))
-                    );
+                    field.onChange(Number(val));
                   }}
-                  isMultiSelect
-                  placeholder="Parties"
+                  placeholder="Provider"
                 />
               );
             }}
@@ -481,7 +486,7 @@ const ContractForm = ({
                 </Button>
               )}
 
-              {isSigned && !isAmmending ? (
+              {isSigned && !isAmmending && watch("status") !== "CANCELLED" ? (
                 <Button
                   onClick={(e) => {
                     e.preventDefault();

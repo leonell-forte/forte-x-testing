@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { IDialogueProps } from "components/ui/dialogue/dialogue";
 
@@ -27,7 +27,13 @@ const BeneficiariesDialogue = ({
 }: IBeneficiariesDialogueProps) => {
   const [modal, setModal] = useState<ModalLabelType>("beneficiaries");
 
+  const [beneficiaryId, setBeneficiaryId] = useState<number>(id!);
+
   const [evidenceId, setEvidenceId] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (id) setBeneficiaryId(id);
+  }, [id]);
 
   const close = () => {
     props.handleClose?.();
@@ -43,7 +49,8 @@ const BeneficiariesDialogue = ({
             {...props}
             editMode={editMode}
             handleClose={close}
-            id={id}
+            beneficiaryId={beneficiaryId}
+            setBeneficiaryId={setBeneficiaryId}
             projectId={projectId}
             handleAddOrViewEvidence={(id) => {
               setModal("evidence");

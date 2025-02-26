@@ -1,9 +1,9 @@
 "use client";
 
-import classNames from "classnames";
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 
-import arrow from "assets/images/icons/chevron.svg";
+import { cn } from "lib/utils";
 
 interface IPaginationProps {
   page: number;
@@ -65,13 +65,15 @@ const Pagination = ({
       <button
         type="button"
         onClick={handlePrev}
-        className="flex h-6 w-6 items-center justify-center"
+        className="group"
         disabled={page <= 1}
       >
-        <img
-          alt="prev"
-          src={arrow}
-          className={classNames("rotate-[90deg]", page <= 1 && "opacity-[.2]")}
+        <HiChevronLeft
+          className={cn(
+            "h-auto w-[18px] transition-all group-hover:fill-mint",
+
+            page <= 1 && "opacity-[.2]"
+          )}
         />
       </button>
       <div className="flex items-center gap-1.5">
@@ -92,14 +94,12 @@ const Pagination = ({
       <button
         type="button"
         onClick={handleNext}
-        className="flex h-6 w-6 items-center justify-center"
+        className="group"
         disabled={page >= pageCount}
       >
-        <img
-          alt="next"
-          src={arrow}
-          className={classNames(
-            "rotate-[-90deg]",
+        <HiChevronRight
+          className={cn(
+            "h-auto w-[18px] transition-all group-hover:fill-mint",
 
             page >= pageCount && "opacity-[.2]"
           )}

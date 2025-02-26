@@ -15,6 +15,7 @@ import Controller from "components/ui/custom-controller/CustomController";
 import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
 import Dropdown from "components/ui/dropdown";
 import { Form } from "components/ui/form/Form";
+import InputMobile from "components/ui/form/InputMobile";
 import Input from "components/ui/input";
 import Spinner from "components/ui/spinner/spinner";
 
@@ -147,11 +148,9 @@ const ViewProfileDialogue = ({
             control={control}
             render={({ field }) => {
               return (
-                <Input
+                <InputMobile
                   {...field}
                   readOnly={!onEdit}
-                  phoneNUmber
-                  autoComplete="tel"
                   placeholder="Phone number"
                 />
               );

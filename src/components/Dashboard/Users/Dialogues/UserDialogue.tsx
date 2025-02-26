@@ -18,9 +18,10 @@ import Controller from "components/ui/custom-controller/CustomController";
 import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
 import Dropdown from "components/ui/dropdown";
 import { Form } from "components/ui/form/Form";
+import InputMobile from "components/ui/form/InputMobile";
 import Input from "components/ui/input";
 import Spinner from "components/ui/spinner/spinner";
-import Tooltip from "components/ui/tooltip/Tooltip";
+import { Tooltip } from "components/ui/tooltip/Tooltip";
 
 interface IUserDialogueProps extends IDialogueProps {
   userId?: string;
@@ -67,7 +68,6 @@ const UserDialogue = ({
 
   useEffect(() => {
     // sets default value of the form
-
     if (userId) {
       reset(users.defaultValues(userData));
     }
@@ -93,14 +93,17 @@ const UserDialogue = ({
     await addUser(values);
   };
 
+  const isOwnAccount = Number(userId) === Number(profile?.id);
+
   const canEditRole = useMemo(() => {
     if (!myRole) return false;
     if (!userData) return true;
+    if (isOwnAccount) return false;
     if (myRole.includes("admin") && userData.role?.includes("owner"))
       return false;
     if (myRole.includes("owner") || myRole.includes("admin")) return true;
     return false;
-  }, [myRole, userData]);
+  }, [myRole, userData, isOwnAccount]);
 
   const tooltipMsg = useMemo(() => {
     if (!userData || !myRole) return "";
@@ -173,7 +176,9 @@ const UserDialogue = ({
                   {...field}
                   autoComplete="email"
                   placeholder="Email"
-                  disabled={profile?.email === field.value}
+                  // disabled={profile?.email === field.value} uncomment to disable if email is same as user's email
+                  // disables email on edit mode
+                  disabled={Boolean(userId)}
                 />
               );
             }}
@@ -214,13 +219,7 @@ const UserDialogue = ({
             required
             control={control}
             render={({ field }) => {
-              return (
-                <Input
-                  {...field}
-                  autoComplete="tel"
-                  placeholder="Phone number"
-                />
-              );
+              return <InputMobile label="Phone number" {...field} />;
             }}
           />
           <Controller
@@ -245,7 +244,11 @@ const UserDialogue = ({
               );
             }}
           />
-          <Tooltip content={tooltipMsg} {...(canEditRole && { open: false })}>
+          <Tooltip
+            title={tooltipMsg}
+            {...(canEditRole && { open: false })}
+            followCursor
+          >
             <div>
               <Controller
                 name="role"
@@ -253,7 +256,6 @@ const UserDialogue = ({
                 required
                 control={control}
                 render={({ field }) => {
-                  const isOwnAccount = Number(userId) === Number(profile?.id);
                   return (
                     <Dropdown
                       value={
@@ -264,7 +266,6 @@ const UserDialogue = ({
                       options={filteredRoles}
                       placeholder="Role"
                       disabled={!canEditRole || isOwnAccount}
-                      tooltip="You cannot change your own role."
                     />
                   );
                 }}

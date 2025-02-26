@@ -5,8 +5,7 @@ import projectService from "api/projects";
 import classNames from "classnames";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-
-import pencil from "assets/images/icons/pencil.svg";
+import { RiPencilFill as Pencil } from "react-icons/ri";
 
 import { usePageTitle } from "lib/hooks";
 import { useProjectMutation } from "lib/mutations/projects";
@@ -150,8 +149,9 @@ const Outcomes = ({ id }: IProps) => {
                             buttonType="default"
                             type="button"
                             onClick={() => setEditIndex(index)}
+                            className="group"
                           >
-                            <img src={pencil} alt="" />
+                            <Pencil className="h-auto w-5 transition-all group-hover:fill-mint" />
                           </Button>
                         )}
                       </div>
@@ -241,8 +241,9 @@ const Outcomes = ({ id }: IProps) => {
                             buttonType="default"
                             type="button"
                             onClick={() => setEditIndex(index)}
+                            className="group"
                           >
-                            <img src={pencil} alt="" />
+                            <Pencil className="h-auto w-5 transition-all group-hover:fill-mint" />
                           </Button>
                         )}
                       </div>

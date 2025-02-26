@@ -2,8 +2,7 @@
 
 import classNames from "classnames";
 import { ReactNode, useRef } from "react";
-
-import close from "assets/images/icons/close.svg";
+import { AiOutlineClose as X } from "react-icons/ai";
 
 import { useEscapeKey, useOutsideClick } from "lib/hooks";
 
@@ -60,6 +59,16 @@ const Dialogue = ({
   useEscapeKey(!hideClose ? closeDialogue : undefined);
 
   useOutsideClick(containerRef, () => {
+    const target = document.activeElement as HTMLElement;
+    // Ignore clicks on elements with these data attributes
+    if (
+      target.closest('[role="listbox"]') ||
+      target.closest('[role="combobox"]') ||
+      target.closest('[role="dialog"]') ||
+      target.closest("[data-radix-popper-content-wrapper]")
+    ) {
+      return;
+    }
     if (!hideClose) closeDialogue?.();
   });
 
@@ -73,7 +82,7 @@ const Dialogue = ({
       />
       <div
         className={classNames(
-          "fixed left-0 top-0 z-40 !mt-0 flex h-screen w-screen items-start justify-center overflow-y-auto bg-[#011217] bg-opacity-[90%] px-0 py-0 md:px-4 md:py-12",
+          "fixed left-0 top-0 z-30 !mt-0 flex h-screen w-screen items-start justify-center overflow-y-auto bg-[#011217] bg-opacity-[90%] px-0 py-0 md:px-4 md:py-12",
 
           center && "items-center"
         )}
@@ -96,9 +105,9 @@ const Dialogue = ({
                 e.stopPropagation();
                 closeDialogue?.();
               }}
-              className="absolute right-4 top-4"
+              className="group absolute right-4 top-4"
             >
-              <img alt="close" src={close} />
+              <X className="h-auto w-5 transition-all group-hover:fill-mint" />
             </button>
           )}
 

@@ -1,13 +1,19 @@
 import { capitalize } from "@mui/material";
 import classNames from "classnames";
-import { motion } from "framer-motion";
-import { InputHTMLAttributes, useMemo, useRef, useState } from "react";
+import {
+  InputHTMLAttributes,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { HiChevronDown } from "react-icons/hi";
 
 import { useOutsideClick } from "lib/hooks";
 import { cn } from "lib/utils";
 
 import Checkbox from "./checkbox";
+import { Popover, PopoverContent, PopoverTrigger } from "./popover/Popover";
 import Loader from "./spinner/spinner";
 import Tag from "./tag";
 
@@ -37,8 +43,6 @@ interface IDropdownProp extends InputHTMLAttributes<HTMLInputElement> {
   showAsTags?: boolean;
 
   enableSearch?: boolean;
-
-  tooltip?: string;
 }
 
 const Dropdown = ({
@@ -60,26 +64,15 @@ const Dropdown = ({
 
   enableSearch,
 
-  tooltip,
-
   ...props
 }: IDropdownProp) => {
+  const dropdownRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [focused, setFocused] = useState(false);
 
   const [showList, setShowList] = useState(false);
 
   const [search, setSearch] = useState("");
-
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-
-  const [isHovered, setIsHovered] = useState(false);
-
-  const dropdownRef = useRef(null);
-
-  useOutsideClick(dropdownRef, () => {
-    setFocused(false);
-    setShowList(false);
-  });
 
   const displayValue =
     isMultiSelect && Array.isArray(props.value)
@@ -93,208 +86,226 @@ const Dropdown = ({
       options.filter((item) =>
         item.label?.toLowerCase().includes(search?.toLowerCase())
       ),
-
     [search, options]
   );
 
+  useOutsideClick(dropdownRef, () => {
+    setShowList(false);
+    setFocused(false);
+  });
+
+  useEffect(() => {
+    if (showList && enableSearch && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [showList, enableSearch]);
+
   return (
     <div
+      ref={dropdownRef}
       className={classNames(
         "relative w-full",
 
         className
       )}
     >
-      <div
-        ref={dropdownRef}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        onMouseMove={(e) => {
-          const rect = e.currentTarget.getBoundingClientRect();
-          setMousePos({
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top,
-          });
+      <Popover
+        open={showList}
+        onOpenChange={(open) => {
+          if ((focused && showList) || props.disabled) return;
+          setShowList(open);
         }}
-        className={classNames(
-          "relative w-full cursor-pointer rounded-lg border px-3.5 py-2.5",
-
-          className,
-          props.disabled ? "border-disabled" : "border-white"
-        )}
       >
-        <div className="relative">
-          <button
-            disabled={props.disabled || props?.readOnly}
-            type="button"
-            onClick={() => {
-              setShowList(true);
-              setFocused(true);
-            }}
+        <PopoverTrigger
+          asChild
+          className={cn(props.disabled && "cursor-not-allowed")}
+        >
+          <div
             className={classNames(
-              "relative flex h-full w-full items-center gap-2.5 outline-none"
+              "relative w-full rounded-lg border px-3.5 py-2.5",
+              className,
+              props.disabled
+                ? "cursor-not-allowed border-disabled"
+                : "border-white"
             )}
           >
-            {showAsTags && isMultiSelect ? (
-              <div className="flex w-[80%] flex-1 flex-shrink flex-wrap gap-2 truncate text-ellipsis">
-                {(props.value as string[]).map((item, index) => {
-                  const label = options?.find(
-                    (option) => option.value === item
-                  )?.label;
-
-                  return (
-                    <Tag
-                      disabled={props.disabled}
-                      dark
-                      handleRemove={(e) => {
-                        e.stopPropagation();
-
-                        handleSelect!(
-                          (props.value as string[]).filter(
-                            (val) => val !== item
-                          )
-                        );
-                      }}
-                      key={index}
-                      label={label}
-                    />
-                  );
-                })}
-                <input
-                  type="text"
-                  className={classNames(
-                    "w-[80%] flex-1 flex-shrink truncate text-ellipsis border-none bg-transparent font-medium outline-none placeholder:font-medium placeholder:text-white/50 disabled:text-white",
-
-                    error && "placeholder:!text-[#fff]/50"
-                  )}
-                  {...props}
-                  value={
-                    focused && enableSearch
-                      ? search
-                      : capitalize(displayValue || "")
-                  }
-                  onChange={(e) => setSearch(e.target.value)}
-                  readOnly={!enableSearch}
-                />
-              </div>
-            ) : (
-              <input
-                type="text"
+            <div className="relative">
+              <button
+                disabled={props.disabled || props?.readOnly}
+                type="button"
                 className={classNames(
-                  "w-[80%] flex-1 flex-shrink truncate text-ellipsis border-none bg-transparent font-medium outline-none placeholder:font-medium placeholder:text-white/50 disabled:text-white",
-
-                  error && "placeholder:!text-[#fff]/50"
+                  "relative flex h-full w-full items-center gap-2.5 outline-none"
                 )}
-                {...props}
-                value={
-                  focused && enableSearch
-                    ? search
-                    : capitalize(displayValue || "")
-                }
-                onChange={(e) => setSearch(e.target.value)}
-                readOnly={!enableSearch}
-              />
-            )}
+              >
+                {showAsTags && isMultiSelect ? (
+                  <div className="flex w-[80%] flex-1 flex-shrink flex-wrap gap-2 truncate text-ellipsis">
+                    {(props.value as string[]).map((item, index) => {
+                      const label = options?.find(
+                        (option) => option.value === item
+                      )?.label;
 
-            <HiChevronDown
-              className={classNames(
-                "h-auto w-[20px] flex-shrink-0 transition-all",
-                showList && "rotate-180",
-                props.disabled ? "fill-disabled" : "fill-white"
-              )}
-            />
-          </button>
-          {tooltip && isHovered && props.disabled && (
-            <div
-              className="absolute z-[1000] rounded-md bg-slate-500/40 p-2"
-              style={{
-                left: `${mousePos.x}px`,
-                top: `${mousePos.y - 40}px`,
-              }}
-            >
-              <p className="flex-shrink-0 whitespace-nowrap text-[10px]">
-                {tooltip}
-              </p>
-            </div>
-          )}
-        </div>
+                      return (
+                        <Tag
+                          disabled={props.disabled}
+                          dark
+                          handleRemove={(e) => {
+                            e.stopPropagation();
 
-        <motion.ul
-          initial={{ opacity: 0 }}
-          animate={showList ? { opacity: 1 } : { opacity: 0, display: "none" }}
-          transition={{ type: "spring", duration: 0.2, bounce: 0 }}
-          className="hide-scroll absolute left-0 top-[100%] z-[999] mt-1.5 max-h-[400px] w-full min-w-[300px] space-y-2 overflow-hidden overflow-y-scroll rounded-[4px] bg-white/90 p-3.5 shadow-md backdrop-blur-lg"
-        >
-          <div>
-            {loading ? (
-              <div className="flex h-[100px] w-full items-center justify-center">
-                <Loader dark />
-              </div>
-            ) : (
-              optionList.map((item, index) => {
-                const { label, value } = item;
-                const isSelected =
-                  props?.value === label || props?.value === value;
+                            handleSelect!(
+                              (props.value as string[]).filter(
+                                (val) => val !== item
+                              )
+                            );
+                          }}
+                          key={index}
+                          label={label}
+                        />
+                      );
+                    })}
+                    <input
+                      type="text"
+                      className={classNames(
+                        "w-full flex-1 flex-shrink truncate text-ellipsis border-none bg-transparent pr-8 font-medium outline-none placeholder:font-medium placeholder:text-white/50 disabled:text-white",
 
-                return isMultiSelect ? (
-                  <div key={index} className="px-2.5 py-1.5">
-                    <Checkbox
-                      labelClass="text-[14px]"
-                      checked={props?.value?.includes(value)}
-                      onChange={() => {
-                        let newValue;
+                        error && "placeholder:!text-[#fff]/50",
 
-                        if (props.value?.includes(value)) {
-                          newValue = (props.value as string[]).filter(
-                            (item) => item !== value
-                          );
-                        } else {
-                          newValue = [...(props.value as string[]), value];
-                        }
-
-                        handleSelect!(newValue);
-                        setSearch("");
+                        props.disabled && "!cursor-not-allowed"
+                      )}
+                      {...props}
+                      ref={inputRef}
+                      value={
+                        focused && enableSearch
+                          ? search
+                          : capitalize(displayValue || "")
+                      }
+                      onBlur={() => {
+                        setFocused(false);
                       }}
-                      dark
-                      label={label}
+                      onFocus={() => {
+                        setShowList(true);
+                        setFocused(true);
+                      }}
+                      onChange={(e) => setSearch(e.target.value)}
+                      readOnly={!enableSearch || props?.readOnly}
+                      disabled={props.disabled}
                     />
                   </div>
                 ) : (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      handleSelect!(value);
+                  <input
+                    type="text"
+                    className={classNames(
+                      "w-full truncate text-ellipsis border-none bg-transparent pr-8 font-medium outline-none placeholder:font-medium placeholder:text-white/50 disabled:text-white",
 
-                      setShowList(false);
+                      error && "placeholder:!text-[#fff]/50",
 
-                      setFocused(false);
-                    }}
-                    key={index}
-                    className="w-full text-left"
-                  >
-                    <li
-                      className={cn(
-                        "truncate rounded-[8px] p-2 text-sm text-black transition duration-500",
-                        isSelected ? "bg-mint" : "hover:text-mint"
-                      )}
-                    >
-                      {label}
-                    </li>
-                  </button>
-                );
-              })
-            )}
+                      props.disabled && "!cursor-not-allowed"
+                    )}
+                    {...props}
+                    ref={inputRef}
+                    value={
+                      focused && enableSearch
+                        ? search
+                        : capitalize(displayValue || "")
+                    }
+                    {...(enableSearch && {
+                      onBlur: () => {
+                        setFocused(false);
+                      },
+                      onFocus: () => {
+                        setShowList(true);
+                        setFocused(true);
+                      },
+                    })}
+                    onChange={(e) => setSearch(e.target.value)}
+                    readOnly={!enableSearch || props?.readOnly}
+                  />
+                )}
+                <HiChevronDown
+                  className={classNames(
+                    "absolute right-0 h-auto w-[20px] flex-shrink-0 transition-all",
+                    showList && "rotate-180",
+                    props.disabled
+                      ? "cursor-not-allowed fill-disabled"
+                      : "fill-white"
+                  )}
+                />
+              </button>
+            </div>
           </div>
-        </motion.ul>
-      </div>
+        </PopoverTrigger>
 
-      {helperText && (
-        <div className="absolute pl-4">
-          <p className="line-clamp-1 text-[12px] font-medium text-alert">
-            {helperText}
-          </p>
-        </div>
-      )}
+        <PopoverContent onOpenAutoFocus={(e) => e.preventDefault()}>
+          {loading ? (
+            <div className="flex h-[100px] w-full items-center justify-center">
+              <Loader dark />
+            </div>
+          ) : optionList.length === 0 ? (
+            <div className="text-center text-sm text-black">
+              No results found.
+            </div>
+          ) : (
+            optionList.map((item, index) => {
+              const { label, value } = item;
+              const isSelected =
+                props?.value === label || props?.value === value;
+
+              return isMultiSelect ? (
+                <div key={index} className="px-2.5 py-1.5">
+                  <Checkbox
+                    labelClass="text-[14px]"
+                    checked={props?.value?.includes(value)}
+                    onChange={() => {
+                      let newValue;
+
+                      if (props.value?.includes(value)) {
+                        newValue = (props.value as string[]).filter(
+                          (item) => item !== value
+                        );
+                      } else {
+                        newValue = [...(props.value as string[]), value];
+                      }
+
+                      handleSelect!(newValue);
+                      setSearch("");
+                    }}
+                    dark
+                    label={label}
+                  />
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleSelect!(value);
+                    setShowList(false);
+                    setSearch("");
+                  }}
+                  key={index}
+                  className="w-full text-left"
+                >
+                  <li
+                    className={cn(
+                      "list-none truncate rounded-[8px] p-2 text-sm text-black transition duration-500",
+                      isSelected ? "bg-mint" : "hover:text-mint"
+                    )}
+                  >
+                    {label}
+                  </li>
+                </button>
+              );
+            })
+          )}
+        </PopoverContent>
+        {helperText && (
+          <div className="absolute pl-4">
+            <p className="line-clamp-1 text-[12px] font-medium text-alert">
+              {helperText}
+            </p>
+          </div>
+        )}
+      </Popover>
     </div>
   );
 };

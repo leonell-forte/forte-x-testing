@@ -34,7 +34,7 @@ const ConfirmPrompt = ({ confirmLeave }: IConfirmPrompt) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ type: "spring", duration: 0.4 }}
-      className="fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-[#011217] bg-opacity-[90%]"
+      className="fixed left-0 top-0 z-[999] flex h-screen w-screen items-center justify-center bg-[#011217] bg-opacity-[90%]"
     >
       <div className={styles["confirm-prompt"]}>
         <div className="space-y-3">

@@ -2,9 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import evidenceService from "api/evidence";
 import { useMemo } from "react";
 import { HiPlusCircle } from "react-icons/hi";
-import { Link } from "react-router-dom";
-
-import download from "assets/images/icons/download.svg";
+import { HiOutlineDownload as DL } from "react-icons/hi";
 
 import { EVIDENCE_STATUS } from "lib/constants";
 import { useAppSelector } from "lib/hooks";
@@ -44,9 +42,9 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
                 e.stopPropagation();
                 handleAddOrViewEvidence?.();
               }}
-              className="transition-all hover:scale-[1.05] hover:opacity-80"
+              className="group"
             >
-              <HiPlusCircle className="h-auto w-8 text-white" />
+              <HiPlusCircle className="h-auto w-8 text-white transition-all group-hover:fill-mint" />
             </button>
           </div>
         </div>
@@ -68,24 +66,22 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
                 <div className="space-y-2">
                   <p className="font-semibold">{file?.filename}</p>
                   <Cards.Group>
-                    <Cards.Details label="Outcome" value={outcome.name} />
+                    <Cards.Details label="Outcome" value={outcome?.name} />
                     <Cards.Details label="Description" value={description} />
                     <Cards.Details label="Status" value={status} capitalize />
                   </Cards.Group>
-                  <div className="absolute bottom-4 right-4">
-                    <Link
-                      to={file?.fileUrl}
-                      download
-                      target="_blank"
+                  <div className="absolute bottom-3 right-4 z-50">
+                    <button
                       type="button"
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        evidenceService.getFile(file.fileUrl, file.filename);
+                      }}
+                      className="group"
                     >
-                      <img
-                        src={download}
-                        alt="download"
-                        className="flex-shrink-0"
-                      />
-                    </Link>
+                      <DL className="h-auto w-6 transition-all group-hover:stroke-mint" />
+                    </button>
                   </div>
                 </div>
               </Cards.Card>
@@ -136,16 +132,14 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
                   <Table.Data>
                     <button
                       type="button"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
                         evidenceService.getFile(file.fileUrl, file.filename);
                       }}
-                      className="mt-1.5"
+                      className="group mt-1.5"
                     >
-                      <img
-                        src={download}
-                        alt="download"
-                        className="flex-shrink-0"
-                      />
+                      <DL className="h-auto w-6 transition-all group-hover:stroke-mint" />
                     </button>
                   </Table.Data>
                 </Table.Row>
