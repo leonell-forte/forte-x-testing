@@ -241,7 +241,7 @@ const HEADERS = [
   "Organization",
   "Registered Name",
   "Registered Address",
-  "Registration",
+  "Registration Number",
   "Region",
   "Type",
   "Status",

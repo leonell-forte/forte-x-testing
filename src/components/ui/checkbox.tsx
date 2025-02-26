@@ -13,6 +13,8 @@ import checkedDisabled from "assets/images/icons/checkbox-disabled-checked.svg";
 import unCheckedDisabled from "assets/images/icons/checkbox-disabled-unchecked.svg";
 import unChecked from "assets/images/icons/checkbox-unchecked.svg";
 
+import { cn } from "lib/utils";
+
 interface ICheckboxProps extends CheckboxProps {
   label?: string | ReactNode;
   helperText?: string | ReactNode;
@@ -78,13 +80,13 @@ const Checkbox = ({
                   ),
                 })}
             {...props}
-            className="flex-shrink-0"
+            className="checkbox flex-shrink-0"
           />
         }
         label={
           label && (
             <p
-              className={classNames(
+              className={cn(
                 dark && "!text-black",
 
                 "text-[12px] text-grey",
