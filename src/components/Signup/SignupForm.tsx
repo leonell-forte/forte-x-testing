@@ -169,15 +169,23 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
                 }}
                 label={
                   <>
-                    I agree to
+                    I have read, understand, and agree to be bound by the{" "}
+                    <Link
+                      to="https://forteglobal.com/terms"
+                      className="link"
+                      target="_blank"
+                    >
+                      Terms of Use
+                    </Link>{" "}
+                    and{" "}
                     <Link
                       to="https://forteglobal.com/privacy-policy"
                       className="link"
                       target="_blank"
                     >
-                      {" "}
-                      Forte&rsquo;s Privacy Policy
-                    </Link>{" "}
+                      Privacy Policy
+                    </Link>
+                    .
                   </>
                 }
               />
