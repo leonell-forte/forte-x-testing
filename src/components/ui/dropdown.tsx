@@ -116,12 +116,17 @@ const Dropdown = ({
           setShowList(open);
         }}
       >
-        <PopoverTrigger asChild>
+        <PopoverTrigger
+          asChild
+          className={cn(props.disabled && "cursor-not-allowed")}
+        >
           <div
             className={classNames(
-              "relative w-full cursor-pointer rounded-lg border px-3.5 py-2.5",
+              "relative w-full rounded-lg border px-3.5 py-2.5",
               className,
-              props.disabled ? "border-disabled" : "border-white"
+              props.disabled
+                ? "cursor-not-allowed border-disabled"
+                : "border-white"
             )}
           >
             <div className="relative">
@@ -162,7 +167,9 @@ const Dropdown = ({
                       className={classNames(
                         "w-full flex-1 flex-shrink truncate text-ellipsis border-none bg-transparent pr-8 font-medium outline-none placeholder:font-medium placeholder:text-white/50 disabled:text-white",
 
-                        error && "placeholder:!text-[#fff]/50"
+                        error && "placeholder:!text-[#fff]/50",
+
+                        props.disabled && "!cursor-not-allowed"
                       )}
                       {...props}
                       ref={inputRef}
@@ -180,6 +187,7 @@ const Dropdown = ({
                       }}
                       onChange={(e) => setSearch(e.target.value)}
                       readOnly={!enableSearch || props?.readOnly}
+                      disabled={props.disabled}
                     />
                   </div>
                 ) : (
@@ -188,7 +196,9 @@ const Dropdown = ({
                     className={classNames(
                       "w-full truncate text-ellipsis border-none bg-transparent pr-8 font-medium outline-none placeholder:font-medium placeholder:text-white/50 disabled:text-white",
 
-                      error && "placeholder:!text-[#fff]/50"
+                      error && "placeholder:!text-[#fff]/50",
+
+                      props.disabled && "!cursor-not-allowed"
                     )}
                     {...props}
                     ref={inputRef}
@@ -214,7 +224,9 @@ const Dropdown = ({
                   className={classNames(
                     "absolute right-0 h-auto w-[20px] flex-shrink-0 transition-all",
                     showList && "rotate-180",
-                    props.disabled ? "fill-disabled" : "fill-white"
+                    props.disabled
+                      ? "cursor-not-allowed fill-disabled"
+                      : "fill-white"
                   )}
                 />
               </button>
