@@ -8,9 +8,8 @@ import {
   useMemo,
   useState,
 } from "react";
-
-import closeFilter from "assets/images/icons/close-filter.svg";
-import filter from "assets/images/icons/filter.svg";
+import { BiSlider as SliderIcon } from "react-icons/bi";
+import { TbFilterX as FilterIcon } from "react-icons/tb";
 
 import { ROLES } from "lib/constants";
 import { useDebounce, usePage, usePageTitle } from "lib/hooks";
@@ -154,9 +153,9 @@ const UsersPage = () => {
                   e.stopPropagation();
                   setModal("filter");
                 }}
-                className="flex-shrink-0 md:hidden"
+                className="group flex-shrink-0 md:hidden"
               >
-                <img src={filter} alt="filter" />
+                <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
               </button>
             </div>
 
@@ -252,9 +251,9 @@ const Filters = ({
 
       <button
         onClick={handleRemoveFilters}
-        className="hidden flex-shrink-0 md:block"
+        className="group hidden flex-shrink-0 md:block"
       >
-        <img src={closeFilter} alt="close-filter" />
+        <FilterIcon className="h-auto w-5 fill-white transition-all group-hover:fill-mint group-hover:stroke-mint" />
       </button>
     </div>
   );

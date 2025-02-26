@@ -2,8 +2,7 @@
 
 import classNames from "classnames";
 import { ReactNode, useRef } from "react";
-
-import close from "assets/images/icons/close.svg";
+import { AiOutlineClose as X } from "react-icons/ai";
 
 import { useEscapeKey, useOutsideClick } from "lib/hooks";
 
@@ -106,9 +105,9 @@ const Dialogue = ({
                 e.stopPropagation();
                 closeDialogue?.();
               }}
-              className="absolute right-4 top-4"
+              className="group absolute right-4 top-4"
             >
-              <img alt="close" src={close} />
+              <X className="h-auto w-5 transition-all group-hover:fill-mint" />
             </button>
           )}
 

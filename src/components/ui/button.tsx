@@ -30,7 +30,8 @@ const Button = ({
       "&:hover": {
         backgroundColor: "#42ECA8",
       },
-      transitionDuration: "500ms",
+      transitionProperty: "all",
+      transitionDuration: "400ms",
     },
 
     secondary: {
@@ -42,6 +43,12 @@ const Button = ({
       boxShadow: "none",
       color: disabled ? "#787878" : active ? "#42ECA8" : "#ffffff",
       fontWeight: "450",
+      "&:hover": {
+        borderColor: "#42ECA8",
+        color: "#42ECA8",
+      },
+      transitionProperty: "all",
+      transitionDuration: "400ms",
     },
 
     tertiary: {
@@ -69,7 +76,7 @@ const Button = ({
       sx={variants[(buttonType as keyof typeof variants) || "primary"]}
       {...props}
       className={classNames(
-        "h-11 gap-[10px] truncate !px-6 !normal-case",
+        "h-11 gap-[10px] truncate !px-6 !normal-case transition-all",
 
         props.className
       )}
