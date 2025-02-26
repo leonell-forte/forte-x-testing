@@ -42,7 +42,7 @@ export const users = {
 
     phoneNumber: z
       .string()
-      .min(1, "Phone number is a required field")
+      .min(3, "Phone number is a required field")
       .refine((pn) => isPhoneValid(pn), {
         message: "Invalid phone number",
       }),

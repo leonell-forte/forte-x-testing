@@ -80,21 +80,22 @@ export const signup = {
 
       phoneNumber: z
         .string()
-        .min(1, "Phone number is a required field")
+        // workaround for now
+        .min(3, "Phone number is a required field")
         .refine((pn) => isPhoneValid(pn), {
           message: "Invalid phone number",
         }),
 
       password: z
         .string()
-        .min(8, "Password must be at least 8 characters long")
         .regex(/[a-z]/, "Password must contain at least one lowercase letter")
         .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
         .regex(/\d/, "Password must contain at least one number")
         .regex(
           /[!@#$%^&*(),.?":{}|<>]/,
           "Password must contain at least one special character"
-        ),
+        )
+        .min(8, "Password must be at least 8 characters long"),
 
       confirmPassword: z.string().min(1, "Passwords do not match"),
 
