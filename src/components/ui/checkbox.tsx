@@ -3,7 +3,6 @@ import {
   FormControlLabel,
   Checkbox as MuiCheckbox,
 } from "@mui/material";
-import classNames from "classnames";
 import { ReactNode, useCallback } from "react";
 import { MdCheckBox as Checked } from "react-icons/md";
 import { MdCheckBoxOutlineBlank as Unchecked } from "react-icons/md";
