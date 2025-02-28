@@ -1,13 +1,17 @@
 import { RxHamburgerMenu as Burger } from "react-icons/rx";
 import { Link } from "react-router-dom";
 
+import { REDIRECT_PATHS } from "lib/constants";
 import { useAppDispatch, usePageTitle } from "lib/hooks";
 import { setShowSidePanel } from "lib/slice/layout";
+
+import { useProfile } from "components/ProfileContext";
 
 import { SearchConsoleMarker } from "./SearchConsole";
 import UserDropdown from "./UserDropdown";
 
 const Header = () => {
+  const { profile } = useProfile();
   const dispatch = useAppDispatch();
 
   const { pageTitle } = usePageTitle();
@@ -23,7 +27,7 @@ const Header = () => {
           <Burger className="h-auto w-6" />
         </button>
 
-        <Link to="/users">
+        <Link to={REDIRECT_PATHS[profile.role!]}>
           <img
             alt="logo"
             src="/logo.png"
