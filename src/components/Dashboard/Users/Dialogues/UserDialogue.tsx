@@ -154,6 +154,8 @@ const UserDialogue = ({
     }
   }, [isNonForteUser, profile, userOrganization, setValue]);
 
+  console.log(userData);
+
   return (
     <Dialogue
       confirmBeforeLeave={isDirty}
@@ -309,7 +311,7 @@ const UserDialogue = ({
               <label className={"min-w-[140px]"}>Terms</label>
               <Input
                 disabled
-                value={`Accepted${userData?.signUpSource ? ` on ${userData?.signUpSource}` : ""} at ${formatDate(userData?.createdAt || "", DEFAULT_DATE_FORMAT + " HH:mm aa")}`}
+                value={`Accepted${userData?.signUpSource ? ` on ${userData?.signUpSource}` : ""} at ${formatDate(userData?.agreedTermsAt || userData?.createdAt || "", DEFAULT_DATE_FORMAT + " HH:mm aa")}`}
               />
             </div>
           )}

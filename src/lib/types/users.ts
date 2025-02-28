@@ -42,6 +42,8 @@ export interface IUser {
 
   createdAt?: Date;
 
+  agreedTermsAt?: Date;
+
   updatedAt?: Date;
 
   status?: UserStatus;
