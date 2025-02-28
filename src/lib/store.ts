@@ -3,13 +3,22 @@ import { configureStore } from "@reduxjs/toolkit";
 import alert from "./slice/alert";
 import auth from "./slice/auth";
 import confirmPrompt from "./slice/confirm-prompt";
+import customPrompt from "./slice/custom-prompt";
 import evidence from "./slice/evidence";
 import layout from "./slice/layout";
 import scroll from "./slice/scroll";
 
 export const makeStore = () => {
   return configureStore({
-    reducer: { auth, alert, layout, scroll, evidence, confirmPrompt },
+    reducer: {
+      auth,
+      alert,
+      layout,
+      scroll,
+      evidence,
+      confirmPrompt,
+      customPrompt,
+    },
   });
 };
 

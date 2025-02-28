@@ -18,6 +18,7 @@ import Layout from "./Dashboard/Layout";
 import { SearchConsole } from "./Layout/Header/SearchConsole";
 import { ProfileProvider } from "./ProfileContext";
 import Providers from "./Providers";
+import CustomPrompt from "./ui/alert/custom-prompt";
 import Spinner from "./ui/spinner/spinner";
 
 const Admin = () => {
@@ -50,6 +51,7 @@ const PrivateMapper = () => {
     return <Navigate to="/" state={{ from: window.location.pathname }} />;
   return (
     <ProfileProvider>
+      <CustomPrompt />
       <Admin />
     </ProfileProvider>
   );
