@@ -171,7 +171,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
                   <>
                     I have read, understand, and agree to be bound by the{" "}
                     <Link
-                      to="https://forteglobal.com/terms"
+                      to="https://test.forteglobal.com/terms"
                       className="link"
                       target="_blank"
                     >
