@@ -154,8 +154,6 @@ const UserDialogue = ({
     }
   }, [isNonForteUser, profile, userOrganization, setValue]);
 
-  console.log(userData);
-
   return (
     <Dialogue
       confirmBeforeLeave={isDirty}
