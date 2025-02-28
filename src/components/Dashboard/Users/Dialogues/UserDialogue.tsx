@@ -2,13 +2,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { capitalize } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import userService from "api/users";
+import classNames from "classnames";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
-import { ROLES } from "lib/constants";
+import { DEFAULT_DATE_FORMAT, ROLES } from "lib/constants";
 import useUserMutation from "lib/mutations/users";
 import { IOrganization } from "lib/types/organizations";
 import { UserFieldTypes, UserStatusValues } from "lib/types/users";
+import { formatDate } from "lib/utils";
 import { users } from "lib/validators/users";
 
 import { useProfile } from "components/ProfileContext";
@@ -297,6 +299,20 @@ const UserDialogue = ({
               );
             }}
           />
+
+          {Boolean(userId) && !isNonForteUser && (
+            <div
+              className={classNames(
+                "flex w-full flex-col gap-y-1.5 md:flex-row md:items-center"
+              )}
+            >
+              <label className={"min-w-[140px]"}>Terms</label>
+              <Input
+                disabled
+                value={`Accepted${userData?.signUpSource ? ` on ${userData?.signUpSource}` : ""} at ${formatDate(userData?.createdAt || "", DEFAULT_DATE_FORMAT + " HH:mm aa")}`}
+              />
+            </div>
+          )}
 
           <div className="!mt-10 flex justify-end gap-4">
             <Button

@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { datoClient } from "lib/axios/datocms-client";
 import { UserData } from "lib/types/auth";
 import { ProfileType } from "lib/types/profile";
 import { LoginReturnType } from "lib/types/users";
@@ -10,25 +11,55 @@ import { cookie } from "../lib/hooks";
 import { login, password, signup } from "../lib/validators/auth";
 
 class AuthService {
+  private getPlatform(): "mobile" | "web" {
+    const userAgent = navigator.userAgent || navigator.vendor;
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        userAgent
+      );
+    return isMobile ? "mobile" : "web";
+  }
+
   async login(body: z.infer<typeof login.schema>): Promise<LoginReturnType> {
     const res = await api.post("/authentication/login", body);
 
     return res.data.data;
   }
 
+  async getLatestTermsVersion() {
+    try {
+      const res = await datoClient.post("", {
+        query: `
+        query {
+          term {
+            terms {
+              version
+            }
+          }
+        }
+      `,
+      });
+
+      return res.data.data.term.terms.pop().version;
+    } catch (err) {
+      return err;
+    }
+  }
+
   async signup(body: z.infer<typeof signup.schema>, code: string = "") {
+    const termsVersion = await this.getLatestTermsVersion();
+
     let data = {
       ...body,
-
       hasAgreedToTerms: body.agreeTerms ? true : false,
-
       invitationCode: formatInvitationCode(code),
+      signUpSource: this.getPlatform(),
+      termsVersion: termsVersion,
     };
 
     delete data.agreeTerms;
 
     const res = await api.post("/authentication/signup", data);
-
     return res;
   }
 

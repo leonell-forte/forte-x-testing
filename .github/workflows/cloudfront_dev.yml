@@ -20,6 +20,9 @@ jobs:
         run: |
           echo "REACT_APP_AMPLITUDE_API_KEY=${{ secrets.REACT_APP_AMPLITUDE_API_KEY_DEV }}" >> .env
           echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL_DEV }}" >> .env
+          echo "REACT_APP_DATOCMS_TOKEN=${{ secrets.REACT_APP_DATOCMS_TOKEN }}" >> .env
+          echo "REACT_APP_DATOCMS_API_URL=${{ secrets.REACT_APP_DATOCMS_API_URL }}" >> .env
+          echo "REACT_APP_ENVIRONMENT=${{ secrets.REACT_APP_ENVIRONMENT_DEV }}" >> .env
 
       - name: Build project
         run: npm run build
