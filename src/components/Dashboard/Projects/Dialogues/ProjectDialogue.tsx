@@ -12,6 +12,7 @@ import { ProjectFieldValues } from "lib/types/projects";
 import { projects } from "lib/validators/projects";
 
 import { useConfirmPrompt } from "components/ui/alert/confirm-prompt";
+import { useCustomPrompt } from "components/ui/alert/custom-prompt";
 import Button from "components/ui/button";
 import Controller from "components/ui/custom-controller/CustomController";
 import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
@@ -31,6 +32,8 @@ const ProjectDialogue = ({
   handleClose,
   projectId,
 }: IProjectDialogueProps) => {
+  const { setShowPrompt } = useConfirmPrompt();
+  const { open } = useCustomPrompt();
   // Project query
   const { data: project, isLoading: projectLoading } = useQuery({
     queryKey: ["specific-project", projectId],
@@ -78,6 +81,32 @@ const ProjectDialogue = ({
     name: "outcomes",
   });
 
+  const handleAddOutcome = () => {
+    append({ name: "", description: "" });
+  };
+
+  const close = () => {
+    reset();
+    handleClose!();
+  };
+
+  // implements optimistic update after adding or editing project
+  const { addProject, isPending } = useProjectMutation(projectId!, close);
+
+  const onSubmit = async (values: ProjectFieldValues) => {
+    if (project) {
+      open({
+        title: "Confirm email with changes",
+        subText:
+          "Saving edits will send an email to all Project Partner users. Click cancel to revert or send to confirm changes and send the emails",
+        onYes: () => addProject(values),
+        yesLabel: "Send email with changes",
+      });
+      return;
+    }
+    await addProject(values);
+  };
+
   useEffect(() => {
     // sets default value of project form
     if (project) {
@@ -101,24 +130,6 @@ const ProjectDialogue = ({
       });
     }
   }, [errors, append, setError]);
-
-  const handleAddOutcome = () => {
-    append({ name: "", description: "" });
-  };
-
-  const close = () => {
-    reset();
-    handleClose!();
-  };
-
-  // implements optimistic update after adding or editing project
-  const { addProject, isPending } = useProjectMutation(projectId!, close);
-
-  const onSubmit = async (values: ProjectFieldValues) => {
-    await addProject(values);
-  };
-
-  const { setShowPrompt } = useConfirmPrompt();
 
   return (
     <Dialogue

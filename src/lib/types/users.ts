@@ -42,9 +42,15 @@ export interface IUser {
 
   createdAt?: Date;
 
+  agreedTermsAt?: Date;
+
   updatedAt?: Date;
 
   status?: UserStatus;
+
+  termsVersion?: string;
+
+  signUpSource?: string;
 }
 
 export type UserFieldTypes = z.infer<typeof users.schema>;

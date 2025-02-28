@@ -2,6 +2,7 @@ import { capitalize } from "@mui/material";
 import classNames from "classnames";
 import {
   InputHTMLAttributes,
+  MouseEvent,
   useEffect,
   useMemo,
   useRef,
@@ -89,10 +90,7 @@ const Dropdown = ({
     [search, options]
   );
 
-  const onMultipleSelect = (
-    value: string,
-    e?: React.MouseEvent<HTMLDivElement>
-  ) => {
+  const onMultipleSelect = (value: string, e?: MouseEvent<HTMLDivElement>) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();

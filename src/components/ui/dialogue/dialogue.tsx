@@ -7,6 +7,7 @@ import { AiOutlineClose as X } from "react-icons/ai";
 import { useEscapeKey, useOutsideClick } from "lib/hooks";
 
 import ConfirmPrompt, { useConfirmPrompt } from "../alert/confirm-prompt";
+import { useCustomPrompt } from "../alert/custom-prompt";
 import styles from "./styles.module.scss";
 
 export interface IDialogueProps {
@@ -47,9 +48,10 @@ const Dialogue = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { setShowPrompt } = useConfirmPrompt();
+  const { show: isCustomPromptOpen } = useCustomPrompt();
 
   const closeDialogue = () => {
-    if (confirmBeforeLeave) {
+    if (confirmBeforeLeave && !isCustomPromptOpen) {
       setShowPrompt(true);
       return;
     }
@@ -65,7 +67,9 @@ const Dialogue = ({
       target.closest('[role="listbox"]') ||
       target.closest('[role="combobox"]') ||
       target.closest('[role="dialog"]') ||
-      target.closest("[data-radix-popper-content-wrapper]")
+      target.closest("[data-radix-popper-content-wrapper]") ||
+      // ignore if custom prompt is open
+      isCustomPromptOpen
     ) {
       return;
     }
