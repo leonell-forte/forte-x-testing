@@ -60,9 +60,9 @@ const Alert = () => {
         transition={{ type: "spring", duration: 0.5, bounce: 0 }}
         className={styles.alert}
       >
-        <div className="relative flex items-start gap-6 px-10 py-9">
+        <div className="relative flex items-start gap-6 px-10 py-6">
           {status === "success" && <img src={success} alt="" />}
-          <div className="space-y-2">
+          <div className="space-y-px">
             {title && <p className="heading">{title}</p>}
             {message && renderMessage(message)}
           </div>

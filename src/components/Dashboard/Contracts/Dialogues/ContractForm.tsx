@@ -103,6 +103,7 @@ const ContractForm = ({
         listAll: true,
         filters: { type: "provider" },
       }),
+    refetchOnWindowFocus: false,
   });
 
   const { data: projectsList, isLoading: projectLoading } = useQuery({

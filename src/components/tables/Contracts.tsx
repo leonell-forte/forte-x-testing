@@ -37,7 +37,6 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
   };
 
   const renderDialog = useCallback(() => {
-    console.log(modal);
     switch (modal) {
       case "contract":
         return (

@@ -20,8 +20,8 @@ export const CustomTrigger = React.forwardRef<
     ref={ref}
     className={classNames(
       "bg-background ring-offset-background flex h-[40.13px] w-full items-center justify-between rounded-lg border px-3 py-2 text-sm leading-4 sm:text-base",
-      "focus:outline-none disabled:bg-gray-300",
-      "disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+      "focus:outline-none",
+      "disabled:cursor-not-allowed [&>span]:line-clamp-1",
       "[&[data-state=open]>svg]:rotate-180",
       "[&>span]:text-left [&>span]:text-inherit",
       "focus:border-selected data-[placeholder]:text-white/70",
@@ -84,7 +84,8 @@ const InputMobile = ({
           }}
           defaultValue={country.iso2}
           value={country.iso2}
-          disabled={disabled}
+          disabled={readOnly || disabled}
+          {...(readOnly || disabled ? { open: false } : {})}
         >
           <CustomTrigger
             value={country.iso2}
