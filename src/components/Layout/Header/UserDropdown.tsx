@@ -22,6 +22,8 @@ const UserDropdown = () => {
     queryKey: ["organizations"],
 
     queryFn: () => organizationService.list({ page: 1, listAll: true }),
+
+    refetchOnWindowFocus: false,
   });
 
   const [showDropdown, setShowDropdown] = useState(false);

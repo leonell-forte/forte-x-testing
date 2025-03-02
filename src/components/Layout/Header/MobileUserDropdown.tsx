@@ -22,6 +22,7 @@ const MobileUserDropdown = () => {
   const { data: organizationList } = useQuery({
     queryKey: ["organizations"],
     queryFn: () => organizationService.list({ page: 1, listAll: true }),
+    refetchOnWindowFocus: false,
   });
 
   const handleLogout = () => authService.logout();
