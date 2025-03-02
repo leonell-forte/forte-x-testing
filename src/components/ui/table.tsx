@@ -107,7 +107,7 @@ const Table = {
       <th
         {...props}
         className={classNames(
-          "h-[50px] truncate pl-[16px] font-[450] !text-black",
+          "h-[50px] max-w-[120px] truncate pl-[16px] font-[450] !text-black",
           props.className
         )}
       >
