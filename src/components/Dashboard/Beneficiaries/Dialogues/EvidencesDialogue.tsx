@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import evidenceService from "api/evidence";
 import projectService from "api/projects";
+import { get } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -14,6 +15,7 @@ import { EvidenceFieldValues } from "lib/types/evidence";
 import { findLabelFromOptions } from "lib/utils";
 import { evidence } from "lib/validators/evidence";
 
+import { useCustomPrompt } from "components/ui/alert/custom-prompt";
 import Button from "components/ui/button";
 import Controller from "components/ui/custom-controller/CustomController";
 import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
@@ -30,7 +32,22 @@ interface IEvidencesDialogueProps extends IDialogueProps {
   id?: number;
 }
 
+const config = {
+  "pending review": {
+    title: "Request review",
+    subText:
+      "Changing a beneficiary status to Pending evidence review will send an email to Forte or your Funder asking them to review this Beneficiary’s evidence. Click cancel to revert or send request to send the email.",
+  },
+  "more information requested": {
+    title: "Request more information",
+    subText:
+      "Changing evidence status to More information requested will send an email to Forte or your Funder asking them to review this evidence. Click cancel to revert or send request to send the email.",
+  },
+};
+
 const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
+  const { open } = useCustomPrompt();
+
   const [onEdit, setOnEdit] = useState(id ? false : true);
 
   const [uploading, setUploading] = useState(false);
@@ -68,6 +85,7 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
   } = form;
 
   const file = watch("file");
+  const status = watch("status");
 
   const { data: fileData, isLoading: isFileLoading } = useQuery({
     queryKey: ["file", file?.fileUrl],
@@ -115,6 +133,18 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
   });
 
   const onSubmit = async (values: EvidenceFieldValues) => {
+    if (
+      evidenceData &&
+      status !== "accepted" &&
+      evidenceData.status !== status
+    ) {
+      open({
+        ...get(config, status),
+        onYes: () => addEvidence(values),
+        yesLabel: "Send request",
+      });
+      return;
+    }
     await addEvidence(values);
   };
 
