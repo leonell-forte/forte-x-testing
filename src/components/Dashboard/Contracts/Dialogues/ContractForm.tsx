@@ -117,11 +117,13 @@ const ContractForm = ({
 
   const organizations: IOption[] = useMemo(
     () =>
-      organizationList?.items?.map((item: IOrganization) => ({
-        label: item.name,
+      organizationList?.items
+        ?.map((item: IOrganization) => ({
+          label: item.name,
 
-        value: item.id?.toString() as string,
-      })) || [],
+          value: item.id?.toString() as string,
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label)) || [],
 
     [organizationList]
   );
