@@ -75,6 +75,8 @@ const Dropdown = ({
 
   const [search, setSearch] = useState("");
 
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
+
   const displayValue =
     isMultiSelect && Array.isArray(props.value)
       ? props.value.length
@@ -269,15 +271,20 @@ const Dropdown = ({
               const isSelected =
                 props?.value === label || props?.value === value;
 
+              const isHovered = hoverIndex === index;
+
               return isMultiSelect ? (
                 <div
                   key={index}
-                  className="checkbox group px-2.5 py-1.5"
+                  className="checkbox group rounded-[8px] px-2.5 py-1.5 transition-all hover:bg-mint"
                   role="button"
                   onClick={(e) => onMultipleSelect(value, e)}
+                  onMouseEnter={() => setHoverIndex(index)}
+                  onMouseLeave={() => setHoverIndex(null)}
                 >
                   <Checkbox
-                    labelClass="text-[14px] group-hover:text-mint text-black transition duration-500"
+                    white={isHovered}
+                    labelClass="text-[14px] text-black transition duration-500"
                     checked={props?.value?.includes(value)}
                     onChange={() => onMultipleSelect(value)}
                     label={label}
@@ -299,7 +306,7 @@ const Dropdown = ({
                   <li
                     className={cn(
                       "list-none truncate rounded-[8px] p-2 text-sm text-black transition duration-500",
-                      isSelected ? "bg-mint" : "hover:text-mint"
+                      isSelected ? "bg-mint" : "hover:bg-mint"
                     )}
                   >
                     {label}

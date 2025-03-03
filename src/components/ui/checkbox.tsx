@@ -59,8 +59,10 @@ const Checkbox = ({
             }}
             {...(white
               ? {
-                  icon: <Unchecked className="text-xl" />,
-                  checkedIcon: <Checked className="text-xl" />,
+                  icon: <Unchecked className="translate-x-[-2px] text-xl" />,
+                  checkedIcon: (
+                    <Checked className="translate-x-[-2px] text-xl" />
+                  ),
                 }
               : {
                   icon: (
