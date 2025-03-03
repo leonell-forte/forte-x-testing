@@ -2,7 +2,7 @@
 
 import classNames from "classnames";
 import { motion } from "framer-motion";
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { RxHamburgerMenu as Burger } from "react-icons/rx";
 import { Link, useLocation } from "react-router-dom";
 
@@ -14,6 +14,7 @@ import { setShowSidePanel } from "lib/slice/layout";
 import MobileUserDropdown from "../Header/MobileUserDropdown";
 
 const SidePanel = () => {
+  const location = useLocation();
   const dispatch = useAppDispatch();
 
   const { isMobile, isTablet } = useScreenSize();
@@ -22,9 +23,10 @@ const SidePanel = () => {
 
   const { pathname } = useLocation();
 
-  const handleClose = () => {
-    dispatch(setShowSidePanel(false));
-  };
+  const handleClose = useCallback(
+    () => dispatch(setShowSidePanel(false)),
+    [dispatch]
+  );
 
   const variants = {
     true: { left: 0 },
@@ -36,6 +38,10 @@ const SidePanel = () => {
     () => MENUS.filter((item) => IsAuthorized(item.permissions)),
     []
   );
+
+  useEffect(() => {
+    handleClose();
+  }, [location.pathname, handleClose]);
 
   return (
     <motion.div
@@ -66,10 +72,6 @@ const SidePanel = () => {
               return (
                 <Link key={index} to={link}>
                   <li
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleClose();
-                    }}
                     className={classNames(
                       "px-2.5 py-3 text-lg capitalize transition-all lg:py-2.5 lg:text-base",
 
