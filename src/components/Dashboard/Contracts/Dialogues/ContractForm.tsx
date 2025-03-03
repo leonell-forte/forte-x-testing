@@ -21,6 +21,7 @@ import { findLabelFromOptions, formatDate } from "lib/utils";
 import { contracts } from "lib/validators/contracts";
 
 import { useConfirmPrompt } from "components/ui/alert/confirm-prompt";
+import { useCustomPrompt } from "components/ui/alert/custom-prompt";
 import Button from "components/ui/button";
 import Controller from "components/ui/custom-controller/CustomController";
 import DatePicker from "components/ui/date-picker";
@@ -59,6 +60,8 @@ const ContractForm = ({
 
   markContract,
 }: IContractForm) => {
+  const { open } = useCustomPrompt();
+
   const { toShowPrompt } = useContractsContext();
 
   const { setPage } = usePage();
@@ -173,6 +176,16 @@ const ContractForm = ({
   });
 
   const onSubmit = async (values: ContractFieldValues) => {
+    if (contractDetails) {
+      open({
+        title: "Confirm email with changes",
+        subText:
+          "Saving edits will send an email to all Contract Party users. Click cancel to revert or send to confirm changes and send the email.",
+        onYes: () => addContract(values),
+        yesLabel: "Send email with changes",
+      });
+      return;
+    }
     await addContract(values);
   };
 

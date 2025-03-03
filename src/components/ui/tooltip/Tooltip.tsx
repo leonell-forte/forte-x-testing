@@ -24,7 +24,7 @@ const Tooltip = styled(({ className, ...props }: TooltipProps) => (
     slotProps={{
       popper: {
         style: {
-          zIndex: 35,
+          zIndex: 41,
         },
       },
     }}

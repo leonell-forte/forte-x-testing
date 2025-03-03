@@ -4,7 +4,7 @@ export type TPrompt = {
   show: boolean;
   config: {
     title: string;
-    subText: string;
+    subText?: string;
     yesLabel?: string;
     noLabel?: string;
     onNo?: () => void;
