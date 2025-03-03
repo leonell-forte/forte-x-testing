@@ -86,6 +86,12 @@ class UserService {
 
     return res;
   }
+
+  async delete(userId: string) {
+    const res = await api.delete(`/users/${userId}`);
+
+    return res;
+  }
 }
 
 const userService = new UserService();

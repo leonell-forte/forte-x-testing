@@ -8,7 +8,7 @@ import { formatErrorMessage } from "lib/utils";
 import { refreshProfile } from "components/ProfileContext";
 import { queryClient } from "components/QueryProvider";
 
-import { useAlert } from "../hooks";
+import { useAlert, usePage } from "../hooks";
 
 interface IUserMutation {
   userId: string;
@@ -98,6 +98,70 @@ const useUserMutation = ({
     },
   });
   return { addUser, isPending };
+};
+
+export const useDeleteUserMutation = (
+  id: string,
+  succesCallback?: () => void
+) => {
+  const { page, setPage } = usePage();
+
+  const { setAlert } = useAlert();
+
+  const userQueryKeys = ["users", +page || 1, "", "", []];
+
+  const { mutateAsync: deleteUser, isPending } = useMutation({
+    mutationFn: userService.delete,
+
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: userQueryKeys });
+
+      const previousUsers = queryClient.getQueryData<IUser[]>(userQueryKeys);
+
+      return { previousUsers };
+    },
+
+    onSuccess: () => {
+      queryClient.setQueryData(userQueryKeys, (old: { items: IUser[] }) => {
+        if (old.items.length === 1 && +page !== 1) {
+          setPage(page - 1);
+        }
+        return {
+          ...old,
+          items: [...old.items].filter((item) => item.id !== id),
+        };
+      });
+      succesCallback?.();
+      setAlert({
+        status: "success",
+        message: "User deleted successfully",
+        title: "User deleted!",
+      });
+      amplitude.track(`Delete User Performed`, {
+        id,
+      });
+    },
+
+    onError: (err: any, _, context) => {
+      setAlert({
+        status: "error",
+
+        title: "Failed deleting user",
+
+        message:
+          formatErrorMessage(err?.response?.data?.data?.[0]) ||
+          err?.response?.data?.message,
+      });
+
+      queryClient.setQueryData(userQueryKeys, context?.previousUsers);
+    },
+
+    onSettled: () => {
+      // queryClient.invalidateQueries({ queryKey: userQueryKeys });
+    },
+  });
+
+  return { deleteUser, isPending };
 };
 
 export default useUserMutation;

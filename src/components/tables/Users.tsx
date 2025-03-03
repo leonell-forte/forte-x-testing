@@ -1,11 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import organizationService from "api/organization";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { FaTrash as Trash } from "react-icons/fa6";
 
 import { IsAuthorized, Users } from "lib/role-permissions";
 import { IUser } from "lib/types/users";
 
+import DeleteDialogue from "components/Dashboard/Users/Dialogues/DeleteDialogue";
 import UserDialogue from "components/Dashboard/Users/Dialogues/UserDialogue";
+import Button from "components/ui/button";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
 
@@ -21,7 +24,7 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
     queryFn: () => organizationService.list({ page: 1, listAll: true }),
   });
 
-  const [modal, setModal] = useState<"user" | null>(null);
+  const [modal, setModal] = useState<"user" | "delete" | null>(null);
 
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
 
@@ -37,19 +40,43 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
     setModal("user");
   };
 
+  const handleDelete = (id: string) => {
+    setModal("delete");
+    setSelectedUser(id);
+  };
+
+  const renderModal = useCallback(() => {
+    switch (modal) {
+      case "user":
+        return (
+          <UserDialogue
+            organizations={organizations}
+            userId={selectedUser!}
+            isVisible={modal === "user"}
+            handleClose={() => {
+              setSelectedUser(null);
+              setModal(null);
+            }}
+          />
+        );
+
+      case "delete":
+        return (
+          <DeleteDialogue
+            isVisible
+            id={selectedUser!}
+            handleClose={() => {
+              setModal(null);
+              setSelectedUser(null);
+            }}
+          />
+        );
+    }
+  }, [modal, selectedUser, organizations]);
+
   return (
     <>
-      {modal === "user" && (
-        <UserDialogue
-          organizations={organizations}
-          userId={selectedUser!}
-          isVisible={modal === "user"}
-          handleClose={() => {
-            setSelectedUser(null);
-            setModal(null);
-          }}
-        />
-      )}
+      {renderModal()}
 
       <div className="table-breakpoint:hidden">
         <Cards.Container isLoading={isLoading}>
@@ -62,6 +89,7 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
               role,
               organization,
               status,
+              id,
             } = item;
 
             const formattedRole = (role?.split(".")?.[1] || role)
@@ -92,6 +120,25 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
                   <Cards.Details label="Status" value={status} capitalize />
                   <Cards.Details label="Organization" value={organization} />
                 </Cards.Group>
+
+                <div className="absolute bottom-3 right-0">
+                  {IsAuthorized([Users.DELETE]) && (
+                    <div className="flex justify-end">
+                      <Button
+                        eventName="Delete Beneficiary"
+                        id={id?.toString()}
+                        buttonType="default"
+                        type="button"
+                        onClick={() => {
+                          handleDelete(id!);
+                        }}
+                        className="group"
+                      >
+                        <Trash className="h-auto w-5 transition-all group-hover:fill-mint" />
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </Cards.Card>
             );
           })}
@@ -117,6 +164,7 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
                 role,
                 organization,
                 status,
+                id,
               } = item;
 
               const formattedRole = (role?.split(".")?.[1] || role)
@@ -152,6 +200,24 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
                   </Table.Data>
 
                   <Table.Data>{organization}</Table.Data>
+                  <Table.Data className="ml-auto w-[50px]">
+                    {IsAuthorized([Users.DELETE]) && (
+                      <div className="flex justify-end">
+                        <Button
+                          eventName="Delete Beneficiary"
+                          id={id?.toString()}
+                          buttonType="default"
+                          type="button"
+                          onClick={() => {
+                            handleDelete(id!);
+                          }}
+                          className="group"
+                        >
+                          <Trash className="h-auto w-5 transition-all group-hover:fill-mint" />
+                        </Button>
+                      </div>
+                    )}
+                  </Table.Data>
                 </Table.Row>
               );
             })}
@@ -172,4 +238,5 @@ const TABLE_HEADER = [
   "Role",
   "Status",
   "Organization",
+  "",
 ];
