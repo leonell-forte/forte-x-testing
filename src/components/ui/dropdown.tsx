@@ -84,9 +84,11 @@ const Dropdown = ({
 
   const optionList = useMemo(
     () =>
-      options.filter((item) =>
-        item.label?.toLowerCase().includes(search?.toLowerCase())
-      ),
+      options
+        .filter((item) =>
+          item.label?.toLowerCase().includes(search?.toLowerCase())
+        )
+        .sort((a, b) => a.label.localeCompare(b.label)),
     [search, options]
   );
 
