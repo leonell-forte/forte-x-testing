@@ -110,11 +110,14 @@ export const beneficiaries = {
 
     cohortName: z.string(),
 
-    linkedinUrl: z.string(),
+    linkedinUrl: z
+      .string()
+      .url("LinkedIn must be a valid URL")
+      .or(z.literal("")),
 
-    githubUrl: z.string(),
+    githubUrl: z.string().url("Github must be a valid URL").or(z.literal("")),
 
-    otherUrl: z.string(),
+    otherUrl: z.string().url("Please use a valid URL").or(z.literal("")),
 
     birthdate: z.string(),
 
