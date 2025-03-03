@@ -98,7 +98,7 @@ const ProjectDialogue = ({
       open({
         title: "Confirm email with changes",
         subText:
-          "Saving edits will send an email to all Project Partner users. Click cancel to revert or send to confirm changes and send the emails",
+          "Saving edits will send an email to all Project Partner users. Click cancel to revert or send to confirm changes and send the email.",
         onYes: () => addProject(values),
         yesLabel: "Send email with changes",
       });
