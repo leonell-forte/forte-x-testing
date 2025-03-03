@@ -151,7 +151,8 @@ const BeneficiariesForm = ({
           label: item.name,
 
           value: item.id!.toString(),
-        })) || [],
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label)) || [],
     [organizationList, contractList]
   );
 

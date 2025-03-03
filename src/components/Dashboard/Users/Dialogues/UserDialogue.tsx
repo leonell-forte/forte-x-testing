@@ -134,7 +134,8 @@ const UserDialogue = ({
         .map((item: IOrganization) => ({
           label: item.registeredName,
           value: String(item.id),
-        })),
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label)),
     [organizations, isNonForteUser]
   );
 

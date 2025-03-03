@@ -437,7 +437,7 @@ export const REGIONS = [
     label: "Africa",
     value: "Africa",
   },
-];
+].sort((a, b) => a.label.localeCompare(b.label));
 
 export const DEFAULT_DATE_FORMAT = "dd-LLL-yyyy";
 
