@@ -12,7 +12,7 @@ import { useAlert, usePage } from "../hooks";
 interface IContractMutation {
   id?: number;
 
-  successCallback?: () => void;
+  successCallback?: (contract: ContractFieldValues) => void;
 }
 
 const useContractMutation = ({ id, successCallback }: IContractMutation) => {
@@ -65,7 +65,7 @@ const useContractMutation = ({ id, successCallback }: IContractMutation) => {
         () => addedContract
       );
 
-      successCallback?.();
+      successCallback?.(addedContract);
 
       setAlert({
         title: "Success!",

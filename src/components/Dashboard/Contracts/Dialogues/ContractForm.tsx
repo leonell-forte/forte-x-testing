@@ -45,6 +45,8 @@ interface IContractForm {
   handleClose: () => void;
 
   markContract: () => void;
+
+  onSuccess?: (contract: ContractFieldValues) => void;
 }
 
 const ContractForm = ({
@@ -59,6 +61,8 @@ const ContractForm = ({
   handleClose,
 
   markContract,
+
+  onSuccess,
 }: IContractForm) => {
   const { open } = useCustomPrompt();
 
@@ -171,8 +175,9 @@ const ContractForm = ({
 
   const { addContract, isPending } = useContractMutation({
     id: contractDetails?.id,
-    successCallback: () => {
-      close();
+    successCallback: (contract) => {
+      onSuccess?.(contract);
+
       setPage(1);
     },
   });
