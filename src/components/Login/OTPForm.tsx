@@ -25,7 +25,7 @@ const OTPForm = ({ handleNext }: ILoginProps) => {
   const isComplete = useMemo(() => !otp.some((item) => !item), [otp]);
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
+    let timer: any;
     if (countdown > 0) {
       timer = setInterval(() => {
         setCountdown((prev) => prev - 1);
