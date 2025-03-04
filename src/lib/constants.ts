@@ -96,6 +96,18 @@ export const EVIDENCE_STATUS = [
     label: "More information requested",
     value: "more information requested",
   },
+  {
+    label: "Invoiced",
+    value: "invoiced",
+  },
+  {
+    label: "Rejected",
+    value: "rejected",
+  },
+  {
+    label: "Paid",
+    value: "paid",
+  },
 ];
 
 export const BENEFICIARY_STATUS = [
