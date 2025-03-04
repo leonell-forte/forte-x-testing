@@ -12,11 +12,11 @@ import Card from "components/ui/card";
 const Login = () => {
   const navigate = useNavigate();
 
-  const [step] = useState(0);
+  const [step, setStep] = useState(0);
 
-  // const handleNextStep = () => {
-  //   setStep((prev) => prev + 1);
-  // };
+  const handleNextStep = () => {
+    setStep((prev) => prev + 1);
+  };
 
   const renderStep = useCallback(
     (step: number) => {
@@ -24,7 +24,7 @@ const Login = () => {
         case 0:
           return (
             <LoginForm
-              handleNext={(path) => navigate(path || "/beneficiaries")} // remove OTP form temporarily
+              handleNext={handleNextStep} // remove OTP form temporarily
             />
           );
 

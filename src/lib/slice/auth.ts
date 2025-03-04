@@ -6,12 +6,16 @@ interface IAuth {
   email: string;
 
   role: UserRoleType | "";
+
+  sessionToken: string;
 }
 
 const initialState: IAuth = {
   email: "",
 
   role: "",
+
+  sessionToken: "",
 };
 
 export const authSlice = createSlice({
@@ -27,9 +31,13 @@ export const authSlice = createSlice({
     setRole: (state, action) => {
       state.role = action.payload;
     },
+
+    setSessionToken: (state, action) => {
+      state.sessionToken = action.payload;
+    },
   },
 });
 
-export const { setEmail, setRole } = authSlice.actions;
+export const { setEmail, setRole, setSessionToken } = authSlice.actions;
 
 export default authSlice.reducer;

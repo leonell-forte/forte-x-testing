@@ -55,10 +55,14 @@ export interface IUser {
 
 export type UserFieldTypes = z.infer<typeof users.schema>;
 
+// export type LoginReturnType = {
+//   refreshToken: string;
+
+//   role: UserRoleType;
+
+//   token: string;
+// };
+
 export type LoginReturnType = {
-  refreshToken: string;
-
-  role: UserRoleType;
-
-  token: string;
+  sessionToken: string;
 };
