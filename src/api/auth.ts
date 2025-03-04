@@ -132,6 +132,19 @@ class AuthService {
 
     return res.data.data;
   }
+
+  async verifyCode(sessionToken: string, code: string) {
+    const res = await api.post("/authentication/verify", {
+      sessionToken,
+      code,
+    });
+    return res.data.data;
+  }
+
+  async resendOtp(sessionToken: string) {
+    const res = await api.get(`authentication/resend-otp/${sessionToken}`);
+    return res.data.data;
+  }
 }
 
 const authService = new AuthService();

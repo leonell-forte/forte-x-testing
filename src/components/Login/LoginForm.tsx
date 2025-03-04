@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import { z } from "zod";
 
 import { cookie, useAppDispatch } from "lib/hooks";
-import { setEmail, setRole } from "lib/slice/auth";
+import { setEmail, setSessionToken } from "lib/slice/auth";
 import { login } from "lib/validators/auth";
 
 import Controller from "components/ui/custom-controller/CustomController";
@@ -50,21 +50,13 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
 
       amplitude.track("Login Form Submission");
 
-      cookie.set("access_token", res.token, {
-        path: "/",
-
-        expires: add(new Date(), { hours: 2 }),
-      });
-
-      cookie.set("refresh_token", res?.refreshToken, { path: "/" });
-
-      handleNext!();
+      dispatch(setSessionToken(res.sessionToken));
 
       dispatch(setEmail(values.email));
 
-      dispatch(setRole(res.role));
-
       cookie.set("token-email", email, { path: "/" });
+
+      handleNext?.();
 
       if (isRemember) {
         const currentDate = new Date();

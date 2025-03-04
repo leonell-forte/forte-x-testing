@@ -5,10 +5,11 @@ import { useEffect, useState } from "react";
 
 interface IOTPInputProps {
   onChange: (value: string[]) => void;
+  digits?: number;
 }
 
-const OTPInput = ({ onChange }: IOTPInputProps) => {
-  const [otp, setOtp] = useState(Array(6).fill("")); // Change 4 to your desired OTP length
+const OTPInput = ({ onChange, digits }: IOTPInputProps) => {
+  const [otp, setOtp] = useState(Array(digits || 6).fill("")); // Change 4 to your desired OTP length
 
   const handleChange = (value: string, index: number) => {
     const newOtp = [...otp];
