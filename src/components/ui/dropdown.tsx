@@ -138,7 +138,10 @@ const Dropdown = ({
       >
         <PopoverTrigger
           asChild
-          className={cn(props.disabled && "cursor-not-allowed")}
+          className={cn(
+            props.disabled && "cursor-not-allowed",
+            props.disabled || (props.readOnly && "pointer-events-none")
+          )}
         >
           <div
             className={classNames(

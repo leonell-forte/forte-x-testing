@@ -5,6 +5,7 @@ import projectService from "api/projects";
 import { useEffect, useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { HiPlusCircle } from "react-icons/hi";
+import { Link } from "react-router-dom";
 
 import { useProjectMutation } from "lib/mutations/projects";
 import { IsAuthorized, Organizations } from "lib/role-permissions";
@@ -175,6 +176,19 @@ const ProjectDialogue = ({
               );
             }}
           />
+          {project ? (
+            <div className="text-xs opacity-70">
+              To view and edit Partners, Contracts and Beneficiaries related to
+              this project,{" "}
+              <Link
+                to={`/projects/${project.id}`}
+                className="link hover:underline"
+              >
+                click here
+              </Link>
+              .
+            </div>
+          ) : null}
 
           <div className="flex items-center gap-5">
             <p className="heading w-fit whitespace-nowrap">Outcomes</p>

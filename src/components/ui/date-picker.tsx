@@ -62,6 +62,11 @@ const DatePicker = ({
               sx: {
                 "& .MuiOutlinedInput-root": {
                   borderRadius: "0.5rem",
+                  cursor: props.readOnly
+                    ? "default"
+                    : props.disabled
+                      ? "not-allowed"
+                      : "pointer",
 
                   "& fieldset": {
                     borderColor: error
@@ -98,10 +103,6 @@ const DatePicker = ({
 
                     fontWeight: 500,
                   },
-                },
-
-                "& .MuiInputBase-readOnly": {
-                  cursor: "pointer !important",
                 },
 
                 "& .MuiInputLabel-root": {
