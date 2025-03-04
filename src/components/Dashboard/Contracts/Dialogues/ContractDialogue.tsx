@@ -28,6 +28,7 @@ const ContractDialogue = ({
 
   handleClose,
 }: IContractDialogueProps) => {
+  const [contractId, setContractId] = useState(id);
   const { showPrompt } = useContractsContext();
   const { data: contractDetails, isLoading: contractDetailsLoading } = useQuery(
     {
@@ -50,12 +51,15 @@ const ContractDialogue = ({
       case "form":
         return (
           <ContractForm
-            contractDetails={id ? contractDetails! : null}
+            contractDetails={contractId ? contractDetails! : null}
             onEdit={onEdit}
             handleEdit={(val) => setOnEdit(val)}
             handleClose={handleClose!}
             projectId={projectId!}
             markContract={() => setComponent("mark")}
+            onSuccess={(contract) => {
+              setContractId(contract.id);
+            }}
           />
         );
 
@@ -75,11 +79,11 @@ const ContractDialogue = ({
   const renderTitle = useCallback(() => {
     switch (component) {
       case "form":
-        return `${id ? `${onEdit ? "Edit" : "View"} contract Id: ${id}` : "Add contract"}`;
+        return `${contractId ? `${onEdit ? "Edit" : "View"} contract Id: ${contractId}` : "Add contract"}`;
       case "mark":
         return "";
     }
-  }, [component, id, onEdit]);
+  }, [component, contractId, onEdit]);
 
   useEffect(() => {
     // determines if form is on edit mode or not. if id is present and contract has draft status, it should automatically have edit mode on.
