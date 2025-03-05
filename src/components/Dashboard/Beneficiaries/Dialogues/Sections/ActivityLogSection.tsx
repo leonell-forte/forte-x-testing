@@ -30,7 +30,7 @@ const ActivityLogSection = ({
 
     const { firstName, lastName } = user;
 
-    const date = `${format(createdAt, "hh:MM aa")} on ${format(createdAt, "dd LLL yyyy")}`;
+    const date = `${format(createdAt, "dd LLL yyyy")}`;
 
     const time = `${format(createdAt, "hh:MM aa")}`;
 
@@ -39,15 +39,14 @@ const ActivityLogSection = ({
         const [key, value] = item as [keyof EvidenceChanges, ChangeValue];
         if (!value || !value.newValue) return null;
 
-        const changeType = key.split(".")[0];
-        switch (changeType) {
+        switch (key) {
           case "description":
             return ` Evidence description was updated by ${firstName} ${lastName} at ${time} on ${date}.`;
           case "status":
             return `Evidence status was updated by ${firstName} ${lastName} at ${time} on ${date}`;
-          case "outcome":
+          case "outcome.name":
             return `Evidence outcome was updated by ${firstName} ${lastName} at ${time} on ${date}`;
-          case "file":
+          case "file.filename":
             return `Evidence was replaced by ${firstName} ${lastName} at ${time} on ${date}`;
           default:
             return null;
@@ -57,7 +56,6 @@ const ActivityLogSection = ({
 
     return changes;
   };
-  console.log(data);
 
   if (isLoading)
     return (
