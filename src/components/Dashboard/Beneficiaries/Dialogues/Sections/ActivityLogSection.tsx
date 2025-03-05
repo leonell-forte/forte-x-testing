@@ -34,8 +34,6 @@ const ActivityLogSection = ({
       .map((item) => {
         const updatedAt = new Date(log.changes.updatedAt?.newValue as string);
 
-        console.log(updatedAt);
-
         const date = `${format(updatedAt, "dd LLL yyyy")}`;
 
         const time =
