@@ -39,6 +39,7 @@ const UserDropdown = () => {
 
     [organizationList]
   );
+  console.log(organizationList);
 
   useOutsideClick(dropdownRef, () => setShowDropdown(false));
 
