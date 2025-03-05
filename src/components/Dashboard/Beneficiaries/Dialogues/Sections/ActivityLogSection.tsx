@@ -26,16 +26,25 @@ const ActivityLogSection = ({
 
   const renderChangeMessage = (log: ActivityLog) => {
     if (!log.changes) return null;
-    const { user, createdAt } = log;
+    const { user } = log;
 
     const { firstName, lastName } = user;
 
-    const date = `${format(createdAt, "dd LLL yyyy")}`;
-
-    const time = `${format(createdAt, "hh:MM aa")}`;
-
     const changes = Object.entries(log.changes)
       .map((item) => {
+        const updatedAt = new Date(log.changes.updatedAt?.newValue as string);
+
+        console.log(updatedAt);
+
+        const date = `${format(updatedAt, "dd LLL yyyy")}`;
+
+        const time =
+          updatedAt.getHours() +
+          ":" +
+          updatedAt.getMinutes() +
+          " " +
+          (updatedAt.getHours() >= 12 ? "PM" : "AM");
+
         const [key, value] = item as [keyof EvidenceChanges, ChangeValue];
         if (!value || !value.newValue) return null;
 
