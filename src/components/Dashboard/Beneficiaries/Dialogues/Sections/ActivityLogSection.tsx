@@ -39,7 +39,7 @@ const ActivityLogSection = ({
         const time =
           updatedAt.getHours() +
           ":" +
-          updatedAt.getMinutes() +
+          String(updatedAt.getMinutes()).padStart(2, "0") +
           " " +
           (updatedAt.getHours() >= 12 ? "PM" : "AM");
 
