@@ -129,7 +129,9 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
 
     evidenceId: id!,
 
-    successCallback: () => props.handleClose?.(),
+    successCallback: () => {
+      setOnEdit(false);
+    },
   });
 
   const onSubmit = async (values: EvidenceFieldValues) => {
