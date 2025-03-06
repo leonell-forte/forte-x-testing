@@ -5,6 +5,7 @@ import { ReactNode, useRef } from "react";
 import { AiOutlineClose as X } from "react-icons/ai";
 
 import { useEscapeKey, useOutsideClick } from "lib/hooks";
+import { cn } from "lib/utils";
 
 import ConfirmPrompt, { useConfirmPrompt } from "../alert/confirm-prompt";
 import { useCustomPrompt } from "../alert/custom-prompt";
@@ -26,6 +27,8 @@ export interface IDialogueProps {
   canFullScreen?: boolean;
 
   hideClose?: boolean;
+
+  className?: string;
 }
 
 const Dialogue = ({
@@ -44,6 +47,8 @@ const Dialogue = ({
   canFullScreen = true,
 
   hideClose,
+
+  className,
 }: IDialogueProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -67,7 +72,6 @@ const Dialogue = ({
       target.closest('[role="listbox"]') ||
       target.closest('[role="combobox"]') ||
       target.closest('[role="dialog"]') ||
-      target.closest("[data-radix-popper-content-wrapper]") ||
       // ignore if custom prompt is open
       isCustomPromptOpen
     ) {
@@ -93,13 +97,15 @@ const Dialogue = ({
       >
         <div
           ref={containerRef}
-          className={classNames(
+          className={cn(
             styles["dialogue-content"],
 
             title ? "p-10" : "px-10 pb-10",
             canFullScreen
               ? "min-h-screen rounded-none md:min-h-max md:rounded-lg"
-              : "mx-4 h-auto rounded-lg md:mx-0"
+              : "mx-4 h-auto rounded-lg md:mx-0",
+
+            className
           )}
         >
           {!hideClose && (

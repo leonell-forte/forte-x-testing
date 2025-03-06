@@ -47,9 +47,10 @@ const FileInput = ({
   const { setAlert } = useAlert();
 
   const handleUpload = async (e: ChangeEvent<HTMLInputElement>) => {
-    setLoading(true);
-
     const file = e.target.files![0];
+
+    if (!file) return;
+    setLoading(true);
 
     onUploadStart?.(file);
 
