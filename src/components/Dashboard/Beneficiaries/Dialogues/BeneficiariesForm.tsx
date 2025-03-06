@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import contractService from "api/contract";
 import organizationService from "api/organization";
+import { add, sub } from "date-fns";
 import { Dispatch, SetStateAction, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
@@ -200,6 +201,8 @@ const BeneficiariesForm = ({
 
   const { setShowPrompt } = useConfirmPrompt();
 
+  const [min, max] = watch(["cohortStartDate", "cohortEndDate"]);
+
   return (
     <Form form={form} onSubmit={onSubmit}>
       <div className="space-y-6">
@@ -370,7 +373,7 @@ const BeneficiariesForm = ({
               name="cohortStartDate"
               render={({ field }) => (
                 <DatePicker
-                  maxDate={new Date(watch("cohortEndDate") || "")}
+                  {...(max && { maxDate: sub(max, { days: 1 }) })}
                   readOnly={!onEdit}
                   value={new Date(field.value || "")}
                   onChange={(date) => {
@@ -387,7 +390,7 @@ const BeneficiariesForm = ({
               render={({ field }) => (
                 <DatePicker
                   readOnly={!onEdit}
-                  minDate={new Date(watch("cohortStartDate") || "")}
+                  {...(min && { minDate: add(min, { days: 1 }) })}
                   value={new Date(field.value || "")}
                   onChange={(date) => {
                     field.onChange(date ? date.toISOString() : "");
