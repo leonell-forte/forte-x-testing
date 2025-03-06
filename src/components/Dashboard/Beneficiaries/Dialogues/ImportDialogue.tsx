@@ -20,8 +20,6 @@ const ImportDialogue = ({ ...props }: IImportDialogueProps) => {
 
     setValue,
 
-    setError,
-
     formState: { errors },
   } = useForm<IImportBeneficiariesFieldValues>({
     resolver: zodResolver(importBeneficiaries.schema),
@@ -39,11 +37,15 @@ const ImportDialogue = ({ ...props }: IImportDialogueProps) => {
   };
 
   return (
-    <Dialogue {...props} title="Import beneficiaries">
+    <Dialogue
+      {...props}
+      title="Import beneficiaries"
+      className="lg:!max-w-screen-lg"
+    >
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-6">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:divide-x">
-            <div className="space-y-2 pr-5">
+            <div className="space-y-2">
               <p>Your CSV must include columns for:</p>
 
               <ul className="list-disc pl-6">
@@ -83,16 +85,14 @@ const ImportDialogue = ({ ...props }: IImportDialogueProps) => {
               <Controller
                 control={control}
                 name="file"
-                render={() => {
+                render={({ field }) => {
                   return (
                     <FileInput
                       raw
                       accept=".csv"
                       placeholder="Upload your file here"
                       onUploadStart={(data) => {
-                        setValue("file", data!);
-
-                        setError("file", { message: "" });
+                        field.onChange(data);
                       }}
                       error={!!errors.file?.message}
                       helperText={errors.file?.message}
