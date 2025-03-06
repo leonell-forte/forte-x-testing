@@ -67,7 +67,6 @@ const Dialogue = ({
       target.closest('[role="listbox"]') ||
       target.closest('[role="combobox"]') ||
       target.closest('[role="dialog"]') ||
-      target.closest("[data-radix-popper-content-wrapper]") ||
       // ignore if custom prompt is open
       isCustomPromptOpen
     ) {

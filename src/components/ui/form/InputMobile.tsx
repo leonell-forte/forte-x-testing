@@ -1,7 +1,6 @@
-import * as SelectPrimitive from "@radix-ui/react-select";
 import classNames from "classnames";
-import { ChevronDown } from "lucide-react";
 import * as React from "react";
+import { HiChevronDown } from "react-icons/hi";
 import {
   CountryIso2,
   FlagImage,
@@ -10,32 +9,10 @@ import {
   usePhoneInput,
 } from "react-international-phone";
 
-import { Select, SelectContent, SelectItem, SelectTrigger } from "./Select";
+import { useOutsideClick } from "lib/hooks";
+import { cn } from "lib/utils";
 
-export const CustomTrigger = React.forwardRef<
-  React.ElementRef<typeof SelectPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
->(({ className, value, ...props }, ref) => (
-  <SelectPrimitive.Trigger
-    ref={ref}
-    className={classNames(
-      "bg-background ring-offset-background flex h-[40.13px] w-full items-center justify-between rounded-lg border px-3 py-2 text-sm leading-4 sm:text-base",
-      "focus:outline-none",
-      "disabled:cursor-not-allowed [&>span]:line-clamp-1",
-      "[&[data-state=open]>svg]:rotate-180",
-      "[&>span]:text-left [&>span]:text-inherit",
-      "focus:border-selected data-[placeholder]:text-white/70",
-      className
-    )}
-    {...props}
-  >
-    <FlagImage iso2={value as CountryIso2} size="30px" />
-    <SelectPrimitive.Icon asChild>
-      <ChevronDown className="h-4 w-4 transform stroke-white/70 transition-all duration-300" />
-    </SelectPrimitive.Icon>
-  </SelectPrimitive.Trigger>
-));
-SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
+import { Popover, PopoverContent, PopoverTrigger } from "../popover/Popover";
 
 type Props = {
   name: string;
@@ -58,6 +35,9 @@ const InputMobile = ({
   onChange,
   value = "",
 }: Props) => {
+  const dropdownRef = React.useRef(null);
+
+  const [open, setOpen] = React.useState(false);
   const { inputValue, handlePhoneValueChange, inputRef, country, setCountry } =
     usePhoneInput({
       defaultCountry: "us",
@@ -68,40 +48,53 @@ const InputMobile = ({
       },
     });
 
+  useOutsideClick(dropdownRef, () => {
+    setOpen(false);
+  });
+
   return (
-    <div
-      className="relative flex w-full items-center gap-2"
-      onClick={(e) => {
-        // Prevent clicks from bubbling up to Dialogue's outside click handler
-        e.stopPropagation();
-      }}
-    >
-      <div className="min-w-[75px]" onClick={(e) => e.stopPropagation()}>
-        <Select
-          name={name}
-          onValueChange={(v) => {
-            setCountry(v);
-          }}
-          defaultValue={country.iso2}
-          value={country.iso2}
-          disabled={readOnly || disabled}
-          {...(readOnly || disabled ? { open: false } : {})}
-        >
-          <CustomTrigger
-            value={country.iso2}
-            onClick={(e) => e.stopPropagation()}
-          />
-          <SelectContent onClick={(e) => e.stopPropagation()}>
+    <div className="relative flex w-full items-center gap-2" ref={dropdownRef}>
+      <div className="min-w-[75px]">
+        <Popover {...(readOnly || disabled ? { open: false } : { open })}>
+          <PopoverTrigger asChild>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setOpen((state) => !state);
+              }}
+              disabled={disabled}
+              className={cn(
+                "flex h-[40.13px] w-full items-center justify-between rounded-lg border px-3 py-2 text-sm leading-4 disabled:cursor-not-allowed sm:text-base",
+                readOnly ? "pointer-events-none cursor-pointer" : ""
+              )}
+            >
+              <FlagImage iso2={country.iso2 as CountryIso2} size="30px" />
+
+              <HiChevronDown
+                className={classNames(
+                  "h-auto w-[20px] flex-shrink-0 transition-all",
+                  open && "rotate-180",
+                  disabled ? "cursor-not-allowed fill-disabled" : "fill-white"
+                )}
+              />
+            </button>
+          </PopoverTrigger>
+          <PopoverContent onPointerDownOutside={(e) => e.stopPropagation()}>
             {defaultCountries.map((c, idx) => {
               const mCountry = parseCountry(c);
               return (
-                <SelectItem
+                <button
+                  type="button"
                   key={idx}
-                  value={mCountry.iso2}
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={() => {
+                    setCountry(mCountry.iso2);
+                  }}
+                  className="relative flex w-full items-center rounded px-2.5 py-1.5 text-sm transition hover:bg-mint sm:text-base"
                 >
                   <div className="group flex items-center gap-3.5">
-                    <FlagImage iso2={mCountry.iso2} size="20px" />
+                    <FlagImage iso2={mCountry.iso2} size="35px" />
                     <div className="flex items-center gap-1.5">
                       <div
                         className={classNames(
@@ -118,11 +111,11 @@ const InputMobile = ({
                       </div>
                     </div>
                   </div>
-                </SelectItem>
+                </button>
               );
             })}
-          </SelectContent>
-        </Select>
+          </PopoverContent>
+        </Popover>
       </div>
 
       <input
