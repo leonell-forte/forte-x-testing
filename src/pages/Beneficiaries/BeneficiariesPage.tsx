@@ -337,11 +337,13 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
 
   const organizations: IOption[] = useMemo(
     () =>
-      organizationList?.items.map((item) => ({
-        label: item.name,
+      organizationList?.items
+        .map((item) => ({
+          label: item.name,
 
-        value: item.id!.toString(),
-      })) || [],
+          value: item.id!.toString(),
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label)) || [],
 
     [organizationList]
   );
