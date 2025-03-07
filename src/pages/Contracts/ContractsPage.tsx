@@ -211,11 +211,13 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
   });
   const projects: IOption[] = useMemo(
     () =>
-      projecrList?.items?.map((item: IProject) => ({
-        label: item.name,
+      projecrList?.items
+        ?.map((item: IProject) => ({
+          label: item.name,
 
-        value: item.id.toString(),
-      })) || [],
+          value: item.id.toString(),
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label)) || [],
 
     [projecrList]
   );

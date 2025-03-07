@@ -242,10 +242,12 @@ const Filters = ({
         }}
         placeholder="Organization"
         className="md:w-[166px]"
-        options={organizations.map((item: IOrganization) => ({
-          label: item.name,
-          value: item.name,
-        }))}
+        options={organizations
+          .map((item: IOrganization) => ({
+            label: item.name,
+            value: item.name,
+          }))
+          .sort((a, b) => a.label.localeCompare(b.label))}
         isMultiSelect
       />
 
