@@ -177,7 +177,7 @@ const ContractForm = ({
     id: contractDetails?.id,
     successCallback: (contract) => {
       onSuccess?.(contract);
-
+      setIsAmmending(false);
       setPage(1);
     },
   });
