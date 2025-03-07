@@ -177,7 +177,7 @@ const ContractForm = ({
     id: contractDetails?.id,
     successCallback: (contract) => {
       onSuccess?.(contract);
-
+      setIsAmmending(false);
       setPage(1);
     },
   });
@@ -515,6 +515,7 @@ const ContractForm = ({
                     setValue("documentId", 0);
                     setError("documentId", { message: "" });
                   }}
+                  disabled={!isDirty}
                 >
                   Save
                 </Button>
