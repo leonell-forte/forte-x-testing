@@ -30,15 +30,17 @@ const ContractDialogue = ({
 }: IContractDialogueProps) => {
   const [contractId, setContractId] = useState(id);
   const { showPrompt } = useContractsContext();
-  const { data: contractDetails, isLoading: contractDetailsLoading } = useQuery(
-    {
-      queryKey: ["specific-contract", id],
+  const {
+    data: contractDetails,
+    isLoading: contractDetailsLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["specific-contract", id],
 
-      queryFn: () => contractService.getOne(id!.toString()!),
+    queryFn: () => contractService.getOne(id!.toString()!),
 
-      enabled: !!id,
-    }
-  );
+    enabled: !!id,
+  });
 
   // sets contract form default values
 
@@ -59,6 +61,7 @@ const ContractDialogue = ({
             markContract={() => setComponent("mark")}
             onSuccess={(contract) => {
               setContractId(contract.id);
+              refetch();
             }}
           />
         );
