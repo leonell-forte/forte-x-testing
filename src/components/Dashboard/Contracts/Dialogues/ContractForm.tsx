@@ -515,6 +515,7 @@ const ContractForm = ({
                     setValue("documentId", 0);
                     setError("documentId", { message: "" });
                   }}
+                  disabled={!isDirty}
                 >
                   Save
                 </Button>
