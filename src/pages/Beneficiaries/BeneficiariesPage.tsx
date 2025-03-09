@@ -219,7 +219,16 @@ const BeneficiariesPage = () => {
           <div className="flex w-full flex-shrink-0 grid-cols-1 flex-wrap gap-2.5 md:w-auto">
             {selectedIds.length > 0 && IsAuthorized([Beneficiaries.EXECUTE]) ? (
               <>
-                {IsAuthorized([Beneficiaries.UPDATE])}
+                {IsAuthorized([Beneficiaries.UPDATE]) && (
+                  <Button
+                    onClick={() => {
+                      setModal("update status");
+                    }}
+                    buttonType="secondary"
+                  >
+                    Update Status
+                  </Button>
+                )}
                 <Button
                   onClick={handleDownloadEvidence}
                   buttonType="secondary"
