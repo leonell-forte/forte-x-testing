@@ -51,6 +51,14 @@ class BeneficiariesService {
         isSearch: true,
       },
 
+      "beneficiary.phone": {
+        value: search!,
+
+        exact: false,
+
+        isSearch: true,
+      },
+
       "beneficiary.cohort_name": {
         value: search!,
 
