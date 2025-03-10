@@ -1,7 +1,7 @@
 "use client";
 
 import authService from "api/auth";
-import { useEffect, useMemo, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 
 import { REDIRECT_PATHS } from "lib/constants";
 import { cookie, useAlert, useAppSelector } from "lib/hooks";
@@ -36,7 +36,8 @@ const OTPForm = ({ handleNext }: ILoginProps) => {
     return () => clearInterval(timer);
   }, [countdown]);
 
-  const handleContinue = async () => {
+  const handleContinue = async (e: ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setLoading(true);
     try {
       const res = await authService.verifyCode(sessionToken, otp.join(""));
@@ -78,7 +79,7 @@ const OTPForm = ({ handleNext }: ILoginProps) => {
   };
 
   return (
-    <div>
+    <form onSubmit={handleContinue}>
       <div className="text-center">
         <p className="text-[24px] md:text-[32px]">Enter code</p>
 
@@ -94,9 +95,8 @@ const OTPForm = ({ handleNext }: ILoginProps) => {
       </div>
       <div className="mx-auto w-full max-w-[22rem] space-y-[15px] text-center">
         <Button
-          type="button"
+          type="submit"
           eventName="OTP"
-          onClick={handleContinue}
           disabled={!isComplete}
           loading={loading}
           fullWidth
@@ -115,7 +115,7 @@ const OTPForm = ({ handleNext }: ILoginProps) => {
           </button>
         </p>
       </div>
-    </div>
+    </form>
   );
 };
 
