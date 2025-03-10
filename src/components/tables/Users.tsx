@@ -134,7 +134,7 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
                         }}
                         className="group"
                       >
-                        <Trash className="h-auto w-5 transition-all group-hover:fill-mint" />
+                        <Trash className="h-auto w-4 transition-all group-hover:fill-mint" />
                       </Button>
                     </div>
                   )}
