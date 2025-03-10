@@ -313,6 +313,7 @@ interface IFilterProps {
 }
 
 const Filters = ({ filters, setFilters }: IFilterProps) => {
+  const { setPage } = usePage();
   const { data: projectsList, isLoading: projectLoading } = useQuery({
     queryKey: ["projects"],
 
@@ -367,9 +368,10 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
         options={projects}
         placeholder="Projects"
         className="xl:w-[166px]"
-        handleSelect={(val) =>
-          setFilters((prev) => ({ ...prev, project: val as string }))
-        }
+        handleSelect={(val) => {
+          setFilters((prev) => ({ ...prev, project: val as string }));
+          setPage(1);
+        }}
       />
 
       <Dropdown
@@ -377,9 +379,10 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
         placeholder="Status"
         className="xl:w-[166px]"
         value={filters.status}
-        handleSelect={(val) =>
-          setFilters((prev) => ({ ...prev, status: val as string }))
-        }
+        handleSelect={(val) => {
+          setFilters((prev) => ({ ...prev, status: val as string }));
+          setPage(1);
+        }}
       />
 
       {IsAuthorized([Organizations.LIST]) && (
@@ -394,6 +397,7 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
             filters.provider as string
           )}
           handleSelect={(val) => {
+            setPage(1);
             setFilters((prev) => ({
               ...prev,
               provider: val as string,
@@ -408,12 +412,13 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
           placeholder="Risk Level"
           className="xl:w-[166px]"
           value={filters.riskLevel}
-          handleSelect={(val) =>
+          handleSelect={(val) => {
             setFilters((prev) => ({
               ...prev,
               riskLevel: val as string,
-            }))
-          }
+            }));
+            setPage(1);
+          }}
         />
 
         <button
