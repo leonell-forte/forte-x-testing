@@ -132,7 +132,10 @@ const OrganizationsPage = () => {
             <div className="w-full md:w-auto">
               <SearchInput
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setPage(1);
+                }}
                 containerClass="lg:max-w-[286px]"
                 placeholder="Search organizations"
                 onClear={() => setSearch("")}
@@ -192,11 +195,13 @@ interface IFilterProps {
 }
 
 const Filters = ({ filters, setFilters }: IFilterProps) => {
+  const { setPage } = usePage();
   const handleSelectFilter = (
     key: keyof IFilters,
     value: string | string[]
   ) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
+    setPage(1);
   };
 
   const handleRemoveFilters = () => {

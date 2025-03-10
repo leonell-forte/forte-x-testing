@@ -193,7 +193,10 @@ const BeneficiariesPage = () => {
               <div className="w-full md:w-auto">
                 <SearchInput
                   value={search}
-                  onChange={(e) => setSearch(e.target.value)}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                    setPage(1);
+                  }}
                   placeholder="Search beneficiaries"
                   containerClass="w-full lg:max-w-[286px]"
                   onClear={() => setSearch("")}

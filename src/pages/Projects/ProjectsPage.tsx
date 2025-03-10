@@ -78,7 +78,10 @@ const ProjectsPage = () => {
         <div className="flex flex-col items-start justify-between gap-2.5 sm:flex-row">
           <SearchInput
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
             containerClass="md:max-w-[286px]"
             onClear={() => setSearch("")}
           />
