@@ -143,7 +143,10 @@ const UsersPage = () => {
               <div className="w-full md:w-auto">
                 <SearchInput
                   value={search}
-                  onChange={(e) => setSearch(e.target.value)}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                    setPage(1);
+                  }}
                   className="md:w-[286px]"
                   onClear={() => setSearch("")}
                 />
@@ -223,11 +226,15 @@ const Filters = ({
   orgLoading,
   handleRemoveFilters,
 }: IFilterProps) => {
+  const { setPage } = usePage();
   return (
     <div className="flex flex-col gap-2.5 md:flex-row">
       <Dropdown
         value={role}
-        handleSelect={(val) => setRole(val as string)}
+        handleSelect={(val) => {
+          setRole(val as string);
+          setPage(1);
+        }}
         placeholder="Role"
         className="md:w-[166px]"
         options={ROLES}
@@ -239,6 +246,7 @@ const Filters = ({
         value={organization}
         handleSelect={(val) => {
           setOrganization(val as string[]);
+          setPage(1);
         }}
         placeholder="Organization"
         className="md:w-[166px]"

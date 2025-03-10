@@ -143,7 +143,10 @@ const ContractsPage = () => {
               <div className="w-full md:w-auto">
                 <SearchInput
                   value={search}
-                  onChange={(e) => setSearch(e.target.value)}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                    setPage(1);
+                  }}
                   containerClass="w-full lg:max-w-[286px]"
                   placeholder="Search contracts"
                   onClear={() => setSearch("")}
@@ -202,16 +205,16 @@ interface IFilterProps {
 }
 
 const Filters = ({ filters, setFilters }: IFilterProps) => {
-  const { page } = usePage();
+  const { page, setPage } = usePage();
 
-  const { data: projecrList, isLoading: isProjectLoading } = useQuery({
+  const { data: projectList, isLoading: isProjectLoading } = useQuery({
     queryKey: ["projects"],
 
     queryFn: () => projectService.list({ page, listAll: true }),
   });
   const projects: IOption[] = useMemo(
     () =>
-      projecrList?.items
+      projectList?.items
         ?.map((item: IProject) => ({
           label: item.name,
 
@@ -219,7 +222,7 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
         }))
         .sort((a, b) => a.label.localeCompare(b.label)) || [],
 
-    [projecrList]
+    [projectList]
   );
   return (
     <div className="grid grid-cols-1 gap-2.5 md:flex">
@@ -228,17 +231,19 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
         className="lg:max-w-[166px]"
         options={CONTRACT_STATUS}
         value={filters.status}
-        handleSelect={(val) =>
-          setFilters((prev) => ({ ...prev, status: val as StatusType }))
-        }
+        handleSelect={(val) => {
+          setFilters((prev) => ({ ...prev, status: val as StatusType }));
+          setPage(1);
+        }}
       />
 
       <div className="flex w-full items-center gap-2.5 lg:w-auto">
         <Dropdown
           value={findLabelFromOptions(projects, filters.project)}
-          handleSelect={(val) =>
-            setFilters((prev) => ({ ...prev, project: val as string }))
-          }
+          handleSelect={(val) => {
+            setFilters((prev) => ({ ...prev, project: val as string }));
+            setPage(1);
+          }}
           loading={isProjectLoading}
           options={projects}
           placeholder="Project"
