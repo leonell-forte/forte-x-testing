@@ -9,7 +9,7 @@ interface IOTPInputProps {
 }
 
 const OTPInput = ({ onChange, digits }: IOTPInputProps) => {
-  const [otp, setOtp] = useState(Array(digits || 6).fill("")); // Change 4 to your desired OTP length
+  const [otp, setOtp] = useState(Array(digits || 6).fill(""));
 
   const handleChange = (value: string, index: number) => {
     const newOtp = [...otp];
@@ -23,15 +23,22 @@ const OTPInput = ({ onChange, digits }: IOTPInputProps) => {
       }
     }
 
-    // Move focus back to the previous input
-    if (!value && index > 0) {
+    setOtp(newOtp);
+  };
+
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
       const prevInput = document.getElementById(`otp-input-${index - 1}`);
       if (prevInput) {
         prevInput.focus();
+        const newOtp = [...otp];
+        newOtp[index - 1] = "";
+        setOtp(newOtp);
       }
     }
-
-    setOtp(newOtp);
   };
 
   useEffect(() => {
@@ -52,10 +59,10 @@ const OTPInput = ({ onChange, digits }: IOTPInputProps) => {
             type="text"
             value={digit}
             onChange={(e) => handleChange(e.target.value, index)}
+            onKeyDown={(e) => handleKeyDown(e, index)}
             maxLength={1}
             className={classNames(
               "aspect-square w-full rounded-xl bg-white !bg-opacity-[50%] text-center !text-[24px] text-forest-green outline-none md:rounded-xl md:!text-[40px]",
-
               digit && "!bg-mint"
             )}
           />
