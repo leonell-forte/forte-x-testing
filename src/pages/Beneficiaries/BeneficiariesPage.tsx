@@ -36,7 +36,7 @@ import Dialogue from "components/ui/dialogue/dialogue";
 import Dropdown, { IOption } from "components/ui/dropdown";
 import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
-import { AlertIcon, Tooltip } from "components/ui/tooltip/Tooltip";
+import { Tooltip } from "components/ui/tooltip/Tooltip";
 
 type ModalLabelTypes =
   | "beneficiaries"
