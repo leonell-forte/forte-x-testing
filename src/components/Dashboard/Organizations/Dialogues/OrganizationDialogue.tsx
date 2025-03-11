@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import organizationService from "api/organization";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { REGIONS, STATUS, TYPES } from "lib/constants";
@@ -35,6 +35,7 @@ const OrganizationDialogue = ({
 
   orgId,
 }: IOrganizationDialogueProps) => {
+  const [editMode, setEditMode] = useState(orgId ? false : true);
   const { data: orgData, isLoading } = useQuery({
     queryKey: ["specific org", orgId],
 
@@ -77,6 +78,24 @@ const OrganizationDialogue = ({
     handleClose!();
   };
 
+  const getTitle = () => {
+    if (orgId) {
+      return editMode ? "Edit organization" : "View organization";
+    }
+    return "Add organization";
+  };
+
+  const handleCancel = () => {
+    if (!orgId && isDirty) {
+      setShowPrompt(true);
+      return;
+    }
+
+    reset();
+    setEditMode(false);
+    !orgId && onClose();
+  };
+
   // implements optimistic update after adding or updating organization
 
   const { addOrganization, isPending } = useOrganizationMutation({
@@ -99,7 +118,7 @@ const OrganizationDialogue = ({
       confirmBeforeLeave={isDirty}
       isVisible={isVisible}
       handleClose={onClose}
-      title={orgId ? "Edit organization" : "Add organization"}
+      title={getTitle()}
     >
       {isLoading ? (
         <div className="flex h-[470px] w-full items-center justify-center">
@@ -114,7 +133,13 @@ const OrganizationDialogue = ({
             name="name"
             control={control}
             render={({ field }) => {
-              return <Input {...field} placeholder="Organization name" />;
+              return (
+                <Input
+                  {...field}
+                  placeholder="Organization name"
+                  disabled={!editMode}
+                />
+              );
             }}
           />
 
@@ -125,7 +150,13 @@ const OrganizationDialogue = ({
             name="registeredName"
             control={control}
             render={({ field }) => {
-              return <Input {...field} placeholder="Registered name" />;
+              return (
+                <Input
+                  {...field}
+                  placeholder="Registered name"
+                  disabled={!editMode}
+                />
+              );
             }}
           />
 
@@ -136,7 +167,13 @@ const OrganizationDialogue = ({
             name="registrationNumber"
             control={control}
             render={({ field }) => {
-              return <Input {...field} placeholder="Registration number" />;
+              return (
+                <Input
+                  {...field}
+                  placeholder="Registration number"
+                  disabled={!editMode}
+                />
+              );
             }}
           />
 
@@ -151,7 +188,13 @@ const OrganizationDialogue = ({
                 name="registeredAddress"
                 control={control}
                 render={({ field }) => {
-                  return <Input {...field} placeholder="Registered address" />;
+                  return (
+                    <Input
+                      {...field}
+                      placeholder="Registered address"
+                      disabled={!editMode}
+                    />
+                  );
                 }}
               />
 
@@ -160,7 +203,13 @@ const OrganizationDialogue = ({
                   name="state"
                   control={control}
                   render={({ field }) => {
-                    return <Input {...field} placeholder="State" />;
+                    return (
+                      <Input
+                        {...field}
+                        placeholder="State"
+                        disabled={!editMode}
+                      />
+                    );
                   }}
                 />
 
@@ -168,7 +217,13 @@ const OrganizationDialogue = ({
                   name="postalCode"
                   control={control}
                   render={({ field }) => {
-                    return <Input {...field} placeholder="Postal code" />;
+                    return (
+                      <Input
+                        {...field}
+                        placeholder="Postal code"
+                        disabled={!editMode}
+                      />
+                    );
                   }}
                 />
 
@@ -176,7 +231,13 @@ const OrganizationDialogue = ({
                   name="country"
                   control={control}
                   render={({ field }) => {
-                    return <Input {...field} placeholder="Country" />;
+                    return (
+                      <Input
+                        {...field}
+                        placeholder="Country"
+                        disabled={!editMode}
+                      />
+                    );
                   }}
                 />
               </div>
@@ -202,6 +263,7 @@ const OrganizationDialogue = ({
                   }}
                   options={REGIONS}
                   placeholder="Select region"
+                  disabled={!editMode}
                 />
               );
             }}
@@ -226,6 +288,7 @@ const OrganizationDialogue = ({
                   }}
                   options={TYPES}
                   placeholder="Select type"
+                  disabled={!editMode}
                 />
               );
             }}
@@ -249,28 +312,27 @@ const OrganizationDialogue = ({
                   }}
                   options={STATUS}
                   placeholder="Select status"
+                  disabled={!editMode}
                 />
               );
             }}
           />
 
           <div className="!mt-10 flex justify-end gap-4">
-            <Button
-              onClick={() => {
-                if (isDirty) {
-                  setShowPrompt(true);
-                  return;
-                }
-                onClose();
-              }}
-              buttonType="secondary"
-            >
-              Cancel
-            </Button>
-
-            <Button loading={isPending} type="submit" disabled={!isDirty}>
-              Save
-            </Button>
+            {editMode ? (
+              <>
+                <Button onClick={handleCancel} buttonType="secondary">
+                  Cancel
+                </Button>
+                <Button loading={isPending} type="submit" disabled={!isDirty}>
+                  Save
+                </Button>
+              </>
+            ) : (
+              <Button type="button" onClick={() => setEditMode(true)}>
+                Edit
+              </Button>
+            )}
           </div>
         </Form>
       )}

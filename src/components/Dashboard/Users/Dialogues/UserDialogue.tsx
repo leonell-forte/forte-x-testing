@@ -3,7 +3,7 @@ import { capitalize } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import userService from "api/users";
 import classNames from "classnames";
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { DEFAULT_DATE_FORMAT, ROLES } from "lib/constants";
@@ -40,6 +40,7 @@ const UserDialogue = ({
 
   userId,
 }: IUserDialogueProps) => {
+  const [editMode, setEditMode] = useState(userId ? false : true);
   const { profile } = useProfile();
   const myRole = profile?.role;
   const { setShowPrompt } = useConfirmPrompt();
@@ -149,6 +150,24 @@ const UserDialogue = ({
     [isNonForteUser, myRole]
   );
 
+  const getTitle = useCallback(() => {
+    if (userId) {
+      return editMode ? "Edit user" : "View user";
+    }
+    return "Add user";
+  }, [userId, editMode]);
+
+  const handleCancel = () => {
+    if (!userId && isDirty) {
+      setShowPrompt(true);
+      return;
+    }
+
+    reset();
+    setEditMode(false);
+    !userId && close();
+  };
+
   useEffect(() => {
     if (isNonForteUser && userOrganization?.id) {
       setValue("organizationId", String(userOrganization.id));
@@ -160,7 +179,7 @@ const UserDialogue = ({
       confirmBeforeLeave={isDirty}
       isVisible={isVisible}
       handleClose={close}
-      title={userId ? "Edit user" : "Add user"}
+      title={getTitle()}
     >
       {isLoading ? (
         <div className="flex h-[470px] w-full items-center justify-center">
@@ -197,6 +216,7 @@ const UserDialogue = ({
                   {...field}
                   autoComplete="given-name"
                   placeholder="First name"
+                  disabled={!editMode}
                 />
               );
             }}
@@ -212,6 +232,7 @@ const UserDialogue = ({
                   {...field}
                   autoComplete="family-name"
                   placeholder="Last name"
+                  disabled={!editMode}
                 />
               );
             }}
@@ -222,7 +243,13 @@ const UserDialogue = ({
             required
             control={control}
             render={({ field }) => {
-              return <InputMobile label="Phone number" {...field} />;
+              return (
+                <InputMobile
+                  label="Phone number"
+                  {...field}
+                  disabled={!editMode}
+                />
+              );
             }}
           />
           <Controller
@@ -233,7 +260,7 @@ const UserDialogue = ({
             render={({ field }) => {
               return (
                 <Dropdown
-                  disabled={isNonForteUser}
+                  disabled={isNonForteUser || !editMode}
                   enableSearch
                   value={
                     organizations.find(
@@ -268,7 +295,7 @@ const UserDialogue = ({
                       handleSelect={(val) => field.onChange(val)}
                       options={filteredRoles}
                       placeholder="Role"
-                      disabled={!canEditRole || isOwnAccount}
+                      disabled={!canEditRole || isOwnAccount || !editMode}
                     />
                   );
                 }}
@@ -295,7 +322,7 @@ const UserDialogue = ({
                     value: item,
                   }))}
                   placeholder="Status"
-                  disabled={field.value === "invited"}
+                  disabled={userId ? !editMode : field.value === "invited"}
                 />
               );
             }}
@@ -316,22 +343,25 @@ const UserDialogue = ({
           )}
 
           <div className="!mt-10 flex justify-end gap-4">
-            <Button
-              onClick={() => {
-                if (isDirty) {
-                  setShowPrompt(true);
-                  return;
-                }
-                close();
-              }}
-              buttonType="secondary"
-            >
-              Cancel
-            </Button>
+            {editMode ? (
+              <>
+                <Button onClick={handleCancel} buttonType="secondary">
+                  Cancel
+                </Button>
 
-            <Button loading={isPending} type="submit" disabled={!isDirty}>
-              Save
-            </Button>
+                <Button loading={isPending} type="submit" disabled={!isDirty}>
+                  Save
+                </Button>
+              </>
+            ) : (
+              <Button
+                loading={isPending}
+                type="button"
+                onClick={() => setEditMode(true)}
+              >
+                Edit
+              </Button>
+            )}
           </div>
         </Form>
       )}
