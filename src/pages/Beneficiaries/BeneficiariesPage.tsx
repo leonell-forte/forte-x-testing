@@ -36,6 +36,7 @@ import Dialogue from "components/ui/dialogue/dialogue";
 import Dropdown, { IOption } from "components/ui/dropdown";
 import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
+import { Tooltip } from "components/ui/tooltip/Tooltip";
 
 type ModalLabelTypes =
   | "beneficiaries"
@@ -187,7 +188,7 @@ const BeneficiariesPage = () => {
       {renderModal()}
 
       <div className="flex h-full flex-col space-y-2.5">
-        <div className="flex flex-col items-center gap-2.5 md:flex-row md:justify-between lg:items-start">
+        <div className="flex flex-col items-center gap-2.5 md:justify-between lg:items-start xl:flex-row">
           <div className="flex w-full flex-col flex-wrap items-start gap-2.5 lg:w-auto lg:flex-row">
             <div className="flex w-full items-center gap-2 md:w-auto">
               <div className="w-full md:w-auto">
@@ -213,32 +214,69 @@ const BeneficiariesPage = () => {
                 <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
               </button>
             </div>
-
-            <div className="hidden xl:block">
-              <Filters filters={filters} setFilters={setFilters} />
-            </div>
           </div>
-
-          <div className="flex w-full flex-shrink-0 grid-cols-1 flex-wrap gap-2.5 md:w-auto">
-            {selectedIds.length > 0 && IsAuthorized([Beneficiaries.EXECUTE]) ? (
+          <div className="flex w-full flex-wrap gap-2.5 md:w-auto">
+            {IsAuthorized([Beneficiaries.EXECUTE]) && (
               <>
                 {IsAuthorized([Beneficiaries.UPDATE]) && (
-                  <Button
-                    onClick={() => {
-                      setModal("update status");
-                    }}
-                    buttonType="secondary"
+                  <Tooltip
+                    title={
+                      !selectedIds.length ? (
+                        <div className="flex items-center gap-1.5">
+                          <div className="flex-1 text-sm text-black">
+                            {" "}
+                            Please select beneficiaries to update status
+                          </div>
+                        </div>
+                      ) : (
+                        ""
+                      )
+                    }
+                    placement="top"
                   >
-                    Update Status
-                  </Button>
+                    <span>
+                      <Button
+                        onClick={() => {
+                          setModal("update status");
+                        }}
+                        buttonType="secondary"
+                        disabled={!selectedIds.length}
+                      >
+                        Update Status
+                      </Button>
+                    </span>
+                  </Tooltip>
                 )}
-                <Button
-                  onClick={handleDownloadEvidence}
-                  buttonType="secondary"
-                  disabled={isDownloadingEvidence}
+                <Tooltip
+                  title={
+                    !selectedIds.length ? (
+                      <div className="flex items-center gap-1.5">
+                        <div className="flex-1 text-sm text-black">
+                          {" "}
+                          Please select beneficiaries to update status
+                        </div>
+                      </div>
+                    ) : (
+                      ""
+                    )
+                  }
+                  placement="top"
                 >
-                  Download Evidence
-                </Button>
+                  <span>
+                    <Button
+                      onClick={handleDownloadEvidence}
+                      buttonType="secondary"
+                      disabled={isDownloadingEvidence || !selectedIds.length}
+                    >
+                      Download Evidence
+                    </Button>
+                  </span>
+                </Tooltip>
+              </>
+            )}
+
+            <>
+              {IsAuthorized([Beneficiaries.EXECUTE]) && (
                 <Button
                   onClick={handleExportBeneficiaries}
                   buttonType="secondary"
@@ -246,43 +284,35 @@ const BeneficiariesPage = () => {
                 >
                   Export CSV
                 </Button>
-              </>
-            ) : (
-              <>
-                {IsAuthorized([Beneficiaries.EXECUTE]) && (
-                  <Button
-                    onClick={handleExportBeneficiaries}
-                    buttonType="secondary"
-                    disabled={isExportingBeneficiaries}
-                  >
-                    Export CSV
-                  </Button>
-                )}
-                {IsAuthorized([Beneficiaries.IMPORT]) && (
-                  <Button
-                    eventName="Import Beneficiaries"
-                    buttonType="secondary"
-                    onClick={() => setModal("import")}
-                  >
-                    Import beneficiaries
-                  </Button>
-                )}
+              )}
+              {IsAuthorized([Beneficiaries.IMPORT]) && (
+                <Button
+                  eventName="Import Beneficiaries"
+                  buttonType="secondary"
+                  onClick={() => setModal("import")}
+                >
+                  Import beneficiaries
+                </Button>
+              )}
 
-                {IsAuthorized([Beneficiaries.CREATE]) && (
-                  <Button
-                    eventName="Add Beneficiary"
-                    onClick={() => {
-                      setModal("beneficiaries");
+              {IsAuthorized([Beneficiaries.CREATE]) && (
+                <Button
+                  eventName="Add Beneficiary"
+                  onClick={() => {
+                    setModal("beneficiaries");
 
-                      setEditMode(true);
-                    }}
-                  >
-                    Add beneficiary
-                  </Button>
-                )}
-              </>
-            )}
+                    setEditMode(true);
+                  }}
+                >
+                  Add beneficiary
+                </Button>
+              )}
+            </>
           </div>
+        </div>
+
+        <div className="hidden xl:block">
+          <Filters filters={filters} setFilters={setFilters} />
         </div>
 
         <div className="flex h-full flex-col justify-between gap-4">

@@ -37,7 +37,7 @@ const Button = ({
     secondary: {
       backgroundColor: "transparent",
       border: "2px solid",
-      borderColor: active ? "#42ECA8" : "#ffffff",
+      borderColor: disabled ? "#0A312Aa" : active ? "#42ECA8" : "#ffffff",
       borderRadius: "100px",
       height: "44px",
       boxShadow: "none",
