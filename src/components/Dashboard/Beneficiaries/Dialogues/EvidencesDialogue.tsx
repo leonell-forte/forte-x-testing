@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import evidenceService from "api/evidence";
 import projectService from "api/projects";
 import { get } from "lodash";
-import { useEffect, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import loader from "assets/images/icons/loader.svg";
@@ -30,6 +30,8 @@ import CommentSection from "./Sections/CommentSection";
 
 interface IEvidencesDialogueProps extends IDialogueProps {
   id?: number;
+
+  setId: Dispatch<SetStateAction<number | null>>;
 }
 
 const config = {
@@ -45,7 +47,11 @@ const config = {
   },
 };
 
-const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
+const EvidencesDialogue = ({
+  id,
+  setId,
+  ...props
+}: IEvidencesDialogueProps) => {
   const { open } = useCustomPrompt();
 
   const [onEdit, setOnEdit] = useState(id ? false : true);
@@ -129,7 +135,8 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
 
     evidenceId: id!,
 
-    successCallback: () => {
+    successCallback: (id) => {
+      setId(Number(id));
       setOnEdit(false);
     },
   });
@@ -307,9 +314,12 @@ const EvidencesDialogue = ({ id, ...props }: IEvidencesDialogueProps) => {
 
         {!!id && beneficiaryId && (
           <div className="space-y-12">
-            <ActivityLogSection beneficiaryId={beneficiaryId} evidenceId={id} />
+            <ActivityLogSection
+              beneficiaryId={beneficiaryId}
+              evidenceId={id as number}
+            />
 
-            <CommentSection id={id} />
+            <CommentSection id={id as number} />
           </div>
         )}
 

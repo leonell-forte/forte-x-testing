@@ -65,6 +65,7 @@ const BeneficiariesDialogue = ({
           <EvidencesDialogue
             {...props}
             id={evidenceId as number}
+            setId={setEvidenceId}
             handleClose={() => {
               setModal("beneficiaries");
 

@@ -14,7 +14,7 @@ interface IEvidenceMutation {
 
   beneficiaryId: number;
 
-  successCallback?: () => void;
+  successCallback?: (id?: string) => void;
 }
 
 export const useEvidenceMutation = ({
@@ -55,7 +55,7 @@ export const useEvidenceMutation = ({
       return { previousEvidences, previousEvidence };
     },
 
-    onSuccess: (addedEvidence) => {
+    onSuccess: (addedEvidence: { data: EvidenceFieldValues }) => {
       console.log(addedEvidence, "addedEvidence");
 
       queryClient.setQueryData(
@@ -76,7 +76,7 @@ export const useEvidenceMutation = ({
         () => addedEvidence
       );
 
-      successCallback?.();
+      successCallback?.(addedEvidence.data.id?.toString());
 
       setAlert({
         title: "Success!",
