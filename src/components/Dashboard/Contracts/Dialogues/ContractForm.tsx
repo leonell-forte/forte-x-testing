@@ -6,6 +6,7 @@ import { addDays, subDays } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 
+import useOrganizationList from "lib/common/useOrganizationList";
 import { CONTRACT_STATUS } from "lib/constants";
 import { usePage } from "lib/hooks";
 import useContractMutation from "lib/mutations/contracts";
@@ -101,30 +102,10 @@ const ContractForm = ({
     name: "outcomeRates",
   });
 
-  const { data: organizationList, isLoading: orgLoading } = useQuery({
-    queryKey: ["organizations"],
-
-    queryFn: () =>
-      organizationService.list({
-        page: 1,
-        listAll: true,
-        filters: { type: "provider" },
-      }),
-    refetchOnWindowFocus: false,
+  const { organizations, isLoading: orgLoading } = useOrganizationList({
+    listAll: true,
+    filters: { type: "provider" },
   });
-
-  const organizations: IOption[] = useMemo(
-    () =>
-      organizationList?.items
-        ?.map((item: IOrganization) => ({
-          label: item.name,
-
-          value: item.id?.toString() as string,
-        }))
-        .sort((a, b) => a.label.localeCompare(b.label)) || [],
-
-    [organizationList]
-  );
 
   const { data: projectsList, isLoading: projectLoading } = useQuery({
     queryKey: ["projects"],
