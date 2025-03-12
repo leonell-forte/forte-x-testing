@@ -1,10 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
 import authService from "api/auth";
-import organizationService from "api/organization";
 import { SyntheticEvent } from "react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { HiUser } from "react-icons/hi2";
 import { HiOutlineChevronUpDown as Chevron } from "react-icons/hi2";
+
+import useOrganizationList from "lib/common/useOrganizationList";
 
 import { useProfile } from "components/ProfileContext";
 import {
@@ -19,18 +19,12 @@ import ViewProfileDialogue from "./ViewProfileDialogue";
 const MobileUserDropdown = () => {
   const { profile } = useProfile();
   const [showModal, setShowModal] = useState(false);
-  const { data: organizationList } = useQuery({
-    queryKey: ["organizations"],
-    queryFn: () => organizationService.list({ page: 1, listAll: true }),
-    refetchOnWindowFocus: false,
+
+  const { rawList: organizations } = useOrganizationList({
+    listAll: true,
   });
 
   const handleLogout = () => authService.logout();
-
-  const organizations = useMemo(
-    () => organizationList?.items || [],
-    [organizationList]
-  );
 
   const handleViewProfile = (e: SyntheticEvent) => {
     e.stopPropagation();
@@ -42,7 +36,7 @@ const MobileUserDropdown = () => {
     <>
       {showModal && profile?.id && (
         <ViewProfileDialogue
-          organizations={organizations}
+          organizations={organizations?.items || []}
           userId={String(profile.id)}
           isVisible={showModal}
           handleClose={() => {

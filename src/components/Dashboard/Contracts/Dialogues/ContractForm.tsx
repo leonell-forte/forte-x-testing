@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
-import organizationService from "api/organization";
 import projectService from "api/projects";
 import { addDays, subDays } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
@@ -16,7 +15,6 @@ import {
   IContract,
   StatusType,
 } from "lib/types/contracts";
-import { IOrganization } from "lib/types/organizations";
 import { IProject } from "lib/types/projects";
 import { findLabelFromOptions, formatDate } from "lib/utils";
 import { contracts } from "lib/validators/contracts";

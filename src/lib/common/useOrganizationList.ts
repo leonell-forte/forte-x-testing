@@ -11,6 +11,8 @@ type UseOrganizationList = {
   filters?: IFilters;
   listAll?: boolean;
   page?: number;
+  enabled?: boolean;
+  search?: string;
 };
 
 const useOrganizationList = ({
@@ -18,6 +20,8 @@ const useOrganizationList = ({
   page,
   listAll,
   filters,
+  enabled,
+  search,
 }: UseOrganizationList = {}) => {
   const { data, isLoading } = useQuery({
     queryKey: ["organizations", ...(key ? key : [])],
@@ -27,8 +31,10 @@ const useOrganizationList = ({
         page: page || 1,
         listAll,
         filters: filters || {},
+        search,
       }),
     refetchOnWindowFocus: false,
+    enabled: enabled ? enabled : true,
   });
 
   const organizations: IOption[] = useMemo(
@@ -43,7 +49,7 @@ const useOrganizationList = ({
 
     [data]
   );
-  return { organizations, isLoading, rawList: data?.items || [] };
+  return { organizations, isLoading, rawList: data };
 };
 
 export default useOrganizationList;

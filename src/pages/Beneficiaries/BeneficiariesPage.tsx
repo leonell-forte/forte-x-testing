@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import beneficiariesService from "api/beneficiaries";
-import organizationService from "api/organization";
 import projectService from "api/projects";
 import {
   Dispatch,
@@ -12,6 +11,7 @@ import {
 import { BiSlider as SliderIcon } from "react-icons/bi";
 import { TbFilterX as FilterIcon } from "react-icons/tb";
 
+import useOrganizationList from "lib/common/useOrganizationList";
 import { BENEFICIARY_STATUS, RISK_LEVEL } from "lib/constants";
 import { useDebounce, usePage, usePageTitle } from "lib/hooks";
 import {
@@ -365,33 +365,11 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
     [projectsList]
   );
 
-  const { data: organizationList, isLoading: orgLoading } = useQuery({
-    queryKey: ["organizations"],
-
-    queryFn: () =>
-      organizationService.list({
-        listAll: true,
-
-        page: 1,
-
-        filters: { type: "provider" },
-      }),
-
+  const { organizations, isLoading: orgLoading } = useOrganizationList({
+    listAll: true,
+    filters: { type: "provider" },
     enabled: IsAuthorized([Organizations.LIST]),
   });
-
-  const organizations: IOption[] = useMemo(
-    () =>
-      organizationList?.items
-        .map((item) => ({
-          label: item.name,
-
-          value: item.id!.toString(),
-        }))
-        .sort((a, b) => a.label.localeCompare(b.label)) || [],
-
-    [organizationList]
-  );
 
   return (
     <div className="grid w-full grid-cols-1 flex-wrap gap-2.5 xl:flex xl:flex-row">

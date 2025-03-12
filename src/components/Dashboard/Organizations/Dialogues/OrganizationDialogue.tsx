@@ -1,14 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import organizationService from "api/organization";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import useOrganizationList from "lib/common/useOrganizationList";
 import { REGIONS, STATUS, TYPES } from "lib/constants";
 import useOrganizationMutation from "lib/mutations/organizations";
 import {
-  IOrganization,
   OrgTypes,
   OrganizationFieldTypes,
   PartnerFieldTypes,
@@ -20,7 +19,7 @@ import { useConfirmPrompt } from "components/ui/alert/confirm-prompt";
 import Button from "components/ui/button";
 import Controller from "components/ui/custom-controller/CustomController";
 import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
-import Dropdown, { IOption } from "components/ui/dropdown";
+import Dropdown from "components/ui/dropdown";
 import { Form } from "components/ui/form/Form";
 import Input from "components/ui/input";
 import Spinner from "components/ui/spinner/spinner";
@@ -431,7 +430,7 @@ const AddPartnerForm = ({ orgId, ...props }: AddPartnerFormProps) => {
                   handleSelect={(val) => {
                     setValue("partnerId", Number(val));
 
-                    const selecterPartner = rawList.find(
+                    const selecterPartner = rawList?.items.find(
                       (item) => Number(item.id) === Number(val)
                     );
 

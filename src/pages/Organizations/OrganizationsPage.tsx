@@ -1,18 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
-import organizationService from "api/organization";
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useMemo,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import { BiSlider as SliderIcon } from "react-icons/bi";
 import { TbFilterX as FilterIcon } from "react-icons/tb";
 
+import useOrganizationList from "lib/common/useOrganizationList";
 import { REGIONS, STATUS, TYPES } from "lib/constants";
 import { useDebounce, usePage, usePageTitle } from "lib/hooks";
-import { IFilters, IOrganization } from "lib/types/organizations";
+import { IFilters } from "lib/types/organizations";
 
 import OrganizationDialogue from "components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
 import OrganizationTable from "components/tables/Organization";
@@ -54,26 +47,34 @@ const OrganizationsPage = () => {
 
   const [filters, setFilters] = useState<IFilters>(initialFilters as IFilters);
 
-  const { data: organizationList, isLoading: orgLoading } = useQuery({
-    queryKey: ["organizations", page, debouncedSearch, filters],
+  // const { data: organizationList, isLoading: orgLoading } = useQuery({
+  //   queryKey: ["organizations", page, debouncedSearch, filters],
 
-    queryFn: () =>
-      organizationService.list({
-        page,
+  //   queryFn: () =>
+  //     organizationService.list({
+  //       page,
 
-        listAll: false,
+  //       listAll: false,
 
-        search: debouncedSearch,
+  //       search: debouncedSearch,
 
-        filters,
-      }),
-  });
+  //       filters,
+  //     }),
+  // });
 
-  const organizations: IOrganization[] = useMemo(
-    () => organizationList?.items || [],
+  // const organizations: IOrganization[] = useMemo(
+  //   () => organizationList?.items || [],
 
-    [organizationList]
-  );
+  //   [organizationList]
+  // );
+
+  const { rawList: organizationList, isLoading: orgLoading } =
+    useOrganizationList({
+      key: [page, debouncedSearch, filters],
+      page,
+      search: debouncedSearch,
+      filters,
+    });
 
   const close = () => {
     setSelectedOrg("");
@@ -171,7 +172,7 @@ const OrganizationsPage = () => {
             isLoading={orgLoading}
           />
 
-          {!!organizations.length && (
+          {!!organizationList?.items.length && (
             <div className="flex w-full items-center justify-end">
               <Pagination
                 page={page}
