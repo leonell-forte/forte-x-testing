@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 
 import loader from "assets/images/icons/loader.svg";
 
-import { EVIDENCE_STATUS } from "lib/constants";
+import { EVIDENCE_STATUS, NO_PROMPT_STATUS } from "lib/constants";
 import { useAppSelector } from "lib/hooks";
 import { useEvidenceMutation } from "lib/mutations/evidences";
 import { EvidenceFieldValues } from "lib/types/evidence";
@@ -144,7 +144,7 @@ const EvidencesDialogue = ({
   const onSubmit = async (values: EvidenceFieldValues) => {
     if (
       evidenceData &&
-      status !== "accepted" &&
+      !NO_PROMPT_STATUS.includes(status) &&
       evidenceData.status !== status
     ) {
       open({

@@ -55,9 +55,7 @@ export const useEvidenceMutation = ({
       return { previousEvidences, previousEvidence };
     },
 
-    onSuccess: (addedEvidence: { data: EvidenceFieldValues }) => {
-      console.log(addedEvidence, "addedEvidence");
-
+    onSuccess: (addedEvidence: EvidenceFieldValues) => {
       queryClient.setQueryData(
         ["evidences", beneficiaryId],
 
@@ -76,7 +74,7 @@ export const useEvidenceMutation = ({
         () => addedEvidence
       );
 
-      successCallback?.(addedEvidence.data.id?.toString());
+      successCallback?.(String(addedEvidence.id));
 
       setAlert({
         title: "Success!",

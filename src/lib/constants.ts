@@ -110,6 +110,8 @@ export const EVIDENCE_STATUS = [
   },
 ];
 
+export const NO_PROMPT_STATUS = ["accepted", "invoiced", "rejected", "paid"];
+
 export const BENEFICIARY_STATUS = [
   {
     label: "New",
