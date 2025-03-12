@@ -113,12 +113,6 @@ const ContractForm = ({
     refetchOnWindowFocus: false,
   });
 
-  const { data: projectsList, isLoading: projectLoading } = useQuery({
-    queryKey: ["projects"],
-
-    queryFn: () => projectService.list({}),
-  });
-
   const organizations: IOption[] = useMemo(
     () =>
       organizationList?.items
@@ -131,6 +125,12 @@ const ContractForm = ({
 
     [organizationList]
   );
+
+  const { data: projectsList, isLoading: projectLoading } = useQuery({
+    queryKey: ["projects"],
+
+    queryFn: () => projectService.list({}),
+  });
 
   const projects: IOption[] = useMemo(
     () =>

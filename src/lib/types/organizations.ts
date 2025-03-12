@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { organizations } from "lib/validators/organizations";
+import { organizations, partner } from "lib/validators/organizations";
 
 export interface IOrganization {
   id?: string;
@@ -45,3 +45,5 @@ export interface IFilters {
 }
 
 export type OrganizationFieldTypes = z.infer<typeof organizations.schema>;
+
+export type PartnerFieldTypes = z.infer<typeof partner.schema>;
