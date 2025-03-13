@@ -3,6 +3,7 @@ import organizationService from "api/organization";
 import { useMemo } from "react";
 
 import { IFilters, IOrganization } from "lib/types/organizations";
+import { sortOptions } from "lib/utils";
 
 import { IOption } from "components/ui/dropdown";
 
@@ -39,17 +40,19 @@ const useOrganizationList = ({
 
   const organizations: IOption[] = useMemo(
     () =>
-      data?.items
-        ?.map((item: IOrganization) => ({
-          label: item.name,
+      data?.items?.map((item: IOrganization) => ({
+        label: item.name,
 
-          value: item.id?.toString() as string,
-        }))
-        .sort((a, b) => a.label.localeCompare(b.label)) || [],
+        value: item.id?.toString() as string,
+      })) || [],
 
     [data]
   );
-  return { organizations, isLoading, rawList: data };
+  return {
+    organizations: sortOptions(organizations),
+    isLoading,
+    rawList: data,
+  };
 };
 
 export default useOrganizationList;

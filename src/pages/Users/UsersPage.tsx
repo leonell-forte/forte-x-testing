@@ -16,6 +16,7 @@ import { useDebounce, usePage, usePageTitle } from "lib/hooks";
 import { IsAuthorized, Users } from "lib/role-permissions";
 import { IOrganization } from "lib/types/organizations";
 import { IUser } from "lib/types/users";
+import { sortOptions } from "lib/utils";
 
 import UserDialogue from "components/Dashboard/Users/Dialogues/UserDialogue";
 import UsersTable from "components/tables/Users";
@@ -250,12 +251,12 @@ const Filters = ({
         }}
         placeholder="Organization"
         className="md:w-[166px]"
-        options={organizations
-          .map((item: IOrganization) => ({
+        options={sortOptions(
+          organizations.map((item: IOrganization) => ({
             label: item.name,
             value: item.name,
           }))
-          .sort((a, b) => a.label.localeCompare(b.label))}
+        )}
         isMultiSelect
       />
 

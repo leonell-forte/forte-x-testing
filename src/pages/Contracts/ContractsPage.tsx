@@ -16,7 +16,7 @@ import { useDebounce, usePage, usePageTitle } from "lib/hooks";
 import { Contracts, IsAuthorized } from "lib/role-permissions";
 import { IContract, IContractFilters, StatusType } from "lib/types/contracts";
 import { IProject } from "lib/types/projects";
-import { findLabelFromOptions } from "lib/utils";
+import { findLabelFromOptions, sortOptions } from "lib/utils";
 
 import { ContractsProvider } from "components/Dashboard/Contracts/Dialogues/ContractContext";
 import ContractDialogue from "components/Dashboard/Contracts/Dialogues/ContractDialogue";
@@ -214,13 +214,11 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
   });
   const projects: IOption[] = useMemo(
     () =>
-      projectList?.items
-        ?.map((item: IProject) => ({
-          label: item.name,
+      projectList?.items?.map((item: IProject) => ({
+        label: item.name,
 
-          value: item.id.toString(),
-        }))
-        .sort((a, b) => a.label.localeCompare(b.label)) || [],
+        value: item.id.toString(),
+      })) || [],
 
     [projectList]
   );
@@ -245,7 +243,7 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
             setPage(1);
           }}
           loading={isProjectLoading}
-          options={projects}
+          options={sortOptions(projects)}
           placeholder="Project"
           className="lg:max-w-[166px]"
         />

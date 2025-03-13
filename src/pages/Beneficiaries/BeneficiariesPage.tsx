@@ -24,7 +24,7 @@ import {
   Organizations,
 } from "lib/role-permissions";
 import { IBeneficiariesFilter } from "lib/types/beneficiaries";
-import { findLabelFromOptions } from "lib/utils";
+import { findLabelFromOptions, sortOptions } from "lib/utils";
 
 import BeneficiariesDialogue from "components/Dashboard/Beneficiaries/Dialogues/BeneficiariesDialogue";
 import BulkUpdateStatus from "components/Dashboard/Beneficiaries/Dialogues/BulkUpdateStatus";
@@ -355,13 +355,11 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
 
   const projects: IOption[] = useMemo(
     () =>
-      projectsList?.items
-        .map((item) => ({
-          label: item.name,
+      projectsList?.items.map((item) => ({
+        label: item.name,
 
-          value: item.id.toString(),
-        }))
-        .sort((a, b) => a.label.localeCompare(b.label)) || [],
+        value: item.id.toString(),
+      })) || [],
     [projectsList]
   );
 
@@ -376,7 +374,7 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
       <Dropdown
         value={findLabelFromOptions(projects, filters.project as string)}
         loading={projectLoading}
-        options={projects}
+        options={sortOptions(projects)}
         placeholder="Projects"
         className="xl:w-[166px]"
         handleSelect={(val) => {
