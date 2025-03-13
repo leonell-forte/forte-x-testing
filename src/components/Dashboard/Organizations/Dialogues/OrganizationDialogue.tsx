@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { useAppDispatch } from "lib/hooks";
-import { setPartnersToAdd } from "lib/slice/partners";
+import { clearPartners, setPartnersToAdd } from "lib/slice/partners";
 
 import { IDialogueProps } from "components/ui/dialogue/dialogue";
 
@@ -33,7 +33,10 @@ const OrganizationDialogue = ({
       case "organization":
         return (
           <OrganizationForm
-            handleClose={handleClose}
+            handleClose={() => {
+              handleClose?.();
+              dispatch(clearPartners());
+            }}
             orgId={orgId}
             addSuccessCallback={addSuccessCallback}
             isVisible={isVisible}

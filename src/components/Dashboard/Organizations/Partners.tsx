@@ -38,8 +38,6 @@ const Partners = ({ partners, handleAddPartner, orgId }: PartnerProps) => {
   const { deletePartner } = useDeletePartnerMutation(orgId);
 
   const handleDelete = async (organizationId: number, partnerId?: string) => {
-    console.log(partnerId);
-
     if (partnerId) {
       await deletePartner(partnerId);
       return;

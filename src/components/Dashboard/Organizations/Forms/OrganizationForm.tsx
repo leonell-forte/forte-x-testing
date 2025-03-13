@@ -6,7 +6,9 @@ import { useForm } from "react-hook-form";
 
 import usePartnerList from "lib/common/lists/usePartnerList";
 import { REGIONS, STATUS, TYPES } from "lib/constants";
+import { useAppDispatch, useAppSelector } from "lib/hooks";
 import useOrganizationMutation from "lib/mutations/organizations";
+import { clearPartners } from "lib/slice/partners";
 import { OrgTypes, OrganizationFieldTypes } from "lib/types/organizations";
 import { organizations } from "lib/validators/organizations";
 
@@ -35,6 +37,10 @@ const OrganizationForm = ({
   isVisible,
   handleAddPartner,
 }: OrganizationFormProps) => {
+  const dispatch = useAppDispatch();
+  // this is a custom state to store partners to be added to the organization after creation
+  const { partnersToAdd } = useAppSelector((state) => state.partners);
+
   const [editMode, setEditMode] = useState(orgId ? false : true);
 
   const { data: orgData, isLoading } = useQuery({
@@ -103,10 +109,20 @@ const OrganizationForm = ({
 
   const { addOrganization, isPending } = useOrganizationMutation({
     orgId,
-    successCallback: (id) => {
+    successCallback: async (id) => {
       onClose();
 
       addSuccessCallback?.(id);
+
+      // if there are partners to add, add them after the organization is created
+      if (partnersToAdd.length) {
+        await Promise.all(
+          partnersToAdd.map(async (partner) => {
+            return await organizationService.addPartner(partner);
+          })
+        );
+        dispatch(clearPartners());
+      }
     },
   });
 

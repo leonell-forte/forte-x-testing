@@ -22,8 +22,12 @@ export const partnersSlice = createSlice({
         (partner) => partner.partner.id !== action.payload
       );
     },
+    clearPartners: (state) => {
+      state.partnersToAdd = [];
+    },
   },
 });
 
-export const { setPartnersToAdd, removePartner } = partnersSlice.actions;
+export const { setPartnersToAdd, removePartner, clearPartners } =
+  partnersSlice.actions;
 export default partnersSlice.reducer;
