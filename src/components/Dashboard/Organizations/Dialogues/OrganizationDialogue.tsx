@@ -15,6 +15,7 @@ import Controller from "components/ui/custom-controller/CustomController";
 import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
 import Dropdown from "components/ui/dropdown";
 import { Form } from "components/ui/form/Form";
+import { useAutoSaveForm } from "components/ui/form/useAutoSave";
 import Input from "components/ui/input";
 import Spinner from "components/ui/spinner/spinner";
 
@@ -113,12 +114,24 @@ const OrganizationDialogue = ({
 
   const { setShowPrompt } = useConfirmPrompt();
 
+  // autosave start
+
+  const formId = "organization-form";
+
+  useAutoSaveForm(form, {
+    formId,
+    enabled: !Boolean(orgData),
+  });
+
+  // autosave end
+
   return (
     <Dialogue
       confirmBeforeLeave={isDirty}
       isVisible={isVisible}
       handleClose={onClose}
       title={getTitle()}
+      formId={formId}
     >
       {isLoading ? (
         <div className="flex h-[470px] w-full items-center justify-center">

@@ -19,6 +19,7 @@ import Controller from "components/ui/custom-controller/CustomController";
 import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
 import Dropdown from "components/ui/dropdown";
 import { Form } from "components/ui/form/Form";
+import { useAutoSaveForm } from "components/ui/form/useAutoSave";
 import Input from "components/ui/input";
 import Spinner from "components/ui/spinner/spinner";
 
@@ -132,12 +133,24 @@ const ProjectDialogue = ({
     }
   }, [errors, append, setError]);
 
+  // autosave start
+
+  const formId = "project-form";
+
+  useAutoSaveForm(form, {
+    formId,
+    enabled: !Boolean(project),
+  });
+
+  // autosave end
+
   return (
     <Dialogue
       confirmBeforeLeave={isDirty}
       isVisible={isVisible}
       handleClose={close}
       title={project ? "Edit project" : "Add project"}
+      formId={formId}
     >
       {projectLoading ? (
         <div className="flex h-[470px] w-full items-center justify-center">
