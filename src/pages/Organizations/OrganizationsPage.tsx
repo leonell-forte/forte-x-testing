@@ -47,27 +47,6 @@ const OrganizationsPage = () => {
 
   const [filters, setFilters] = useState<IFilters>(initialFilters as IFilters);
 
-  // const { data: organizationList, isLoading: orgLoading } = useQuery({
-  //   queryKey: ["organizations", page, debouncedSearch, filters],
-
-  //   queryFn: () =>
-  //     organizationService.list({
-  //       page,
-
-  //       listAll: false,
-
-  //       search: debouncedSearch,
-
-  //       filters,
-  //     }),
-  // });
-
-  // const organizations: IOrganization[] = useMemo(
-  //   () => organizationList?.items || [],
-
-  //   [organizationList]
-  // );
-
   const { rawList: organizationList, isLoading: orgLoading } =
     useOrganizationList({
       key: [page, debouncedSearch, filters],
