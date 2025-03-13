@@ -405,7 +405,7 @@ const OrganizationForm = ({
   );
 };
 
-type AddPartnerFormProps = IOrganizationDialogueProps & {};
+type AddPartnerFormProps = IOrganizationDialogueProps;
 
 const AddPartnerForm = ({ orgId, ...props }: AddPartnerFormProps) => {
   const existingPartners = queryClient.getQueryData([
