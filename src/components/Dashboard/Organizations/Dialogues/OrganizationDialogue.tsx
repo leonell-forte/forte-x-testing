@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { useAppDispatch } from "lib/hooks";
 import { clearPartners, setPartnersToAdd } from "lib/slice/partners";
+import { OrganizationFieldTypes } from "lib/types/organizations";
 
 import { IDialogueProps } from "components/ui/dialogue/dialogue";
 
@@ -27,6 +28,7 @@ const OrganizationDialogue = ({
 }: IOrganizationDialogueProps) => {
   const dispatch = useAppDispatch();
   const [modal, setModal] = useState<ModalType>("organization");
+  const [formData, setFormData] = useState<OrganizationFieldTypes | null>(null);
 
   const renderModal = (modal: ModalType) => {
     switch (modal) {
@@ -36,11 +38,14 @@ const OrganizationDialogue = ({
             handleClose={() => {
               handleClose?.();
               dispatch(clearPartners());
+              setFormData(null);
             }}
             orgId={orgId}
             addSuccessCallback={addSuccessCallback}
             isVisible={isVisible}
             handleAddPartner={() => setModal("partner")}
+            savedFormData={formData}
+            onFormDataChange={setFormData}
           />
         );
 

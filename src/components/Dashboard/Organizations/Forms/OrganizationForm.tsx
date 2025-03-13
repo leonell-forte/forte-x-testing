@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import organizationService from "api/organization";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import usePartnerList from "lib/common/lists/usePartnerList";
@@ -28,6 +28,8 @@ const labelClass = "min-w-[160px]";
 
 type OrganizationFormProps = IOrganizationDialogueProps & {
   handleAddPartner: () => void;
+  savedFormData?: OrganizationFieldTypes | null;
+  onFormDataChange?: (data: OrganizationFieldTypes) => void;
 };
 
 const OrganizationForm = ({
@@ -36,6 +38,8 @@ const OrganizationForm = ({
   addSuccessCallback,
   isVisible,
   handleAddPartner,
+  savedFormData,
+  onFormDataChange,
 }: OrganizationFormProps) => {
   const dispatch = useAppDispatch();
   // this is a custom state to store partners to be added to the organization after creation
@@ -56,7 +60,7 @@ const OrganizationForm = ({
   const form = useForm<OrganizationFieldTypes>({
     resolver: zodResolver(organizations.schema),
 
-    defaultValues: organizations.defaultValues(),
+    defaultValues: savedFormData || organizations.defaultValues(),
   });
 
   const {
@@ -73,6 +77,11 @@ const OrganizationForm = ({
     formState: { isDirty },
   } = form;
 
+  // Add this computed value for form dirtiness
+  const isFormDirty = useMemo(() => {
+    return isDirty || partnersToAdd.length > 0;
+  }, [isDirty, partnersToAdd.length]);
+
   // prefill initial value from selected org
 
   useEffect(() => {
@@ -80,6 +89,13 @@ const OrganizationForm = ({
       reset(organizations.defaultValues(orgData));
     }
   }, [orgData, reset]);
+
+  useEffect(() => {
+    const subscription = form.watch((value) => {
+      onFormDataChange?.(value as OrganizationFieldTypes);
+    });
+    return () => subscription.unsubscribe();
+  }, [form.watch, onFormDataChange, form]);
 
   const onClose = () => {
     reset();
@@ -95,7 +111,7 @@ const OrganizationForm = ({
   };
 
   const handleCancel = () => {
-    if (!orgId && isDirty) {
+    if (!orgId && isFormDirty) {
       setShowPrompt(true);
       return;
     }
@@ -118,7 +134,10 @@ const OrganizationForm = ({
       if (partnersToAdd.length) {
         await Promise.all(
           partnersToAdd.map(async (partner) => {
-            return await organizationService.addPartner(partner);
+            return await organizationService.addPartner({
+              ...partner,
+              organizationId: id,
+            });
           })
         );
         dispatch(clearPartners());
@@ -134,7 +153,7 @@ const OrganizationForm = ({
 
   return (
     <Dialogue
-      confirmBeforeLeave={isDirty}
+      confirmBeforeLeave={isFormDirty}
       isVisible={isVisible}
       handleClose={onClose}
       title={getTitle()}
@@ -352,7 +371,11 @@ const OrganizationForm = ({
                 <Button onClick={handleCancel} buttonType="secondary">
                   Cancel
                 </Button>
-                <Button loading={isPending} type="submit" disabled={!isDirty}>
+                <Button
+                  loading={isPending}
+                  type="submit"
+                  disabled={!isFormDirty}
+                >
                   Save
                 </Button>
               </>

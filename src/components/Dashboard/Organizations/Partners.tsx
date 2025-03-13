@@ -112,7 +112,7 @@ const Partners = ({ partners, handleAddPartner, orgId }: PartnerProps) => {
       </div>
 
       <div className="hidden md:block">
-        <Table.Container isEmpty={!partners.length}>
+        <Table.Container isEmpty={!partnersList.length}>
           <Table.Head>
             <Table.Row>
               {HEADERS.map((item, index) => {
