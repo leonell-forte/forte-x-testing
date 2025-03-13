@@ -12,6 +12,7 @@ import { clearPartners } from "lib/slice/partners";
 import { OrgTypes, OrganizationFieldTypes } from "lib/types/organizations";
 import { organizations } from "lib/validators/organizations";
 
+import { useProfile } from "components/ProfileContext";
 import { useConfirmPrompt } from "components/ui/alert/confirm-prompt";
 import Button from "components/ui/button";
 import Controller from "components/ui/custom-controller/CustomController";
@@ -44,6 +45,8 @@ const OrganizationForm = ({
 }: OrganizationFormProps) => {
   const dispatch = useAppDispatch();
   // this is a custom state to store partners to be added to the organization after creation
+  const { profile } = useProfile();
+
   const { partnersToAdd } = useAppSelector((state) => state.partners);
 
   const [editMode, setEditMode] = useState(orgId ? false : true);
@@ -366,17 +369,18 @@ const OrganizationForm = ({
             />
           </div>
 
-          {partnersLoading ? (
-            <div className="flex h-[200px] w-full items-center justify-center">
-              <Spinner />
-            </div>
-          ) : (
-            <Partners
-              handleAddPartner={handleAddPartner}
-              partners={partners || []}
-              orgId={orgId as string}
-            />
-          )}
+          {profile.organization === "Forte" &&
+            (partnersLoading ? (
+              <div className="flex h-[200px] w-full items-center justify-center">
+                <Spinner />
+              </div>
+            ) : (
+              <Partners
+                handleAddPartner={handleAddPartner}
+                partners={partners || []}
+                orgId={orgId as string}
+              />
+            ))}
 
           <div className="!mt-10 flex justify-end gap-4">
             {editMode ? (
