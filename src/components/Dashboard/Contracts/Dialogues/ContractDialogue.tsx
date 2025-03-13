@@ -101,6 +101,7 @@ const ContractDialogue = ({
       isVisible={isVisible}
       handleClose={handleClose}
       title={renderTitle()}
+      formId="contract-form"
     >
       {contractDetailsLoading ? (
         <div className="flex h-[470px] w-full items-center justify-center">

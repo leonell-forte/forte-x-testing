@@ -27,6 +27,7 @@ import DatePicker from "components/ui/date-picker";
 import Dropdown, { IOption } from "components/ui/dropdown";
 import FileInput from "components/ui/file-input";
 import { Form } from "components/ui/form/Form";
+import { useAutoSaveForm } from "components/ui/form/useAutoSave";
 import Input from "components/ui/input";
 
 import ContractOutcomeField from "../ContractOutcomeField";
@@ -187,6 +188,15 @@ const ContractForm = ({
   useEffect(() => {
     toShowPrompt(isDirty);
   }, [isDirty, toShowPrompt]);
+
+  // autosave start
+
+  useAutoSaveForm(form, {
+    formId: "contract-form",
+
+    enabled: !Boolean(contractDetails) && isDirty,
+  });
+  // autosave end
 
   return (
     <Form form={form} onSubmit={onSubmit} className="space-y-1">

@@ -29,6 +29,8 @@ export interface IDialogueProps {
   hideClose?: boolean;
 
   className?: string;
+
+  formId?: string;
 }
 
 const Dialogue = ({
@@ -49,6 +51,8 @@ const Dialogue = ({
   hideClose,
 
   className,
+
+  formId,
 }: IDialogueProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -86,6 +90,7 @@ const Dialogue = ({
         confirmLeave={() => {
           setShowPrompt(false);
           handleClose?.();
+          if (formId) localStorage.removeItem(`form-autosave-${formId}`);
         }}
       />
       <div

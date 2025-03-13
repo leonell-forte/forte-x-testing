@@ -18,6 +18,7 @@ import Controller from "components/ui/custom-controller/CustomController";
 import Dialogue from "components/ui/dialogue/dialogue";
 import Dropdown from "components/ui/dropdown";
 import { Form } from "components/ui/form/Form";
+import { useAutoSaveForm } from "components/ui/form/useAutoSave";
 import Input from "components/ui/input";
 import Spinner from "components/ui/spinner/spinner";
 
@@ -103,6 +104,17 @@ const OrganizationForm = ({
     handleClose!();
   };
 
+  // autosave start
+
+  const formId = "organization-form";
+
+  useAutoSaveForm(form, {
+    formId,
+    enabled: !Boolean(orgData),
+  });
+
+  // autosave end
+
   const getTitle = () => {
     if (orgId) {
       return editMode ? "Edit organization" : "View organization";
@@ -157,6 +169,7 @@ const OrganizationForm = ({
       isVisible={isVisible}
       handleClose={onClose}
       title={getTitle()}
+      formId={formId}
     >
       {isLoading ? (
         <div className="flex h-[470px] w-full items-center justify-center">
