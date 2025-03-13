@@ -44,6 +44,19 @@ export interface IFilters {
   type?: "funder" | "provider" | "forte" | "";
 }
 
+type PartnerData = {
+  id: number;
+  name: string;
+  registeredName: string;
+  registeredNumber: string;
+};
+
+export type Partner = {
+  id: string;
+  partner: PartnerData;
+  createdAt: string; // Consider using Date if you plan to work with date objects
+};
+
 export type OrganizationFieldTypes = z.infer<typeof organizations.schema>;
 
 export type PartnerFieldTypes = z.infer<typeof partner.schema>;

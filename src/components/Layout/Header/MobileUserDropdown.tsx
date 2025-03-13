@@ -4,7 +4,7 @@ import { useState } from "react";
 import { HiUser } from "react-icons/hi2";
 import { HiOutlineChevronUpDown as Chevron } from "react-icons/hi2";
 
-import useOrganizationList from "lib/common/useOrganizationList";
+import useOrganizationList from "lib/common/lists/useOrganizationList";
 
 import { useProfile } from "components/ProfileContext";
 import {

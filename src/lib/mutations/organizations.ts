@@ -83,4 +83,6 @@ const useOrganizationMutation = ({
   return { addOrganization, isPending };
 };
 
+// const usePartnerMutation = () => {};
+
 export default useOrganizationMutation;

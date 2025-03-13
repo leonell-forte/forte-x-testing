@@ -4,17 +4,21 @@ import organizationService from "api/organization";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import useOrganizationList from "lib/common/useOrganizationList";
+import useOrganizationList from "lib/common/lists/useOrganizationList";
+import usePartnerList from "lib/common/lists/usePartnerList";
 import { REGIONS, STATUS, TYPES } from "lib/constants";
 import useOrganizationMutation from "lib/mutations/organizations";
+import { usePartnerMutation } from "lib/mutations/partners";
 import {
   OrgTypes,
   OrganizationFieldTypes,
+  Partner,
   PartnerFieldTypes,
 } from "lib/types/organizations";
 import { findLabelFromOptions } from "lib/utils";
 import { organizations, partner } from "lib/validators/organizations";
 
+import { queryClient } from "components/QueryProvider";
 import { useConfirmPrompt } from "components/ui/alert/confirm-prompt";
 import Button from "components/ui/button";
 import Controller from "components/ui/custom-controller/CustomController";
@@ -93,6 +97,8 @@ const OrganizationForm = ({
 
     enabled: !!orgId,
   });
+
+  const { partners, isLoading: partnersLoading } = usePartnerList(orgId);
 
   const form = useForm<OrganizationFieldTypes>({
     resolver: zodResolver(organizations.schema),
@@ -365,7 +371,17 @@ const OrganizationForm = ({
             />
           </div>
 
-          <Partners handleAddPartner={handleAddPartner} />
+          {partnersLoading ? (
+            <div className="flex h-[200px] w-full items-center justify-center">
+              <Spinner />
+            </div>
+          ) : (
+            <Partners
+              handleAddPartner={handleAddPartner}
+              partners={partners || []}
+              orgId={orgId as string}
+            />
+          )}
 
           <div className="!mt-10 flex justify-end gap-4">
             {editMode ? (
@@ -392,12 +408,22 @@ const OrganizationForm = ({
 type AddPartnerFormProps = IOrganizationDialogueProps & {};
 
 const AddPartnerForm = ({ orgId, ...props }: AddPartnerFormProps) => {
+  const existingPartners = queryClient.getQueryData([
+    "partners",
+    orgId,
+  ]) as Partner[];
+
   const form = useForm<PartnerFieldTypes>({
     resolver: zodResolver(partner.schema),
     defaultValues: partner.defaultValues(Number(orgId)),
   });
 
-  const { control, setValue, setError } = form;
+  const {
+    control,
+    setValue,
+    setError,
+    formState: { isDirty },
+  } = form;
 
   const {
     organizations,
@@ -409,11 +435,31 @@ const AddPartnerForm = ({ orgId, ...props }: AddPartnerFormProps) => {
     filters: {},
   });
 
-  const onSubmit = (values: PartnerFieldTypes) => {
-    console.log(values);
+  const filteredOrganizations = organizations.filter((org) => {
+    const isOwnOrg = Number(org.value) === Number(orgId);
+    const orgExists = existingPartners.some(
+      (partner) => Number(partner.partner.id) === Number(org.value)
+    );
+
+    return !isOwnOrg && !orgExists;
+  });
+
+  const { addPartner, isPending } = usePartnerMutation({
+    orgId,
+    successCallback: props.handleClose,
+  });
+
+  const onSubmit = async (values: PartnerFieldTypes) => {
+    await addPartner(values);
   };
+
   return (
-    <Dialogue isVisible title="Add partner" handleClose={props.handleClose}>
+    <Dialogue
+      isVisible
+      title="Add partner"
+      handleClose={props.handleClose}
+      confirmBeforeLeave={isDirty}
+    >
       <Form form={form} onSubmit={onSubmit} className="space-y-10">
         <div className="space-y-4">
           <Controller
@@ -428,13 +474,11 @@ const AddPartnerForm = ({ orgId, ...props }: AddPartnerFormProps) => {
                   enableSearch
                   value={findLabelFromOptions(organizations, field.value)}
                   handleSelect={(val) => {
-                    setValue("partnerId", Number(val));
+                    setValue("partnerId", Number(val), { shouldDirty: true });
 
                     const selecterPartner = rawList?.items.find(
                       (item) => Number(item.id) === Number(val)
                     );
-
-                    console.log(selecterPartner);
 
                     setValue(
                       "registeredName",
@@ -449,7 +493,7 @@ const AddPartnerForm = ({ orgId, ...props }: AddPartnerFormProps) => {
                     setError("partnerId", { message: "" });
                   }}
                   loading={orgLoading}
-                  options={organizations}
+                  options={filteredOrganizations}
                   placeholder="Select partner"
                 />
               );
@@ -492,7 +536,9 @@ const AddPartnerForm = ({ orgId, ...props }: AddPartnerFormProps) => {
         </div>
 
         <div className="flex w-full justify-end">
-          <Button type="submit">Add partner</Button>
+          <Button type="submit" loading={isPending}>
+            Add partner
+          </Button>
         </div>
       </Form>
     </Dialogue>

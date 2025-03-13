@@ -6,7 +6,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { HiPlusCircle } from "react-icons/hi";
 import { Link } from "react-router-dom";
 
-import useOrganizationList from "lib/common/useOrganizationList";
+import useOrganizationList from "lib/common/lists/useOrganizationList";
 import { useProjectMutation } from "lib/mutations/projects";
 import { IsAuthorized, Organizations } from "lib/role-permissions";
 import { ProjectFieldValues } from "lib/types/projects";

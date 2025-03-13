@@ -1,13 +1,31 @@
+import { get } from "lodash";
+import { FaTrash as Trash } from "react-icons/fa6";
 import { HiPlusCircle } from "react-icons/hi";
 
+import { useDeletePartnerMutation } from "lib/mutations/partners";
+import { Partner } from "lib/types/organizations";
+
+import { useCustomPrompt } from "components/ui/alert/custom-prompt";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
 
 type PartnerProps = {
+  partners: Partner[];
   handleAddPartner: () => void;
+  orgId: string; // Add this prop
 };
 
-const Partners = ({ handleAddPartner }: PartnerProps) => {
+const config = {
+  delete: {
+    title: "Remove partner",
+    subText: "Are you sure you want to remove this partner?",
+  },
+};
+
+const Partners = ({ partners, handleAddPartner, orgId }: PartnerProps) => {
+  const { open } = useCustomPrompt();
+  const { deletePartner } = useDeletePartnerMutation(orgId);
+
   return (
     <div className="space-y-[30px]">
       <div className="flex items-center gap-5">
@@ -31,8 +49,9 @@ const Partners = ({ handleAddPartner }: PartnerProps) => {
 
       <div className="md:hidden">
         <Cards.Container>
-          {Array.from({ length: 3 }).map((item, index) => {
-            // const { file, outcome, description, status, id } = item;
+          {partners.map((item, index) => {
+            const { partner, id } = item;
+            const { name, registeredName, registeredNumber } = partner;
 
             return (
               <Cards.Card
@@ -43,24 +62,34 @@ const Partners = ({ handleAddPartner }: PartnerProps) => {
                 key={index}
               >
                 <div className="space-y-2">
-                  <p className="font-semibold">test</p>
+                  <p className="font-semibold">{name}</p>
                   <Cards.Group>
-                    <Cards.Details label="Test" value="test" />
-                    <Cards.Details label="Test" value="test" />
-                    <Cards.Details label="Test" value="test" capitalize />
+                    <Cards.Details
+                      label="Registered name"
+                      value={registeredName}
+                    />
+                    <Cards.Details
+                      label="Registration ID"
+                      value={registeredNumber}
+                      capitalize
+                    />
                   </Cards.Group>
                   <div className="absolute bottom-3 right-4 z-50">
-                    {/* <button
+                    <button
                       type="button"
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        // evidenceService.getFile(file.fileUrl, file.filename);
+                        open({
+                          ...get(config, "delete"),
+                          onYes: () => deletePartner(id),
+                          yesLabel: "Remove",
+                        });
                       }}
                       className="group"
                     >
-                      <DL className="h-auto w-6 transition-all group-hover:stroke-mint" />
-                    </button> */}
+                      <Trash className="h-auto w-4 transition-all group-hover:fill-mint" />
+                    </button>
                   </div>
                 </div>
               </Cards.Card>
@@ -70,7 +99,7 @@ const Partners = ({ handleAddPartner }: PartnerProps) => {
       </div>
 
       <div className="hidden md:block">
-        <Table.Container>
+        <Table.Container isEmpty={!partners.length}>
           <Table.Head>
             <Table.Row>
               {HEADERS.map((item, index) => {
@@ -80,13 +109,32 @@ const Partners = ({ handleAddPartner }: PartnerProps) => {
             </Table.Row>
           </Table.Head>
           <Table.Body>
-            {Array.from({ length: 3 }).map((item, index) => {
+            {partners.map((item, index) => {
+              const { partner, id } = item;
+              const { name, registeredName, registeredNumber } = partner;
+
               return (
-                <Table.Row>
-                  <Table.Data>test</Table.Data>
-                  <Table.Data>test</Table.Data>
-                  <Table.Data>test</Table.Data>
-                  <Table.Data></Table.Data>
+                <Table.Row key={index}>
+                  <Table.Data>{name}</Table.Data>
+                  <Table.Data>{registeredName}</Table.Data>
+                  <Table.Data>{registeredNumber}</Table.Data>
+                  <Table.Data>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        open({
+                          ...get(config, "delete"),
+                          onYes: () => deletePartner(id),
+                          yesLabel: "Remove",
+                        });
+                      }}
+                      className="group"
+                    >
+                      <Trash className="h-auto w-4 transition-all group-hover:fill-mint" />
+                    </button>
+                  </Table.Data>
                 </Table.Row>
               );
             })}
@@ -99,4 +147,4 @@ const Partners = ({ handleAddPartner }: PartnerProps) => {
 
 export default Partners;
 
-const HEADERS = ["test", "test", "test"];
+const HEADERS = ["Organization name", "Registered name", "Registration ID"];

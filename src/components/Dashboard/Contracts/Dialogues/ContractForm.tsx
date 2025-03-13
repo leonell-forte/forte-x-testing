@@ -5,7 +5,7 @@ import { addDays, subDays } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 
-import useOrganizationList from "lib/common/useOrganizationList";
+import useOrganizationList from "lib/common/lists/useOrganizationList";
 import { CONTRACT_STATUS } from "lib/constants";
 import { usePage } from "lib/hooks";
 import useContractMutation from "lib/mutations/contracts";

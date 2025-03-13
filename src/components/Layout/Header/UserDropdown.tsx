@@ -5,7 +5,7 @@ import { HiUser } from "react-icons/hi2";
 
 import arrow from "assets/images/icons/chevron.svg";
 
-import useOrganizationList from "lib/common/useOrganizationList";
+import useOrganizationList from "lib/common/lists/useOrganizationList";
 import { useOutsideClick } from "lib/hooks";
 
 import { useProfile } from "components/ProfileContext";

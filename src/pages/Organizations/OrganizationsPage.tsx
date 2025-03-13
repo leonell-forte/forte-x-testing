@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import { BiSlider as SliderIcon } from "react-icons/bi";
 import { TbFilterX as FilterIcon } from "react-icons/tb";
 
-import useOrganizationList from "lib/common/useOrganizationList";
+import useOrganizationList from "lib/common/lists/useOrganizationList";
 import { REGIONS, STATUS, TYPES } from "lib/constants";
 import { useDebounce, usePage, usePageTitle } from "lib/hooks";
 import { IFilters } from "lib/types/organizations";

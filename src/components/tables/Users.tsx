@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { FaTrash as Trash } from "react-icons/fa6";
 
-import useOrganizationList from "lib/common/useOrganizationList";
+import useOrganizationList from "lib/common/lists/useOrganizationList";
 import { IsAuthorized, Users } from "lib/role-permissions";
 import { IUser } from "lib/types/users";
 
