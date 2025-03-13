@@ -308,7 +308,9 @@ const OrganizationForm = ({
                     isMultiSelect
                     value={field.value}
                     handleSelect={(val) => {
-                      setValue("regions", val as string[]);
+                      setValue("regions", val as string[], {
+                        shouldDirty: true,
+                      });
 
                       setError("regions", { message: "" });
                     }}
@@ -334,7 +336,7 @@ const OrganizationForm = ({
                     handleSelect={(val) => {
                       setError("type", { message: "" });
 
-                      setValue("type", val as OrgTypes);
+                      setValue("type", val as OrgTypes, { shouldDirty: true });
                     }}
                     options={TYPES}
                     placeholder="Select type"
@@ -358,7 +360,7 @@ const OrganizationForm = ({
                     }
                     handleSelect={(val) => {
                       setError("status", { message: "" });
-                      setValue("status", val as string);
+                      setValue("status", val as string, { shouldDirty: true });
                     }}
                     options={STATUS}
                     placeholder="Select status"
