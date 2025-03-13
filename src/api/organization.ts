@@ -113,10 +113,11 @@ class OrganizationService {
   }
 
   async addPartner(data: PartnerFieldTypes): Promise<Partner> {
-    const { organizationId, partnerId } = data;
+    const { organizationId, partner } = data;
+    const { id } = partner;
     const response = await api.post("/organizations/partnership", {
       organizationId,
-      partnerId,
+      partnerId: id,
     });
 
     return response.data.data;

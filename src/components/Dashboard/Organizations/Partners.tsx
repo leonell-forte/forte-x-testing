@@ -1,8 +1,11 @@
 import { get } from "lodash";
+import { useMemo } from "react";
 import { FaTrash as Trash } from "react-icons/fa6";
 import { HiPlusCircle } from "react-icons/hi";
 
+import { useAppDispatch, useAppSelector } from "lib/hooks";
 import { useDeletePartnerMutation } from "lib/mutations/partners";
+import { removePartner } from "lib/slice/partners";
 import { Partner } from "lib/types/organizations";
 
 import { useCustomPrompt } from "components/ui/alert/custom-prompt";
@@ -23,8 +26,26 @@ const config = {
 };
 
 const Partners = ({ partners, handleAddPartner, orgId }: PartnerProps) => {
+  const dispatch = useAppDispatch();
+  const { partnersToAdd } = useAppSelector((state) => state.partners);
+
+  const partnersList: Partner[] = useMemo(
+    () => [...partners, ...partnersToAdd],
+    [partners, partnersToAdd]
+  );
+
   const { open } = useCustomPrompt();
   const { deletePartner } = useDeletePartnerMutation(orgId);
+
+  const handleDelete = async (organizationId: number, partnerId?: string) => {
+    console.log(partnerId);
+
+    if (partnerId) {
+      await deletePartner(partnerId);
+      return;
+    }
+    dispatch(removePartner(organizationId));
+  };
 
   return (
     <div className="space-y-[30px]">
@@ -49,18 +70,12 @@ const Partners = ({ partners, handleAddPartner, orgId }: PartnerProps) => {
 
       <div className="md:hidden">
         <Cards.Container>
-          {partners.map((item, index) => {
-            const { partner, id } = item;
-            const { name, registeredName, registeredNumber } = partner;
+          {partnersList.map((item, index) => {
+            const { partner } = item;
+            const { name, registeredName, registeredNumber, id } = partner;
 
             return (
-              <Cards.Card
-                onClick={(e) => {
-                  e.stopPropagation();
-                  //   handleAddOrViewEvidence?.(id);
-                }}
-                key={index}
-              >
+              <Cards.Card key={index}>
                 <div className="space-y-2">
                   <p className="font-semibold">{name}</p>
                   <Cards.Group>
@@ -82,7 +97,7 @@ const Partners = ({ partners, handleAddPartner, orgId }: PartnerProps) => {
                         e.stopPropagation();
                         open({
                           ...get(config, "delete"),
-                          onYes: () => deletePartner(id),
+                          onYes: () => handleDelete(id, item?.id),
                           yesLabel: "Remove",
                         });
                       }}
@@ -109,9 +124,9 @@ const Partners = ({ partners, handleAddPartner, orgId }: PartnerProps) => {
             </Table.Row>
           </Table.Head>
           <Table.Body>
-            {partners.map((item, index) => {
-              const { partner, id } = item;
-              const { name, registeredName, registeredNumber } = partner;
+            {partnersList.map((item, index) => {
+              const { partner } = item;
+              const { name, registeredName, registeredNumber, id } = partner;
 
               return (
                 <Table.Row key={index}>
@@ -126,7 +141,7 @@ const Partners = ({ partners, handleAddPartner, orgId }: PartnerProps) => {
                         e.stopPropagation();
                         open({
                           ...get(config, "delete"),
-                          onYes: () => deletePartner(id),
+                          onYes: () => handleDelete(id, item?.id),
                           yesLabel: "Remove",
                         });
                       }}

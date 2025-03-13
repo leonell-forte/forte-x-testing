@@ -52,9 +52,9 @@ type PartnerData = {
 };
 
 export type Partner = {
-  id: string;
+  id?: string;
   partner: PartnerData;
-  createdAt: string; // Consider using Date if you plan to work with date objects
+  createdAt?: string; // Consider using Date if you plan to work with date objects
 };
 
 export type OrganizationFieldTypes = z.infer<typeof organizations.schema>;
