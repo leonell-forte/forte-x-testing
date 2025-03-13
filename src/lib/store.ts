@@ -6,6 +6,7 @@ import confirmPrompt from "./slice/confirm-prompt";
 import customPrompt from "./slice/custom-prompt";
 import evidence from "./slice/evidence";
 import layout from "./slice/layout";
+import partners from "./slice/partners";
 import scroll from "./slice/scroll";
 
 export const makeStore = () => {
@@ -18,6 +19,7 @@ export const makeStore = () => {
       evidence,
       confirmPrompt,
       customPrompt,
+      partners,
     },
   });
 };

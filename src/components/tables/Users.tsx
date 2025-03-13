@@ -1,8 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
-import organizationService from "api/organization";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import { FaTrash as Trash } from "react-icons/fa6";
 
+import useOrganizationList from "lib/common/lists/useOrganizationList";
 import { IsAuthorized, Users } from "lib/role-permissions";
 import { IUser } from "lib/types/users";
 
@@ -18,21 +17,13 @@ type TUsersTable = {
 };
 
 const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
-  const { data: organizationList } = useQuery({
-    queryKey: ["organizations"],
-
-    queryFn: () => organizationService.list({ page: 1, listAll: true }),
+  const { rawList: organizations } = useOrganizationList({
+    listAll: true,
   });
 
   const [modal, setModal] = useState<"user" | "delete" | null>(null);
 
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
-
-  const organizations = useMemo(
-    () => organizationList?.items || [],
-
-    [organizationList]
-  );
 
   const handleEditUser = (user: IUser) => {
     setSelectedUser(user.id!.toString());
@@ -50,7 +41,7 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
       case "user":
         return (
           <UserDialogue
-            organizations={organizations}
+            organizations={organizations?.items || []}
             userId={selectedUser!}
             isVisible={modal === "user"}
             handleClose={() => {

@@ -4,6 +4,8 @@ import {
   IFilters,
   IOrganization,
   OrganizationFieldTypes,
+  Partner,
+  PartnerFieldTypes,
 } from "../lib/types/organizations";
 import { IODataObject, generateODataQuery } from "../lib/utils";
 
@@ -106,6 +108,29 @@ class OrganizationService {
 
   async update(org: OrganizationFieldTypes) {
     const response = await api.put("/organizations", org);
+
+    return response;
+  }
+
+  async addPartner(data: PartnerFieldTypes): Promise<Partner> {
+    const { organizationId, partner } = data;
+    const { id } = partner;
+    const response = await api.post("/organizations/partnership", {
+      organizationId,
+      partnerId: id,
+    });
+
+    return response.data.data;
+  }
+
+  async getPartners(id: string): Promise<Partner[]> {
+    const response = await api.get(`/organizations/partnership/${id}`);
+
+    return response.data.data;
+  }
+
+  async deletePartner(id: string) {
+    const response = await api.delete(`/organizations/partnership/${id}`);
 
     return response;
   }

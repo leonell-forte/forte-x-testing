@@ -1,11 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
-import organizationService from "api/organization";
 import projectService from "api/projects";
 import { addDays, subDays } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 
+import useOrganizationList from "lib/common/lists/useOrganizationList";
 import { CONTRACT_STATUS } from "lib/constants";
 import { usePage } from "lib/hooks";
 import useContractMutation from "lib/mutations/contracts";
@@ -15,7 +15,6 @@ import {
   IContract,
   StatusType,
 } from "lib/types/contracts";
-import { IOrganization } from "lib/types/organizations";
 import { IProject } from "lib/types/projects";
 import { findLabelFromOptions, formatDate } from "lib/utils";
 import { contracts } from "lib/validators/contracts";
@@ -102,16 +101,9 @@ const ContractForm = ({
     name: "outcomeRates",
   });
 
-  const { data: organizationList, isLoading: orgLoading } = useQuery({
-    queryKey: ["organizations"],
-
-    queryFn: () =>
-      organizationService.list({
-        page: 1,
-        listAll: true,
-        filters: { type: "provider" },
-      }),
-    refetchOnWindowFocus: false,
+  const { organizations, isLoading: orgLoading } = useOrganizationList({
+    listAll: true,
+    filters: { type: "provider" },
   });
 
   const { data: projectsList, isLoading: projectLoading } = useQuery({
@@ -119,19 +111,6 @@ const ContractForm = ({
 
     queryFn: () => projectService.list({}),
   });
-
-  const organizations: IOption[] = useMemo(
-    () =>
-      organizationList?.items
-        ?.map((item: IOrganization) => ({
-          label: item.name,
-
-          value: item.id?.toString() as string,
-        }))
-        .sort((a, b) => a.label.localeCompare(b.label)) || [],
-
-    [organizationList]
-  );
 
   const projects: IOption[] = useMemo(
     () =>

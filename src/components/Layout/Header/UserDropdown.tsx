@@ -1,12 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
 import authService from "api/auth";
-import organizationService from "api/organization";
 import { motion } from "framer-motion";
-import { MouseEvent, useMemo, useRef, useState } from "react";
+import { MouseEvent, useRef, useState } from "react";
 import { HiUser } from "react-icons/hi2";
 
 import arrow from "assets/images/icons/chevron.svg";
 
+import useOrganizationList from "lib/common/lists/useOrganizationList";
 import { useOutsideClick } from "lib/hooks";
 
 import { useProfile } from "components/ProfileContext";
@@ -18,12 +17,8 @@ const UserDropdown = () => {
 
   const [showModal, setShowModal] = useState(false);
 
-  const { data: organizationList } = useQuery({
-    queryKey: ["organizations"],
-
-    queryFn: () => organizationService.list({ page: 1, listAll: true }),
-
-    refetchOnWindowFocus: false,
+  const { rawList: organizations } = useOrganizationList({
+    listAll: true,
   });
 
   const [showDropdown, setShowDropdown] = useState(false);
@@ -33,12 +28,6 @@ const UserDropdown = () => {
   };
 
   const dropdownRef = useRef(null);
-
-  const organizations = useMemo(
-    () => organizationList?.items || [],
-
-    [organizationList]
-  );
 
   useOutsideClick(dropdownRef, () => setShowDropdown(false));
 
@@ -54,7 +43,7 @@ const UserDropdown = () => {
     <>
       {showModal && user && (
         <ViewProfileDialogue
-          organizations={organizations}
+          organizations={organizations?.items || []}
           userId={String(user.id)}
           isVisible={showModal}
           handleClose={() => {
