@@ -22,6 +22,7 @@ import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
 import Dropdown, { IOption } from "components/ui/dropdown";
 import FileInput from "components/ui/file-input";
 import { Form } from "components/ui/form/Form";
+import { useAutoSaveForm } from "components/ui/form/useAutoSave";
 import Input from "components/ui/input";
 import Spinner from "components/ui/spinner/spinner";
 
@@ -157,11 +158,19 @@ const EvidencesDialogue = ({
     await addEvidence(values);
   };
 
+  const formId = "evidence-form";
+
+  useAutoSaveForm(form, {
+    formId,
+    enabled: !Boolean(evidenceData),
+  });
+
   return (
     <Dialogue
       {...props}
       title={id ? `Evidence ID ${id}` : "Add evidence"}
       confirmBeforeLeave={isDirty}
+      formId="evidence-form"
     >
       <div className="space-y-[30px]">
         {evidenceLoading ? (

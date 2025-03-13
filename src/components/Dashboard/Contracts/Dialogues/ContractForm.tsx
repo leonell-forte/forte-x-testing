@@ -1,11 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
-import organizationService from "api/organization";
 import projectService from "api/projects";
 import { addDays, subDays } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 
+import useOrganizationList from "lib/common/lists/useOrganizationList";
 import { CONTRACT_STATUS } from "lib/constants";
 import { usePage } from "lib/hooks";
 import useContractMutation from "lib/mutations/contracts";
@@ -15,7 +15,6 @@ import {
   IContract,
   StatusType,
 } from "lib/types/contracts";
-import { IOrganization } from "lib/types/organizations";
 import { IProject } from "lib/types/projects";
 import { findLabelFromOptions, formatDate } from "lib/utils";
 import { contracts } from "lib/validators/contracts";
@@ -28,6 +27,7 @@ import DatePicker from "components/ui/date-picker";
 import Dropdown, { IOption } from "components/ui/dropdown";
 import FileInput from "components/ui/file-input";
 import { Form } from "components/ui/form/Form";
+import { useAutoSaveForm } from "components/ui/form/useAutoSave";
 import Input from "components/ui/input";
 
 import ContractOutcomeField from "../ContractOutcomeField";
@@ -101,16 +101,9 @@ const ContractForm = ({
     name: "outcomeRates",
   });
 
-  const { data: organizationList, isLoading: orgLoading } = useQuery({
-    queryKey: ["organizations"],
-
-    queryFn: () =>
-      organizationService.list({
-        page: 1,
-        listAll: true,
-        filters: { type: "provider" },
-      }),
-    refetchOnWindowFocus: false,
+  const { organizations, isLoading: orgLoading } = useOrganizationList({
+    listAll: true,
+    filters: { type: "provider" },
   });
 
   const { data: projectsList, isLoading: projectLoading } = useQuery({
@@ -118,19 +111,6 @@ const ContractForm = ({
 
     queryFn: () => projectService.list({}),
   });
-
-  const organizations: IOption[] = useMemo(
-    () =>
-      organizationList?.items
-        ?.map((item: IOrganization) => ({
-          label: item.name,
-
-          value: item.id?.toString() as string,
-        }))
-        .sort((a, b) => a.label.localeCompare(b.label)) || [],
-
-    [organizationList]
-  );
 
   const projects: IOption[] = useMemo(
     () =>
@@ -208,6 +188,15 @@ const ContractForm = ({
   useEffect(() => {
     toShowPrompt(isDirty);
   }, [isDirty, toShowPrompt]);
+
+  // autosave start
+
+  useAutoSaveForm(form, {
+    formId: "contract-form",
+
+    enabled: !Boolean(contractDetails) && isDirty,
+  });
+  // autosave end
 
   return (
     <Form form={form} onSubmit={onSubmit} className="space-y-1">

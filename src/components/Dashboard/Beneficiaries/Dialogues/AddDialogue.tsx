@@ -52,6 +52,7 @@ const AddDialogue = ({
       confirmBeforeLeave={showPrompt}
       handleClose={props.handleClose}
       title={`${beneficiaryId ? `Beneficiary ID #${beneficiaryId}` : "Add beneficiary"}`}
+      formId="beneficiaries-form"
     >
       {isLoading ? (
         <div className="flex h-[470px] w-full items-center justify-center">

@@ -32,6 +32,7 @@ import DatePicker from "components/ui/date-picker";
 import Dropdown, { IOption } from "components/ui/dropdown";
 import { Form } from "components/ui/form/Form";
 import InputMobile from "components/ui/form/InputMobile";
+import { useAutoSaveForm } from "components/ui/form/useAutoSave";
 import Input from "components/ui/input";
 
 import { useBeneficiariesContext } from "./BeneficiariesContext";
@@ -202,6 +203,15 @@ const BeneficiariesForm = ({
   const { setShowPrompt } = useConfirmPrompt();
 
   const [min, max] = watch(["cohortStartDate", "cohortEndDate"]);
+
+  // autosave start
+
+  useAutoSaveForm(form, {
+    formId: "beneficiaries-form",
+
+    enabled: !Boolean(beneficiaryData),
+  });
+  // autosave end
 
   return (
     <Form form={form} onSubmit={onSubmit}>

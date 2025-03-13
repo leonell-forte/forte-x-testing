@@ -64,3 +64,33 @@ export const organizations = {
     status: z.string().min(1, "Status is a required field"),
   }),
 };
+
+const partnerSchema = z.object({
+  id: z.number().min(1, "Partner is a required field."),
+  name: z.string(),
+  registeredName: z.string().min(1, "Registered name is a required field."),
+  registeredNumber: z.string().min(1, "Registration ID is a required field."),
+});
+
+export const partner = {
+  defaultValues: (orgId: number) => {
+    return {
+      organizationId: orgId,
+
+      partner: {
+        id: 0,
+
+        name: "",
+
+        registeredName: "",
+
+        registeredNumber: "",
+      },
+    };
+  },
+
+  schema: z.object({
+    organizationId: z.number(),
+    partner: partnerSchema,
+  }),
+};

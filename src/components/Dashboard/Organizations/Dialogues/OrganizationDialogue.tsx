@@ -1,30 +1,21 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
-import organizationService from "api/organization";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useState } from "react";
 
-import { REGIONS, STATUS, TYPES } from "lib/constants";
-import useOrganizationMutation from "lib/mutations/organizations";
-import { OrgTypes, OrganizationFieldTypes } from "lib/types/organizations";
-import { organizations } from "lib/validators/organizations";
+import { useAppDispatch } from "lib/hooks";
+import { clearPartners, setPartnersToAdd } from "lib/slice/partners";
+import { OrganizationFieldTypes } from "lib/types/organizations";
 
-import { useConfirmPrompt } from "components/ui/alert/confirm-prompt";
-import Button from "components/ui/button";
-import Controller from "components/ui/custom-controller/CustomController";
-import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
-import Dropdown from "components/ui/dropdown";
-import { Form } from "components/ui/form/Form";
-import Input from "components/ui/input";
-import Spinner from "components/ui/spinner/spinner";
+import { IDialogueProps } from "components/ui/dialogue/dialogue";
 
-interface IOrganizationDialogueProps extends IDialogueProps {
+import AddPartnerForm from "../Forms/AddPartnerForm";
+import OrganizationForm from "../Forms/OrganizationForm";
+
+export interface IOrganizationDialogueProps extends IDialogueProps {
   orgId?: string;
 
   addSuccessCallback?: (id: number) => void;
 }
 
-const labelClass = "min-w-[160px]";
+type ModalType = "organization" | "partner";
 
 const OrganizationDialogue = ({
   handleClose,
@@ -35,309 +26,42 @@ const OrganizationDialogue = ({
 
   orgId,
 }: IOrganizationDialogueProps) => {
-  const [editMode, setEditMode] = useState(orgId ? false : true);
-  const { data: orgData, isLoading } = useQuery({
-    queryKey: ["specific org", orgId],
+  const dispatch = useAppDispatch();
+  const [modal, setModal] = useState<ModalType>("organization");
+  const [formData, setFormData] = useState<OrganizationFieldTypes | null>(null);
 
-    queryFn: () => organizationService.getOne(orgId!),
+  const renderModal = (modal: ModalType) => {
+    switch (modal) {
+      case "organization":
+        return (
+          <OrganizationForm
+            handleClose={() => {
+              handleClose?.();
+              dispatch(clearPartners());
+              setFormData(null);
+            }}
+            orgId={orgId}
+            addSuccessCallback={addSuccessCallback}
+            isVisible={isVisible}
+            handleAddPartner={() => setModal("partner")}
+            savedFormData={formData}
+            onFormDataChange={setFormData}
+          />
+        );
 
-    enabled: !!orgId,
-  });
-
-  const form = useForm<OrganizationFieldTypes>({
-    resolver: zodResolver(organizations.schema),
-
-    defaultValues: organizations.defaultValues(),
-  });
-
-  const {
-    watch,
-
-    setValue,
-
-    setError,
-
-    reset,
-
-    control,
-
-    formState: { isDirty },
-  } = form;
-
-  // prefill initial value from selected org
-
-  useEffect(() => {
-    if (orgData) {
-      reset(organizations.defaultValues(orgData));
+      case "partner":
+        return (
+          <AddPartnerForm
+            handleClose={() => setModal("organization")}
+            orgId={orgId}
+            handleStorePartner={(partner) =>
+              dispatch(setPartnersToAdd(partner))
+            }
+          />
+        );
     }
-  }, [orgData, reset]);
-
-  const onClose = () => {
-    reset();
-
-    handleClose!();
   };
-
-  const getTitle = () => {
-    if (orgId) {
-      return editMode ? "Edit organization" : "View organization";
-    }
-    return "Add organization";
-  };
-
-  const handleCancel = () => {
-    if (!orgId && isDirty) {
-      setShowPrompt(true);
-      return;
-    }
-
-    reset();
-    setEditMode(false);
-    !orgId && onClose();
-  };
-
-  // implements optimistic update after adding or updating organization
-
-  const { addOrganization, isPending } = useOrganizationMutation({
-    orgId,
-    successCallback: (id) => {
-      onClose();
-
-      addSuccessCallback?.(id);
-    },
-  });
-
-  const onSubmit = async (values: OrganizationFieldTypes) => {
-    await addOrganization(values);
-  };
-
-  const { setShowPrompt } = useConfirmPrompt();
-
-  return (
-    <Dialogue
-      confirmBeforeLeave={isDirty}
-      isVisible={isVisible}
-      handleClose={onClose}
-      title={getTitle()}
-    >
-      {isLoading ? (
-        <div className="flex h-[470px] w-full items-center justify-center">
-          <Spinner />
-        </div>
-      ) : (
-        <Form form={form} onSubmit={onSubmit} className="space-y-4">
-          <Controller
-            required
-            labelClassName={labelClass}
-            label="Organization"
-            name="name"
-            control={control}
-            render={({ field }) => {
-              return (
-                <Input
-                  {...field}
-                  placeholder="Organization name"
-                  disabled={!editMode}
-                />
-              );
-            }}
-          />
-
-          <Controller
-            labelClassName={labelClass}
-            label="Registered name"
-            required
-            name="registeredName"
-            control={control}
-            render={({ field }) => {
-              return (
-                <Input
-                  {...field}
-                  placeholder="Registered name"
-                  disabled={!editMode}
-                />
-              );
-            }}
-          />
-
-          <Controller
-            labelClassName={labelClass}
-            label="Registration #"
-            required
-            name="registrationNumber"
-            control={control}
-            render={({ field }) => {
-              return (
-                <Input
-                  {...field}
-                  placeholder="Registration number"
-                  disabled={!editMode}
-                />
-              );
-            }}
-          />
-
-          <div className="flex w-full flex-col gap-5 gap-y-1.5 md:flex-row md:items-center">
-            <label htmlFor="" className="min-w-[140px]">
-              Registered address*
-            </label>
-
-            <div className="w-full space-y-4">
-              <Controller
-                labelClassName={labelClass}
-                name="registeredAddress"
-                control={control}
-                render={({ field }) => {
-                  return (
-                    <Input
-                      {...field}
-                      placeholder="Registered address"
-                      disabled={!editMode}
-                    />
-                  );
-                }}
-              />
-
-              <div className="flex w-full items-center gap-4 md:gap-2">
-                <Controller
-                  name="state"
-                  control={control}
-                  render={({ field }) => {
-                    return (
-                      <Input
-                        {...field}
-                        placeholder="State"
-                        disabled={!editMode}
-                      />
-                    );
-                  }}
-                />
-
-                <Controller
-                  name="postalCode"
-                  control={control}
-                  render={({ field }) => {
-                    return (
-                      <Input
-                        {...field}
-                        placeholder="Postal code"
-                        disabled={!editMode}
-                      />
-                    );
-                  }}
-                />
-
-                <Controller
-                  name="country"
-                  control={control}
-                  render={({ field }) => {
-                    return (
-                      <Input
-                        {...field}
-                        placeholder="Country"
-                        disabled={!editMode}
-                      />
-                    );
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-
-          <Controller
-            labelClassName={labelClass}
-            label="Region"
-            required
-            name="regions"
-            control={control}
-            render={({ field }) => {
-              return (
-                <Dropdown
-                  enableSearch
-                  isMultiSelect
-                  value={field.value}
-                  handleSelect={(val) => {
-                    setValue("regions", val as string[]);
-
-                    setError("regions", { message: "" });
-                  }}
-                  options={REGIONS}
-                  placeholder="Select region"
-                  disabled={!editMode}
-                />
-              );
-            }}
-          />
-
-          <Controller
-            labelClassName={labelClass}
-            label="Type"
-            required
-            name="type"
-            control={control}
-            render={() => {
-              return (
-                <Dropdown
-                  value={
-                    TYPES.find((item) => item.value === watch("type"))?.label
-                  }
-                  handleSelect={(val) => {
-                    setError("type", { message: "" });
-
-                    setValue("type", val as OrgTypes);
-                  }}
-                  options={TYPES}
-                  placeholder="Select type"
-                  disabled={!editMode}
-                />
-              );
-            }}
-          />
-
-          <Controller
-            labelClassName={labelClass}
-            label="Status"
-            required
-            name="status"
-            control={control}
-            render={() => {
-              return (
-                <Dropdown
-                  value={
-                    STATUS.find((item) => item.value === watch("status"))?.label
-                  }
-                  handleSelect={(val) => {
-                    setError("status", { message: "" });
-                    setValue("status", val as string);
-                  }}
-                  options={STATUS}
-                  placeholder="Select status"
-                  disabled={!editMode}
-                />
-              );
-            }}
-          />
-
-          <div className="!mt-10 flex justify-end gap-4">
-            {editMode ? (
-              <>
-                <Button onClick={handleCancel} buttonType="secondary">
-                  Cancel
-                </Button>
-                <Button loading={isPending} type="submit" disabled={!isDirty}>
-                  Save
-                </Button>
-              </>
-            ) : (
-              <Button type="button" onClick={() => setEditMode(true)}>
-                Edit
-              </Button>
-            )}
-          </div>
-        </Form>
-      )}
-    </Dialogue>
-  );
+  return renderModal(modal);
 };
 
 export default OrganizationDialogue;

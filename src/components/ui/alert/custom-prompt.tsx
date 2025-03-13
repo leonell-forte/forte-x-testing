@@ -38,7 +38,7 @@ const CustomPrompt = () => {
       role="dialog"
     >
       <div className={cn(styles["confirm-prompt"], "!max-w-screen-md")}>
-        <div className="space-y-3 text-left">
+        <div className="w-full space-y-3 text-left">
           <p className="heading">{config.title}</p>
           {config.subText && <p className="text-[14px]">{config.subText}</p>}
         </div>

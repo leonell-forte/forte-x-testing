@@ -1,12 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
-import organizationService from "api/organization";
 import projectService from "api/projects";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { HiPlusCircle } from "react-icons/hi";
 import { Link } from "react-router-dom";
 
+import useOrganizationList from "lib/common/lists/useOrganizationList";
 import { useProjectMutation } from "lib/mutations/projects";
 import { IsAuthorized, Organizations } from "lib/role-permissions";
 import { ProjectFieldValues } from "lib/types/projects";
@@ -19,6 +19,7 @@ import Controller from "components/ui/custom-controller/CustomController";
 import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
 import Dropdown from "components/ui/dropdown";
 import { Form } from "components/ui/form/Form";
+import { useAutoSaveForm } from "components/ui/form/useAutoSave";
 import Input from "components/ui/input";
 import Spinner from "components/ui/spinner/spinner";
 
@@ -43,26 +44,12 @@ const ProjectDialogue = ({
   });
 
   // Organization data handling
-  const { data: { items: orgItems = [] } = {}, isLoading: orgLoading } =
-    useQuery({
-      queryKey: ["organizations"],
-      queryFn: () =>
-        organizationService.list({
-          listAll: true,
-          page: 1,
-          filters: { type: "funder" },
-        }),
-      enabled: IsAuthorized([Organizations.LIST]),
-    });
 
-  const organizations = useMemo(
-    () =>
-      orgItems.map((item) => ({
-        label: item.name,
-        value: item.id!.toString(),
-      })),
-    [orgItems]
-  );
+  const { organizations, isLoading: orgLoading } = useOrganizationList({
+    listAll: true,
+    filters: { type: "funder" },
+    enabled: IsAuthorized([Organizations.LIST]),
+  });
 
   // Form handling
   const form = useForm<ProjectFieldValues>({
@@ -132,12 +119,24 @@ const ProjectDialogue = ({
     }
   }, [errors, append, setError]);
 
+  // autosave start
+
+  const formId = "project-form";
+
+  useAutoSaveForm(form, {
+    formId,
+    enabled: !Boolean(project),
+  });
+
+  // autosave end
+
   return (
     <Dialogue
       confirmBeforeLeave={isDirty}
       isVisible={isVisible}
       handleClose={close}
       title={project ? "Edit project" : "Add project"}
+      formId={formId}
     >
       {projectLoading ? (
         <div className="flex h-[470px] w-full items-center justify-center">
