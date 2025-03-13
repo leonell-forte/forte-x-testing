@@ -16,7 +16,7 @@ import {
   StatusType,
 } from "lib/types/contracts";
 import { IProject } from "lib/types/projects";
-import { findLabelFromOptions, formatDate } from "lib/utils";
+import { findLabelFromOptions, formatDate, sortOptions } from "lib/utils";
 import { contracts } from "lib/validators/contracts";
 
 import { useConfirmPrompt } from "components/ui/alert/confirm-prompt";
@@ -294,7 +294,7 @@ const ContractForm = ({
 
                     field.value.toString()
                   )}
-                  options={projects}
+                  options={sortOptions(projects)}
                   handleSelect={(val) => {
                     field.onChange(Number(val));
 

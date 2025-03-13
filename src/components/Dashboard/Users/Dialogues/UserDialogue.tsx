@@ -10,7 +10,7 @@ import { DEFAULT_DATE_FORMAT, ROLES } from "lib/constants";
 import useUserMutation from "lib/mutations/users";
 import { IOrganization } from "lib/types/organizations";
 import { UserFieldTypes, UserStatusValues } from "lib/types/users";
-import { formatDate } from "lib/utils";
+import { formatDate, sortOptions } from "lib/utils";
 import { users } from "lib/validators/users";
 
 import { useProfile } from "components/ProfileContext";
@@ -136,8 +136,7 @@ const UserDialogue = ({
         .map((item: IOrganization) => ({
           label: item.registeredName,
           value: String(item.id),
-        }))
-        .sort((a, b) => a.label.localeCompare(b.label)),
+        })),
     [organizations, isNonForteUser]
   );
 
@@ -280,7 +279,7 @@ const UserDialogue = ({
                       (item) => item.id?.toString() === field.value
                     )?.registeredName
                   }
-                  options={filteredOrg}
+                  options={sortOptions(filteredOrg)}
                   handleSelect={(val) => field.onChange(val)}
                   placeholder="Organization"
                 />

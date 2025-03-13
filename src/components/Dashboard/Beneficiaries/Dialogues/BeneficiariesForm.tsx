@@ -22,7 +22,7 @@ import {
   IBeneficiaries,
   IBeneficiariesFieldValues,
 } from "lib/types/beneficiaries";
-import { findLabelFromOptions } from "lib/utils";
+import { findLabelFromOptions, sortOptions } from "lib/utils";
 import { beneficiaries } from "lib/validators/beneficiaries";
 
 import { useConfirmPrompt } from "components/ui/alert/confirm-prompt";
@@ -153,8 +153,7 @@ const BeneficiariesForm = ({
           label: item.name,
 
           value: item.id!.toString(),
-        }))
-        .sort((a, b) => a.label.localeCompare(b.label)) || [],
+        })) || [],
     [organizationList, contractList]
   );
 
@@ -328,7 +327,7 @@ const BeneficiariesForm = ({
 
                   setError("providerId", { message: "" });
                 }}
-                options={contracts}
+                options={sortOptions(contracts)}
                 placeholder="Contract"
               />
             )}

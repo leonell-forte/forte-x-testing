@@ -5,7 +5,7 @@ import { Control } from "react-hook-form";
 import { HiMinusCircle, HiPlusCircle } from "react-icons/hi";
 
 import { ContractFieldValues, RateEnum } from "lib/types/contracts";
-import { findLabelFromOptions } from "lib/utils";
+import { findLabelFromOptions, sortOptions } from "lib/utils";
 
 import Controller from "components/ui/custom-controller/CustomController";
 import Dropdown, { IOption } from "components/ui/dropdown";
@@ -88,9 +88,7 @@ const ContractOutcomeField = ({
                 handleSelect={(val) => {
                   handleSelectOutcome(val as string);
                 }}
-                options={outcomes.sort((a, b) =>
-                  a.label.localeCompare(b.label)
-                )}
+                options={sortOptions(outcomes)}
                 placeholder="Outcome"
               />
             );

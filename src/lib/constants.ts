@@ -6,6 +6,7 @@ import {
   Users,
 } from "./role-permissions";
 import { UserRoleType } from "./types/users";
+import { sortOptions } from "./utils";
 
 export const DEFAULT_PAGE_SIZE = "10";
 
@@ -422,7 +423,7 @@ export const CONFIRM = [
   },
 ];
 
-export const REGIONS = [
+export const REGIONS = sortOptions([
   {
     label: "Asia",
     value: "Asia",
@@ -451,7 +452,7 @@ export const REGIONS = [
     label: "Africa",
     value: "Africa",
   },
-].sort((a, b) => a.label.localeCompare(b.label));
+]);
 
 export const DEFAULT_DATE_FORMAT = "dd-LLL-yyyy";
 

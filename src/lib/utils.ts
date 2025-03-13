@@ -166,3 +166,7 @@ export const formatInvitationCode = (input: string) => {
 export function separateCamelCase(str: string) {
   return str.replace(/([a-z])([A-Z])/g, "$1 $2");
 }
+
+export const sortOptions = (options: IOption[]) => {
+  return options.sort((a, b) => a.label.localeCompare(b.label));
+};
