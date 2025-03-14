@@ -7,6 +7,7 @@ import {
   ChangeValue,
   EvidenceChanges,
 } from "lib/types/activity-logs";
+import { formatDate } from "lib/utils";
 
 import Spinner from "components/ui/spinner/spinner";
 
@@ -24,6 +25,17 @@ const ActivityLogSection = ({
     queryFn: () => evidenceService.getActivityLogs(beneficiaryId, evidenceId),
   });
 
+  const getTime = (date: Date) => {
+    const time =
+      date.getHours() +
+      ":" +
+      String(date.getMinutes()).padStart(2, "0") +
+      " " +
+      (date.getHours() >= 12 ? "PM" : "AM");
+
+    return time;
+  };
+
   const renderChangeMessage = (log: ActivityLog) => {
     if (!log.changes) return null;
     const { user } = log;
@@ -36,12 +48,7 @@ const ActivityLogSection = ({
 
         const date = `${format(updatedAt, "dd LLL yyyy")}`;
 
-        const time =
-          updatedAt.getHours() +
-          ":" +
-          String(updatedAt.getMinutes()).padStart(2, "0") +
-          " " +
-          (updatedAt.getHours() >= 12 ? "PM" : "AM");
+        const time = getTime(updatedAt);
 
         const [key, value] = item as [keyof EvidenceChanges, ChangeValue];
         if (!value || !value.newValue) return null;
@@ -74,12 +81,18 @@ const ActivityLogSection = ({
   return (
     <div className="space-y-6">
       <p className="font-medium">Activity log</p>
-      {data?.length === 1 ? (
+      {!data?.length ? (
         <p className="text-[14px]">No activities at the moment</p>
       ) : (
         <ul className="pl-6">
+          <li className="list-disc text-[14px]">
+            Evidence was uploaded by {data[0].user.firstName}{" "}
+            {data[0].user.lastName} at {getTime(new Date(data[0].createdAt))} at{" "}
+            {formatDate(data[0].createdAt, "dd LLL yyyy")}
+          </li>
           {data?.map((item, index) => {
             const changes = renderChangeMessage(item);
+
             return changes?.map((message, msgIndex) => (
               <li
                 key={`${index}-${msgIndex}`}
