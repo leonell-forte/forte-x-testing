@@ -24,7 +24,7 @@ export const organizations = {
       // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
       type: org?.type! || "",
 
-      status: org?.status || "",
+      status: org?.status || "active",
     };
 
     if (org) {
