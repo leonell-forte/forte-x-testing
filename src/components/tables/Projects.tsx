@@ -203,4 +203,4 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
 
 export default ProjectsTable;
 
-const TABLE_HEADER = ["Project", "Partners", "Outcomes"];
+const TABLE_HEADER = ["Project", "Providers", "Outcomes"];
