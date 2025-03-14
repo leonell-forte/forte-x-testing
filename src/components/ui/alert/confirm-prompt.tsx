@@ -49,7 +49,7 @@ const ConfirmPrompt = ({ confirmLeave }: IConfirmPrompt) => {
           <Button buttonType="secondary" onClick={() => setShowPrompt(false)}>
             Cancel
           </Button>
-          <Button onClick={confirmLeave}>OK</Button>
+          <Button onClick={confirmLeave}>Leave</Button>
         </div>
       </div>
     </motion.div>
