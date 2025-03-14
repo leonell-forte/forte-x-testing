@@ -253,7 +253,7 @@ const ContractForm = ({
                   handleSelect={(val) => {
                     field.onChange(Number(val));
                   }}
-                  placeholder="Provider"
+                  placeholder="Select provider"
                 />
               );
             }}
@@ -273,7 +273,7 @@ const ContractForm = ({
                   options={CONTRACT_STATUS.filter(
                     (item) => item.value !== "completed"
                   )}
-                  placeholder="Status"
+                  placeholder="Select status"
                 />
               );
             }}
@@ -310,7 +310,7 @@ const ContractForm = ({
                       },
                     ]);
                   }}
-                  placeholder="Project"
+                  placeholder="Select project"
                 />
               );
             }}
@@ -345,7 +345,7 @@ const ContractForm = ({
                 onSuccess={(data) => {
                   field.onChange(data.id);
                 }}
-                placeholder="Document"
+                placeholder="Upload document"
               />
             )}
           />
