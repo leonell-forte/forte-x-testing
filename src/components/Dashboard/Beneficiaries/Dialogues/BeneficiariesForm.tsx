@@ -287,7 +287,7 @@ const BeneficiariesForm = ({
                 }}
                 readOnly={!onEdit}
                 options={RISK_LEVEL}
-                placeholder="Risk level"
+                placeholder="Select risk level"
               />
             )}
           />
@@ -328,7 +328,7 @@ const BeneficiariesForm = ({
                   setError("providerId", { message: "" });
                 }}
                 options={sortOptions(contracts)}
-                placeholder="Contract"
+                placeholder="Select contract"
               />
             )}
           />
@@ -499,7 +499,7 @@ const BeneficiariesForm = ({
                   value={field.value}
                   handleSelect={(val) => field.onChange(val)}
                   options={GENDER}
-                  placeholder="Gender"
+                  placeholder="Select gender"
                 />
               )}
             />
@@ -515,7 +515,7 @@ const BeneficiariesForm = ({
                     field.onChange(val);
                   }}
                   options={CONFIRM}
-                  placeholder="Disability status"
+                  placeholder="Select disability status"
                 />
               )}
             />
@@ -556,7 +556,7 @@ const BeneficiariesForm = ({
               }}
               readOnly={!onEdit}
               options={HIGHEST_EDUCATION_LEVEL}
-              placeholder="Highest education level"
+              placeholder="Select highest education level"
             />
           )}
         />
@@ -580,7 +580,7 @@ const BeneficiariesForm = ({
 
                 value: item,
               }))}
-              placeholder="Select"
+              placeholder="Select languages"
             />
           )}
         />
@@ -614,7 +614,7 @@ const BeneficiariesForm = ({
               </Button>
 
               <Button type="submit" loading={isPending} disabled={!isDirty}>
-                Save
+                {id ? "Update" : "Add"}
               </Button>
             </>
           ) : (

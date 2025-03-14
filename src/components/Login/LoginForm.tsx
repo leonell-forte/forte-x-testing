@@ -142,7 +142,7 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
 
         <div className="mx-auto w-full max-w-[22rem] space-y-[15px] text-center">
           <Button type="submit" fullWidth loading={loading}>
-            Continue
+            Log in
           </Button>
 
           <div className="flex items-center gap-4">
@@ -154,7 +154,7 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
           </div>
 
           <Button type="button" fullWidth buttonType="secondary">
-            Continue with Google{" "}
+            Log in with Google{" "}
           </Button>
         </div>
       </Form>

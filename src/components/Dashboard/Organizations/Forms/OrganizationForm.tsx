@@ -395,7 +395,7 @@ const OrganizationForm = ({
                   type="submit"
                   disabled={!isFormDirty}
                 >
-                  Save
+                  {orgId ? "Update" : "Add"}
                 </Button>
               </>
             ) : (

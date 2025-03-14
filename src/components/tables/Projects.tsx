@@ -77,45 +77,45 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
                 key={index}
                 title={name}
               >
-                <div className="flex items-end gap-2.5">
-                  <div className="w-full overflow-hidden">
-                    <p className="truncate">
-                      {providers?.map((item) => item).join(", ") || "-"}
-                    </p>
-                    <p className="truncate">
-                      {outcomes.map((item) => item.name).join(", ")}
-                    </p>
-                  </div>
-                  <div className="flex gap-6">
-                    {IsAuthorized([Projects.UPDATE]) && (
-                      <Button
-                        eventName="Edit Project"
-                        id={id.toString()}
-                        buttonType="default"
-                        type="button"
-                        onClick={() => handleEditUser(item)}
-                        className="icon group"
-                      >
-                        <Pencil className="h-auto w-5 transition-all group-hover:fill-mint" />
-                      </Button>
-                    )}
+                <Cards.Group>
+                  <Cards.Details
+                    label="Providers"
+                    value={providers?.map((item) => item).join(", ") || "-"}
+                  />
+                  <Cards.Details
+                    label="Outcomes"
+                    value={outcomes.map((item) => item.name).join(", ")}
+                  />
+                </Cards.Group>
+                <div className="absolute bottom-3 right-3 flex gap-2">
+                  {IsAuthorized([Projects.UPDATE]) && (
+                    <Button
+                      eventName="Edit Project"
+                      id={id.toString()}
+                      buttonType="default"
+                      type="button"
+                      onClick={() => handleEditUser(item)}
+                      className="icon group"
+                    >
+                      <Pencil className="h-auto w-5 transition-all group-hover:fill-mint" />
+                    </Button>
+                  )}
 
-                    {IsAuthorized([Projects.DELETE]) && (
-                      <Button
-                        eventName="Delete Project"
-                        id={id.toString()}
-                        buttonType="default"
-                        type="button"
-                        onClick={() => {
-                          setModal("delete");
-                          setSelectedProject(item);
-                        }}
-                        className="icon group"
-                      >
-                        <Trash className="h-auto w-4 transition-all group-hover:fill-mint" />
-                      </Button>
-                    )}
-                  </div>
+                  {IsAuthorized([Projects.DELETE]) && (
+                    <Button
+                      eventName="Delete Project"
+                      id={id.toString()}
+                      buttonType="default"
+                      type="button"
+                      onClick={() => {
+                        setModal("delete");
+                        setSelectedProject(item);
+                      }}
+                      className="icon group"
+                    >
+                      <Trash className="h-auto w-4 transition-all group-hover:fill-mint" />
+                    </Button>
+                  )}
                 </div>
               </Cards.Card>
             );
@@ -203,4 +203,4 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
 
 export default ProjectsTable;
 
-const TABLE_HEADER = ["Project", "Partners", "Outcomes"];
+const TABLE_HEADER = ["Project", "Providers", "Outcomes"];

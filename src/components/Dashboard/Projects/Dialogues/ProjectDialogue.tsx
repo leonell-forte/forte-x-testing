@@ -234,7 +234,7 @@ const ProjectDialogue = ({
             </Button>
 
             <Button loading={isPending} type="submit" disabled={!isDirty}>
-              Save
+              {projectId ? "Update" : "Add"}
             </Button>
           </div>
         </Form>

@@ -346,13 +346,13 @@ const EvidencesDialogue = ({
                 </Button>
 
                 <Button type="submit" form="evidences-form" loading={isPending}>
-                  Save
+                  Update
                 </Button>
               </div>
             )
           ) : (
             <Button loading={isPending} type="submit" form="evidences-form">
-              Save and upload document
+              Add and upload document
             </Button>
           )}
         </div>

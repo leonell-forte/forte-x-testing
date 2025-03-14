@@ -89,7 +89,7 @@ const ContractOutcomeField = ({
                   handleSelectOutcome(val as string);
                 }}
                 options={sortOptions(outcomes)}
-                placeholder="Outcome"
+                placeholder="Select outcome"
               />
             );
           }}

@@ -37,11 +37,7 @@ const ImportDialogue = ({ ...props }: IImportDialogueProps) => {
   };
 
   return (
-    <Dialogue
-      {...props}
-      title="Import beneficiaries"
-      className="lg:!max-w-screen-lg"
-    >
+    <Dialogue {...props} title="Bulk upload" className="lg:!max-w-screen-lg">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-6">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:divide-x">

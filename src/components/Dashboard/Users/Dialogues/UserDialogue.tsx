@@ -281,7 +281,7 @@ const UserDialogue = ({
                   }
                   options={sortOptions(filteredOrg)}
                   handleSelect={(val) => field.onChange(val)}
-                  placeholder="Organization"
+                  placeholder="Select organization"
                 />
               );
             }}
@@ -306,7 +306,7 @@ const UserDialogue = ({
                       }
                       handleSelect={(val) => field.onChange(val)}
                       options={filteredRoles}
-                      placeholder="Role"
+                      placeholder="Select role"
                       disabled={!canEditRole || isOwnAccount || !editMode}
                     />
                   );
@@ -362,7 +362,7 @@ const UserDialogue = ({
                 </Button>
 
                 <Button loading={isPending} type="submit" disabled={!isDirty}>
-                  Save
+                  {userId ? "Update" : "Add"}
                 </Button>
               </>
             ) : (
