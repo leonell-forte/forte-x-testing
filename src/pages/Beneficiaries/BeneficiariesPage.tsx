@@ -291,7 +291,7 @@ const BeneficiariesPage = () => {
                   buttonType="secondary"
                   onClick={() => setModal("import")}
                 >
-                  Import beneficiaries
+                  Bulk upload
                 </Button>
               )}
 
