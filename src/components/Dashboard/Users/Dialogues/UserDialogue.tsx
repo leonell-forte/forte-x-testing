@@ -362,7 +362,7 @@ const UserDialogue = ({
                 </Button>
 
                 <Button loading={isPending} type="submit" disabled={!isDirty}>
-                  Save
+                  {userId ? "Update" : "Add"}
                 </Button>
               </>
             ) : (

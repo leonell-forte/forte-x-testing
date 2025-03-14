@@ -195,7 +195,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
 
         <div className="mx-auto w-full max-w-[22rem] space-y-[15px] text-center">
           <Button type="submit" fullWidth loading={loading}>
-            Continue
+            Sign up
           </Button>
           <div className="flex items-center gap-4">
             <hr className="w-full" />
@@ -210,7 +210,7 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
             buttonType="secondary"
             onClick={() => authService.googleSignup(code)}
           >
-            Continue with Google{" "}
+            Sign up with Google{" "}
           </Button>
         </div>
 

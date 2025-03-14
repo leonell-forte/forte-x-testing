@@ -614,7 +614,7 @@ const BeneficiariesForm = ({
               </Button>
 
               <Button type="submit" loading={isPending} disabled={!isDirty}>
-                Save
+                {id ? "Update" : "Add"}
               </Button>
             </>
           ) : (

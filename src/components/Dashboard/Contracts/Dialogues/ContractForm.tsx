@@ -506,11 +506,11 @@ const ContractForm = ({
                   }}
                   disabled={!isDirty}
                 >
-                  Save
+                  {contractDetails ? "Update" : "Add"}
                 </Button>
               ) : (
                 <Button type="submit" loading={isPending} disabled={!isDirty}>
-                  Save
+                  {contractDetails ? "Update" : "Add"}
                 </Button>
               )}
             </div>
