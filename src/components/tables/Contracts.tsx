@@ -104,7 +104,7 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
                 key={index}
               >
                 <Cards.Group cols={2}>
-                  <Cards.Details label="Name" value={name} />
+                  <Cards.Details label="Contract name" value={name} />
                   <Cards.Details label="Provider" value={provider?.name} />
                   <Cards.Details
                     label="Status"
@@ -221,7 +221,7 @@ export default ContractsTable;
 
 const TABLE_HEADER = [
   "ID",
-  "Name",
+  "Contract name",
   "Provider",
   "Status",
   "Project",
