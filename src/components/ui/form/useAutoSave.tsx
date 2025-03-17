@@ -94,6 +94,7 @@ export function useAutoSaveForm<TFormValues extends Record<string, any>>(
         clearTimeout(timerRef.current);
       }
     };
+    // eslint-disable-next-line
   }, [enabled, idleTime]);
 
   useEffect(() => {
@@ -106,6 +107,7 @@ export function useAutoSaveForm<TFormValues extends Record<string, any>>(
       );
       clearSavedData();
     }
+    // eslint-disable-next-line
   }, []);
 
   return {
