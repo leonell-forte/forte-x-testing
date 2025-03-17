@@ -280,6 +280,7 @@ const BeneficiariesPage = () => {
             <>
               {IsAuthorized([Beneficiaries.EXECUTE]) && (
                 <Button
+                  eventName="Export Beneficiaries"
                   onClick={handleExportBeneficiaries}
                   buttonType="secondary"
                   disabled={isExportingBeneficiaries}
