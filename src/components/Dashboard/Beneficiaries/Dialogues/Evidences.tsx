@@ -1,3 +1,4 @@
+import * as amplitude from "@amplitude/analytics-browser";
 import { useQuery } from "@tanstack/react-query";
 import evidenceService from "api/evidence";
 import { useMemo } from "react";
@@ -41,6 +42,7 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
               onClick={(e) => {
                 e.stopPropagation();
                 handleAddOrViewEvidence?.();
+                amplitude.track(`Add Evidence Button Click`);
               }}
               className="group"
             >
