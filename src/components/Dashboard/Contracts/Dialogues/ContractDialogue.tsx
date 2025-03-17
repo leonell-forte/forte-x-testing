@@ -71,7 +71,10 @@ const ContractDialogue = ({
           <MarkContract
             contractDetails={contractDetails!}
             handleBack={() => setComponent("form")}
-            handleClose={handleClose!}
+            handleClose={() => {
+              refetch();
+              setComponent("form");
+            }}
           />
         );
     }

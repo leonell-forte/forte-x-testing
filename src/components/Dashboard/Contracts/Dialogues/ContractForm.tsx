@@ -496,7 +496,10 @@ const ContractForm = ({
                 </Button>
               )}
 
-              {isSigned && !isAmmending && watch("status") !== "CANCELLED" ? (
+              {isSigned &&
+              !isAmmending &&
+              watch("status") !== "CANCELLED" &&
+              watch("status") !== "DRAFT" ? (
                 <Button
                   onClick={(e) => {
                     e.preventDefault();

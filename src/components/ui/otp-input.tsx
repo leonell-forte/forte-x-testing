@@ -40,6 +40,34 @@ const OTPInput = ({ onChange, digits }: IOTPInputProps) => {
     }
   };
 
+  const handlePaste = (e: React.ClipboardEvent, currentIndex: number) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData("text").replace(/\s/g, "");
+    if (!pastedData.match(/^[0-9]+$/)) return; // Only allow numbers
+
+    const otpArray = pastedData.split("").slice(0, otp.length - currentIndex);
+    const newOtp = [...otp];
+
+    otpArray.forEach((value, index) => {
+      const targetIndex = currentIndex + index;
+      if (targetIndex < otp.length) {
+        newOtp[targetIndex] = value;
+      }
+    });
+
+    setOtp(newOtp);
+
+    // Focus last filled input or next empty input
+    const targetIndex = Math.min(
+      currentIndex + otpArray.length,
+      otp.length - 1
+    );
+    const targetInput = document.getElementById(`otp-input-${targetIndex}`);
+    if (targetInput) {
+      targetInput.focus();
+    }
+  };
+
   useEffect(() => {
     const debounce = setTimeout(() => {
       onChange(otp);
@@ -59,6 +87,7 @@ const OTPInput = ({ onChange, digits }: IOTPInputProps) => {
             value={digit}
             onChange={(e) => handleChange(e.target.value, index)}
             onKeyDown={(e) => handleKeyDown(e, index)}
+            onPaste={(e) => handlePaste(e, index)}
             maxLength={1}
             className={classNames(
               "aspect-square w-full rounded-xl bg-white !bg-opacity-[50%] text-center !text-[24px] text-forest-green outline-none md:rounded-xl md:!text-[40px]",
