@@ -39,7 +39,7 @@ export const beneficiaries = {
 
       cohortEndDate: beneficiary?.cohortEndDate || null,
 
-      cohortName: beneficiary?.program || "",
+      cohortName: beneficiary?.cohortName || "",
 
       linkedinUrl: beneficiary?.linkedinUrl || "",
 
