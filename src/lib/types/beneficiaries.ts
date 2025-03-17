@@ -30,6 +30,8 @@ export interface IBeneficiaries {
 
   program: string;
 
+  cohortName: string;
+
   cohortStartDate: string;
 
   riskLevel: RiskLevelEnum;
