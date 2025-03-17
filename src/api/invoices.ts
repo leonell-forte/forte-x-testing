@@ -29,6 +29,11 @@ export class InvoiceService {
 
         isSearch: true,
       },
+      "invoices.status": {
+        value: filters?.status || "",
+
+        exact: true,
+      },
     };
 
     if (generateODataQuery(searchFilter)) {
