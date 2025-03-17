@@ -194,7 +194,7 @@ const ContractForm = ({
   useAutoSaveForm(form, {
     formId: "contract-form",
 
-    enabled: !Boolean(contractDetails) && isDirty,
+    enabled: !contractDetails && isDirty,
   });
   // autosave end
 

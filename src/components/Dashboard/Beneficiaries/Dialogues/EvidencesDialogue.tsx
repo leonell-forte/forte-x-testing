@@ -162,7 +162,7 @@ const EvidencesDialogue = ({
 
   useAutoSaveForm(form, {
     formId,
-    enabled: !Boolean(evidenceData),
+    enabled: !evidenceData,
   });
 
   return (

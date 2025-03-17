@@ -1,6 +1,7 @@
 import {
   Beneficiaries,
   Contracts,
+  Milestones,
   Organizations,
   Projects,
   Users,
@@ -36,6 +37,12 @@ export const MENUS = [
     name: "users",
     link: "/users",
     permissions: [Users.NAVIGATE],
+  },
+
+  {
+    name: "Milestones",
+    link: "/milestones",
+    permissions: [Milestones.NAVIGATE],
   },
 ];
 
@@ -164,6 +171,25 @@ export const CONTRACT_STATUS = [
   {
     label: "Cancelled",
     value: "cancelled",
+  },
+];
+
+export const MILESTONE_STATUS = [
+  {
+    label: "Open",
+    value: "open",
+  },
+  {
+    label: "Achieved",
+    value: "achieved",
+  },
+  {
+    label: "Invoiced",
+    value: "invoiced",
+  },
+  {
+    label: "Paid",
+    value: "paid",
   },
 ];
 

@@ -98,14 +98,14 @@ export const generateODataQuery = (obj: IODataObject): string => {
   return searchQuery || nonSearchQuery || "";
 };
 
-export const formatDate = (date: string | Date, dateFormat: string) => {
+export const formatDate = (date: string | Date, dateFormat?: string) => {
   const parsedDate = new Date(date);
 
   if (isNaN(parsedDate.getTime())) {
     // Return an empty string if the date is invalid
     return "-";
   }
-  return format(parsedDate, dateFormat);
+  return format(parsedDate, dateFormat || "dd-LL-yyyy");
 };
 
 export const findLabelFromOptions = (
@@ -169,4 +169,29 @@ export function separateCamelCase(str: string) {
 
 export const sortOptions = (options: IOption[]) => {
   return options.sort((a, b) => a.label.localeCompare(b.label));
+};
+
+export function parseNumber<T>(
+  str: string | number,
+  defaultValue?: T
+): T | string | number | undefined {
+  const v = parseFloat(`${str}`.replace(/,/g, ""));
+  // eslint-disable-next-line no-restricted-globals
+  if (isNaN(v)) return typeof defaultValue !== "boolean" ? defaultValue : str;
+  return v;
+}
+
+export const formatNumber = (v: number | string, decimal = 0) => {
+  try {
+    const n = parseNumber(v) as number;
+    // eslint-disable-next-line no-restricted-globals
+    if (isNaN(n)) return v;
+    return n.toLocaleString(undefined, {
+      minimumFractionDigits: decimal,
+      maximumFractionDigits: decimal,
+    });
+  } catch (err) {
+    console.error(err);
+    return v;
+  }
 };

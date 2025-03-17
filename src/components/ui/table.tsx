@@ -31,11 +31,8 @@ const Table = {
 
     return (
       <div className={classNames("w-full pb-8", props.className)}>
-        <div ref={tableRef} className="hide-scroll relative w-full">
-          <table
-            {...props}
-            className="w-full overflow-hidden !rounded-t-[.5em]"
-          >
+        <div ref={tableRef} className="relative w-full">
+          <table {...props} className="w-full !rounded-t-[.5em]">
             {children}
           </table>
 

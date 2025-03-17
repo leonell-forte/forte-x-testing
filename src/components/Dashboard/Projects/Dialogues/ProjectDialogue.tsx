@@ -125,7 +125,7 @@ const ProjectDialogue = ({
 
   useAutoSaveForm(form, {
     formId,
-    enabled: !Boolean(project),
+    enabled: !project,
   });
 
   // autosave end

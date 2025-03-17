@@ -46,9 +46,20 @@ export enum Projects {
   NAVIGATE = "navigate:project",
 }
 
+export enum Milestones {
+  CREATE = "create:milestone",
+  UPDATE = "update:milestone",
+  IMPORT = "import:milestone",
+  DELETE = "delete:milestone",
+  LIST = "list:milestone",
+  NAVIGATE = "navigate:milestone",
+}
+
 const ROLES: Record<
   UserRoleType,
-  Array<Beneficiaries | Users | Organizations | Contracts | Projects>
+  Array<
+    Beneficiaries | Users | Organizations | Contracts | Projects | Milestones
+  >
 > = {
   owner: [
     ...Object.values(Beneficiaries),
@@ -56,6 +67,7 @@ const ROLES: Record<
     ...Object.values(Organizations),
     ...Object.values(Contracts),
     ...Object.values(Projects),
+    ...Object.values(Milestones),
   ],
   admin: [
     ...Object.values(Beneficiaries),
@@ -63,13 +75,14 @@ const ROLES: Record<
     ...Object.values(Organizations),
     ...Object.values(Contracts),
     ...Object.values(Projects),
+    ...Object.values(Milestones),
   ],
-
   user: [
     ...Object.values(Beneficiaries),
     ...Object.values(Contracts),
     ...Object.values(Organizations),
     ...Object.values(Projects),
+    ...Object.values(Milestones),
     Users.NAVIGATE,
   ],
 
@@ -81,12 +94,15 @@ const ROLES: Record<
     Contracts.LIST,
     Organizations.NAVIGATE,
     Organizations.LIST,
+    Milestones.LIST,
   ],
 
   "provider.owner": [
     ...Object.values(Beneficiaries),
     ...Object.values(Contracts),
     ...Object.values(Projects),
+    ...Object.values(Milestones),
+
     Users.CREATE,
     Users.IMPORT,
     Users.NAVIGATE,
@@ -101,6 +117,8 @@ const ROLES: Record<
     ...Object.values(Beneficiaries),
     ...Object.values(Contracts),
     ...Object.values(Projects),
+    ...Object.values(Milestones),
+
     Users.CREATE,
     Users.IMPORT,
     Users.NAVIGATE,
@@ -114,6 +132,8 @@ const ROLES: Record<
     ...Object.values(Beneficiaries),
     ...Object.values(Contracts),
     ...Object.values(Projects),
+    ...Object.values(Milestones),
+
     Organizations.NAVIGATE,
     Organizations.LIST,
   ],
@@ -133,6 +153,8 @@ const ROLES: Record<
     ...Object.values(Users),
     ...Object.values(Contracts),
     ...Object.values(Projects),
+    ...Object.values(Milestones),
+
     Organizations.NAVIGATE,
     Organizations.LIST,
     Organizations.UPDATE,
@@ -143,6 +165,8 @@ const ROLES: Record<
     ...Object.values(Beneficiaries),
     ...Object.values(Contracts),
     ...Object.values(Projects),
+    ...Object.values(Milestones),
+
     Users.CREATE,
     Users.IMPORT,
     Users.NAVIGATE,

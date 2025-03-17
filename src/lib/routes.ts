@@ -5,6 +5,7 @@ import SearchResultsPage from "pages/Search/SearchResultsPage";
 import {
   Beneficiaries,
   Contracts,
+  Milestones,
   Organizations,
   Projects,
   Users,
@@ -30,6 +31,10 @@ const BeneficiariesPage = React.lazy(
   () => import("../pages/Beneficiaries/BeneficiariesPage")
 );
 
+const MilestonePage = React.lazy(
+  () => import("../pages/Milestones/MilestonesPage")
+);
+
 const LoginPage = React.lazy(() => import("../pages/Login/LoginPage"));
 
 const SignupPage = React.lazy(() => import("../pages/Signup/SignupPage"));
@@ -46,7 +51,7 @@ export interface RouteConfig {
   link: string;
   Component: React.ComponentType;
   permissions: Array<
-    Beneficiaries | Users | Organizations | Contracts | Projects
+    Beneficiaries | Users | Organizations | Contracts | Projects | Milestones
   >;
   public?: boolean;
 }
@@ -98,6 +103,14 @@ export const ROUTES: RouteConfig[] = [
     Component: BeneficiariesPage,
 
     permissions: [Beneficiaries.NAVIGATE],
+  },
+
+  {
+    link: "milestones/*",
+
+    Component: MilestonePage,
+
+    permissions: [Milestones.NAVIGATE],
   },
 
   {
