@@ -236,6 +236,7 @@ const BeneficiariesPage = () => {
                   >
                     <span>
                       <Button
+                        eventName="Update Status"
                         onClick={() => {
                           setModal("update status");
                         }}
@@ -264,6 +265,7 @@ const BeneficiariesPage = () => {
                 >
                   <span>
                     <Button
+                      eventName="Download Evidence"
                       onClick={handleDownloadEvidence}
                       buttonType="secondary"
                       disabled={isDownloadingEvidence || !selectedIds.length}
@@ -287,7 +289,7 @@ const BeneficiariesPage = () => {
               )}
               {IsAuthorized([Beneficiaries.IMPORT]) && (
                 <Button
-                  eventName="Import Beneficiaries"
+                  eventName="Bulk Upload Beneficiaries"
                   buttonType="secondary"
                   onClick={() => setModal("import")}
                 >
