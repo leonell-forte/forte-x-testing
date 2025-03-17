@@ -32,14 +32,16 @@ const ContractDialogue = ({
   const { showPrompt } = useContractsContext();
   const {
     data: contractDetails,
-    isLoading: contractDetailsLoading,
+    isFetching: contractDetailsLoading,
     refetch,
   } = useQuery({
-    queryKey: ["specific-contract", id],
+    queryKey: ["specific-contract", contractId],
 
-    queryFn: () => contractService.getOne(id!.toString()!),
+    queryFn: () => contractService.getOne(contractId!.toString()!),
 
-    enabled: !!id,
+    enabled: !!contractId,
+
+    refetchOnWindowFocus: false,
   });
 
   // sets contract form default values
@@ -48,37 +50,41 @@ const ContractDialogue = ({
 
   const [component, setComponent] = useState<Component>("form");
 
-  const renderComponent = (component: Component) => {
-    switch (component) {
-      case "form":
-        return (
-          <ContractForm
-            contractDetails={contractId ? contractDetails! : null}
-            onEdit={onEdit}
-            handleEdit={(val) => setOnEdit(val)}
-            handleClose={handleClose!}
-            projectId={projectId!}
-            markContract={() => setComponent("mark")}
-            onSuccess={(contract) => {
-              setContractId(contract.id);
-              refetch();
-            }}
-          />
-        );
+  const renderComponent = useCallback(
+    (component: Component) => {
+      switch (component) {
+        case "form":
+          return (
+            <ContractForm
+              contractDetails={contractId ? contractDetails! : null}
+              onEdit={onEdit}
+              handleEdit={(val) => setOnEdit(val)}
+              handleClose={handleClose!}
+              projectId={projectId!}
+              markContract={() => setComponent("mark")}
+              onSuccess={(contract) => {
+                setContractId(contract.id);
+                refetch();
+              }}
+            />
+          );
 
-      case "mark":
-        return (
-          <MarkContract
-            contractDetails={contractDetails!}
-            handleBack={() => setComponent("form")}
-            handleClose={() => {
-              refetch();
-              setComponent("form");
-            }}
-          />
-        );
-    }
-  };
+        case "mark":
+          return (
+            <MarkContract
+              contractDetails={contractDetails!}
+              handleBack={() => setComponent("form")}
+              handleClose={() => {
+                setComponent("form");
+                refetch();
+              }}
+            />
+          );
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [contractDetails, contractId, onEdit, handleClose, projectId]
+  );
 
   const canEdit = IsAuthorized([Contracts.UPDATE]);
 
