@@ -50,16 +50,6 @@ const Pagination = ({
     }
   };
 
-  // const handleBlur = () => {
-  //   const newPage = Number(inputValue);
-  //   if (newPage >= 1 && newPage <= pageCount) {
-  //     onPageChange(newPage);
-  //   } else {
-  //     // Reset to current page if invalid
-  //     setInputValue(String(page));
-  //   }
-  // };
-
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       const newPage = Number(inputValue);
