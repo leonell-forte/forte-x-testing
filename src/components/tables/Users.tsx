@@ -116,7 +116,7 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
                   {IsAuthorized([Users.DELETE]) && (
                     <div className="flex justify-end">
                       <Button
-                        eventName="Delete Beneficiary"
+                        eventName="Delete Users"
                         id={id?.toString()}
                         buttonType="default"
                         type="button"
@@ -195,7 +195,7 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
                     {IsAuthorized([Users.DELETE]) && (
                       <div className="flex justify-end">
                         <Button
-                          eventName="Delete Beneficiary"
+                          eventName="Delete User"
                           id={id?.toString()}
                           buttonType="default"
                           type="button"
