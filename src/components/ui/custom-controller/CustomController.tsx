@@ -14,7 +14,7 @@ import { AlertIcon, Tooltip } from "../tooltip/Tooltip";
 
 type CustomProps = {
   name: string;
-  control: Control<any>;
+  control?: Control<any>;
   label?: string;
   labelClassName?: string;
   required?: boolean;

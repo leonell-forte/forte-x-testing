@@ -1,11 +1,13 @@
 import {
   Beneficiaries,
   Contracts,
+  Invoices,
   Milestones,
   Organizations,
   Projects,
   Users,
 } from "./role-permissions";
+import { InvoiceStatus } from "./types/invoices";
 import { UserRoleType } from "./types/users";
 import { sortOptions } from "./utils";
 
@@ -37,6 +39,12 @@ export const MENUS = [
     name: "users",
     link: "/users",
     permissions: [Users.NAVIGATE],
+  },
+
+  {
+    name: "invoices",
+    link: "/invoices",
+    permissions: [Invoices.NAVIGATE],
   },
 
   {
@@ -507,3 +515,9 @@ export const REDIRECT_PATHS: Record<UserRoleType, string> = {
 
   "read-only": "/beneficiaries",
 };
+
+export const INVOICE_STATUSES: Array<InvoiceStatus> = [
+  "Cancelled",
+  "Pending",
+  "Paid",
+];

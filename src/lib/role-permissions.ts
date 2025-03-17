@@ -2,6 +2,15 @@ import { useProfile } from "components/ProfileContext";
 
 import { UserRoleType } from "./types/users";
 
+export type PermissionEnums =
+  | Beneficiaries
+  | Users
+  | Organizations
+  | Contracts
+  | Projects
+  | Invoices
+  | Milestones;
+
 export enum Beneficiaries {
   CREATE = "create:beneficiary",
   UPDATE = "update:beneficiary",
@@ -46,6 +55,14 @@ export enum Projects {
   NAVIGATE = "navigate:project",
 }
 
+export enum Invoices {
+  CREATE = "create:project",
+  UPDATE = "update:project",
+  DELETE = "delete:project",
+  LIST = "list:project",
+  NAVIGATE = "navigate:project",
+}
+
 export enum Milestones {
   CREATE = "create:milestone",
   UPDATE = "update:milestone",
@@ -55,18 +72,14 @@ export enum Milestones {
   NAVIGATE = "navigate:milestone",
 }
 
-const ROLES: Record<
-  UserRoleType,
-  Array<
-    Beneficiaries | Users | Organizations | Contracts | Projects | Milestones
-  >
-> = {
+const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
   owner: [
     ...Object.values(Beneficiaries),
     ...Object.values(Users),
     ...Object.values(Organizations),
     ...Object.values(Contracts),
     ...Object.values(Projects),
+    ...Object.values(Invoices),
     ...Object.values(Milestones),
   ],
   admin: [
@@ -75,6 +88,7 @@ const ROLES: Record<
     ...Object.values(Organizations),
     ...Object.values(Contracts),
     ...Object.values(Projects),
+    ...Object.values(Invoices),
     ...Object.values(Milestones),
   ],
   user: [
@@ -82,6 +96,7 @@ const ROLES: Record<
     ...Object.values(Contracts),
     ...Object.values(Organizations),
     ...Object.values(Projects),
+    ...Object.values(Invoices),
     ...Object.values(Milestones),
     Users.NAVIGATE,
   ],
@@ -94,6 +109,8 @@ const ROLES: Record<
     Contracts.LIST,
     Organizations.NAVIGATE,
     Organizations.LIST,
+    Invoices.NAVIGATE,
+    Invoices.LIST,
     Milestones.LIST,
   ],
 
@@ -101,6 +118,7 @@ const ROLES: Record<
     ...Object.values(Beneficiaries),
     ...Object.values(Contracts),
     ...Object.values(Projects),
+    ...Object.values(Invoices),
     ...Object.values(Milestones),
 
     Users.CREATE,
@@ -117,6 +135,7 @@ const ROLES: Record<
     ...Object.values(Beneficiaries),
     ...Object.values(Contracts),
     ...Object.values(Projects),
+    ...Object.values(Invoices),
     ...Object.values(Milestones),
 
     Users.CREATE,
@@ -132,6 +151,7 @@ const ROLES: Record<
     ...Object.values(Beneficiaries),
     ...Object.values(Contracts),
     ...Object.values(Projects),
+    ...Object.values(Invoices),
     ...Object.values(Milestones),
 
     Organizations.NAVIGATE,
@@ -146,6 +166,8 @@ const ROLES: Record<
     Contracts.LIST,
     Organizations.NAVIGATE,
     Organizations.LIST,
+    Invoices.NAVIGATE,
+    Invoices.LIST,
   ],
 
   "funder.owner": [
@@ -153,6 +175,7 @@ const ROLES: Record<
     ...Object.values(Users),
     ...Object.values(Contracts),
     ...Object.values(Projects),
+    ...Object.values(Invoices),
     ...Object.values(Milestones),
 
     Organizations.NAVIGATE,
@@ -165,6 +188,7 @@ const ROLES: Record<
     ...Object.values(Beneficiaries),
     ...Object.values(Contracts),
     ...Object.values(Projects),
+    ...Object.values(Invoices),
     ...Object.values(Milestones),
 
     Users.CREATE,
@@ -180,6 +204,7 @@ const ROLES: Record<
     ...Object.values(Beneficiaries),
     ...Object.values(Contracts),
     ...Object.values(Projects),
+    ...Object.values(Invoices),
     Organizations.NAVIGATE,
     Organizations.LIST,
   ],
@@ -192,6 +217,8 @@ const ROLES: Record<
     Organizations.NAVIGATE,
     Projects.LIST,
     Projects.NAVIGATE,
+    Invoices.LIST,
+    Invoices.NAVIGATE,
   ],
 };
 

@@ -171,6 +171,16 @@ export const sortOptions = (options: IOption[]) => {
   return options.sort((a, b) => a.label.localeCompare(b.label));
 };
 
+export function formatCurrency(
+  amount: number,
+  currency: string = "USD",
+  locale: string = "en-US"
+) {
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: currency,
+  }).format(amount);
+}
 export function parseNumber<T>(
   str: string | number,
   defaultValue?: T
