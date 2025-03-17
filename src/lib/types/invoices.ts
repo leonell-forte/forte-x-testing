@@ -12,7 +12,7 @@ export type InvoiceStatus = "Cancelled" | "Pending" | "Paid";
 
 type MilestoneStatus = "Achieved" | "Paid" | "Open";
 
-type Contract = Funder & {};
+type Contract = Funder;
 
 type Beneficiary = {
   firstName: string;
