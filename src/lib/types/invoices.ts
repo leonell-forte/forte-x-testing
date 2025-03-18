@@ -10,7 +10,7 @@ export type AdditionalFee = {
 
 export type InvoiceStatus = "Cancelled" | "Pending" | "Paid";
 
-type MilestoneStatus = "Achieved" | "Paid" | "Open";
+export type MilestoneStatus = "Achieved" | "Paid" | "Open";
 
 type Contract = Funder;
 

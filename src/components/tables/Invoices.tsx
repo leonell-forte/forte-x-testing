@@ -1,11 +1,11 @@
 import { HiOutlineDownload as DL } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 
-import { Invoice, InvoiceStatus } from "lib/types/invoices";
-import { formatCurrency, formatDate } from "lib/utils";
+import { Invoice } from "lib/types/invoices";
+import { formatCurrency, formatDate, getStatusVariant } from "lib/utils";
 
 import Button from "components/ui/button";
-import Status, { StatusVariant } from "components/ui/status";
+import Status from "components/ui/status";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
 
@@ -23,19 +23,6 @@ const Invoices = ({ list, isLoading }: InvoicesProps) => {
 
   const handleDownload = () => {
     //  ...download loginc here
-  };
-
-  const getStatusVariant = (status: InvoiceStatus): StatusVariant => {
-    switch (status) {
-      case "Paid":
-        return "primary";
-      case "Pending":
-        return "warning";
-      case "Cancelled":
-        return "danger";
-      default:
-        return "primary";
-    }
   };
 
   return (

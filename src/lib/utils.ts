@@ -3,6 +3,9 @@ import { format } from "date-fns";
 import { twMerge } from "tailwind-merge";
 
 import { IOption } from "components/ui/dropdown";
+import { StatusVariant } from "components/ui/status";
+
+import { InvoiceStatus, MilestoneStatus } from "./types/invoices";
 
 export const filterBySearch = (
   list: Record<string, string>[],
@@ -203,5 +206,24 @@ export const formatNumber = (v: number | string, decimal = 0) => {
   } catch (err) {
     console.error(err);
     return v;
+  }
+};
+
+export const getStatusVariant = (
+  status: InvoiceStatus | MilestoneStatus
+): StatusVariant => {
+  switch (status) {
+    case "Paid":
+      return "primary";
+    case "Pending":
+      return "warning";
+    case "Cancelled":
+      return "danger";
+    case "Achieved":
+      return "primary";
+    case "Open":
+      return "warning";
+    default:
+      return "primary";
   }
 };
