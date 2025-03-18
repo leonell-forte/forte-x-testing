@@ -103,7 +103,7 @@ const FileInput = ({
 
       <div
         className={classNames(
-          "pointer-events-none absolute left-4 text-sm",
+          "pointer-events-none absolute left-4 w-full truncate pr-14 text-sm",
           value ? "text-white" : "text-white/50"
         )}
       >
