@@ -40,6 +40,15 @@ module.exports = {
         success: "#42ECA8",
         disabled: "#787878",
         panel: "rgba(48,241,255,10%)",
+        green: {
+          300: "#1D6965",
+        },
+        neutral: {
+          100: "#38C6C04D",
+        },
+        red: {
+          300: "#6A3030",
+        },
       },
       fontSize: {
         "heading-1": "42px",

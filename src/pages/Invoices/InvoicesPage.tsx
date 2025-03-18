@@ -1,6 +1,8 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { BiSlider as SliderIcon } from "react-icons/bi";
 import { TbFilterX as FilterIcon } from "react-icons/tb";
+
+// import { BiSlider as SliderIcon } from "react-icons/bi";
+import add from "assets/images/icons/add.svg";
 
 import useInvoiceList from "lib/common/lists/useInvoiceList";
 import { INVOICE_STATUSES } from "lib/constants";
@@ -56,6 +58,14 @@ const InvoicesPage = () => {
       />
       <div className="flex h-full flex-col justify-between gap-4">
         <div className="space-y-2.5">
+          <div className="flex items-start justify-between">
+            <p className="text-[24px] font-semibold">Invoices</p>
+            <Button>
+              <img src={add} alt="add" width={14} height={14} />
+              Generate Invoice
+            </Button>
+          </div>
+
           <div className="flex flex-col gap-2 md:flex-row">
             <div className="flex gap-2">
               <div className="w-full md:w-[286px]">
@@ -70,7 +80,7 @@ const InvoicesPage = () => {
                   onClear={() => setSearch("")}
                 />
               </div>
-              <button
+              {/* <button
                 onClick={(e) => {
                   e.stopPropagation();
                   setShowFilter(true);
@@ -78,15 +88,15 @@ const InvoicesPage = () => {
                 className="group flex-shrink-0 md:hidden"
               >
                 <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
-              </button>
+              </button> */}
             </div>
-            <div className="hidden w-full md:block">
+            {/* <div className="hidden w-full md:block">
               <Filters
                 filters={filters}
                 setFilters={setFilters}
                 handleRemoveFilters={() => setFilters({ status: "" })}
               />
-            </div>
+            </div> */}
           </div>
           <InvoicesTable list={invoices?.items} isLoading={isLoading} />
         </div>

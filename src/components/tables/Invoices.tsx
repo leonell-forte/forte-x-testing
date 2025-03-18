@@ -1,10 +1,11 @@
 import { HiOutlineDownload as DL } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 
-import { Invoice } from "lib/types/invoices";
+import { Invoice, InvoiceStatus } from "lib/types/invoices";
 import { formatCurrency, formatDate } from "lib/utils";
 
 import Button from "components/ui/button";
+import Status, { StatusVariant } from "components/ui/status";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
 
@@ -22,6 +23,19 @@ const Invoices = ({ list, isLoading }: InvoicesProps) => {
 
   const handleDownload = () => {
     //  ...download loginc here
+  };
+
+  const getStatusVariant = (status: InvoiceStatus): StatusVariant => {
+    switch (status) {
+      case "Paid":
+        return "primary";
+      case "Pending":
+        return "warning";
+      case "Cancelled":
+        return "danger";
+      default:
+        return "primary";
+    }
   };
 
   return (
@@ -84,7 +98,6 @@ const Invoices = ({ list, isLoading }: InvoicesProps) => {
               {HEADERS.map((header, index) => (
                 <Table.Header key={index}>{header}</Table.Header>
               ))}
-              <Table.Header></Table.Header>
             </Table.Row>
           </Table.Head>
           <Table.Body>
@@ -103,16 +116,18 @@ const Invoices = ({ list, isLoading }: InvoicesProps) => {
                     INV-{id.slice(-4)}
                   </Table.Data>
                   <Table.Data>
-                    {formatDate(new Date(createdAt || ""), "dd-LLL-yyyy")}
+                    {formatDate(new Date(createdAt || ""), "dd LLLL yyyy")}
                   </Table.Data>
                   <Table.Data>
-                    {formatDate(new Date(dueDate || ""), "dd-LLL-yyyy")}
-                  </Table.Data>
-                  <Table.Data>
-                    {formatDate(new Date(paidDate || ""), "dd-LLL-yyyy")}
+                    {formatDate(new Date(paidDate || ""), "dd LLLL yyyy")}
                   </Table.Data>
                   <Table.Data>{formatCurrency(grossAmount)}</Table.Data>
-                  <Table.Data>{status}</Table.Data>
+                  <Table.Data>
+                    {formatDate(new Date(dueDate || ""), "dd LLLL yyyy")}
+                  </Table.Data>
+                  <Table.Data>
+                    <Status variant={getStatusVariant(status)}>{status}</Status>
+                  </Table.Data>
                   <Table.Data>
                     <Button
                       eventName="Edit Project"
@@ -140,8 +155,9 @@ export default Invoices;
 const HEADERS = [
   "Invoice ID",
   "Invoice date",
-  "Date due",
-  "Date paid",
-  "Total",
+  "# of Milestones",
+  "Amount",
+  "Due date",
   "Status",
+  "",
 ];
