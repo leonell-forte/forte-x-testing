@@ -2,11 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import evidenceService from "api/evidence";
 import { format } from "date-fns";
 
-import {
-  ActivityLog,
-  ChangeValue,
-  EvidenceChanges,
-} from "lib/types/activity-logs";
+import { ActivityLog } from "lib/types/activity-logs";
 import { formatDate } from "lib/utils";
 
 import Spinner from "components/ui/spinner/spinner";
@@ -42,18 +38,17 @@ const ActivityLogSection = ({
 
     const { firstName, lastName } = user;
 
-    const changes = Object.entries(log.changes)
+    const changes = log.changes
       .map((item) => {
-        const updatedAt = new Date(log.changes.updatedAt?.newValue as string);
+        const updatedAt = new Date(log.createdAt as string);
 
         const date = `${format(updatedAt, "dd LLL yyyy")}`;
 
         const time = getTime(updatedAt);
 
-        const [key, value] = item as [keyof EvidenceChanges, ChangeValue];
-        if (!value || !value.newValue) return null;
+        const { propertyName } = item;
 
-        switch (key) {
+        switch (propertyName.toLowerCase()) {
           case "description":
             return ` Evidence description was updated by ${firstName} ${lastName} at ${time} on ${date}.`;
           case "status":
@@ -85,11 +80,6 @@ const ActivityLogSection = ({
         <p className="text-[14px]">No activities at the moment</p>
       ) : (
         <ul className="pl-6">
-          <li className="list-disc text-[14px]">
-            Evidence was uploaded by {data[0].user.firstName}{" "}
-            {data[0].user.lastName} at {getTime(new Date(data[0].createdAt))} at{" "}
-            {formatDate(data[0].createdAt, "dd LLL yyyy")}
-          </li>
           {data?.map((item, index) => {
             const changes = renderChangeMessage(item);
 
@@ -102,6 +92,12 @@ const ActivityLogSection = ({
               </li>
             ));
           })}
+          <li className="list-disc text-[14px]">
+            Evidence was uploaded by {data[data.length - 1].user.firstName}{" "}
+            {data[data.length - 1].user.lastName} at{" "}
+            {getTime(new Date(data[data.length - 1].createdAt))} at{" "}
+            {formatDate(data[data.length - 1].createdAt, "dd LLL yyyy")}
+          </li>
         </ul>
       )}
     </div>

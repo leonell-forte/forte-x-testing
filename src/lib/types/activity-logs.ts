@@ -3,24 +3,10 @@ export interface ChangeValue<T = any> {
   newValue?: T;
 }
 
-interface FileChanges {
-  "file.id"?: ChangeValue<number>;
-  "file.filename"?: ChangeValue<string>;
-  "file.key"?: ChangeValue<string>;
-  "file.fileUrl"?: ChangeValue<string>;
-}
-
-interface OutcomeChanges {
-  "outcome.id"?: ChangeValue<number>;
-  "outcome.name"?: ChangeValue<string>;
-  "outcome.description"?: ChangeValue<string>;
-}
-
-export interface EvidenceChanges extends FileChanges, OutcomeChanges {
-  description?: ChangeValue<string>;
-  status?: ChangeValue<string>;
-  createdAt?: ChangeValue<string>;
-  updatedAt?: ChangeValue<string>;
+export interface EvidenceChanges {
+  propertyName: string;
+  oldValue: string | number;
+  newValue: string | number;
 }
 
 interface ActivityLogUser {
@@ -33,7 +19,7 @@ export interface ActivityLog {
   id: number;
   module: "evidences";
   action: string;
-  changes: EvidenceChanges;
+  changes: EvidenceChanges[];
   referenceId: string;
   createdAt: string;
   user: ActivityLogUser;
