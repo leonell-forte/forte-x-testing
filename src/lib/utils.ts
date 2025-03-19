@@ -6,6 +6,7 @@ import { IOption } from "components/ui/dropdown";
 import { StatusVariant } from "components/ui/status";
 
 import { InvoiceStatus, MilestoneStatus } from "./types/invoices";
+import { EvidenceStatus } from "./types/milestones";
 
 export const filterBySearch = (
   list: Record<string, string>[],
@@ -210,19 +211,29 @@ export const formatNumber = (v: number | string, decimal = 0) => {
 };
 
 export const getStatusVariant = (
-  status: InvoiceStatus | MilestoneStatus
+  status: InvoiceStatus | MilestoneStatus | EvidenceStatus
 ): StatusVariant => {
   switch (status) {
     case "Paid":
-      return "primary";
+      return "neutral";
     case "Pending":
       return "warning";
     case "Cancelled":
       return "danger";
     case "Achieved":
-      return "primary";
-    case "Open":
       return "warning";
+    case "Open":
+      return "primary";
+    case "Accepted":
+      return "primary";
+    case "Pending Review":
+      return "warning";
+    case "More Information Requested":
+      return "primary";
+    case "Invoiced":
+      return "success";
+    case "Rejected":
+      return "danger";
     default:
       return "primary";
   }

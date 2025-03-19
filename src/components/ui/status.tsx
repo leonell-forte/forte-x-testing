@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { PropsWithChildren } from "react";
 
-export type StatusVariant = "primary" | "danger" | "warning";
+export type StatusVariant = keyof typeof variants;
 
 type PropTypes = PropsWithChildren & {
   variant?: StatusVariant;
@@ -23,7 +23,9 @@ const Status = ({ variant = "primary", children }: PropTypes) => {
 export default Status;
 
 const variants = {
-  primary: "text-green-300 bg-[#c3eeec]",
+  primary: "text-[#173E76] bg-[#C2D6F3]",
   danger: "bg-[#ead0d0] text-red-300",
-  warning: "bg-orange-100 text-orange-500",
+  warning: "text-[#655D21] bg-[#ECE7C5]",
+  success: "bg-[#C3EEEC] text-[#1D6965]",
+  neutral: "bg-transparent border border-white text-white",
 };

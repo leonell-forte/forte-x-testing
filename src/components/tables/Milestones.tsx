@@ -2,8 +2,9 @@ import { useNavigate } from "react-router-dom";
 
 import { IsAuthorized, Milestones } from "lib/role-permissions";
 import { IMilestone } from "lib/types/milestones";
-import { formatDate, formatNumber } from "lib/utils";
+import { formatDate, formatNumber, getStatusVariant } from "lib/utils";
 
+import Status from "components/ui/status";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
 
@@ -38,60 +39,36 @@ const MilestonesTable = ({ list, isLoading = false }: TMilestonesTable) => {
               outcome: { name: outcomeName },
               cost,
               status,
-              createdAt,
-              invoiceDate,
-              paidDate,
             } = item;
             return (
               <Cards.Card
-                onClick={
-                  IsAuthorized([Milestones.UPDATE])
-                    ? (e) => {
-                        e.stopPropagation();
-
-                        console.log("Show details");
-                      }
-                    : undefined
-                }
+                onClick={() => navigate(id)}
                 title={`Milestone ID: ${id}`}
                 key={index}
               >
                 <Cards.Group cols={2}>
-                  <Cards.Details label="Name" value={title} />
-
-                  <Cards.Details label="Outcome Name" value={outcomeName} />
+                  <Cards.Details label="Funder" value={title} />
                   <Cards.Details
                     label="Type"
                     value={getRandomString(MILESTONE_TYPES)}
                   />
                   <Cards.Details
-                    label="Milestone Reference"
+                    label="Reference"
                     value={getRandomString(MILESTONE_REFERENCE)}
                   />
+                  <Cards.Details label="Outcome Name" value={outcomeName} />
+
                   <Cards.Details
                     label="Cost"
                     value={`$${formatNumber(cost)}`}
                   />
-                  <Cards.Details label="Status" value={status} />
                   <Cards.Details
-                    label="Date Created"
-                    value={formatDate(createdAt)}
-                  />
-                  <Cards.Details
-                    label="Date Achieved"
-                    value={formatDate(new Date())}
-                  />
-                  <Cards.Details
-                    label="Invoice ID"
-                    value={id.split("-")?.[1] || "ID"}
-                  />
-                  <Cards.Details
-                    label="Date Invoiced"
-                    value={formatDate(invoiceDate)}
-                  />
-                  <Cards.Details
-                    label="Date Paid"
-                    value={formatDate(paidDate)}
+                    label="Evidence Status"
+                    value={
+                      <Status variant={getStatusVariant(status)}>
+                        {status}
+                      </Status>
+                    }
                   />
                 </Cards.Group>
               </Cards.Card>
@@ -99,7 +76,7 @@ const MilestonesTable = ({ list, isLoading = false }: TMilestonesTable) => {
           })}
         </Cards.Container>
       </div>
-      <div className="hidden table-breakpoint:block">
+      <div className="hidden w-[calc(100vw-250px)] overflow-x-auto table-breakpoint:block">
         <Table.Container isEmpty={!list.length} isLoading={isLoading}>
           <Table.Head>
             <Table.Row>
@@ -117,50 +94,27 @@ const MilestonesTable = ({ list, isLoading = false }: TMilestonesTable) => {
                 outcome: { name: outcomeName },
                 cost,
                 status,
-                createdAt,
-                invoiceDate,
-                paidDate,
               } = item;
 
               return (
                 <Table.Row onClick={() => navigate(id)} key={index}>
-                  <Table.Data className="max-w-[60px]">
-                    {id.split("-")?.[0] || "ID"}
+                  <Table.Data>
+                    <p className="underline">{id.split("-")?.[0] || "ID"}</p>
                   </Table.Data>
 
-                  <Table.Data className="max-w-[100px]">{title}</Table.Data>
-                  <Table.Data className="max-w-[100px]">
-                    {outcomeName}
-                  </Table.Data>
-
-                  <Table.Data className="max-w-[100px]">
-                    {getRandomString(MILESTONE_TYPES)}
-                  </Table.Data>
-
-                  <Table.Data className="max-w-[100px] capitalize">
+                  <Table.Data> {title}</Table.Data>
+                  <Table.Data>{getRandomString(MILESTONE_TYPES)}</Table.Data>
+                  <Table.Data>
                     {getRandomString(MILESTONE_REFERENCE)}
                   </Table.Data>
+                  <Table.Data>{outcomeName}</Table.Data>
 
                   <Table.Data className="max-w-[70px]">
                     ${formatNumber(cost)}
                   </Table.Data>
 
-                  <Table.Data className="w-[80px]">{status}</Table.Data>
-
-                  <Table.Data className="w-[120px]">
-                    {formatDate(createdAt)}
-                  </Table.Data>
-                  <Table.Data className="w-[120px]">
-                    {formatDate(new Date())}
-                  </Table.Data>
-                  <Table.Data className="w-[70px]">
-                    {id.split("-")?.[1] || "ID"}
-                  </Table.Data>
-                  <Table.Data className="w-[120px]">
-                    {formatDate(invoiceDate)}
-                  </Table.Data>
-                  <Table.Data className="w-[120px]">
-                    {formatDate(paidDate)}
+                  <Table.Data>
+                    <Status variant={getStatusVariant(status)}>{status}</Status>
                   </Table.Data>
                 </Table.Row>
               );
@@ -175,16 +129,11 @@ const MilestonesTable = ({ list, isLoading = false }: TMilestonesTable) => {
 export default MilestonesTable;
 
 const TABLE_HEADER = [
-  "ID",
-  "Name",
-  "Outcome Name",
+  "Milestone ID",
+  "Funder",
   "Type",
   "Reference",
+  "Outcome Name",
   "Cost",
-  "Status",
-  "Date Created",
-  "Date Achieved",
-  "Invoice ID",
-  "Date Invoiced",
-  "Date Paid",
+  "Evidence Status",
 ];

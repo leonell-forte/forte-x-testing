@@ -19,14 +19,14 @@ function InfoVertical({
   leadingIcon: Icon,
 }: Props) {
   return (
-    <div>
-      <div className="text-subtle text-xs">{label}</div>
+    <div className="space-y-2">
+      <div className="text-xs opacity-70">{label}</div>
       {isLoading ? (
         <div className="h-4 w-full animate-pulse rounded-md bg-gray-200" />
       ) : (
         <>
           {type === "normal" ? (
-            <span className="text-default flex items-center space-x-2 text-sm">
+            <span className="flex items-center space-x-2">
               {typeof Icon !== "undefined" ? <Icon /> : null}
               {children}
             </span>

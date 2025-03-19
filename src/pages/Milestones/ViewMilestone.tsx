@@ -2,10 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import milestoneService from "api/milestones";
 import { HiOutlineDownload as DL } from "react-icons/hi";
 import { HiArrowLeft } from "react-icons/hi2";
+import { RiShareBoxLine as Share } from "react-icons/ri";
 import { Link, useParams } from "react-router-dom";
 
 import { usePageTitle } from "lib/hooks";
-import { formatDate, formatNumber } from "lib/utils";
+import { formatDate, formatNumber, getStatusVariant } from "lib/utils";
 
 import {
   MILESTONE_REFERENCE,
@@ -13,6 +14,7 @@ import {
   getRandomString,
 } from "components/tables/Milestones";
 import InfoVertical from "components/ui/info-vertical/InfoVertical";
+import Status from "components/ui/status";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
 
@@ -34,64 +36,70 @@ export default function ViewMilestone() {
 
   return (
     <div className="space-y-8 p-2.5">
-      <Link to="/milestones" className="group flex w-fit items-center gap-2.5">
-        <HiArrowLeft className="transition group-hover:fill-mint" />
-        <p className="font-semibold transition group-hover:text-mint">Back</p>
-      </Link>
-      <div className="space-y-4">
-        <div className="flex items-center gap-x-4">
-          <p className="heading w-fit whitespace-nowrap">Milestone Details</p>
-          <hr className="w-full" />
+      <div className="space-y-2">
+        <Link
+          to="/milestones"
+          className="group flex w-fit items-center gap-2.5"
+        >
+          <HiArrowLeft className="transition group-hover:fill-mint" />
+          <p className="font-semibold transition group-hover:text-mint">Back</p>
+        </Link>
+        <div className="flex items-center gap-x-2">
+          <div className="t-1 text-2xl">Milestone ID: {id?.split("-")[0]}</div>
+          <Status variant={getStatusVariant(milestone.status)}>
+            {milestone.status}
+          </Status>
         </div>
-        <div className="flex flex-wrap items-center gap-x-20 gap-y-12 py-4">
-          <InfoVertical label="Milestone ID">{id}</InfoVertical>
-          <InfoVertical label="Milestone Name">
-            {milestone.milestone.title}
-          </InfoVertical>
-          <InfoVertical label="Outcome Name">
-            {milestone.outcome.name}
-          </InfoVertical>
-          <InfoVertical label="Milestone Type">
+      </div>
+
+      <div className="space-y-4">
+        <p className="heading w-fit whitespace-nowrap">Milestone Details</p>
+
+        <div className="grid items-center gap-6 rounded-lg border p-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          <InfoVertical label="Type">
             {getRandomString(MILESTONE_TYPES)}
-          </InfoVertical>
-          <InfoVertical label="Milestone Reference">
-            <button
-              type="button"
-              onClick={() => alert("Go to reference")}
-              className="text-mint hover:underline"
-            >
-              {getRandomString(MILESTONE_REFERENCE)}
-            </button>
           </InfoVertical>
           <InfoVertical label="Cost">
             ${formatNumber(milestone.cost)}
           </InfoVertical>
-          <InfoVertical label="Status">{milestone.status}</InfoVertical>
-          <InfoVertical label="Date Created">
-            {formatDate(milestone.createdAt, "MMMM dd, yyy")}
-          </InfoVertical>
-          <InfoVertical label="Date Achieved">
-            {formatDate(milestone.invoiceDate, "MMMM dd, yyy")}
-          </InfoVertical>
           <InfoVertical label="Invoice ID">{milestone.id}</InfoVertical>
-          <InfoVertical label="Date Invoiced">
-            {formatDate(milestone.invoiceDate, "MMMM dd, yyy")}
+          <InfoVertical label="Outcome Name">
+            {milestone.outcome.name}
           </InfoVertical>
+          <InfoVertical label="Date Created">
+            {formatDate(milestone.createdAt, "dd MMMM yyy")}
+          </InfoVertical>
+
+          <InfoVertical label="Date Invoiced">
+            {formatDate(milestone.invoiceDate, "dd MMMM yyy")}
+          </InfoVertical>
+          <InfoVertical label="Reference">
+            <button
+              type="button"
+              onClick={() => alert("Go to reference")}
+              className="group flex items-center gap-x-2 transition hover:text-mint"
+            >
+              {getRandomString(MILESTONE_REFERENCE)}
+              <Share className="fill-mint" />
+            </button>
+          </InfoVertical>
+
+          <InfoVertical label="Date Achieved">
+            {formatDate(milestone.invoiceDate, "dd MMMM yyy")}
+          </InfoVertical>
+
           <InfoVertical label="Date Paid">
-            {formatDate(milestone.paidDate, "MMMM dd, yyy")}
+            {formatDate(milestone.paidDate, "dd MMMM yyy")}
           </InfoVertical>
         </div>
       </div>
       <div className="space-y-4">
-        <div className="flex items-center gap-x-4">
-          <p className="heading w-fit whitespace-nowrap">Evidence</p>
-          <hr className="w-full" />
-        </div>
+        <p className="heading w-fit whitespace-nowrap">Evidence</p>
 
         <div className="md:hidden">
           <Cards.Container>
             {milestone.evidences.map((item, index) => {
-              const { fileName, status, beneficiary } = item;
+              const { fileName, status } = item;
 
               return (
                 <Cards.Card
@@ -102,16 +110,20 @@ export default function ViewMilestone() {
                   key={index}
                 >
                   <div className="space-y-2">
-                    <p className="font-semibold">{fileName}</p>
                     <Cards.Group>
+                      <Cards.Details label="File name" value={fileName} />
                       <Cards.Details label="Description" value="Lorem Ipsum" />
                       <Cards.Details
-                        label="Beneficiary ID"
-                        value={beneficiary.id}
+                        label="Status"
+                        value={
+                          <Status variant={getStatusVariant(status)}>
+                            {status}
+                          </Status>
+                        }
+                        capitalize
                       />
-                      <Cards.Details label="Status" value={status} capitalize />
                     </Cards.Group>
-                    <div className="absolute bottom-3 right-4 z-50">
+                    <div className="absolute bottom-4 right-6 z-50">
                       <button
                         type="button"
                         onClick={(e) => {
@@ -137,14 +149,11 @@ export default function ViewMilestone() {
           >
             <Table.Head>
               <Table.Row>
-                {[
-                  "Evidence files",
-                  "Description",
-                  "Beneficiary ID",
-                  "Status",
-                ].map((item, index) => {
-                  return <Table.Header key={index}>{item}</Table.Header>;
-                })}
+                {["File name", "Description", "Evidence Status"].map(
+                  (item, index) => {
+                    return <Table.Header key={index}>{item}</Table.Header>;
+                  }
+                )}
 
                 <Table.Header></Table.Header>
               </Table.Row>
@@ -152,7 +161,7 @@ export default function ViewMilestone() {
 
             <Table.Body>
               {milestone.evidences.map((item, index) => {
-                const { fileName, status, beneficiary } = item;
+                const { fileName, status } = item;
                 return (
                   <Table.Row
                     key={index}
@@ -165,12 +174,10 @@ export default function ViewMilestone() {
 
                     <Table.Data>Lorem Ipsum</Table.Data>
 
-                    <Table.Data className="w-[200px]">
-                      {beneficiary.id}
-                    </Table.Data>
-
                     <Table.Data>
-                      <span>{status}</span>
+                      <Status variant={getStatusVariant(status)}>
+                        {status}
+                      </Status>
                     </Table.Data>
 
                     <Table.Data>

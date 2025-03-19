@@ -2,6 +2,16 @@ export type StatusType = "DRAFT" | "SIGNED" | "COMPLETED" | "CANCELLED" | "";
 
 export type StatusRecords = Exclude<StatusType, "CANCELLED" | "">;
 
+export type MilestoneStatus = "Achieved" | "Paid" | "Open";
+
+export type EvidenceStatus =
+  | "Accepted"
+  | "Pending Review"
+  | "More Information Requested"
+  | "Invoiced"
+  | "Rejected"
+  | "Paid";
+
 type TMileStoneDetails = {
   title: string;
   link: string;
@@ -15,7 +25,7 @@ type TBeneficiary = {
 
 type TEvidence = {
   fileName: string;
-  status: string;
+  status: EvidenceStatus;
   createdAt: string;
   updatedAt: string;
   beneficiary: TBeneficiary;
@@ -28,7 +38,7 @@ export interface IMilestone {
     name: string;
   };
   contractName: string;
-  status: string;
+  status: MilestoneStatus;
   invoiceDate: string;
   paidDate: string;
   milestone: TMileStoneDetails;
