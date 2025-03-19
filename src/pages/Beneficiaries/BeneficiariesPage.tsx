@@ -254,7 +254,7 @@ const BeneficiariesPage = () => {
                       <div className="flex items-center gap-1.5">
                         <div className="flex-1 text-sm text-black">
                           {" "}
-                          Please select beneficiaries to update status
+                          Please select beneficiaries to download evidences
                         </div>
                       </div>
                     ) : (
