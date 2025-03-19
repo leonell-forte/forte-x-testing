@@ -1,9 +1,15 @@
-import skills from "assets/images/signup/spot-future-skills.png";
+import { useQuery } from "@tanstack/react-query";
+import authService from "api/auth";
 
 import SignupForm from "components/Signup/SignupForm";
 import Card from "components/ui/card";
 
 const SignupPage = () => {
+  const { data } = useQuery({
+    queryKey: ["signup-copy"],
+    queryFn: authService.getSignupCopy,
+  });
+
   const handleNextStep = (path?: string) => {
     window.location.href = path || "/beneficiaries";
   };
@@ -12,17 +18,16 @@ const SignupPage = () => {
     <div className="main-container grid min-h-screen grid-cols-1 items-center gap-12 px-10 lg:grid-cols-2 lg:py-10 xl:gap-[70px]">
       <div className="hidden lg:block">
         <div className="mx-auto h-auto w-auto max-w-[437px] md:mx-0">
-          <img alt="jobs" src={skills} />
+          <img alt="jobs" src={data?.image.url} />
         </div>
 
         <div className="max-w-xs space-y-6 text-center md:max-w-full md:text-left">
           <p className="font-famaime text-[40px] leading-[110%] md:text-[52px]">
-            World-class workforce development made simple.
+            {data?.title}{" "}
           </p>
 
           <p className="text-[18px] leading-[110%] md:text-[20px]">
-            From procurement to reporting, optimize your talent development with
-            Forte.
+            {data?.description}
           </p>
         </div>
       </div>
