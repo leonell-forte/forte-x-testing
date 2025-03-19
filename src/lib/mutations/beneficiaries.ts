@@ -293,6 +293,8 @@ export const useDeleteBeneficiaryMutation = (
 export const useBulkStatusUpdateMutation = (
   status: string,
 
+  ids: number[],
+
   successCallback?: () => void
 ) => {
   const { setAlert } = useAlert();
@@ -336,7 +338,12 @@ export const useBulkStatusUpdateMutation = (
         (old: { items: IBeneficiaries[] }) => ({
           ...old,
 
-          items: old?.items?.map((item) => ({ ...item, status })),
+          items: old?.items?.map((item) => {
+            if (ids.includes(item.id)) {
+              return { ...item, status };
+            }
+            return { ...item };
+          }),
         })
       );
 

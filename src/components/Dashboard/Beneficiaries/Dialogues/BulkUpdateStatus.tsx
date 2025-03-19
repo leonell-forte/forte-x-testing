@@ -25,6 +25,8 @@ const BulkUpdateStatus = ({ ids, ...props }: IBulkUpdateProps) => {
   const { updateStatus, isPending } = useBulkStatusUpdateMutation(
     getValues("status"),
 
+    ids,
+
     props.handleClose
   );
 
