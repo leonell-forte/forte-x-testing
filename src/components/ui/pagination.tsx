@@ -50,15 +50,19 @@ const Pagination = ({
     }
   };
 
+  const applyPageChange = (value: string) => {
+    const newPage = Number(value);
+    if (newPage >= 1 && newPage <= pageCount) {
+      onPageChange(newPage);
+    } else {
+      // Reset to current page if invalid
+      setInputValue(String(page));
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      const newPage = Number(inputValue);
-      if (newPage >= 1 && newPage <= pageCount) {
-        onPageChange(newPage);
-      } else {
-        // Reset to current page if invalid
-        setInputValue(String(page));
-      }
+      applyPageChange(inputValue);
     }
   };
 
@@ -73,7 +77,6 @@ const Pagination = ({
         <HiChevronLeft
           className={cn(
             "h-auto w-[18px] transition-all group-hover:fill-mint",
-
             page <= 1 && "opacity-[.2]"
           )}
         />
@@ -86,6 +89,7 @@ const Pagination = ({
             type="text"
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
+            onBlur={() => applyPageChange(inputValue)}
           />
         </div>
 
@@ -102,7 +106,6 @@ const Pagination = ({
         <HiChevronRight
           className={cn(
             "h-auto w-[18px] transition-all group-hover:fill-mint",
-
             page >= pageCount && "opacity-[.2]"
           )}
         />
