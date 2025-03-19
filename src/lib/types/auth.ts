@@ -5,3 +5,9 @@ export type UserData = {
   email: string;
   role: string;
 };
+
+export type LoginCopy = {
+  image: { url: string };
+  title: string;
+  description: string;
+};
