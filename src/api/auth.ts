@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { datoClient } from "lib/axios/datocms-client";
-import { UserData } from "lib/types/auth";
+import { LoginCopy, UserData } from "lib/types/auth";
 import { ProfileType } from "lib/types/profile";
 import { LoginReturnType } from "lib/types/users";
 import { formatInvitationCode } from "lib/utils";
@@ -44,6 +44,42 @@ class AuthService {
     } catch (err) {
       return err;
     }
+  }
+
+  async getLoginCopy(): Promise<LoginCopy> {
+    const res = await datoClient.post("", {
+      query: `
+      query {
+        login {
+          image {
+            url
+          }
+          title
+          description
+        }
+      }
+    `,
+    });
+
+    return res.data.data.login;
+  }
+
+  async getSignupCopy(): Promise<LoginCopy> {
+    const res = await datoClient.post("", {
+      query: `
+      query {
+        signup {
+          image {
+            url
+          }
+          title
+          description
+        }
+      }
+    `,
+    });
+
+    return res.data.data.signup;
   }
 
   async signup(body: z.infer<typeof signup.schema>, code: string = "") {
