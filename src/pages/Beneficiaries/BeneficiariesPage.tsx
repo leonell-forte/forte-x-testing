@@ -1,13 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import beneficiariesService from "api/beneficiaries";
-import projectService from "api/projects";
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useMemo,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import { BiSlider as SliderIcon } from "react-icons/bi";
 import { TbFilterX as FilterIcon } from "react-icons/tb";
 
@@ -34,7 +27,7 @@ import ImportDialogue from "components/Dashboard/Beneficiaries/Dialogues/ImportD
 import BeneficiariesTable from "components/tables/Beneficiaries";
 import Button from "components/ui/button";
 import Dialogue from "components/ui/dialogue/dialogue";
-import Dropdown, { IOption } from "components/ui/dropdown";
+import Dropdown from "components/ui/dropdown";
 import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
 import { Tooltip } from "components/ui/tooltip/Tooltip";
@@ -351,21 +344,6 @@ interface IFilterProps {
 
 const Filters = ({ filters, setFilters }: IFilterProps) => {
   const { setPage } = usePage();
-  // const { data: projectsList, isLoading: projectLoading } = useQuery({
-  //   queryKey: ["projects"],
-
-  //   queryFn: () => projectService.list({ listAll: true }),
-  // });
-
-  // const projects: IOption[] = useMemo(
-  //   () =>
-  //     projectsList?.items.map((item) => ({
-  //       label: item.name,
-
-  //       value: item.id.toString(),
-  //     })) || [],
-  //   [projectsList]
-  // );
 
   const {
     projects,

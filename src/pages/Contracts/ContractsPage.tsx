@@ -1,21 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
-import projectService from "api/projects";
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useMemo,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import { BiSlider as SliderIcon } from "react-icons/bi";
 import { TbFilterX as FilterIcon } from "react-icons/tb";
 
 import useContractList from "lib/common/lists/useContractList";
+import useProjectList from "lib/common/lists/useProjectList";
 import { CONTRACT_STATUS } from "lib/constants";
 import { usePage, usePageTitle } from "lib/hooks";
 import { Contracts, IsAuthorized } from "lib/role-permissions";
 import { IContractFilters, StatusType } from "lib/types/contracts";
-import { IProject } from "lib/types/projects";
 import { findLabelFromOptions, sortOptions } from "lib/utils";
 
 import { ContractsProvider } from "components/Dashboard/Contracts/Dialogues/ContractContext";
@@ -23,7 +15,7 @@ import ContractDialogue from "components/Dashboard/Contracts/Dialogues/ContractD
 import ContractsTable from "components/tables/Contracts";
 import Button from "components/ui/button";
 import Dialogue from "components/ui/dialogue/dialogue";
-import Dropdown, { IOption } from "components/ui/dropdown";
+import Dropdown from "components/ui/dropdown";
 import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
 
@@ -178,23 +170,16 @@ interface IFilterProps {
 }
 
 const Filters = ({ filters, setFilters }: IFilterProps) => {
-  const { page, setPage } = usePage();
+  const { setPage } = usePage();
 
-  const { data: projectList, isLoading: isProjectLoading } = useQuery({
-    queryKey: ["projects"],
-
-    queryFn: () => projectService.list({ page, listAll: true }),
+  const {
+    projects,
+    isLoading: isProjectLoading,
+    handleSearchProject,
+  } = useProjectList({
+    key: ["filter"],
+    pageSize: 100,
   });
-  const projects: IOption[] = useMemo(
-    () =>
-      projectList?.items?.map((item: IProject) => ({
-        label: item.name,
-
-        value: item.id.toString(),
-      })) || [],
-
-    [projectList]
-  );
   return (
     <div className="grid grid-cols-1 gap-2.5 md:flex">
       <Dropdown
@@ -210,6 +195,7 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
 
       <div className="flex w-full items-center gap-2.5 lg:w-auto">
         <Dropdown
+          enableSearch
           value={findLabelFromOptions(projects, filters.project)}
           handleSelect={(val) => {
             setFilters((prev) => ({ ...prev, project: val as string }));
@@ -219,6 +205,7 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
           options={sortOptions(projects)}
           placeholder="Project"
           className="lg:max-w-[166px]"
+          onChange={(e) => handleSearchProject(e.target.value)}
         />
 
         <button
