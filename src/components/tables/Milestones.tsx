@@ -1,8 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
-import { IsAuthorized, Milestones } from "lib/role-permissions";
 import { IMilestone } from "lib/types/milestones";
-import { formatDate, formatNumber, getStatusVariant } from "lib/utils";
+import { formatNumber, getStatusVariant } from "lib/utils";
 
 import Status from "components/ui/status";
 import Table from "components/ui/table";
