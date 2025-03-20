@@ -136,7 +136,7 @@ const BeneficiariesForm = ({
     rawList: contractList,
     isLoading: contractsLoading,
     handleSearchContract,
-  } = useContractList({});
+  } = useContractList({ pageSize: 100 });
 
   const contracts: IOption[] = useMemo(
     () =>
@@ -579,6 +579,7 @@ const BeneficiariesForm = ({
                 value: item,
               }))}
               placeholder="Select languages"
+              filterOptions
             />
           )}
         />

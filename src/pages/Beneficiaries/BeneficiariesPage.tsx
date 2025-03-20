@@ -374,6 +374,7 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
     key: ["filter"],
     filters: { type: "provider" },
     enabled: IsAuthorized([Organizations.LIST]),
+    pageSize: 100,
   });
 
   return (

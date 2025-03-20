@@ -47,9 +47,7 @@ const UserDialogue = ({
     rawList,
     handleSearchOrg,
     isLoading: orgLoading,
-  } = useOrganizationList({
-    listAll: true,
-  });
+  } = useOrganizationList({});
 
   const organizations = useMemo(() => rawList?.items || [], [rawList]);
 

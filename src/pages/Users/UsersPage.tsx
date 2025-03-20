@@ -14,9 +14,7 @@ import useOrganizationList from "lib/common/lists/useOrganizationList";
 import { ROLES } from "lib/constants";
 import { useDebounce, usePage, usePageTitle } from "lib/hooks";
 import { IsAuthorized, Users } from "lib/role-permissions";
-import { IOrganization } from "lib/types/organizations";
 import { IUser } from "lib/types/users";
-import { sortOptions } from "lib/utils";
 
 import UserDialogue from "components/Dashboard/Users/Dialogues/UserDialogue";
 import UsersTable from "components/tables/Users";
@@ -211,14 +209,13 @@ const Filters = ({
   const { setPage } = usePage();
 
   const {
-    rawList,
+    organizations,
     isLoading: orgLoading,
     handleSearchOrg,
   } = useOrganizationList({
-    page: 1,
+    pageSize: 100,
   });
 
-  const organizations = rawList?.items || [];
   return (
     <div className="flex flex-col gap-2.5 md:flex-row">
       <Dropdown
@@ -237,17 +234,13 @@ const Filters = ({
         loading={orgLoading}
         value={organization}
         handleSelect={(val) => {
+          handleSearchOrg("");
           setOrganization(val as string[]);
           setPage(1);
         }}
         placeholder="Organization"
         className="md:w-[166px]"
-        options={sortOptions(
-          organizations.map((item: IOrganization) => ({
-            label: item.name,
-            value: item.name,
-          }))
-        )}
+        options={organizations}
         onChange={(e) => handleSearchOrg(e.target.value)}
         isMultiSelect
       />

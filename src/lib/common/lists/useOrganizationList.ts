@@ -14,6 +14,7 @@ type UseOrganizationList = {
   listAll?: boolean;
   page?: number;
   enabled?: boolean;
+  pageSize?: number;
 };
 
 const useOrganizationList = ({
@@ -22,20 +23,23 @@ const useOrganizationList = ({
   listAll,
   filters,
   enabled,
+  pageSize,
 }: UseOrganizationList = {}) => {
-  const [debouncedOrgSesarch, setOrgSearch, orgSearch] = useDebouncedSearch("");
+  const [debouncedOrgSearch, setOrgSearch, orgSearch] = useDebouncedSearch("");
   const handleSearchOrg = (value: string) => {
     setOrgSearch(value);
   };
+
   const { data, isLoading } = useQuery({
-    queryKey: ["organizations", ...(key ? key : []), debouncedOrgSesarch],
+    queryKey: ["organizations", ...(key ? key : []), debouncedOrgSearch],
 
     queryFn: () =>
       organizationService.list({
         page: page || 1,
         listAll,
         filters: filters || {},
-        search: debouncedOrgSesarch,
+        search: debouncedOrgSearch,
+        pageSize: pageSize || undefined,
       }),
     refetchOnWindowFocus: false,
     enabled: enabled ? enabled : true,

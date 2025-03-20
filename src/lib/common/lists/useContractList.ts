@@ -14,6 +14,7 @@ type UseContractList = {
   listAll?: boolean;
   enabled?: boolean;
   filters?: IContractFilters;
+  pageSize?: number;
 };
 
 const useContractList = ({
@@ -22,6 +23,7 @@ const useContractList = ({
   listAll,
   filters,
   enabled,
+  pageSize,
 }: UseContractList) => {
   const [debouncedContractSearch, setContractSearch, contractSearch] =
     useDebouncedSearch("");
@@ -39,7 +41,10 @@ const useContractList = ({
         search: debouncedContractSearch,
         listAll,
         filters: filters,
+        pageSize: pageSize || undefined,
       }),
+    refetchOnWindowFocus: false,
+    enabled: enabled ? enabled : true,
   });
 
   const contracts: IOption[] = useMemo(
