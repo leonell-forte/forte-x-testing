@@ -1,13 +1,13 @@
-import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
-import { QueryClient } from "@tanstack/react-query";
-import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+// import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+// import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { ReactNode } from "react";
 
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 15 * (60 * 1000), // 15 mins
-      gcTime: 60 * (60 * 1000), // 1 hour
+      // staleTime: 15 * (60 * 1000), // 15 mins
+      // gcTime: 60 * (60 * 1000), // 1 hour
     },
   },
 });
@@ -17,16 +17,16 @@ interface IProp {
 }
 
 const QueryProvider = ({ children }: IProp) => {
-  const persister = createSyncStoragePersister({
-    storage: window.localStorage,
-  });
+  // const persister = createSyncStoragePersister({
+  //   storage: window.localStorage,
+  // });
   return (
-    <PersistQueryClientProvider
+    <QueryClientProvider
       client={queryClient}
-      persistOptions={{ persister }}
+      // persistOptions={{ persister }}
     >
       {children}
-    </PersistQueryClientProvider>
+    </QueryClientProvider>
   );
 };
 
