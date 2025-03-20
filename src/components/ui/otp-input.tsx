@@ -83,7 +83,7 @@ const OTPInput = ({ onChange, digits }: IOTPInputProps) => {
           <input
             key={index}
             id={`otp-input-${index}`}
-            type="text"
+            type="number"
             value={digit}
             onChange={(e) => handleChange(e.target.value, index)}
             onKeyDown={(e) => handleKeyDown(e, index)}
