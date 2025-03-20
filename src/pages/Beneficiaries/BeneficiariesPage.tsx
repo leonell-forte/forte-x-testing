@@ -12,6 +12,7 @@ import { BiSlider as SliderIcon } from "react-icons/bi";
 import { TbFilterX as FilterIcon } from "react-icons/tb";
 
 import useOrganizationList from "lib/common/lists/useOrganizationList";
+import useProjectList from "lib/common/lists/useProjectList";
 import { BENEFICIARY_STATUS, RISK_LEVEL } from "lib/constants";
 import { useDebounce, usePage, usePageTitle } from "lib/hooks";
 import {
@@ -350,21 +351,30 @@ interface IFilterProps {
 
 const Filters = ({ filters, setFilters }: IFilterProps) => {
   const { setPage } = usePage();
-  const { data: projectsList, isLoading: projectLoading } = useQuery({
-    queryKey: ["projects"],
+  // const { data: projectsList, isLoading: projectLoading } = useQuery({
+  //   queryKey: ["projects"],
 
-    queryFn: () => projectService.list({ listAll: true }),
+  //   queryFn: () => projectService.list({ listAll: true }),
+  // });
+
+  // const projects: IOption[] = useMemo(
+  //   () =>
+  //     projectsList?.items.map((item) => ({
+  //       label: item.name,
+
+  //       value: item.id.toString(),
+  //     })) || [],
+  //   [projectsList]
+  // );
+
+  const {
+    projects,
+    isLoading: projectLoading,
+    handleSearchProject,
+  } = useProjectList({
+    key: ["filter"],
+    pageSize: 100,
   });
-
-  const projects: IOption[] = useMemo(
-    () =>
-      projectsList?.items.map((item) => ({
-        label: item.name,
-
-        value: item.id.toString(),
-      })) || [],
-    [projectsList]
-  );
 
   const {
     organizations,
@@ -380,6 +390,7 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
   return (
     <div className="grid w-full grid-cols-1 flex-wrap gap-2.5 xl:flex xl:flex-row">
       <Dropdown
+        enableSearch
         value={findLabelFromOptions(projects, filters.project as string)}
         loading={projectLoading}
         options={sortOptions(projects)}
@@ -389,6 +400,7 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
           setFilters((prev) => ({ ...prev, project: val as string }));
           setPage(1);
         }}
+        onChange={(e) => handleSearchProject(e.target.value)}
       />
 
       <Dropdown
