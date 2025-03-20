@@ -115,6 +115,7 @@ const ContractForm = ({
     handleSearchProject,
   } = useProjectList({
     key: ["dropdown"],
+    pageSize: 100,
   });
 
   const { isSigned, isCompleted, isDraft, isCancelled } = useMemo(() => {
