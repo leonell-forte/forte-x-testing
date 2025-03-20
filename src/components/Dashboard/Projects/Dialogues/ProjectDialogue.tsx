@@ -36,6 +36,7 @@ const ProjectDialogue = ({
 }: IProjectDialogueProps) => {
   const { setShowPrompt } = useConfirmPrompt();
   const { open } = useCustomPrompt();
+
   // Project query
   const { data: project, isLoading: projectLoading } = useQuery({
     queryKey: ["specific-project", projectId],
@@ -45,8 +46,11 @@ const ProjectDialogue = ({
 
   // Organization data handling
 
-  const { organizations, isLoading: orgLoading } = useOrganizationList({
-    listAll: true,
+  const {
+    organizations,
+    isLoading: orgLoading,
+    handleSearchOrg,
+  } = useOrganizationList({
     filters: { type: "funder" },
     enabled: IsAuthorized([Organizations.LIST]),
   });
@@ -162,6 +166,7 @@ const ProjectDialogue = ({
             render={({ field }) => {
               return (
                 <Dropdown
+                  enableSearch
                   value={
                     organizations.find(
                       (org) => Number(org.value) === Number(field.value)
@@ -171,6 +176,7 @@ const ProjectDialogue = ({
                   options={organizations}
                   placeholder="Select funder"
                   loading={orgLoading}
+                  onChange={(e) => handleSearchOrg(e.target.value)}
                 />
               );
             }}

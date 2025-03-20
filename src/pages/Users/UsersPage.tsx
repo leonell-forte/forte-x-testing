@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import organizationService from "api/organization";
 import userService from "api/users";
 import {
   Dispatch,
@@ -11,6 +10,7 @@ import {
 import { BiSlider as SliderIcon } from "react-icons/bi";
 import { TbFilterX as FilterIcon } from "react-icons/tb";
 
+import useOrganizationList from "lib/common/lists/useOrganizationList";
 import { ROLES } from "lib/constants";
 import { useDebounce, usePage, usePageTitle } from "lib/hooks";
 import { IsAuthorized, Users } from "lib/role-permissions";
@@ -53,23 +53,11 @@ const UsersPage = () => {
     queryFn: () => userService.list(page, debouncedSearch, role, organization),
   });
 
-  const { data: organizationList, isLoading: orgLoading } = useQuery({
-    queryKey: ["organizations"],
-
-    queryFn: () => organizationService.list({ page: 1, listAll: true }),
-  });
-
   const [modal, setModal] = useState<"user" | "filter" | null>(null);
 
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
 
   const users: IUser[] = useMemo(() => userList?.items || [], [userList]);
-
-  const organizations = useMemo(
-    () => organizationList?.items || [],
-
-    [organizationList]
-  );
 
   const close = () => {
     setSelectedUser(null);
@@ -89,7 +77,6 @@ const UsersPage = () => {
       case "user":
         return (
           <UserDialogue
-            organizations={organizations}
             userId={selectedUser!}
             isVisible={modal === "user"}
             handleClose={close}
@@ -109,8 +96,6 @@ const UsersPage = () => {
                 setOrganization={setOrganization}
                 role={role}
                 setRole={setRole}
-                organizations={organizations}
-                orgLoading={orgLoading}
                 handleRemoveFilters={handleRemoveFilters}
               />
               <div>
@@ -131,7 +116,7 @@ const UsersPage = () => {
         );
     }
     // eslint-disable-next-line
-  }, [modal, orgLoading, organization, organizations, role, selectedUser]);
+  }, [modal, organization, role, selectedUser]);
 
   return (
     <>
@@ -169,8 +154,6 @@ const UsersPage = () => {
                 setOrganization={setOrganization}
                 role={role}
                 setRole={setRole}
-                organizations={organizations}
-                orgLoading={orgLoading}
                 handleRemoveFilters={handleRemoveFilters}
               />
             </div>
@@ -213,8 +196,7 @@ interface IFilterProps {
   setOrganization: Dispatch<SetStateAction<string[]>>;
   role: string;
   setRole: Dispatch<SetStateAction<string>>;
-  organizations: IOrganization[];
-  orgLoading?: boolean;
+
   handleRemoveFilters: () => void;
 }
 
@@ -223,11 +205,20 @@ const Filters = ({
   setOrganization,
   role,
   setRole,
-  organizations,
-  orgLoading,
+
   handleRemoveFilters,
 }: IFilterProps) => {
   const { setPage } = usePage();
+
+  const {
+    rawList,
+    isLoading: orgLoading,
+    handleSearchOrg,
+  } = useOrganizationList({
+    page: 1,
+  });
+
+  const organizations = rawList?.items || [];
   return (
     <div className="flex flex-col gap-2.5 md:flex-row">
       <Dropdown
@@ -257,6 +248,7 @@ const Filters = ({
             value: item.name,
           }))
         )}
+        onChange={(e) => handleSearchOrg(e.target.value)}
         isMultiSelect
       />
 

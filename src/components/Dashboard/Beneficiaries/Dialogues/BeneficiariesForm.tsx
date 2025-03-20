@@ -1,11 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
-import contractService from "api/contract";
 import organizationService from "api/organization";
 import { add, sub } from "date-fns";
 import { Dispatch, SetStateAction, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
+import useContractList from "lib/common/lists/useContractList";
 import {
   BENEFICIARY_STATUS,
   CONFIRM,
@@ -22,7 +22,7 @@ import {
   IBeneficiaries,
   IBeneficiariesFieldValues,
 } from "lib/types/beneficiaries";
-import { findLabelFromOptions, sortOptions } from "lib/utils";
+import { findLabelFromOptions } from "lib/utils";
 import { beneficiaries } from "lib/validators/beneficiaries";
 
 import { useConfirmPrompt } from "components/ui/alert/confirm-prompt";
@@ -132,14 +132,11 @@ const BeneficiariesForm = ({
       }),
   });
 
-  const { data: contractList, isLoading: contractsLoading } = useQuery({
-    queryKey: ["contracts"],
-
-    queryFn: () =>
-      contractService.list({
-        listAll: true,
-      }),
-  });
+  const {
+    rawList: contractList,
+    isLoading: contractsLoading,
+    handleSearchContract,
+  } = useContractList({});
 
   const contracts: IOption[] = useMemo(
     () =>
@@ -327,8 +324,9 @@ const BeneficiariesForm = ({
 
                   setError("providerId", { message: "" });
                 }}
-                options={sortOptions(contracts)}
+                options={contracts}
                 placeholder="Select contract"
+                onChange={(e) => handleSearchContract(e.target.value)}
               />
             )}
           />

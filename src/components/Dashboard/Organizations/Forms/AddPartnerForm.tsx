@@ -50,10 +50,9 @@ const AddPartnerForm = ({
     organizations,
     isLoading: orgLoading,
     rawList,
+    handleSearchOrg,
   } = useOrganizationList({
     page: 1,
-    listAll: true,
-    filters: {},
   });
 
   const filteredOrganizations = organizations.filter((org) => {
@@ -128,6 +127,7 @@ const AddPartnerForm = ({
                   loading={orgLoading}
                   options={filteredOrganizations}
                   placeholder="Select partner"
+                  onChange={(e) => handleSearchOrg(e.target.value)}
                 />
               );
             }}

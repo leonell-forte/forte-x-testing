@@ -366,8 +366,12 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
     [projectsList]
   );
 
-  const { organizations, isLoading: orgLoading } = useOrganizationList({
-    listAll: true,
+  const {
+    organizations,
+    isLoading: orgLoading,
+    handleSearchOrg,
+  } = useOrganizationList({
+    key: ["filter"],
     filters: { type: "provider" },
     enabled: IsAuthorized([Organizations.LIST]),
   });
@@ -415,6 +419,8 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
               provider: val as string,
             }));
           }}
+          enableSearch
+          onChange={(e) => handleSearchOrg(e.target.value)}
         />
       )}
 

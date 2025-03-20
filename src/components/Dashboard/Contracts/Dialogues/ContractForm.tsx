@@ -69,6 +69,7 @@ const ContractForm = ({
   const { toShowPrompt } = useContractsContext();
 
   const { setPage } = usePage();
+
   const [isAmmending, setIsAmmending] = useState(false);
 
   const form = useForm<ContractFieldValues>({
@@ -101,8 +102,11 @@ const ContractForm = ({
     name: "outcomeRates",
   });
 
-  const { organizations, isLoading: orgLoading } = useOrganizationList({
-    listAll: true,
+  const {
+    organizations,
+    isLoading: orgLoading,
+    handleSearchOrg,
+  } = useOrganizationList({
     filters: { type: "provider" },
   });
 
@@ -254,6 +258,7 @@ const ContractForm = ({
                     field.onChange(Number(val));
                   }}
                   placeholder="Select provider"
+                  onChange={(e) => handleSearchOrg(e.target.value)}
                 />
               );
             }}

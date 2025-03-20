@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import contractService from "api/contract";
 import projectService from "api/projects";
 import {
   Dispatch,
@@ -11,10 +10,11 @@ import {
 import { BiSlider as SliderIcon } from "react-icons/bi";
 import { TbFilterX as FilterIcon } from "react-icons/tb";
 
+import useContractList from "lib/common/lists/useContractList";
 import { CONTRACT_STATUS } from "lib/constants";
-import { useDebounce, usePage, usePageTitle } from "lib/hooks";
+import { usePage, usePageTitle } from "lib/hooks";
 import { Contracts, IsAuthorized } from "lib/role-permissions";
-import { IContract, IContractFilters, StatusType } from "lib/types/contracts";
+import { IContractFilters, StatusType } from "lib/types/contracts";
 import { IProject } from "lib/types/projects";
 import { findLabelFromOptions, sortOptions } from "lib/utils";
 
@@ -32,8 +32,6 @@ const ContractsPage = () => {
 
   const { page, setPage } = usePage();
 
-  const [search, setSearch] = useState("");
-
   const initialFilter = {
     status: "",
 
@@ -44,44 +42,19 @@ const ContractsPage = () => {
 
   const [filters, setFilters] = useState<IContractFilters>(initialFilter);
 
-  const [debouncedSearch, setDebouncedSearch] = useState("");
-
   const [contractId, setContractId] = useState<number | null>(null);
 
-  useDebounce(
-    () => {
-      setDebouncedSearch(search);
-    },
-
-    500,
-
-    [search]
-  );
-
-  const { data: contractList, isLoading } = useQuery({
-    queryKey: ["contracts", page, debouncedSearch, filters],
-
-    queryFn: () =>
-      contractService.list({
-        page,
-
-        filters,
-
-        search: debouncedSearch,
-
-        listAll: false,
-      }),
+  const {
+    contracts,
+    isLoading,
+    rawList: contractList,
+    handleSearchContract,
+    searchContractValue,
+  } = useContractList({
+    key: [page, filters],
+    page,
+    filters,
   });
-
-  const contracts: IContract[] = useMemo(
-    () =>
-      contractList?.items.map((item) => ({
-        ...item,
-        documentName: item.document?.toString(),
-      })) || [],
-
-    [contractList]
-  );
 
   const [modal, setModal] = useState<"contract" | "delete" | "filter" | null>(
     null
@@ -142,14 +115,14 @@ const ContractsPage = () => {
             <div className="flex gap-2">
               <div className="w-full md:w-auto">
                 <SearchInput
-                  value={search}
+                  value={searchContractValue}
                   onChange={(e) => {
-                    setSearch(e.target.value);
+                    handleSearchContract(e.target.value);
                     setPage(1);
                   }}
                   containerClass="w-full lg:max-w-[286px]"
                   placeholder="Search contracts"
-                  onClear={() => setSearch("")}
+                  onClear={() => handleSearchContract("")}
                 />
               </div>
               <button
@@ -179,7 +152,7 @@ const ContractsPage = () => {
         </div>
 
         <div className="flex h-full flex-col justify-between gap-4">
-          <ContractsTable list={contracts} isLoading={isLoading} />
+          <ContractsTable list={contractList.items} isLoading={isLoading} />
 
           {!!contracts.length && (
             <div className="flex w-full items-center justify-end">
