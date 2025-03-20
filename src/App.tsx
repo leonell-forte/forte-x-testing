@@ -7,7 +7,7 @@ function App() {
   return (
     <QueryProvider>
       <div>
-        <div className="fixed left-0 top-0 z-[-1] h-screen w-screen bg-body-gradient"></div>
+        <div className="layout-background fixed left-0 top-0 z-[-1] h-screen w-screen"></div>
         <RouteProvider />
       </div>
     </QueryProvider>
