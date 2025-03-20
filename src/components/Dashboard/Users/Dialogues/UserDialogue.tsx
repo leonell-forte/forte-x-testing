@@ -47,7 +47,10 @@ const UserDialogue = ({
     rawList,
     handleSearchOrg,
     isLoading: orgLoading,
-  } = useOrganizationList({});
+  } = useOrganizationList({
+    key: ["dropdown"],
+    pageSize: 100,
+  });
 
   const organizations = useMemo(() => rawList?.items || [], [rawList]);
 

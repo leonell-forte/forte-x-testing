@@ -213,6 +213,7 @@ const Filters = ({
     isLoading: orgLoading,
     handleSearchOrg,
   } = useOrganizationList({
+    key: ["filter"],
     pageSize: 100,
   });
 

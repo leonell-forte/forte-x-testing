@@ -52,7 +52,8 @@ const AddPartnerForm = ({
     rawList,
     handleSearchOrg,
   } = useOrganizationList({
-    page: 1,
+    key: ["dropdown"],
+    pageSize: 100,
   });
 
   const filteredOrganizations = organizations.filter((org) => {

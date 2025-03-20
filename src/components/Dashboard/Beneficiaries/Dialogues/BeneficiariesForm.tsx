@@ -136,7 +136,10 @@ const BeneficiariesForm = ({
     rawList: contractList,
     isLoading: contractsLoading,
     handleSearchContract,
-  } = useContractList({ pageSize: 100 });
+  } = useContractList({
+    key: ["dropdown"],
+    pageSize: 100,
+  });
 
   const contracts: IOption[] = useMemo(
     () =>

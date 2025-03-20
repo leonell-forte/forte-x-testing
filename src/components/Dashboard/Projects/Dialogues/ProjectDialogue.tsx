@@ -51,6 +51,8 @@ const ProjectDialogue = ({
     isLoading: orgLoading,
     handleSearchOrg,
   } = useOrganizationList({
+    key: ["dropdown"],
+    pageSize: 100,
     filters: { type: "funder" },
     enabled: IsAuthorized([Organizations.LIST]),
   });
