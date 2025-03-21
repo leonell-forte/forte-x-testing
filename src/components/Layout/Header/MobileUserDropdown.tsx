@@ -1,5 +1,5 @@
 import authService from "api/auth";
-import { SyntheticEvent } from "react";
+import { SyntheticEvent, useEffect } from "react";
 import { useState } from "react";
 import { HiUser } from "react-icons/hi2";
 import { HiOutlineChevronUpDown as Chevron } from "react-icons/hi2";
@@ -20,9 +20,11 @@ const MobileUserDropdown = () => {
   const { profile } = useProfile();
   const [showModal, setShowModal] = useState(false);
 
-  const { rawList: organizations } = useOrganizationList({
-    listAll: true,
-  });
+  const { rawList: organizations, handleSearchOrg } = useOrganizationList({});
+
+  useEffect(() => {
+    if (profile.organization) handleSearchOrg(profile.organization);
+  }, [profile.organization, handleSearchOrg]);
 
   const handleLogout = () => authService.logout();
 

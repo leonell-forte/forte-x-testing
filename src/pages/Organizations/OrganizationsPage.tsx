@@ -4,7 +4,7 @@ import { TbFilterX as FilterIcon } from "react-icons/tb";
 
 import useOrganizationList from "lib/common/lists/useOrganizationList";
 import { REGIONS, STATUS, TYPES } from "lib/constants";
-import { useDebounce, usePage, usePageTitle } from "lib/hooks";
+import { usePage, usePageTitle } from "lib/hooks";
 import { IFilters } from "lib/types/organizations";
 
 import OrganizationDialogue from "components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
@@ -30,30 +30,20 @@ const OrganizationsPage = () => {
 
   const { page, setPage } = usePage();
 
-  const [search, setSearch] = useState("");
-
-  const [debouncedSearch, setDebouncedSearch] = useState("");
-
-  useDebounce(
-    () => {
-      setDebouncedSearch(search);
-    },
-
-    500,
-    [search]
-  );
-
   const [selectedOrg, setSelectedOrg] = useState("");
 
   const [filters, setFilters] = useState<IFilters>(initialFilters as IFilters);
 
-  const { rawList: organizationList, isLoading: orgLoading } =
-    useOrganizationList({
-      key: [page, debouncedSearch, filters],
-      page,
-      search: debouncedSearch,
-      filters,
-    });
+  const {
+    rawList: organizationList,
+    isLoading: orgLoading,
+    handleSearchOrg,
+    searchOrgValue,
+  } = useOrganizationList({
+    key: [page, filters],
+    page,
+    filters,
+  });
 
   const close = () => {
     setSelectedOrg("");
@@ -111,14 +101,14 @@ const OrganizationsPage = () => {
           <div className="flex gap-2.5 md:flex-wrap">
             <div className="w-full md:w-auto">
               <SearchInput
-                value={search}
+                value={searchOrgValue}
                 onChange={(e) => {
-                  setSearch(e.target.value);
+                  handleSearchOrg(e.target.value);
                   setPage(1);
                 }}
                 containerClass="lg:max-w-[286px]"
                 placeholder="Search organizations"
-                onClear={() => setSearch("")}
+                onClear={() => handleSearchOrg("")}
               />
             </div>
             <button
@@ -200,6 +190,7 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
           placeholder="Region"
           className="lg:max-w-[166px]"
           options={REGIONS}
+          filterOptions
         />
 
         <Dropdown

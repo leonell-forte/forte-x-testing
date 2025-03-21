@@ -1,8 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
-import projectService from "api/projects";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 
-import { useDebounce, usePage, usePageTitle } from "lib/hooks";
+import useProjectList from "lib/common/lists/useProjectList";
+import { usePage, usePageTitle } from "lib/hooks";
 import { IsAuthorized, Projects } from "lib/role-permissions";
 import { IProject } from "lib/types/projects";
 
@@ -15,34 +14,18 @@ import SearchInput from "components/ui/search-input";
 const ProjectsPage = () => {
   usePageTitle("Projects");
 
-  const [search, setSearch] = useState("");
-
-  const [debouncedSearch, setDebouncedSearch] = useState("");
-
-  useDebounce(
-    () => {
-      setDebouncedSearch(search);
-    },
-
-    500,
-
-    [search]
-  );
-
   const { page, setPage } = usePage();
 
-  const { data: projectsList, isLoading: projectLoading } = useQuery({
-    queryKey: ["projects", page, debouncedSearch],
-
-    queryFn: () =>
-      projectService.list({ page, search: debouncedSearch, listAll: false }),
+  const {
+    projects,
+    isLoading: projectLoading,
+    rawList: projectsList,
+    handleSearchProject,
+    searchProjectValue,
+  } = useProjectList({
+    key: [page],
+    page,
   });
-
-  const projects: IProject[] = useMemo(
-    () => projectsList?.items || [],
-
-    [projectsList]
-  );
 
   const [modal, setModal] = useState<"project" | "delete" | null>(null);
 
@@ -77,13 +60,13 @@ const ProjectsPage = () => {
       <div className="flex h-full flex-col space-y-2.5">
         <div className="flex flex-col items-start justify-between gap-2.5 sm:flex-row">
           <SearchInput
-            value={search}
+            value={searchProjectValue}
             onChange={(e) => {
-              setSearch(e.target.value);
+              handleSearchProject(e.target.value);
               setPage(1);
             }}
             containerClass="md:max-w-[286px]"
-            onClear={() => setSearch("")}
+            onClear={() => handleSearchProject("")}
           />
 
           {IsAuthorized([Projects.CREATE]) && (
@@ -94,7 +77,10 @@ const ProjectsPage = () => {
         </div>
 
         <div className="flex h-full flex-col justify-between gap-4">
-          <ProjectsTable list={projects} isLoading={projectLoading} />
+          <ProjectsTable
+            list={projectsList?.items || []}
+            isLoading={projectLoading}
+          />
 
           {!!projects.length && (
             <div className="flex w-full items-center justify-end">

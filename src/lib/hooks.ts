@@ -1,4 +1,11 @@
-import { MutableRefObject, useCallback, useEffect, useState } from "react";
+import {
+  Dispatch,
+  MutableRefObject,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import Cookies from "universal-cookie";
@@ -156,4 +163,25 @@ export const useScreenSize = () => {
   const isDesktop = screenWidth > BREAKPOINTS.tablet;
 
   return { isMobile, isTablet, isDesktop };
+};
+
+export const useDebouncedSearch = (initialValue: string) => {
+  const [search, setSearch] = useState(initialValue);
+
+  const [debouncedSearch, setDebouncedSearch] = useState(initialValue);
+
+  useDebounce(
+    () => {
+      setDebouncedSearch(search);
+    },
+
+    500,
+    [search]
+  );
+
+  return [debouncedSearch, setSearch, search] as [
+    string,
+    Dispatch<SetStateAction<string>>,
+    string,
+  ];
 };
