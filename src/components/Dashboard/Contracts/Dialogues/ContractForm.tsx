@@ -106,6 +106,7 @@ const ContractForm = ({
     handleSearchOrg,
   } = useOrganizationList({
     key: ["dropdown"],
+    pageSize: 100,
     filters: { type: "provider" },
   });
 
