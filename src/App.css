@@ -42,6 +42,16 @@ body {
   @apply w-screen overflow-x-hidden;
 }
 
+.layout-background {
+  background: radial-gradient(
+      120% 120% at 100% 0%,
+      #42eca8 0%,
+      #17262d 69.59%,
+      #000000 100%
+    )
+    /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */;
+}
+
 input,
 textarea {
   @apply truncate !text-sm font-light;

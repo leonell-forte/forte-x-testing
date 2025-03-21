@@ -1,3 +1,11 @@
+import { ReactComponent as Beneficiary } from "assets/images/icons/beneficiary.svg";
+import { ReactComponent as Contract } from "assets/images/icons/contract.svg";
+import { ReactComponent as Funder } from "assets/images/icons/funder.svg";
+// import { ReactComponent as Invoice } from "assets/images/icons/invoice.svg";
+// import { ReactComponent as Milestone } from "assets/images/icons/milestone.svg";
+import { ReactComponent as Project } from "assets/images/icons/project.svg";
+import { ReactComponent as Provider } from "assets/images/icons/provider.svg";
+
 import {
   Beneficiaries,
   Contracts,
@@ -15,27 +23,32 @@ export const MENUS = [
     name: "beneficiaries",
     link: "/beneficiaries",
     permissions: [Beneficiaries.NAVIGATE],
+    icon: Beneficiary,
   },
   {
     name: "contracts",
     link: "/contracts",
     permissions: [Contracts.NAVIGATE],
+    icon: Contract,
   },
   {
     name: "organizations",
     link: "/organizations",
     permissions: [Organizations.NAVIGATE],
+    icon: Provider,
   },
   {
     name: "projects",
     link: "/projects",
     permissions: [Projects.NAVIGATE],
+    icon: Project,
   },
 
   {
     name: "users",
     link: "/users",
     permissions: [Users.NAVIGATE],
+    icon: Funder,
   },
 ];
 

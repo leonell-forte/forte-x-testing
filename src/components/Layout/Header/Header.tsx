@@ -22,7 +22,7 @@ const Header = () => {
 
   return (
     <div className="flex w-screen items-center justify-between gap-4 px-5 pb-[18px] pt-[18px] lg:px-5 lg:pt-[15px]">
-      <div className="flex items-center justify-start gap-2 lg:ml-4 lg:items-end lg:gap-20">
+      <div className="flex items-center justify-start gap-2 lg:ml-4 lg:items-end lg:gap-24">
         <button onClick={handleClick} className="lg:hidden">
           <Burger className="h-auto w-6" />
         </button>

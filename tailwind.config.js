@@ -39,7 +39,16 @@ module.exports = {
         warning: "#EBBC46",
         success: "#42ECA8",
         disabled: "#787878",
-        panel: "rgba(48,241,255,10%)",
+        panel: "#30F1FF1F",
+        green: {
+          300: "#1D6965",
+        },
+        neutral: {
+          100: "#38C6C04D",
+        },
+        red: {
+          300: "#6A3030",
+        },
       },
       fontSize: {
         "heading-1": "42px",
