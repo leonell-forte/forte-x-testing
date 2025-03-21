@@ -48,7 +48,7 @@ const SidePanel = () => {
       initial={variants[showSidePanel.toString() as "true" | "false"]}
       animate={variants[showSidePanel.toString() as "true" | "false"]}
       transition={{ type: "spring", duration: 0.7, bounce: 0 }}
-      className="lg:max-h-auto fixed left-0 top-0 z-20 h-full min-h-screen w-[250px] flex-shrink-0 rounded-[16px] border-transparent bg-panel px-8 py-6 backdrop-blur-md backdrop-brightness-[60%] lg:relative lg:h-auto lg:w-[192px] lg:backdrop-blur-0 lg:backdrop-brightness-100"
+      className="lg:max-h-auto fixed left-0 top-0 z-20 h-full min-h-screen w-[260px] flex-shrink-0 rounded-[16px] border-transparent bg-panel px-8 py-6 backdrop-blur-md backdrop-brightness-[60%] lg:relative lg:h-auto lg:w-[192px] lg:backdrop-blur-0 lg:backdrop-brightness-100"
     >
       <button
         onClick={handleClose}
