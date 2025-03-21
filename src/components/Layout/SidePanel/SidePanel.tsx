@@ -73,7 +73,7 @@ const SidePanel = () => {
                 <Link key={index} to={link}>
                   <li
                     className={classNames(
-                      "flex items-center gap-3 text-lg capitalize transition-all lg:py-2.5 lg:text-base"
+                      "flex items-center gap-3 text-lg capitalize transition-all lg:text-base"
                     )}
                   >
                     <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center">
