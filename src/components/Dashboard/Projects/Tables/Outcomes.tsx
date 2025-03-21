@@ -15,6 +15,7 @@ import { projects } from "lib/validators/projects";
 
 import Button from "components/ui/button";
 import Input from "components/ui/input";
+import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
 
@@ -164,7 +165,7 @@ const Outcomes = ({ id }: IProps) => {
         </Cards.Container>
       </div>
 
-      <div className="hidden lg:block">
+      <ScrollArea className="hidden w-[calc(100vw-330px)] overflow-hidden lg:block">
         <Table.Container isLoading={isLoading}>
           <Table.Head>
             <Table.Row>
@@ -184,11 +185,9 @@ const Outcomes = ({ id }: IProps) => {
 
               return (
                 <Table.Row key={index}>
-                  <Table.Data className="w-[120px]">{`Outcome ${
-                    index + 1
-                  }`}</Table.Data>
+                  <Table.Data>{`Outcome ${index + 1}`}</Table.Data>
 
-                  <Table.Data className="w-[300px]">
+                  <Table.Data>
                     {onEdit ? (
                       <Controller
                         name={`outcomes.${index}.name`}
@@ -254,7 +253,8 @@ const Outcomes = ({ id }: IProps) => {
             })}
           </Table.Body>
         </Table.Container>
-      </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
     </div>
   );
 };

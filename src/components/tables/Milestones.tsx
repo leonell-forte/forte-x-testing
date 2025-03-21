@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { IMilestone } from "lib/types/milestones";
 import { formatNumber, getStatusVariant } from "lib/utils";
 
+import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import Status from "components/ui/status";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
@@ -29,7 +30,7 @@ const MilestonesTable = ({ list, isLoading = false }: TMilestonesTable) => {
 
   return (
     <>
-      <div className="table-breakpoint:hidden">
+      <div className="lg:hidden">
         <Cards.Container isLoading={isLoading}>
           {list.map((item, index) => {
             const {
@@ -75,7 +76,7 @@ const MilestonesTable = ({ list, isLoading = false }: TMilestonesTable) => {
           })}
         </Cards.Container>
       </div>
-      <div className="hidden w-[calc(100vw-250px)] overflow-x-auto table-breakpoint:block">
+      <ScrollArea className="hidden w-[calc(100vw-330px)] overflow-hidden lg:block">
         <Table.Container isEmpty={!list.length} isLoading={isLoading}>
           <Table.Head>
             <Table.Row>
@@ -120,7 +121,8 @@ const MilestonesTable = ({ list, isLoading = false }: TMilestonesTable) => {
             })}
           </Table.Body>
         </Table.Container>
-      </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
     </>
   );
 };

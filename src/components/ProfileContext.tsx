@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import authService from "api/auth";
 import { ReactNode, createContext, useContext } from "react";
 
 import { api } from "lib/axios/interceptor";
@@ -23,6 +22,7 @@ function useFetchProfile() {
       });
     },
     select: (res) => res?.data?.data,
+    placeholderData: (previous) => previous,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
@@ -36,21 +36,13 @@ const ProfileContext = createContext<IProfileContext | undefined>(undefined);
 
 function ProfileProvider({ children }: { children: ReactNode }) {
   const { isLoading, data: profile } = useFetchProfile();
-  if (isLoading)
+  if (isLoading || !profile)
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <Spinner />
       </div>
     );
-  if (!profile)
-    return (
-      <div>
-        Unable to load profile, Please try again later.{" "}
-        <button type="button" onClick={() => authService.logout()}>
-          Logout
-        </button>
-      </div>
-    );
+
   return (
     <ProfileContext.Provider value={{ profile }}>
       {children}

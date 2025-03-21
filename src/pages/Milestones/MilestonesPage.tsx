@@ -16,8 +16,6 @@ import SearchInput from "components/ui/search-input";
 import ViewMilestone from "./ViewMilestone";
 
 const MilestonesComp = () => {
-  usePageTitle("Milestones");
-
   const { page, setPage } = usePage();
 
   const [search, setSearch] = useState("");
@@ -61,25 +59,28 @@ const MilestonesComp = () => {
 
   return (
     <div className="flex h-full flex-col space-y-2.5">
-      <div className="flex flex-col justify-between gap-2.5 sm:flex-row">
-        <div className="flex flex-col gap-2.5 sm:flex-row">
-          <div className="flex gap-2">
-            <div className="w-full md:w-auto">
-              <SearchInput
-                value={search}
-                onChange={(e) => {
-                  setSearch(e.target.value);
-                  setPage(1);
-                }}
-                containerClass="w-full lg:max-w-[286px]"
-                placeholder="Search milestones"
-                onClear={() => setSearch("")}
-              />
+      <div className="space-y-5">
+        <p className="text-[24px] font-semibold">Milestones</p>
+        <div className="flex flex-col justify-between gap-2.5 sm:flex-row">
+          <div className="flex flex-col gap-2.5 sm:flex-row">
+            <div className="flex gap-2">
+              <div className="w-full md:w-auto">
+                <SearchInput
+                  value={search}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                    setPage(1);
+                  }}
+                  containerClass="w-full lg:max-w-[286px]"
+                  placeholder="Search milestones"
+                  onClear={() => setSearch("")}
+                />
+              </div>
             </div>
-          </div>
 
-          <div>
-            <Filters filters={filters} setFilters={setFilters} />
+            <div>
+              <Filters filters={filters} setFilters={setFilters} />
+            </div>
           </div>
         </div>
       </div>

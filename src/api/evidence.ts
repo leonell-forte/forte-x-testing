@@ -33,7 +33,7 @@ export class EvidenceService {
 
   async list(
     beneficiaryId: number
-  ): Promise<{ items: Evidence[]; totalSize: number }> {
+  ): Promise<{ items: Evidence[]; totalSize: number; pageSize: number }> {
     const response = await api.get(`/beneficiaries/${beneficiaryId}/evidences`);
 
     return response.data;

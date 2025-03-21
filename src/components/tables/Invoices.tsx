@@ -5,6 +5,7 @@ import { Invoice } from "lib/types/invoices";
 import { formatCurrency, formatDate, getStatusVariant } from "lib/utils";
 
 import Button from "components/ui/button";
+import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import Status from "components/ui/status";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
@@ -27,7 +28,7 @@ const Invoices = ({ list, isLoading }: InvoicesProps) => {
 
   return (
     <div>
-      <div className="table-breakpoint:hidden">
+      <div className="lg:hidden">
         <Cards.Container isLoading={isLoading}>
           {list?.map((item, index) => {
             const { id, createdAt, dueDate, paidDate, grossAmount, status } =
@@ -62,14 +63,14 @@ const Invoices = ({ list, isLoading }: InvoicesProps) => {
                 </Cards.Group>
                 <div className="absolute bottom-3 right-3 flex gap-2">
                   <Button
-                    eventName="Delete Invoice"
+                    eventName="Download Invoice"
                     id={id.toString()}
                     buttonType="default"
                     type="button"
                     onClick={handleDownload}
                     className="icon group"
                   >
-                    <DL className="h-auto w-6 transition-all group-hover:fill-mint" />{" "}
+                    <DL className="h-auto w-6 transition-all group-hover:stroke-mint" />{" "}
                   </Button>
                 </div>
               </Cards.Card>
@@ -78,7 +79,7 @@ const Invoices = ({ list, isLoading }: InvoicesProps) => {
         </Cards.Container>
       </div>
 
-      <div className="hidden table-breakpoint:block">
+      <ScrollArea className="hidden w-[calc(100vw-330px)] overflow-hidden lg:block">
         <Table.Container isEmpty={!list?.length} isLoading={isLoading}>
           <Table.Head>
             <Table.Row>
@@ -124,7 +125,7 @@ const Invoices = ({ list, isLoading }: InvoicesProps) => {
                       onClick={handleDownload}
                       className="icon group"
                     >
-                      <DL className="h-auto w-6 transition-all group-hover:fill-mint" />{" "}
+                      <DL className="h-auto w-6 transition-all group-hover:stroke-mint" />{" "}
                     </Button>
                   </Table.Data>
                 </Table.Row>
@@ -132,7 +133,8 @@ const Invoices = ({ list, isLoading }: InvoicesProps) => {
             })}
           </Table.Body>
         </Table.Container>
-      </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
     </div>
   );
 };

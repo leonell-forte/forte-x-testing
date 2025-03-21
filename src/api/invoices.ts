@@ -10,11 +10,11 @@ type ListParams = {
 };
 
 export class InvoiceService {
-  async list({
-    page,
-    search,
-    filters,
-  }: ListParams): Promise<{ items: Invoice[]; totalSize: number }> {
+  async list({ page, search, filters }: ListParams): Promise<{
+    items: Invoice[];
+    totalSize: number;
+    pageSize: number;
+  }> {
     const params = new URLSearchParams();
 
     params.append("$pageNum", page.toString());

@@ -16,7 +16,7 @@ const IndividualProjectsPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="hide-scroll h-full space-y-2.5 py-3">
+    <div className="hide-scroll h-full space-y-8 py-3">
       <Link
         to={".."}
         onClick={(e) => {

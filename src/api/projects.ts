@@ -22,7 +22,11 @@ class ProjectsService {
     listAll,
 
     pageSize,
-  }: IProjectListProp): Promise<{ items: IProject[]; totalSize: number }> {
+  }: IProjectListProp): Promise<{
+    items: IProject[];
+    totalSize: number;
+    pageSize: number;
+  }> {
     const params = new URLSearchParams();
 
     const filters: IODataObject = {

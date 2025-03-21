@@ -9,6 +9,7 @@ import { INVOICE_STATUSES } from "lib/constants";
 import { useDebounce, usePage, usePageTitle } from "lib/hooks";
 import { InvoiceFilters, InvoiceStatus } from "lib/types/invoices";
 
+import { showGenerateInvoiceModal } from "components/Dashboard/Invoices/modals/GenerateInvoice";
 import InvoicesTable from "components/tables/Invoices";
 import Button from "components/ui/button";
 import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
@@ -17,8 +18,6 @@ import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
 
 const InvoicesPage = () => {
-  usePageTitle("Invoices");
-
   const { page, setPage } = usePage();
 
   const [filters, setFilters] = useState<InvoiceFilters>({
@@ -58,29 +57,30 @@ const InvoicesPage = () => {
       />
       <div className="flex h-full flex-col justify-between gap-4">
         <div className="space-y-2.5">
-          <div className="flex items-start justify-between">
-            <p className="text-[24px] font-semibold">Invoices</p>
-            <Button>
-              <img src={add} alt="add" width={14} height={14} />
-              Generate Invoice
-            </Button>
-          </div>
+          <div className="space-y-5">
+            <div className="flex items-start justify-between">
+              <p className="text-[24px] font-semibold">Invoices</p>
+              <Button onClick={() => showGenerateInvoiceModal()}>
+                <img src={add} alt="add" width={14} height={14} />
+                Generate Invoice
+              </Button>
+            </div>
 
-          <div className="flex flex-col gap-2 md:flex-row">
-            <div className="flex gap-2">
-              <div className="w-full md:w-[286px]">
-                <SearchInput
-                  value={search}
-                  onChange={(e) => {
-                    setSearch(e.target.value);
-                    setPage(1);
-                  }}
-                  className="w-full"
-                  placeholder="Search invoice"
-                  onClear={() => setSearch("")}
-                />
-              </div>
-              {/* <button
+            <div className="flex flex-col gap-2 md:flex-row">
+              <div className="flex gap-2">
+                <div className="w-full md:w-[286px]">
+                  <SearchInput
+                    value={search}
+                    onChange={(e) => {
+                      setSearch(e.target.value);
+                      setPage(1);
+                    }}
+                    className="w-full"
+                    placeholder="Search invoice"
+                    onClear={() => setSearch("")}
+                  />
+                </div>
+                {/* <button
                 onClick={(e) => {
                   e.stopPropagation();
                   setShowFilter(true);
@@ -89,19 +89,20 @@ const InvoicesPage = () => {
               >
                 <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
               </button> */}
-            </div>
-            {/* <div className="hidden w-full md:block">
+              </div>
+              {/* <div className="hidden w-full md:block">
               <Filters
                 filters={filters}
                 setFilters={setFilters}
                 handleRemoveFilters={() => setFilters({ status: "" })}
               />
             </div> */}
+            </div>
           </div>
-          <InvoicesTable list={invoices?.items} isLoading={isLoading} />
         </div>
+        <div className="flex h-full flex-col justify-between gap-4">
+          <InvoicesTable list={invoices?.items} isLoading={isLoading} />
 
-        {!!invoices?.items.length && (
           <div className="flex w-full items-center justify-end">
             <Pagination
               page={page}
@@ -109,7 +110,7 @@ const InvoicesPage = () => {
               total={invoices?.totalSize as number}
             />
           </div>
-        )}
+        </div>
       </div>
     </>
   );

@@ -26,7 +26,7 @@ export class CommentsService {
   async list(
     beneficiaryId: number,
     evidenceId: number
-  ): Promise<{ items: Comment[]; totalSize: number }> {
+  ): Promise<{ items: Comment[]; totalSize: number; pageSize: number }> {
     const response = await api.get(
       `/beneficiaries/${beneficiaryId}/evidences/${evidenceId}/comments`
     );

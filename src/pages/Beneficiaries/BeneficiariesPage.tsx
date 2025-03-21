@@ -41,8 +41,6 @@ type ModalLabelTypes =
   | "";
 
 const BeneficiariesPage = () => {
-  usePageTitle("Beneficiaries");
-
   const [search, setSearch] = useState("");
 
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -182,44 +180,50 @@ const BeneficiariesPage = () => {
       {renderModal()}
 
       <div className="flex h-full flex-col space-y-2.5">
-        <div className="flex flex-col items-center gap-2.5 md:justify-between lg:items-start xl:flex-row">
-          <div className="flex w-full flex-col flex-wrap items-start gap-2.5 lg:w-auto lg:flex-row">
-            <div className="flex w-full items-center gap-2 md:w-auto">
-              <div className="w-full md:w-auto">
-                <SearchInput
-                  value={search}
-                  onChange={(e) => {
-                    setSearch(e.target.value);
-                    setPage(1);
-                  }}
-                  placeholder="Search beneficiaries"
-                  containerClass="w-full lg:max-w-[286px]"
-                  onClear={() => setSearch("")}
-                />
-              </div>
+        <div className="space-y-4">
+          <div className="flex flex-col justify-between gap-x-8 gap-y-1.5 lg:flex-row">
+            <p className="text-[24px] font-semibold">Beneficiaries</p>
 
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setModal("filter");
-                }}
-                className="group flex-shrink-0 xl:hidden"
-              >
-                <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
-              </button>
-            </div>
-          </div>
-          <div className="flex w-full flex-wrap gap-2.5 md:w-auto">
-            {IsAuthorized([Beneficiaries.EXECUTE]) && (
-              <>
-                {IsAuthorized([Beneficiaries.UPDATE]) && (
+            <div className="flex w-full flex-wrap justify-start gap-2.5 md:w-auto lg:justify-end">
+              {IsAuthorized([Beneficiaries.EXECUTE]) && (
+                <>
+                  {IsAuthorized([Beneficiaries.UPDATE]) && (
+                    <Tooltip
+                      title={
+                        !selectedIds.length ? (
+                          <div className="flex items-center gap-1.5">
+                            <div className="flex-1 text-sm text-black">
+                              {" "}
+                              Please select beneficiaries to update status
+                            </div>
+                          </div>
+                        ) : (
+                          ""
+                        )
+                      }
+                      placement="top"
+                    >
+                      <span>
+                        <Button
+                          eventName="Update Status"
+                          onClick={() => {
+                            setModal("update status");
+                          }}
+                          buttonType="secondary"
+                          disabled={!selectedIds.length}
+                        >
+                          Update Status
+                        </Button>
+                      </span>
+                    </Tooltip>
+                  )}
                   <Tooltip
                     title={
                       !selectedIds.length ? (
                         <div className="flex items-center gap-1.5">
                           <div className="flex-1 text-sm text-black">
                             {" "}
-                            Please select beneficiaries to update status
+                            Please select beneficiaries to download evidences
                           </div>
                         </div>
                       ) : (
@@ -230,86 +234,86 @@ const BeneficiariesPage = () => {
                   >
                     <span>
                       <Button
-                        eventName="Update Status"
-                        onClick={() => {
-                          setModal("update status");
-                        }}
+                        eventName="Download Evidence"
+                        onClick={handleDownloadEvidence}
                         buttonType="secondary"
-                        disabled={!selectedIds.length}
+                        disabled={isDownloadingEvidence || !selectedIds.length}
                       >
-                        Update Status
+                        Download Evidence
                       </Button>
                     </span>
                   </Tooltip>
+                </>
+              )}
+
+              <>
+                {IsAuthorized([Beneficiaries.EXECUTE]) && (
+                  <Button
+                    eventName="Export Beneficiaries"
+                    onClick={handleExportBeneficiaries}
+                    buttonType="secondary"
+                    disabled={isExportingBeneficiaries}
+                  >
+                    Export CSV
+                  </Button>
                 )}
-                <Tooltip
-                  title={
-                    !selectedIds.length ? (
-                      <div className="flex items-center gap-1.5">
-                        <div className="flex-1 text-sm text-black">
-                          {" "}
-                          Please select beneficiaries to download evidences
-                        </div>
-                      </div>
-                    ) : (
-                      ""
-                    )
-                  }
-                  placement="top"
-                >
-                  <span>
-                    <Button
-                      eventName="Download Evidence"
-                      onClick={handleDownloadEvidence}
-                      buttonType="secondary"
-                      disabled={isDownloadingEvidence || !selectedIds.length}
-                    >
-                      Download Evidence
-                    </Button>
-                  </span>
-                </Tooltip>
+                {IsAuthorized([Beneficiaries.IMPORT]) && (
+                  <Button
+                    eventName="Bulk Upload Beneficiaries"
+                    buttonType="secondary"
+                    onClick={() => setModal("import")}
+                  >
+                    Bulk upload
+                  </Button>
+                )}
+
+                {IsAuthorized([Beneficiaries.CREATE]) && (
+                  <Button
+                    eventName="Add Beneficiary"
+                    onClick={() => {
+                      setModal("beneficiaries");
+
+                      setEditMode(true);
+                    }}
+                  >
+                    Add beneficiary
+                  </Button>
+                )}
               </>
-            )}
-
-            <>
-              {IsAuthorized([Beneficiaries.EXECUTE]) && (
-                <Button
-                  eventName="Export Beneficiaries"
-                  onClick={handleExportBeneficiaries}
-                  buttonType="secondary"
-                  disabled={isExportingBeneficiaries}
-                >
-                  Export CSV
-                </Button>
-              )}
-              {IsAuthorized([Beneficiaries.IMPORT]) && (
-                <Button
-                  eventName="Bulk Upload Beneficiaries"
-                  buttonType="secondary"
-                  onClick={() => setModal("import")}
-                >
-                  Bulk upload
-                </Button>
-              )}
-
-              {IsAuthorized([Beneficiaries.CREATE]) && (
-                <Button
-                  eventName="Add Beneficiary"
-                  onClick={() => {
-                    setModal("beneficiaries");
-
-                    setEditMode(true);
-                  }}
-                >
-                  Add beneficiary
-                </Button>
-              )}
-            </>
+            </div>
           </div>
-        </div>
 
-        <div className="hidden xl:block">
-          <Filters filters={filters} setFilters={setFilters} />
+          <div className="flex">
+            <div className="flex w-full flex-col flex-wrap items-start gap-2.5 lg:w-auto lg:flex-row">
+              <div className="flex w-full items-center gap-2 md:w-auto">
+                <div className="w-full md:w-auto">
+                  <SearchInput
+                    value={search}
+                    onChange={(e) => {
+                      setSearch(e.target.value);
+                      setPage(1);
+                    }}
+                    placeholder="Search beneficiaries"
+                    containerClass="w-full lg:max-w-[286px]"
+                    onClear={() => setSearch("")}
+                  />
+                </div>
+
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setModal("filter");
+                  }}
+                  className="group flex-shrink-0 xl:hidden"
+                >
+                  <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
+                </button>
+              </div>
+              <div className="hidden xl:block">
+                <Filters filters={filters} setFilters={setFilters} />
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="flex h-full flex-col justify-between gap-4">
@@ -324,6 +328,7 @@ const BeneficiariesPage = () => {
               <Pagination
                 page={page}
                 onPageChange={(val) => setPage(val)}
+                pageSize={beneficiariesList.pageSize}
                 total={beneficiariesList?.totalSize as number}
               />
             </div>

@@ -5,11 +5,9 @@ import { create } from "zustand";
 
 import { cn } from "lib/utils";
 
-import styles from "../styles.module.scss";
-
 export const MAP_SIZE_CLASS = {
   xs: "max-w-sm",
-  sm: "max-w-md",
+  sm: "max-w-[551px]",
   base: "max-w-lg",
   lg: "max-w-xl",
   xl: "max-w-2xl",
@@ -45,28 +43,27 @@ const ModalMarker = () => {
       className="relative z-40 focus:outline-none"
       onClose={close}
     >
-      <div className="fixed inset-0 z-10 w-screen overflow-y-auto bg-black/30">
-        <div className="flex min-h-full items-center justify-center p-4">
+      <div className="fixed inset-0 z-10 w-screen overflow-y-auto bg-black/80">
+        <div className="flex min-h-full items-center justify-center">
           <DialogPanel
             transition
             className={cn(
-              "data-[closed]:transform-[scale(95%)] w-full rounded-lg duration-300 ease-out data-[closed]:opacity-0",
-              styles["dialogue-content"]
+              "data-[closed]:transform-[scale(95%)] relative w-full rounded-lg bg-[#30F1FF1F] p-14 drop-shadow-sm backdrop-blur duration-300 ease-out data-[closed]:opacity-0",
+              MAP_SIZE_CLASS[config?.size || "base"]
             )}
           >
-            {typeof config?.title !== "undefined" ? (
-              <div
-                className={cn(
-                  "flex items-center justify-between rounded-t-lg p-6"
-                )}
-              >
-                <div className="text-lg font-semibold">{config?.title}</div>
-                <button type="button" onClick={close} className="group">
-                  <X className="h-auto w-5 transition-all group-hover:fill-mint" />
-                </button>
-              </div>
-            ) : null}
-            <div className="p-6">{config?.component}</div>
+            <button
+              type="button"
+              onClick={close}
+              className="group absolute right-6 top-6"
+            >
+              <X className="h-auto w-4 transition-all group-hover:fill-mint" />
+            </button>
+            {typeof config?.title !== "undefined" && (
+              <div className="text-xl font-semibold">{config?.title}</div>
+            )}
+
+            <div className="mt-6">{config?.component}</div>
           </DialogPanel>
         </div>
       </div>

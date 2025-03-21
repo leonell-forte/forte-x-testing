@@ -13,7 +13,17 @@ interface ITableContainerProp extends ITableProp {
   isEmpty?: boolean;
 
   isLoading?: boolean;
+
+  loadingConfig?: {
+    rows: number;
+    columns: number;
+  };
 }
+
+const defaultLoadingConfig = {
+  rows: 10,
+  columns: 8,
+};
 
 interface ITableCellProps extends TableHTMLAttributes<HTMLTableCellElement> {}
 
@@ -25,26 +35,53 @@ const Table = {
 
     isLoading,
 
+    loadingConfig = defaultLoadingConfig,
+
     ...props
   }: ITableContainerProp) => {
     const tableRef = useRef<HTMLDivElement>(null);
 
     return (
-      <div className={classNames("w-full pb-8", props.className)}>
+      <div className={classNames("w-full pb-1", props.className)}>
         <div ref={tableRef} className="relative w-full">
-          <table {...props} className="w-full !rounded-t-[.5em]">
+          <table {...props} className="w-full">
             {children}
+            {isLoading && (
+              <tbody>
+                {Array.from({ length: loadingConfig.rows }).map(
+                  (_, rowIndex) => (
+                    <tr
+                      key={`row-${rowIndex}`}
+                      className="border-b border-white/50 last:border-0"
+                    >
+                      {Array.from({ length: loadingConfig.columns }).map(
+                        (_, colIndex) => (
+                          <td
+                            key={`cell-${rowIndex}-${colIndex}`}
+                            className="p-4"
+                          >
+                            <div
+                              className={`h-6 animate-pulse rounded-md bg-white/30 ${
+                                colIndex === 0
+                                  ? "w-24"
+                                  : colIndex % 2 === 0
+                                    ? "w-1/2"
+                                    : "w-full"
+                              }`}
+                            />
+                          </td>
+                        )
+                      )}
+                    </tr>
+                  )
+                )}
+              </tbody>
+            )}
           </table>
 
           {isEmpty && !isLoading && (
             <div className="mx-auto flex h-40 min-w-full items-center justify-center">
               <p>No data</p>
-            </div>
-          )}
-
-          {isLoading && (
-            <div className="flex h-40 w-full items-center justify-center">
-              <Spinner />
             </div>
           )}
         </div>
@@ -57,7 +94,7 @@ const Table = {
       <thead
         {...props}
         className={classNames(
-          "truncate bg-white text-left text-[14px] font-medium",
+          "truncate border-b border-white/50 text-left",
 
           props.className
         )}
@@ -89,12 +126,12 @@ const Table = {
   Data: ({ children, className, ...props }: ITableCellProps) => {
     return (
       <td
-        className={"h-[50px] max-w-[300px] border-b text-[14px] font-[300]"}
+        className={
+          "h-[50px] max-w-[300px] border-b border-white/50 text-base font-[300]"
+        }
         {...props}
       >
-        <div className={classNames(className, "truncate pl-[16px]")}>
-          {children}
-        </div>
+        <div className={classNames(className, "truncate px-6")}>{children}</div>
       </td>
     );
   },
@@ -104,7 +141,7 @@ const Table = {
       <th
         {...props}
         className={classNames(
-          "h-[50px] max-w-[120px] truncate pl-[16px] font-[450] !text-black",
+          "h-[50px] truncate px-6 text-base font-semibold text-white",
           props.className
         )}
       >

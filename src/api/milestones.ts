@@ -22,7 +22,11 @@ class MilestoneService {
     filters,
 
     search,
-  }: IMilestoneListProps): Promise<{ items: IMilestone[]; totalSize: number }> {
+  }: IMilestoneListProps): Promise<{
+    items: IMilestone[];
+    totalSize: number;
+    pageSize: number;
+  }> {
     const params = new URLSearchParams();
 
     let filtersData: IODataObject = {
@@ -51,7 +55,7 @@ class MilestoneService {
       params.append("$filter", generateODataQuery(filtersData));
     }
 
-    const res = await api.get(`/milestones?${params}`);
+    const res = await api.get(`/milestones`);
 
     return res.data;
   }

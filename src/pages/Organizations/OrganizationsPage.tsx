@@ -24,8 +24,6 @@ const initialFilters = {
 };
 
 const OrganizationsPage = () => {
-  usePageTitle("Organizations");
-
   const [modal, setModal] = useState<"org" | "filter" | null>(null);
 
   const { page, setPage } = usePage();
@@ -97,7 +95,19 @@ const OrganizationsPage = () => {
       {renderModal()}
 
       <div className="flex h-full flex-col space-y-2.5">
-        <div className="flex flex-col justify-between gap-2.5 sm:flex-row">
+        <div className="space-y-5">
+          <div className="flex flex-col justify-between gap-2.5 sm:flex-row">
+            <p className="text-[24px] font-semibold">Organizations</p>
+            <Button
+              eventName="Add Organization"
+              onClick={() => {
+                setModal("org");
+              }}
+            >
+              Add organization
+            </Button>
+          </div>
+
           <div className="flex gap-2.5 md:flex-wrap">
             <div className="w-full md:w-auto">
               <SearchInput
@@ -124,15 +134,6 @@ const OrganizationsPage = () => {
               <Filters filters={filters} setFilters={setFilters} />
             </div>
           </div>
-
-          <Button
-            eventName="Add Organization"
-            onClick={() => {
-              setModal("org");
-            }}
-          >
-            Add organization
-          </Button>
         </div>
 
         <div className="flex h-full flex-col justify-between gap-4">
