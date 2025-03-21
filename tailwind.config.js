@@ -39,7 +39,7 @@ module.exports = {
         warning: "#EBBC46",
         success: "#42ECA8",
         disabled: "#787878",
-        panel: "rgba(48,241,255,10%)",
+        panel: "#30F1FF1F",
         green: {
           300: "#1D6965",
         },
