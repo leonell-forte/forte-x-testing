@@ -1,7 +1,6 @@
 import { useCallback, useState } from "react";
 import { FaTrash as Trash } from "react-icons/fa6";
 
-import useOrganizationList from "lib/common/lists/useOrganizationList";
 import { IsAuthorized, Users } from "lib/role-permissions";
 import { IUser } from "lib/types/users";
 
@@ -17,10 +16,6 @@ type TUsersTable = {
 };
 
 const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
-  const { rawList: organizations } = useOrganizationList({
-    listAll: true,
-  });
-
   const [modal, setModal] = useState<"user" | "delete" | null>(null);
 
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
@@ -41,7 +36,6 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
       case "user":
         return (
           <UserDialogue
-            organizations={organizations?.items || []}
             userId={selectedUser!}
             isVisible={modal === "user"}
             handleClose={() => {
@@ -63,7 +57,7 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
           />
         );
     }
-  }, [modal, selectedUser, organizations]);
+  }, [modal, selectedUser]);
 
   return (
     <>

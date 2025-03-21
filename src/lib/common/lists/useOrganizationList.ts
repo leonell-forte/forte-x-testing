@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import organizationService from "api/organization";
 import { useMemo } from "react";
 
+import { useDebouncedSearch } from "lib/hooks";
 import { IFilters, IOrganization } from "lib/types/organizations";
 import { sortOptions } from "lib/utils";
 
@@ -13,7 +14,7 @@ type UseOrganizationList = {
   listAll?: boolean;
   page?: number;
   enabled?: boolean;
-  search?: string;
+  pageSize?: number;
 };
 
 const useOrganizationList = ({
@@ -22,17 +23,23 @@ const useOrganizationList = ({
   listAll,
   filters,
   enabled,
-  search,
+  pageSize,
 }: UseOrganizationList = {}) => {
+  const [debouncedOrgSearch, setOrgSearch, orgSearch] = useDebouncedSearch("");
+  const handleSearchOrg = (value: string) => {
+    setOrgSearch(value);
+  };
+
   const { data, isLoading } = useQuery({
-    queryKey: ["organizations", ...(key ? key : [])],
+    queryKey: ["organizations", ...(key ? key : []), debouncedOrgSearch],
 
     queryFn: () =>
       organizationService.list({
         page: page || 1,
         listAll,
         filters: filters || {},
-        search,
+        search: debouncedOrgSearch,
+        pageSize: pageSize || undefined,
       }),
     refetchOnWindowFocus: false,
     enabled: enabled ? enabled : true,
@@ -52,6 +59,8 @@ const useOrganizationList = ({
     organizations: sortOptions(organizations),
     isLoading,
     rawList: data,
+    handleSearchOrg,
+    searchOrgValue: orgSearch,
   };
 };
 

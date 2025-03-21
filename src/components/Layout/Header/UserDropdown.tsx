@@ -1,6 +1,6 @@
 import authService from "api/auth";
 import { motion } from "framer-motion";
-import { MouseEvent, useRef, useState } from "react";
+import { MouseEvent, useEffect, useRef, useState } from "react";
 import { HiUser } from "react-icons/hi2";
 
 import arrow from "assets/images/icons/chevron.svg";
@@ -17,9 +17,11 @@ const UserDropdown = () => {
 
   const [showModal, setShowModal] = useState(false);
 
-  const { rawList: organizations } = useOrganizationList({
-    listAll: true,
-  });
+  const { rawList: organizations, handleSearchOrg } = useOrganizationList({});
+
+  useEffect(() => {
+    if (user?.organization) handleSearchOrg(user.organization);
+  }, [user?.organization, handleSearchOrg]);
 
   const [showDropdown, setShowDropdown] = useState(false);
 

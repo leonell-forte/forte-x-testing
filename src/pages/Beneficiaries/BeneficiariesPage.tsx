@@ -1,17 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import beneficiariesService from "api/beneficiaries";
-import projectService from "api/projects";
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useMemo,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import { BiSlider as SliderIcon } from "react-icons/bi";
 import { TbFilterX as FilterIcon } from "react-icons/tb";
 
 import useOrganizationList from "lib/common/lists/useOrganizationList";
+import useProjectList from "lib/common/lists/useProjectList";
 import { BENEFICIARY_STATUS, RISK_LEVEL } from "lib/constants";
 import { useDebounce, usePage, usePageTitle } from "lib/hooks";
 import {
@@ -33,7 +27,7 @@ import ImportDialogue from "components/Dashboard/Beneficiaries/Dialogues/ImportD
 import BeneficiariesTable from "components/tables/Beneficiaries";
 import Button from "components/ui/button";
 import Dialogue from "components/ui/dialogue/dialogue";
-import Dropdown, { IOption } from "components/ui/dropdown";
+import Dropdown from "components/ui/dropdown";
 import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
 import { Tooltip } from "components/ui/tooltip/Tooltip";
@@ -350,31 +344,31 @@ interface IFilterProps {
 
 const Filters = ({ filters, setFilters }: IFilterProps) => {
   const { setPage } = usePage();
-  const { data: projectsList, isLoading: projectLoading } = useQuery({
-    queryKey: ["projects"],
 
-    queryFn: () => projectService.list({ listAll: true }),
+  const {
+    projects,
+    isLoading: projectLoading,
+    handleSearchProject,
+  } = useProjectList({
+    key: ["filter"],
+    pageSize: 100,
   });
 
-  const projects: IOption[] = useMemo(
-    () =>
-      projectsList?.items.map((item) => ({
-        label: item.name,
-
-        value: item.id.toString(),
-      })) || [],
-    [projectsList]
-  );
-
-  const { organizations, isLoading: orgLoading } = useOrganizationList({
-    listAll: true,
+  const {
+    organizations,
+    isLoading: orgLoading,
+    handleSearchOrg,
+  } = useOrganizationList({
+    key: ["filter"],
     filters: { type: "provider" },
     enabled: IsAuthorized([Organizations.LIST]),
+    pageSize: 100,
   });
 
   return (
     <div className="grid w-full grid-cols-1 flex-wrap gap-2.5 xl:flex xl:flex-row">
       <Dropdown
+        enableSearch
         value={findLabelFromOptions(projects, filters.project as string)}
         loading={projectLoading}
         options={sortOptions(projects)}
@@ -384,6 +378,7 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
           setFilters((prev) => ({ ...prev, project: val as string }));
           setPage(1);
         }}
+        onChange={(e) => handleSearchProject(e.target.value)}
       />
 
       <Dropdown
@@ -415,6 +410,8 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
               provider: val as string,
             }));
           }}
+          enableSearch
+          onChange={(e) => handleSearchOrg(e.target.value)}
         />
       )}
 
