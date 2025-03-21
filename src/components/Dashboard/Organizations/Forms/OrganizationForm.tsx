@@ -317,6 +317,7 @@ const OrganizationForm = ({
                     options={REGIONS}
                     placeholder="Select region"
                     disabled={!editMode}
+                    filterOptions
                   />
                 );
               }}

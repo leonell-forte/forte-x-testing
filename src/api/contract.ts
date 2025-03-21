@@ -17,6 +17,8 @@ interface IContractListProps {
   listAll?: boolean;
 
   projectId?: number;
+
+  pageSize?: number;
 }
 
 class ContractService {
@@ -30,6 +32,8 @@ class ContractService {
     listAll,
 
     projectId,
+
+    pageSize,
   }: IContractListProps): Promise<{ items: IContract[]; totalSize: number }> {
     const params = new URLSearchParams();
 
@@ -79,7 +83,7 @@ class ContractService {
       },
     };
 
-    params.append("$pageSize", DEFAULT_PAGE_SIZE);
+    params.append("$pageSize", pageSize?.toString() || DEFAULT_PAGE_SIZE);
 
     params.append("$pageNum", (page || 1).toString());
 

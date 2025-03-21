@@ -1,11 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
-import projectService from "api/projects";
 import { addDays, subDays } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 
 import useOrganizationList from "lib/common/lists/useOrganizationList";
+import useProjectList from "lib/common/lists/useProjectList";
 import { CONTRACT_STATUS } from "lib/constants";
 import { usePage } from "lib/hooks";
 import useContractMutation from "lib/mutations/contracts";
@@ -15,7 +14,6 @@ import {
   IContract,
   StatusType,
 } from "lib/types/contracts";
-import { IProject } from "lib/types/projects";
 import { findLabelFromOptions, formatDate, sortOptions } from "lib/utils";
 import { contracts } from "lib/validators/contracts";
 
@@ -24,7 +22,7 @@ import { useCustomPrompt } from "components/ui/alert/custom-prompt";
 import Button from "components/ui/button";
 import Controller from "components/ui/custom-controller/CustomController";
 import DatePicker from "components/ui/date-picker";
-import Dropdown, { IOption } from "components/ui/dropdown";
+import Dropdown from "components/ui/dropdown";
 import FileInput from "components/ui/file-input";
 import { Form } from "components/ui/form/Form";
 import { useAutoSaveForm } from "components/ui/form/useAutoSave";
@@ -69,6 +67,7 @@ const ContractForm = ({
   const { toShowPrompt } = useContractsContext();
 
   const { setPage } = usePage();
+
   const [isAmmending, setIsAmmending] = useState(false);
 
   const form = useForm<ContractFieldValues>({
@@ -101,27 +100,24 @@ const ContractForm = ({
     name: "outcomeRates",
   });
 
-  const { organizations, isLoading: orgLoading } = useOrganizationList({
-    listAll: true,
+  const {
+    organizations,
+    isLoading: orgLoading,
+    handleSearchOrg,
+  } = useOrganizationList({
+    key: ["dropdown"],
+    pageSize: 100,
     filters: { type: "provider" },
   });
 
-  const { data: projectsList, isLoading: projectLoading } = useQuery({
-    queryKey: ["projects"],
-
-    queryFn: () => projectService.list({}),
+  const {
+    projects,
+    isLoading: projectLoading,
+    handleSearchProject,
+  } = useProjectList({
+    key: ["dropdown"],
+    pageSize: 100,
   });
-
-  const projects: IOption[] = useMemo(
-    () =>
-      projectsList?.items.map((item: IProject) => ({
-        label: item.name,
-
-        value: item.id.toString(),
-      })) || [],
-
-    [projectsList]
-  );
 
   const { isSigned, isCompleted, isDraft, isCancelled } = useMemo(() => {
     const status = contractDetails?.status;
@@ -254,6 +250,7 @@ const ContractForm = ({
                     field.onChange(Number(val));
                   }}
                   placeholder="Select provider"
+                  onChange={(e) => handleSearchOrg(e.target.value)}
                 />
               );
             }}
@@ -311,6 +308,7 @@ const ContractForm = ({
                     ]);
                   }}
                   placeholder="Select project"
+                  onChange={(e) => handleSearchProject(e.target.value)}
                 />
               );
             }}

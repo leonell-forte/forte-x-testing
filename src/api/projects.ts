@@ -9,6 +9,8 @@ interface IProjectListProp {
   search?: string;
 
   listAll?: boolean;
+
+  pageSize?: number;
 }
 
 class ProjectsService {
@@ -18,6 +20,8 @@ class ProjectsService {
     search,
 
     listAll,
+
+    pageSize,
   }: IProjectListProp): Promise<{ items: IProject[]; totalSize: number }> {
     const params = new URLSearchParams();
 
@@ -40,7 +44,7 @@ class ProjectsService {
 
     params.append("$pageNum", page.toString());
 
-    params.append("$pageSize", DEFAULT_PAGE_SIZE);
+    params.append("$pageSize", pageSize?.toString() || DEFAULT_PAGE_SIZE);
 
     params.append("$orderBy", `"project"."createdAt" desc`);
 

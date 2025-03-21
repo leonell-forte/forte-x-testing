@@ -44,6 +44,8 @@ interface IDropdownProp extends InputHTMLAttributes<HTMLInputElement> {
   showAsTags?: boolean;
 
   enableSearch?: boolean;
+
+  filterOptions?: boolean;
 }
 
 const Dropdown = ({
@@ -65,10 +67,14 @@ const Dropdown = ({
 
   enableSearch,
 
+  filterOptions,
+
   ...props
 }: IDropdownProp) => {
   const dropdownRef = useRef(null);
+
   const inputRef = useRef<HTMLInputElement>(null);
+
   const [focused, setFocused] = useState(false);
 
   const [showList, setShowList] = useState(false);
@@ -83,14 +89,6 @@ const Dropdown = ({
         ? `${props.value.length} selected`
         : ""
       : (props.value as string);
-
-  const optionList = useMemo(
-    () =>
-      options.filter((item) =>
-        item.label?.toLowerCase().includes(search?.toLowerCase())
-      ),
-    [search, options]
-  );
 
   const onMultipleSelect = (value: string, e?: MouseEvent<HTMLDivElement>) => {
     if (e) {
@@ -119,6 +117,15 @@ const Dropdown = ({
       inputRef.current.focus();
     }
   }, [showList, enableSearch]);
+
+  const filteredOptions = useMemo(() => {
+    if (filterOptions) {
+      return options.filter((option) =>
+        option.label.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+    return options;
+  }, [options, search, filterOptions]);
 
   return (
     <div
@@ -208,7 +215,10 @@ const Dropdown = ({
                         setShowList(true);
                         setFocused(true);
                       }}
-                      onChange={(e) => setSearch(e.target.value)}
+                      onChange={(e) => {
+                        props.onChange?.(e);
+                        setSearch(e.target.value);
+                      }}
                       readOnly={!enableSearch || props?.readOnly}
                       disabled={props.disabled}
                     />
@@ -239,7 +249,10 @@ const Dropdown = ({
                         setFocused(true);
                       },
                     })}
-                    onChange={(e) => setSearch(e.target.value)}
+                    onChange={(e) => {
+                      props.onChange?.(e);
+                      setSearch(e.target.value);
+                    }}
                     readOnly={!enableSearch || props?.readOnly}
                   />
                 )}
@@ -258,64 +271,66 @@ const Dropdown = ({
         </PopoverTrigger>
 
         <PopoverContent onOpenAutoFocus={(e) => e.preventDefault()}>
-          {loading ? (
-            <div className="flex h-[100px] w-full items-center justify-center">
-              <Loader dark />
-            </div>
-          ) : optionList.length === 0 ? (
-            <div className="text-center text-sm text-black">
-              No results found.
-            </div>
-          ) : (
-            optionList.map((item, index) => {
-              const { label, value } = item;
-              const isSelected =
-                props?.value === label || props?.value === value;
+          <div className="sm:min-w-[250px]">
+            {loading ? (
+              <div className="flex h-[100px] w-full items-center justify-center">
+                <Loader dark />
+              </div>
+            ) : filteredOptions.length === 0 ? (
+              <div className="text-center text-sm text-black">
+                No results found.
+              </div>
+            ) : (
+              filteredOptions.map((item, index) => {
+                const { label, value } = item;
+                const isSelected =
+                  props?.value === label || props?.value === value;
 
-              const isHovered = hoverIndex === index;
+                const isHovered = hoverIndex === index;
 
-              return isMultiSelect ? (
-                <div
-                  key={index}
-                  className="checkbox group rounded-[8px] px-2.5 py-1.5 transition-all hover:bg-mint"
-                  role="button"
-                  onClick={(e) => onMultipleSelect(value, e)}
-                  onMouseEnter={() => setHoverIndex(index)}
-                  onMouseLeave={() => setHoverIndex(null)}
-                >
-                  <Checkbox
-                    white={isHovered}
-                    labelClass="text-[14px] text-black transition duration-500"
-                    checked={props?.value?.includes(value)}
-                    onChange={() => onMultipleSelect(value)}
-                    label={label}
-                  />
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    handleSelect!(value);
-                    setShowList(false);
-                    setSearch("");
-                  }}
-                  key={index}
-                  className="w-full text-left"
-                >
-                  <li
-                    className={cn(
-                      "list-none truncate rounded-[8px] p-2 text-sm text-black transition duration-500",
-                      isSelected ? "bg-mint" : "hover:bg-mint"
-                    )}
+                return isMultiSelect ? (
+                  <div
+                    key={index}
+                    className="checkbox group rounded-[8px] px-2.5 py-1.5 transition-all hover:bg-mint"
+                    role="button"
+                    onClick={(e) => onMultipleSelect(value, e)}
+                    onMouseEnter={() => setHoverIndex(index)}
+                    onMouseLeave={() => setHoverIndex(null)}
                   >
-                    {label}
-                  </li>
-                </button>
-              );
-            })
-          )}
+                    <Checkbox
+                      white={isHovered}
+                      labelClass="text-[14px] text-black transition duration-500"
+                      checked={props?.value?.includes(value)}
+                      onChange={() => onMultipleSelect(value)}
+                      label={label}
+                    />
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleSelect!(value);
+                      setShowList(false);
+                      setSearch("");
+                    }}
+                    key={index}
+                    className="w-full text-left"
+                  >
+                    <li
+                      className={cn(
+                        "list-none truncate rounded-[8px] p-2 text-sm text-black transition duration-500",
+                        isSelected ? "bg-mint" : "hover:bg-mint"
+                      )}
+                    >
+                      {label}
+                    </li>
+                  </button>
+                );
+              })
+            )}
+          </div>
         </PopoverContent>
         {helperText && (
           <div className="absolute pl-4">

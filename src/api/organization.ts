@@ -17,6 +17,8 @@ interface IListProps {
   search?: string;
 
   filters?: IFilters;
+
+  pageSize?: number;
 }
 
 class OrganizationService {
@@ -28,12 +30,14 @@ class OrganizationService {
     search,
 
     filters,
+
+    pageSize,
   }: IListProps): Promise<{ items: IOrganization[]; totalSize: number }> {
     const params = new URLSearchParams();
 
     params.append("$pageNum", page.toString());
 
-    params.append("$pageSize", DEFAULT_PAGE_SIZE);
+    params.append("$pageSize", pageSize?.toString() || DEFAULT_PAGE_SIZE);
 
     const searchFilter: IODataObject = {
       "organizations.name": {

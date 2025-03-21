@@ -6,6 +6,7 @@ import classNames from "classnames";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
+import useOrganizationList from "lib/common/lists/useOrganizationList";
 import { DEFAULT_DATE_FORMAT, ROLES } from "lib/constants";
 import useUserMutation from "lib/mutations/users";
 import { IOrganization } from "lib/types/organizations";
@@ -28,14 +29,10 @@ import { Tooltip } from "components/ui/tooltip/Tooltip";
 
 interface IUserDialogueProps extends IDialogueProps {
   userId?: string;
-
-  organizations: IOrganization[];
 }
 
 const UserDialogue = ({
   isVisible,
-
-  organizations,
 
   handleClose,
 
@@ -45,6 +42,17 @@ const UserDialogue = ({
   const { profile } = useProfile();
   const myRole = profile?.role;
   const { setShowPrompt } = useConfirmPrompt();
+
+  const {
+    rawList,
+    handleSearchOrg,
+    isLoading: orgLoading,
+  } = useOrganizationList({
+    key: ["dropdown"],
+    pageSize: 100,
+  });
+
+  const organizations = useMemo(() => rawList?.items || [], [rawList]);
 
   const { data: userData, isLoading } = useQuery({
     queryKey: ["specific-user", userId],
@@ -279,9 +287,11 @@ const UserDialogue = ({
                       (item) => item.id?.toString() === field.value
                     )?.registeredName
                   }
+                  loading={orgLoading}
                   options={sortOptions(filteredOrg)}
                   handleSelect={(val) => field.onChange(val)}
                   placeholder="Select organization"
+                  onChange={(e) => handleSearchOrg(e.target.value)}
                 />
               );
             }}
