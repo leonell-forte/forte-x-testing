@@ -113,7 +113,7 @@ const OrganizationForm = ({
 
   useAutoSaveForm(form, {
     formId,
-    enabled: !Boolean(orgData),
+    enabled: !orgData,
   });
 
   // autosave end
@@ -133,7 +133,7 @@ const OrganizationForm = ({
 
     reset();
     setEditMode(false);
-    !orgId && onClose();
+    if (!orgId) onClose();
   };
 
   // implements optimistic update after adding or updating organization

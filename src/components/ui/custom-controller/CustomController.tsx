@@ -14,7 +14,7 @@ import { AlertIcon, Tooltip } from "../tooltip/Tooltip";
 
 type CustomProps = {
   name: string;
-  control: Control<any>;
+  control?: Control<any>;
   label?: string;
   labelClassName?: string;
   required?: boolean;
@@ -75,12 +75,7 @@ export default function CustomController({
       open={Boolean(result?.message) && isFirstIndex}
       {...(tooltip && tooltip)}
     >
-      <div
-        className={cn(
-          "flex w-full flex-col gap-y-1.5 md:flex-row md:items-center",
-          containerClassName
-        )}
-      >
+      <div className={cn("space-y-1", containerClassName)}>
         {label && (
           <label htmlFor={name} className={cn("min-w-[140px]", labelClassName)}>
             {label}

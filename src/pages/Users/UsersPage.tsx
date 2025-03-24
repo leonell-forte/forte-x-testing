@@ -12,7 +12,7 @@ import { TbFilterX as FilterIcon } from "react-icons/tb";
 
 import useOrganizationList from "lib/common/lists/useOrganizationList";
 import { ROLES } from "lib/constants";
-import { useDebounce, usePage, usePageTitle } from "lib/hooks";
+import { useDebounce, usePage } from "lib/hooks";
 import { IsAuthorized, Users } from "lib/role-permissions";
 import { IUser } from "lib/types/users";
 
@@ -25,8 +25,6 @@ import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
 
 const UsersPage = () => {
-  usePageTitle("Users");
-
   const { page, setPage } = usePage();
 
   const [search, setSearch] = useState("");
@@ -121,7 +119,22 @@ const UsersPage = () => {
       {renderModal()}
 
       <div className="flex h-full flex-col space-y-2.5">
-        <div className="flex flex-col justify-between gap-2.5 sm:flex-row">
+        <div className="space-y-5">
+          <div className="flex flex-col justify-between gap-2.5 sm:flex-row">
+            <p className="text-[24px] font-semibold">Users</p>
+
+            {IsAuthorized([Users.CREATE]) && (
+              <Button
+                eventName="Add User"
+                onClick={() => {
+                  setModal("user");
+                }}
+              >
+                Add user
+              </Button>
+            )}
+          </div>
+
           <div className="flex flex-col flex-wrap gap-2.5 sm:flex-row">
             <div className="flex gap-2">
               <div className="w-full md:w-auto">
@@ -156,17 +169,6 @@ const UsersPage = () => {
               />
             </div>
           </div>
-
-          {IsAuthorized([Users.CREATE]) && (
-            <Button
-              eventName="Add User"
-              onClick={() => {
-                setModal("user");
-              }}
-            >
-              Add user
-            </Button>
-          )}
         </div>
 
         <div className="flex h-full flex-col justify-between gap-4">

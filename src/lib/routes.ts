@@ -5,12 +5,21 @@ import SearchResultsPage from "pages/Search/SearchResultsPage";
 import {
   Beneficiaries,
   Contracts,
+  // Invoices,
+  // Milestones,
   Organizations,
+  PermissionEnums,
   Projects,
   Users,
 } from "./role-permissions";
 
 const UsersPage = React.lazy(() => import("../pages/Users/UsersPage"));
+
+// const InvoicesPage = React.lazy(() => import("../pages/Invoices/InvoicesPage"));
+
+// const IndividualInvoicePage = React.lazy(
+//   () => import("../pages/Invoices/[id]/IndividualInvoicePage")
+// );
 
 const ProjectsPage = React.lazy(() => import("../pages/Projects/ProjectsPage"));
 
@@ -30,6 +39,10 @@ const BeneficiariesPage = React.lazy(
   () => import("../pages/Beneficiaries/BeneficiariesPage")
 );
 
+// const MilestonePage = React.lazy(
+//   () => import("../pages/Milestones/MilestonesPage")
+// );
+
 const LoginPage = React.lazy(() => import("../pages/Login/LoginPage"));
 
 const SignupPage = React.lazy(() => import("../pages/Signup/SignupPage"));
@@ -45,13 +58,25 @@ const ComponentsPage = React.lazy(
 export interface RouteConfig {
   link: string;
   Component: React.ComponentType;
-  permissions: Array<
-    Beneficiaries | Users | Organizations | Contracts | Projects
-  >;
+  permissions: Array<PermissionEnums>;
   public?: boolean;
 }
 
 export const ROUTES: RouteConfig[] = [
+  // {
+  //   link: "invoices",
+
+  //   Component: InvoicesPage,
+
+  //   permissions: [Invoices.NAVIGATE],
+  // },
+  // {
+  //   link: "invoices/:id",
+
+  //   Component: IndividualInvoicePage,
+
+  //   permissions: [Invoices.NAVIGATE],
+  // },
   {
     link: "users",
 
@@ -100,6 +125,14 @@ export const ROUTES: RouteConfig[] = [
     permissions: [Beneficiaries.NAVIGATE],
   },
 
+  // {
+  //   link: "milestones/*",
+
+  //   Component: MilestonePage,
+
+  //   permissions: [Milestones.NAVIGATE],
+  // },
+
   {
     link: "search/:query",
 
@@ -135,6 +168,7 @@ export const ROUTES: RouteConfig[] = [
 
     public: true,
   },
+
   {
     link: "/components",
 

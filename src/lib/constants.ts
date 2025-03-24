@@ -9,10 +9,13 @@ import { ReactComponent as Provider } from "assets/images/icons/provider.svg";
 import {
   Beneficiaries,
   Contracts,
+  // Invoices,
+  // Milestones,
   Organizations,
   Projects,
   Users,
 } from "./role-permissions";
+import { InvoiceStatus } from "./types/invoices";
 import { UserRoleType } from "./types/users";
 import { sortOptions } from "./utils";
 
@@ -50,6 +53,20 @@ export const MENUS = [
     permissions: [Users.NAVIGATE],
     icon: Funder,
   },
+
+  // {
+  //   name: "invoices",
+  //   link: "/invoices",
+  //   permissions: [Invoices.NAVIGATE],
+  //   icon: Invoice,
+  // },
+
+  // {
+  //   name: "Milestones",
+  //   link: "/milestones",
+  //   permissions: [Milestones.NAVIGATE],
+  //   icon: Milestone,
+  // },
 ];
 
 export const ROLES = [
@@ -177,6 +194,25 @@ export const CONTRACT_STATUS = [
   {
     label: "Cancelled",
     value: "cancelled",
+  },
+];
+
+export const MILESTONE_STATUS = [
+  {
+    label: "Open",
+    value: "open",
+  },
+  {
+    label: "Achieved",
+    value: "achieved",
+  },
+  {
+    label: "Invoiced",
+    value: "invoiced",
+  },
+  {
+    label: "Paid",
+    value: "paid",
   },
 ];
 
@@ -494,3 +530,9 @@ export const REDIRECT_PATHS: Record<UserRoleType, string> = {
 
   "read-only": "/beneficiaries",
 };
+
+export const INVOICE_STATUSES: Array<InvoiceStatus> = [
+  "Cancelled",
+  "Pending",
+  "Paid",
+];

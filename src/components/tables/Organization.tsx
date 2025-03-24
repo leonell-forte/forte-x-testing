@@ -3,6 +3,7 @@ import { useState } from "react";
 import { IOrganization } from "lib/types/organizations";
 
 import OrganizationDialogue from "components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
+import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
 
@@ -37,7 +38,7 @@ const OrganizationTable = ({ list, isLoading = false }: TOrganizationTable) => {
           handleClose={close}
         />
       )}
-      <div className="table-breakpoint:hidden">
+      <div className="lg:hidden">
         <Cards.Container isLoading={isLoading}>
           {list.map((item, index) => {
             const {
@@ -78,7 +79,7 @@ const OrganizationTable = ({ list, isLoading = false }: TOrganizationTable) => {
           })}
         </Cards.Container>
       </div>
-      <div className="hidden table-breakpoint:block">
+      <ScrollArea className="hidden w-[calc(100vw-330px)] overflow-hidden lg:block">
         <Table.Container isEmpty={!list} isLoading={isLoading}>
           <Table.Head>
             <Table.Row>
@@ -107,25 +108,17 @@ const OrganizationTable = ({ list, isLoading = false }: TOrganizationTable) => {
                   }}
                   key={bodyIndex}
                 >
-                  <Table.Data className="w-[140px]">{name}</Table.Data>
+                  <Table.Data>{name}</Table.Data>
 
-                  <Table.Data className="w-[180px]">
-                    {registeredName}
-                  </Table.Data>
+                  <Table.Data>{registeredName}</Table.Data>
 
-                  <Table.Data className="w-[100px]">
-                    {registrationNumber}
-                  </Table.Data>
+                  <Table.Data>{registrationNumber}</Table.Data>
 
-                  <Table.Data className="w-[260px]">
-                    {regions?.join(", ")}
-                  </Table.Data>
+                  <Table.Data>{regions?.join(", ")}</Table.Data>
 
-                  <Table.Data className="w-[140px] capitalize">
-                    {type}
-                  </Table.Data>
+                  <Table.Data className="capitalize">{type}</Table.Data>
 
-                  <Table.Data className="w-[100px]">
+                  <Table.Data>
                     <p className="truncate capitalize">{status}</p>
                   </Table.Data>
                 </Table.Row>
@@ -133,7 +126,8 @@ const OrganizationTable = ({ list, isLoading = false }: TOrganizationTable) => {
             })}
           </Table.Body>
         </Table.Container>
-      </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
     </>
   );
 };

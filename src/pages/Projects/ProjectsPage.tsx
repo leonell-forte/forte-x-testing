@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 
 import useProjectList from "lib/common/lists/useProjectList";
-import { usePage, usePageTitle } from "lib/hooks";
+import { usePage } from "lib/hooks";
 import { IsAuthorized, Projects } from "lib/role-permissions";
 import { IProject } from "lib/types/projects";
 
@@ -12,8 +12,6 @@ import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
 
 const ProjectsPage = () => {
-  usePageTitle("Projects");
-
   const { page, setPage } = usePage();
 
   const {
@@ -58,7 +56,19 @@ const ProjectsPage = () => {
       {renderModal()}
 
       <div className="flex h-full flex-col space-y-2.5">
-        <div className="flex flex-col items-start justify-between gap-2.5 sm:flex-row">
+        <div className="space-y-5">
+          <div className="flex flex-col items-start justify-between gap-2.5 sm:flex-row">
+            <p className="text-[24px] font-semibold">Projects</p>
+            {IsAuthorized([Projects.CREATE]) && (
+              <Button
+                eventName="Add Project"
+                onClick={() => setModal("project")}
+              >
+                Add project
+              </Button>
+            )}
+          </div>
+
           <SearchInput
             value={searchProjectValue}
             onChange={(e) => {
@@ -68,12 +78,6 @@ const ProjectsPage = () => {
             containerClass="md:max-w-[286px]"
             onClear={() => handleSearchProject("")}
           />
-
-          {IsAuthorized([Projects.CREATE]) && (
-            <Button eventName="Add Project" onClick={() => setModal("project")}>
-              Add project
-            </Button>
-          )}
         </div>
 
         <div className="flex h-full flex-col justify-between gap-4">

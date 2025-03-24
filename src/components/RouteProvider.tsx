@@ -19,6 +19,7 @@ import { SearchConsole } from "./Layout/Header/SearchConsole";
 import { ProfileProvider } from "./ProfileContext";
 import Providers from "./Providers";
 import CustomPrompt from "./ui/alert/custom-prompt";
+import ModalMarker from "./ui/dialogue/v2/Modal";
 import Spinner from "./ui/spinner/spinner";
 
 const Admin = () => {
@@ -52,6 +53,7 @@ const PrivateMapper = () => {
   return (
     <ProfileProvider>
       <CustomPrompt />
+      <ModalMarker />
       <Admin />
     </ProfileProvider>
   );

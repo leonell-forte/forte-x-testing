@@ -7,6 +7,7 @@ import { IUser } from "lib/types/users";
 import DeleteDialogue from "components/Dashboard/Users/Dialogues/DeleteDialogue";
 import UserDialogue from "components/Dashboard/Users/Dialogues/UserDialogue";
 import Button from "components/ui/button";
+import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
 
@@ -63,7 +64,7 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
     <>
       {renderModal()}
 
-      <div className="table-breakpoint:hidden">
+      <div className="lg:hidden">
         <Cards.Container isLoading={isLoading}>
           {list.map((item, index) => {
             const {
@@ -130,7 +131,7 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
         </Cards.Container>
       </div>
 
-      <div className="hidden table-breakpoint:block">
+      <ScrollArea className="hidden w-[calc(100vw-330px)] overflow-hidden lg:block">
         <Table.Container isEmpty={!list.length} isLoading={isLoading}>
           <Table.Head>
             <Table.Row>
@@ -168,24 +169,22 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
                   }
                   key={bodyIndex}
                 >
-                  <Table.Data className="w-[140px]">{firstName}</Table.Data>
+                  <Table.Data>{firstName}</Table.Data>
 
-                  <Table.Data className="w-[140px]">{lastName}</Table.Data>
+                  <Table.Data>{lastName}</Table.Data>
 
-                  <Table.Data className="w-[200px]">{email}</Table.Data>
+                  <Table.Data>{email}</Table.Data>
 
-                  <Table.Data className="w-[100px]">{phoneNumber}</Table.Data>
+                  <Table.Data>{phoneNumber}</Table.Data>
 
-                  <Table.Data className="w-[80px] capitalize">
+                  <Table.Data className="capitalize">
                     {formattedRole}
                   </Table.Data>
 
-                  <Table.Data className="w-[80px] capitalize">
-                    {status}
-                  </Table.Data>
+                  <Table.Data className="capitalize">{status}</Table.Data>
 
                   <Table.Data>{organization}</Table.Data>
-                  <Table.Data className="ml-auto w-[50px]">
+                  <Table.Data className="ml-auto">
                     {IsAuthorized([Users.DELETE]) && (
                       <div className="flex justify-end">
                         <Button
@@ -208,7 +207,8 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
             })}
           </Table.Body>
         </Table.Container>
-      </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
     </>
   );
 };

@@ -9,6 +9,7 @@ import { IProject } from "lib/types/projects";
 import DeleteDialogue from "components/Dashboard/Projects/Dialogues/DeleteDialogue";
 import ProjectDialogue from "components/Dashboard/Projects/Dialogues/ProjectDialogue";
 import Button from "components/ui/button";
+import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
 
@@ -62,7 +63,7 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
     <>
       {renderDialog()}
 
-      <div className="table-breakpoint:hidden">
+      <div className="lg:hidden">
         <Cards.Container isLoading={isLoading}>
           {list.map((item, index) => {
             const { id, name, outcomes, providers } = item;
@@ -84,7 +85,7 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
                   />
                   <Cards.Details
                     label="Outcomes"
-                    value={outcomes.map((item) => item.name).join(", ")}
+                    value={outcomes?.map((item) => item.name).join(", ")}
                   />
                 </Cards.Group>
                 <div className="absolute bottom-3 right-3 flex gap-2">
@@ -123,7 +124,7 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
         </Cards.Container>
       </div>
 
-      <div className="hidden table-breakpoint:block">
+      <ScrollArea className="hidden w-[calc(100vw-330px)] overflow-hidden lg:block">
         <Table.Container isEmpty={!list.length} isLoading={isLoading}>
           <Table.Head>
             <Table.Row>
@@ -147,14 +148,14 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
                   }}
                   key={bodyIndex}
                 >
-                  <Table.Data className="w-[220px]">{name}</Table.Data>
+                  <Table.Data>{name}</Table.Data>
 
-                  <Table.Data className="w-[220px]">
+                  <Table.Data>
                     {providers?.map((item) => item).join(", ") || "-"}
                   </Table.Data>
 
-                  <Table.Data className="w-[220px]">
-                    {outcomes.map((item) => item.name).join(", ")}
+                  <Table.Data>
+                    {outcomes?.map((item) => item.name).join(", ")}
                   </Table.Data>
 
                   <Table.Data>
@@ -196,7 +197,8 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
             })}
           </Table.Body>
         </Table.Container>
-      </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
     </>
   );
 };

@@ -173,7 +173,7 @@ const UserDialogue = ({
 
     reset();
     setEditMode(false);
-    !userId && close();
+    if (!userId) close();
   };
 
   useEffect(() => {
@@ -188,7 +188,7 @@ const UserDialogue = ({
 
   useAutoSaveForm(form, {
     formId,
-    enabled: !Boolean(userId),
+    enabled: !userId,
   });
 
   // autosave end

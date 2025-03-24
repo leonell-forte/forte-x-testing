@@ -7,6 +7,7 @@ import { IContract } from "lib/types/contracts";
 import ContractDialogue from "components/Dashboard/Contracts/Dialogues/ContractDialogue";
 import DeleteDialogue from "components/Dashboard/Contracts/Dialogues/DeleteDialogue";
 import Button from "components/ui/button";
+import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
 
@@ -73,7 +74,7 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
   return (
     <>
       {renderDialog()}
-      <div className="table-breakpoint:hidden">
+      <div className="lg:hidden">
         <Cards.Container isLoading={isLoading}>
           {contracts.map((item, index) => {
             const {
@@ -134,7 +135,7 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
           })}
         </Cards.Container>
       </div>
-      <div className="hidden table-breakpoint:block">
+      <ScrollArea className="hidden w-[calc(100vw-330px)] overflow-hidden lg:block">
         <Table.Container isEmpty={!contracts.length} isLoading={isLoading}>
           <Table.Head>
             <Table.Row>
@@ -175,23 +176,21 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
                   }
                   key={index}
                 >
-                  <Table.Data className="w-[40px]">{id}</Table.Data>
+                  <Table.Data>{id}</Table.Data>
 
-                  <Table.Data className="w-[120px]">{name}</Table.Data>
+                  <Table.Data>{name}</Table.Data>
 
-                  <Table.Data className="w-[140px]">
-                    {provider?.name}
-                  </Table.Data>
+                  <Table.Data>{provider?.name}</Table.Data>
 
-                  <Table.Data className="w-[90px] capitalize">
+                  <Table.Data className="capitalize">
                     {status?.toLowerCase()}
                   </Table.Data>
 
-                  <Table.Data className="w-[120px]">{project}</Table.Data>
+                  <Table.Data>{project}</Table.Data>
 
-                  <Table.Data className="w-[190px]">{documentName}</Table.Data>
+                  <Table.Data>{documentName}</Table.Data>
 
-                  <Table.Data className="ml-auto w-[40px]">
+                  <Table.Data className="ml-auto">
                     {IsAuthorized([Contracts.DELETE]) && (
                       <div className="flex justify-end">
                         <Button
@@ -212,7 +211,8 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
             })}
           </Table.Body>
         </Table.Container>
-      </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
     </>
   );
 };

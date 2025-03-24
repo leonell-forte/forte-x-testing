@@ -10,6 +10,7 @@ import { MENUS } from "lib/constants";
 import { useAppDispatch, useAppSelector, useScreenSize } from "lib/hooks";
 import { IsAuthorized } from "lib/role-permissions";
 import { setShowSidePanel } from "lib/slice/layout";
+import { cn } from "lib/utils";
 
 import MobileUserDropdown from "../Header/MobileUserDropdown";
 
@@ -48,7 +49,7 @@ const SidePanel = () => {
       initial={variants[showSidePanel.toString() as "true" | "false"]}
       animate={variants[showSidePanel.toString() as "true" | "false"]}
       transition={{ type: "spring", duration: 0.7, bounce: 0 }}
-      className="lg:max-h-auto fixed left-0 top-0 z-20 h-full min-h-screen w-[260px] flex-shrink-0 rounded-[16px] border-transparent bg-panel px-8 py-6 backdrop-blur-md backdrop-brightness-[60%] lg:relative lg:h-auto lg:w-[192px] lg:backdrop-blur-0 lg:backdrop-brightness-100"
+      className="lg:max-h-auto fixed left-0 top-0 z-20 h-full w-[260px] flex-shrink-0 rounded-[16px] border-transparent bg-panel px-8 py-6 backdrop-blur-md backdrop-brightness-[60%] lg:relative lg:h-auto lg:w-[206px] lg:backdrop-blur-0 lg:backdrop-brightness-100"
     >
       <button
         onClick={handleClose}
@@ -73,16 +74,23 @@ const SidePanel = () => {
                 <Link key={index} to={link}>
                   <li
                     className={classNames(
-                      "flex items-center gap-3 text-lg capitalize transition-all lg:text-base"
+                      "group flex items-center gap-3 text-lg capitalize transition-all lg:text-base"
                     )}
                   >
                     <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center">
-                      <Icon className={active ? "fill-mint" : "fill-white"} />
+                      <Icon
+                        className={cn(
+                          active
+                            ? "fill-mint"
+                            : "fill-white group-hover:fill-mint/70",
+                          "transition"
+                        )}
+                      />
                     </div>
                     <span
-                      className={classNames(
-                        "font-light",
-                        active ? "text-mint" : "hover:text-mint/70"
+                      className={cn(
+                        "font-light transition",
+                        active ? "text-mint" : "group-hover:text-mint/70"
                       )}
                     >
                       {name}

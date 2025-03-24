@@ -3,6 +3,10 @@ import { format } from "date-fns";
 import { twMerge } from "tailwind-merge";
 
 import { IOption } from "components/ui/dropdown";
+import { StatusVariant } from "components/ui/status";
+
+import { InvoiceStatus, MilestoneStatus } from "./types/invoices";
+import { EvidenceStatus } from "./types/milestones";
 
 export const filterBySearch = (
   list: Record<string, string>[],
@@ -98,14 +102,14 @@ export const generateODataQuery = (obj: IODataObject): string => {
   return searchQuery || nonSearchQuery || "";
 };
 
-export const formatDate = (date: string | Date, dateFormat: string) => {
+export const formatDate = (date: string | Date, dateFormat?: string) => {
   const parsedDate = new Date(date);
 
   if (isNaN(parsedDate.getTime())) {
     // Return an empty string if the date is invalid
     return "-";
   }
-  return format(parsedDate, dateFormat);
+  return format(parsedDate, dateFormat || "dd-LL-yyyy");
 };
 
 export const findLabelFromOptions = (
@@ -169,4 +173,68 @@ export function separateCamelCase(str: string) {
 
 export const sortOptions = (options: IOption[]) => {
   return options.sort((a, b) => a.label.localeCompare(b.label));
+};
+
+export function formatCurrency(
+  amount: number,
+  currency: string = "USD",
+  locale: string = "en-US"
+) {
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: currency,
+  }).format(amount);
+}
+export function parseNumber<T>(
+  str: string | number,
+  defaultValue?: T
+): T | string | number | undefined {
+  const v = parseFloat(`${str}`.replace(/,/g, ""));
+  // eslint-disable-next-line no-restricted-globals
+  if (isNaN(v)) return typeof defaultValue !== "boolean" ? defaultValue : str;
+  return v;
+}
+
+export const formatNumber = (v: number | string, decimal = 0) => {
+  try {
+    const n = parseNumber(v) as number;
+    // eslint-disable-next-line no-restricted-globals
+    if (isNaN(n)) return v;
+    return n.toLocaleString(undefined, {
+      minimumFractionDigits: decimal,
+      maximumFractionDigits: decimal,
+    });
+  } catch (err) {
+    console.error(err);
+    return v;
+  }
+};
+
+export const getStatusVariant = (
+  status: InvoiceStatus | MilestoneStatus | EvidenceStatus
+): StatusVariant => {
+  switch (status) {
+    case "Paid":
+      return "neutral";
+    case "Pending":
+      return "warning";
+    case "Cancelled":
+      return "danger";
+    case "Achieved":
+      return "warning";
+    case "Open":
+      return "primary";
+    case "Accepted":
+      return "primary";
+    case "Pending Review":
+      return "warning";
+    case "More Information Requested":
+      return "primary";
+    case "Invoiced":
+      return "success";
+    case "Rejected":
+      return "danger";
+    default:
+      return "primary";
+  }
 };

@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useRef } from "react";
 import type { Path, UseFormReturn } from "react-hook-form";
 
@@ -27,6 +25,7 @@ export function useAutoSaveForm<TFormValues extends Record<string, any>>(
   options: AutoSaveOptions
 ) {
   const { formId, idleTime = 120000, enabled = true, onSave } = options;
+  // eslint-disable-next-line no-undef
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const storageKey = `form-autosave-${formId}`;
 
@@ -95,7 +94,7 @@ export function useAutoSaveForm<TFormValues extends Record<string, any>>(
         clearTimeout(timerRef.current);
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
   }, [enabled, idleTime]);
 
   useEffect(() => {
@@ -108,7 +107,7 @@ export function useAutoSaveForm<TFormValues extends Record<string, any>>(
       );
       clearSavedData();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
   }, []);
 
   return {

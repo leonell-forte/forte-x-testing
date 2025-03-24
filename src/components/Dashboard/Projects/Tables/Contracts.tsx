@@ -4,10 +4,11 @@ import { useState } from "react";
 
 import { DEFAULT_DATE_FORMAT } from "lib/constants";
 import { IsAuthorized, Projects } from "lib/role-permissions";
-import { Contracts as ContractPermission } from "lib/role-permissions";
+// import { Contracts as ContractPermission } from "lib/role-permissions";
 import { formatDate } from "lib/utils";
 
 import Button from "components/ui/button";
+import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
 
@@ -46,11 +47,11 @@ const Contracts = ({ projectId }: IProps) => {
     setSelectedContract("");
   };
 
-  const handleEdit = (id: string) => {
-    setSelectedContract(id);
+  // const handleEdit = (id: string) => {
+  //   setSelectedContract(id);
 
-    setModal("contract");
-  };
+  //   setModal("contract");
+  // };
 
   const renderModal = (modal: ModalLabelType) => {
     switch (modal) {
@@ -96,7 +97,7 @@ const Contracts = ({ projectId }: IProps) => {
           <Cards.Container isLoading={isLoading}>
             {contractList?.items.map((item, index) => {
               const {
-                id,
+                // id,
 
                 provider,
 
@@ -113,19 +114,7 @@ const Contracts = ({ projectId }: IProps) => {
                 outcomenames,
               } = item;
               return (
-                <Cards.Card
-                  onClick={
-                    IsAuthorized([ContractPermission.UPDATE])
-                      ? (e) => {
-                          e.stopPropagation();
-
-                          handleEdit(id!.toString());
-                        }
-                      : undefined
-                  }
-                  key={index}
-                  title={name}
-                >
+                <Cards.Card key={index} title={name}>
                   <Cards.Group cols={2}>
                     <Cards.Details label="Provider" value={provider?.name} />
                     <Cards.Details
@@ -156,7 +145,7 @@ const Contracts = ({ projectId }: IProps) => {
             })}
           </Cards.Container>
         </div>
-        <div className="hidden lg:block">
+        <ScrollArea className="hidden w-[calc(100vw-330px)] overflow-hidden lg:block">
           <Table.Container
             isLoading={isLoading}
             isEmpty={!contractList?.items.length}
@@ -189,51 +178,33 @@ const Contracts = ({ projectId }: IProps) => {
                   outcomenames,
                 } = item;
                 return (
-                  <Table.Row
-                    onClick={
-                      IsAuthorized([ContractPermission.UPDATE])
-                        ? (e) => {
-                            e.stopPropagation();
+                  <Table.Row key={index}>
+                    <Table.Data>{id}</Table.Data>
 
-                            handleEdit(id!.toString());
-                          }
-                        : undefined
-                    }
-                    key={index}
-                  >
-                    <Table.Data className="w-[100px]">{id}</Table.Data>
+                    <Table.Data>{name}</Table.Data>
 
-                    <Table.Data className="w-[100px]">{name}</Table.Data>
+                    <Table.Data>{provider?.name}</Table.Data>
 
-                    <Table.Data className="w-[150px]">
-                      {provider?.name}
-                    </Table.Data>
+                    <Table.Data>{outcomenames?.join(", ")}</Table.Data>
 
-                    <Table.Data className="w-[150px]">
-                      {outcomenames?.join(", ")}
-                    </Table.Data>
+                    <Table.Data>{targetNoOfBenefeciaries}</Table.Data>
 
-                    <Table.Data className="w-[80px]">
-                      {targetNoOfBenefeciaries}
-                    </Table.Data>
-
-                    <Table.Data className="w-[120px] capitalize">
+                    <Table.Data className="capitalize">
                       {status?.toLowerCase()}
                     </Table.Data>
 
-                    <Table.Data className="w-[120px]">
+                    <Table.Data>
                       {formatDate(startDate, "LL-dd-yyyy")}
                     </Table.Data>
 
-                    <Table.Data className="w-[120px]">
-                      {formatDate(endDate, "LL-dd-yyyy")}
-                    </Table.Data>
+                    <Table.Data>{formatDate(endDate, "LL-dd-yyyy")}</Table.Data>
                   </Table.Row>
                 );
               })}
             </Table.Body>
           </Table.Container>
-        </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
       </div>
     </>
   );

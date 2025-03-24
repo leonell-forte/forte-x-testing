@@ -12,6 +12,7 @@ import BeneficiariesDialogue from "components/Dashboard/Beneficiaries/Dialogues/
 import DeleteDialogue from "components/Dashboard/Beneficiaries/Dialogues/DeleteDialogue";
 import Button from "components/ui/button";
 import Checkbox from "components/ui/checkbox";
+import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
 
@@ -94,7 +95,7 @@ const BeneficiariesTable = ({
   return (
     <>
       {renderDialog()}
-      <div className="min-[1350px]:hidden">
+      <div className="lg:hidden">
         <Cards.Container isLoading={isLoading}>
           {list.map((item, index) => {
             const {
@@ -212,7 +213,7 @@ const BeneficiariesTable = ({
           })}
         </Cards.Container>
       </div>
-      <div className="hidden min-[1350px]:block">
+      <ScrollArea className="hidden w-[calc(100vw-330px)] overflow-hidden lg:block">
         <Table.Container isLoading={isLoading} isEmpty={!list?.length}>
           <Table.Head>
             <Table.Row>
@@ -224,7 +225,7 @@ const BeneficiariesTable = ({
                       list?.length !== 0 && selectedIds.length === list.length
                     }
                     label="First name"
-                    labelClass="!text-black text-[14px] font-[450]"
+                    labelClass="!text-white text-base font-semibold"
                     onChange={handleSelectAll}
                   />
                 </Table.Header>
@@ -289,7 +290,7 @@ const BeneficiariesTable = ({
                     setEditMode(false);
                   }}
                 >
-                  <Table.Data className="w-[100px] !pl-4">
+                  <Table.Data className="!px-4">
                     <div className="flex items-center gap-2">
                       {setChecked ? (
                         <div
@@ -326,31 +327,31 @@ const BeneficiariesTable = ({
                     </div>
                   </Table.Data>
 
-                  <Table.Data className="w-[100px]">{lastName}</Table.Data>
+                  <Table.Data>{lastName}</Table.Data>
 
-                  <Table.Data className="w-[130px]">{email}</Table.Data>
+                  <Table.Data>{email}</Table.Data>
 
-                  <Table.Data className="w-[120px]">{phoneNumber}</Table.Data>
+                  <Table.Data>{phoneNumber}</Table.Data>
 
-                  <Table.Data className="w-[140px]">{provider}</Table.Data>
+                  <Table.Data>{provider}</Table.Data>
 
-                  <Table.Data className="w-[90px] capitalize">
+                  <Table.Data className="capitalize">
                     {status.toLowerCase()}
                   </Table.Data>
 
-                  <Table.Data className="w-[110px]">
+                  <Table.Data>
                     {formatDate(cohortStartDate || "", DEFAULT_DATE_FORMAT)}
                   </Table.Data>
 
-                  <Table.Data className="w-[110px]">
+                  <Table.Data>
                     {formatDate(cohortEndDate || "", DEFAULT_DATE_FORMAT)}
                   </Table.Data>
 
-                  <Table.Data className="w-[150px]">
+                  <Table.Data>
                     {evidences?.map((item) => item.file.filename).join(", ")}
                   </Table.Data>
 
-                  <Table.Data className="ml-auto w-[50px]">
+                  <Table.Data className="ml-auto">
                     {IsAuthorized([Beneficiaries.DELETE]) && (
                       <div className="flex justify-end">
                         <Button
@@ -371,7 +372,8 @@ const BeneficiariesTable = ({
             })}
           </Table.Body>
         </Table.Container>
-      </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
     </>
   );
 };

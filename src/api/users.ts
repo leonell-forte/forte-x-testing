@@ -9,7 +9,7 @@ class UserService {
     search?: string,
     role?: string,
     organization?: string[]
-  ): Promise<{ items: IUser[]; totalSize: number }> {
+  ): Promise<{ items: IUser[]; totalSize: number; pageSize: number }> {
     const params = new URLSearchParams();
 
     const filter: IODataObject = {

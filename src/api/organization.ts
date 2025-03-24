@@ -32,7 +32,11 @@ class OrganizationService {
     filters,
 
     pageSize,
-  }: IListProps): Promise<{ items: IOrganization[]; totalSize: number }> {
+  }: IListProps): Promise<{
+    items: IOrganization[];
+    totalSize: number;
+    pageSize: number;
+  }> {
     const params = new URLSearchParams();
 
     params.append("$pageNum", page.toString());

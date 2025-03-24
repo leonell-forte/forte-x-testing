@@ -34,7 +34,11 @@ class ContractService {
     projectId,
 
     pageSize,
-  }: IContractListProps): Promise<{ items: IContract[]; totalSize: number }> {
+  }: IContractListProps): Promise<{
+    items: IContract[];
+    totalSize: number;
+    pageSize: number;
+  }> {
     const params = new URLSearchParams();
 
     let filtersData: IODataObject = {

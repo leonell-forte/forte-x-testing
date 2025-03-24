@@ -5,7 +5,7 @@ import { TbFilterX as FilterIcon } from "react-icons/tb";
 import useContractList from "lib/common/lists/useContractList";
 import useProjectList from "lib/common/lists/useProjectList";
 import { CONTRACT_STATUS } from "lib/constants";
-import { usePage, usePageTitle } from "lib/hooks";
+import { usePage } from "lib/hooks";
 import { Contracts, IsAuthorized } from "lib/role-permissions";
 import { IContractFilters, StatusType } from "lib/types/contracts";
 import { findLabelFromOptions, sortOptions } from "lib/utils";
@@ -20,8 +20,6 @@ import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
 
 const ContractsPage = () => {
-  usePageTitle("Contracts");
-
   const { page, setPage } = usePage();
 
   const initialFilter = {
@@ -102,7 +100,19 @@ const ContractsPage = () => {
       {renderModal()}
 
       <div className="flex h-full flex-col space-y-2.5">
-        <div className="flex flex-col justify-between gap-2.5 sm:flex-row">
+        <div className="space-y-5">
+          <div className="flex flex-col justify-between gap-2.5 sm:flex-row">
+            <p className="text-[24px] font-semibold">Contracts</p>
+
+            {IsAuthorized([Contracts.CREATE]) && (
+              <Button
+                eventName="Add Contract"
+                onClick={() => setModal("contract")}
+              >
+                Add contract
+              </Button>
+            )}
+          </div>
           <div className="flex flex-col gap-2.5 sm:flex-row">
             <div className="flex gap-2">
               <div className="w-full md:w-auto">
@@ -132,15 +142,6 @@ const ContractsPage = () => {
               <Filters filters={filters} setFilters={setFilters} />
             </div>
           </div>
-
-          {IsAuthorized([Contracts.CREATE]) && (
-            <Button
-              eventName="Add Contract"
-              onClick={() => setModal("contract")}
-            >
-              Add contract
-            </Button>
-          )}
         </div>
 
         <div className="flex h-full flex-col justify-between gap-4">
@@ -151,6 +152,7 @@ const ContractsPage = () => {
               <Pagination
                 page={page}
                 onPageChange={(val) => setPage(val)}
+                pageSize={contractList?.totalSize}
                 total={contractList?.totalSize as number}
               />
             </div>

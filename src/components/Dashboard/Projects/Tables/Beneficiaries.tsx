@@ -5,6 +5,7 @@ import { useState } from "react";
 import { IsAuthorized, Projects } from "lib/role-permissions";
 
 import Button from "components/ui/button";
+import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
 
@@ -116,7 +117,7 @@ const Beneficiaries = ({ id }: IProps) => {
           </Cards.Container>
         </div>
 
-        <div className="hidden lg:block">
+        <ScrollArea className="hidden w-[calc(100vw-330px)] overflow-hidden lg:block">
           <Table.Container isLoading={isLoading} isEmpty={!data?.items.length}>
             <Table.Head>
               <Table.Row>
@@ -164,7 +165,8 @@ const Beneficiaries = ({ id }: IProps) => {
               })}
             </Table.Body>
           </Table.Container>
-        </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
       </div>
     </>
   );

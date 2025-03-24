@@ -22,14 +22,15 @@ const Button = ({
 }: IButtonProp) => {
   const variants: Record<string, object> = {
     primary: {
-      backgroundColor: active ? "#42ECA8" : "#fff",
+      backgroundColor: disabled ? "#C6C6C6" : "#42eca8",
       borderRadius: "100px",
       boxShadow: "none",
-      color: disabled ? "#787878" : "#0A312A",
+      color: disabled ? "#8E8E8E" : "#0A312A",
       fontWeight: "450",
       "&:hover": {
-        backgroundColor: "#42ECA8",
+        backgroundColor: "#14c57e",
       },
+
       transitionProperty: "all",
       transitionDuration: "400ms",
     },
@@ -39,7 +40,6 @@ const Button = ({
       border: "2px solid",
       borderColor: disabled ? "#0A312Aa" : active ? "#42ECA8" : "#ffffff",
       borderRadius: "100px",
-      height: "44px",
       boxShadow: "none",
       color: disabled ? "#787878" : active ? "#42ECA8" : "#ffffff",
       fontWeight: "450",
@@ -54,7 +54,6 @@ const Button = ({
     tertiary: {
       backgroundColor: "transparent",
       borderRadius: "100px",
-      height: "44px",
       boxShadow: "none",
       color: disabled ? "#787878" : active ? "#42ECA8" : "#ffffff",
       fontWeight: "450",
@@ -76,7 +75,7 @@ const Button = ({
       sx={variants[(buttonType as keyof typeof variants) || "primary"]}
       {...props}
       className={classNames(
-        "h-11 gap-[10px] truncate !px-6 !normal-case transition-all",
+        "h-fit gap-[10px] truncate !px-6 py-2.5 !normal-case transition-all",
 
         props.className
       )}

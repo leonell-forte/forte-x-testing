@@ -1,6 +1,8 @@
 import { Skeleton } from "@mui/material";
 import classNames from "classnames";
-import { HTMLAttributes, PropsWithChildren } from "react";
+import { HTMLAttributes, PropsWithChildren, ReactNode } from "react";
+
+import InfoVertical from "./info-vertical/InfoVertical";
 
 type Title = {
   title?: string;
@@ -12,7 +14,7 @@ type IProps = PropsWithChildren<HTMLAttributes<HTMLDivElement>> & {
 
 type Details = {
   label: string;
-  value?: string;
+  value?: ReactNode;
   capitalize?: boolean;
 };
 
@@ -61,15 +63,17 @@ const Cards = {
     return (
       <div
         className={classNames(
-          "relative animate-fadeIn overflow-hidden rounded-[.5em] bg-panel p-4 text-[14px] transition-all",
+          "relative animate-fadeIn overflow-hidden rounded-[.5em] bg-panel p-6 text-[14px] transition-all",
           className,
           props.onClick && "cursor-pointer hover:brightness-75"
         )}
         {...props}
       >
-        <p className="mb-2 truncate text-[18px] font-bold capitalize">
-          {title}
-        </p>
+        {title && (
+          <p className="mb-4 truncate text-[18px] font-bold capitalize">
+            {title}
+          </p>
+        )}
         {props.children}
       </div>
     );
@@ -79,7 +83,7 @@ const Cards = {
     return (
       <div
         className={classNames(
-          "grid gap-2",
+          "grid gap-6",
 
           className
         )}
@@ -93,12 +97,11 @@ const Cards = {
 
   Details: ({ label, value, capitalize }: Details) => {
     return (
-      <div>
-        <p className="text-[12px] font-extralight">{label}</p>
+      <InfoVertical label={label}>
         <p className={classNames("truncate", capitalize && "capitalize")}>
           {value || "-"}
         </p>
-      </div>
+      </InfoVertical>
     );
   },
 };

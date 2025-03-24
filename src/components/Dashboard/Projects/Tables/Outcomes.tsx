@@ -13,8 +13,10 @@ import { IsAuthorized, Projects } from "lib/role-permissions";
 import { ProjectFieldValues } from "lib/types/projects";
 import { projects } from "lib/validators/projects";
 
+import { BreadCrumb } from "components/ui/breadcrumb/Breadcrumb";
 import Button from "components/ui/button";
 import Input from "components/ui/input";
+import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
 
@@ -76,186 +78,189 @@ const Outcomes = ({ id }: IProps) => {
   };
 
   return (
-    <div className="space-y-2.5">
-      <p className="text-[24px] font-semibold">Outcomes</p>
+    <>
+      <BreadCrumb href="/projects">Projects</BreadCrumb>
+      <BreadCrumb>Project: {project?.name}</BreadCrumb>
+      <div className="space-y-2.5">
+        <p className="text-[24px] font-semibold">Outcomes</p>
 
-      <div className="lg:hidden">
-        <Cards.Container
-          isLoading={isLoading}
-          className="!grid-cols-1 md:!grid-cols-2"
-        >
-          {project?.outcomes.map((item, index) => {
-            const { name, description } = item;
-            const onEdit = index === editIndex;
+        <div className="lg:hidden">
+          <Cards.Container
+            isLoading={isLoading}
+            className="!grid-cols-1 md:!grid-cols-2"
+          >
+            {project?.outcomes.map((item, index) => {
+              const { name, description } = item;
+              const onEdit = index === editIndex;
 
-            return (
-              <Cards.Card key={index}>
-                <div
-                  className={classNames(
-                    "flex items-end",
-                    onEdit ? "flex-col gap-4" : "flex-row"
-                  )}
-                >
-                  <div className="w-full space-y-2">
-                    <p className="truncate text-[18px] font-bold capitalize">
+              return (
+                <Cards.Card key={index}>
+                  <div
+                    className={classNames(
+                      "flex items-end",
+                      onEdit ? "flex-col gap-4" : "flex-row"
+                    )}
+                  >
+                    <div className="w-full space-y-2">
+                      <p className="truncate text-[18px] font-bold capitalize">
+                        {onEdit ? (
+                          <Controller
+                            name={`outcomes.${index}.name`}
+                            control={control}
+                            render={({ field }) => (
+                              <div className="py-2">
+                                <Input label="Name" {...field} />
+                              </div>
+                            )}
+                          />
+                        ) : (
+                          name
+                        )}
+                      </p>
+                      <p>
+                        {onEdit ? (
+                          <Controller
+                            name={`outcomes.${index}.description`}
+                            control={control}
+                            render={({ field }) => (
+                              <div className="py-2">
+                                <Input label="Description" {...field} />
+                              </div>
+                            )}
+                          />
+                        ) : (
+                          description
+                        )}
+                      </p>
+                    </div>
+                    <div>
+                      {IsAuthorized([Projects.UPDATE]) && (
+                        <div className="flex justify-end gap-1.5">
+                          {onEdit ? (
+                            <>
+                              <Button onClick={closeEdit} buttonType="tertiary">
+                                Cancel
+                              </Button>
+
+                              <Button
+                                loading={isPending}
+                                onClick={handleSubmit(onSubmit)}
+                              >
+                                Save
+                              </Button>
+                            </>
+                          ) : (
+                            <Button
+                              buttonType="default"
+                              type="button"
+                              onClick={() => setEditIndex(index)}
+                              className="group"
+                            >
+                              <Pencil className="h-auto w-5 transition-all group-hover:fill-mint" />
+                            </Button>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </Cards.Card>
+              );
+            })}
+          </Cards.Container>
+        </div>
+
+        <ScrollArea className="hidden w-[calc(100vw-330px)] overflow-hidden lg:block">
+          <Table.Container isLoading={isLoading}>
+            <Table.Head>
+              <Table.Row>
+                {HEADERS.map((item, index) => {
+                  return <Table.Header key={index}>{item}</Table.Header>;
+                })}
+
+                <Table.Header></Table.Header>
+              </Table.Row>
+            </Table.Head>
+
+            <Table.Body>
+              {project?.outcomes.map((item, index) => {
+                const { name, description } = item;
+
+                const onEdit = index === editIndex;
+
+                return (
+                  <Table.Row key={index}>
+                    <Table.Data>{`Outcome ${index + 1}`}</Table.Data>
+
+                    <Table.Data>
                       {onEdit ? (
                         <Controller
                           name={`outcomes.${index}.name`}
                           control={control}
                           render={({ field }) => (
-                            <div className="py-2">
-                              <Input label="Name" {...field} />
+                            <div className="py-1">
+                              <Input {...field} />
                             </div>
                           )}
                         />
                       ) : (
                         name
                       )}
-                    </p>
-                    <p>
+                    </Table.Data>
+
+                    <Table.Data>
                       {onEdit ? (
                         <Controller
                           name={`outcomes.${index}.description`}
                           control={control}
                           render={({ field }) => (
-                            <div className="py-2">
-                              <Input label="Description" {...field} />
+                            <div className="py-1">
+                              <Input {...field} />
                             </div>
                           )}
                         />
                       ) : (
                         description
                       )}
-                    </p>
-                  </div>
-                  <div>
-                    {IsAuthorized([Projects.UPDATE]) && (
-                      <div className="flex justify-end gap-1.5">
-                        {onEdit ? (
-                          <>
-                            <Button onClick={closeEdit} buttonType="tertiary">
-                              Cancel
-                            </Button>
+                    </Table.Data>
 
+                    <Table.Data>
+                      {IsAuthorized([Projects.UPDATE]) && (
+                        <div className="flex justify-end gap-1.5">
+                          {onEdit ? (
+                            <>
+                              <Button onClick={closeEdit} buttonType="tertiary">
+                                Cancel
+                              </Button>
+
+                              <Button
+                                loading={isPending}
+                                onClick={handleSubmit(onSubmit)}
+                              >
+                                Save
+                              </Button>
+                            </>
+                          ) : (
                             <Button
-                              loading={isPending}
-                              onClick={handleSubmit(onSubmit)}
+                              buttonType="default"
+                              type="button"
+                              onClick={() => setEditIndex(index)}
+                              className="group"
                             >
-                              Save
+                              <Pencil className="h-auto w-5 transition-all group-hover:fill-mint" />
                             </Button>
-                          </>
-                        ) : (
-                          <Button
-                            buttonType="default"
-                            type="button"
-                            onClick={() => setEditIndex(index)}
-                            className="group"
-                          >
-                            <Pencil className="h-auto w-5 transition-all group-hover:fill-mint" />
-                          </Button>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </Cards.Card>
-            );
-          })}
-        </Cards.Container>
-      </div>
-
-      <div className="hidden lg:block">
-        <Table.Container isLoading={isLoading}>
-          <Table.Head>
-            <Table.Row>
-              {HEADERS.map((item, index) => {
-                return <Table.Header key={index}>{item}</Table.Header>;
+                          )}
+                        </div>
+                      )}
+                    </Table.Data>
+                  </Table.Row>
+                );
               })}
-
-              <Table.Header></Table.Header>
-            </Table.Row>
-          </Table.Head>
-
-          <Table.Body>
-            {project?.outcomes.map((item, index) => {
-              const { name, description } = item;
-
-              const onEdit = index === editIndex;
-
-              return (
-                <Table.Row key={index}>
-                  <Table.Data className="w-[120px]">{`Outcome ${
-                    index + 1
-                  }`}</Table.Data>
-
-                  <Table.Data className="w-[300px]">
-                    {onEdit ? (
-                      <Controller
-                        name={`outcomes.${index}.name`}
-                        control={control}
-                        render={({ field }) => (
-                          <div className="py-1">
-                            <Input {...field} />
-                          </div>
-                        )}
-                      />
-                    ) : (
-                      name
-                    )}
-                  </Table.Data>
-
-                  <Table.Data>
-                    {onEdit ? (
-                      <Controller
-                        name={`outcomes.${index}.description`}
-                        control={control}
-                        render={({ field }) => (
-                          <div className="py-1">
-                            <Input {...field} />
-                          </div>
-                        )}
-                      />
-                    ) : (
-                      description
-                    )}
-                  </Table.Data>
-
-                  <Table.Data>
-                    {IsAuthorized([Projects.UPDATE]) && (
-                      <div className="flex justify-end gap-1.5">
-                        {onEdit ? (
-                          <>
-                            <Button onClick={closeEdit} buttonType="tertiary">
-                              Cancel
-                            </Button>
-
-                            <Button
-                              loading={isPending}
-                              onClick={handleSubmit(onSubmit)}
-                            >
-                              Save
-                            </Button>
-                          </>
-                        ) : (
-                          <Button
-                            buttonType="default"
-                            type="button"
-                            onClick={() => setEditIndex(index)}
-                            className="group"
-                          >
-                            <Pencil className="h-auto w-5 transition-all group-hover:fill-mint" />
-                          </Button>
-                        )}
-                      </div>
-                    )}
-                  </Table.Data>
-                </Table.Row>
-              );
-            })}
-          </Table.Body>
-        </Table.Container>
+            </Table.Body>
+          </Table.Container>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
       </div>
-    </div>
+    </>
   );
 };
 

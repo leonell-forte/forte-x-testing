@@ -208,7 +208,7 @@ const BeneficiariesForm = ({
   useAutoSaveForm(form, {
     formId: "beneficiaries-form",
 
-    enabled: !Boolean(beneficiaryData),
+    enabled: !beneficiaryData,
   });
   // autosave end
 

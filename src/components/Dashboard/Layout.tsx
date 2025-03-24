@@ -11,10 +11,10 @@ const Layout = () => {
       <div className="flex min-h-screen w-screen flex-col">
         <Header />
 
-        <div className="flex flex-grow gap-4 px-5 pb-4">
+        <div className="flex h-full flex-1 flex-grow gap-4 px-5 pb-4">
           <SidePanel />
 
-          <div className="relative flex-1 rounded-[16px] bg-panel p-[17px]">
+          <div className="relative flex-1 rounded-lg bg-panel px-8 py-6">
             <Outlet />
           </div>
         </div>

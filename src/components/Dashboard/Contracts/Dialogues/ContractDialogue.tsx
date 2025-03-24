@@ -82,7 +82,7 @@ const ContractDialogue = ({
           );
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    //eslint-disable-next-line
     [contractDetails, contractId, onEdit, handleClose, projectId]
   );
 
