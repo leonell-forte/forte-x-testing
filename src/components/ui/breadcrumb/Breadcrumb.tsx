@@ -7,7 +7,7 @@ import { cn } from "lib/utils";
 export const BreadCrumbs = () => {
   return (
     <div className="bread-container">
-      <div id="bread-crumbs" className="bread-crumbs" />
+      <div id="bread-crumbs" className="flex w-full items-center space-x-3" />
     </div>
   );
 };
@@ -26,13 +26,14 @@ export const BreadCrumb = ({ children, href, className }: Props) => {
   useEffect(() => {
     setBreadCrumbOut(document.getElementById("bread-crumbs"));
   }, [location, setBreadCrumbOut]);
+
   return (
     <>
       {breadCrumbOut &&
         createPortal(
           <div
             className={cn(
-              "bread-crumb transition duration-500",
+              "bread-crumb whitespace-nowrap transition duration-500 [&:last-child]:!text-white/40",
               href ? "text-white hover:text-mint" : "text-white",
               className
             )}
