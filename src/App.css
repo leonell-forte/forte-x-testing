@@ -160,26 +160,11 @@ button.icon {
   min-width: unset !important;
 }
 
-.bread-container {
-  .bread-crumbs {
-    @apply flex items-center space-x-3;
-    .bread-crumb {
-      @apply relative whitespace-nowrap text-sm;
-      &:not(:first-child) {
-        &::before {
-          content: "/ ";
-          @apply mr-2 text-sm;
-        }
-      }
-      &:last-child {
-        &::before {
-          @apply text-white;
-        }
-        @apply text-white/40;
-      }
-      &:first-child {
-        @apply font-semibold;
-      }
+.bread-crumb {
+  &:not(:last-child) {
+    &::after {
+      content: "/ ";
+      @apply pointer-events-none ml-2.5 text-sm font-semibold !text-white;
     }
   }
 }

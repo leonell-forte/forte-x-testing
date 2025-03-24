@@ -77,6 +77,7 @@ export const ROUTES: RouteConfig[] = [
 
   //   permissions: [Invoices.NAVIGATE],
   // },
+
   {
     link: "users",
 
