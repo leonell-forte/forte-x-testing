@@ -1,8 +1,6 @@
 import classNames from "classnames";
 import { TableHTMLAttributes, useRef } from "react";
 
-import Spinner from "./spinner/spinner";
-
 interface ITableProp extends TableHTMLAttributes<HTMLTableElement> {}
 
 interface ITableRowProps extends TableHTMLAttributes<HTMLTableRowElement> {}

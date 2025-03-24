@@ -12,7 +12,7 @@ import { TbFilterX as FilterIcon } from "react-icons/tb";
 
 import useOrganizationList from "lib/common/lists/useOrganizationList";
 import { ROLES } from "lib/constants";
-import { useDebounce, usePage, usePageTitle } from "lib/hooks";
+import { useDebounce, usePage } from "lib/hooks";
 import { IsAuthorized, Users } from "lib/role-permissions";
 import { IUser } from "lib/types/users";
 

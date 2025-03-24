@@ -5,7 +5,7 @@ import { TbFilterX as FilterIcon } from "react-icons/tb";
 import useContractList from "lib/common/lists/useContractList";
 import useProjectList from "lib/common/lists/useProjectList";
 import { CONTRACT_STATUS } from "lib/constants";
-import { usePage, usePageTitle } from "lib/hooks";
+import { usePage } from "lib/hooks";
 import { Contracts, IsAuthorized } from "lib/role-permissions";
 import { IContractFilters, StatusType } from "lib/types/contracts";
 import { findLabelFromOptions, sortOptions } from "lib/utils";

@@ -7,7 +7,7 @@ import { TbFilterX as FilterIcon } from "react-icons/tb";
 import useOrganizationList from "lib/common/lists/useOrganizationList";
 import useProjectList from "lib/common/lists/useProjectList";
 import { BENEFICIARY_STATUS, RISK_LEVEL } from "lib/constants";
-import { useDebounce, usePage, usePageTitle } from "lib/hooks";
+import { useDebounce, usePage } from "lib/hooks";
 import {
   useExportBeneficiaries,
   useExportEvidenceMutation,

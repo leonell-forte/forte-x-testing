@@ -5,7 +5,7 @@ import { TbFilterX as FilterIcon } from "react-icons/tb";
 import { Route, Routes } from "react-router-dom";
 
 import { MILESTONE_STATUS } from "lib/constants";
-import { useDebounce, usePage, usePageTitle } from "lib/hooks";
+import { useDebounce, usePage } from "lib/hooks";
 import { IMilestoneFilters } from "lib/types/milestones";
 
 import MilestonesTable from "components/tables/Milestones";

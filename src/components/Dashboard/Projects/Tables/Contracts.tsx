@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { DEFAULT_DATE_FORMAT } from "lib/constants";
 import { IsAuthorized, Projects } from "lib/role-permissions";
-import { Contracts as ContractPermission } from "lib/role-permissions";
+// import { Contracts as ContractPermission } from "lib/role-permissions";
 import { formatDate } from "lib/utils";
 
 import Button from "components/ui/button";
@@ -47,11 +47,11 @@ const Contracts = ({ projectId }: IProps) => {
     setSelectedContract("");
   };
 
-  const handleEdit = (id: string) => {
-    setSelectedContract(id);
+  // const handleEdit = (id: string) => {
+  //   setSelectedContract(id);
 
-    setModal("contract");
-  };
+  //   setModal("contract");
+  // };
 
   const renderModal = (modal: ModalLabelType) => {
     switch (modal) {
@@ -97,7 +97,7 @@ const Contracts = ({ projectId }: IProps) => {
           <Cards.Container isLoading={isLoading}>
             {contractList?.items.map((item, index) => {
               const {
-                id,
+                // id,
 
                 provider,
 
@@ -114,19 +114,7 @@ const Contracts = ({ projectId }: IProps) => {
                 outcomenames,
               } = item;
               return (
-                <Cards.Card
-                  onClick={
-                    IsAuthorized([ContractPermission.UPDATE])
-                      ? (e) => {
-                          e.stopPropagation();
-
-                          handleEdit(id!.toString());
-                        }
-                      : undefined
-                  }
-                  key={index}
-                  title={name}
-                >
+                <Cards.Card key={index} title={name}>
                   <Cards.Group cols={2}>
                     <Cards.Details label="Provider" value={provider?.name} />
                     <Cards.Details
@@ -190,18 +178,7 @@ const Contracts = ({ projectId }: IProps) => {
                   outcomenames,
                 } = item;
                 return (
-                  <Table.Row
-                    onClick={
-                      IsAuthorized([ContractPermission.UPDATE])
-                        ? (e) => {
-                            e.stopPropagation();
-
-                            handleEdit(id!.toString());
-                          }
-                        : undefined
-                    }
-                    key={index}
-                  >
+                  <Table.Row key={index}>
                     <Table.Data>{id}</Table.Data>
 
                     <Table.Data>{name}</Table.Data>

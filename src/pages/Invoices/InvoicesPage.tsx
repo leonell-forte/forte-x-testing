@@ -6,7 +6,7 @@ import add from "assets/images/icons/add.svg";
 
 import useInvoiceList from "lib/common/lists/useInvoiceList";
 import { INVOICE_STATUSES } from "lib/constants";
-import { useDebounce, usePage, usePageTitle } from "lib/hooks";
+import { useDebounce, usePage } from "lib/hooks";
 import { InvoiceFilters, InvoiceStatus } from "lib/types/invoices";
 
 import { showGenerateInvoiceModal } from "components/Dashboard/Invoices/modals/GenerateInvoice";

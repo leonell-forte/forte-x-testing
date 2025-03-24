@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 
 import useProjectList from "lib/common/lists/useProjectList";
-import { usePage, usePageTitle } from "lib/hooks";
+import { usePage } from "lib/hooks";
 import { IsAuthorized, Projects } from "lib/role-permissions";
 import { IProject } from "lib/types/projects";
 

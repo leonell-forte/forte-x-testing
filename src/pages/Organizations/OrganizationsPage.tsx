@@ -4,7 +4,7 @@ import { TbFilterX as FilterIcon } from "react-icons/tb";
 
 import useOrganizationList from "lib/common/lists/useOrganizationList";
 import { REGIONS, STATUS, TYPES } from "lib/constants";
-import { usePage, usePageTitle } from "lib/hooks";
+import { usePage } from "lib/hooks";
 import { IFilters } from "lib/types/organizations";
 
 import OrganizationDialogue from "components/Dashboard/Organizations/Dialogues/OrganizationDialogue";

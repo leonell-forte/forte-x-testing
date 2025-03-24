@@ -78,15 +78,7 @@ const Pagination = ({
   const visiblePages = getVisiblePages();
 
   return (
-    <div className="flex w-full items-center justify-between pt-4">
-      <div className="text-xs opacity-60">
-        <p>
-          Showing {start} to {end} of {total}
-        </p>
-        <p>
-          Page {currentPage} of {totalPages}
-        </p>
-      </div>
+    <div className="flex w-full flex-col items-center justify-center gap-y-3 pt-4">
       {totalPages > 1 ? (
         <div className="flex items-center justify-center gap-2 rounded-lg">
           <button
@@ -121,6 +113,13 @@ const Pagination = ({
         </div>
       ) : (
         <div />
+      )}
+      {total > 1 && (
+        <div className="text-xs opacity-60">
+          <p>
+            {start} to {end} of {total} items
+          </p>
+        </div>
       )}
     </div>
   );

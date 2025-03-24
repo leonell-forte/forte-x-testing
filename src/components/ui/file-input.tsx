@@ -55,6 +55,7 @@ const FileInput = ({
     onUploadStart?.(file);
 
     if (!raw) {
+      //eslint-disable-next-line
       let interval: NodeJS.Timeout | undefined;
 
       const progressSteps = [15, 30, 60, 75, 90];

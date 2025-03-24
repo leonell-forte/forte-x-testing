@@ -1,6 +1,5 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
-
-import arrow from "assets/images/icons/arrow.svg";
+import { HiArrowLeft } from "react-icons/hi2";
+import { Link, useParams } from "react-router-dom";
 
 import { ContractsProvider } from "components/Dashboard/Contracts/Dialogues/ContractContext";
 import Beneficiaries from "components/Dashboard/Projects/Tables/Beneficiaries";
@@ -10,24 +9,13 @@ import Outcomes from "components/Dashboard/Projects/Tables/Outcomes";
 // import Partners from "components/Dashboard/Projects/Tables/Partners";
 
 const IndividualProjectsPage = () => {
-  // page title is set on the outcomes component
-
   const { id } = useParams();
-  const navigate = useNavigate();
 
   return (
     <div className="hide-scroll h-full space-y-8 py-3">
-      <Link
-        to={".."}
-        onClick={(e) => {
-          e.preventDefault();
-          navigate(-1);
-        }}
-        className="flex items-center gap-2.5"
-      >
-        <img src={arrow} alt="back" />
-
-        <p className="font-semibold">Back</p>
+      <Link to="/projects" className="group flex w-fit items-center gap-2.5">
+        <HiArrowLeft className="transition group-hover:fill-mint" />
+        <p className="font-semibold transition group-hover:text-mint">Back</p>
       </Link>
 
       <Outcomes id={id as string} />
