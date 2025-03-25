@@ -48,7 +48,7 @@ const ModalMarker = () => {
           <DialogPanel
             transition
             className={cn(
-              "data-[closed]:transform-[scale(95%)] relative my-12 w-full rounded-lg bg-[#30F1FF1F] p-14 drop-shadow-sm backdrop-blur duration-300 ease-out data-[closed]:opacity-0",
+              "data-[closed]:transform-[scale(95%)] relative h-screen w-full bg-[#30F1FF1F] p-14 drop-shadow-sm backdrop-blur duration-300 ease-out data-[closed]:opacity-0 md:my-12 md:h-full md:rounded-lg",
               MAP_SIZE_CLASS[config?.size || "base"]
             )}
           >
