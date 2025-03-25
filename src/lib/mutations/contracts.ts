@@ -95,7 +95,7 @@ const useContractMutation = ({ id, successCallback }: IContractMutation) => {
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: contractQuery });
+      queryClient.invalidateQueries({ queryKey: ["contracts"] });
     },
   });
 
@@ -186,7 +186,7 @@ export const useDeleteContractMutation = (
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: contractQuery });
+      queryClient.invalidateQueries({ queryKey: ["contracts"] });
     },
   });
 

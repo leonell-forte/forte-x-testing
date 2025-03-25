@@ -271,7 +271,7 @@ const Dropdown = ({
         </PopoverTrigger>
 
         <PopoverContent onOpenAutoFocus={(e) => e.preventDefault()}>
-          <div className="sm:min-w-[250px]">
+          <div>
             {loading ? (
               <div className="flex h-[100px] w-full items-center justify-center">
                 <Loader dark />

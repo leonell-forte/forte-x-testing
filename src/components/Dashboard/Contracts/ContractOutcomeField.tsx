@@ -73,27 +73,51 @@ const ContractOutcomeField = ({
 
   return (
     <div className="space-y-4">
-      <div className="flex gap-4">
-        <Controller
-          label={`Outcome ${index + 1}`}
-          required
-          name={`outcomeRates.${index}.outcomeId`}
-          control={control}
-          render={({ field }) => {
-            return (
-              <Dropdown
-                disabled={!projectId || disabled}
-                loading={isProjectLoading}
-                value={findLabelFromOptions(outcomes, field.value?.toString())}
-                handleSelect={(val) => {
-                  handleSelectOutcome(val as string);
-                }}
-                options={sortOptions(outcomes)}
-                placeholder="Select outcome"
-              />
-            );
-          }}
-        />
+      <div className="flex items-center gap-4">
+        <div className="w-full">
+          <Controller
+            label={`Outcome ${index + 1}`}
+            required
+            name={`outcomeRates.${index}.outcomeId`}
+            control={control}
+            render={({ field }) => {
+              return (
+                <Dropdown
+                  disabled={!projectId || disabled}
+                  loading={isProjectLoading}
+                  value={findLabelFromOptions(
+                    outcomes,
+                    field.value?.toString()
+                  )}
+                  handleSelect={(val) => {
+                    handleSelectOutcome(val as string);
+                  }}
+                  options={sortOptions(outcomes)}
+                  placeholder="Select outcome"
+                />
+              );
+            }}
+          />
+        </div>
+        <div className="w-full">
+          <Controller
+            label="Rate"
+            required
+            name={`outcomeRates.${index}.rate`}
+            control={control}
+            render={({ field }) => {
+              return (
+                <Input
+                  {...field}
+                  min={0}
+                  disabled={disabled}
+                  placeholder="Rate"
+                  type="number"
+                />
+              );
+            }}
+          />
+        </div>
 
         {!disabled && (
           <button
@@ -107,7 +131,7 @@ const ContractOutcomeField = ({
               }
             }}
             type="button"
-            className="mt-[27px] transition-all hover:scale-[1.05] hover:opacity-80 md:mt-0"
+            className="mt-6 transition-all hover:scale-[1.05] hover:opacity-80"
           >
             {!index ? (
               <HiPlusCircle className="h-auto w-8 text-white" />
@@ -119,24 +143,6 @@ const ContractOutcomeField = ({
       </div>
 
       <div className="w-full space-y-4">
-        <Controller
-          label="Rate"
-          required
-          name={`outcomeRates.${index}.rate`}
-          control={control}
-          render={({ field }) => {
-            return (
-              <Input
-                {...field}
-                min={0}
-                disabled={disabled}
-                placeholder="Rate"
-                type="number"
-              />
-            );
-          }}
-        />
-
         <div className="flex flex-col gap-2 md:flex-row md:items-end">
           <Controller
             name={`outcomeRates.${index}.perOutcome`}
