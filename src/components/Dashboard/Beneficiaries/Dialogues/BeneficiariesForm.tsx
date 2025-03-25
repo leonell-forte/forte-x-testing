@@ -26,6 +26,7 @@ import { findLabelFromOptions } from "lib/utils";
 import { beneficiaries } from "lib/validators/beneficiaries";
 
 import { useConfirmPrompt } from "components/ui/alert/confirm-prompt";
+import { useCustomPrompt } from "components/ui/alert/custom-prompt";
 import Button from "components/ui/button";
 import Controller from "components/ui/custom-controller/CustomController";
 import DatePicker from "components/ui/date-picker";
@@ -36,6 +37,14 @@ import { useAutoSaveForm } from "components/ui/form/useAutoSave";
 import Input from "components/ui/input";
 
 import { useBeneficiariesContext } from "./BeneficiariesContext";
+
+const alertConfig = {
+  "Pending evidence review": {
+    title: "Request review",
+    subText:
+      "Changing a beneficiary status to Pending evidence review will send an email to Forte or your Funder asking them to review this Beneficiary’s evidence. Click cancel to revert or send request to send the email.",
+  },
+};
 
 interface IProps {
   id?: number;
@@ -195,7 +204,17 @@ const BeneficiariesForm = ({
     successCallback: (id) => onSuccess(id),
   });
 
+  const { open } = useCustomPrompt();
+
   const onSubmit = async (values: IBeneficiariesFieldValues) => {
+    if (beneficiaryData && values.status === "Pending evidence review") {
+      open({
+        ...alertConfig["Pending evidence review"],
+        onYes: () => addBeneficiary(values),
+        yesLabel: "Send request",
+      });
+      return;
+    }
     await addBeneficiary(values);
   };
 
