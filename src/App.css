@@ -168,3 +168,177 @@ button.icon {
     }
   }
 }
+
+#hubspotForm {
+  form {
+    @apply w-full space-y-6 md:space-y-6;
+  }
+
+  .form-columns-1,
+  .form-columns-0 {
+    @apply flex min-w-full;
+  }
+
+  .form-columns-2 {
+    @apply grid min-w-full grid-cols-1 gap-6 md:grid-cols-2;
+
+    .hs-dateinput {
+      @apply md:!max-w-[100%];
+    }
+  }
+
+  .form-columns-3 {
+    @apply grid min-w-full grid-cols-1 gap-6;
+  }
+  .actions {
+    @apply flex justify-end gap-2;
+  }
+  .hs-button {
+    @apply h-8 w-full cursor-pointer rounded-[30px] bg-mint px-10 font-medium text-black transition-all hover:bg-[#14c57e] disabled:pointer-events-none disabled:bg-[#787878] disabled:text-gray-300 md:w-auto;
+  }
+
+  .hs-richtext {
+    @apply mb-[10px];
+    p {
+      @apply !text-white;
+    }
+  }
+
+  .hs-form-field {
+    @apply relative flex w-full flex-col gap-1;
+    * {
+      option {
+        @apply text-black disabled:text-gray-400;
+      }
+    }
+
+    > legend {
+      @apply mb-2 text-xs text-white/80;
+    }
+    > .hs-error-msgs {
+      @apply absolute -bottom-3;
+      label {
+        @apply !text-xs text-red-500/80;
+      }
+    }
+
+    > .input {
+      > input {
+        @apply placeholder:text-white/30;
+      }
+      > input,
+      select,
+      textarea,
+      .hs-dateinput input {
+        @apply relative mb-2.5 w-full rounded-lg border bg-transparent text-sm;
+        padding: 0.625rem 0.875rem;
+      }
+      > textarea {
+        margin-bottom: 4px !important;
+        height: 200px;
+        resize: none;
+      }
+      > select {
+        appearance: none; /* Removes default arrow */
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url("/src/assets/images/icons/chevron.svg"); /* Custom arrow */
+        background-size: 0.8rem; /* Adjust size */
+        background-repeat: no-repeat;
+        background-position: right 15px center; /* Adjust position */
+        padding: 12px 40px 12px 20px; /* Adjust left & right padding */
+      }
+    }
+  }
+
+  .hs_error_rollup * {
+    @apply text-right !text-sm text-red-500/80;
+  }
+
+  .hs-fieldtype-file {
+    .input {
+      input {
+        @apply !p-[9px] md:max-w-[272px];
+      }
+    }
+  }
+
+  .hs-fieldtype-checkbox,
+  .hs-fieldtype-radio {
+    > legend {
+      @apply mb-4 !text-white/70;
+    }
+  }
+
+  .hs-fieldtype-booleancheckbox {
+    > legend {
+      @apply !static left-0 mb-3 text-[16px] leading-[100%] text-white md:!absolute md:top-0;
+    }
+  }
+
+  .hs-fieldtype-booleancheckbox,
+  .hs-fieldtype-checkbox,
+  .hs-fieldtype-radio {
+    @apply relative;
+
+    > label {
+      @apply mb-[10px] !block;
+    }
+
+    > legend {
+      @apply !static left-0 text-[16px] leading-[100%] text-white md:!absolute;
+    }
+    > .input {
+      @apply md:ml-[215px];
+      input {
+        @apply mt-1 flex-shrink-0;
+      }
+      label {
+        @apply flex h-fit gap-2;
+      }
+      .multi-container {
+        @apply grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3;
+      }
+    }
+  }
+
+  .hs-fieldtype-radio {
+    .multi-container {
+      @apply grid !grid-cols-1 gap-3;
+    }
+  }
+
+  .hs-datepicker {
+    @apply !bg-black;
+    .pika-label {
+      color: black !important;
+    }
+
+    .pika-table {
+      th {
+        abbr {
+          color: black !important;
+          text-decoration: none;
+        }
+      }
+      td {
+        @apply cursor-pointer overflow-hidden rounded-[0px];
+        box-shadow: none !important;
+
+        &.is-selected {
+          @apply !bg-mint;
+          .pika-day {
+            @apply shadow-none hover:!bg-mint;
+          }
+        }
+
+        .is-empty {
+        }
+
+        .pika-day {
+          @apply !rounded-none bg-transparent !py-3 text-center text-black transition-all hover:!bg-gray-200;
+        }
+      }
+    }
+  }
+}

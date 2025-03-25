@@ -1,3 +1,4 @@
+import { FaQuestion } from "react-icons/fa6";
 import { RxHamburgerMenu as Burger } from "react-icons/rx";
 import { Link } from "react-router-dom";
 
@@ -7,9 +8,11 @@ import { setShowSidePanel } from "lib/slice/layout";
 
 import { useProfile } from "components/ProfileContext";
 import { BreadCrumbs } from "components/ui/breadcrumb/Breadcrumb";
+import { Tooltip } from "components/ui/tooltip/Tooltip";
 
 import { SearchConsoleMarker } from "./SearchConsole";
 import UserDropdown from "./UserDropdown";
+import { showGetHelpModal } from "./modals/GetHelp";
 
 const Header = () => {
   const { profile } = useProfile();
@@ -36,8 +39,17 @@ const Header = () => {
         <BreadCrumbs />
       </div>
 
-      <div className="flex w-full items-end justify-end gap-4 lg:mt-2.5">
+      <div className="flex w-full items-center justify-end gap-4 lg:mt-2.5">
         <SearchConsoleMarker />
+        <Tooltip title="Support">
+          <button
+            type="button"
+            onClick={() => showGetHelpModal()}
+            className="group rounded-full bg-white p-1 transition hover:bg-mint"
+          >
+            <FaQuestion className="h-auto w-4 fill-mint transition group-hover:fill-white" />
+          </button>
+        </Tooltip>
 
         <UserDropdown />
       </div>

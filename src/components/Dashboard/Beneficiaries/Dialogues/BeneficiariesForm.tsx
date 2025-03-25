@@ -426,7 +426,7 @@ const BeneficiariesForm = ({
           <hr className="w-full" />
         </div>
 
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <Controller
             label="Linkedin"
             control={control}
@@ -531,36 +531,37 @@ const BeneficiariesForm = ({
             <Input {...field} readOnly={!onEdit} placeholder="Address" />
           )}
         />
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <Controller
+            label="Socio-economic status"
+            control={control}
+            name="socioeconomicStatus"
+            render={({ field }) => (
+              <Input
+                {...field}
+                readOnly={!onEdit}
+                placeholder="Socio-economic status"
+              />
+            )}
+          />
 
-        <Controller
-          label="Socio-economic status"
-          control={control}
-          name="socioeconomicStatus"
-          render={({ field }) => (
-            <Input
-              {...field}
-              readOnly={!onEdit}
-              placeholder="Socio-economic status"
-            />
-          )}
-        />
-
-        <Controller
-          label="Highest education level"
-          control={control}
-          name="educationLevel"
-          render={({ field }) => (
-            <Dropdown
-              value={field.value}
-              handleSelect={(val) => {
-                field.onChange(val);
-              }}
-              readOnly={!onEdit}
-              options={HIGHEST_EDUCATION_LEVEL}
-              placeholder="Select highest education level"
-            />
-          )}
-        />
+          <Controller
+            label="Highest education level"
+            control={control}
+            name="educationLevel"
+            render={({ field }) => (
+              <Dropdown
+                value={field.value}
+                handleSelect={(val) => {
+                  field.onChange(val);
+                }}
+                readOnly={!onEdit}
+                options={HIGHEST_EDUCATION_LEVEL}
+                placeholder="Select highest education level"
+              />
+            )}
+          />
+        </div>
 
         <Controller
           label="Language(s) spoken"

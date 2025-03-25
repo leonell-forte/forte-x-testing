@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import evidenceService from "api/evidence";
 import { format } from "date-fns";
+import { isEmpty } from "lodash";
 
 import { ActivityLog } from "lib/types/activity-logs";
 import { formatDate } from "lib/utils";
@@ -33,22 +34,20 @@ const ActivityLogSection = ({
   };
 
   const renderChangeMessage = (log: ActivityLog) => {
-    if (!log.changes) return null;
+    if (isEmpty(log.changes)) return null;
     const { user } = log;
 
     const { firstName, lastName } = user;
 
-    const changes = log.changes
-      .map((item) => {
+    const changes = Object.entries(log.changes)
+      .map(([key]) => {
         const updatedAt = new Date(log.createdAt as string);
 
         const date = `${format(updatedAt, "dd LLL yyyy")}`;
 
         const time = getTime(updatedAt);
 
-        const { propertyName } = item;
-
-        switch (propertyName.toLowerCase()) {
+        switch (key.toLowerCase()) {
           case "description":
             return ` Evidence description was updated by ${firstName} ${lastName} at ${time} on ${date}.`;
           case "status":
@@ -81,6 +80,7 @@ const ActivityLogSection = ({
       ) : (
         <ul className="pl-6">
           {data?.map((item, index) => {
+            console.log(item);
             const changes = renderChangeMessage(item);
 
             return changes?.map((message, msgIndex) => (
