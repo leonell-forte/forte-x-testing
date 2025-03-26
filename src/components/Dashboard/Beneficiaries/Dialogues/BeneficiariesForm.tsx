@@ -133,7 +133,7 @@ const BeneficiariesForm = ({
 
     queryFn: () =>
       organizationService.list({
-        listAll: true,
+        pageSize: 100,
 
         page: 1,
 
