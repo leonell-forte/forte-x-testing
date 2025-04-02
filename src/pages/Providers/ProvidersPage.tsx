@@ -118,7 +118,7 @@ const ProvidersPage = () => {
                   setPage(1);
                 }}
                 containerClass="lg:max-w-[286px]"
-                placeholder="Search funders"
+                placeholder="Search providers"
                 onClear={() => handleSearchOrg("")}
               />
             </div>
