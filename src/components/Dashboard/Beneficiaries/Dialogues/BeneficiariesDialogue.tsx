@@ -53,7 +53,7 @@ const BeneficiariesDialogue = ({
             beneficiaryId={beneficiaryId}
             setBeneficiaryId={setBeneficiaryId}
             projectId={projectId}
-            handleAddOrViewEvidence={(id) => {
+            handleAddOrViewEvidence={() => {
               setModal("evidence");
 
               // if (id) setEvidenceId(id);
