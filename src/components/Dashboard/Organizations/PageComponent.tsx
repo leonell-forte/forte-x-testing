@@ -69,24 +69,16 @@ const PageComponent = ({ type, initialFilters }: PageComponentProps) => {
             isVisible={modal === "filter"}
             handleClose={close}
           >
-            <div className="space-y-6">
+            <FilterWrapper 
+              onApply={close}
+              onClear={() => setFilters(initialFilters as IFilters)}
+            >
               <Filters
                 initialFilters={initialFilters}
                 filters={filters}
                 setFilters={setFilters}
               />
-              <div className="flex justify-end gap-2">
-                <Button
-                  buttonType="secondary"
-                  onClick={() => {
-                    setFilters(initialFilters as IFilters);
-                  }}
-                >
-                  Clear
-                </Button>
-                <Button onClick={close}>Apply</Button>
-              </div>
-            </div>
+            </FilterWrapper>
           </Dialogue>
         );
     }
@@ -133,11 +125,13 @@ const PageComponent = ({ type, initialFilters }: PageComponentProps) => {
               <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
             </button>
             <div className="hidden lg:block">
-              <Filters
-                initialFilters={initialFilters}
-                filters={filters}
-                setFilters={setFilters}
-              />
+              <FilterWrapper>
+                <Filters
+                  initialFilters={initialFilters}
+                  filters={filters}
+                  setFilters={setFilters}
+                />
+              </FilterWrapper>
             </div>
           </div>
         </div>
@@ -174,6 +168,22 @@ interface IFilterProps {
   initialFilters: IFilters;
 }
 
+const FilterWrapper = ({ children, onApply, onClear }: { children: React.ReactNode, onApply?: () => void, onClear?: () => void }) => (
+  <div className="space-y-6">
+    {children}
+    {(onApply || onClear) && (
+      <div className="flex justify-end gap-2">
+        {onClear && (
+          <Button buttonType="secondary" onClick={onClear}>
+            Clear
+          </Button>
+        )}
+        {onApply && <Button onClick={onApply}>Apply</Button>}
+      </div>
+    )}
+  </div>
+);
+
 const Filters = ({ filters, setFilters, initialFilters }: IFilterProps) => {
   const { setPage } = usePage();
   const handleSelectFilter = (
@@ -184,38 +194,29 @@ const Filters = ({ filters, setFilters, initialFilters }: IFilterProps) => {
     setPage(1);
   };
 
-  const handleRemoveFilters = () => {
-    setFilters(initialFilters as IFilters);
-  };
   return (
     <div className="grid w-full grid-cols-1 gap-2.5 lg:flex">
-      <div className="grid w-full grid-cols-1 gap-2.5 lg:flex">
-        <Dropdown
-          enableSearch
-          isMultiSelect
-          value={filters.region}
-          handleSelect={(val) => {
-            handleSelectFilter("region", val);
-          }}
-          placeholder="Region"
-          className="lg:max-w-[166px]"
-          options={REGIONS}
-          filterOptions
-        />
+      <Dropdown
+        enableSearch
+        isMultiSelect
+        value={filters.region}
+        handleSelect={(val) => handleSelectFilter("region", val)}
+        placeholder="Region"
+        className="lg:max-w-[166px]"
+        options={REGIONS}
+        filterOptions
+      />
 
-        <Dropdown
-          value={filters.status}
-          handleSelect={(val) => {
-            handleSelectFilter("status", val);
-          }}
-          placeholder="Status"
-          className="lg:max-w-[166px]"
-          options={STATUS}
-        />
-      </div>
+      <Dropdown
+        value={filters.status}
+        handleSelect={(val) => handleSelectFilter("status", val)}
+        placeholder="Status"
+        className="lg:max-w-[166px]"
+        options={STATUS}
+      />
 
       <button
-        onClick={handleRemoveFilters}
+        onClick={() => setFilters(initialFilters as IFilters)}
         className="group hidden flex-shrink-0 lg:block"
       >
         <FilterIcon className="h-auto w-5 fill-white transition-all group-hover:fill-mint group-hover:stroke-mint" />
