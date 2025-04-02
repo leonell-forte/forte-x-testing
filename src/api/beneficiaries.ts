@@ -16,6 +16,8 @@ interface IBeneficiariesListProps {
   search?: string;
 
   filters?: IBeneficiariesFilter;
+
+  pageSize?: number;
 }
 
 class BeneficiariesService {
@@ -27,6 +29,8 @@ class BeneficiariesService {
     search,
 
     filters,
+
+    pageSize,
   }: IBeneficiariesListProps): Promise<{
     items: IBeneficiaries[];
 
@@ -111,7 +115,7 @@ class BeneficiariesService {
 
     params.append("$pageNum", page.toString());
 
-    params.append("$pageSize", DEFAULT_PAGE_SIZE);
+    params.append("$pageSize", pageSize ? String(pageSize) : DEFAULT_PAGE_SIZE);
 
     params.append("$orderBy", `"beneficiary"."createdAt" desc`);
 
