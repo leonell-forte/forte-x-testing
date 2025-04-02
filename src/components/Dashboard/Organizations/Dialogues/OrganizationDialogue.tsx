@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { useAppDispatch } from "lib/hooks";
 import { clearPartners, setPartnersToAdd } from "lib/slice/partners";
-import { OrganizationFieldTypes } from "lib/types/organizations";
+import { OrgTypes, OrganizationFieldTypes } from "lib/types/organizations";
 
 import { IDialogueProps } from "components/ui/dialogue/dialogue";
 
@@ -13,6 +13,8 @@ export interface IOrganizationDialogueProps extends IDialogueProps {
   orgId?: string;
 
   addSuccessCallback?: (id: number) => void;
+
+  type?: OrgTypes;
 }
 
 type ModalType = "organization" | "partner";
@@ -25,6 +27,8 @@ const OrganizationDialogue = ({
   isVisible,
 
   orgId,
+
+  type,
 }: IOrganizationDialogueProps) => {
   const dispatch = useAppDispatch();
   const [modal, setModal] = useState<ModalType>("organization");
@@ -46,6 +50,7 @@ const OrganizationDialogue = ({
             handleAddPartner={() => setModal("partner")}
             savedFormData={formData}
             onFormDataChange={setFormData}
+            type={type}
           />
         );
 

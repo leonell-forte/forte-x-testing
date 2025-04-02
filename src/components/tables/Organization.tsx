@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { IOrganization } from "lib/types/organizations";
+import { IOrganization, OrgTypes } from "lib/types/organizations";
 
 import OrganizationDialogue from "components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
 import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
@@ -10,9 +10,14 @@ import Cards from "components/ui/table-card";
 type TOrganizationTable = {
   list: IOrganization[];
   isLoading?: boolean;
+  type?: OrgTypes;
 };
 
-const OrganizationTable = ({ list, isLoading = false }: TOrganizationTable) => {
+const OrganizationTable = ({
+  list,
+  isLoading = false,
+  type,
+}: TOrganizationTable) => {
   const [modal, setModal] = useState<"org" | null>(null);
 
   const [selectedOrg, setSelectedOrg] = useState("");
@@ -36,6 +41,7 @@ const OrganizationTable = ({ list, isLoading = false }: TOrganizationTable) => {
           orgId={selectedOrg}
           isVisible={modal === "org"}
           handleClose={close}
+          type={type}
         />
       )}
       <div className="lg:hidden">

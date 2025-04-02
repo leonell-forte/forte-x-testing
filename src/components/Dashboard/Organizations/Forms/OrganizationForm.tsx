@@ -42,6 +42,7 @@ const OrganizationForm = ({
   handleAddPartner,
   savedFormData,
   onFormDataChange,
+  type,
 }: OrganizationFormProps) => {
   const dispatch = useAppDispatch();
   // this is a custom state to store partners to be added to the organization after creation
@@ -64,7 +65,7 @@ const OrganizationForm = ({
   const form = useForm<OrganizationFieldTypes>({
     resolver: zodResolver(organizations.schema),
 
-    defaultValues: savedFormData || organizations.defaultValues(),
+    defaultValues: savedFormData || organizations.defaultValues(type),
   });
 
   const {
@@ -90,9 +91,9 @@ const OrganizationForm = ({
 
   useEffect(() => {
     if (orgData) {
-      reset(organizations.defaultValues(orgData));
+      reset(organizations.defaultValues(type, orgData));
     }
-  }, [orgData, reset]);
+  }, [orgData, reset, type]);
 
   useEffect(() => {
     const subscription = form.watch((value) => {
@@ -120,9 +121,9 @@ const OrganizationForm = ({
 
   const getTitle = () => {
     if (orgId) {
-      return editMode ? "Edit organization" : "View organization";
+      return editMode ? `Edit ${type}` : `View ${type}`;
     }
-    return "Add organization";
+    return `Add ${type}`;
   };
 
   const handleCancel = () => {
@@ -349,7 +350,7 @@ const OrganizationForm = ({
                       }}
                       options={TYPES}
                       placeholder="Select type"
-                      disabled={!editMode}
+                      disabled
                     />
                   );
                 }}
