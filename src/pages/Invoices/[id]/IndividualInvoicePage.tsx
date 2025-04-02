@@ -58,6 +58,7 @@ const IndividualInvoicePage = () => {
         toast({ title: `Failed to pay Invoice ID: ${id}`, variant: "danger" });
       }
     }
+    // eslint-disable-next-line
   }, []);
 
   if (isLoading)
