@@ -121,7 +121,7 @@ class BeneficiariesService {
 
     params.append("$pageNum", page.toString());
 
-    params.append("$pageSize", String(pageSize) || DEFAULT_PAGE_SIZE);
+    params.append("$pageSize", pageSize ? String(pageSize) : DEFAULT_PAGE_SIZE);
 
     params.append("$orderBy", `"beneficiary"."createdAt" desc`);
 
