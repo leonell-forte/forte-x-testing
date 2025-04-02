@@ -116,8 +116,8 @@ export const TYPES = [
 
 export const EVIDENCE_STATUS = [
   {
-    label: "Accepted",
-    value: "accepted",
+    label: "Approved",
+    value: "approved",
   },
   {
     label: "Pending review",
@@ -141,7 +141,7 @@ export const EVIDENCE_STATUS = [
   },
 ];
 
-export const NO_PROMPT_STATUS = ["accepted", "invoiced", "rejected", "paid"];
+export const NO_PROMPT_STATUS = ["approved", "invoiced", "rejected", "paid"];
 
 export const BENEFICIARY_STATUS = [
   {
@@ -532,7 +532,7 @@ export const REDIRECT_PATHS: Record<UserRoleType, string> = {
 };
 
 export const INVOICE_STATUSES: Array<InvoiceStatus> = [
-  "Cancelled",
-  "Pending",
-  "Paid",
+  "cancelled",
+  "pending",
+  "paid",
 ];

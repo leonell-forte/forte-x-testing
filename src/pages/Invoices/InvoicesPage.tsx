@@ -1,9 +1,9 @@
 import { Dispatch, SetStateAction, useState } from "react";
+import { HiPlus } from "react-icons/hi2";
 import { TbFilterX as FilterIcon } from "react-icons/tb";
+import { Route, Routes, useLocation } from "react-router-dom";
 
 // import { BiSlider as SliderIcon } from "react-icons/bi";
-import add from "assets/images/icons/add.svg";
-
 import useInvoiceList from "lib/common/lists/useInvoiceList";
 import { INVOICE_STATUSES } from "lib/constants";
 import { useDebounce, usePage } from "lib/hooks";
@@ -11,13 +11,26 @@ import { InvoiceFilters, InvoiceStatus } from "lib/types/invoices";
 
 import { showGenerateInvoiceModal } from "components/Dashboard/Invoices/modals/GenerateInvoice";
 import InvoicesTable from "components/tables/Invoices";
+import { BreadCrumb } from "components/ui/breadcrumb/Breadcrumb";
 import Button from "components/ui/button";
 import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
 import Dropdown from "components/ui/dropdown";
 import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
 
-const InvoicesPage = () => {
+import ViewMilestone from "pages/Milestones/ViewMilestone";
+
+import IndividualInvoicePage from "./[id]/IndividualInvoicePage";
+
+export function getRandomString(array: string[]): string | undefined {
+  if (!array || array.length === 0) {
+    return undefined;
+  }
+  const randomIndex = Math.floor(Math.random() * array.length);
+  return array[randomIndex];
+}
+
+const InvoicesComp = () => {
   const { page, setPage } = usePage();
 
   const [filters, setFilters] = useState<InvoiceFilters>({
@@ -60,8 +73,8 @@ const InvoicesPage = () => {
           <div className="space-y-5">
             <div className="flex items-start justify-between">
               <p className="text-[24px] font-semibold">Invoices</p>
-              <Button onClick={() => showGenerateInvoiceModal()}>
-                <img src={add} alt="add" width={14} height={14} />
+              <Button onClick={showGenerateInvoiceModal}>
+                <HiPlus className="h-auto w-4" />
                 Generate Invoice
               </Button>
             </div>
@@ -115,8 +128,6 @@ const InvoicesPage = () => {
     </>
   );
 };
-
-export default InvoicesPage;
 
 type FiltersProps = {
   filters: InvoiceFilters;
@@ -191,3 +202,36 @@ const FilterDialogue = ({
     </Dialogue>
   );
 };
+
+export default function InvoicesPage() {
+  const location = useLocation();
+  const pathnames = location.pathname.split("/").filter((x) => x);
+  return (
+    <Routes>
+      <Route index element={<InvoicesComp />} />
+      <Route
+        path=":invoiceId"
+        element={
+          <>
+            <BreadCrumb href="/invoices">Invoices</BreadCrumb>
+            <BreadCrumb>Invoice ID: {pathnames?.[1] || ""}</BreadCrumb>
+            <IndividualInvoicePage />
+          </>
+        }
+      />
+      <Route
+        path=":id/:milestoneId"
+        element={
+          <>
+            <BreadCrumb href="/invoices">Invoices</BreadCrumb>
+            <BreadCrumb href={`/invoices/${pathnames?.[1]}`}>
+              Invoice ID: {pathnames?.[1] || ""}
+            </BreadCrumb>
+            <BreadCrumb>Milestone ID: {pathnames?.[2] || ""}</BreadCrumb>
+            <ViewMilestone />
+          </>
+        }
+      />
+    </Routes>
+  );
+}

@@ -7,7 +7,7 @@ export const generateInvoiceForm = {
     organizationId: "",
   },
   schema: z.object({
-    organizationId: z.string().min(1, "Funder is a required field"),
+    funderId: z.string().min(1, "Funder is a required field"),
 
     startDate: z.string().min(1, "Start date is required"),
 

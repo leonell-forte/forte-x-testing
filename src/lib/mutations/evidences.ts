@@ -5,14 +5,15 @@ import evidenceService from "api/evidence";
 import { formatErrorMessage } from "lib/utils";
 
 import { queryClient } from "components/QueryProvider";
+import { useModal } from "components/ui/dialogue/v2/Modal";
 
 import { useAlert } from "../hooks";
-import { Evidence, EvidenceFieldValues } from "../types/evidence";
+import { EvidenceFieldValues } from "../types/evidence";
 
 interface IEvidenceMutation {
   evidenceId: number;
 
-  beneficiaryId: number;
+  milestoneId: string;
 
   successCallback?: (id?: string) => void;
 }
@@ -20,60 +21,21 @@ interface IEvidenceMutation {
 export const useEvidenceMutation = ({
   evidenceId,
 
-  beneficiaryId,
+  milestoneId,
 
   successCallback,
 }: IEvidenceMutation) => {
   const { setAlert } = useAlert();
+  const { close } = useModal();
 
   const { mutateAsync: addEvidence, isPending } = useMutation({
     mutationFn: evidenceId
       ? (values: EvidenceFieldValues) =>
-          evidenceService.update({ beneficiaryId, values })
+          evidenceService.update({ milestoneId, values })
       : (values: EvidenceFieldValues) =>
-          evidenceService.add({ values, beneficiaryId }),
-
-    onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ["evidence", evidenceId] });
-
-      await queryClient.cancelQueries({
-        queryKey: ["evidences", beneficiaryId],
-      });
-
-      const previousEvidences = queryClient.getQueryData([
-        "evidences",
-
-        beneficiaryId,
-      ]);
-
-      const previousEvidence = queryClient.getQueryData([
-        "evidence",
-
-        evidenceId,
-      ]);
-
-      return { previousEvidences, previousEvidence };
-    },
+          evidenceService.add({ values, milestoneId }),
 
     onSuccess: (addedEvidence: EvidenceFieldValues) => {
-      queryClient.setQueryData(
-        ["evidences", beneficiaryId],
-
-        (old: { items: Evidence[] }) => {
-          return {
-            ...old,
-
-            items: [...(old?.items || []), addedEvidence],
-          };
-        }
-      );
-
-      queryClient.setQueryData(
-        ["evidence", evidenceId],
-
-        () => addedEvidence
-      );
-
       successCallback?.(String(addedEvidence.id));
 
       setAlert({
@@ -89,9 +51,10 @@ export const useEvidenceMutation = ({
       amplitude.track(
         `${evidenceId ? "Update" : "Add"} Evidence Form Submission`
       );
+      close();
     },
 
-    onError: (err: any, newEvidence, context) => {
+    onError: (err: any) => {
       setAlert({
         status: "error",
 
@@ -99,24 +62,14 @@ export const useEvidenceMutation = ({
 
         message: formatErrorMessage(err?.response?.data?.data?.[0]),
       });
-
-      queryClient.setQueryData(
-        ["evidences", beneficiaryId],
-
-        context?.previousEvidences
-      );
-
-      queryClient.setQueryData(
-        ["evidence", evidenceId],
-
-        context?.previousEvidence
-      );
     },
 
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["evidence", evidenceId] });
 
-      queryClient.invalidateQueries({ queryKey: ["evidences", beneficiaryId] });
+      queryClient.invalidateQueries({
+        queryKey: ["milestone-details"],
+      });
     },
   });
 

@@ -2,31 +2,29 @@ import { useQuery } from "@tanstack/react-query";
 import milestoneService from "api/milestones";
 import { Dispatch, SetStateAction, useState } from "react";
 import { TbFilterX as FilterIcon } from "react-icons/tb";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 
 import { MILESTONE_STATUS } from "lib/constants";
 import { useDebounce, usePage } from "lib/hooks";
 import { IMilestoneFilters } from "lib/types/milestones";
 
 import MilestonesTable from "components/tables/Milestones";
+import { BreadCrumb } from "components/ui/breadcrumb/Breadcrumb";
 import Dropdown from "components/ui/dropdown";
 import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
 
 import ViewMilestone from "./ViewMilestone";
 
+const initialFilter = {
+  status: "",
+  contractId: "",
+};
+
 const MilestonesComp = () => {
   const { page, setPage } = usePage();
 
   const [search, setSearch] = useState("");
-
-  const initialFilter = {
-    status: "",
-
-    project: "",
-
-    date: "",
-  };
 
   const [filters, setFilters] = useState<IMilestoneFilters>(initialFilter);
 
@@ -123,11 +121,7 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
 
       <div className="flex w-full items-center gap-2.5 lg:w-auto">
         <button
-          onClick={() =>
-            setFilters({
-              status: "",
-            })
-          }
+          onClick={() => setFilters(initialFilter)}
           className="group hidden md:block"
         >
           <FilterIcon className="h-auto w-5 fill-white transition-all group-hover:fill-mint group-hover:stroke-mint" />
@@ -138,10 +132,21 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
 };
 
 export default function MilestonePage() {
+  const location = useLocation();
+  const pathnames = location.pathname.split("/").filter((x) => x);
   return (
     <Routes>
       <Route index element={<MilestonesComp />} />
-      <Route path=":id" element={<ViewMilestone />} />
+      <Route
+        path=":milestoneId"
+        element={
+          <>
+            <BreadCrumb href="/milestones">Milestones</BreadCrumb>
+            <BreadCrumb>Milestone ID: {pathnames?.[1] || ""}</BreadCrumb>
+            <ViewMilestone />
+          </>
+        }
+      />
     </Routes>
   );
 }

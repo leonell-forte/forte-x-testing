@@ -7,7 +7,8 @@ import Spinner from "components/ui/spinner/spinner";
 
 import { useBeneficiariesContext } from "./BeneficiariesContext";
 import BeneficiariesForm from "./BeneficiariesForm";
-import Evidences from "./Evidences";
+
+// import Evidences from "./Evidences";
 
 interface IBeneficiariesDialogueProps extends IDialogueProps {
   beneficiaryId?: number;
@@ -30,7 +31,7 @@ const AddDialogue = ({
 
   editMode,
 
-  handleAddOrViewEvidence,
+  // handleAddOrViewEvidence,
 
   ...props
 }: IBeneficiariesDialogueProps) => {
@@ -72,9 +73,9 @@ const AddDialogue = ({
             handleClose={props.handleClose}
           />
 
-          {beneficiaryId && (
+          {/* {beneficiaryId && (
             <Evidences handleAddOrViewEvidence={handleAddOrViewEvidence} />
-          )}
+          )} */}
         </div>
       )}
     </Dialogue>

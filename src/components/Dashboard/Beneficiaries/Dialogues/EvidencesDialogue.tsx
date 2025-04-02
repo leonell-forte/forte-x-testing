@@ -1,364 +1,394 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
-import evidenceService from "api/evidence";
-import projectService from "api/projects";
-import { get } from "lodash";
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+export default {};
 
-import loader from "assets/images/icons/loader.svg";
+// import { zodResolver } from "@hookform/resolvers/zod";
+// import { useQuery } from "@tanstack/react-query";
+// import evidenceService from "api/evidence";
+// import milestoneService from "api/milestones";
+// import projectService from "api/projects";
+// import { get } from "lodash";
+// import { Dispatch, SetStateAction, useMemo, useState } from "react";
+// import { useForm } from "react-hook-form";
 
-import { EVIDENCE_STATUS, NO_PROMPT_STATUS } from "lib/constants";
-import { useAppSelector } from "lib/hooks";
-import { useEvidenceMutation } from "lib/mutations/evidences";
-import { EvidenceFieldValues } from "lib/types/evidence";
-import { findLabelFromOptions } from "lib/utils";
-import { evidence } from "lib/validators/evidence";
+// import loader from "assets/images/icons/loader.svg";
 
-import { useCustomPrompt } from "components/ui/alert/custom-prompt";
-import Button from "components/ui/button";
-import Controller from "components/ui/custom-controller/CustomController";
-import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
-import Dropdown, { IOption } from "components/ui/dropdown";
-import FileInput from "components/ui/file-input";
-import { Form } from "components/ui/form/Form";
-import { useAutoSaveForm } from "components/ui/form/useAutoSave";
-import Input from "components/ui/input";
-import Spinner from "components/ui/spinner/spinner";
+// import { EVIDENCE_STATUS, NO_PROMPT_STATUS } from "lib/constants";
+// import { useAppSelector } from "lib/hooks";
+// import { useEvidenceMutation } from "lib/mutations/evidences";
+// import { EvidenceFieldValues } from "lib/types/evidence";
+// import { findLabelFromOptions } from "lib/utils";
+// import { evidence } from "lib/validators/evidence";
 
-import ActivityLogSection from "./Sections/ActivityLogSection";
-import CommentSection from "./Sections/CommentSection";
+// import { useCustomPrompt } from "components/ui/alert/custom-prompt";
+// import Button from "components/ui/button";
+// import Controller from "components/ui/custom-controller/CustomController";
+// import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
+// import Dropdown, { IOption } from "components/ui/dropdown";
+// import FileInput from "components/ui/file-input";
+// import { Form } from "components/ui/form/Form";
+// import { useAutoSaveForm } from "components/ui/form/useAutoSave";
+// import Input from "components/ui/input";
+// import Spinner from "components/ui/spinner/spinner";
 
-interface IEvidencesDialogueProps extends IDialogueProps {
-  id?: number;
+// import ActivityLogSection from "./Sections/ActivityLogSection";
+// import CommentSection from "./Sections/CommentSection";
 
-  setId: Dispatch<SetStateAction<number | null>>;
-}
+// interface IEvidencesDialogueProps extends IDialogueProps {
+//   id?: number;
 
-const config = {
-  "pending review": {
-    title: "Request review",
-    subText:
-      "Changing a beneficiary status to Pending evidence review will send an email to Forte or your Funder asking them to review this Beneficiary’s evidence. Click cancel to revert or send request to send the email.",
-  },
-  "more information requested": {
-    title: "Request more information",
-    subText:
-      "Changing evidence status to More information requested will send an email to Forte or your Funder asking them to review this evidence. Click cancel to revert or send request to send the email.",
-  },
-};
+//   setId: Dispatch<SetStateAction<number | null>>;
+// }
 
-const EvidencesDialogue = ({
-  id,
-  setId,
-  ...props
-}: IEvidencesDialogueProps) => {
-  const { open } = useCustomPrompt();
+// const config = {
+//   "pending review": {
+//     title: "Request review",
+//     subText:
+//       "Changing a beneficiary status to Pending evidence review will send an email to Forte or your Funder asking them to review this Beneficiary’s evidence. Click cancel to revert or send request to send the email.",
+//   },
+//   "more information requested": {
+//     title: "Request more information",
+//     subText:
+//       "Changing evidence status to More information requested will send an email to Forte or your Funder asking them to review this evidence. Click cancel to revert or send request to send the email.",
+//   },
+// };
 
-  const [onEdit, setOnEdit] = useState(id ? false : true);
+// const EvidencesDialogue = ({
+//   id,
+//   setId,
+//   ...props
+// }: IEvidencesDialogueProps) => {
+//   const { open } = useCustomPrompt();
 
-  const [uploading, setUploading] = useState(false);
+//   const [onEdit, setOnEdit] = useState(id ? false : true);
 
-  const { projectId, beneficiaryId } = useAppSelector(
-    (state) => state.evidence
-  );
+//   const [uploading, setUploading] = useState(false);
 
-  const { data: evidenceData, isLoading: evidenceLoading } = useQuery({
-    queryKey: ["evidence", id],
+//   const { projectId, beneficiaryId, contractId } = useAppSelector(
+//     (state) => state.evidence
+//   );
 
-    queryFn: () => evidenceService.getOne(beneficiaryId!, id!),
+//   const { data: evidenceData, isLoading: evidenceLoading } = useQuery({
+//     queryKey: ["evidence", id],
 
-    enabled: !!id,
-  });
+//     queryFn: () => evidenceService.getOne(beneficiaryId!, id!),
 
-  const form = useForm({
-    resolver: zodResolver(evidence.schema),
+//     enabled: !!id,
+//   });
 
-    defaultValues: evidence.defaultValues(evidenceData),
-  });
+//   const form = useForm({
+//     resolver: zodResolver(evidence.schema),
 
-  const {
-    control,
+//     defaultValues: evidence.defaultValues(),
+//   });
 
-    setValue,
+//   const {
+//     control,
 
-    setError,
+//     setValue,
 
-    formState: { errors, isDirty },
+//     setError,
 
-    reset,
+//     formState: { isDirty },
 
-    watch,
-  } = form;
+//     watch,
+//   } = form;
 
-  const file = watch("file");
-  const status = watch("status");
+//   const file = watch("file");
+//   const status = watch("status");
 
-  const { data: fileData, isLoading: isFileLoading } = useQuery({
-    queryKey: ["file", file?.fileUrl],
+//   const { data: fileData, isLoading: isFileLoading } = useQuery({
+//     queryKey: ["file", file?.fileUrl],
 
-    queryFn: () => evidenceService.getFile(file?.fileUrl || ""),
+//     queryFn: () => evidenceService.getFile(file?.fileUrl || ""),
 
-    enabled: Boolean(file?.fileUrl),
+//     enabled: Boolean(file?.fileUrl),
 
-    refetchOnWindowFocus: false,
-  });
+//     refetchOnWindowFocus: false,
+//   });
 
-  const { data: project, isLoading: isProjectLoading } = useQuery({
-    queryKey: ["specific-project", projectId],
+//   const { data: project, isLoading: isProjectLoading } = useQuery({
+//     queryKey: ["specific-project", projectId],
 
-    queryFn: () => projectService.getOne(String(projectId || "")),
+//     queryFn: () => projectService.getOne(String(projectId || "")),
 
-    enabled: !!projectId,
+//     enabled: !!projectId,
 
-    refetchOnMount: true,
-  });
+//     refetchOnMount: true,
+//   });
 
-  const outcomes: IOption[] = useMemo(
-    () =>
-      project?.outcomes.map((item) => ({
-        label: item.name,
+//   // milestones start
 
-        value: String(item.id || ""),
-      })) || [],
-    [project]
-  );
+//   const milestoneFilter = {
+//     contractId: String(contractId) || "",
+//   };
 
-  useEffect(() => {
-    // prefills defaultvalue of evidence form
-    if (evidenceData) {
-      reset(evidence.defaultValues(evidenceData));
-    }
-  }, [reset, evidenceData]);
+//   const { data: milestones, isLoading: isMilestoneLoading } = useQuery({
+//     queryKey: ["evidence-milestones", contractId],
 
-  const { addEvidence, isPending } = useEvidenceMutation({
-    beneficiaryId: beneficiaryId!,
+//     queryFn: () =>
+//       milestoneService.list({ pageSize: 100, filters: milestoneFilter }),
 
-    evidenceId: id!,
+//     enabled: Boolean(contractId),
 
-    successCallback: (id) => {
-      setId(Number(id));
-      setOnEdit(false);
-    },
-  });
+//     refetchOnMount: true,
+//   });
 
-  const onSubmit = async (values: EvidenceFieldValues) => {
-    if (
-      evidenceData &&
-      !NO_PROMPT_STATUS.includes(status) &&
-      evidenceData.status !== status
-    ) {
-      open({
-        ...get(config, status),
-        onYes: () => addEvidence(values),
-        yesLabel: "Send request",
-      });
-      return;
-    }
-    await addEvidence(values);
-  };
+//   console.log(milestones);
 
-  const formId = "evidence-form";
+//   // milestones end
 
-  useAutoSaveForm(form, {
-    formId,
-    enabled: !evidenceData,
-  });
+//   const outcomes: IOption[] = useMemo(
+//     () =>
+//       project?.outcomes.map((item) => ({
+//         label: item.name,
 
-  return (
-    <Dialogue
-      {...props}
-      title={id ? `Evidence ID ${id}` : "Add evidence"}
-      confirmBeforeLeave={isDirty}
-      formId="evidence-form"
-    >
-      <div className="space-y-[30px]">
-        {evidenceLoading ? (
-          <div className="flex h-[470px] w-full items-center justify-center">
-            <Spinner />
-          </div>
-        ) : (
-          <>
-            <Form form={form} onSubmit={onSubmit} id="evidences-form">
-              <div className="space-y-4">
-                <div className="space-y-4">
-                  <Controller
-                    label="Description"
-                    required
-                    control={control}
-                    name="description"
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        disabled={!onEdit}
-                        placeholder="Description"
-                      />
-                    )}
-                  />
+//         value: String(item.id || ""),
+//       })) || [],
+//     [project]
+//   );
 
-                  <Controller
-                    label="Outcome"
-                    control={control}
-                    name="outcomeId"
-                    render={({ field }) => (
-                      <Dropdown
-                        disabled={!onEdit}
-                        loading={isProjectLoading}
-                        value={findLabelFromOptions(
-                          outcomes,
-                          String(field.value || "")
-                        )}
-                        handleSelect={(val) => {
-                          setValue("outcomeId", val as string);
-                        }}
-                        options={outcomes}
-                        placeholder="Outcome"
-                        error={!!errors.outcomeId?.message}
-                        helperText={errors.outcomeId?.message}
-                      />
-                    )}
-                  />
+//   const milestonesOptions: IOption[] = useMemo(
+//     () =>
+//       milestones?.items.map((item) => ({
+//         label: `${item.id} - ${item.outcome.name}`,
 
-                  <Controller
-                    label="Status"
-                    required
-                    control={control}
-                    name="status"
-                    render={({ field }) => (
-                      <Dropdown
-                        disabled={!id || !onEdit}
-                        value={field.value}
-                        handleSelect={(val) => {
-                          setValue("status", val as string);
+//         value: String(item.id || ""),
+//       })) || [],
+//     [milestones]
+//   );
 
-                          setError("status", { message: "" });
-                        }}
-                        placeholder="Status"
-                        options={EVIDENCE_STATUS}
-                        error={!!errors.status?.message}
-                        helperText={errors.status?.message}
-                      />
-                    )}
-                  />
-                </div>
-                {!isFileLoading ? (
-                  <div className="flex flex-col items-center">
-                    <div className="flex max-h-[644px] w-full max-w-[490px] items-center justify-center">
-                      {fileData && (
-                        <iframe
-                          src={
-                            fileData + "#navpanes=0&toolbar=0&view=Fit&page=1"
-                          }
-                          style={{ border: "none", background: "transparent" }}
-                          width="100%"
-                          height="600px"
-                          title={file.filename}
-                          className={
-                            uploading || isFileLoading ? "opacity-[.4]" : ""
-                          }
-                        />
-                      )}
+//   // useEffect(() => {
+//   //   // prefills defaultvalue of evidence form
+//   //   if (evidenceData) {
+//   //     reset(evidence.defaultValues(evidenceData));
+//   //   }
+//   // }, [reset, evidenceData]);
 
-                      {uploading ||
-                        (isFileLoading && (
-                          <img
-                            src={loader}
-                            alt="loader"
-                            className="absolute w-10 animate-spin"
-                          />
-                        ))}
-                    </div>
+//   const { addEvidence, isPending } = useEvidenceMutation({
+//     // beneficiaryId: beneficiaryId!,
 
-                    {fileData && onEdit && (
-                      <div className="relative flex justify-center px-6 py-3 text-center">
-                        <p className="pointer-events-none absolute truncate text-center font-semibold text-mint">
-                          Replace document
-                        </p>
-                        <div className="opacity-0">
-                          <FileInput
-                            disabled={!onEdit}
-                            accept=".pdf"
-                            onUploadStart={() => setUploading(true)}
-                            onUploadEnd={() => setUploading(false)}
-                            onSuccess={(data) => {
-                              setValue("file", data);
+//     evidenceId: id!,
 
-                              setError("file", { message: "" });
-                            }}
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="flex h-[250px] w-full items-center justify-center">
-                    <Spinner />
-                  </div>
-                )}
+//     milestoneId: "",
 
-                {!file.id && (
-                  <Controller
-                    label="File"
-                    required
-                    control={control}
-                    name="file"
-                    render={() => (
-                      <FileInput
-                        accept=".pdf"
-                        disabled={!onEdit}
-                        placeholder="Upload file"
-                        onSuccess={(data) => {
-                          setValue("file", data);
+//     successCallback: (id) => {
+//       setId(Number(id));
+//       setOnEdit(false);
+//     },
+//   });
 
-                          setError("file", { message: "" });
-                        }}
-                      />
-                    )}
-                  />
-                )}
-              </div>
-            </Form>
-          </>
-        )}
+//   const onSubmit = async (values: EvidenceFieldValues) => {
+//     if (
+//       evidenceData &&
+//       !NO_PROMPT_STATUS.includes(status) &&
+//       evidenceData.status !== status
+//     ) {
+//       open({
+//         ...get(config, status),
+//         onYes: () => addEvidence(values),
+//         yesLabel: "Send request",
+//       });
+//       return;
+//     }
+//     await addEvidence(values);
+//   };
 
-        {!!id && beneficiaryId && (
-          <div className="space-y-12">
-            <ActivityLogSection
-              beneficiaryId={beneficiaryId}
-              evidenceId={id as number}
-            />
+//   const formId = "evidence-form";
 
-            <CommentSection id={id as number} />
-          </div>
-        )}
+//   useAutoSaveForm(form, {
+//     formId,
+//     enabled: !evidenceData,
+//   });
 
-        <div className="mt-16 flex justify-end">
-          {id ? (
-            !onEdit ? (
-              <Button onClick={() => setOnEdit(true)}>Edit</Button>
-            ) : (
-              <div className="space-x-4">
-                <Button
-                  buttonType="secondary"
-                  onClick={() => props.handleClose?.()}
-                >
-                  Cancel
-                </Button>
+//   return (
+//     <Dialogue
+//       {...props}
+//       title={id ? `Evidence ID ${id}` : "Add evidence"}
+//       confirmBeforeLeave={isDirty}
+//       formId="evidence-form"
+//     >
+//       <div className="space-y-[30px]">
+//         {evidenceLoading ? (
+//           <div className="flex h-[470px] w-full items-center justify-center">
+//             <Spinner />
+//           </div>
+//         ) : (
+//           <>
+//             <Form form={form} onSubmit={onSubmit} id="evidences-form">
+//               <div className="space-y-4">
+//                 <div className="space-y-4">
+//                   <Controller
+//                     label="Description"
+//                     required
+//                     control={control}
+//                     name="description"
+//                     render={({ field }) => (
+//                       <Input
+//                         {...field}
+//                         disabled={!onEdit}
+//                         placeholder="Description"
+//                       />
+//                     )}
+//                   />
 
-                <Button type="submit" form="evidences-form" loading={isPending}>
-                  Update
-                </Button>
-              </div>
-            )
-          ) : (
-            <Button loading={isPending} type="submit" form="evidences-form">
-              Add and upload document
-            </Button>
-          )}
-        </div>
-      </div>
-    </Dialogue>
-  );
-};
+//                   <Controller
+//                     label="Milestone"
+//                     control={control}
+//                     name="milestoneId"
+//                     render={({ field }) => (
+//                       <Dropdown
+//                         disabled={!onEdit}
+//                         loading={isMilestoneLoading}
+//                         value={findLabelFromOptions(
+//                           milestonesOptions,
+//                           String(field.value || "")
+//                         )}
+//                         handleSelect={(val) => {
+//                           field.onChange(val);
+//                         }}
+//                         options={milestonesOptions}
+//                         placeholder="Milestone"
+//                       />
+//                     )}
+//                   />
 
-export default EvidencesDialogue;
+//                   <Controller
+//                     label="Status"
+//                     required
+//                     control={control}
+//                     name="status"
+//                     render={({ field }) => (
+//                       <Dropdown
+//                         disabled={!id || !onEdit}
+//                         value={field.value}
+//                         handleSelect={(val) => {
+//                           setValue("status", val as string);
+
+//                           setError("status", { message: "" });
+//                         }}
+//                         placeholder="Status"
+//                         options={EVIDENCE_STATUS}
+//                       />
+//                     )}
+//                   />
+//                 </div>
+//                 {!isFileLoading ? (
+//                   <div className="flex flex-col items-center">
+//                     <div className="flex max-h-[644px] w-full max-w-[490px] items-center justify-center">
+//                       {fileData && (
+//                         <iframe
+//                           src={
+//                             fileData + "#navpanes=0&toolbar=0&view=Fit&page=1"
+//                           }
+//                           style={{ border: "none", background: "transparent" }}
+//                           width="100%"
+//                           height="600px"
+//                           title={file.filename}
+//                           className={
+//                             uploading || isFileLoading ? "opacity-[.4]" : ""
+//                           }
+//                         />
+//                       )}
+
+//                       {uploading ||
+//                         (isFileLoading && (
+//                           <img
+//                             src={loader}
+//                             alt="loader"
+//                             className="absolute w-10 animate-spin"
+//                           />
+//                         ))}
+//                     </div>
+
+//                     {fileData && onEdit && (
+//                       <div className="relative flex justify-center px-6 py-3 text-center">
+//                         <p className="pointer-events-none absolute truncate text-center font-semibold text-mint">
+//                           Replace document
+//                         </p>
+//                         <div className="opacity-0">
+//                           <FileInput
+//                             disabled={!onEdit}
+//                             accept=".pdf"
+//                             onUploadStart={() => setUploading(true)}
+//                             onUploadEnd={() => setUploading(false)}
+//                             onSuccess={(data) => {
+//                               setValue("file", data);
+
+//                               setError("file", { message: "" });
+//                             }}
+//                           />
+//                         </div>
+//                       </div>
+//                     )}
+//                   </div>
+//                 ) : (
+//                   <div className="flex h-[250px] w-full items-center justify-center">
+//                     <Spinner />
+//                   </div>
+//                 )}
+
+//                 {!file.id && (
+//                   <Controller
+//                     label="File"
+//                     required
+//                     control={control}
+//                     name="file"
+//                     render={() => (
+//                       <FileInput
+//                         accept=".pdf"
+//                         disabled={!onEdit}
+//                         placeholder="Upload file"
+//                         onSuccess={(data) => {
+//                           setValue("file", data);
+
+//                           setError("file", { message: "" });
+//                         }}
+//                       />
+//                     )}
+//                   />
+//                 )}
+//               </div>
+//             </Form>
+//           </>
+//         )}
+
+//         {!!id && beneficiaryId && (
+//           <div className="space-y-12">
+//             <ActivityLogSection
+//               beneficiaryId={beneficiaryId}
+//               evidenceId={id as number}
+//             />
+
+//             <CommentSection id={id as number} />
+//           </div>
+//         )}
+
+//         <div className="mt-16 flex justify-end">
+//           {id ? (
+//             !onEdit ? (
+//               <Button onClick={() => setOnEdit(true)}>Edit</Button>
+//             ) : (
+//               <div className="space-x-4">
+//                 <Button
+//                   buttonType="secondary"
+//                   onClick={() => props.handleClose?.()}
+//                 >
+//                   Cancel
+//                 </Button>
+
+//                 <Button type="submit" form="evidences-form" loading={isPending}>
+//                   Update
+//                 </Button>
+//               </div>
+//             )
+//           ) : (
+//             <Button loading={isPending} type="submit" form="evidences-form">
+//               Add and upload document
+//             </Button>
+//           )}
+//         </div>
+//       </div>
+//     </Dialogue>
+//   );
+// };
+
+// export default EvidencesDialogue;

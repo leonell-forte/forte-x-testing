@@ -6,11 +6,13 @@ import { fileSchema } from "./common";
 export const evidence = {
   defaultValues: (evidence?: Evidence) => {
     let data: EvidenceFieldValues = {
+      beneficiaryId: String(evidence?.beneficiaryId) || "",
+
       description: evidence?.description || "",
 
       status: evidence?.status || "pending review",
 
-      outcomeId: String(evidence?.outcome?.id) || "",
+      milestoneId: "",
 
       file: evidence?.file || {
         id: 0, // Provide default values for required fields
@@ -34,10 +36,19 @@ export const evidence = {
 
     status: z.string().min(1, "Status is a required field"),
 
-    outcomeId: z.string(),
+    milestoneId: z.string(),
 
     file: fileSchema.refine((file) => file.key !== "", {
       message: "File is a required field",
     }),
   }),
 };
+
+const beneficiaryIdSchema = z.object({
+  beneficiaryId: z.string().min(1, "Beneficiary is a required field"),
+});
+
+export const completeSchema = z.intersection(
+  evidence.schema,
+  beneficiaryIdSchema
+);

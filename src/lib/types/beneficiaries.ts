@@ -105,4 +105,6 @@ export interface IBeneficiariesFilter {
   riskLevel?: string;
 
   startDate?: string;
+
+  contractId?: string;
 }

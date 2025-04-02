@@ -11,7 +11,7 @@ const Status = ({ variant = "primary", children }: PropTypes) => {
   return (
     <div
       className={classNames(
-        "flex h-6 w-fit items-center justify-center rounded-full px-4 text-[10px]",
+        "flex h-6 w-fit items-center justify-center rounded-full px-4 text-[10px] capitalize",
         variants[variant as StatusVariant]
       )}
     >

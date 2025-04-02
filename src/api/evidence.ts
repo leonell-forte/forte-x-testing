@@ -4,11 +4,7 @@ import { AddEvidenceParams, Evidence } from "../lib/types/evidence";
 
 export class EvidenceService {
   async add({
-    beneficiaryId,
-
-    // projectId,
-
-    // contractId,
+    milestoneId,
 
     values,
   }: AddEvidenceParams) {
@@ -19,11 +15,11 @@ export class EvidenceService {
 
       fileId: values.file?.id,
 
-      outcomeId: values.outcomeId ? Number(values.outcomeId) : null,
+      milestoneId: milestoneId,
     };
 
     const response = await api.post(
-      `/beneficiaries/${beneficiaryId}/evidences`,
+      `/beneficiaries/${values.beneficiaryId}/evidences`,
 
       body
     );
@@ -47,7 +43,7 @@ export class EvidenceService {
     return response.data.data;
   }
 
-  async update({ beneficiaryId, values }: AddEvidenceParams) {
+  async update({ values, milestoneId }: AddEvidenceParams) {
     const body = {
       id: values.id,
 
@@ -57,11 +53,11 @@ export class EvidenceService {
 
       fileId: values.file?.id,
 
-      outcomeId: Number(values.outcomeId),
+      milestoneId: milestoneId,
     };
 
     const response = await api.put(
-      `/beneficiaries/${beneficiaryId}/evidences`,
+      `/beneficiaries/${values.beneficiaryId}/evidences`,
       body
     );
 

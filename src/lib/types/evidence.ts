@@ -2,8 +2,11 @@ import { z } from "zod";
 
 import { evidence } from "../validators/evidence";
 import { File, User } from "./common";
+import { EvidenceStatus } from "./milestones";
 
-export type EvidenceFieldValues = z.infer<typeof evidence.schema>;
+export type EvidenceFieldValues = z.infer<typeof evidence.schema> & {
+  beneficiaryId: string;
+};
 
 export type AddEvidenceParams = {
   beneficiaryId?: number;
@@ -11,6 +14,8 @@ export type AddEvidenceParams = {
   projectId?: number;
 
   contractId?: number;
+
+  milestoneId?: string;
 
   values: EvidenceFieldValues;
 };
@@ -20,15 +25,7 @@ export type Evidence = {
 
   description: string;
 
-  status: string;
-
-  outcome: {
-    id: number;
-
-    name: string;
-
-    description: string;
-  };
+  status: EvidenceStatus;
 
   file: File;
 

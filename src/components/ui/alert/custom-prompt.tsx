@@ -1,12 +1,11 @@
-import { motion } from "framer-motion";
+import { Dialog, DialogPanel } from "@headlessui/react";
 import { AiOutlineClose as X } from "react-icons/ai";
 
-import { useAppDispatch, useAppSelector, useEscapeKey } from "lib/hooks";
+import { useAppDispatch, useAppSelector } from "lib/hooks";
 import { TPrompt, setConfig, setShow } from "lib/slice/custom-prompt";
 import { cn } from "lib/utils";
 
 import Button from "../button";
-import styles from "./styles.module.scss";
 
 export const useCustomPrompt = () => {
   const dispatch = useAppDispatch();
@@ -24,53 +23,59 @@ export const useCustomPrompt = () => {
 
 const CustomPrompt = () => {
   const { show, close, config } = useCustomPrompt();
-
-  useEscapeKey(close);
-
-  if (!show) return null;
-
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ type: "spring", duration: 0.4 }}
-      className="fixed left-0 top-0 z-[999] flex h-screen w-screen items-center justify-center bg-[#011217] bg-opacity-[90%]"
-      role="dialog"
+    <Dialog
+      open={show}
+      as="div"
+      className="relative z-[100] focus:outline-none"
+      onClose={close}
     >
-      <div className={cn(styles["confirm-prompt"], "!max-w-screen-md")}>
-        <div className="w-full space-y-3 text-left">
-          <p className="heading">{config.title}</p>
-          {config.subText && <p className="text-[14px]">{config.subText}</p>}
-        </div>
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            close();
-          }}
-          className="group absolute right-4 top-4"
-        >
-          <X className="h-auto w-5 transition-all group-hover:fill-mint" />
-        </button>
+      <div className="fixed inset-0 z-10 w-screen overflow-y-auto bg-black/80">
+        <div className="flex min-h-full items-center justify-center">
+          {" "}
+          <DialogPanel
+            transition
+            className={cn(
+              "data-[closed]:transform-[scale(95%)] relative h-screen w-full max-w-2xl bg-[#30F1FF1F] p-6 drop-shadow-sm backdrop-blur duration-300 ease-out data-[closed]:opacity-0 md:my-12 md:h-full md:rounded-lg md:p-14"
+            )}
+          >
+            <div className="w-full space-y-3 text-left">
+              <p className="heading">{config.title}</p>
+              {config.subText && (
+                <p className="text-[14px]">{config.subText}</p>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                close();
+              }}
+              className="group absolute right-4 top-4"
+            >
+              <X className="h-auto w-5 transition-all group-hover:fill-mint" />
+            </button>
 
-        <div className="ml-auto flex justify-end gap-2">
-          <Button
-            buttonType="secondary"
-            onClick={() => (config.onNo ? config.onNo() : close())}
-          >
-            {config.noLabel}
-          </Button>
-          <Button
-            onClick={() => {
-              config.onYes();
-              close();
-            }}
-          >
-            {config.yesLabel}
-          </Button>
+            <div className="ml-auto flex justify-end gap-2">
+              <Button
+                buttonType="secondary"
+                onClick={() => (config.onNo ? config.onNo() : close())}
+              >
+                {config.noLabel}
+              </Button>
+              <Button
+                onClick={() => {
+                  config.onYes();
+                  close();
+                }}
+              >
+                {config.yesLabel}
+              </Button>
+            </div>
+          </DialogPanel>
         </div>
       </div>
-    </motion.div>
+    </Dialog>
   );
 };
 

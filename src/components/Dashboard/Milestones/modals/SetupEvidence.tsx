@@ -1,0 +1,331 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
+import evidenceService from "api/evidence";
+import { get } from "lodash";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+
+import loader from "assets/images/icons/loader.svg";
+
+import useBeneficiariesList from "lib/common/lists/useBeneficiariesList";
+import { EVIDENCE_STATUS, NO_PROMPT_STATUS } from "lib/constants";
+import { useEvidenceMutation } from "lib/mutations/evidences";
+import { EvidenceFieldValues } from "lib/types/evidence";
+import { IMilestone, TMilestoneEvidence } from "lib/types/milestones";
+import { completeSchema, evidence } from "lib/validators/evidence";
+
+import { useCustomPrompt } from "components/ui/alert/custom-prompt";
+import Button from "components/ui/button";
+import Controller from "components/ui/custom-controller/CustomController";
+import { useModal } from "components/ui/dialogue/v2/Modal";
+import Dropdown from "components/ui/dropdown";
+import FileInput from "components/ui/file-input";
+import { Form } from "components/ui/form/Form";
+import { useAutoSaveForm } from "components/ui/form/useAutoSave";
+import Input from "components/ui/input";
+import Spinner from "components/ui/spinner/spinner";
+
+type TParams = {
+  milestone: IMilestone;
+  evidenceDetails?: TMilestoneEvidence;
+};
+
+const config = {
+  "pending review": {
+    title: "Request review",
+    subText:
+      "Changing a beneficiary status to Pending evidence review will send an email to Forte or your Funder asking them to review this Beneficiary’s evidence. Click cancel to revert or send request to send the email.",
+  },
+  "more information requested": {
+    title: "Request more information",
+    subText:
+      "Changing evidence status to More information requested will send an email to Forte or your Funder asking them to review this evidence. Click cancel to revert or send request to send the email.",
+  },
+};
+
+export function showSetupEvidenceModal(params: TParams) {
+  const isEdit = Boolean(params.evidenceDetails);
+  useModal.getState().open({
+    component: (
+      <SetupEvidenceModal
+        milestone={params.milestone}
+        evidenceDetails={params.evidenceDetails}
+      />
+    ),
+    size: "2xl",
+    title: `${isEdit ? "Edit" : "Add"} Evidence ${isEdit ? "ID: " + params.evidenceDetails?.id : ""}`,
+  });
+}
+
+function SetupEvidenceModal({ milestone, evidenceDetails }: TParams) {
+  const { close } = useModal();
+  const { open } = useCustomPrompt();
+
+  const isThreshold = milestone.type === "threshold";
+
+  const { addEvidence, isPending } = useEvidenceMutation({
+    milestoneId: milestone.id,
+
+    evidenceId: evidenceDetails?.id || NaN,
+  });
+
+  const onSubmit = async (values: EvidenceFieldValues) => {
+    const payload = {
+      ...values,
+      beneficiaryId: isThreshold
+        ? values.beneficiaryId
+        : milestone.reference.id!,
+    };
+    if (
+      evidenceData &&
+      !NO_PROMPT_STATUS.includes(values.status) &&
+      evidenceData.status !== values.status
+    ) {
+      open({
+        ...get(config, values.status),
+        onYes: () => addEvidence(payload),
+        yesLabel: "Send request",
+      });
+      return;
+    }
+    await addEvidence(payload);
+  };
+
+  const [uploading, setUploading] = useState(false);
+
+  const { data: evidenceData, isLoading: evidenceLoading } = useQuery({
+    queryKey: ["evidence", evidenceDetails?.id],
+
+    queryFn: () =>
+      evidenceService.getOne(
+        evidenceDetails ? evidenceDetails.beneficiary.id : NaN,
+        evidenceDetails ? evidenceDetails.id : NaN
+      ),
+
+    enabled: Boolean(evidenceDetails?.id),
+  });
+
+  const form = useForm<EvidenceFieldValues>({
+    resolver: zodResolver(isThreshold ? completeSchema : evidence.schema),
+    defaultValues: evidence.defaultValues(),
+  });
+
+  const {
+    control,
+    watch,
+    setValue,
+    setError,
+    reset,
+    formState: { isDirty },
+  } = form;
+
+  const file = watch("file");
+
+  const { data: fileData, isLoading: isFileLoading } = useQuery({
+    queryKey: ["file", file?.fileUrl],
+
+    queryFn: () => evidenceService.getFile(file?.fileUrl || ""),
+
+    enabled: Boolean(file?.fileUrl),
+
+    refetchOnWindowFocus: false,
+  });
+
+  const contractId = milestone.contract.id;
+
+  const {
+    beneficiaries,
+    isLoading: beneLoading,
+    handleSearchBene,
+  } = useBeneficiariesList({
+    key: ["dropdown"],
+    pageSize: 100,
+    filters: {
+      contractId,
+    },
+  });
+
+  const formId = "evidence-form";
+
+  useAutoSaveForm(form, {
+    formId,
+    enabled: !evidenceDetails,
+  });
+
+  useEffect(() => {
+    // prefills defaultvalue of evidence form
+    if (evidenceData) {
+      reset(evidence.defaultValues(evidenceData));
+    }
+  }, [reset, evidenceData]);
+
+  return (
+    <div>
+      {evidenceLoading ? (
+        <div className="flex h-[470px] w-full items-center justify-center">
+          <Spinner />
+        </div>
+      ) : (
+        <Form form={form} onSubmit={onSubmit} id="evidences-form">
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {isThreshold ? (
+                <Controller
+                  label="Beneficiary"
+                  required
+                  name="beneficiaryId"
+                  control={control}
+                  render={({ field }) => {
+                    return (
+                      <Dropdown
+                        enableSearch
+                        disabled={Boolean(evidenceDetails)}
+                        loading={beneLoading}
+                        value={
+                          beneficiaries.find(
+                            (item) => Number(item.value) === Number(field.value)
+                          )?.label
+                        }
+                        options={beneficiaries}
+                        handleSelect={(val) => {
+                          field.onChange(String(val));
+                        }}
+                        placeholder="Select beneficiary"
+                        onChange={(e) => handleSearchBene(e.target.value)}
+                      />
+                    );
+                  }}
+                />
+              ) : null}
+              <Controller
+                label="Description"
+                required
+                control={control}
+                name="description"
+                render={({ field }) => (
+                  <Input {...field} placeholder="Description" />
+                )}
+              />
+
+              <Controller
+                label="Status"
+                required
+                control={control}
+                name="status"
+                render={({ field }) => (
+                  <Dropdown
+                    value={field.value}
+                    handleSelect={(val) => field.onChange(val)}
+                    placeholder="Status"
+                    options={EVIDENCE_STATUS}
+                    disabled={!evidenceDetails}
+                  />
+                )}
+              />
+            </div>
+            {!isFileLoading && fileData ? (
+              <div className="flex flex-col items-center">
+                <div className="flex h-[calc(100vh-550px)] w-full max-w-[490px] items-center justify-center md:h-[calc(100vh-550px)]">
+                  {fileData && (
+                    <iframe
+                      src={fileData + "#navpanes=0&toolbar=0&view=Fit&page=1"}
+                      style={{ border: "none", background: "transparent" }}
+                      width="100%"
+                      height="100%"
+                      title={file.filename}
+                      className={
+                        uploading || isFileLoading ? "h-full opacity-[.4]" : ""
+                      }
+                    />
+                  )}
+
+                  {uploading ||
+                    (isFileLoading && (
+                      <img
+                        src={loader}
+                        alt="loader"
+                        className="absolute w-10 animate-spin"
+                      />
+                    ))}
+                </div>
+
+                {fileData && (
+                  <div className="relative flex justify-center px-6 py-3 text-center">
+                    <p className="pointer-events-none absolute truncate text-center font-semibold text-mint">
+                      Replace document
+                    </p>
+                    <div className="opacity-0">
+                      <FileInput
+                        accept=".pdf"
+                        onUploadStart={() => setUploading(true)}
+                        onUploadEnd={() => setUploading(false)}
+                        onSuccess={(data) => {
+                          setValue("file", data);
+
+                          setError("file", { message: "" });
+                        }}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : null}
+            {isFileLoading ? (
+              <div className="flex h-[250px] w-full items-center justify-center">
+                <Spinner />
+              </div>
+            ) : null}
+
+            {!file.id && (
+              <Controller
+                label="File"
+                required
+                control={control}
+                name="file"
+                render={() => (
+                  <FileInput
+                    accept=".pdf"
+                    placeholder="Upload file"
+                    onSuccess={(data) => {
+                      setValue("file", data);
+
+                      setError("file", { message: "" });
+                    }}
+                  />
+                )}
+              />
+            )}
+          </div>
+
+          <div className="mt-8 flex w-full justify-end">
+            {evidenceDetails ? (
+              <div className="flex w-full flex-col justify-end gap-4 sm:flex-row">
+                <Button
+                  buttonType="secondary"
+                  onClick={close}
+                  className="w-full sm:w-fit"
+                >
+                  Cancel
+                </Button>
+
+                <Button
+                  type="submit"
+                  className="w-full sm:w-fit"
+                  form="evidences-form"
+                  disabled={!isDirty}
+                  loading={isPending}
+                >
+                  Update
+                </Button>
+              </div>
+            ) : (
+              <Button loading={isPending} type="submit" form="evidences-form">
+                Add and upload document
+              </Button>
+            )}
+          </div>
+        </Form>
+      )}
+    </div>
+  );
+}

@@ -33,11 +33,13 @@ export const BreadCrumb = ({ children, href, className }: Props) => {
         createPortal(
           <div
             className={cn(
-              "bread-crumb whitespace-nowrap transition duration-500 [&:first-child]:font-semibold [&:last-child]:!text-white/40",
+              "bread-crumb whitespace-nowrap transition duration-500 [&:last-child]:font-semibold",
               href ? "text-white hover:text-mint" : "text-white",
               className
             )}
-            {...(href && { role: "button", onClick: () => navigate(href) })}
+            {...(href !== undefined
+              ? { role: "button", onClick: () => navigate(href) }
+              : {})}
           >
             {children}
           </div>,

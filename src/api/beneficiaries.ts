@@ -16,6 +16,8 @@ interface IBeneficiariesListProps {
   search?: string;
 
   filters?: IBeneficiariesFilter;
+
+  pageSize?: number;
 }
 
 class BeneficiariesService {
@@ -27,6 +29,8 @@ class BeneficiariesService {
     search,
 
     filters,
+
+    pageSize,
   }: IBeneficiariesListProps): Promise<{
     items: IBeneficiaries[];
 
@@ -107,11 +111,17 @@ class BeneficiariesService {
 
         isDate: true,
       },
+
+      "beneficiary.contract_id": {
+        value: filters?.contractId || "",
+
+        exact: true,
+      },
     };
 
     params.append("$pageNum", page.toString());
 
-    params.append("$pageSize", DEFAULT_PAGE_SIZE);
+    params.append("$pageSize", String(pageSize) || DEFAULT_PAGE_SIZE);
 
     params.append("$orderBy", `"beneficiary"."createdAt" desc`);
 

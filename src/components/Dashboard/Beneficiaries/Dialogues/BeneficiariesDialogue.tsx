@@ -4,7 +4,8 @@ import { IDialogueProps } from "components/ui/dialogue/dialogue";
 
 import AddDialogue from "./AddDialogue";
 import { BeneficiariesProvider } from "./BeneficiariesContext";
-import EvidencesDialogue from "./EvidencesDialogue";
+
+// import EvidencesDialogue from "./EvidencesDialogue";
 
 type ModalLabelType = "beneficiaries" | "evidence";
 
@@ -29,7 +30,7 @@ const BeneficiariesDialogue = ({
 
   const [beneficiaryId, setBeneficiaryId] = useState<number>(id!);
 
-  const [evidenceId, setEvidenceId] = useState<number | null>(null);
+  // const [evidenceId, setEvidenceId] = useState<number | null>(null);
 
   useEffect(() => {
     if (id) setBeneficiaryId(id);
@@ -38,7 +39,7 @@ const BeneficiariesDialogue = ({
   const close = () => {
     props.handleClose?.();
 
-    setEvidenceId(null);
+    // setEvidenceId(null);
   };
 
   const renderModal = (modal: ModalLabelType) => {
@@ -55,24 +56,24 @@ const BeneficiariesDialogue = ({
             handleAddOrViewEvidence={(id) => {
               setModal("evidence");
 
-              if (id) setEvidenceId(id);
+              // if (id) setEvidenceId(id);
             }}
           />
         );
 
-      case "evidence":
-        return (
-          <EvidencesDialogue
-            {...props}
-            id={evidenceId as number}
-            setId={setEvidenceId}
-            handleClose={() => {
-              setModal("beneficiaries");
+      // case "evidence":
+      //   return (
+      //     <EvidencesDialogue
+      //       {...props}
+      //       id={evidenceId as number}
+      //       setId={setEvidenceId}
+      //       handleClose={() => {
+      //         setModal("beneficiaries");
 
-              setEvidenceId(null);
-            }}
-          />
-        );
+      //         setEvidenceId(null);
+      //       }}
+      //     />
+      //   );
 
       default:
         return null;

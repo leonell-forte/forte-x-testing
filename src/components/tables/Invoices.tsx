@@ -1,10 +1,8 @@
-import { HiOutlineDownload as DL } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 
 import { Invoice } from "lib/types/invoices";
-import { formatCurrency, formatDate, getStatusVariant } from "lib/utils";
+import { formatDate, formatNumber, getStatusVariant } from "lib/utils";
 
-import Button from "components/ui/button";
 import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import Status from "components/ui/status";
 import Table from "components/ui/table";
@@ -22,17 +20,16 @@ const Invoices = ({ list, isLoading }: InvoicesProps) => {
     navigate(`/invoices/${id}`);
   };
 
-  const handleDownload = () => {
-    //  ...download loginc here
-  };
+  // const handleDownload = () => {
+  //   //  ...download loginc here
+  // };
 
   return (
     <div>
       <div className="lg:hidden">
         <Cards.Container isLoading={isLoading}>
           {list?.map((item, index) => {
-            const { id, createdAt, dueDate, paidDate, grossAmount, status } =
-              item;
+            const { id, createdAt, cost, status } = item;
             return (
               <Cards.Card
                 onClick={(e) => {
@@ -40,7 +37,7 @@ const Invoices = ({ list, isLoading }: InvoicesProps) => {
                   handleView(id);
                 }}
                 key={index}
-                title={`INV-${id.slice(-4)}`.toUpperCase()}
+                title={id}
               >
                 <Cards.Group cols={2}>
                   <Cards.Details
@@ -48,19 +45,13 @@ const Invoices = ({ list, isLoading }: InvoicesProps) => {
                     value={formatDate(new Date(createdAt || ""), "dd-LLL-yyyy")}
                   />
                   <Cards.Details
-                    label="Date due"
-                    value={formatDate(new Date(dueDate || ""), "dd-LLL-yyyy")}
-                  />
-                  <Cards.Details
-                    label="Date paid"
-                    value={formatDate(new Date(paidDate || ""), "dd-LLL-yyyy")}
-                  />
-                  <Cards.Details
                     label="Total"
-                    value={formatCurrency(grossAmount)}
+                    value={`$${formatNumber(cost)}`}
                   />
                   <Cards.Details label="Status" value={status} />
                 </Cards.Group>
+                {/* still not sure what download is for -echo
+                
                 <div className="absolute bottom-3 right-3 flex gap-2">
                   <Button
                     eventName="Download Invoice"
@@ -72,7 +63,7 @@ const Invoices = ({ list, isLoading }: InvoicesProps) => {
                   >
                     <DL className="h-auto w-6 transition-all group-hover:stroke-mint" />{" "}
                   </Button>
-                </div>
+                </div> */}
               </Cards.Card>
             );
           })}
@@ -90,8 +81,7 @@ const Invoices = ({ list, isLoading }: InvoicesProps) => {
           </Table.Head>
           <Table.Body>
             {list?.map((item, index) => {
-              const { id, createdAt, dueDate, paidDate, grossAmount, status } =
-                item;
+              const { id, createdAt, cost, status } = item;
               return (
                 <Table.Row
                   key={index}
@@ -100,22 +90,17 @@ const Invoices = ({ list, isLoading }: InvoicesProps) => {
                     handleView(id);
                   }}
                 >
-                  <Table.Data className="uppercase">
-                    INV-{id.slice(-4)}
-                  </Table.Data>
+                  <Table.Data className="uppercase">{id}</Table.Data>
                   <Table.Data>
                     {formatDate(new Date(createdAt || ""), "dd LLLL yyyy")}
                   </Table.Data>
-                  <Table.Data>
-                    {formatDate(new Date(paidDate || ""), "dd LLLL yyyy")}
-                  </Table.Data>
-                  <Table.Data>{formatCurrency(grossAmount)}</Table.Data>
-                  <Table.Data>
-                    {formatDate(new Date(dueDate || ""), "dd LLLL yyyy")}
-                  </Table.Data>
+                  <Table.Data>To inquire from BE</Table.Data>
+                  <Table.Data>{formatNumber(cost)}</Table.Data>
+                  <Table.Data>To inquire from BE</Table.Data>
                   <Table.Data>
                     <Status variant={getStatusVariant(status)}>{status}</Status>
                   </Table.Data>
+                  {/*  still not sure what download is for -echo
                   <Table.Data>
                     <Button
                       eventName="Edit Project"
@@ -127,7 +112,7 @@ const Invoices = ({ list, isLoading }: InvoicesProps) => {
                     >
                       <DL className="h-auto w-6 transition-all group-hover:stroke-mint" />{" "}
                     </Button>
-                  </Table.Data>
+                  </Table.Data> */}
                 </Table.Row>
               );
             })}
@@ -148,5 +133,5 @@ const HEADERS = [
   "Amount",
   "Due date",
   "Status",
-  "",
+  // "",
 ];
