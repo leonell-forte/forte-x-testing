@@ -26,7 +26,7 @@ export const MENUS = [
     name: "funders",
     link: "/funders",
     permissions: [Organizations.NAVIGATE],
-    icon: Provider,
+    icon: Funder,
   },
   {
     name: "providers",
