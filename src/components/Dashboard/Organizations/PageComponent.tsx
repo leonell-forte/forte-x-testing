@@ -27,7 +27,7 @@ const PageComponent = ({ type, initialFilters }: PageComponentProps) => {
 
   const [selectedOrg, setSelectedOrg] = useState("");
 
-  const [filters, setFilters] = useState<IFilters>(initialFilters as IFilters);
+  const [filters, setFilters] = useState<IFilters>(initialFilters);
 
   const {
     rawList: organizationList,
@@ -69,9 +69,9 @@ const PageComponent = ({ type, initialFilters }: PageComponentProps) => {
             isVisible={modal === "filter"}
             handleClose={close}
           >
-            <FilterWrapper 
+            <FilterWrapper
               onApply={close}
-              onClear={() => setFilters(initialFilters as IFilters)}
+              onClear={() => setFilters(initialFilters)}
             >
               <Filters
                 initialFilters={initialFilters}
@@ -168,7 +168,15 @@ interface IFilterProps {
   initialFilters: IFilters;
 }
 
-const FilterWrapper = ({ children, onApply, onClear }: { children: React.ReactNode, onApply?: () => void, onClear?: () => void }) => (
+const FilterWrapper = ({
+  children,
+  onApply,
+  onClear,
+}: {
+  children: React.ReactNode;
+  onApply?: () => void;
+  onClear?: () => void;
+}) => (
   <div className="space-y-6">
     {children}
     {(onApply || onClear) && (
@@ -216,7 +224,7 @@ const Filters = ({ filters, setFilters, initialFilters }: IFilterProps) => {
       />
 
       <button
-        onClick={() => setFilters(initialFilters as IFilters)}
+        onClick={() => setFilters(initialFilters)}
         className="group hidden flex-shrink-0 lg:block"
       >
         <FilterIcon className="h-auto w-5 fill-white transition-all group-hover:fill-mint group-hover:stroke-mint" />
