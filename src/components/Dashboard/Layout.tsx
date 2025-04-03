@@ -14,7 +14,7 @@ const Layout = () => {
         <div className="flex h-full flex-1 flex-grow gap-4 px-5 pb-4">
           <SidePanel />
 
-          <div className="relative flex-1 rounded-lg bg-panel px-8 py-6">
+          <div className="relative flex-1 rounded-[16px] bg-panel px-8 py-6">
             <Outlet />
           </div>
         </div>

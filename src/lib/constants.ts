@@ -23,20 +23,14 @@ export const DEFAULT_PAGE_SIZE = "10";
 
 export const MENUS = [
   {
-    name: "beneficiaries",
-    link: "/beneficiaries",
-    permissions: [Beneficiaries.NAVIGATE],
-    icon: Beneficiary,
+    name: "funders",
+    link: "/funders",
+    permissions: [Organizations.NAVIGATE],
+    icon: Provider,
   },
   {
-    name: "contracts",
-    link: "/contracts",
-    permissions: [Contracts.NAVIGATE],
-    icon: Contract,
-  },
-  {
-    name: "organizations",
-    link: "/organizations",
+    name: "providers",
+    link: "/providers",
     permissions: [Organizations.NAVIGATE],
     icon: Provider,
   },
@@ -45,6 +39,18 @@ export const MENUS = [
     link: "/projects",
     permissions: [Projects.NAVIGATE],
     icon: Project,
+  },
+  {
+    name: "contracts",
+    link: "/contracts",
+    permissions: [Contracts.NAVIGATE],
+    icon: Contract,
+  },
+  {
+    name: "beneficiaries",
+    link: "/beneficiaries",
+    permissions: [Beneficiaries.NAVIGATE],
+    icon: Beneficiary,
   },
 
   {

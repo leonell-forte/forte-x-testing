@@ -27,6 +27,12 @@ const OrganizationsPage = React.lazy(
   () => import("../pages/Organizations/OrganizationsPage")
 );
 
+const FundersPage = React.lazy(() => import("../pages/Funders/FundersPage"));
+
+const ProvidersPage = React.lazy(
+  () => import("../pages/Providers/ProvidersPage")
+);
+
 const ContractsPage = React.lazy(
   () => import("../pages/Contracts/ContractsPage")
 );
@@ -107,9 +113,17 @@ export const ROUTES: RouteConfig[] = [
   },
 
   {
-    link: "organizations",
+    link: "funders",
 
-    Component: OrganizationsPage,
+    Component: FundersPage,
+
+    permissions: [Organizations.NAVIGATE],
+  },
+
+  {
+    link: "providers",
+
+    Component: ProvidersPage,
 
     permissions: [Organizations.NAVIGATE],
   },
