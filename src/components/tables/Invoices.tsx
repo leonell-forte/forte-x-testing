@@ -1,7 +1,12 @@
 import { useNavigate } from "react-router-dom";
 
 import { Invoice } from "lib/types/invoices";
-import { formatDate, formatNumber, getStatusVariant } from "lib/utils";
+import {
+  formatCurrency,
+  formatDate,
+  formatNumber,
+  getStatusVariant,
+} from "lib/utils";
 
 import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import Status from "components/ui/status";
@@ -81,7 +86,7 @@ const Invoices = ({ list, isLoading }: InvoicesProps) => {
           </Table.Head>
           <Table.Body>
             {list?.map((item, index) => {
-              const { id, createdAt, cost, status } = item;
+              const { id, createdAt, cost, status, noOfMilestones } = item;
               return (
                 <Table.Row
                   key={index}
@@ -94,9 +99,8 @@ const Invoices = ({ list, isLoading }: InvoicesProps) => {
                   <Table.Data>
                     {formatDate(new Date(createdAt || ""), "dd LLLL yyyy")}
                   </Table.Data>
-                  <Table.Data>To inquire from BE</Table.Data>
-                  <Table.Data>{formatNumber(cost)}</Table.Data>
-                  <Table.Data>To inquire from BE</Table.Data>
+                  <Table.Data>{noOfMilestones || "-"}</Table.Data>
+                  <Table.Data>{formatCurrency(cost)}</Table.Data>
                   <Table.Data>
                     <Status variant={getStatusVariant(status)}>{status}</Status>
                   </Table.Data>
@@ -131,7 +135,6 @@ const HEADERS = [
   "Invoice date",
   "# of Milestones",
   "Amount",
-  "Due date",
   "Status",
   // "",
 ];

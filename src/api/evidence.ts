@@ -1,6 +1,10 @@
 import { api } from "../lib/axios/interceptor";
 import { ActivityLogs } from "../lib/types/activity-logs";
-import { AddEvidenceParams, Evidence } from "../lib/types/evidence";
+import {
+  AddEvidenceParams,
+  DeleteParams,
+  Evidence,
+} from "../lib/types/evidence";
 
 export class EvidenceService {
   async add({
@@ -59,6 +63,14 @@ export class EvidenceService {
     const response = await api.put(
       `/beneficiaries/${values.beneficiaryId}/evidences`,
       body
+    );
+
+    return response.data.data;
+  }
+
+  async remove({ beneficiaryId, evidenceId }: DeleteParams) {
+    const response = await api.delete(
+      `/beneficiaries/${beneficiaryId}/evidences/${evidenceId}`
     );
 
     return response.data.data;

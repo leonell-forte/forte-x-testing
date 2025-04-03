@@ -19,7 +19,7 @@ export type Invoice = {
   funder: Funder;
   paymentLink: string;
   status: InvoiceStatus;
-
+  noOfMilestones: number;
   milestones: IMilestone[];
 };
 

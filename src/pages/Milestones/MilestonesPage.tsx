@@ -4,9 +4,9 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { TbFilterX as FilterIcon } from "react-icons/tb";
 import { Route, Routes, useLocation } from "react-router-dom";
 
-import { MILESTONE_STATUS } from "lib/constants";
+import { MILESTONE_STATUS, MILESTONE_TYPES } from "lib/constants";
 import { useDebounce, usePage } from "lib/hooks";
-import { IMilestoneFilters } from "lib/types/milestones";
+import { IMilestoneFilters, MilestoneStatus } from "lib/types/milestones";
 
 import MilestonesTable from "components/tables/Milestones";
 import { BreadCrumb } from "components/ui/breadcrumb/Breadcrumb";
@@ -19,6 +19,7 @@ import ViewMilestone from "./ViewMilestone";
 const initialFilter = {
   status: "",
   contractId: "",
+  type: "",
 };
 
 const MilestonesComp = () => {
@@ -76,7 +77,7 @@ const MilestonesComp = () => {
               </div>
             </div>
 
-            <div>
+            <div className="flex-1 flex-grow">
               <Filters filters={filters} setFilters={setFilters} />
             </div>
           </div>
@@ -107,15 +108,29 @@ interface IFilterProps {
 }
 
 const Filters = ({ filters, setFilters }: IFilterProps) => {
+  const { setPage } = usePage();
+
   return (
-    <div className="grid grid-cols-1 gap-2.5 md:flex">
+    <div className="flex flex-col gap-2.5 md:flex-row">
       <Dropdown
         placeholder="Status"
-        className="lg:max-w-[166px]"
+        className="w-full lg:max-w-[180px]"
         options={MILESTONE_STATUS}
         value={filters.status}
         handleSelect={(val) => {
-          console.log(val);
+          setFilters((state) => ({ ...state, status: val as MilestoneStatus }));
+          setPage(1);
+        }}
+      />
+
+      <Dropdown
+        placeholder="Type"
+        className="w-full lg:max-w-[180px]"
+        options={MILESTONE_TYPES}
+        value={filters.type}
+        handleSelect={(val) => {
+          setFilters((state) => ({ ...state, type: val as string }));
+          setPage(1);
         }}
       />
 

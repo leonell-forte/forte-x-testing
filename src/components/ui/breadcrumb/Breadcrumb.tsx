@@ -7,7 +7,10 @@ import { cn } from "lib/utils";
 export const BreadCrumbs = () => {
   return (
     <div className="bread-container">
-      <div id="bread-crumbs" className="flex w-full items-center space-x-3" />
+      <div
+        id="bread-crumbs"
+        className="flex w-full flex-wrap items-center space-x-3"
+      />
     </div>
   );
 };
@@ -33,7 +36,7 @@ export const BreadCrumb = ({ children, href, className }: Props) => {
         createPortal(
           <div
             className={cn(
-              "bread-crumb whitespace-nowrap transition duration-500 [&:last-child]:font-semibold",
+              "bread-crumb overflow-hidden text-ellipsis whitespace-nowrap transition duration-500 [&:last-child]:font-semibold",
               href ? "text-white hover:text-mint" : "text-white",
               className
             )}

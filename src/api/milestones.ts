@@ -50,6 +50,27 @@ class MilestoneService {
 
         isSearch: true,
       },
+      "funder.name": {
+        value: search!,
+
+        exact: false,
+
+        isSearch: true,
+      },
+      "provider.name": {
+        value: search!,
+
+        exact: false,
+
+        isSearch: true,
+      },
+      "contract.name": {
+        value: search!,
+
+        exact: false,
+
+        isSearch: true,
+      },
       "contract.id": {
         value: filters?.contractId || "",
 
@@ -58,6 +79,12 @@ class MilestoneService {
 
       "milestone.status": {
         value: filters?.status || "",
+
+        exact: true,
+      },
+
+      "milestone.type": {
+        value: filters?.type || "",
 
         exact: true,
       },

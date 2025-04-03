@@ -1,18 +1,14 @@
 import { File } from "./common";
 
-export type StatusType = "DRAFT" | "SIGNED" | "COMPLETED" | "CANCELLED" | "";
-
-export type StatusRecords = Exclude<StatusType, "CANCELLED" | "">;
-
-export type MilestoneStatus = "Achieved" | "Paid" | "Open";
+export type MilestoneStatus = "achieved" | "paid" | "open" | "invoiced";
 
 export type EvidenceStatus =
-  | "Accepted"
-  | "Pending Review"
-  | "More Information Requested"
-  | "Invoiced"
-  | "Rejected"
-  | "Paid";
+  | "accepted"
+  | "pending review"
+  | "more information requested"
+  | "invoiced"
+  | "rejected"
+  | "paid";
 
 export const MILESTONE_TYPES = {
   threshold: "Threshold",
@@ -44,9 +40,10 @@ export interface IMilestone {
   createdAt: string;
   cost: string;
   funder: Sub;
-  invoicedAt?: string;
+  invoicedAt: string;
   outcome: Sub;
-  paidAt?: string;
+  paidAt: string;
+  achievedAt: string;
   provider: Sub;
   reference: Sub;
   status: MilestoneStatus;
@@ -56,6 +53,7 @@ export interface IMilestone {
 }
 
 export interface IMilestoneFilters {
-  status?: StatusType | string;
+  status?: MilestoneStatus | string;
   contractId?: string;
+  type?: string;
 }

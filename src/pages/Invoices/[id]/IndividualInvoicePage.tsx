@@ -30,7 +30,7 @@ const IndividualInvoicePage = () => {
     enabled: !!id,
   });
 
-  const onDownload = (url: string) => {
+  const onPay = (url: string) => {
     window.location.href = url;
   };
 
@@ -90,7 +90,7 @@ const IndividualInvoicePage = () => {
             {invoice.status === "pending" && (
               <Button
                 className="!min-w-[155px]"
-                onClick={() => onDownload(invoice.paymentLink)}
+                onClick={() => onPay(invoice.paymentLink)}
               >
                 Pay now
               </Button>

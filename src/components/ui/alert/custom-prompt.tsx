@@ -56,7 +56,7 @@ const CustomPrompt = () => {
               <X className="h-auto w-5 transition-all group-hover:fill-mint" />
             </button>
 
-            <div className="ml-auto flex justify-end gap-2">
+            <div className="ml-auto mt-8 flex justify-end gap-2">
               <Button
                 buttonType="secondary"
                 onClick={() => (config.onNo ? config.onNo() : close())}

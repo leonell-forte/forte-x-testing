@@ -22,14 +22,14 @@ export class InvoiceService {
     params.append("$pageSize", DEFAULT_PAGE_SIZE);
 
     const searchFilter: IODataObject = {
-      "invoices.id": {
+      "invoice.id": {
         value: search!,
 
         exact: false,
 
         isSearch: true,
       },
-      "invoices.status": {
+      "invoice.status": {
         value: filters?.status || "",
 
         exact: true,

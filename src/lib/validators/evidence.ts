@@ -12,8 +12,6 @@ export const evidence = {
 
       status: evidence?.status || "pending review",
 
-      milestoneId: "",
-
       file: evidence?.file || {
         id: 0, // Provide default values for required fields
         key: "",
@@ -35,8 +33,6 @@ export const evidence = {
     description: z.string().min(1, "Description is a required field"),
 
     status: z.string().min(1, "Status is a required field"),
-
-    milestoneId: z.string(),
 
     file: fileSchema.refine((file) => file.key !== "", {
       message: "File is a required field",

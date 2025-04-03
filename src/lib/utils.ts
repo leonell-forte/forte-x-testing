@@ -224,12 +224,12 @@ export const getStatusVariant = (
       return "warning";
     case "open":
       return "primary";
-    case "accepted":
-      return "primary";
+    case "approved":
+      return "success";
     case "pending Review":
       return "warning";
     case "more information requested":
-      return "primary";
+      return "warning";
     case "invoiced":
       return "success";
     case "rejected":

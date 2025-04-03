@@ -310,7 +310,7 @@ export const ToastAction = React.forwardRef<
   <ToastPrimitives.Action
     ref={ref}
     className={cn(
-      "inline-flex h-8 shrink-0 items-center justify-center disabled:pointer-events-none disabled:opacity-50",
+      "inline-flex h-5 shrink-0 items-center justify-center self-center rounded-full border px-2 py-1 text-xs transition hover:bg-gray-100 disabled:pointer-events-none disabled:opacity-50",
       className
     )}
     {...props}
@@ -328,7 +328,7 @@ const ToastClose = React.forwardRef<
     toast-close=""
     {...props}
   >
-    <X className="h-5 w-5" />
+    <X className="h-5 w-5 transition hover:opacity-50" />
   </ToastPrimitives.Close>
 ));
 ToastClose.displayName = ToastPrimitives.Close.displayName;

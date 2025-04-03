@@ -1,5 +1,5 @@
 import { Dialog, DialogPanel } from "@headlessui/react";
-import React from "react";
+import React, { ReactNode } from "react";
 import { AiOutlineClose as X } from "react-icons/ai";
 import { create } from "zustand";
 
@@ -17,7 +17,7 @@ export const MAP_SIZE_CLASS = {
 type TModalConfig = {
   component: React.ReactNode | null;
   size?: keyof typeof MAP_SIZE_CLASS;
-  title?: string;
+  title?: ReactNode;
 };
 
 type TModalState = {

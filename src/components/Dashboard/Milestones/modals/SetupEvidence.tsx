@@ -25,6 +25,8 @@ import { useAutoSaveForm } from "components/ui/form/useAutoSave";
 import Input from "components/ui/input";
 import Spinner from "components/ui/spinner/spinner";
 
+import { showViewEvidenceModal } from "./ViewEvidence";
+
 type TParams = {
   milestone: IMilestone;
   evidenceDetails?: TMilestoneEvidence;
@@ -63,10 +65,41 @@ function SetupEvidenceModal({ milestone, evidenceDetails }: TParams) {
 
   const isThreshold = milestone.type === "threshold";
 
+  const form = useForm<EvidenceFieldValues>({
+    resolver: zodResolver(isThreshold ? completeSchema : evidence.schema),
+    defaultValues: evidence.defaultValues(),
+    mode: "onChange",
+  });
+
+  const {
+    control,
+    watch,
+    setValue,
+    setError,
+    reset,
+    formState: { isDirty },
+  } = form;
+
+  const [file, beneficiaryId] = watch(["file", "beneficiaryId"]);
+
   const { addEvidence, isPending } = useEvidenceMutation({
     milestoneId: milestone.id,
 
     evidenceId: evidenceDetails?.id || NaN,
+
+    successCallback: (res) => {
+      console.log(res);
+      showViewEvidenceModal({
+        milestone: milestone,
+        evidenceDetails: {
+          ...res,
+          beneficiary: {
+            ...(res.beneficiary || {}),
+            id: Number(beneficiaryId),
+          },
+        },
+      });
+    },
   });
 
   const onSubmit = async (values: EvidenceFieldValues) => {
@@ -104,22 +137,6 @@ function SetupEvidenceModal({ milestone, evidenceDetails }: TParams) {
 
     enabled: Boolean(evidenceDetails?.id),
   });
-
-  const form = useForm<EvidenceFieldValues>({
-    resolver: zodResolver(isThreshold ? completeSchema : evidence.schema),
-    defaultValues: evidence.defaultValues(),
-  });
-
-  const {
-    control,
-    watch,
-    setValue,
-    setError,
-    reset,
-    formState: { isDirty },
-  } = form;
-
-  const file = watch("file");
 
   const { data: fileData, isLoading: isFileLoading } = useQuery({
     queryKey: ["file", file?.fileUrl],
@@ -225,7 +242,7 @@ function SetupEvidenceModal({ milestone, evidenceDetails }: TParams) {
             </div>
             {!isFileLoading && fileData ? (
               <div className="flex flex-col items-center">
-                <div className="flex h-[calc(100vh-550px)] w-full max-w-[490px] items-center justify-center md:h-[calc(100vh-550px)]">
+                <div className="flex h-[calc(100vh-550px)] w-full items-center justify-center overflow-x-auto md:h-[calc(100vh-550px)]">
                   {fileData && (
                     <iframe
                       src={fileData + "#navpanes=0&toolbar=0&view=Fit&page=1"}
@@ -234,7 +251,9 @@ function SetupEvidenceModal({ milestone, evidenceDetails }: TParams) {
                       height="100%"
                       title={file.filename}
                       className={
-                        uploading || isFileLoading ? "h-full opacity-[.4]" : ""
+                        uploading || isFileLoading
+                          ? "h-full opacity-[.4]"
+                          : "w-[700px] max-w-full overflow-x-auto md:w-[42rem]"
                       }
                     />
                   )}

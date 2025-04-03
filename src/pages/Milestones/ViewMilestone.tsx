@@ -1,23 +1,39 @@
 import { useQuery } from "@tanstack/react-query";
+import evidenceService from "api/evidence";
 import milestoneService from "api/milestones";
+import { useMemo } from "react";
 import { HiOutlineDownload as DL } from "react-icons/hi";
 import { HiPlus } from "react-icons/hi2";
+import { HiEllipsisHorizontal as Ellipsis } from "react-icons/hi2";
 import { RiShareBoxLine as Share } from "react-icons/ri";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { usePageTitle } from "lib/hooks";
+import { useDeleteEvidence } from "lib/mutations/evidences";
 import { MILESTONE_TYPES } from "lib/types/milestones";
 import { formatDate, formatNumber, getStatusVariant } from "lib/utils";
 
 import { showSetupEvidenceModal } from "components/Dashboard/Milestones/modals/SetupEvidence";
+import { showViewEvidenceModal } from "components/Dashboard/Milestones/modals/ViewEvidence";
+import { useCustomPrompt } from "components/ui/alert/custom-prompt";
 import Button from "components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "components/ui/dropdown-menu/DropdownMenu";
 import InfoVertical from "components/ui/info-vertical/InfoVertical";
+import ReferenceLink from "components/ui/reference-link/ReferenceLink";
 import Status from "components/ui/status";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
 
 export default function ViewMilestone() {
+  const navigate = useNavigate();
   const params = useParams();
+  const { open } = useCustomPrompt();
+
   const id = params.milestoneId;
   usePageTitle(`Milestone ID: ${id?.split("-")[0]}`);
 
@@ -28,6 +44,25 @@ export default function ViewMilestone() {
 
     enabled: Boolean(id),
   });
+
+  const { deleteEvidence } = useDeleteEvidence();
+
+  const handleDelete = (beneId: number, id: number) => {
+    open({
+      title: "Delete Evidence",
+      subText:
+        "Are you sure you want to delete this evidence? This process cannot be undone.",
+      onYes: () => deleteEvidence({ beneficiaryId: beneId, evidenceId: id }),
+      yesLabel: "Proceed",
+    });
+  };
+  const isThreshold = milestone?.type === "threshold";
+
+  const headers = useMemo(() => {
+    if (isThreshold)
+      return ["File name", "Beneficiary", "Description", "Evidence Status"];
+    return ["File name", "Description", "Evidence Status"];
+  }, [isThreshold]);
 
   if (!milestone) return null;
 
@@ -41,10 +76,12 @@ export default function ViewMilestone() {
               {milestone.status}
             </Status>
           </div>
-          <Button onClick={() => showSetupEvidenceModal({ milestone })}>
-            <HiPlus className="h-auto w-6 fill-black" />
-            Add Evidence
-          </Button>
+          {milestone.status === "open" && (
+            <Button onClick={() => showSetupEvidenceModal({ milestone })}>
+              <HiPlus className="h-auto w-6 fill-black" />
+              Add Evidence
+            </Button>
+          )}
         </div>
 
         <div className="space-y-4">
@@ -71,7 +108,9 @@ export default function ViewMilestone() {
             <InfoVertical label="Reference">
               <button
                 type="button"
-                onClick={() => alert("Go to reference")}
+                onClick={() =>
+                  navigate(isThreshold ? "/contracts" : "/beneficiaries")
+                }
                 className="group flex items-center gap-x-2 transition hover:text-mint"
               >
                 {milestone.reference.name}
@@ -80,7 +119,7 @@ export default function ViewMilestone() {
             </InfoVertical>
 
             <InfoVertical label="Date Achieved">
-              {formatDate(milestone.invoicedAt || "", "dd MMMM yyy")}
+              {formatDate(milestone.achievedAt || "", "dd MMMM yyy")}
             </InfoVertical>
 
             <InfoVertical label="Date Paid">
@@ -150,11 +189,9 @@ export default function ViewMilestone() {
             >
               <Table.Head>
                 <Table.Row>
-                  {["File name", "Description", "Evidence Status"].map(
-                    (item, index) => {
-                      return <Table.Header key={index}>{item}</Table.Header>;
-                    }
-                  )}
+                  {headers.map((item, index) => {
+                    return <Table.Header key={index}>{item}</Table.Header>;
+                  })}
 
                   <Table.Header></Table.Header>
                 </Table.Row>
@@ -162,19 +199,27 @@ export default function ViewMilestone() {
 
               <Table.Body>
                 {milestone.evidences.map((item, index) => {
-                  const { file, status, description } = item;
+                  const { file, status, description, beneficiary } = item;
                   return (
                     <Table.Row
                       key={index}
                       onClick={(e) => {
                         e.stopPropagation();
-                        showSetupEvidenceModal({
+                        showViewEvidenceModal({
                           milestone,
                           evidenceDetails: item,
                         });
                       }}
                     >
                       <Table.Data>{file.filename}</Table.Data>
+
+                      {isThreshold ? (
+                        <Table.Data>
+                          <ReferenceLink hrefLink="/beneficiaries">
+                            {beneficiary.firstName} {beneficiary.lastName}
+                          </ReferenceLink>
+                        </Table.Data>
+                      ) : null}
 
                       <Table.Data>{description}</Table.Data>
 
@@ -185,17 +230,38 @@ export default function ViewMilestone() {
                       </Table.Data>
 
                       <Table.Data>
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            alert("download evidence");
-                          }}
-                          className="group mt-1.5"
-                        >
-                          <DL className="h-auto w-6 transition-all group-hover:stroke-mint" />
-                        </button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <button className="group mt-1 flex w-full items-center justify-end">
+                              <Ellipsis className="m-auto h-auto w-8 group-hover:fill-mint" />
+                            </button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent
+                            align="end"
+                            side="bottom"
+                            sideOffset={1}
+                          >
+                            <DropdownMenuItem
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                evidenceService.getFile(
+                                  item.file.fileUrl,
+                                  item.file.filename
+                                );
+                              }}
+                            >
+                              Download
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDelete(item.beneficiary.id, item.id);
+                              }}
+                            >
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </Table.Data>
                     </Table.Row>
                   );

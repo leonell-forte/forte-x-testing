@@ -222,6 +222,32 @@ export const MILESTONE_STATUS = [
   },
 ];
 
+export const INVOICE_STATUS = [
+  {
+    label: "Pending",
+    value: "pending",
+  },
+  {
+    label: "Paid",
+    value: "paid",
+  },
+  {
+    label: "Cancelled",
+    value: "cancelled",
+  },
+];
+
+export const MILESTONE_TYPES = [
+  {
+    label: "Threshold",
+    value: "threshold",
+  },
+  {
+    label: "Per Outcome",
+    value: "outcome",
+  },
+];
+
 export const HIGHEST_EDUCATION_LEVEL = [
   {
     label: "Less than High School",

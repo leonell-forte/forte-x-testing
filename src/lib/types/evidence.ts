@@ -37,3 +37,8 @@ export type Evidence = {
 
   beneficiaryId?: number;
 };
+
+export type DeleteParams = {
+  beneficiaryId: number;
+  evidenceId: number;
+};

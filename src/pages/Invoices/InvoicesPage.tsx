@@ -3,9 +3,8 @@ import { HiPlus } from "react-icons/hi2";
 import { TbFilterX as FilterIcon } from "react-icons/tb";
 import { Route, Routes, useLocation } from "react-router-dom";
 
-// import { BiSlider as SliderIcon } from "react-icons/bi";
 import useInvoiceList from "lib/common/lists/useInvoiceList";
-import { INVOICE_STATUSES } from "lib/constants";
+import { INVOICE_STATUS } from "lib/constants";
 import { useDebounce, usePage } from "lib/hooks";
 import { InvoiceFilters, InvoiceStatus } from "lib/types/invoices";
 
@@ -55,9 +54,11 @@ const InvoicesComp = () => {
   const { invoices, isLoading } = useInvoiceList({
     page,
     search: debouncedSearch,
-    key: [page, debouncedSearch],
+    key: [page, debouncedSearch, filters],
     filters,
   });
+
+  console.log(filters);
 
   return (
     <>
@@ -74,7 +75,7 @@ const InvoicesComp = () => {
             <div className="flex items-start justify-between">
               <p className="text-[24px] font-semibold">Invoices</p>
               <Button onClick={showGenerateInvoiceModal}>
-                <HiPlus className="h-auto w-4" />
+                <HiPlus className="h-auto w-6 fill-black" />
                 Generate Invoice
               </Button>
             </div>
@@ -93,23 +94,14 @@ const InvoicesComp = () => {
                     onClear={() => setSearch("")}
                   />
                 </div>
-                {/* <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowFilter(true);
-                }}
-                className="group flex-shrink-0 md:hidden"
-              >
-                <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
-              </button> */}
               </div>
-              {/* <div className="hidden w-full md:block">
-              <Filters
-                filters={filters}
-                setFilters={setFilters}
-                handleRemoveFilters={() => setFilters({ status: "" })}
-              />
-            </div> */}
+              <div className="hidden w-full md:block">
+                <Filters
+                  filters={filters}
+                  setFilters={setFilters}
+                  handleRemoveFilters={() => setFilters({ status: "" })}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -140,19 +132,19 @@ const Filters = ({
   setFilters,
   handleRemoveFilters,
 }: FiltersProps) => {
+  const { setPage } = usePage();
+
   return (
     <div className="flex flex-col gap-2.5 md:flex-row">
       <Dropdown
         value={filters.status}
         handleSelect={(val) => {
           setFilters((prev) => ({ ...prev, status: val as InvoiceStatus }));
+          setPage(1);
         }}
         placeholder="Select status"
-        className="md:max-w-[250px]"
-        options={INVOICE_STATUSES.map((status) => ({
-          label: status,
-          value: status,
-        }))}
+        className="w-full lg:max-w-[180px]"
+        options={INVOICE_STATUS}
       />
       <button
         onClick={handleRemoveFilters}
