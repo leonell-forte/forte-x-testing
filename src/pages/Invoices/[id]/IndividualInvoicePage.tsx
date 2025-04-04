@@ -35,10 +35,10 @@ const IndividualInvoicePage = () => {
   };
 
   useEffect(() => {
-    if (searchParams.has("payment")) {
-      const status = searchParams.get("payment");
+    if (searchParams.has("paymentStatus")) {
+      const status = searchParams.get("paymentStatus");
       if (status) {
-        searchParams.delete("payment");
+        searchParams.delete("paymentStatus");
         const newParams: { [key: string]: string } = {};
         searchParams.forEach((value: string, key: string) => {
           newParams[key] = value;
@@ -110,7 +110,11 @@ const IndividualInvoicePage = () => {
               </InfoVertical>
               <InfoVertical label="Invoice ID">{invoice.id}</InfoVertical>
 
-              <InfoVertical label="Date Paid">-</InfoVertical>
+              <InfoVertical label="Date Paid">
+                {invoice.paidAt
+                  ? formatDate(invoice.paidAt, "dd MMMM yyy")
+                  : "-"}
+              </InfoVertical>
             </div>
           </div>
 

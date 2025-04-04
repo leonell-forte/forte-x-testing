@@ -88,14 +88,13 @@ function SetupEvidenceModal({ milestone, evidenceDetails }: TParams) {
     evidenceId: evidenceDetails?.id || NaN,
 
     successCallback: (res) => {
-      console.log(res);
       showViewEvidenceModal({
         milestone: milestone,
         evidenceDetails: {
           ...res,
           beneficiary: {
             ...(res.beneficiary || {}),
-            id: Number(beneficiaryId),
+            id: Number(beneficiaryId) || Number(milestone.reference.id),
           },
         },
       });

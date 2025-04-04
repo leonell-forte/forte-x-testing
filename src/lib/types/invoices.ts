@@ -21,6 +21,7 @@ export type Invoice = {
   status: InvoiceStatus;
   noOfMilestones: number;
   milestones: IMilestone[];
+  paidAt: string;
 };
 
 export type InvoiceFilters = {
