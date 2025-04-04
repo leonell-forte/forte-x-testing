@@ -91,7 +91,7 @@ const PageComponent = ({ type, initialFilters }: PageComponentProps) => {
       <div className="flex h-full flex-col space-y-2.5">
         <div className="space-y-5">
           <div className="flex flex-col justify-between gap-2.5 sm:flex-row">
-            <p className="text-[24px] font-semibold">Providers</p>
+            <p className="text-[24px] font-semibold capitalize">{type}</p>
             <Button
               eventName="Add Organization"
               onClick={() => {
@@ -111,7 +111,7 @@ const PageComponent = ({ type, initialFilters }: PageComponentProps) => {
                   setPage(1);
                 }}
                 containerClass="lg:max-w-[286px]"
-                placeholder="Search providers"
+                placeholder={`Search ${type}s`}
                 onClear={() => handleSearchOrg("")}
               />
             </div>
