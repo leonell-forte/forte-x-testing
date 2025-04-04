@@ -9,7 +9,7 @@ import { MdClose as X } from "react-icons/md";
 import { cn } from "lib/utils";
 
 const TOAST_LIMIT = 1;
-const TOAST_REMOVE_DELAY = 5000;
+const TOAST_REMOVE_DELAY = 3500;
 
 type ToasterToast = ToastProps & {
   id: string;
@@ -99,7 +99,7 @@ const reducer = (state: State, action: Action): State => {
       const { toastId } = action;
 
       if (toastId) {
-        addToRemoveQueue(toastId);
+        // addToRemoveQueue(toastId);
       } else {
         state.toasts.forEach((toast) => {
           addToRemoveQueue(toast.id);

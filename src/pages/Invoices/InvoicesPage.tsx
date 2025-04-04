@@ -58,8 +58,6 @@ const InvoicesComp = () => {
     filters,
   });
 
-  console.log(filters);
-
   return (
     <>
       <FilterDialogue

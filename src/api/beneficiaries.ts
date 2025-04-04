@@ -195,8 +195,6 @@ class BeneficiariesService {
       },
     });
 
-    console.log(response);
-
     return response;
   }
 
