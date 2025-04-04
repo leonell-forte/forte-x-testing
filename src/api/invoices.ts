@@ -21,6 +21,8 @@ export class InvoiceService {
 
     params.append("$pageSize", DEFAULT_PAGE_SIZE);
 
+    params.append("$orderBy", `"invoice"."created_at" desc`);
+
     const searchFilter: IODataObject = {
       "invoice.id": {
         value: search!,

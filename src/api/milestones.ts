@@ -94,7 +94,7 @@ class MilestoneService {
 
     params.append("$pageNum", (page || 1).toString());
 
-    // params.append("$orderBy", `"milestone"."createdAt" desc`);
+    params.append("$orderBy", `"milestone"."created_at" desc`);
 
     if (generateODataQuery(filtersData)) {
       params.append("$filter", generateODataQuery(filtersData));
