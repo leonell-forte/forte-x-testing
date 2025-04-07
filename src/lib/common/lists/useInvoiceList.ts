@@ -11,10 +11,16 @@ type UseInvoiceList = {
   filters?: InvoiceFilters;
 };
 
-const useInvoiceList = ({ search, page, key, enabled }: UseInvoiceList) => {
+const useInvoiceList = ({
+  search,
+  page,
+  key,
+  enabled,
+  filters,
+}: UseInvoiceList) => {
   const { data, isLoading } = useQuery({
-    queryKey: ["invoices", ...(key ? key : [])],
-    queryFn: () => invoiceService.list({ search, page: page || 1 }),
+    queryKey: ["invoices", key],
+    queryFn: () => invoiceService.list({ search, page: page || 1, filters }),
     enabled: enabled ? enabled : true,
   });
 

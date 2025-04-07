@@ -1,5 +1,5 @@
 import { Dialog, DialogPanel } from "@headlessui/react";
-import React from "react";
+import React, { ReactNode } from "react";
 import { AiOutlineClose as X } from "react-icons/ai";
 import { create } from "zustand";
 
@@ -17,7 +17,7 @@ export const MAP_SIZE_CLASS = {
 type TModalConfig = {
   component: React.ReactNode | null;
   size?: keyof typeof MAP_SIZE_CLASS;
-  title?: string;
+  title?: ReactNode;
 };
 
 type TModalState = {
@@ -48,7 +48,7 @@ const ModalMarker = () => {
           <DialogPanel
             transition
             className={cn(
-              "data-[closed]:transform-[scale(95%)] relative h-screen w-full bg-[#30F1FF1F] p-14 drop-shadow-sm backdrop-blur duration-300 ease-out data-[closed]:opacity-0 md:my-12 md:h-full md:rounded-lg",
+              "data-[closed]:transform-[scale(95%)] relative min-h-screen w-full bg-[#30F1FF1F] p-6 drop-shadow-sm backdrop-blur duration-300 ease-out data-[closed]:opacity-0 md:h-full md:min-h-fit md:rounded-lg md:p-14",
               MAP_SIZE_CLASS[config?.size || "base"]
             )}
           >

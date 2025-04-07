@@ -5,8 +5,8 @@ import SearchResultsPage from "pages/Search/SearchResultsPage";
 import {
   Beneficiaries,
   Contracts,
-  // Invoices,
-  // Milestones,
+  Invoices,
+  Milestones,
   Organizations,
   PermissionEnums,
   Projects,
@@ -15,11 +15,7 @@ import {
 
 const UsersPage = React.lazy(() => import("../pages/Users/UsersPage"));
 
-// const InvoicesPage = React.lazy(() => import("../pages/Invoices/InvoicesPage"));
-
-// const IndividualInvoicePage = React.lazy(
-//   () => import("../pages/Invoices/[id]/IndividualInvoicePage")
-// );
+const InvoicesPage = React.lazy(() => import("../pages/Invoices/InvoicesPage"));
 
 const ProjectsPage = React.lazy(() => import("../pages/Projects/ProjectsPage"));
 
@@ -27,8 +23,10 @@ const IndividualProjectsPage = React.lazy(
   () => import("../pages/Projects/[id]/IndividualProjectsPage")
 );
 
-const OrganizationsPage = React.lazy(
-  () => import("../pages/Organizations/OrganizationsPage")
+const FundersPage = React.lazy(() => import("../pages/Funders/FundersPage"));
+
+const ProvidersPage = React.lazy(
+  () => import("../pages/Providers/ProvidersPage")
 );
 
 const ContractsPage = React.lazy(
@@ -39,9 +37,9 @@ const BeneficiariesPage = React.lazy(
   () => import("../pages/Beneficiaries/BeneficiariesPage")
 );
 
-// const MilestonePage = React.lazy(
-//   () => import("../pages/Milestones/MilestonesPage")
-// );
+const MilestonePage = React.lazy(
+  () => import("../pages/Milestones/MilestonesPage")
+);
 
 const LoginPage = React.lazy(() => import("../pages/Login/LoginPage"));
 
@@ -63,21 +61,21 @@ export interface RouteConfig {
 }
 
 export const ROUTES: RouteConfig[] = [
-  // {
-  //   link: "invoices",
+  {
+    link: "invoices/*",
 
-  //   Component: InvoicesPage,
+    Component: InvoicesPage,
 
-  //   permissions: [Invoices.NAVIGATE],
-  // },
-  // {
-  //   link: "invoices/:id",
+    permissions: [Invoices.NAVIGATE],
+  },
 
-  //   Component: IndividualInvoicePage,
+  {
+    link: "milestones/*",
 
-  //   permissions: [Invoices.NAVIGATE],
-  // },
+    Component: MilestonePage,
 
+    permissions: [Milestones.NAVIGATE],
+  },
   {
     link: "users",
 
@@ -103,9 +101,17 @@ export const ROUTES: RouteConfig[] = [
   },
 
   {
-    link: "organizations",
+    link: "funders",
 
-    Component: OrganizationsPage,
+    Component: FundersPage,
+
+    permissions: [Organizations.NAVIGATE],
+  },
+
+  {
+    link: "providers",
+
+    Component: ProvidersPage,
 
     permissions: [Organizations.NAVIGATE],
   },
@@ -125,14 +131,6 @@ export const ROUTES: RouteConfig[] = [
 
     permissions: [Beneficiaries.NAVIGATE],
   },
-
-  // {
-  //   link: "milestones/*",
-
-  //   Component: MilestonePage,
-
-  //   permissions: [Milestones.NAVIGATE],
-  // },
 
   {
     link: "search/:query",

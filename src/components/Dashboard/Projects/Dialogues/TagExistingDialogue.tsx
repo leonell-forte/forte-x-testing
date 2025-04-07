@@ -47,7 +47,6 @@ const TagExistingDialogue = ({
   );
 
   const [values, setValues] = useState<string[]>([]);
-  console.log(values);
 
   useEffect(() => {
     if (existingPartners) {

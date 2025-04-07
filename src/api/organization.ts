@@ -1,3 +1,5 @@
+import { omit } from "lodash";
+
 import { api } from "../lib/axios/interceptor";
 import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import {
@@ -115,7 +117,7 @@ class OrganizationService {
   }
 
   async update(org: OrganizationFieldTypes) {
-    const response = await api.put("/organizations", org);
+    const response = await api.put("/organizations", omit(org, ["type"]));
 
     return response;
   }

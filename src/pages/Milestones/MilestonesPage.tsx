@@ -2,31 +2,30 @@ import { useQuery } from "@tanstack/react-query";
 import milestoneService from "api/milestones";
 import { Dispatch, SetStateAction, useState } from "react";
 import { TbFilterX as FilterIcon } from "react-icons/tb";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 
-import { MILESTONE_STATUS } from "lib/constants";
+import { MILESTONE_STATUS, MILESTONE_TYPES } from "lib/constants";
 import { useDebounce, usePage } from "lib/hooks";
-import { IMilestoneFilters } from "lib/types/milestones";
+import { IMilestoneFilters, MilestoneStatus } from "lib/types/milestones";
 
 import MilestonesTable from "components/tables/Milestones";
+import { BreadCrumb } from "components/ui/breadcrumb/Breadcrumb";
 import Dropdown from "components/ui/dropdown";
 import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
 
 import ViewMilestone from "./ViewMilestone";
 
+const initialFilter = {
+  status: "",
+  contractId: "",
+  type: "",
+};
+
 const MilestonesComp = () => {
   const { page, setPage } = usePage();
 
   const [search, setSearch] = useState("");
-
-  const initialFilter = {
-    status: "",
-
-    project: "",
-
-    date: "",
-  };
 
   const [filters, setFilters] = useState<IMilestoneFilters>(initialFilter);
 
@@ -78,7 +77,7 @@ const MilestonesComp = () => {
               </div>
             </div>
 
-            <div>
+            <div className="flex-1 flex-grow">
               <Filters filters={filters} setFilters={setFilters} />
             </div>
           </div>
@@ -109,25 +108,35 @@ interface IFilterProps {
 }
 
 const Filters = ({ filters, setFilters }: IFilterProps) => {
+  const { setPage } = usePage();
+
   return (
-    <div className="grid grid-cols-1 gap-2.5 md:flex">
+    <div className="flex flex-col gap-2.5 md:flex-row">
       <Dropdown
         placeholder="Status"
-        className="lg:max-w-[166px]"
+        className="w-full lg:max-w-[180px]"
         options={MILESTONE_STATUS}
         value={filters.status}
         handleSelect={(val) => {
-          console.log(val);
+          setFilters((state) => ({ ...state, status: val as MilestoneStatus }));
+          setPage(1);
+        }}
+      />
+
+      <Dropdown
+        placeholder="Type"
+        className="w-full lg:max-w-[180px]"
+        options={MILESTONE_TYPES}
+        value={filters.type}
+        handleSelect={(val) => {
+          setFilters((state) => ({ ...state, type: val as string }));
+          setPage(1);
         }}
       />
 
       <div className="flex w-full items-center gap-2.5 lg:w-auto">
         <button
-          onClick={() =>
-            setFilters({
-              status: "",
-            })
-          }
+          onClick={() => setFilters(initialFilter)}
           className="group hidden md:block"
         >
           <FilterIcon className="h-auto w-5 fill-white transition-all group-hover:fill-mint group-hover:stroke-mint" />
@@ -138,10 +147,21 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
 };
 
 export default function MilestonePage() {
+  const location = useLocation();
+  const pathnames = location.pathname.split("/").filter((x) => x);
   return (
     <Routes>
       <Route index element={<MilestonesComp />} />
-      <Route path=":id" element={<ViewMilestone />} />
+      <Route
+        path=":milestoneId"
+        element={
+          <>
+            <BreadCrumb href="/milestones">Milestones</BreadCrumb>
+            <BreadCrumb>Milestone ID: {pathnames?.[1] || ""}</BreadCrumb>
+            <ViewMilestone />
+          </>
+        }
+      />
     </Routes>
   );
 }

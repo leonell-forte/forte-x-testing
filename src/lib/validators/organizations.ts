@@ -1,9 +1,9 @@
 import { z } from "zod";
 
-import { IOrganization } from "../types/organizations";
+import { IOrganization, OrgTypes } from "../types/organizations";
 
 export const organizations = {
-  defaultValues: (org?: IOrganization) => {
+  defaultValues: (type?: OrgTypes, org?: IOrganization) => {
     let data: IOrganization = {
       name: org?.name || "",
 
@@ -22,7 +22,7 @@ export const organizations = {
       regions: org?.regions || [],
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-      type: org?.type! || "",
+      type: org?.type! || type || "",
 
       status: org?.status || "active",
     };

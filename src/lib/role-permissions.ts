@@ -56,11 +56,11 @@ export enum Projects {
 }
 
 export enum Invoices {
-  CREATE = "create:project",
-  UPDATE = "update:project",
-  DELETE = "delete:project",
-  LIST = "list:project",
-  NAVIGATE = "navigate:project",
+  CREATE = "create:invoice",
+  UPDATE = "update:invoice",
+  DELETE = "delete:invoice",
+  LIST = "list:invoice",
+  NAVIGATE = "navigate:invoice",
 }
 
 export enum Milestones {

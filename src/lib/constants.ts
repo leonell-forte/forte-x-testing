@@ -1,16 +1,16 @@
 import { ReactComponent as Beneficiary } from "assets/images/icons/beneficiary.svg";
 import { ReactComponent as Contract } from "assets/images/icons/contract.svg";
 import { ReactComponent as Funder } from "assets/images/icons/funder.svg";
-// import { ReactComponent as Invoice } from "assets/images/icons/invoice.svg";
-// import { ReactComponent as Milestone } from "assets/images/icons/milestone.svg";
+import { ReactComponent as Invoice } from "assets/images/icons/invoice.svg";
+import { ReactComponent as Milestone } from "assets/images/icons/milestone.svg";
 import { ReactComponent as Project } from "assets/images/icons/project.svg";
 import { ReactComponent as Provider } from "assets/images/icons/provider.svg";
 
 import {
   Beneficiaries,
   Contracts,
-  // Invoices,
-  // Milestones,
+  Invoices,
+  Milestones,
   Organizations,
   Projects,
   Users,
@@ -23,20 +23,14 @@ export const DEFAULT_PAGE_SIZE = "10";
 
 export const MENUS = [
   {
-    name: "beneficiaries",
-    link: "/beneficiaries",
-    permissions: [Beneficiaries.NAVIGATE],
-    icon: Beneficiary,
+    name: "funders",
+    link: "/funders",
+    permissions: [Organizations.NAVIGATE],
+    icon: Funder,
   },
   {
-    name: "contracts",
-    link: "/contracts",
-    permissions: [Contracts.NAVIGATE],
-    icon: Contract,
-  },
-  {
-    name: "organizations",
-    link: "/organizations",
+    name: "providers",
+    link: "/providers",
     permissions: [Organizations.NAVIGATE],
     icon: Provider,
   },
@@ -46,6 +40,18 @@ export const MENUS = [
     permissions: [Projects.NAVIGATE],
     icon: Project,
   },
+  {
+    name: "contracts",
+    link: "/contracts",
+    permissions: [Contracts.NAVIGATE],
+    icon: Contract,
+  },
+  {
+    name: "beneficiaries",
+    link: "/beneficiaries",
+    permissions: [Beneficiaries.NAVIGATE],
+    icon: Beneficiary,
+  },
 
   {
     name: "users",
@@ -54,19 +60,19 @@ export const MENUS = [
     icon: Funder,
   },
 
-  // {
-  //   name: "invoices",
-  //   link: "/invoices",
-  //   permissions: [Invoices.NAVIGATE],
-  //   icon: Invoice,
-  // },
+  {
+    name: "invoices",
+    link: "/invoices",
+    permissions: [Invoices.NAVIGATE],
+    icon: Invoice,
+  },
 
-  // {
-  //   name: "Milestones",
-  //   link: "/milestones",
-  //   permissions: [Milestones.NAVIGATE],
-  //   icon: Milestone,
-  // },
+  {
+    name: "Milestones",
+    link: "/milestones",
+    permissions: [Milestones.NAVIGATE],
+    icon: Milestone,
+  },
 ];
 
 export const ROLES = [
@@ -116,8 +122,8 @@ export const TYPES = [
 
 export const EVIDENCE_STATUS = [
   {
-    label: "Accepted",
-    value: "accepted",
+    label: "Approved",
+    value: "approved",
   },
   {
     label: "Pending review",
@@ -141,7 +147,7 @@ export const EVIDENCE_STATUS = [
   },
 ];
 
-export const NO_PROMPT_STATUS = ["accepted", "invoiced", "rejected", "paid"];
+export const NO_PROMPT_STATUS = ["approved", "invoiced", "rejected", "paid"];
 
 export const BENEFICIARY_STATUS = [
   {
@@ -213,6 +219,32 @@ export const MILESTONE_STATUS = [
   {
     label: "Paid",
     value: "paid",
+  },
+];
+
+export const INVOICE_STATUS = [
+  {
+    label: "Pending",
+    value: "pending",
+  },
+  {
+    label: "Paid",
+    value: "paid",
+  },
+  {
+    label: "Cancelled",
+    value: "cancelled",
+  },
+];
+
+export const MILESTONE_TYPES = [
+  {
+    label: "Threshold",
+    value: "threshold",
+  },
+  {
+    label: "Per Outcome",
+    value: "outcome",
   },
 ];
 
@@ -532,7 +564,7 @@ export const REDIRECT_PATHS: Record<UserRoleType, string> = {
 };
 
 export const INVOICE_STATUSES: Array<InvoiceStatus> = [
-  "Cancelled",
-  "Pending",
-  "Paid",
+  "cancelled",
+  "pending",
+  "paid",
 ];

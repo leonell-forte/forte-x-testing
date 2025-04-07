@@ -1,208 +1,129 @@
 import { useQuery } from "@tanstack/react-query";
 import invoiceService from "api/invoices";
-import { InputHTMLAttributes } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useEffect } from "react";
+import {
+  createSearchParams,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 
-import download from "assets/images/icons/download.svg";
-import link from "assets/images/icons/link.svg";
+import { formatDate, formatNumber, getStatusVariant } from "lib/utils";
 
-import { InvoiceStatus } from "lib/types/invoices";
-import { formatCurrency, formatDate, getStatusVariant } from "lib/utils";
-
-import { BreadCrumb } from "components/ui/breadcrumb/Breadcrumb";
+import MilestonesTable from "components/tables/Milestones";
 import Button from "components/ui/button";
-import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
+import InfoVertical from "components/ui/info-vertical/InfoVertical";
 import Spinner from "components/ui/spinner/spinner";
 import Status from "components/ui/status";
-import Table from "components/ui/table";
-import Cards from "components/ui/table-card";
+import { toast } from "components/ui/toast/Toast";
 
 const IndividualInvoicePage = () => {
   const params = useParams();
-  const id = params.id;
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
-  const { data, isLoading } = useQuery({
+  const id = params.invoiceId;
+
+  const { data: invoice, isLoading } = useQuery({
     queryKey: ["invoice", id],
-    queryFn: () => invoiceService.getOne(id as string),
+    queryFn: () => invoiceService.getOne(id!),
     enabled: !!id,
   });
+
+  const onPay = (url: string) => {
+    window.location.href = url;
+  };
+
+  useEffect(() => {
+    if (searchParams.has("paymentStatus")) {
+      const status = searchParams.get("paymentStatus");
+      if (status) {
+        searchParams.delete("paymentStatus");
+        const newParams: { [key: string]: string } = {};
+        searchParams.forEach((value: string, key: string) => {
+          newParams[key] = value;
+        });
+
+        setSearchParams(newParams);
+        navigate(
+          {
+            search: createSearchParams(newParams).toString(),
+          },
+          { replace: true }
+        );
+        if (status === "success" || status === "paid") {
+          toast({ title: `Invoice ID: ${id} successfully paid` });
+          return;
+        }
+        toast({ title: `Failed to pay Invoice ID: ${id}`, variant: "danger" });
+      }
+    }
+    // eslint-disable-next-line
+  }, []);
+
   if (isLoading)
     return (
       <div className="flex h-[470px] w-full items-center justify-center">
         <Spinner />
       </div>
     );
+
+  if (!invoice) return null;
+
   return (
     <>
-      <BreadCrumb href="/invoices" className="font-semibold">
-        Invoices
-      </BreadCrumb>
-      <BreadCrumb>
-        Invoice ID: {`INV-${id?.slice(-4)}`.toUpperCase()}
-      </BreadCrumb>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <p className="text-[24px] font-semibold">
-              Invoice {`ID#${id?.slice(-4)}`.toUpperCase()}
-            </p>
-            <Status variant={getStatusVariant(data?.status as InvoiceStatus)}>
-              {data?.status}
+            <p className="text-[24px] font-semibold">Invoice {id}</p>
+            <Status variant={getStatusVariant(invoice.status)}>
+              {invoice.status}
             </Status>
           </div>
 
           <div className="flex justify-end gap-4">
-            <Button buttonType="secondary">
-              <img src={download} alt="download" />
+            {/* <Button buttonType="secondary" className="group">
+              <DL className="h-auto w-6 transition-all duration-300 group-hover:stroke-mint" />
               Download
-            </Button>
+            </Button> */}
 
-            {data?.status === "Pending" && (
-              <Button className="!min-w-[155px]">Pay now</Button>
+            {invoice.status === "pending" && (
+              <Button
+                className="!min-w-[155px]"
+                onClick={() => onPay(invoice.paymentLink)}
+              >
+                Pay now
+              </Button>
             )}
           </div>
         </div>
         <div className="space-y-4">
           <div className="space-y-4">
-            <p className="text-[20px] font-semibold">Invoice details</p>
-            <div className="rounded-[8px] border border-white/30 p-6">
-              <div className="grid-cols 1 grid max-w-[656px] gap-4 sm:grid-cols-2">
-                <Data
-                  label="Date invoiced"
-                  value={formatDate(
-                    new Date(data?.createdAt || ""),
-                    "dd-LLL-yyyy"
-                  )}
-                />
-                <Data
-                  label="Amount"
-                  value={formatCurrency(data?.grossAmount as number)}
-                />
-                <Data
-                  label="Date due"
-                  value={formatDate(
-                    new Date(data?.dueDate || ""),
-                    "dd-LLL-yyyy"
-                  )}
-                />
-                <Data
-                  label="Date paid"
-                  value={formatDate(
-                    new Date(data?.paidDate || ""),
-                    "dd-LLL-yyyy"
-                  )}
-                />
-              </div>
+            <p className="heading w-fit whitespace-nowrap">Invoice Details</p>
+
+            <div className="grid items-center gap-6 rounded-lg border p-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+              <InfoVertical label="Date Invoiced">
+                {formatDate(invoice.createdAt, "dd MMMM yyy")}
+              </InfoVertical>
+              <InfoVertical label="Cost">
+                ${formatNumber(invoice.cost)}
+              </InfoVertical>
+              <InfoVertical label="Invoice ID">{invoice.id}</InfoVertical>
+
+              <InfoVertical label="Date Paid">
+                {invoice.paidAt
+                  ? formatDate(invoice.paidAt, "dd MMMM yyy")
+                  : "-"}
+              </InfoVertical>
             </div>
           </div>
 
           <p className="text-[20px] font-semibold">Milestones</p>
 
-          <div className="table-breakpoint:hidden">
-            <Cards.Container className="!grid-cols-1" isLoading={isLoading}>
-              {data?.items.map((item, index) => {
-                const { milestone, id, outcome, cost, status, invoiceDate } =
-                  item;
-
-                return (
-                  <Cards.Card
-                    onClick={() => {}}
-                    key={index}
-                    title={milestone.title}
-                  >
-                    <Cards.Group cols={2}>
-                      <Cards.Details label="Milestone ID" value={id} />
-                      <Cards.Details
-                        label="Outcome name"
-                        value={outcome.name}
-                      />
-                      <Cards.Details
-                        label="Milestone type"
-                        value={"**not available in response**"}
-                      />
-                      <Cards.Details
-                        label="Milestone reference"
-                        value={milestone.link}
-                      />
-                      <Cards.Details
-                        label="Cost"
-                        value={formatCurrency(cost)}
-                      />
-                      <Cards.Details label="Status" value={status} />
-                      <Cards.Details
-                        label="Date created"
-                        value={formatDate(new Date(invoiceDate), "dd-LLL-yyyy")}
-                      />
-                      <Cards.Details
-                        label="Date achieved"
-                        value={
-                          "**needs clarification to which date this refers to**"
-                        }
-                      />
-                    </Cards.Group>
-                  </Cards.Card>
-                );
-              })}
-            </Cards.Container>
-          </div>
-
-          <ScrollArea className="hidden w-[calc(100vw-330px)] overflow-hidden lg:block">
-            <Table.Container>
-              <Table.Head>
-                <Table.Row>
-                  {MILESTONE_HEADERS.map((header, index) => (
-                    <Table.Header key={index}>{header}</Table.Header>
-                  ))}
-                </Table.Row>
-              </Table.Head>
-              <Table.Body>
-                {data?.items.map((item, index) => {
-                  const { milestone, id, outcome, cost, status } = item;
-
-                  return (
-                    <Table.Row key={index}>
-                      <Table.Data>
-                        <Link to="#" className="flex items-center gap-2">
-                          {" "}
-                          {`ID#${id.slice(-3).toUpperCase()}`}{" "}
-                          <img src={link} alt="link" />
-                        </Link>
-                      </Table.Data>
-                      <Table.Data>
-                        ** No project name in the response**
-                      </Table.Data>
-                      <Table.Data>**Need to add type in outcomes**</Table.Data>
-                      <Table.Data>
-                        <Link to={milestone.link} className="hover:underline">
-                          {milestone.title}
-                        </Link>
-                      </Table.Data>
-                      <Table.Data>{outcome.name}</Table.Data>
-                      <Table.Data>{formatCurrency(cost)}</Table.Data>
-                      <Table.Data>
-                        <Status variant={getStatusVariant(status)}>
-                          {status}
-                        </Status>
-                      </Table.Data>
-
-                      {/* <Table.Data>{outcome.name}</Table.Data>
-                    <Table.Data>{"**not available in response**"}</Table.Data>
-                    <Table.Data>{milestone.link}</Table.Data>
-                    <Table.Data>{formatCurrency(cost)}</Table.Data>
-                    <Table.Data>{status}</Table.Data>
-                    <Table.Data>
-                      {formatDate(new Date(invoiceDate), "dd-LLL-yyyy")}
-                    </Table.Data>
-                    <Table.Data>
-                      {"**needs clarification to which date this refers to**"}
-                    </Table.Data> */}
-                    </Table.Row>
-                  );
-                })}
-              </Table.Body>
-            </Table.Container>
-            <ScrollBar orientation="horizontal" />
-          </ScrollArea>
+          <MilestonesTable
+            list={invoice.milestones || []}
+            isLoading={isLoading}
+          />
         </div>
       </div>
     </>
@@ -210,25 +131,3 @@ const IndividualInvoicePage = () => {
 };
 
 export default IndividualInvoicePage;
-
-const Data = ({
-  label,
-  value,
-}: InputHTMLAttributes<HTMLInputElement> & { label: string }) => {
-  return (
-    <div className="flex flex-col gap-2">
-      <label className="text-[12px] font-light">{label}</label>
-      <p className="font-light">{value}</p>
-    </div>
-  );
-};
-
-const MILESTONE_HEADERS = [
-  "Milestone ID",
-  "Project name",
-  "Type",
-  "Reference",
-  "Outcome name",
-  "Cost",
-  "Evidence status",
-];

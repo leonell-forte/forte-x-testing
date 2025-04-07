@@ -80,7 +80,6 @@ const ActivityLogSection = ({
       ) : (
         <ul className="pl-6">
           {data?.map((item, index) => {
-            console.log(item);
             const changes = renderChangeMessage(item);
 
             return changes?.map((message, msgIndex) => (

@@ -1,23 +1,35 @@
 import { Dispatch, SetStateAction, useState } from "react";
+import { HiPlus } from "react-icons/hi2";
 import { TbFilterX as FilterIcon } from "react-icons/tb";
-
-// import { BiSlider as SliderIcon } from "react-icons/bi";
-import add from "assets/images/icons/add.svg";
+import { Route, Routes, useLocation } from "react-router-dom";
 
 import useInvoiceList from "lib/common/lists/useInvoiceList";
-import { INVOICE_STATUSES } from "lib/constants";
+import { INVOICE_STATUS } from "lib/constants";
 import { useDebounce, usePage } from "lib/hooks";
 import { InvoiceFilters, InvoiceStatus } from "lib/types/invoices";
 
 import { showGenerateInvoiceModal } from "components/Dashboard/Invoices/modals/GenerateInvoice";
 import InvoicesTable from "components/tables/Invoices";
+import { BreadCrumb } from "components/ui/breadcrumb/Breadcrumb";
 import Button from "components/ui/button";
 import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
 import Dropdown from "components/ui/dropdown";
 import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
 
-const InvoicesPage = () => {
+import ViewMilestone from "pages/Milestones/ViewMilestone";
+
+import IndividualInvoicePage from "./[id]/IndividualInvoicePage";
+
+export function getRandomString(array: string[]): string | undefined {
+  if (!array || array.length === 0) {
+    return undefined;
+  }
+  const randomIndex = Math.floor(Math.random() * array.length);
+  return array[randomIndex];
+}
+
+const InvoicesComp = () => {
   const { page, setPage } = usePage();
 
   const [filters, setFilters] = useState<InvoiceFilters>({
@@ -42,7 +54,7 @@ const InvoicesPage = () => {
   const { invoices, isLoading } = useInvoiceList({
     page,
     search: debouncedSearch,
-    key: [page, debouncedSearch],
+    key: [page, debouncedSearch, filters],
     filters,
   });
 
@@ -60,8 +72,8 @@ const InvoicesPage = () => {
           <div className="space-y-5">
             <div className="flex items-start justify-between">
               <p className="text-[24px] font-semibold">Invoices</p>
-              <Button onClick={() => showGenerateInvoiceModal()}>
-                <img src={add} alt="add" width={14} height={14} />
+              <Button onClick={showGenerateInvoiceModal}>
+                <HiPlus className="h-auto w-6 fill-black" />
                 Generate Invoice
               </Button>
             </div>
@@ -80,23 +92,14 @@ const InvoicesPage = () => {
                     onClear={() => setSearch("")}
                   />
                 </div>
-                {/* <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowFilter(true);
-                }}
-                className="group flex-shrink-0 md:hidden"
-              >
-                <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
-              </button> */}
               </div>
-              {/* <div className="hidden w-full md:block">
-              <Filters
-                filters={filters}
-                setFilters={setFilters}
-                handleRemoveFilters={() => setFilters({ status: "" })}
-              />
-            </div> */}
+              <div className="hidden w-full md:block">
+                <Filters
+                  filters={filters}
+                  setFilters={setFilters}
+                  handleRemoveFilters={() => setFilters({ status: "" })}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -116,8 +119,6 @@ const InvoicesPage = () => {
   );
 };
 
-export default InvoicesPage;
-
 type FiltersProps = {
   filters: InvoiceFilters;
   setFilters: Dispatch<SetStateAction<InvoiceFilters>>;
@@ -129,19 +130,19 @@ const Filters = ({
   setFilters,
   handleRemoveFilters,
 }: FiltersProps) => {
+  const { setPage } = usePage();
+
   return (
     <div className="flex flex-col gap-2.5 md:flex-row">
       <Dropdown
         value={filters.status}
         handleSelect={(val) => {
           setFilters((prev) => ({ ...prev, status: val as InvoiceStatus }));
+          setPage(1);
         }}
         placeholder="Select status"
-        className="md:max-w-[250px]"
-        options={INVOICE_STATUSES.map((status) => ({
-          label: status,
-          value: status,
-        }))}
+        className="w-full lg:max-w-[180px]"
+        options={INVOICE_STATUS}
       />
       <button
         onClick={handleRemoveFilters}
@@ -191,3 +192,36 @@ const FilterDialogue = ({
     </Dialogue>
   );
 };
+
+export default function InvoicesPage() {
+  const location = useLocation();
+  const pathnames = location.pathname.split("/").filter((x) => x);
+  return (
+    <Routes>
+      <Route index element={<InvoicesComp />} />
+      <Route
+        path=":invoiceId"
+        element={
+          <>
+            <BreadCrumb href="/invoices">Invoices</BreadCrumb>
+            <BreadCrumb>Invoice ID: {pathnames?.[1] || ""}</BreadCrumb>
+            <IndividualInvoicePage />
+          </>
+        }
+      />
+      <Route
+        path=":id/:milestoneId"
+        element={
+          <>
+            <BreadCrumb href="/invoices">Invoices</BreadCrumb>
+            <BreadCrumb href={`/invoices/${pathnames?.[1]}`}>
+              Invoice ID: {pathnames?.[1] || ""}
+            </BreadCrumb>
+            <BreadCrumb>Milestone ID: {pathnames?.[2] || ""}</BreadCrumb>
+            <ViewMilestone />
+          </>
+        }
+      />
+    </Routes>
+  );
+}

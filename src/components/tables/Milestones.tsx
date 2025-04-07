@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-import { IMilestone } from "lib/types/milestones";
+import { IMilestone, MILESTONE_TYPES } from "lib/types/milestones";
 import { formatNumber, getStatusVariant } from "lib/utils";
 
 import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
@@ -22,7 +22,6 @@ export function getRandomString(array: string[]): string | undefined {
   return array[randomIndex];
 }
 
-export const MILESTONE_TYPES = ["Threshold", "Per Outcome"];
 export const MILESTONE_REFERENCE = ["Contract Name", "Beneficiary Name"];
 
 const MilestonesTable = ({ list, isLoading = false }: TMilestonesTable) => {
@@ -33,13 +32,7 @@ const MilestonesTable = ({ list, isLoading = false }: TMilestonesTable) => {
       <div className="lg:hidden">
         <Cards.Container isLoading={isLoading}>
           {list.map((item, index) => {
-            const {
-              id,
-              milestone: { title },
-              outcome: { name: outcomeName },
-              cost,
-              status,
-            } = item;
+            const { id, funder, type, reference, outcome, cost, status } = item;
             return (
               <Cards.Card
                 onClick={() => navigate(id)}
@@ -47,16 +40,10 @@ const MilestonesTable = ({ list, isLoading = false }: TMilestonesTable) => {
                 key={index}
               >
                 <Cards.Group cols={2}>
-                  <Cards.Details label="Funder" value={title} />
-                  <Cards.Details
-                    label="Type"
-                    value={getRandomString(MILESTONE_TYPES)}
-                  />
-                  <Cards.Details
-                    label="Reference"
-                    value={getRandomString(MILESTONE_REFERENCE)}
-                  />
-                  <Cards.Details label="Outcome Name" value={outcomeName} />
+                  <Cards.Details label="Funder" value={funder.name} />
+                  <Cards.Details label="Type" value={MILESTONE_TYPES[type]} />
+                  <Cards.Details label="Reference" value={reference.name} />
+                  <Cards.Details label="Outcome Name" value={outcome.name} />
 
                   <Cards.Details
                     label="Cost"
@@ -81,35 +68,35 @@ const MilestonesTable = ({ list, isLoading = false }: TMilestonesTable) => {
           <Table.Head>
             <Table.Row>
               {TABLE_HEADER.map((key, headerIndex) => {
-                return <Table.Header key={headerIndex}>{key}</Table.Header>;
+                return (
+                  <Table.Header
+                    key={headerIndex}
+                    {...(key === "Cost" && { className: "text-right !pr-12" })}
+                  >
+                    {key}
+                  </Table.Header>
+                );
               })}
             </Table.Row>
           </Table.Head>
 
           <Table.Body>
             {list?.map((item, index) => {
-              const {
-                id,
-                milestone: { title },
-                outcome: { name: outcomeName },
-                cost,
-                status,
-              } = item;
+              const { id, funder, type, reference, outcome, cost, status } =
+                item;
 
               return (
                 <Table.Row onClick={() => navigate(id)} key={index}>
                   <Table.Data>
-                    <p className="underline">{id.split("-")?.[0] || "ID"}</p>
+                    <p className="underline">{id}</p>
                   </Table.Data>
 
-                  <Table.Data> {title}</Table.Data>
-                  <Table.Data>{getRandomString(MILESTONE_TYPES)}</Table.Data>
-                  <Table.Data>
-                    {getRandomString(MILESTONE_REFERENCE)}
-                  </Table.Data>
-                  <Table.Data>{outcomeName}</Table.Data>
+                  <Table.Data>{funder.name}</Table.Data>
+                  <Table.Data>{MILESTONE_TYPES[type]}</Table.Data>
+                  <Table.Data>{reference.name}</Table.Data>
+                  <Table.Data>{outcome.name}</Table.Data>
 
-                  <Table.Data className="max-w-[70px]">
+                  <Table.Data className="!pr-12 text-right">
                     ${formatNumber(cost)}
                   </Table.Data>
 

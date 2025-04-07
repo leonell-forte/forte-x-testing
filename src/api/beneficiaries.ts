@@ -111,6 +111,12 @@ class BeneficiariesService {
 
         isDate: true,
       },
+
+      "beneficiary.contract_id": {
+        value: filters?.contractId || "",
+
+        exact: true,
+      },
     };
 
     params.append("$pageNum", page.toString());
@@ -188,8 +194,6 @@ class BeneficiariesService {
         "Content-Type": "multipart/form-data",
       },
     });
-
-    console.log(response);
 
     return response;
   }

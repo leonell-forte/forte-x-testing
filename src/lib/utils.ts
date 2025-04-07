@@ -5,8 +5,8 @@ import { twMerge } from "tailwind-merge";
 import { IOption } from "components/ui/dropdown";
 import { StatusVariant } from "components/ui/status";
 
-import { InvoiceStatus, MilestoneStatus } from "./types/invoices";
-import { EvidenceStatus } from "./types/milestones";
+import { InvoiceStatus } from "./types/invoices";
+import { EvidenceStatus, MilestoneStatus } from "./types/milestones";
 
 export const filterBySearch = (
   list: Record<string, string>[],
@@ -195,7 +195,7 @@ export function parseNumber<T>(
   return v;
 }
 
-export const formatNumber = (v: number | string, decimal = 0) => {
+export const formatNumber = (v: number | string, decimal = 2) => {
   try {
     const n = parseNumber(v) as number;
     // eslint-disable-next-line no-restricted-globals
@@ -213,28 +213,33 @@ export const formatNumber = (v: number | string, decimal = 0) => {
 export const getStatusVariant = (
   status: InvoiceStatus | MilestoneStatus | EvidenceStatus
 ): StatusVariant => {
-  switch (status) {
-    case "Paid":
+  switch (status?.toLowerCase()) {
+    case "paid":
       return "neutral";
-    case "Pending":
+    case "pending":
       return "warning";
-    case "Cancelled":
+    case "cancelled":
       return "danger";
-    case "Achieved":
+    case "achieved":
       return "warning";
-    case "Open":
+    case "open":
       return "primary";
-    case "Accepted":
-      return "primary";
-    case "Pending Review":
-      return "warning";
-    case "More Information Requested":
-      return "primary";
-    case "Invoiced":
+    case "approved":
       return "success";
-    case "Rejected":
+    case "pending Review":
+      return "warning";
+    case "more information requested":
+      return "warning";
+    case "invoiced":
+      return "success";
+    case "rejected":
       return "danger";
     default:
       return "primary";
   }
+};
+
+export const shouldHref = (href: string, current: string) => {
+  if (href === current) return undefined;
+  return href;
 };

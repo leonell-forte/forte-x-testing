@@ -23,7 +23,7 @@ const Header = () => {
   };
 
   return (
-    <div className="flex w-screen items-center justify-between gap-4 px-5 pb-[18px] pt-[18px] lg:px-5 lg:pt-[15px]">
+    <div className="grid w-screen grid-cols-[20px_1fr] items-center justify-between gap-4 px-5 pb-[18px] pt-[18px] lg:grid-cols-[242px_1fr] lg:px-5 lg:pt-[15px]">
       <div className="flex items-center justify-start gap-2 lg:ml-4 lg:items-end lg:gap-x-[142px]">
         <button onClick={handleClick} className="lg:hidden">
           <Burger className="h-auto w-6" />
@@ -36,22 +36,29 @@ const Header = () => {
             className="hidden max-w-[98px] lg:block"
           />
         </Link>
-        <BreadCrumbs />
       </div>
 
-      <div className="flex w-full items-center justify-end gap-4 lg:mt-2.5">
-        <SearchConsoleMarker />
-        <Tooltip title="Support">
-          <button
-            type="button"
-            onClick={() => showGetHelpModal()}
-            className="group rounded-full bg-white p-1 transition hover:bg-mint"
-          >
-            <FaQuestion className="h-auto w-4 fill-mint transition group-hover:fill-white" />
-          </button>
-        </Tooltip>
+      <div className="flex items-center justify-between gap-x-6">
+        <div className="w-full flex-1">
+          <BreadCrumbs />
+        </div>
 
-        <UserDropdown />
+        <div className="flex items-center justify-end gap-4 lg:mt-2.5">
+          <div className="hidden lg:block">
+            <SearchConsoleMarker />
+          </div>
+          <Tooltip title="Support">
+            <button
+              type="button"
+              onClick={() => showGetHelpModal()}
+              className="group rounded-full bg-white p-1 transition hover:bg-mint"
+            >
+              <FaQuestion className="h-auto w-4 fill-mint transition group-hover:fill-white" />
+            </button>
+          </Tooltip>
+
+          <UserDropdown />
+        </div>
       </div>
     </div>
   );

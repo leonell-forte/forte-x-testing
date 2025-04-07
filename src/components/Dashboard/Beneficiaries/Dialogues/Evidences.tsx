@@ -55,7 +55,7 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
       <div className="md:hidden">
         <Cards.Container>
           {evidences.map((item, index) => {
-            const { file, outcome, description, status, id } = item;
+            const { file, description, status, id } = item;
 
             return (
               <Cards.Card
@@ -68,7 +68,6 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
                 <div className="space-y-2">
                   <p className="font-semibold">{file?.filename}</p>
                   <Cards.Group>
-                    <Cards.Details label="Outcome" value={outcome?.name} />
                     <Cards.Details label="Description" value={description} />
                     <Cards.Details label="Status" value={status} capitalize />
                   </Cards.Group>
@@ -106,7 +105,7 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
 
           <Table.Body>
             {evidences.map((item, index) => {
-              const { file, outcome, description, status, id } = item;
+              const { file, description, status, id } = item;
               return (
                 <Table.Row key={index}>
                   <Table.Data className="w-[140px]">
@@ -119,10 +118,6 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
                     >
                       {file?.filename}
                     </p>
-                  </Table.Data>
-
-                  <Table.Data className="w-[100px]">
-                    {outcome?.name}{" "}
                   </Table.Data>
 
                   <Table.Data className="w-[140px]">{description}</Table.Data>
@@ -156,4 +151,4 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
 
 export default Evidences;
 
-const HEADERS = ["Evidence files", "Outcome", "Description", "Status"];
+const HEADERS = ["Evidence files", "Description", "Status"];

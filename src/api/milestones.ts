@@ -12,8 +12,19 @@ interface IMilestoneListProps {
 
   listAll?: boolean;
 
-  projectId?: number;
+  pageSize?: number;
 }
+
+type TAchieved = {
+  funderId: string;
+  startDate: string;
+  endDate: string;
+};
+
+type TGenerate = {
+  funderId: string;
+  milestoneIds: string[];
+};
 
 class MilestoneService {
   async list({
@@ -22,6 +33,8 @@ class MilestoneService {
     filters,
 
     search,
+
+    pageSize,
   }: IMilestoneListProps): Promise<{
     items: IMilestone[];
     totalSize: number;
@@ -30,38 +43,88 @@ class MilestoneService {
     const params = new URLSearchParams();
 
     let filtersData: IODataObject = {
-      "milestone.name": {
+      "milestone.id": {
         value: search!,
 
         exact: false,
 
         isSearch: true,
       },
+      "funder.name": {
+        value: search!,
+
+        exact: false,
+
+        isSearch: true,
+      },
+      "provider.name": {
+        value: search!,
+
+        exact: false,
+
+        isSearch: true,
+      },
+      "contract.name": {
+        value: search!,
+
+        exact: false,
+
+        isSearch: true,
+      },
+      "contract.id": {
+        value: filters?.contractId || "",
+
+        exact: true,
+      },
 
       "milestone.status": {
-        value: filters?.status.toUpperCase() || "",
+        value: filters?.status || "",
+
+        exact: true,
+      },
+
+      "milestone.type": {
+        value: filters?.type || "",
 
         exact: true,
       },
     };
 
-    params.append("$pageSize", DEFAULT_PAGE_SIZE);
+    params.append("$pageSize", String(pageSize || DEFAULT_PAGE_SIZE));
 
     params.append("$pageNum", (page || 1).toString());
 
-    params.append("$orderBy", `"milestone"."createdAt" desc`);
+    params.append("$orderBy", `"milestone"."created_at" desc`);
 
     if (generateODataQuery(filtersData)) {
       params.append("$filter", generateODataQuery(filtersData));
     }
 
-    const res = await api.get(`/milestones`);
+    const res = await api.get(`/milestones`, { params });
 
     return res.data;
   }
 
   async getOne(id: string): Promise<IMilestone> {
     const response = await api.get(`/milestones/${id}`);
+
+    return response.data.data;
+  }
+
+  async getAchievedMilestones(payload: TAchieved): Promise<IMilestone[]> {
+    const response = await api.post(`/milestones/achieved-milestones`, {
+      ...payload,
+      funderId: Number(payload.funderId),
+    });
+
+    return response.data.data;
+  }
+
+  async generateInvoice(payload: TGenerate): Promise<any> {
+    const response = await api.post(`/invoices`, {
+      ...payload,
+      funderId: Number(payload.funderId),
+    });
 
     return response.data.data;
   }

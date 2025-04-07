@@ -8,6 +8,7 @@ import usePartnerList from "lib/common/lists/usePartnerList";
 import { REGIONS, STATUS, TYPES } from "lib/constants";
 import { useAppDispatch, useAppSelector } from "lib/hooks";
 import useOrganizationMutation from "lib/mutations/organizations";
+import { IsAuthorized, Organizations } from "lib/role-permissions";
 import { clearPartners } from "lib/slice/partners";
 import { OrgTypes, OrganizationFieldTypes } from "lib/types/organizations";
 import { organizations } from "lib/validators/organizations";
@@ -23,6 +24,7 @@ import { useAutoSaveForm } from "components/ui/form/useAutoSave";
 import Input from "components/ui/input";
 import Spinner from "components/ui/spinner/spinner";
 
+import { showDeactivateOrgPrompt } from "../Dialogues/DeactivateOrgPrompt";
 import { IOrganizationDialogueProps } from "../Dialogues/OrganizationDialogue";
 import Partners from "../Partners";
 
@@ -42,6 +44,7 @@ const OrganizationForm = ({
   handleAddPartner,
   savedFormData,
   onFormDataChange,
+  type,
 }: OrganizationFormProps) => {
   const dispatch = useAppDispatch();
   // this is a custom state to store partners to be added to the organization after creation
@@ -64,7 +67,7 @@ const OrganizationForm = ({
   const form = useForm<OrganizationFieldTypes>({
     resolver: zodResolver(organizations.schema),
 
-    defaultValues: savedFormData || organizations.defaultValues(),
+    defaultValues: savedFormData || organizations.defaultValues(type),
   });
 
   const {
@@ -90,9 +93,9 @@ const OrganizationForm = ({
 
   useEffect(() => {
     if (orgData) {
-      reset(organizations.defaultValues(orgData));
+      reset(organizations.defaultValues(type, orgData));
     }
-  }, [orgData, reset]);
+  }, [orgData, reset, type]);
 
   useEffect(() => {
     const subscription = form.watch((value) => {
@@ -120,9 +123,9 @@ const OrganizationForm = ({
 
   const getTitle = () => {
     if (orgId) {
-      return editMode ? "Edit organization" : "View organization";
+      return editMode ? `Edit ${type}` : `View ${type}`;
     }
-    return "Add organization";
+    return `Add ${type}`;
   };
 
   const handleCancel = () => {
@@ -161,6 +164,13 @@ const OrganizationForm = ({
   });
 
   const onSubmit = async (values: OrganizationFieldTypes) => {
+    if (orgData && values.status === "inactive") {
+      showDeactivateOrgPrompt({
+        onYes: () => addOrganization(values),
+        orgName: orgData?.name,
+      });
+      return;
+    }
     await addOrganization(values);
   };
 
@@ -349,7 +359,7 @@ const OrganizationForm = ({
                       }}
                       options={TYPES}
                       placeholder="Select type"
-                      disabled={!editMode}
+                      disabled
                     />
                   );
                 }}
@@ -396,26 +406,30 @@ const OrganizationForm = ({
               />
             ))}
 
-          <div className="!mt-10 flex justify-end gap-4">
-            {editMode ? (
-              <>
-                <Button onClick={handleCancel} buttonType="secondary">
-                  Cancel
+          {IsAuthorized([Organizations.UPDATE]) ? (
+            <div className="!mt-10 flex justify-end gap-4">
+              {editMode ? (
+                <>
+                  <Button onClick={handleCancel} buttonType="secondary">
+                    Cancel
+                  </Button>
+                  <Button
+                    loading={isPending}
+                    type="submit"
+                    disabled={!isFormDirty}
+                  >
+                    {orgId ? "Update" : "Add"}
+                  </Button>
+                </>
+              ) : (
+                <Button type="button" onClick={() => setEditMode(true)}>
+                  Edit
                 </Button>
-                <Button
-                  loading={isPending}
-                  type="submit"
-                  disabled={!isFormDirty}
-                >
-                  {orgId ? "Update" : "Add"}
-                </Button>
-              </>
-            ) : (
-              <Button type="button" onClick={() => setEditMode(true)}>
-                Edit
-              </Button>
-            )}
-          </div>
+              )}
+            </div>
+          ) : (
+            <div className="h-1" />
+          )}
         </Form>
       )}
     </Dialogue>

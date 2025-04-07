@@ -30,6 +30,79 @@
   font-style: normal;
 }
 
+/*
+colors
+*/
+
+@layer base {
+  :root {
+    --brand: oklch(84.137% 0.16779 161.59);
+    --brand-50: oklch(97.719% 0.0234 169.92);
+    --brand-100: oklch(95.769% 0.04312 168.96);
+    --brand-200: oklch(92.208% 0.07966 167.85);
+    --brand-300: oklch(89.014% 0.11329 166.26);
+    --brand-400: oklch(86.47% 0.14395 163.98);
+    --brand-500: oklch(84.137% 0.16779 161.59);
+    --brand-600: oklch(79.746% 0.18256 158.27);
+    --brand-700: oklch(65.734% 0.14932 158.48);
+    --brand-800: oklch(50.953% 0.11306 159.36);
+    --brand-900: oklch(35.286% 0.07594 159.84);
+    --brand-950: oklch(26.49% 0.05319 161.9);
+
+    --red: oklch(59.802% 0.10967 20.86);
+    --red-50: oklch(92.254% 0.01755 17.476);
+    --red-100: oklch(88.662% 0.02679 17.668);
+    --red-200: oklch(81.366% 0.04513 18.12);
+    --red-300: oklch(74.162% 0.06609 18.762);
+    --red-400: oklch(66.908% 0.08732 19.623);
+    --red-500: oklch(59.802% 0.10967 20.86);
+    --red-600: oklch(50.727% 0.11398 21.956);
+    --red-700: oklch(41.461% 0.09034 21.767);
+    --red-800: oklch(32.022% 0.06483 21.35);
+    --red-900: oklch(21.446% 0.03667 20.553);
+    --red-950: oklch(16.085% 0.01955 19.429);
+
+    --yellow: oklch(75.001% 0.13207 101.17);
+    --yellow-50: oklch(92.887% 0.04231 101.32);
+    --yellow-100: oklch(90.942% 0.05405 101.64);
+    --yellow-200: oklch(86.846% 0.07709 101.31);
+    --yellow-300: oklch(82.78% 0.09867 101.19);
+    --yellow-400: oklch(78.977% 0.11757 101.6);
+    --yellow-500: oklch(75.001% 0.13207 101.17);
+    --yellow-600: oklch(62.455% 0.1085 100.84);
+    --yellow-700: oklch(49.474% 0.08446 101.29);
+    --yellow-800: oklch(35.202% 0.0573 102.05);
+    --yellow-900: oklch(19.396% 0.02405 100.73);
+    --yellow-950: oklch(8.3334% 0.00723 107.87);
+
+    --neutral: oklch(64.673% 0 none);
+    --neutral-50: oklch(100% 0 none);
+    --neutral-100: oklch(100% 0 none);
+    --neutral-200: oklch(100% 0 none);
+    --neutral-300: oklch(96.715% 0 none);
+    --neutral-400: oklch(81.093% 0 none);
+    --neutral-500: oklch(64.673% 0 none);
+    --neutral-600: oklch(53.476% 0 none);
+    --neutral-700: oklch(41.654% 0 none);
+    --neutral-800: oklch(28.908% 0 none);
+    --neutral-900: oklch(13.979% 0 none);
+    --neutral-950: oklch(0% 0 none);
+
+    --green: oklch(75.245% 0.11689 190.74);
+    --green-50: oklch(92.328% 0.04144 192.72);
+    --green-100: oklch(90.337% 0.05327 191.86);
+    --green-200: oklch(86.275% 0.07447 191.61);
+    --green-300: oklch(82.418% 0.09307 191.2);
+    --green-400: oklch(78.803% 0.10797 190.68);
+    --green-500: oklch(75.245% 0.11689 190.74);
+    --green-600: oklch(62.553% 0.09584 191.39);
+    --green-700: oklch(49.388% 0.07499 190.14);
+    --green-800: oklch(35.051% 0.05069 191.17);
+    --green-900: oklch(19.004% 0.02219 190.24);
+    --green-950: oklch(6.0847% 0.01039 194.77);
+  }
+}
+
 * {
   @apply font-light text-white;
   font-family: "TWKLausanne", sans-serif !important;
@@ -161,11 +234,17 @@ button.icon {
 }
 
 .bread-crumb {
-  &:not(:last-child) {
-    &::after {
+  &:not(:first-child) {
+    &::before {
       content: "/ ";
-      @apply pointer-events-none ml-2.5 text-sm font-semibold !text-white;
+      @apply pointer-events-none mr-2.5 text-sm;
     }
+  }
+  &:not(:last-child) {
+    @apply max-w-[150px] font-light text-white/40 hover:text-white xl:max-w-full;
+  }
+  &:last-child {
+    @apply max-w-[150px] sm:max-w-full;
   }
 }
 
@@ -198,7 +277,7 @@ button.icon {
 }
 
 .hs-error-msgs * label {
-  @apply !text-xs text-red-500/80;
+  @apply !text-xs text-red-500;
 }
 
 .hs-form-field > .input > input,
@@ -226,5 +305,24 @@ button.icon {
 }
 
 .hs_error_rollup * {
-  @apply text-right !text-sm text-red-500/80;
+  @apply text-right !text-sm text-red-500;
+}
+
+.toast-default * p,
+.toast-default * svg {
+  @apply fill-[#0D7F51] text-[#0D7F51];
+}
+
+.toast-danger * p,
+.toast-danger * svg {
+  @apply fill-red text-red;
+}
+
+.toast-warning * p,
+.toast-warning * svg {
+  @apply fill-yellow text-yellow;
+}
+
+.toast-default button {
+  @apply border-[#0D7F51]/40;
 }
