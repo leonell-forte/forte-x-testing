@@ -8,6 +8,7 @@ import usePartnerList from "lib/common/lists/usePartnerList";
 import { REGIONS, STATUS, TYPES } from "lib/constants";
 import { useAppDispatch, useAppSelector } from "lib/hooks";
 import useOrganizationMutation from "lib/mutations/organizations";
+import { IsAuthorized, Organizations } from "lib/role-permissions";
 import { clearPartners } from "lib/slice/partners";
 import { OrgTypes, OrganizationFieldTypes } from "lib/types/organizations";
 import { organizations } from "lib/validators/organizations";
@@ -23,6 +24,7 @@ import { useAutoSaveForm } from "components/ui/form/useAutoSave";
 import Input from "components/ui/input";
 import Spinner from "components/ui/spinner/spinner";
 
+import { showDeactivateOrgPrompt } from "../Dialogues/DeactivateOrgPrompt";
 import { IOrganizationDialogueProps } from "../Dialogues/OrganizationDialogue";
 import Partners from "../Partners";
 
@@ -162,6 +164,13 @@ const OrganizationForm = ({
   });
 
   const onSubmit = async (values: OrganizationFieldTypes) => {
+    if (orgData && values.status === "inactive") {
+      showDeactivateOrgPrompt({
+        onYes: () => addOrganization(values),
+        orgName: orgData?.name,
+      });
+      return;
+    }
     await addOrganization(values);
   };
 
@@ -397,26 +406,30 @@ const OrganizationForm = ({
               />
             ))}
 
-          <div className="!mt-10 flex justify-end gap-4">
-            {editMode ? (
-              <>
-                <Button onClick={handleCancel} buttonType="secondary">
-                  Cancel
+          {IsAuthorized([Organizations.UPDATE]) ? (
+            <div className="!mt-10 flex justify-end gap-4">
+              {editMode ? (
+                <>
+                  <Button onClick={handleCancel} buttonType="secondary">
+                    Cancel
+                  </Button>
+                  <Button
+                    loading={isPending}
+                    type="submit"
+                    disabled={!isFormDirty}
+                  >
+                    {orgId ? "Update" : "Add"}
+                  </Button>
+                </>
+              ) : (
+                <Button type="button" onClick={() => setEditMode(true)}>
+                  Edit
                 </Button>
-                <Button
-                  loading={isPending}
-                  type="submit"
-                  disabled={!isFormDirty}
-                >
-                  {orgId ? "Update" : "Add"}
-                </Button>
-              </>
-            ) : (
-              <Button type="button" onClick={() => setEditMode(true)}>
-                Edit
-              </Button>
-            )}
-          </div>
+              )}
+            </div>
+          ) : (
+            <div className="h-1" />
+          )}
         </Form>
       )}
     </Dialogue>

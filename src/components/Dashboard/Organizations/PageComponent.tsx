@@ -1,10 +1,17 @@
-import { Dispatch, SetStateAction, useCallback, useState } from "react";
+import {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useCallback,
+  useState,
+} from "react";
 import { BiSlider as SliderIcon } from "react-icons/bi";
 import { TbFilterX as FilterIcon } from "react-icons/tb";
 
 import useOrganizationList from "lib/common/lists/useOrganizationList";
 import { REGIONS, STATUS } from "lib/constants";
 import { usePage } from "lib/hooks";
+import { IsAuthorized, Organizations } from "lib/role-permissions";
 import { IFilters, OrgTypes } from "lib/types/organizations";
 
 import OrganizationDialogue from "components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
@@ -92,14 +99,16 @@ const PageComponent = ({ type, initialFilters }: PageComponentProps) => {
         <div className="space-y-5">
           <div className="flex flex-col justify-between gap-2.5 sm:flex-row">
             <p className="text-[24px] font-semibold capitalize">{type}</p>
-            <Button
-              eventName="Add Organization"
-              onClick={() => {
-                setModal("org");
-              }}
-            >
-              Add {type}
-            </Button>
+            {IsAuthorized([Organizations.UPDATE]) && (
+              <Button
+                eventName="Add Organization"
+                onClick={() => {
+                  setModal("org");
+                }}
+              >
+                Add {type}
+              </Button>
+            )}
           </div>
 
           <div className="flex gap-2.5 md:flex-wrap">
@@ -173,7 +182,7 @@ const FilterWrapper = ({
   onApply,
   onClear,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   onApply?: () => void;
   onClear?: () => void;
 }) => (

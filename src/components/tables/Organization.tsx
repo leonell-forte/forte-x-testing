@@ -86,7 +86,7 @@ const OrganizationTable = ({
         </Cards.Container>
       </div>
       <ScrollArea className="hidden w-[calc(100vw-330px)] overflow-hidden lg:block">
-        <Table.Container isEmpty={!list} isLoading={isLoading}>
+        <Table.Container isEmpty={list.length === 0} isLoading={isLoading}>
           <Table.Head>
             <Table.Row>
               {TABLE_HEADER.map((key, headerIndex) => {

@@ -28,7 +28,7 @@ export const useGenerateInvoice = (succesCallback: (x: any) => void) => {
             altText="view"
             onClick={() => navigate(`/invoices/${id}`)}
           >
-            View
+            <p>View</p>
           </ToastAction>
         ),
       });
