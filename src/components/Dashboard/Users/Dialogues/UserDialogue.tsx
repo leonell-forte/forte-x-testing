@@ -395,7 +395,7 @@ const UserDialogue = ({
                   Cancel
                 </Button>
 
-                {userId && (
+                {userId && userData?.status === "invited" && (
                   <Button
                     onClick={handleResendInvitation}
                     loading={resendLoading}
