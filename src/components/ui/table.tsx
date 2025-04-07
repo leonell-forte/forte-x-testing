@@ -1,5 +1,7 @@
 import classNames from "classnames";
-import { TableHTMLAttributes, useRef } from "react";
+import { TableHTMLAttributes, useEffect, useRef, useState } from "react";
+
+import { Tooltip } from "./tooltip/Tooltip";
 
 interface ITableProp extends TableHTMLAttributes<HTMLTableElement> {}
 
@@ -122,14 +124,34 @@ const Table = {
   },
 
   Data: ({ children, className, ...props }: ITableCellProps) => {
+    const textRef = useRef<HTMLDivElement>(null);
+    const [isOverflowed, setIsOverflowed] = useState(false);
+
+    useEffect(() => {
+      const el = textRef.current;
+      if (el) {
+        setIsOverflowed(el.scrollWidth > el.clientWidth);
+      }
+    }, [children]);
+
+    const content = (
+      <div ref={textRef} className={classNames(className, "truncate px-6")}>
+        {children}
+      </div>
+    );
+
     return (
       <td
-        className={
-          "h-[50px] max-w-[300px] border-b border-white/50 text-base font-[300]"
-        }
+        className="h-[50px] max-w-[300px] border-b border-white/50 text-base font-[300]"
         {...props}
       >
-        <div className={classNames(className, "truncate px-6")}>{children}</div>
+        {isOverflowed ? (
+          <Tooltip title={children} placement="top">
+            {content}
+          </Tooltip>
+        ) : (
+          content
+        )}
       </td>
     );
   },

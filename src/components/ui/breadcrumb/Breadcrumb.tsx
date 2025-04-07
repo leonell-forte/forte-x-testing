@@ -29,7 +29,6 @@ export const BreadCrumb = ({ children, href, className }: Props) => {
   useEffect(() => {
     setBreadCrumbOut(document.getElementById("bread-crumbs"));
   }, [location, setBreadCrumbOut]);
-
   return (
     <>
       {breadCrumbOut &&

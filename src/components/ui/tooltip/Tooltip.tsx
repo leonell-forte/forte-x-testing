@@ -14,23 +14,25 @@ function AlertIcon() {
   );
 }
 
-const Tooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Prim
-    {...props}
-    arrow
-    slots={{
-      transition: Zoom,
-    }}
-    slotProps={{
-      popper: {
-        style: {
-          zIndex: 41,
+const Tooltip = styled(
+  ({ className, arrow = true, ...props }: TooltipProps) => (
+    <Prim
+      {...props}
+      arrow={arrow}
+      slots={{
+        transition: Zoom,
+      }}
+      slotProps={{
+        popper: {
+          style: {
+            zIndex: 41,
+          },
         },
-      },
-    }}
-    classes={{ popper: className }}
-  />
-))(({ theme }) => ({
+      }}
+      classes={{ popper: className }}
+    />
+  )
+)(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
     backgroundColor: theme.palette.common.white,
     color: "rgba(0, 0, 0, 0.87)",
