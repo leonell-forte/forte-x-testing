@@ -76,6 +76,7 @@ export const ROUTES: RouteConfig[] = [
 
     permissions: [Milestones.NAVIGATE],
   },
+
   {
     link: "users",
 
@@ -182,3 +183,125 @@ export const ROUTES: RouteConfig[] = [
 export const publicRoutes = ROUTES.filter((route) => route.public).map(
   (route) => route.link
 );
+
+export const ROUTES2 = [
+  {
+    path: "/invoices",
+
+    link: "invoices",
+
+    Component: InvoicesPage,
+
+    permissions: [Invoices.NAVIGATE],
+  },
+
+  {
+    link: "milestones/*",
+
+    Component: MilestonePage,
+
+    permissions: [Milestones.NAVIGATE],
+  },
+
+  {
+    link: "users",
+
+    Component: UsersPage,
+
+    permissions: [Users.NAVIGATE],
+  },
+
+  {
+    link: "projects",
+
+    Component: ProjectsPage,
+
+    permissions: [Projects.NAVIGATE],
+  },
+
+  {
+    link: "projects/:id",
+
+    Component: IndividualProjectsPage,
+
+    permissions: [Projects.NAVIGATE],
+  },
+
+  {
+    link: "funders",
+
+    Component: FundersPage,
+
+    permissions: [Organizations.NAVIGATE],
+  },
+
+  {
+    link: "providers",
+
+    Component: ProvidersPage,
+
+    permissions: [Organizations.NAVIGATE],
+  },
+
+  {
+    link: "contracts",
+
+    Component: ContractsPage,
+
+    permissions: [Contracts.NAVIGATE],
+  },
+
+  {
+    link: "beneficiaries",
+
+    Component: BeneficiariesPage,
+
+    permissions: [Beneficiaries.NAVIGATE],
+  },
+
+  {
+    link: "search/:query",
+
+    Component: SearchResultsPage,
+
+    permissions: [],
+  },
+
+  {
+    link: "/",
+
+    Component: LoginPage,
+
+    permissions: [],
+
+    public: true,
+  },
+  {
+    link: "/signup",
+
+    Component: SignupPage,
+
+    permissions: [],
+
+    public: true,
+  },
+  {
+    link: "/forgot-password",
+
+    Component: ForgotPasswordPage,
+
+    permissions: [],
+
+    public: true,
+  },
+
+  {
+    link: "/components",
+
+    Component: ComponentsPage,
+
+    permissions: [],
+
+    public: true,
+  },
+];

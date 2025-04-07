@@ -92,6 +92,12 @@ class UserService {
 
     return res;
   }
+
+  async resendInvitation(userId: string) {
+    const res = await api.post(`/users/${userId}/resend-invite`);
+
+    return res;
+  }
 }
 
 const userService = new UserService();

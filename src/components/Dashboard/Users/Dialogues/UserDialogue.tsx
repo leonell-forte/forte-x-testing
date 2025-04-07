@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 
 import useOrganizationList from "lib/common/lists/useOrganizationList";
 import { DEFAULT_DATE_FORMAT, ROLES } from "lib/constants";
+import { useAlert } from "lib/hooks";
 import useUserMutation from "lib/mutations/users";
 import { IOrganization } from "lib/types/organizations";
 import { UserFieldTypes, UserStatusValues } from "lib/types/users";
@@ -39,9 +40,11 @@ const UserDialogue = ({
   userId,
 }: IUserDialogueProps) => {
   const [editMode, setEditMode] = useState(userId ? false : true);
+  const [resendLoading, setResendLoading] = useState(false);
   const { profile } = useProfile();
   const myRole = profile?.role;
   const { setShowPrompt } = useConfirmPrompt();
+  const { setAlert } = useAlert();
 
   const {
     rawList,
@@ -192,6 +195,27 @@ const UserDialogue = ({
   });
 
   // autosave end
+
+  const handleResendInvitation = async () => {
+    setResendLoading(true);
+    try {
+      await userService.resendInvitation(userId as string);
+      setAlert({
+        message: "Invitation has been resent",
+        title: "Success!",
+        status: "success",
+      });
+    } catch (error) {
+      console.log(error);
+      setAlert({
+        message: "Failed to resend invitation",
+        title: "Error",
+        status: "error",
+      });
+    } finally {
+      setResendLoading(false);
+    }
+  };
 
   return (
     <Dialogue
@@ -370,6 +394,15 @@ const UserDialogue = ({
                 <Button onClick={handleCancel} buttonType="secondary">
                   Cancel
                 </Button>
+
+                {userId && userData?.status === "invited" && (
+                  <Button
+                    onClick={handleResendInvitation}
+                    loading={resendLoading}
+                  >
+                    Send invitation
+                  </Button>
+                )}
 
                 <Button loading={isPending} type="submit" disabled={!isDirty}>
                   {userId ? "Update" : "Add"}
