@@ -1,6 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import beneficiariesService from "api/beneficiaries";
-import { Dispatch, SetStateAction, useCallback, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 import { BiSlider as SliderIcon } from "react-icons/bi";
 import { TbFilterX as FilterIcon } from "react-icons/tb";
 
@@ -97,8 +103,19 @@ const BeneficiariesPage = () => {
   const { exportEvidence, isPending: isDownloadingEvidence } =
     useExportEvidenceMutation();
 
+  const { listWithEvidence: selectedIdsWithEvidence, downloadDisabled } =
+    useMemo(() => {
+      const listWithEvidence = selectedIds.filter((id) =>
+        beneficiariesList?.items?.some(
+          (item) => item.id === id && item.evidences?.length
+        )
+      );
+
+      return { listWithEvidence, downloadDisabled: !listWithEvidence?.length };
+    }, [selectedIds, beneficiariesList?.items]);
+
   const handleDownloadEvidence = () => {
-    exportEvidence({ beneficiaryIds: selectedIds });
+    exportEvidence({ beneficiaryIds: selectedIdsWithEvidence });
   };
 
   // export beneficiaries
@@ -237,7 +254,7 @@ const BeneficiariesPage = () => {
                         eventName="Download Evidence"
                         onClick={handleDownloadEvidence}
                         buttonType="secondary"
-                        disabled={isDownloadingEvidence || !selectedIds.length}
+                        disabled={isDownloadingEvidence || downloadDisabled}
                       >
                         Download Evidence
                       </Button>
