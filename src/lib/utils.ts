@@ -8,6 +8,7 @@ import { StatusVariant } from "components/ui/status";
 import { IBeneficiaries } from "./types/beneficiaries";
 import { InvoiceStatus } from "./types/invoices";
 import { EvidenceStatus, MilestoneStatus } from "./types/milestones";
+import { PayoutStatus } from "./types/payouts";
 
 export const filterBySearch = (
   list: Record<string, string>[],
@@ -239,6 +240,10 @@ export const getStatusVariant = (
       return "success";
     case "rejected":
       return "danger";
+    case "draft":
+      return "warning";
+    case "settled":
+      return "neutral";
     default:
       return "primary";
   }

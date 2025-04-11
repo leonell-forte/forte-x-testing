@@ -3,6 +3,7 @@ import { omit } from "lodash";
 import { api } from "../lib/axios/interceptor";
 import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import {
+  BankDetails,
   IFilters,
   IOrganization,
   OrganizationFieldTypes,
@@ -143,6 +144,22 @@ class OrganizationService {
     const response = await api.delete(`/organizations/partnership/${id}`);
 
     return response;
+  }
+
+  async getStripeOnboardingLink(id: string): Promise<{
+    data: string;
+  }> {
+    const response = await api.get(
+      `/organizations/${id}/stripe/onboarding-link`
+    );
+
+    return response.data;
+  }
+
+  async getBankDetails(id: string): Promise<{ data: BankDetails[] }> {
+    const response = await api.get(`/organizations/${id}/stripe/bank-details`);
+
+    return response.data;
   }
 }
 

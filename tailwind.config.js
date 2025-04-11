@@ -123,6 +123,17 @@ module.exports = {
       fontFamily: {
         famaime: ["FAMAime", "sans-serif"],
       },
+      borderRadius: {
+        1: "2px",
+        2: "4px",
+        3: "8px",
+        4: "12px",
+        5: "16px",
+        6: "20px",
+        7: "24px",
+        8: "28px",
+        9: "32px",
+      },
     },
   },
   plugins: [twAnimate],

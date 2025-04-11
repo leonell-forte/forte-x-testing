@@ -43,9 +43,12 @@ const Button = ({
       boxShadow: "none",
       color: disabled ? "#787878" : active ? "#42ECA8" : "#ffffff",
       fontWeight: "450",
+      stroke: "white",
       "&:hover": {
         borderColor: "#42ECA8",
         color: "#42ECA8",
+        fill: "#42ECA8",
+        stroke: "#42ECA8",
       },
       transitionProperty: "all",
       transitionDuration: "400ms",
@@ -75,7 +78,7 @@ const Button = ({
       sx={variants[(buttonType as keyof typeof variants) || "primary"]}
       {...props}
       className={classNames(
-        "h-fit gap-[10px] truncate !px-6 py-2.5 !normal-case transition-all",
+        "h-10 gap-[10px] truncate !px-6 py-2.5 !normal-case transition-all",
 
         props.className
       )}

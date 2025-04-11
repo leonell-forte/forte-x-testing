@@ -1,0 +1,137 @@
+import { useNavigate } from "react-router-dom";
+
+// import { ReactComponent as MoreIcon } from "assets/images/icons/more.svg";
+
+import { DEFAULT_DATE_FORMAT } from "lib/constants";
+import { Payout, PayoutStatus } from "lib/types/payouts";
+import { formatDate, getStatusVariant } from "lib/utils";
+
+import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
+import Status from "components/ui/status";
+import Table from "components/ui/table";
+import Cards from "components/ui/table-card";
+
+type PayoutsTableProps = {
+  list: Payout[];
+  isLoading: boolean;
+};
+
+const PayoutsTable = ({ list, isLoading }: PayoutsTableProps) => {
+  const navigate = useNavigate();
+
+  return (
+    <div>
+      <div className="lg:hidden">
+        <Cards.Container isLoading={isLoading}>
+          {list.map((payout, index) => {
+            const { id, provider, noOfMilestones, amount, status, settledAt } =
+              payout;
+            return (
+              <Cards.Card
+                key={index}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/payouts/${id}`);
+                }}
+                title={id}
+              >
+                <Cards.Group cols={3}>
+                  <Cards.Details label="Provider" value={provider.name} />
+                  <Cards.Details
+                    label="# of milestones"
+                    value={noOfMilestones}
+                  />
+                  <Cards.Details label="Amount" value={amount} />
+                  <Cards.Details
+                    label="Date settled"
+                    value={
+                      settledAt
+                        ? formatDate(settledAt, DEFAULT_DATE_FORMAT)
+                        : "-"
+                    }
+                  />
+                  <Cards.Details
+                    value={
+                      <Status
+                        variant={getStatusVariant(status as PayoutStatus)}
+                      >
+                        {status}
+                      </Status>
+                    }
+                    label="Status"
+                    capitalize
+                  />
+                </Cards.Group>
+              </Cards.Card>
+            );
+          })}
+        </Cards.Container>
+      </div>
+
+      <ScrollArea className="hidden w-[calc(100vw-330px)] overflow-hidden lg:block">
+        <Table.Container isEmpty={!list.length} isLoading={isLoading}>
+          <Table.Head>
+            <Table.Row>
+              {TABLE_HEADER.map((key, headerIndex) => {
+                return <Table.Header key={headerIndex}>{key}</Table.Header>;
+              })}
+              {/* <Table.Header></Table.Header> */}
+            </Table.Row>
+          </Table.Head>
+          <Table.Body>
+            {list.map((payout, index) => {
+              const {
+                id,
+                provider,
+                noOfMilestones,
+                amount,
+                status,
+                settledAt,
+              } = payout;
+              return (
+                <Table.Row
+                  key={index}
+                  onClick={() => {
+                    navigate(`/payouts/${id}`);
+                  }}
+                >
+                  <Table.Data>{id}</Table.Data>
+                  <Table.Data>{provider.name}</Table.Data>
+                  <Table.Data>{noOfMilestones}</Table.Data>
+                  <Table.Data>{amount}</Table.Data>
+                  <Table.Data>
+                    {settledAt
+                      ? formatDate(settledAt, DEFAULT_DATE_FORMAT)
+                      : "-"}
+                  </Table.Data>
+                  <Table.Data>
+                    <Status variant={getStatusVariant(status as PayoutStatus)}>
+                      {status}
+                    </Status>
+                  </Table.Data>
+                  {/* <Table.Data>
+                    <button>
+                      <MoreIcon />
+                    </button>
+                  </Table.Data> */}
+                </Table.Row>
+              );
+            })}
+          </Table.Body>
+        </Table.Container>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
+    </div>
+  );
+};
+
+export default PayoutsTable;
+
+const TABLE_HEADER = [
+  "Payout ID",
+  "Provider",
+  "# of Milestones",
+  "Amount",
+  "Date settled",
+  "Status",
+];

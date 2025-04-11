@@ -1,13 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import evidenceService from "api/evidence";
 import milestoneService from "api/milestones";
-import { useMemo } from "react";
+import payoutsService from "api/payouts";
+import { useMemo, useState } from "react";
 import { HiPencil } from "react-icons/hi";
 import { HiPlus } from "react-icons/hi2";
 import { HiEllipsisHorizontal as Ellipsis } from "react-icons/hi2";
 import { RiShareBoxLine as Share } from "react-icons/ri";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { useAlert } from "lib/hooks";
 import { useDeleteEvidence } from "lib/mutations/evidences";
 import { MILESTONE_TYPES } from "lib/types/milestones";
 import { formatDate, formatNumber, getStatusVariant } from "lib/utils";
@@ -32,8 +34,10 @@ import Cards from "components/ui/table-card";
 
 export default function ViewMilestone() {
   const navigate = useNavigate();
+  const { setAlert } = useAlert();
   const params = useParams();
   const { open } = useCustomPrompt();
+  const [loading, setLoading] = useState(false);
 
   const id = params.milestoneId;
   const beneficiaryId = params.beneficiaryId;
@@ -73,6 +77,27 @@ export default function ViewMilestone() {
     );
 
   if (!milestone) return null;
+
+  const handleGeneratePayouts = async () => {
+    setLoading(true);
+    try {
+      await payoutsService.generate(milestone.provider.id as string);
+      setAlert({
+        message: "Payouts generated successfully",
+        status: "success",
+        title: "Success",
+      });
+    } catch (err) {
+      console.log(err);
+      setAlert({
+        message: "Failed to generate payouts",
+        status: "error",
+        title: "Error",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>

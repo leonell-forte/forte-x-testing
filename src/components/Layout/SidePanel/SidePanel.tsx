@@ -81,8 +81,8 @@ const SidePanel = () => {
                       <Icon
                         className={cn(
                           active
-                            ? "fill-mint"
-                            : "fill-white group-hover:fill-mint/70",
+                            ? "fill-mint stroke-mint"
+                            : "fill-white stroke-white group-hover:fill-mint/70 group-hover:stroke-mint/70",
                           "transition"
                         )}
                       />

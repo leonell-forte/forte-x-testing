@@ -60,3 +60,11 @@ export type Partner = {
 export type OrganizationFieldTypes = z.infer<typeof organizations.schema>;
 
 export type PartnerFieldTypes = z.infer<typeof partner.schema>;
+
+export type BankDetails = {
+  bankName: string;
+  last4Digits: string;
+  accountHolderName: string | null;
+  status: string;
+  routingNumber: string;
+};

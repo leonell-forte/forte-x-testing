@@ -35,7 +35,7 @@ const MilestonesTable = ({
                 <Cards.Group cols={2}>
                   <Cards.Details label="Funder" value={funder.name} />
                   <Cards.Details label="Type" value={MILESTONE_TYPES[type]} />
-                  <Cards.Details label="Reference" value={reference.name} />
+                  <Cards.Details label="Reference" value={reference?.name} />
                   <Cards.Details label="Outcome Name" value={outcome.name} />
 
                   <Cards.Details
@@ -86,7 +86,7 @@ const MilestonesTable = ({
 
                   <Table.Data>{funder.name}</Table.Data>
                   <Table.Data>{MILESTONE_TYPES[type]}</Table.Data>
-                  <Table.Data>{reference.name}</Table.Data>
+                  <Table.Data>{reference?.name}</Table.Data>
                   <Table.Data>{outcome.name}</Table.Data>
 
                   <Table.Data className="!pr-12 text-right">
