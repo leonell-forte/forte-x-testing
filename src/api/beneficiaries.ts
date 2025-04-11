@@ -1,3 +1,5 @@
+import { IMilestone } from "lib/types/milestones";
+
 import { api } from "../lib/axios/interceptor";
 import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import {
@@ -7,6 +9,7 @@ import {
   IImportBeneficiariesFieldValues,
 } from "../lib/types/beneficiaries";
 import { IODataObject, generateODataQuery } from "../lib/utils";
+import { IMilestoneListProps } from "./milestones";
 
 interface IBeneficiariesListProps {
   page?: number;
@@ -212,6 +215,88 @@ class BeneficiariesService {
     });
 
     return response;
+  }
+
+  async listMilestones({
+    page = 1,
+
+    filters,
+
+    search,
+
+    pageSize,
+
+    beneficiaryId,
+  }: IMilestoneListProps & { beneficiaryId: number }): Promise<{
+    data: IMilestone[];
+    totalSize: number;
+    pageSize: number;
+  }> {
+    const params = new URLSearchParams();
+
+    let filtersData: IODataObject = {
+      "milestone.id": {
+        value: search!,
+
+        exact: false,
+
+        isSearch: true,
+      },
+      "funder.name": {
+        value: search!,
+
+        exact: false,
+
+        isSearch: true,
+      },
+      "provider.name": {
+        value: search!,
+
+        exact: false,
+
+        isSearch: true,
+      },
+      "contract.name": {
+        value: search!,
+
+        exact: false,
+
+        isSearch: true,
+      },
+      "contract.id": {
+        value: filters?.contractId || "",
+
+        exact: true,
+      },
+
+      "milestone.status": {
+        value: filters?.status || "",
+
+        exact: true,
+      },
+
+      "milestone.type": {
+        value: filters?.type || "",
+
+        exact: true,
+      },
+    };
+
+    params.append("$pageSize", String(pageSize || DEFAULT_PAGE_SIZE));
+
+    params.append("$pageNum", (page || 1).toString());
+
+    params.append("$orderBy", `"milestone"."created_at" desc`);
+
+    if (generateODataQuery(filtersData)) {
+      params.append("$filter", generateODataQuery(filtersData));
+    }
+
+    const res = await api.get(`/beneficiaries/${beneficiaryId}/milestones`, {
+      params,
+    });
+
+    return res.data;
   }
 }
 

@@ -8,7 +8,10 @@ import {
   useState,
 } from "react";
 import { BiSlider as SliderIcon } from "react-icons/bi";
+import { HiPlus } from "react-icons/hi2";
 import { TbFilterX as FilterIcon } from "react-icons/tb";
+import { Route, Routes, useLocation } from "react-router-dom";
+import { create } from "zustand";
 
 import useOrganizationList from "lib/common/lists/useOrganizationList";
 import useProjectList from "lib/common/lists/useProjectList";
@@ -26,17 +29,21 @@ import {
 import { IBeneficiariesFilter } from "lib/types/beneficiaries";
 import { findLabelFromOptions, sortOptions } from "lib/utils";
 
-import BeneficiariesDialogue from "components/Dashboard/Beneficiaries/Dialogues/BeneficiariesDialogue";
 import BulkUpdateStatus from "components/Dashboard/Beneficiaries/Dialogues/BulkUpdateStatus";
-import DeleteDialogue from "components/Dashboard/Beneficiaries/Dialogues/DeleteDialogue";
 import ImportDialogue from "components/Dashboard/Beneficiaries/Dialogues/ImportDialogue";
+import { showSetupBeneficiaryModal } from "components/Dashboard/Beneficiaries/Dialogues/SetupBeneficiary";
 import BeneficiariesTable from "components/tables/Beneficiaries";
+import { BreadCrumb } from "components/ui/breadcrumb/Breadcrumb";
 import Button from "components/ui/button";
 import Dialogue from "components/ui/dialogue/dialogue";
 import Dropdown from "components/ui/dropdown";
 import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
 import { Tooltip } from "components/ui/tooltip/Tooltip";
+
+import ViewMilestone from "pages/Milestones/ViewMilestone";
+
+import ViewBeneficiary from "./ViewBeneficiary";
 
 type ModalLabelTypes =
   | "beneficiaries"
@@ -46,7 +53,17 @@ type ModalLabelTypes =
   | "filter"
   | "";
 
-const BeneficiariesPage = () => {
+type TBeneStore = {
+  beneficiaryName: string;
+  setBeneficiaryName: (name: string) => void;
+};
+
+export const useBeneficiaryStore = create<TBeneStore>()((set) => ({
+  beneficiaryName: "",
+  setBeneficiaryName: (name) => set(() => ({ beneficiaryName: name })),
+}));
+
+const BeneficiariesComp = () => {
   const [search, setSearch] = useState("");
 
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -76,8 +93,6 @@ const BeneficiariesPage = () => {
   const { page, setPage } = usePage();
 
   const [modal, setModal] = useState<ModalLabelTypes>("");
-
-  const [editMode, setEditMode] = useState(false);
 
   const [beneficiaryId, setBeneficiaryId] = useState<number | null>(null);
 
@@ -131,25 +146,6 @@ const BeneficiariesPage = () => {
 
   const renderModal = useCallback(() => {
     switch (modal) {
-      case "beneficiaries":
-        return (
-          <BeneficiariesDialogue
-            id={beneficiaryId as number}
-            editMode={editMode}
-            isVisible={modal === "beneficiaries"}
-            handleClose={close}
-          />
-        );
-
-      case "delete":
-        return (
-          <DeleteDialogue
-            id={beneficiaryId as number}
-            isVisible={modal === "delete"}
-            handleClose={close}
-          />
-        );
-
       case "update status":
         return (
           <BulkUpdateStatus
@@ -190,7 +186,7 @@ const BeneficiariesPage = () => {
         );
     }
     //eslint-disable-next-line
-  }, [modal, beneficiaryId, selectedIds, editMode, filters]);
+  }, [modal, beneficiaryId, selectedIds, filters]);
 
   return (
     <>
@@ -287,12 +283,9 @@ const BeneficiariesPage = () => {
                 {IsAuthorized([Beneficiaries.CREATE]) && (
                   <Button
                     eventName="Add Beneficiary"
-                    onClick={() => {
-                      setModal("beneficiaries");
-
-                      setEditMode(true);
-                    }}
+                    onClick={() => showSetupBeneficiaryModal()}
                   >
+                    <HiPlus className="h-auto w-6 fill-black" />
                     Add beneficiary
                   </Button>
                 )}
@@ -355,8 +348,6 @@ const BeneficiariesPage = () => {
     </>
   );
 };
-
-export default BeneficiariesPage;
 
 interface IFilterProps {
   filters: IBeneficiariesFilter;
@@ -472,3 +463,44 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
     </div>
   );
 };
+
+export default function BeneficiariesPage() {
+  const location = useLocation();
+  const pathnames = location.pathname.split("/").filter((x) => x);
+  const beneficiaryId = pathnames?.[1] || "";
+  const milestoneId = pathnames?.[3] || "";
+  const { beneficiaryName } = useBeneficiaryStore();
+
+  return (
+    <Routes>
+      <Route index element={<BeneficiariesComp />} />
+      <Route
+        path=":beneficiaryId"
+        element={
+          <>
+            <BreadCrumb href="/beneficiaries">Beneficiaries</BreadCrumb>
+            <BreadCrumb>{beneficiaryName}</BreadCrumb>
+            <ViewBeneficiary />
+          </>
+        }
+      />
+      <Route
+        path=":beneficiaryId/milestone/:milestoneId"
+        element={
+          <>
+            <BreadCrumb href="/beneficiaries">Beneficiaries</BreadCrumb>
+            <BreadCrumb href={`/beneficiaries/${beneficiaryId}`}>
+              {beneficiaryName}
+            </BreadCrumb>
+            <BreadCrumb
+              href={`/beneficiaries/${beneficiaryId}/milestone/${milestoneId}`}
+            >
+              Milestone ID: {milestoneId}
+            </BreadCrumb>
+            <ViewMilestone />
+          </>
+        }
+      />
+    </Routes>
+  );
+}

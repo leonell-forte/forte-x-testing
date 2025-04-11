@@ -3,7 +3,7 @@ import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import { IMilestone, IMilestoneFilters } from "../lib/types/milestones";
 import { IODataObject, generateODataQuery } from "../lib/utils";
 
-interface IMilestoneListProps {
+export interface IMilestoneListProps {
   page?: number;
 
   filters?: IMilestoneFilters | null;

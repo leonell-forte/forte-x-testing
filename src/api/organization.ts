@@ -110,7 +110,7 @@ class OrganizationService {
     return response;
   }
 
-  async getOne(id: string) {
+  async getOne(id: string | number): Promise<IOrganization> {
     const response = await api.get(`/organizations/${id}`);
 
     return response.data.data;

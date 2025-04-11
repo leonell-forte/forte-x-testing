@@ -5,6 +5,7 @@ import { twMerge } from "tailwind-merge";
 import { IOption } from "components/ui/dropdown";
 import { StatusVariant } from "components/ui/status";
 
+import { IBeneficiaries } from "./types/beneficiaries";
 import { InvoiceStatus } from "./types/invoices";
 import { EvidenceStatus, MilestoneStatus } from "./types/milestones";
 
@@ -105,11 +106,11 @@ export const generateODataQuery = (obj: IODataObject): string => {
 export const formatDate = (date: string | Date, dateFormat?: string) => {
   const parsedDate = new Date(date);
 
-  if (isNaN(parsedDate.getTime())) {
+  if (!date || isNaN(parsedDate.getTime())) {
     // Return an empty string if the date is invalid
     return "-";
   }
-  return format(parsedDate, dateFormat || "dd-LL-yyyy");
+  return format(parsedDate, dateFormat || "dd MMMM yyy");
 };
 
 export const findLabelFromOptions = (
@@ -211,7 +212,11 @@ export const formatNumber = (v: number | string, decimal = 2) => {
 };
 
 export const getStatusVariant = (
-  status: InvoiceStatus | MilestoneStatus | EvidenceStatus
+  status:
+    | InvoiceStatus
+    | MilestoneStatus
+    | EvidenceStatus
+    | IBeneficiaries["status"]
 ): StatusVariant => {
   switch (status?.toLowerCase()) {
     case "paid":

@@ -3,14 +3,9 @@ import {
   FormControlLabel,
   Checkbox as MuiCheckbox,
 } from "@mui/material";
-import { ReactNode, useCallback } from "react";
+import { ReactNode } from "react";
 import { MdCheckBox as Checked } from "react-icons/md";
 import { MdCheckBoxOutlineBlank as Unchecked } from "react-icons/md";
-
-import check from "assets/images/icons/checkbox-checked.svg";
-import checkedDisabled from "assets/images/icons/checkbox-disabled-checked.svg";
-import unCheckedDisabled from "assets/images/icons/checkbox-disabled-unchecked.svg";
-import unChecked from "assets/images/icons/checkbox-unchecked.svg";
 
 import { cn } from "lib/utils";
 
@@ -31,19 +26,6 @@ const Checkbox = ({
   white = false,
   ...props
 }: ICheckboxProps) => {
-  const renderIcons = useCallback(() => {
-    let checked, unchecked;
-
-    if (disabled) {
-      checked = checkedDisabled;
-      unchecked = unCheckedDisabled;
-    } else {
-      checked = check;
-      unchecked = unChecked;
-    }
-
-    return { checked, unchecked };
-  }, [disabled]);
   return (
     <div className="relative pl-[2px]">
       <FormControlLabel
@@ -57,29 +39,22 @@ const Checkbox = ({
               paddingRight: white ? "4px" : "8px",
               marginInline: "0px !important",
             }}
-            {...(white
-              ? {
-                  icon: <Unchecked className="translate-x-[-2px] text-xl" />,
-                  checkedIcon: (
-                    <Checked className="translate-x-[-2px] text-xl" />
-                  ),
-                }
-              : {
-                  icon: (
-                    <img
-                      src={renderIcons().unchecked}
-                      alt="unchecked"
-                      className="w-4"
-                    />
-                  ),
-                  checkedIcon: (
-                    <img
-                      src={renderIcons().checked}
-                      alt="checked"
-                      className="w-4"
-                    />
-                  ),
-                })}
+            icon={
+              <Unchecked
+                className={cn(
+                  "h-auto w-5 translate-x-[-2px]",
+                  disabled ? "fill-gray-500" : ""
+                )}
+              />
+            }
+            checkedIcon={
+              <Checked
+                className={cn(
+                  "h-auto w-5 translate-x-[-2px]",
+                  disabled ? "fill-gray-500" : "fill-mint"
+                )}
+              />
+            }
             {...props}
             className="checkbox flex-shrink-0"
           />

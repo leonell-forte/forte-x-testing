@@ -30,6 +30,7 @@ import { showViewEvidenceModal } from "./ViewEvidence";
 type TParams = {
   milestone: IMilestone;
   evidenceDetails?: TMilestoneEvidence;
+  beneficiaryIdParam?: string;
 };
 
 const config = {
@@ -52,6 +53,7 @@ export function showSetupEvidenceModal(params: TParams) {
       <SetupEvidenceModal
         milestone={params.milestone}
         evidenceDetails={params.evidenceDetails}
+        beneficiaryIdParam={params.beneficiaryIdParam}
       />
     ),
     size: "2xl",
@@ -59,9 +61,17 @@ export function showSetupEvidenceModal(params: TParams) {
   });
 }
 
-function SetupEvidenceModal({ milestone, evidenceDetails }: TParams) {
+function SetupEvidenceModal({
+  milestone,
+  evidenceDetails,
+  beneficiaryIdParam,
+}: TParams) {
   const { close } = useModal();
   const { open } = useCustomPrompt();
+
+  console.log(beneficiaryIdParam, "param");
+
+  const fromBeneficiaries = Boolean(beneficiaryIdParam);
 
   const isThreshold = milestone.type === "threshold";
 
@@ -172,8 +182,13 @@ function SetupEvidenceModal({ milestone, evidenceDetails }: TParams) {
     // prefills defaultvalue of evidence form
     if (evidenceData) {
       reset(evidence.defaultValues(evidenceData));
+      return;
     }
-  }, [reset, evidenceData]);
+    if (fromBeneficiaries && beneficiaryIdParam) {
+      setValue("beneficiaryId", beneficiaryIdParam);
+      return;
+    }
+  }, [reset, evidenceData, fromBeneficiaries, beneficiaryIdParam]);
 
   return (
     <div>
@@ -195,7 +210,7 @@ function SetupEvidenceModal({ milestone, evidenceDetails }: TParams) {
                     return (
                       <Dropdown
                         enableSearch
-                        disabled={Boolean(evidenceDetails)}
+                        disabled={Boolean(evidenceDetails) || fromBeneficiaries}
                         loading={beneLoading}
                         value={
                           beneficiaries.find(

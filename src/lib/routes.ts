@@ -126,7 +126,7 @@ export const ROUTES: RouteConfig[] = [
   },
 
   {
-    link: "beneficiaries",
+    link: "beneficiaries/*",
 
     Component: BeneficiariesPage,
 
