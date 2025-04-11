@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import evidenceService from "api/evidence";
 import milestoneService from "api/milestones";
 import { useMemo } from "react";
+import { HiPencil } from "react-icons/hi";
 import { HiPlus } from "react-icons/hi2";
 import { HiEllipsisHorizontal as Ellipsis } from "react-icons/hi2";
 import { RiShareBoxLine as Share } from "react-icons/ri";
@@ -11,6 +12,7 @@ import { useDeleteEvidence } from "lib/mutations/evidences";
 import { MILESTONE_TYPES } from "lib/types/milestones";
 import { formatDate, formatNumber, getStatusVariant } from "lib/utils";
 
+import { showOverrideCostModal } from "components/Dashboard/Milestones/modals/OverrideCost";
 import { showSetupEvidenceModal } from "components/Dashboard/Milestones/modals/SetupEvidence";
 import { showViewEvidenceModal } from "components/Dashboard/Milestones/modals/ViewEvidence";
 import { useCustomPrompt } from "components/ui/alert/custom-prompt";
@@ -82,19 +84,35 @@ export default function ViewMilestone() {
               {milestone.status}
             </Status>
           </div>
-          {milestone.status === "open" && (
-            <Button
-              onClick={() =>
-                showSetupEvidenceModal({
-                  milestone,
-                  beneficiaryIdParam: beneficiaryId,
-                })
-              }
-            >
-              <HiPlus className="h-auto w-6 fill-black" />
-              Add Evidence
-            </Button>
-          )}
+          <div className="flex items-center gap-2">
+            {milestone.status !== "paid" && milestone.type === "outcome" && (
+              <Button
+                className="group"
+                buttonType="secondary"
+                onClick={() =>
+                  showOverrideCostModal({
+                    milestone,
+                  })
+                }
+              >
+                <HiPencil className="h-auto w-6 transition duration-300 group-hover:fill-mint" />
+                Override cost
+              </Button>
+            )}
+            {milestone.status === "open" && (
+              <Button
+                onClick={() =>
+                  showSetupEvidenceModal({
+                    milestone,
+                    beneficiaryIdParam: beneficiaryId,
+                  })
+                }
+              >
+                <HiPlus className="h-auto w-6 fill-black" />
+                Add Evidence
+              </Button>
+            )}
+          </div>
         </div>
 
         <div className="space-y-4">

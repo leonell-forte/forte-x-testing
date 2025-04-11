@@ -26,6 +26,11 @@ type TGenerate = {
   milestoneIds: string[];
 };
 
+export type TOverride = {
+  id: string;
+  cost: number;
+};
+
 class MilestoneService {
   async list({
     page = 1,
@@ -125,6 +130,12 @@ class MilestoneService {
       ...payload,
       funderId: Number(payload.funderId),
     });
+
+    return response.data.data;
+  }
+
+  async overrideCost(payload: TOverride): Promise<any> {
+    const response = await api.put("/milestones/update-cost", payload);
 
     return response.data.data;
   }

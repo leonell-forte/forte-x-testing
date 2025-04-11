@@ -1,6 +1,7 @@
 import * as amplitude from "@amplitude/analytics-browser";
 import { useMutation } from "@tanstack/react-query";
 import evidenceService from "api/evidence";
+import milestoneService, { TOverride } from "api/milestones";
 
 import { TMilestoneEvidence } from "lib/types/milestones";
 import { formatErrorMessage } from "lib/utils";
@@ -105,4 +106,36 @@ export const useDeleteEvidence = () => {
   });
 
   return { deleteEvidence, isPending };
+};
+
+export const useOverrideCost = () => {
+  const { close } = useModal();
+
+  const { mutateAsync: overrideCost, isPending } = useMutation({
+    mutationFn: (values: TOverride) => milestoneService.overrideCost(values),
+    onSuccess: () => {
+      toast({
+        title: "Milestone cost successfully updated.",
+      });
+      close();
+    },
+    onError: (err: any) => {
+      toast({
+        variant: "danger",
+        title: "Failed updating cost of milestone",
+
+        description:
+          formatErrorMessage(err?.response?.data?.data?.[0]) ||
+          "There has been an error with updating the cost of the milestone.",
+      });
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["milestone-details"],
+      });
+    },
+  });
+
+  return { overrideCost, isPending };
 };

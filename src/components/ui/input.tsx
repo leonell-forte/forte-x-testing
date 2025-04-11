@@ -1,13 +1,15 @@
 "use client";
 
-import { TextField, TextFieldProps } from "@mui/material";
+import { InputAdornment, TextField, TextFieldProps } from "@mui/material";
 import classNames from "classnames";
 import { ChangeEvent, forwardRef, useState } from "react";
+import { FaDollarSign as USD } from "react-icons/fa6";
 
 import eyeClosed from "assets/images/icons/eye-closed.svg";
 import eyeOpen from "assets/images/icons/eye-open.svg";
 
 import { PHONE_NUMBER } from "lib/regex";
+import { cn } from "lib/utils";
 
 type PropTypes = TextFieldProps & {
   dark?: boolean;
@@ -21,11 +23,21 @@ type PropTypes = TextFieldProps & {
   phoneNUmber?: boolean;
 
   readOnly?: boolean;
+
+  isCurrency?: boolean;
 };
 
 const Input = forwardRef<HTMLDivElement, PropTypes>(
   (
-    { dark, wholeNumberOnly, phoneNUmber, name, readOnly = false, ...props },
+    {
+      dark,
+      wholeNumberOnly,
+      phoneNUmber,
+      name,
+      readOnly = false,
+      isCurrency = false,
+      ...props
+    },
     ref
   ) => {
     const [show, setShow] = useState(false);
@@ -52,6 +64,17 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
               accept: props.accept,
               readOnly,
             },
+            ...(isCurrency && {
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start" className="ml-3">
+                    <USD
+                      className={cn(props.disabled ? "fill-[#787878]" : "", "")}
+                    />
+                  </InputAdornment>
+                ),
+              },
+            }),
           }}
           {...props}
           onChange={handleChange}
