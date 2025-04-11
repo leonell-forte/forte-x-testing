@@ -188,7 +188,7 @@ function SetupEvidenceModal({
       setValue("beneficiaryId", beneficiaryIdParam);
       return;
     }
-  }, [reset, evidenceData, fromBeneficiaries, beneficiaryIdParam]);
+  }, [reset, evidenceData, fromBeneficiaries, beneficiaryIdParam, setValue]);
 
   return (
     <div>

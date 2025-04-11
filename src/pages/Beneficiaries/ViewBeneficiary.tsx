@@ -68,7 +68,7 @@ export default function ViewBeneficiary() {
   React.useEffect(() => {
     if (!beneficiaryName) return;
     setBeneficiaryName(beneficiaryName);
-  }, [beneficiaryName]);
+  }, [beneficiaryName, setBeneficiaryName]);
 
   if (isLoading)
     return (
