@@ -124,6 +124,16 @@ export default function ViewMilestone() {
                 Override cost
               </Button>
             )}
+            {milestone.status === "paid" && (
+              <Button
+                loading={loading}
+                className="group"
+                buttonType="secondary"
+                onClick={handleGeneratePayouts}
+              >
+                Generate Payout
+              </Button>
+            )}
             {milestone.status === "open" && (
               <Button
                 onClick={() =>

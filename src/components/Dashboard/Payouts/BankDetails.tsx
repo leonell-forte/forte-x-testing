@@ -33,6 +33,8 @@ const BankDetails = ({ providerId, total }: BankDetailsProps) => {
       );
       window.location.href = res.data;
     } catch (err) {
+      console.log(err);
+
       setAlert({
         status: "error",
         message: "Failed to get onboarding link",

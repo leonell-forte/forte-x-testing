@@ -8,7 +8,6 @@ import { StatusVariant } from "components/ui/status";
 import { IBeneficiaries } from "./types/beneficiaries";
 import { InvoiceStatus } from "./types/invoices";
 import { EvidenceStatus, MilestoneStatus } from "./types/milestones";
-import { PayoutStatus } from "./types/payouts";
 
 export const filterBySearch = (
   list: Record<string, string>[],
