@@ -18,6 +18,7 @@ import Layout from "./Dashboard/Layout";
 import { SearchConsole } from "./Layout/Header/SearchConsole";
 import { ProfileProvider } from "./ProfileContext";
 import Providers from "./Providers";
+import ConfirmPromptV2 from "./ui/alert/confirm-prompt-v2";
 import CustomPrompt from "./ui/alert/custom-prompt";
 import ModalMarker from "./ui/dialogue/v2/Modal";
 import Spinner from "./ui/spinner/spinner";
@@ -53,6 +54,7 @@ const PrivateMapper = () => {
   return (
     <ProfileProvider>
       <CustomPrompt />
+      <ConfirmPromptV2 />
       <ModalMarker />
       <Admin />
     </ProfileProvider>

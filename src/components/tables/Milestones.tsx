@@ -11,22 +11,15 @@ import Cards from "components/ui/table-card";
 type TMilestonesTable = {
   list: IMilestone[];
   isLoading?: boolean;
+  href?: string;
 };
 
-// for stubs
-export function getRandomString(array: string[]): string | undefined {
-  if (!array || array.length === 0) {
-    return undefined;
-  }
-  const randomIndex = Math.floor(Math.random() * array.length);
-  return array[randomIndex];
-}
-
-export const MILESTONE_REFERENCE = ["Contract Name", "Beneficiary Name"];
-
-const MilestonesTable = ({ list, isLoading = false }: TMilestonesTable) => {
+const MilestonesTable = ({
+  list,
+  isLoading = false,
+  href = "",
+}: TMilestonesTable) => {
   const navigate = useNavigate();
-
   return (
     <>
       <div className="lg:hidden">
@@ -35,14 +28,14 @@ const MilestonesTable = ({ list, isLoading = false }: TMilestonesTable) => {
             const { id, funder, type, reference, outcome, cost, status } = item;
             return (
               <Cards.Card
-                onClick={() => navigate(id)}
+                onClick={() => navigate(`${href}${id}`)}
                 title={`Milestone ID: ${id}`}
                 key={index}
               >
                 <Cards.Group cols={2}>
                   <Cards.Details label="Funder" value={funder.name} />
                   <Cards.Details label="Type" value={MILESTONE_TYPES[type]} />
-                  <Cards.Details label="Reference" value={reference.name} />
+                  <Cards.Details label="Reference" value={reference?.name} />
                   <Cards.Details label="Outcome Name" value={outcome.name} />
 
                   <Cards.Details
@@ -86,14 +79,14 @@ const MilestonesTable = ({ list, isLoading = false }: TMilestonesTable) => {
                 item;
 
               return (
-                <Table.Row onClick={() => navigate(id)} key={index}>
+                <Table.Row onClick={() => navigate(`${href}${id}`)} key={index}>
                   <Table.Data>
                     <p className="underline">{id}</p>
                   </Table.Data>
 
                   <Table.Data>{funder.name}</Table.Data>
                   <Table.Data>{MILESTONE_TYPES[type]}</Table.Data>
-                  <Table.Data>{reference.name}</Table.Data>
+                  <Table.Data>{reference?.name}</Table.Data>
                   <Table.Data>{outcome.name}</Table.Data>
 
                   <Table.Data className="!pr-12 text-right">

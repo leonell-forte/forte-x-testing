@@ -2,10 +2,12 @@ import * as amplitude from "@amplitude/analytics-browser";
 import { useMutation } from "@tanstack/react-query";
 import beneficiariesService from "api/beneficiaries";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 import { formatErrorMessage } from "lib/utils";
 
 import { queryClient } from "components/QueryProvider";
+import { ToastAction, toast } from "components/ui/toast/Toast";
 
 import { useAlert, usePage } from "../hooks";
 import { IBeneficiaries } from "../types/beneficiaries";
@@ -21,7 +23,7 @@ export const useBeneficiaryMutation = ({
 
   successCallback,
 }: IBeneficiaryMutationProps) => {
-  const { setAlert } = useAlert();
+  const navigate = useNavigate();
 
   const { page } = usePage();
 
@@ -56,24 +58,23 @@ export const useBeneficiaryMutation = ({
     },
 
     onSuccess: (addedBeneficiary) => {
-      queryClient.setQueryData(beneficiaryQuery, () => {
-        return addedBeneficiary.data.data;
-      });
-
-      queryClient.setQueryData(
-        ["specific-beneficiary", beneficiaryId],
-
-        () => addedBeneficiary.data.data
-      );
-
       successCallback?.(addedBeneficiary.data.data?.id);
+      console.log(addedBeneficiary);
 
-      setAlert({
-        title: "Success!",
-
-        message: `Beneficiary ${beneficiaryId ? "updated" : "added"} successfully`,
-
-        status: "success",
+      toast({
+        title: `Beneficiary ${beneficiaryId ? "updated" : "added"} successfully`,
+        ...(!beneficiaryId && {
+          action: (
+            <ToastAction
+              altText="view"
+              onClick={() =>
+                navigate(`/beneficiaries/${addedBeneficiary.data.data?.id}`)
+              }
+            >
+              <p>View</p>
+            </ToastAction>
+          ),
+        }),
       });
 
       amplitude.track(
@@ -81,26 +82,21 @@ export const useBeneficiaryMutation = ({
       );
     },
 
-    onError: (err: any, newBeneficiary, context) => {
-      setAlert({
+    onError: (err: any) => {
+      toast({
         title: `Failed ${beneficiaryId ? "updating" : "adding"} beneficiary`,
-
-        message:
+        description:
           formatErrorMessage(err?.response?.data?.data?.[0]) ||
           err?.response?.data?.message,
-
-        status: "error",
+        variant: "danger",
       });
-
-      queryClient.setQueryData(
-        beneficiaryQuery,
-
-        context?.previousBeneficiaries
-      );
     },
 
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: beneficiaryQuery });
+      queryClient.invalidateQueries({
+        queryKey: ["beneficiary-details"],
+      });
     },
   });
 
@@ -194,96 +190,35 @@ export const useImportBeneficiaryMutation = ({
   return { importBeneficiaries, isPending };
 };
 
-export const useDeleteBeneficiaryMutation = (
-  id: number,
-
-  successCallback?: () => void
-) => {
-  const { setAlert } = useAlert();
-
-  const { page, setPage } = usePage();
-
-  const beneficiaryQuery = [
-    "beneficiaries",
-    "",
-    +page,
-    {
-      project: "",
-
-      status: "",
-
-      provider: "",
-
-      riskLevel: "",
-
-      // startDate: "",
-    },
-  ];
-
+export const useDeleteBeneficiaryMutation = (successCallback?: () => void) => {
   const { mutateAsync: deleteBeneficiary, isPending } = useMutation({
     mutationFn: beneficiariesService.delete,
 
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: beneficiaryQuery });
-
-      const previousBeneficiaries = queryClient.getQueryData<IBeneficiaries[]>([
-        "beneficiaries",
-      ]);
-
-      return { previousBeneficiaries };
+      await queryClient.cancelQueries({ queryKey: ["beneficiaries"] });
     },
 
-    onSuccess: () => {
-      queryClient.setQueryData(
-        beneficiaryQuery,
-
-        (old: { items: IBeneficiaries[] }) => {
-          // sets page to previous page if current list is empty
-          if (old.items.length === 1 && +page !== 1) {
-            setPage(page - 1);
-          }
-
-          return {
-            ...old,
-
-            itemss: old?.items?.filter((item) => item.id !== id),
-          };
-        }
-      );
-
+    onSuccess: (res) => {
+      console.log(res);
       successCallback?.();
 
-      setAlert({
-        title: "Beneficiary deleted",
+      toast({ title: "Beneficiary deleted successfully" });
 
-        message: "Beneficiary deleted successfully",
-
-        status: "success",
-      });
-
-      amplitude.track(`Delete Beneficiary Performed`, {
-        id: id,
-      });
+      // amplitude.track(`Delete Beneficiary Performed`, {
+      //   id: id,
+      // });
     },
 
-    onError: (err: any, _, context) => {
-      setAlert({
+    onError: (err: any) => {
+      toast({
         title: "Failed deleting beneficiary",
-
-        message: err?.response?.data?.message,
-
-        status: "error",
+        description: err?.response?.data?.message,
+        variant: "danger",
       });
-
-      queryClient.setQueryData(
-        beneficiaryQuery,
-
-        context?.previousBeneficiaries
-      );
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: beneficiaryQuery });
+      queryClient.invalidateQueries({ queryKey: ["beneficiaries"] });
     },
   });
 

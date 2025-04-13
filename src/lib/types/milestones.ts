@@ -50,6 +50,7 @@ export interface IMilestone {
   type: keyof typeof MILESTONE_TYPES;
   updatedAt: string;
   evidences: TMilestoneEvidence[];
+  invoiceId: string;
 }
 
 export interface IMilestoneFilters {

@@ -3,7 +3,7 @@ import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import { IMilestone, IMilestoneFilters } from "../lib/types/milestones";
 import { IODataObject, generateODataQuery } from "../lib/utils";
 
-interface IMilestoneListProps {
+export interface IMilestoneListProps {
   page?: number;
 
   filters?: IMilestoneFilters | null;
@@ -24,6 +24,11 @@ type TAchieved = {
 type TGenerate = {
   funderId: string;
   milestoneIds: string[];
+};
+
+export type TOverride = {
+  id: string;
+  cost: number;
 };
 
 class MilestoneService {
@@ -125,6 +130,12 @@ class MilestoneService {
       ...payload,
       funderId: Number(payload.funderId),
     });
+
+    return response.data.data;
+  }
+
+  async overrideCost(payload: TOverride): Promise<any> {
+    const response = await api.put("/milestones/update-cost", payload);
 
     return response.data.data;
   }

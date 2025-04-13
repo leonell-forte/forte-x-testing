@@ -41,6 +41,12 @@ const MilestonePage = React.lazy(
   () => import("../pages/Milestones/MilestonesPage")
 );
 
+const PayoutsPage = React.lazy(() => import("../pages/Payouts/PayoutsPage"));
+
+const IndividualPayoutsPage = React.lazy(
+  () => import("../pages/Payouts/[id]/IndividualPayoutsPage")
+);
+
 const LoginPage = React.lazy(() => import("../pages/Login/LoginPage"));
 
 const SignupPage = React.lazy(() => import("../pages/Signup/SignupPage"));
@@ -126,11 +132,27 @@ export const ROUTES: RouteConfig[] = [
   },
 
   {
-    link: "beneficiaries",
+    link: "beneficiaries/*",
 
     Component: BeneficiariesPage,
 
     permissions: [Beneficiaries.NAVIGATE],
+  },
+
+  {
+    link: "payouts",
+
+    Component: PayoutsPage,
+
+    permissions: [],
+  },
+
+  {
+    link: "payouts/:id",
+
+    Component: IndividualPayoutsPage,
+
+    permissions: [],
   },
 
   {

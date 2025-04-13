@@ -1,18 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 import evidenceService from "api/evidence";
 import milestoneService from "api/milestones";
-import { useMemo } from "react";
-import { HiOutlineDownload as DL } from "react-icons/hi";
+import payoutsService from "api/payouts";
+import { useMemo, useState } from "react";
+import { HiPencil } from "react-icons/hi";
 import { HiPlus } from "react-icons/hi2";
 import { HiEllipsisHorizontal as Ellipsis } from "react-icons/hi2";
 import { RiShareBoxLine as Share } from "react-icons/ri";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { usePageTitle } from "lib/hooks";
+import { useAlert } from "lib/hooks";
 import { useDeleteEvidence } from "lib/mutations/evidences";
 import { MILESTONE_TYPES } from "lib/types/milestones";
 import { formatDate, formatNumber, getStatusVariant } from "lib/utils";
 
+import { showOverrideCostModal } from "components/Dashboard/Milestones/modals/OverrideCost";
 import { showSetupEvidenceModal } from "components/Dashboard/Milestones/modals/SetupEvidence";
 import { showViewEvidenceModal } from "components/Dashboard/Milestones/modals/ViewEvidence";
 import { useCustomPrompt } from "components/ui/alert/custom-prompt";
@@ -25,17 +27,20 @@ import {
 } from "components/ui/dropdown-menu/DropdownMenu";
 import InfoVertical from "components/ui/info-vertical/InfoVertical";
 import ReferenceLink from "components/ui/reference-link/ReferenceLink";
+import Spinner from "components/ui/spinner/spinner";
 import Status from "components/ui/status";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
 
 export default function ViewMilestone() {
   const navigate = useNavigate();
+  const { setAlert } = useAlert();
   const params = useParams();
   const { open } = useCustomPrompt();
+  const [loading, setLoading] = useState(false);
 
   const id = params.milestoneId;
-  usePageTitle(`Milestone ID: ${id?.split("-")[0]}`);
+  const beneficiaryId = params.beneficiaryId;
 
   const { data: milestone, isLoading } = useQuery({
     queryKey: ["milestone-details", id],
@@ -64,7 +69,35 @@ export default function ViewMilestone() {
     return ["File name", "Description", "Evidence Status"];
   }, [isThreshold]);
 
+  if (isLoading)
+    return (
+      <div className="flex h-full w-full items-center justify-center">
+        <Spinner />
+      </div>
+    );
+
   if (!milestone) return null;
+
+  const handleGeneratePayouts = async () => {
+    setLoading(true);
+    try {
+      await payoutsService.generate(milestone.provider.id as string);
+      setAlert({
+        message: "Payouts generated successfully",
+        status: "success",
+        title: "Success",
+      });
+    } catch (err) {
+      console.log(err);
+      setAlert({
+        message: "Failed to generate payouts",
+        status: "error",
+        title: "Error",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -76,12 +109,35 @@ export default function ViewMilestone() {
               {milestone.status}
             </Status>
           </div>
-          {milestone.status === "open" && (
-            <Button onClick={() => showSetupEvidenceModal({ milestone })}>
-              <HiPlus className="h-auto w-6 fill-black" />
-              Add Evidence
-            </Button>
-          )}
+          <div className="flex items-center gap-2">
+            {milestone.status !== "paid" && milestone.type === "outcome" && (
+              <Button
+                className="group"
+                buttonType="secondary"
+                onClick={() =>
+                  showOverrideCostModal({
+                    milestone,
+                  })
+                }
+              >
+                <HiPencil className="h-auto w-6 transition duration-300 group-hover:fill-mint" />
+                Override cost
+              </Button>
+            )}
+            {milestone.status === "open" && (
+              <Button
+                onClick={() =>
+                  showSetupEvidenceModal({
+                    milestone,
+                    beneficiaryIdParam: beneficiaryId,
+                  })
+                }
+              >
+                <HiPlus className="h-auto w-6 fill-black" />
+                Add Evidence
+              </Button>
+            )}
+          </div>
         </div>
 
         <div className="space-y-4">
@@ -109,7 +165,11 @@ export default function ViewMilestone() {
               <button
                 type="button"
                 onClick={() =>
-                  navigate(isThreshold ? "/contracts" : "/beneficiaries")
+                  navigate(
+                    isThreshold
+                      ? "/contracts"
+                      : `/beneficiaries/${milestone.reference.id}`
+                  )
                 }
                 className="group flex items-center gap-x-2 transition hover:text-mint"
               >
@@ -133,7 +193,7 @@ export default function ViewMilestone() {
           <div className="md:hidden">
             <Cards.Container>
               {milestone.evidences.map((item, index) => {
-                const { file, status } = item;
+                const { file, status, beneficiary } = item;
 
                 return (
                   <Cards.Card
@@ -149,10 +209,18 @@ export default function ViewMilestone() {
                           label="File name"
                           value={file.filename}
                         />
-                        <Cards.Details
-                          label="Description"
-                          value="Lorem Ipsum"
-                        />
+                        {isThreshold ? (
+                          <Cards.Details
+                            label="Beneficiary"
+                            value={
+                              <ReferenceLink
+                                hrefLink={`/beneficiaries/${beneficiary.id}`}
+                              >
+                                {beneficiary.firstName} {beneficiary.lastName}
+                              </ReferenceLink>
+                            }
+                          />
+                        ) : null}
                         <Cards.Details
                           label="Status"
                           value={
@@ -164,17 +232,38 @@ export default function ViewMilestone() {
                         />
                       </Cards.Group>
                       <div className="absolute bottom-4 right-6 z-50">
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            alert("download file");
-                          }}
-                          className="group"
-                        >
-                          <DL className="h-auto w-6 transition-all group-hover:stroke-mint" />
-                        </button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <button className="group mt-1 flex w-full items-center justify-end">
+                              <Ellipsis className="m-auto h-auto w-8 group-hover:fill-mint" />
+                            </button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent
+                            align="end"
+                            side="bottom"
+                            sideOffset={1}
+                          >
+                            <DropdownMenuItem
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                evidenceService.getFile(
+                                  item.file.fileUrl,
+                                  item.file.filename
+                                );
+                              }}
+                            >
+                              Download
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDelete(item.beneficiary.id, item.id);
+                              }}
+                            >
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                     </div>
                   </Cards.Card>
@@ -215,7 +304,9 @@ export default function ViewMilestone() {
 
                       {isThreshold ? (
                         <Table.Data>
-                          <ReferenceLink hrefLink="/beneficiaries">
+                          <ReferenceLink
+                            hrefLink={`/beneficiaries/${beneficiary.id}`}
+                          >
                             {beneficiary.firstName} {beneficiary.lastName}
                           </ReferenceLink>
                         </Table.Data>

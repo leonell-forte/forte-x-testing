@@ -38,9 +38,9 @@ export interface IBeneficiaries {
 
   status: string;
 
-  projectId?: number;
+  projectId: number;
 
-  providerId?: number;
+  providerId: number;
 
   linkedinUrl?: string;
 

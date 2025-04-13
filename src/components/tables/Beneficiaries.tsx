@@ -1,27 +1,20 @@
 import React from "react";
 import { ChangeEvent, useCallback, useState } from "react";
 import { FaTrash as Trash } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-import { DEFAULT_DATE_FORMAT } from "lib/constants";
+import { useDeleteBeneficiaryMutation } from "lib/mutations/beneficiaries";
 import { Beneficiaries, IsAuthorized } from "lib/role-permissions";
 import { IBeneficiaries } from "lib/types/beneficiaries";
-import { cn, formatDate } from "lib/utils";
+import { cn, getStatusVariant } from "lib/utils";
 
-import BeneficiariesDialogue from "components/Dashboard/Beneficiaries/Dialogues/BeneficiariesDialogue";
-import DeleteDialogue from "components/Dashboard/Beneficiaries/Dialogues/DeleteDialogue";
+import { useCustomPrompt } from "components/ui/alert/custom-prompt";
 import Button from "components/ui/button";
 import Checkbox from "components/ui/checkbox";
 import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
+import Status from "components/ui/status";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
-
-type ModalLabelTypes =
-  | "beneficiaries"
-  | "delete"
-  | "import"
-  | "update status"
-  | "";
 
 type TBeneficiariesTable = {
   list: IBeneficiaries[];
@@ -34,28 +27,9 @@ const BeneficiariesTable = ({
   isLoading = false,
   setChecked,
 }: TBeneficiariesTable) => {
-  const [modal, setModal] = useState<ModalLabelTypes>("");
-  const [editMode, setEditMode] = useState(false);
-
-  const [beneficiaryId, setBeneficiaryId] = useState<number | null>(null);
+  const navigate = useNavigate();
 
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
-
-  const close = useCallback(() => {
-    setModal("");
-
-    setBeneficiaryId(null);
-
-    setSelectedIds([]);
-
-    if (setChecked) setChecked([]);
-  }, [setChecked]);
-
-  const handleDelete = (id: number) => {
-    setModal("delete");
-
-    setBeneficiaryId(id);
-  };
 
   const handleSelectAll = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -69,32 +43,22 @@ const BeneficiariesTable = ({
     [list, setChecked]
   );
 
-  const renderDialog = useCallback(() => {
-    switch (modal) {
-      case "beneficiaries":
-        return (
-          <BeneficiariesDialogue
-            id={beneficiaryId as number}
-            editMode={editMode}
-            isVisible={modal === "beneficiaries"}
-            handleClose={close}
-          />
-        );
+  const { open } = useCustomPrompt();
 
-      case "delete":
-        return (
-          <DeleteDialogue
-            id={beneficiaryId as number}
-            isVisible={modal === "delete"}
-            handleClose={close}
-          />
-        );
-    }
-  }, [beneficiaryId, editMode, modal, close]);
+  const { deleteBeneficiary } = useDeleteBeneficiaryMutation();
+
+  const handleDelete = (beneId: number) => {
+    open({
+      title: "Delete Beneficiary",
+      subText:
+        "Are you sure that you want to delete this beneficiary? When you delete a beneficiary, all evidence documents and other information are deleted too.",
+      onYes: () => deleteBeneficiary(beneId),
+      yesLabel: "Proceed",
+    });
+  };
 
   return (
     <>
-      {renderDialog()}
       <div className="lg:hidden">
         <Cards.Container isLoading={isLoading}>
           {list.map((item, index) => {
@@ -103,33 +67,22 @@ const BeneficiariesTable = ({
 
               lastName,
 
+              contract,
+
               provider,
 
               email,
 
               id,
 
-              cohortEndDate,
-
-              cohortStartDate,
-
               status,
-
-              evidences,
-
-              phoneNumber,
             } = item;
 
             return (
               <Cards.Card
                 onClick={(e) => {
                   e.stopPropagation();
-
-                  setBeneficiaryId(id);
-
-                  setModal("beneficiaries");
-
-                  setEditMode(false);
+                  navigate(`/beneficiaries/${id}`);
                 }}
                 key={index}
                 title={`${firstName} ${lastName}`}
@@ -157,40 +110,18 @@ const BeneficiariesTable = ({
 
                 <Cards.Group cols={2} className="w-[85%]">
                   <Cards.Details label="Email" value={email} />
-                  <Cards.Details label="Phone number" value={phoneNumber} />
+                  <Cards.Details label="Contract" value={contract} />
                   <Cards.Details label="Provider" value={provider} />
-                  <Cards.Details label="Status" value={status} capitalize />
+
                   <Cards.Details
-                    label="Start date"
-                    value={formatDate(
-                      cohortStartDate || "",
-                      DEFAULT_DATE_FORMAT
-                    )}
-                  />
-                  <Cards.Details
-                    label="End date"
-                    value={formatDate(cohortEndDate || "", DEFAULT_DATE_FORMAT)}
+                    label="Status"
+                    value={
+                      <Status variant={getStatusVariant(status)}>
+                        {status}
+                      </Status>
+                    }
                   />
                 </Cards.Group>
-
-                <div className="mt-4 flex w-[85%] flex-col">
-                  <p className="text-[12px]">Evidences</p>
-                  {!evidences?.length
-                    ? "No uploaded evidence yet"
-                    : evidences?.map((item, index) => {
-                        return (
-                          <Link
-                            key={index}
-                            className="truncate underline-offset-4 hover:underline"
-                            target="_blank"
-                            to={item.file.fileUrl}
-                            download
-                          >
-                            {item.file.filename}
-                          </Link>
-                        );
-                      })}
-                </div>
 
                 <div className="absolute bottom-3 right-0">
                   {IsAuthorized([Beneficiaries.DELETE]) && (
@@ -224,30 +155,22 @@ const BeneficiariesTable = ({
                     checked={
                       list?.length !== 0 && selectedIds.length === list.length
                     }
-                    label="First name"
+                    label="Name"
                     labelClass="!text-white text-base font-semibold"
                     onChange={handleSelectAll}
                   />
                 </Table.Header>
               ) : (
-                <Table.Header>First Name</Table.Header>
+                <Table.Header>Name</Table.Header>
               )}
-
-              <Table.Header>Last name</Table.Header>
 
               <Table.Header>Email</Table.Header>
 
-              <Table.Header>Phone number</Table.Header>
+              <Table.Header>Contract</Table.Header>
 
               <Table.Header>Provider</Table.Header>
 
               <Table.Header>Status</Table.Header>
-
-              <Table.Header>Start date</Table.Header>
-
-              <Table.Header>End date</Table.Header>
-
-              <Table.Header>Evidence</Table.Header>
 
               <Table.Header></Table.Header>
             </Table.Row>
@@ -266,15 +189,9 @@ const BeneficiariesTable = ({
 
                 id,
 
-                cohortEndDate,
-
-                cohortStartDate,
+                contract,
 
                 status,
-
-                evidences,
-
-                phoneNumber,
               } = item;
 
               return (
@@ -282,12 +199,7 @@ const BeneficiariesTable = ({
                   key={index}
                   onClick={(e) => {
                     e.stopPropagation();
-
-                    setBeneficiaryId(id);
-
-                    setModal("beneficiaries");
-
-                    setEditMode(false);
+                    navigate(`/beneficiaries/${id}`);
                   }}
                 >
                   <Table.Data className="!px-4">
@@ -322,33 +234,19 @@ const BeneficiariesTable = ({
                           setChecked ? "translate-x-[-8px]" : ""
                         )}
                       >
-                        {firstName}
+                        {firstName} {lastName}
                       </p>
                     </div>
                   </Table.Data>
 
-                  <Table.Data>{lastName}</Table.Data>
-
                   <Table.Data>{email}</Table.Data>
 
-                  <Table.Data>{phoneNumber}</Table.Data>
+                  <Table.Data>{contract}</Table.Data>
 
                   <Table.Data>{provider}</Table.Data>
 
                   <Table.Data className="capitalize">
-                    {status.toLowerCase()}
-                  </Table.Data>
-
-                  <Table.Data>
-                    {formatDate(cohortStartDate || "", DEFAULT_DATE_FORMAT)}
-                  </Table.Data>
-
-                  <Table.Data>
-                    {formatDate(cohortEndDate || "", DEFAULT_DATE_FORMAT)}
-                  </Table.Data>
-
-                  <Table.Data>
-                    {evidences?.map((item) => item.file.filename).join(", ")}
+                    <Status variant={getStatusVariant(status)}>{status}</Status>
                   </Table.Data>
 
                   <Table.Data className="ml-auto">

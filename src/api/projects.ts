@@ -77,7 +77,7 @@ class ProjectsService {
     return res;
   }
 
-  async getOne(id: string): Promise<IProject> {
+  async getOne(id: string | number): Promise<IProject> {
     const response = await api.get(`/projects/${id}`);
 
     return response.data.data;
