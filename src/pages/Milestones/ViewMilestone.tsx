@@ -99,6 +99,8 @@ export default function ViewMilestone() {
     }
   };
 
+  console.log(milestone.status);
+
   return (
     <>
       <div className="space-y-8">
@@ -122,6 +124,16 @@ export default function ViewMilestone() {
               >
                 <HiPencil className="h-auto w-6 transition duration-300 group-hover:fill-mint" />
                 Override cost
+              </Button>
+            )}
+            {milestone.status === "paid" && (
+              <Button
+                loading={loading}
+                className="group"
+                buttonType="secondary"
+                onClick={handleGeneratePayouts}
+              >
+                Generate Payout
               </Button>
             )}
             {milestone.status === "open" && (
