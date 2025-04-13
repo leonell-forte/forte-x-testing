@@ -8,7 +8,7 @@ type ContentProps = {
 const Details = {
   Container: (props: React.PropsWithChildren) => {
     return (
-      <div className="rounded-3 flex gap-11 border border-white/30 px-6 py-4">
+      <div className="flex gap-11 rounded-3 border border-white/30 px-6 py-4">
         {props.children}
       </div>
     );
