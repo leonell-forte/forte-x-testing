@@ -99,8 +99,6 @@ export default function ViewMilestone() {
     }
   };
 
-  console.log(milestone.status);
-
   return (
     <>
       <div className="space-y-8">
