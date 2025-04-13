@@ -35,7 +35,7 @@ const PayoutsPage = () => {
   const { data: userData } = useQuery({
     queryKey: ["specific user", profile?.id],
 
-    queryFn: () => userService.getOne(profile?.id!),
+    queryFn: () => userService.getOne(profile?.id as string),
 
     enabled: !!profile?.id,
   });
