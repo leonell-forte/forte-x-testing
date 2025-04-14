@@ -284,13 +284,7 @@ export const useBulkStatusUpdateMutation = (
 
       successCallback?.();
 
-      setAlert({
-        title: "Success!",
-
-        message: "Beneficiaries status updated.",
-
-        status: "success",
-      });
+      toast({ title: "Updated selected beneficiaries status" });
 
       amplitude.track(`Bulk Beneficiary Status Performed`);
     },

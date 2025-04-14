@@ -3,11 +3,16 @@ import { ChangeEvent, useCallback, useState } from "react";
 import { FaTrash as Trash } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 
-import { useDeleteBeneficiaryMutation } from "lib/mutations/beneficiaries";
+import {
+  useDeleteBeneficiaryMutation,
+  useExportBeneficiaries,
+  useExportEvidenceMutation,
+} from "lib/mutations/beneficiaries";
 import { Beneficiaries, IsAuthorized } from "lib/role-permissions";
 import { IBeneficiaries } from "lib/types/beneficiaries";
 import { cn, getStatusVariant } from "lib/utils";
 
+import { showBulkUpdateStatusModal } from "components/Dashboard/Beneficiaries/Dialogues/BulkUpdateStatusV2";
 import { useCustomPrompt } from "components/ui/alert/custom-prompt";
 import Button from "components/ui/button";
 import Checkbox from "components/ui/checkbox";
@@ -15,6 +20,7 @@ import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import Status from "components/ui/status";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
+import { Toolbar } from "components/ui/toolbar/Toolbar";
 
 type TBeneficiariesTable = {
   list: IBeneficiaries[];
@@ -54,6 +60,29 @@ const BeneficiariesTable = ({
         "Are you sure that you want to delete this beneficiary? When you delete a beneficiary, all evidence documents and other information are deleted too.",
       onYes: () => deleteBeneficiary(beneId),
       yesLabel: "Proceed",
+    });
+  };
+
+  const { exportEvidence } = useExportEvidenceMutation();
+
+  const handleDownloadEvidence = async () => {
+    await exportEvidence({ beneficiaryIds: selectedIds });
+    setSelectedIds([]);
+  };
+
+  const { exportBeneficiaries } = useExportBeneficiaries();
+
+  const handleExportBeneficiaries = async () => {
+    await exportBeneficiaries({
+      beneficiaryIds: selectedIds.length ? selectedIds : [-1],
+    });
+    setSelectedIds([]);
+  };
+
+  const handleBulkUpdate = () => {
+    showBulkUpdateStatusModal({
+      ids: selectedIds,
+      successCb: () => setSelectedIds([]),
     });
   };
 
@@ -272,6 +301,13 @@ const BeneficiariesTable = ({
         </Table.Container>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
+      <Toolbar
+        selectedCount={selectedIds.length}
+        onDelete={() => setSelectedIds([])}
+        onEdit={() => handleBulkUpdate()}
+        onDownload={() => handleDownloadEvidence()}
+        onExport={() => handleExportBeneficiaries()}
+      />
     </>
   );
 };
