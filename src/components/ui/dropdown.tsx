@@ -271,7 +271,7 @@ const Dropdown = ({
         </PopoverTrigger>
 
         <PopoverContent onOpenAutoFocus={(e) => e.preventDefault()}>
-          <div>
+          <div className="max-w-full">
             {loading ? (
               <div className="flex h-[100px] w-full items-center justify-center">
                 <Loader dark />
@@ -291,19 +291,19 @@ const Dropdown = ({
                 return isMultiSelect ? (
                   <div
                     key={index}
-                    className="checkbox group rounded-[8px] px-2.5 py-1.5 transition-all hover:bg-mint"
+                    className="checkbox gap group flex max-w-full items-center overflow-hidden rounded-[8px] px-2.5 py-1.5 transition-all hover:bg-neutral-300 hover:[&>svg]:rotate-180"
                     role="button"
                     onClick={(e) => onMultipleSelect(value, e)}
                     onMouseEnter={() => setHoverIndex(index)}
                     onMouseLeave={() => setHoverIndex(null)}
                   >
                     <Checkbox
-                      white={isHovered}
-                      labelClass="text-[14px] text-black transition duration-500"
                       checked={props?.value?.includes(value)}
                       onChange={() => onMultipleSelect(value)}
-                      label={label}
                     />
+                    <span className="w-full translate-x-[-15px] translate-y-[2px] overflow-hidden text-ellipsis whitespace-nowrap text-[14px] text-black transition duration-500">
+                      {label}
+                    </span>
                   </div>
                 ) : (
                   <button

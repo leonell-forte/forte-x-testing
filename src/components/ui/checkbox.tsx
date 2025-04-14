@@ -56,7 +56,7 @@ const Checkbox = ({
               />
             }
             {...props}
-            className="checkbox flex-shrink-0"
+            className="checkbox flex-shrink-0 hover:outline-none focus:outline-none"
           />
         }
         label={
@@ -69,7 +69,9 @@ const Checkbox = ({
 
                 labelClass,
 
-                helperText && "!text-alert"
+                helperText && "!text-alert",
+
+                "overflow-hidden text-ellipsis whitespace-nowrap"
               )}
             >
               {label}

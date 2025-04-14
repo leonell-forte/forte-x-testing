@@ -326,3 +326,7 @@ button.icon {
 .toast-default button {
   @apply border-[#0D7F51]/40;
 }
+
+.checkbox * svg {
+  @apply fill-mint stroke-mint;
+}

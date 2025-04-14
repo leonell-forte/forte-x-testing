@@ -17,6 +17,7 @@ import { IsAuthorized, Users } from "lib/role-permissions";
 import { IUser } from "lib/types/users";
 
 import UserDialogue from "components/Dashboard/Users/Dialogues/UserDialogue";
+import { useProfile } from "components/ProfileContext";
 import UsersTable from "components/tables/Users";
 import Button from "components/ui/button";
 import Dialogue from "components/ui/dialogue/dialogue";
@@ -208,6 +209,8 @@ const Filters = ({
 
   handleRemoveFilters,
 }: IFilterProps) => {
+  const { profile } = useProfile();
+  const isForteUser = profile?.organization === "Forte";
   const { setPage } = usePage();
 
   const {
@@ -231,22 +234,24 @@ const Filters = ({
         className="md:w-[166px]"
         options={ROLES}
       />
-
-      <Dropdown
-        enableSearch
-        loading={orgLoading}
-        value={organization}
-        handleSelect={(val) => {
-          handleSearchOrg("");
-          setOrganization(val as string[]);
-          setPage(1);
-        }}
-        placeholder="Organization"
-        className="md:w-[166px]"
-        options={organizations}
-        onChange={(e) => handleSearchOrg(e.target.value)}
-        isMultiSelect
-      />
+      {isForteUser && (
+        <div className="min-w-[250px]">
+          <Dropdown
+            enableSearch
+            loading={orgLoading}
+            value={organization}
+            handleSelect={(val) => {
+              handleSearchOrg("");
+              setOrganization(val as string[]);
+              setPage(1);
+            }}
+            placeholder="Organization"
+            options={organizations}
+            onChange={(e) => handleSearchOrg(e.target.value)}
+            isMultiSelect
+          />
+        </div>
+      )}
 
       <button
         onClick={handleRemoveFilters}
