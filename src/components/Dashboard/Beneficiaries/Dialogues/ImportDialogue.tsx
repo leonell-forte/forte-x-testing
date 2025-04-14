@@ -7,12 +7,20 @@ import { importBeneficiaries } from "lib/validators/beneficiaries";
 
 import Button from "components/ui/button";
 import Checkbox from "components/ui/checkbox";
-import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
+import { useModal } from "components/ui/dialogue/v2/Modal";
 import FileInput from "components/ui/file-input";
 
-interface IImportDialogueProps extends IDialogueProps {}
+export function showImportBeneficiariesModal() {
+  useModal.getState().open({
+    component: <ImportBeneficiaries />,
+    size: "3xl",
+    title: "Import Beneficiaries",
+  });
+}
 
-const ImportDialogue = ({ ...props }: IImportDialogueProps) => {
+const ImportBeneficiaries = () => {
+  const { close } = useModal();
+
   const {
     handleSubmit,
 
@@ -29,7 +37,7 @@ const ImportDialogue = ({ ...props }: IImportDialogueProps) => {
 
   const { importBeneficiaries: beneficiariesImport, isPending } =
     useImportBeneficiaryMutation({
-      successCallback: props.handleClose,
+      successCallback: close,
     });
 
   const onSubmit = async (values: IImportBeneficiariesFieldValues) => {
@@ -37,100 +45,96 @@ const ImportDialogue = ({ ...props }: IImportDialogueProps) => {
   };
 
   return (
-    <Dialogue {...props} title="Bulk upload" className="lg:!max-w-screen-lg">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:divide-x">
-            <div className="space-y-2">
-              <p>Your CSV must include columns for:</p>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:divide-x">
+          <div className="space-y-2">
+            <p>Your CSV must include columns for:</p>
 
-              <ul className="list-disc pl-6">
-                <li>First name</li>
+            <ul className="list-disc pl-6">
+              <li>First name</li>
 
-                <li>Last name</li>
+              <li>Last name</li>
 
-                <li>
-                  Contract ID (You can find the Contract ID on the Contracts
-                  page).
-                </li>
+              <li>
+                Contract ID (You can find the Contract ID on the Contracts
+                page).
+              </li>
 
-                <li>Email</li>
-              </ul>
+              <li>Email</li>
+            </ul>
 
-              <p>
-                You may also choose to include columns for all other beneficiary
-                fields, including:
-              </p>
+            <p>
+              You may also choose to include columns for all other beneficiary
+              fields, including:
+            </p>
 
-              <ul className="list-disc pl-6">
-                <li>Cohort (Start date, End date, and Program)</li>
+            <ul className="list-disc pl-6">
+              <li>Cohort (Start date, End date, and Program)</li>
 
-                <li>Social media (LinkedIn, Github, and Other)</li>
-                <li>
-                  Demographics (Date of birth, Ethnicity, Gender, Disability
-                  status, Address, Socio-economic status, Highest education
-                  level, and Language(s) spoken)
-                </li>
-              </ul>
-            </div>
-
-            <div className="space-y-2 md:pl-6">
-              <label htmlFor="">Upload CSV</label>
-
-              {/* <Input placeholder="Upload your file here" /> */}
-              <Controller
-                control={control}
-                name="file"
-                render={({ field }) => {
-                  return (
-                    <FileInput
-                      raw
-                      accept=".csv"
-                      placeholder="Upload your file here"
-                      onUploadStart={(data) => {
-                        field.onChange(data);
-                      }}
-                      error={!!errors.file?.message}
-                      helperText={errors.file?.message}
-                    />
-                  );
-                }}
-              />
-
-              <Checkbox
-                onChange={(e) => {
-                  setValue("isOverwriteByEmailEnabled", e.target.checked);
-                }}
-                labelClass="text-[14px]"
-                label="Overwrite existing beneficiaries with the same email."
-              />
-            </div>
+              <li>Social media (LinkedIn, Github, and Other)</li>
+              <li>
+                Demographics (Date of birth, Ethnicity, Gender, Disability
+                status, Address, Socio-economic status, Highest education level,
+                and Language(s) spoken)
+              </li>
+            </ul>
           </div>
 
-          <p className="text-sm">
-            Need help getting started?{" "}
-            <a
-              href="/beneficiaries-template.csv"
-              download="Import Beneficiaries Template.csv"
-              className="font-semibold text-mint"
-            >
-              Download a basic CSV template here.
-            </a>
-          </p>
+          <div className="space-y-2 md:pl-6">
+            <label htmlFor="">Upload CSV</label>
+
+            {/* <Input placeholder="Upload your file here" /> */}
+            <Controller
+              control={control}
+              name="file"
+              render={({ field }) => {
+                return (
+                  <FileInput
+                    raw
+                    accept=".csv"
+                    placeholder="Upload your file here"
+                    onUploadStart={(data) => {
+                      field.onChange(data);
+                    }}
+                    error={!!errors.file?.message}
+                    helperText={errors.file?.message}
+                  />
+                );
+              }}
+            />
+
+            <Checkbox
+              onChange={(e) => {
+                setValue("isOverwriteByEmailEnabled", e.target.checked);
+              }}
+              labelClass="text-[14px]"
+              label="Overwrite existing beneficiaries with the same email."
+            />
+          </div>
         </div>
 
-        <div className="mt-12 flex justify-end gap-2.5">
-          <Button onClick={props.handleClose} buttonType="secondary">
-            Cancel
-          </Button>
+        <p className="text-sm">
+          Need help getting started?{" "}
+          <a
+            href="/beneficiaries-template.csv"
+            download="Import Beneficiaries Template.csv"
+            className="font-semibold text-mint"
+          >
+            Download a basic CSV template here.
+          </a>
+        </p>
+      </div>
 
-          <Button type="submit" loading={isPending}>
-            Import
-          </Button>
-        </div>
-      </form>
-    </Dialogue>
+      <div className="mt-12 flex justify-end gap-2.5">
+        <Button onClick={close} buttonType="secondary">
+          Cancel
+        </Button>
+
+        <Button type="submit" loading={isPending}>
+          Import
+        </Button>
+      </div>
+    </form>
   );
 };
-
-export default ImportDialogue;

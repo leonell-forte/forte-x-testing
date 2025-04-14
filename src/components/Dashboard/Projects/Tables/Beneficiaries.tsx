@@ -4,13 +4,13 @@ import { useState } from "react";
 
 import { IsAuthorized, Projects } from "lib/role-permissions";
 
+import { showImportBeneficiariesModal } from "components/Dashboard/Beneficiaries/Dialogues/ImportDialogue";
 import Button from "components/ui/button";
 import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
 
 import BeneficiariesDialogue from "../../Beneficiaries/Dialogues/BeneficiariesDialogue";
-import ImportDialogue from "../../Beneficiaries/Dialogues/ImportDialogue";
 import TagExistingDialogue from "../Dialogues/TagExistingDialogue";
 
 type ModalLabelType = "beneficiaries" | "tag" | "import" | "";
@@ -52,11 +52,6 @@ const Beneficiaries = ({ id }: IProps) => {
             title="Add beneficiaries to project"
           />
         );
-
-      case "import":
-        return (
-          <ImportDialogue isVisible={modal === "import"} handleClose={close} />
-        );
     }
   };
   return (
@@ -71,7 +66,7 @@ const Beneficiaries = ({ id }: IProps) => {
             <div className="flex w-full flex-col gap-2.5 sm:w-auto sm:flex-row">
               <Button
                 eventName="Import Beneficiaries"
-                onClick={() => setModal("import")}
+                onClick={() => showImportBeneficiariesModal()}
                 buttonType="secondary"
               >
                 Import beneficiaries

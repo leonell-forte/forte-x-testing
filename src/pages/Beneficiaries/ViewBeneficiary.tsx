@@ -103,7 +103,7 @@ export default function ViewBeneficiary() {
             className="group"
             onClick={() => showSetupBeneficiaryModal(beneficiary)}
           >
-            <HiPencil className="h-auto w-6 transition duration-500 group-hover:fill-mint" />
+            <HiPencil className="h-auto w-6 transition duration-100 group-hover:fill-mint" />
             Edit
           </Button>
         </div>

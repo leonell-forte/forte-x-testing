@@ -30,13 +30,19 @@ import { IBeneficiariesFilter } from "lib/types/beneficiaries";
 import { findLabelFromOptions, sortOptions } from "lib/utils";
 
 import BulkUpdateStatus from "components/Dashboard/Beneficiaries/Dialogues/BulkUpdateStatus";
-import ImportDialogue from "components/Dashboard/Beneficiaries/Dialogues/ImportDialogue";
+import { showImportBeneficiariesModal } from "components/Dashboard/Beneficiaries/Dialogues/ImportDialogue";
 import { showSetupBeneficiaryModal } from "components/Dashboard/Beneficiaries/Dialogues/SetupBeneficiary";
 import BeneficiariesTable from "components/tables/Beneficiaries";
 import { BreadCrumb } from "components/ui/breadcrumb/Breadcrumb";
 import Button from "components/ui/button";
 import Dialogue from "components/ui/dialogue/dialogue";
 import Dropdown from "components/ui/dropdown";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "components/ui/dropdown-menu/DropdownMenu";
 import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
 import { Tooltip } from "components/ui/tooltip/Tooltip";
@@ -146,20 +152,6 @@ const BeneficiariesComp = () => {
 
   const renderModal = useCallback(() => {
     switch (modal) {
-      case "update status":
-        return (
-          <BulkUpdateStatus
-            ids={selectedIds}
-            isVisible={modal === "update status"}
-            handleClose={close}
-          />
-        );
-
-      case "import":
-        return (
-          <ImportDialogue isVisible={modal === "import"} handleClose={close} />
-        );
-
       case "filter":
         return (
           <Dialogue
@@ -198,98 +190,40 @@ const BeneficiariesComp = () => {
             <p className="text-[24px] font-semibold">Beneficiaries</p>
 
             <div className="flex w-full flex-wrap justify-start gap-2.5 md:w-auto lg:justify-end">
-              {IsAuthorized([Beneficiaries.EXECUTE]) && (
-                <>
-                  {IsAuthorized([Beneficiaries.UPDATE]) && (
-                    <Tooltip
-                      title={
-                        !selectedIds.length ? (
-                          <div className="flex items-center gap-1.5">
-                            <div className="flex-1 text-sm text-black">
-                              {" "}
-                              Please select beneficiaries to update status
-                            </div>
-                          </div>
-                        ) : (
-                          ""
-                        )
-                      }
-                      placement="top"
+              {IsAuthorized([Beneficiaries.CREATE]) && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <Button eventName="Add Beneficiary">
+                      <HiPlus className="h-auto w-6 fill-black" />
+                      Add beneficiary
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="center"
+                    side="bottom"
+                    sideOffset={1}
+                  >
+                    <DropdownMenuItem
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        showSetupBeneficiaryModal();
+                      }}
                     >
-                      <span>
-                        <Button
-                          eventName="Update Status"
-                          onClick={() => {
-                            setModal("update status");
-                          }}
-                          buttonType="secondary"
-                          disabled={!selectedIds.length}
-                        >
-                          Update Status
-                        </Button>
-                      </span>
-                    </Tooltip>
-                  )}
-                  <Tooltip
-                    title={
-                      !selectedIds.length ? (
-                        <div className="flex items-center gap-1.5">
-                          <div className="flex-1 text-sm text-black">
-                            {" "}
-                            Please select beneficiaries to download evidences
-                          </div>
-                        </div>
-                      ) : (
-                        ""
-                      )
-                    }
-                    placement="top"
-                  >
-                    <span>
-                      <Button
-                        eventName="Download Evidence"
-                        onClick={handleDownloadEvidence}
-                        buttonType="secondary"
-                        disabled={isDownloadingEvidence || downloadDisabled}
+                      Single Entry
+                    </DropdownMenuItem>
+                    {IsAuthorized([Beneficiaries.IMPORT]) && (
+                      <DropdownMenuItem
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          showImportBeneficiariesModal();
+                        }}
                       >
-                        Download Evidence
-                      </Button>
-                    </span>
-                  </Tooltip>
-                </>
+                        Bulk upload
+                      </DropdownMenuItem>
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
               )}
-
-              <>
-                {IsAuthorized([Beneficiaries.EXECUTE]) && (
-                  <Button
-                    eventName="Export Beneficiaries"
-                    onClick={handleExportBeneficiaries}
-                    buttonType="secondary"
-                    disabled={isExportingBeneficiaries}
-                  >
-                    Export CSV
-                  </Button>
-                )}
-                {IsAuthorized([Beneficiaries.IMPORT]) && (
-                  <Button
-                    eventName="Bulk Upload Beneficiaries"
-                    buttonType="secondary"
-                    onClick={() => setModal("import")}
-                  >
-                    Bulk upload
-                  </Button>
-                )}
-
-                {IsAuthorized([Beneficiaries.CREATE]) && (
-                  <Button
-                    eventName="Add Beneficiary"
-                    onClick={() => showSetupBeneficiaryModal()}
-                  >
-                    <HiPlus className="h-auto w-6 fill-black" />
-                    Add beneficiary
-                  </Button>
-                )}
-              </>
             </div>
           </div>
 
