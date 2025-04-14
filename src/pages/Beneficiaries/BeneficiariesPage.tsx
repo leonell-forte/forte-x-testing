@@ -1,12 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import beneficiariesService from "api/beneficiaries";
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useMemo,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import { BiSlider as SliderIcon } from "react-icons/bi";
 import { HiPlus } from "react-icons/hi2";
 import { TbFilterX as FilterIcon } from "react-icons/tb";
@@ -18,10 +12,6 @@ import useProjectList from "lib/common/lists/useProjectList";
 import { BENEFICIARY_STATUS, RISK_LEVEL } from "lib/constants";
 import { useDebounce, usePage } from "lib/hooks";
 import {
-  useExportBeneficiaries,
-  useExportEvidenceMutation,
-} from "lib/mutations/beneficiaries";
-import {
   Beneficiaries,
   IsAuthorized,
   Organizations,
@@ -29,7 +19,6 @@ import {
 import { IBeneficiariesFilter } from "lib/types/beneficiaries";
 import { findLabelFromOptions, sortOptions } from "lib/utils";
 
-import BulkUpdateStatus from "components/Dashboard/Beneficiaries/Dialogues/BulkUpdateStatus";
 import { showImportBeneficiariesModal } from "components/Dashboard/Beneficiaries/Dialogues/ImportDialogue";
 import { showSetupBeneficiaryModal } from "components/Dashboard/Beneficiaries/Dialogues/SetupBeneficiary";
 import BeneficiariesTable from "components/tables/Beneficiaries";
@@ -45,7 +34,6 @@ import {
 } from "components/ui/dropdown-menu/DropdownMenu";
 import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
-import { Tooltip } from "components/ui/tooltip/Tooltip";
 
 import ViewMilestone from "pages/Milestones/ViewMilestone";
 
@@ -117,37 +105,6 @@ const BeneficiariesComp = () => {
     setBeneficiaryId(null);
 
     setPage(1);
-  };
-
-  // download evidence function
-
-  const { exportEvidence, isPending: isDownloadingEvidence } =
-    useExportEvidenceMutation();
-
-  const { listWithEvidence: selectedIdsWithEvidence, downloadDisabled } =
-    useMemo(() => {
-      const listWithEvidence = selectedIds.filter((id) =>
-        beneficiariesList?.items?.some(
-          (item) => item.id === id && item.evidences?.length
-        )
-      );
-
-      return { listWithEvidence, downloadDisabled: !listWithEvidence?.length };
-    }, [selectedIds, beneficiariesList?.items]);
-
-  const handleDownloadEvidence = () => {
-    exportEvidence({ beneficiaryIds: selectedIdsWithEvidence });
-  };
-
-  // export beneficiaries
-
-  const { exportBeneficiaries, isPending: isExportingBeneficiaries } =
-    useExportBeneficiaries();
-
-  const handleExportBeneficiaries = () => {
-    exportBeneficiaries({
-      beneficiaryIds: selectedIds.length ? selectedIds : [-1],
-    });
   };
 
   const renderModal = useCallback(() => {
