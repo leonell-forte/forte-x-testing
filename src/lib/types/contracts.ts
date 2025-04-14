@@ -26,7 +26,15 @@ export interface IContractOutcomeRates {
   threshold: string | number;
 
   outcomeId?: number;
+
+  outcome?: string;
 }
+
+export type Sub = {
+  id: number;
+
+  name: string;
+};
 
 export interface IContract {
   name: string;
@@ -49,10 +57,9 @@ export interface IContract {
 
   outcomes: IContractOutcomeRates[];
 
-  provider: {
-    id: number;
-    name: string;
-  };
+  provider: Sub;
+
+  funder: Sub;
 
   project?: string;
 

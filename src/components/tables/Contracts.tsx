@@ -1,13 +1,15 @@
 import { useCallback, useMemo, useState } from "react";
 import { FaTrash as Trash } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 
 import { Contracts, IsAuthorized } from "lib/role-permissions";
 import { IContract } from "lib/types/contracts";
+import { getStatusVariant } from "lib/utils";
 
-import ContractDialogue from "components/Dashboard/Contracts/Dialogues/ContractDialogue";
 import DeleteDialogue from "components/Dashboard/Contracts/Dialogues/DeleteDialogue";
 import Button from "components/ui/button";
 import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
+import Status from "components/ui/status";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
 
@@ -17,6 +19,7 @@ type TContractsTable = {
 };
 
 const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
+  const navigate = useNavigate();
   const [contractId, setContractId] = useState<number | null>(null);
 
   const contracts: IContract[] = useMemo(
@@ -39,15 +42,6 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
 
   const renderDialog = useCallback(() => {
     switch (modal) {
-      case "contract":
-        return (
-          <ContractDialogue
-            id={contractId!}
-            isVisible={modal === "contract"}
-            handleClose={close}
-          />
-        );
-
       case "delete":
         return (
           <DeleteDialogue
@@ -58,12 +52,6 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
         );
     }
   }, [modal, contractId]);
-
-  const handleEditContract = (id: number) => {
-    setModal("contract");
-
-    setContractId(id);
-  };
 
   const handleDeleteContract = (id: number) => {
     setModal("delete");
@@ -97,7 +85,7 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
                     ? (e) => {
                         e.stopPropagation();
 
-                        handleEditContract(id!);
+                        navigate(`/contracts/${id}`);
                       }
                     : undefined
                 }
@@ -160,7 +148,7 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
 
                 provider,
 
-                documentName,
+                targetNoOfBenefeciaries,
               } = item;
 
               return (
@@ -170,7 +158,7 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
                       ? (e) => {
                           e.stopPropagation();
 
-                          handleEditContract(id!);
+                          navigate(`/contracts/${id}`);
                         }
                       : undefined
                   }
@@ -180,15 +168,15 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
 
                   <Table.Data>{name}</Table.Data>
 
-                  <Table.Data>{provider?.name}</Table.Data>
-
-                  <Table.Data className="capitalize">
-                    {status?.toLowerCase()}
-                  </Table.Data>
-
                   <Table.Data>{project}</Table.Data>
 
-                  <Table.Data>{documentName}</Table.Data>
+                  <Table.Data>{provider?.name}</Table.Data>
+
+                  <Table.Data>{targetNoOfBenefeciaries}</Table.Data>
+
+                  <Table.Data className="capitalize">
+                    <Status variant={getStatusVariant(status)}>{status}</Status>
+                  </Table.Data>
 
                   <Table.Data className="ml-auto">
                     {IsAuthorized([Contracts.DELETE]) && (
@@ -222,8 +210,8 @@ export default ContractsTable;
 const TABLE_HEADER = [
   "ID",
   "Contract name",
-  "Provider",
-  "Status",
   "Project",
-  "Document",
+  "Provider",
+  "# of Beneficiaries",
+  "Status",
 ];

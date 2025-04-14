@@ -1,0 +1,195 @@
+import { useQuery } from "@tanstack/react-query";
+import contractService from "api/contract";
+import evidenceService from "api/evidence";
+import { useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
+
+import { ReactComponent as Check } from "assets/images/icons/check.svg";
+import { ReactComponent as Edit } from "assets/images/icons/pencil.svg";
+
+import { Contracts, IsAuthorized } from "lib/role-permissions";
+import { IContract } from "lib/types/contracts";
+import { getStatusVariant } from "lib/utils";
+
+import AddButton from "components/Dashboard/Contracts/AddButton";
+import ContractDetails from "components/Dashboard/Contracts/ContractDetails";
+import MarkContract from "components/Dashboard/Contracts/Dialogues/MarkContract";
+import LinkedOutcomes from "components/Dashboard/Contracts/LinkedOutcomes";
+import { showSetupContractModal } from "components/Dashboard/Contracts/SetupContract";
+import { BreadCrumb } from "components/ui/breadcrumb/Breadcrumb";
+import Button from "components/ui/button";
+import Dialogue from "components/ui/dialogue/dialogue";
+import Spinner from "components/ui/spinner/spinner";
+import Status from "components/ui/status";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "components/ui/tabs/Tabs";
+
+import BeneficiariesPage from "pages/Beneficiaries/BeneficiariesPage";
+import MilestonePage from "pages/Milestones/MilestonesPage";
+
+const IndividualContractsPage = () => {
+  const params = useParams();
+
+  const [modal, setModal] = useState<"contract" | "mark" | null>(null);
+
+  const {
+    data: contractDetails,
+    isFetching: contractDetailsLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["specific-contract", params.id],
+
+    queryFn: () => contractService.getOne(params.id!),
+
+    enabled: !!params.id,
+
+    refetchOnWindowFocus: false,
+  });
+  console.log(contractDetails);
+
+  const { isSigned, isCompleted, isDraft } = useMemo(() => {
+    const status = contractDetails?.status;
+
+    return {
+      isSigned: status === "SIGNED",
+
+      isCompleted: status === "COMPLETED",
+
+      isDraft: status === "DRAFT",
+
+      isCancelled: status === "CANCELLED",
+    };
+  }, [contractDetails?.status]);
+
+  const statusActions = useMemo(() => {
+    if (isDraft) return { label: "Mark as signed" };
+
+    if (isSigned) return { label: "Mark as completed" };
+
+    if (isCompleted) return { label: "Mark as incomplete" };
+
+    return null;
+  }, [isDraft, isSigned, isCompleted]);
+
+  if (contractDetailsLoading) {
+    return (
+      <div className="flex h-full w-full items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
+
+  const { name, status } = contractDetails!;
+
+  const handleClose = () => {
+    setModal(null);
+  };
+
+  const renderModal = () => {
+    switch (modal) {
+      case "mark":
+        return (
+          <Dialogue isVisible center handleClose={handleClose}>
+            <MarkContract
+              contractDetails={contractDetails!}
+              handleBack={() => setModal(null)}
+              handleClose={() => {
+                refetch();
+                setModal(null);
+              }}
+            />
+          </Dialogue>
+        );
+    }
+  };
+
+  return (
+    <>
+      {renderModal()}
+
+      <BreadCrumb href="/contracts">Contracts</BreadCrumb>
+      <BreadCrumb>{name}</BreadCrumb>
+
+      <div className="space-y-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-4">
+              <p className="text-[24px] font-medium">{name}</p>
+              <Status variant={getStatusVariant(status)}>
+                {status.toLowerCase()}
+              </Status>
+            </div>
+            <button
+              className="link"
+              onClick={() =>
+                evidenceService.getFile(
+                  contractDetails!.document!.slug!,
+                  contractDetails?.document?.filename
+                )
+              }
+            >
+              {contractDetails?.document?.filename}
+            </button>
+          </div>
+
+          <div className="flex gap-4">
+            {IsAuthorized([Contracts.UPDATE]) && (
+              <div>
+                {contractDetails && (
+                  <Button
+                    buttonType="secondary"
+                    onClick={() => setModal("mark")}
+                  >
+                    <Check fill="white" width={17.59} />
+                    {statusActions?.label}
+                  </Button>
+                )}
+              </div>
+            )}
+
+            <Button
+              buttonType="secondary"
+              onClick={() =>
+                showSetupContractModal({
+                  contract: contractDetails,
+                })
+              }
+            >
+              <Edit width={18} />
+              Edit
+            </Button>
+            <AddButton contractId={params.id as string} />
+          </div>
+        </div>
+
+        <ContractDetails contract={contractDetails as IContract} />
+
+        <Tabs defaultValue="outcomes">
+          <TabsList>
+            <TabsTrigger value="outcomes">Linked outcomes</TabsTrigger>
+            <TabsTrigger value="beneficiaries">Beneficiaries</TabsTrigger>
+            <TabsTrigger value="milestones">Milestones</TabsTrigger>
+          </TabsList>
+          <TabsContent value="outcomes">
+            <LinkedOutcomes
+              outcomes={contractDetails?.outcomes || []}
+              isLoading={contractDetailsLoading}
+            />
+          </TabsContent>
+          <TabsContent value="beneficiaries">
+            <BeneficiariesPage />
+          </TabsContent>
+          <TabsContent value="milestones">
+            <MilestonePage />
+          </TabsContent>
+        </Tabs>
+      </div>
+    </>
+  );
+};
+
+export default IndividualContractsPage;

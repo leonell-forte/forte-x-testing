@@ -33,6 +33,10 @@ const ContractsPage = React.lazy(
   () => import("../pages/Contracts/ContractsPage")
 );
 
+const IndividualContractsPage = React.lazy(
+  () => import("../pages/Contracts/[id]/IndividualContractsPage")
+);
+
 const BeneficiariesPage = React.lazy(
   () => import("../pages/Beneficiaries/BeneficiariesPage")
 );
@@ -133,6 +137,22 @@ export const ROUTES: RouteConfig[] = [
 
   {
     link: "beneficiaries/*",
+
+    Component: BeneficiariesPage,
+
+    permissions: [Beneficiaries.NAVIGATE],
+  },
+
+  {
+    link: "contracts/:id",
+
+    Component: IndividualContractsPage,
+
+    permissions: [Contracts.NAVIGATE],
+  },
+
+  {
+    link: "beneficiaries",
 
     Component: BeneficiariesPage,
 

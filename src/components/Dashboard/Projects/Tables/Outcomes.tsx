@@ -1,7 +1,4 @@
-import * as amplitude from "@amplitude/analytics-browser";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
-import projectService from "api/projects";
 import classNames from "classnames";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -10,39 +7,26 @@ import { RiPencilFill as Pencil } from "react-icons/ri";
 import { usePageTitle } from "lib/hooks";
 import { useProjectMutation } from "lib/mutations/projects";
 import { IsAuthorized, Projects } from "lib/role-permissions";
-import { ProjectFieldValues } from "lib/types/projects";
+import { IProject, ProjectFieldValues } from "lib/types/projects";
 import { projects } from "lib/validators/projects";
 
-import { BreadCrumb } from "components/ui/breadcrumb/Breadcrumb";
 import Button from "components/ui/button";
 import Input from "components/ui/input";
 import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
+import SearchInput from "components/ui/search-input";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
 
 interface IProps {
-  id: string;
+  project: IProject;
+  isLoading: boolean;
 }
 
-const Outcomes = ({ id }: IProps) => {
-  const { data: project, isLoading } = useQuery({
-    queryKey: ["specific-project", id],
-
-    queryFn: () => projectService.getOne(id!),
-
-    enabled: !!id,
-  });
-
+const Outcomes = ({ project, isLoading }: IProps) => {
   usePageTitle(project?.name);
 
-  useEffect(() => {
-    const debounce = setTimeout(() => {
-      amplitude.track(`${project?.name} Page View`, { id });
-    }, 300);
-    return () => clearTimeout(debounce);
-  }, [project?.name, id]);
-
   const [editIndex, setEditIndex] = useState<number | null>(null);
+  const [search, setSearch] = useState("");
 
   const closeEdit = () => {
     setEditIndex(null);
@@ -71,25 +55,34 @@ const Outcomes = ({ id }: IProps) => {
     setEditIndex(null);
   };
 
-  const { addProject, isPending } = useProjectMutation(id!, close);
+  const { addProject, isPending } = useProjectMutation(
+    project?.id?.toString() || "",
+    close
+  );
 
   const onSubmit = async (values: ProjectFieldValues) => {
     await addProject(values);
   };
 
+  const outcomes = project?.outcomes.filter((item) => {
+    return item.name.toLowerCase().includes(search.toLowerCase());
+  });
+
   return (
     <>
-      <BreadCrumb href="/projects">Projects</BreadCrumb>
-      <BreadCrumb>Project: {project?.name}</BreadCrumb>
       <div className="space-y-2.5">
-        <p className="text-[24px] font-semibold">Outcomes</p>
-
+        <SearchInput
+          placeholder="Search"
+          className="md:max-w-[313px]"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
         <div className="lg:hidden">
           <Cards.Container
             isLoading={isLoading}
             className="!grid-cols-1 md:!grid-cols-2"
           >
-            {project?.outcomes.map((item, index) => {
+            {outcomes?.map((item, index) => {
               const { name, description } = item;
               const onEdit = index === editIndex;
 
@@ -182,7 +175,7 @@ const Outcomes = ({ id }: IProps) => {
             </Table.Head>
 
             <Table.Body>
-              {project?.outcomes.map((item, index) => {
+              {outcomes?.map((item, index) => {
                 const { name, description } = item;
 
                 const onEdit = index === editIndex;
@@ -266,4 +259,4 @@ const Outcomes = ({ id }: IProps) => {
 
 export default Outcomes;
 
-const HEADERS = ["Outcome", "Name", "Outcome(s)"];
+const HEADERS = ["Outcome", "Name", "Description"];

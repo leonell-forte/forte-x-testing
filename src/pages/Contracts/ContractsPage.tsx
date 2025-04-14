@@ -2,6 +2,8 @@ import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import { BiSlider as SliderIcon } from "react-icons/bi";
 import { TbFilterX as FilterIcon } from "react-icons/tb";
 
+import { ReactComponent as Add } from "assets/images/icons/add.svg";
+
 import useContractList from "lib/common/lists/useContractList";
 import useProjectList from "lib/common/lists/useProjectList";
 import { CONTRACT_STATUS } from "lib/constants";
@@ -11,7 +13,7 @@ import { IContractFilters, StatusType } from "lib/types/contracts";
 import { findLabelFromOptions, sortOptions } from "lib/utils";
 
 import { ContractsProvider } from "components/Dashboard/Contracts/Dialogues/ContractContext";
-import ContractDialogue from "components/Dashboard/Contracts/Dialogues/ContractDialogue";
+import { showSetupContractModal } from "components/Dashboard/Contracts/SetupContract";
 import ContractsTable from "components/tables/Contracts";
 import Button from "components/ui/button";
 import Dialogue from "components/ui/dialogue/dialogue";
@@ -46,9 +48,7 @@ const ContractsPage = () => {
     filters,
   });
 
-  const [modal, setModal] = useState<"contract" | "delete" | "filter" | null>(
-    null
-  );
+  const [modal, setModal] = useState<"delete" | "filter" | null>(null);
 
   const close = () => {
     setContractId(null);
@@ -58,15 +58,6 @@ const ContractsPage = () => {
 
   const renderModal = useCallback(() => {
     switch (modal) {
-      case "contract":
-        return (
-          <ContractDialogue
-            id={contractId!}
-            isVisible={modal === "contract"}
-            handleClose={close}
-          />
-        );
-
       case "filter":
         return (
           <Dialogue
@@ -107,8 +98,9 @@ const ContractsPage = () => {
             {IsAuthorized([Contracts.CREATE]) && (
               <Button
                 eventName="Add Contract"
-                onClick={() => setModal("contract")}
+                onClick={() => showSetupContractModal({})}
               >
+                <Add width={24} />
                 Add contract
               </Button>
             )}
@@ -169,9 +161,11 @@ interface IFilterProps {
   filters: IContractFilters;
 
   setFilters: Dispatch<SetStateAction<IContractFilters>>;
+
+  projectId?: number;
 }
 
-const Filters = ({ filters, setFilters }: IFilterProps) => {
+export const Filters = ({ filters, setFilters, projectId }: IFilterProps) => {
   const { setPage } = usePage();
 
   const {
@@ -196,19 +190,21 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
       />
 
       <div className="flex w-full items-center gap-2.5 lg:w-auto">
-        <Dropdown
-          enableSearch
-          value={findLabelFromOptions(projects, filters.project)}
-          handleSelect={(val) => {
-            setFilters((prev) => ({ ...prev, project: val as string }));
-            setPage(1);
-          }}
-          loading={isProjectLoading}
-          options={sortOptions(projects)}
-          placeholder="Project"
-          className="lg:max-w-[166px]"
-          onChange={(e) => handleSearchProject(e.target.value)}
-        />
+        {!projectId && (
+          <Dropdown
+            enableSearch
+            value={findLabelFromOptions(projects, filters.project)}
+            handleSelect={(val) => {
+              setFilters((prev) => ({ ...prev, project: val as string }));
+              setPage(1);
+            }}
+            loading={isProjectLoading}
+            options={sortOptions(projects)}
+            placeholder="Project"
+            className="lg:max-w-[166px]"
+            onChange={(e) => handleSearchProject(e.target.value)}
+          />
+        )}
 
         <button
           onClick={() =>

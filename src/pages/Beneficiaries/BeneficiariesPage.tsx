@@ -244,9 +244,11 @@ interface IFilterProps {
   filters: IBeneficiariesFilter;
 
   setFilters: Dispatch<SetStateAction<IBeneficiariesFilter>>;
+
+  projectId?: string;
 }
 
-const Filters = ({ filters, setFilters }: IFilterProps) => {
+export const Filters = ({ filters, setFilters, projectId }: IFilterProps) => {
   const { setPage } = usePage();
 
   const {
@@ -271,19 +273,21 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
 
   return (
     <div className="grid w-full grid-cols-1 flex-wrap gap-2.5 xl:flex xl:flex-row">
-      <Dropdown
-        enableSearch
-        value={findLabelFromOptions(projects, filters.project as string)}
-        loading={projectLoading}
-        options={sortOptions(projects)}
-        placeholder="Projects"
-        className="xl:w-[166px]"
-        handleSelect={(val) => {
-          setFilters((prev) => ({ ...prev, project: val as string }));
-          setPage(1);
-        }}
-        onChange={(e) => handleSearchProject(e.target.value)}
-      />
+      {!projectId && (
+        <Dropdown
+          enableSearch
+          value={findLabelFromOptions(projects, filters.project as string)}
+          loading={projectLoading}
+          options={sortOptions(projects)}
+          placeholder="Projects"
+          className="xl:w-[166px]"
+          handleSelect={(val) => {
+            setFilters((prev) => ({ ...prev, project: val as string }));
+            setPage(1);
+          }}
+          onChange={(e) => handleSearchProject(e.target.value)}
+        />
+      )}
 
       <Dropdown
         options={BENEFICIARY_STATUS}

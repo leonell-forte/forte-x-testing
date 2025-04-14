@@ -229,9 +229,7 @@ export const getStatusVariant = (
       return "warning";
     case "open":
       return "primary";
-    case "approved":
-      return "success";
-    case "pending Review":
+    case "pending review":
       return "warning";
     case "more information requested":
       return "warning";

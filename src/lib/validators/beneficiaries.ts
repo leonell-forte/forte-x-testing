@@ -12,10 +12,16 @@ interface IBeneficiaryDefaultValue {
   beneficiary?: IBeneficiaries;
 
   projectId?: number;
+
+  contractId?: number;
 }
 
 export const beneficiaries = {
-  defaultValues: ({ beneficiary, projectId }: IBeneficiaryDefaultValue) => {
+  defaultValues: ({
+    beneficiary,
+    projectId,
+    contractId,
+  }: IBeneficiaryDefaultValue) => {
     let data: IBeneficiariesFieldValues = {
       firstName: beneficiary?.firstName || "",
 
@@ -29,7 +35,7 @@ export const beneficiaries = {
 
       status: beneficiary?.status || "New",
 
-      contractId: beneficiary?.contractId || 0,
+      contractId: beneficiary?.contractId || contractId || 0,
 
       projectId: beneficiary?.projectId || projectId || 0,
 

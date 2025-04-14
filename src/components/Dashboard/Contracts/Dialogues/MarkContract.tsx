@@ -16,7 +16,7 @@ import FileInput from "components/ui/file-input";
 interface IMarkContract {
   contractDetails: IContract;
 
-  handleBack: () => void;
+  handleBack?: () => void;
 
   handleClose: () => void;
 }
@@ -133,7 +133,7 @@ const MarkAsCompleted = ({
       )}
 
       <div className="mt-10 flex justify-end gap-2">
-        <Button onClick={handleBack} buttonType="secondary">
+        <Button onClick={() => handleBack?.()} buttonType="secondary">
           Cancel
         </Button>
 

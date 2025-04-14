@@ -137,7 +137,14 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
           </Table.Head>
           <Table.Body>
             {list.map((item: IProject, bodyIndex: number) => {
-              const { id, name, outcomes, providers } = item;
+              const {
+                id,
+                name,
+                funder,
+                beneficiariesCount,
+                contractsCount,
+                milestonesCount,
+              } = item;
 
               return (
                 <Table.Row
@@ -150,13 +157,13 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
                 >
                   <Table.Data>{name}</Table.Data>
 
-                  <Table.Data>
-                    {providers?.map((item) => item).join(", ") || "-"}
-                  </Table.Data>
+                  <Table.Data>{funder?.name}</Table.Data>
 
-                  <Table.Data>
-                    {outcomes?.map((item) => item.name).join(", ")}
-                  </Table.Data>
+                  <Table.Data>{contractsCount}</Table.Data>
+
+                  <Table.Data>{beneficiariesCount}</Table.Data>
+
+                  <Table.Data>{milestonesCount}</Table.Data>
 
                   <Table.Data>
                     <div className="flex justify-end gap-4 px-4">
@@ -205,4 +212,10 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
 
 export default ProjectsTable;
 
-const TABLE_HEADER = ["Project", "Providers", "Outcomes"];
+const TABLE_HEADER = [
+  "Project",
+  "Funder  ",
+  "# of Contracts",
+  "# of Beneficiaries",
+  "# of Milestones",
+];

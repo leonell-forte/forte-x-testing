@@ -87,7 +87,9 @@ export class EvidenceService {
   }
 
   async getFile(fileId: string, fileName?: string): Promise<any> {
-    const response = await api.get(`/files${fileId}`, { responseType: "blob" });
+    const response = await api.get(`/files/${fileId}`, {
+      responseType: "blob",
+    });
     const file = new Blob([response.data], { type: "application/pdf" });
     const fileURL = URL.createObjectURL(file);
     const link = document.createElement("a");
