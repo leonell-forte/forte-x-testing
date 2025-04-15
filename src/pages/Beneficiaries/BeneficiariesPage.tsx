@@ -143,46 +143,48 @@ const BeneficiariesComp = ({ projectId }: { projectId?: string }) => {
 
       <div className="flex h-full flex-col space-y-2.5">
         <div className="space-y-4">
-          <div className="flex flex-col justify-between gap-x-8 gap-y-1.5 lg:flex-row">
-            <p className="text-[24px] font-semibold">Beneficiaries</p>
+          {!projectId && (
+            <div className="flex flex-col justify-between gap-x-8 gap-y-1.5 lg:flex-row">
+              <p className="text-[24px] font-semibold">Beneficiaries</p>
 
-            <div className="flex w-full flex-wrap justify-start gap-2.5 md:w-auto lg:justify-end">
-              {IsAuthorized([Beneficiaries.CREATE]) && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger>
-                    <Button eventName="Add Beneficiary">
-                      <HiPlus className="h-auto w-6 fill-black" />
-                      Add beneficiary
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    align="center"
-                    side="bottom"
-                    sideOffset={1}
-                  >
-                    <DropdownMenuItem
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        showSetupBeneficiaryModal();
-                      }}
+              <div className="flex w-full flex-wrap justify-start gap-2.5 md:w-auto lg:justify-end">
+                {IsAuthorized([Beneficiaries.CREATE]) && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <Button eventName="Add Beneficiary">
+                        <HiPlus className="h-auto w-6 fill-black" />
+                        Add beneficiary
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      align="center"
+                      side="bottom"
+                      sideOffset={1}
                     >
-                      Single Entry
-                    </DropdownMenuItem>
-                    {IsAuthorized([Beneficiaries.IMPORT]) && (
                       <DropdownMenuItem
                         onClick={(e) => {
                           e.stopPropagation();
-                          showImportBeneficiariesModal();
+                          showSetupBeneficiaryModal();
                         }}
                       >
-                        Bulk upload
+                        Single Entry
                       </DropdownMenuItem>
-                    )}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
+                      {IsAuthorized([Beneficiaries.IMPORT]) && (
+                        <DropdownMenuItem
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            showImportBeneficiariesModal();
+                          }}
+                        >
+                          Bulk upload
+                        </DropdownMenuItem>
+                      )}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="flex">
             <div className="flex w-full flex-col flex-wrap items-start gap-2.5 lg:w-auto lg:flex-row">
