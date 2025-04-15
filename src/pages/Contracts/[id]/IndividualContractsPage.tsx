@@ -49,7 +49,6 @@ const IndividualContractsPage = () => {
 
     refetchOnWindowFocus: false,
   });
-  console.log(contractDetails);
 
   const { isSigned, isCompleted, isDraft } = useMemo(() => {
     const status = contractDetails?.status;
@@ -127,7 +126,7 @@ const IndividualContractsPage = () => {
               className="link"
               onClick={() =>
                 evidenceService.getFile(
-                  contractDetails!.document!.slug!,
+                  `/${contractDetails!.document!.slug!}`,
                   contractDetails?.document?.filename
                 )
               }

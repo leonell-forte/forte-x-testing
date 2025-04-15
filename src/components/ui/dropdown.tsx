@@ -81,8 +81,6 @@ const Dropdown = ({
 
   const [search, setSearch] = useState("");
 
-  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
-
   const displayValue =
     isMultiSelect && Array.isArray(props.value)
       ? props.value.length
@@ -286,16 +284,12 @@ const Dropdown = ({
                 const isSelected =
                   props?.value === label || props?.value === value;
 
-                const isHovered = hoverIndex === index;
-
                 return isMultiSelect ? (
                   <div
                     key={index}
                     className="checkbox gap group flex max-w-full items-center overflow-hidden rounded-[8px] px-2.5 py-1.5 transition-all hover:bg-neutral-300 hover:[&>svg]:rotate-180"
                     role="button"
                     onClick={(e) => onMultipleSelect(value, e)}
-                    onMouseEnter={() => setHoverIndex(index)}
-                    onMouseLeave={() => setHoverIndex(null)}
                   >
                     <Checkbox
                       checked={props?.value?.includes(value)}

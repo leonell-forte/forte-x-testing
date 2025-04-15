@@ -17,7 +17,7 @@ type BankDetailsProps = {
 const BankDetails = ({ providerId, total }: BankDetailsProps) => {
   const { data: bankDetails, isLoading } = useQuery({
     queryKey: ["bank-details", providerId],
-    queryFn: () => organizationService.getBankDetails("44" as string),
+    queryFn: () => organizationService.getBankDetails(providerId as string),
     enabled: !!providerId,
   });
 

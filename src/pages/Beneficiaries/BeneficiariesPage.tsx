@@ -57,13 +57,13 @@ export const useBeneficiaryStore = create<TBeneStore>()((set) => ({
   setBeneficiaryName: (name) => set(() => ({ beneficiaryName: name })),
 }));
 
-const BeneficiariesComp = () => {
+const BeneficiariesComp = ({ projectId }: { projectId?: string }) => {
   const [search, setSearch] = useState("");
 
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
   const initialFilter = {
-    project: "",
+    project: projectId || "",
 
     status: "",
 
@@ -211,7 +211,11 @@ const BeneficiariesComp = () => {
                 </button>
               </div>
               <div className="hidden xl:block">
-                <Filters filters={filters} setFilters={setFilters} />
+                <Filters
+                  filters={filters}
+                  setFilters={setFilters}
+                  projectId={projectId}
+                />
               </div>
             </div>
           </div>
@@ -359,7 +363,11 @@ export const Filters = ({ filters, setFilters, projectId }: IFilterProps) => {
   );
 };
 
-export default function BeneficiariesPage() {
+export default function BeneficiariesPage({
+  projectId,
+}: {
+  projectId?: string;
+}) {
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
   const beneficiaryId = pathnames?.[1] || "";
@@ -368,7 +376,7 @@ export default function BeneficiariesPage() {
 
   return (
     <Routes>
-      <Route index element={<BeneficiariesComp />} />
+      <Route index element={<BeneficiariesComp projectId={projectId} />} />
       <Route
         path=":beneficiaryId"
         element={

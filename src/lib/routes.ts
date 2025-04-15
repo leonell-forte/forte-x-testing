@@ -25,6 +25,10 @@ const IndividualProjectsPage = React.lazy(
 
 const FundersPage = React.lazy(() => import("../pages/Funders/FundersPage"));
 
+const OnBoardingSuccessPage = React.lazy(
+  () => import("../pages/Onboarding/OnBoardingSuccess")
+);
+
 const ProvidersPage = React.lazy(
   () => import("../pages/Providers/ProvidersPage")
 );
@@ -171,6 +175,14 @@ export const ROUTES: RouteConfig[] = [
     link: "payouts/:id",
 
     Component: IndividualPayoutsPage,
+
+    permissions: [],
+  },
+
+  {
+    link: "onboarding",
+
+    Component: OnBoardingSuccessPage,
 
     permissions: [],
   },

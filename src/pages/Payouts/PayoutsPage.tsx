@@ -1,6 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import userService from "api/users";
-import { Dispatch, SetStateAction, useCallback, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { BiSlider as SliderIcon } from "react-icons/bi";
 import { TbFilterX as FilterIcon } from "react-icons/tb";
 
@@ -13,6 +19,7 @@ import { Filter } from "lib/types/payouts";
 import { findLabelFromOptions } from "lib/utils";
 
 import BankDetails from "components/Dashboard/Payouts/BankDetails";
+import GeneratePayout from "components/Dashboard/Payouts/GeneratePayout";
 import { useProfile } from "components/ProfileContext";
 import PayoutsTable from "components/tables/Payouts";
 import Button from "components/ui/button";
@@ -21,16 +28,14 @@ import Dropdown from "components/ui/dropdown";
 import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
 
-type ModalLabelTypes = "filter" | "";
-
-const initialFilters = {
-  provider: "",
-
-  status: "",
-};
+type ModalLabelTypes = "filter" | "generate" | "";
 
 const PayoutsPage = () => {
   const { profile } = useProfile();
+
+  const isForte = profile?.organization === "Forte";
+
+  const isProvider = profile?.role?.split(".")[0] === "provider";
 
   const { data: userData } = useQuery({
     queryKey: ["specific user", profile?.id],
@@ -40,11 +45,24 @@ const PayoutsPage = () => {
     enabled: !!profile?.id,
   });
 
+  const initialFilters = {
+    provider: !isForte ? userData?.organization?.toString() || "" : "",
+
+    status: "",
+  };
+
   const { page, setPage } = usePage();
 
   const [modal, setModal] = useState<ModalLabelTypes>("");
 
   const [filters, setFilters] = useState<Filter>(initialFilters as Filter);
+
+  useEffect(() => {
+    setFilters((prev) => ({
+      ...prev,
+      provider: !isForte ? userData?.organization?.toString() || "" : "",
+    }));
+  }, [isForte, userData]);
 
   const {
     rawList: payouts,
@@ -58,8 +76,6 @@ const PayoutsPage = () => {
   });
 
   const providerId = userData?.organization || "";
-
-  const isProvider = profile?.role?.split(".")[0] === "provider";
 
   const handleClose = () => {
     setModal("");
@@ -76,7 +92,12 @@ const PayoutsPage = () => {
             handleClose={handleClose}
           >
             <div className="space-y-6">
-              <Filters filters={filters} setFilters={setFilters} />
+              <Filters
+                filters={filters}
+                setFilters={setFilters}
+                initialFilters={initialFilters}
+                isForte={isForte}
+              />
               <div className="flex justify-end gap-2">
                 <Button
                   buttonType="secondary"
@@ -91,6 +112,9 @@ const PayoutsPage = () => {
             </div>
           </Dialogue>
         );
+
+      case "generate":
+        return <GeneratePayout handleClose={handleClose} />;
     }
     //eslint-disable-next-line
   }, [modal, filters]);
@@ -99,8 +123,14 @@ const PayoutsPage = () => {
     <>
       {renderModal()}
       <div className="space-y-6">
-        <p className="text-[24px] font-semibold">Payouts</p>
-
+        <div className="itemsc flex justify-between">
+          <p className="text-[24px] font-semibold">Payouts</p>
+          {isForte && (
+            <Button onClick={() => setModal("generate")}>
+              Generate payouts
+            </Button>
+          )}
+        </div>
         {isProvider && <BankDetails providerId={providerId.toString()} />}
 
         <div className="flex gap-2.5 md:flex-wrap">
@@ -126,7 +156,12 @@ const PayoutsPage = () => {
             <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
           </button>
           <div className="hidden lg:block">
-            <Filters filters={filters} setFilters={setFilters} />
+            <Filters
+              filters={filters}
+              setFilters={setFilters}
+              initialFilters={initialFilters}
+              isForte={isForte}
+            />
           </div>
         </div>
 
@@ -154,9 +189,18 @@ interface IFilterProps {
   filters: Filter;
 
   setFilters: Dispatch<SetStateAction<Filter>>;
+
+  initialFilters: Filter;
+
+  isForte: boolean;
 }
 
-const Filters = ({ filters, setFilters }: IFilterProps) => {
+const Filters = ({
+  filters,
+  setFilters,
+  initialFilters,
+  isForte,
+}: IFilterProps) => {
   const {
     organizations,
     isLoading: orgLoading,
@@ -179,7 +223,7 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
   return (
     <div className="grid w-full grid-cols-1 gap-2.5 lg:flex">
       <div className="grid w-full grid-cols-1 gap-2.5 lg:flex">
-        {IsAuthorized([Organizations.LIST]) && (
+        {IsAuthorized([Organizations.LIST]) && isForte && (
           <Dropdown
             loading={orgLoading}
             options={organizations}

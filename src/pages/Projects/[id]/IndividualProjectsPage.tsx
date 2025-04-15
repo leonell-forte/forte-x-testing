@@ -11,7 +11,6 @@ import { IProject } from "lib/types/projects";
 import { ContractsProvider } from "components/Dashboard/Contracts/Dialogues/ContractContext";
 import AddOptions from "components/Dashboard/Projects/AddButton";
 import ProjectDialogue from "components/Dashboard/Projects/Dialogues/ProjectDialogue";
-import Beneficiaries from "components/Dashboard/Projects/Tables/Beneficiaries";
 import Contracts from "components/Dashboard/Projects/Tables/Contracts";
 import Outcomes from "components/Dashboard/Projects/Tables/Outcomes";
 import { BreadCrumb } from "components/ui/breadcrumb/Breadcrumb";
@@ -23,6 +22,8 @@ import {
   TabsList,
   TabsTrigger,
 } from "components/ui/tabs/Tabs";
+
+import BeneficiariesPage from "pages/Beneficiaries/BeneficiariesPage";
 
 const IndividualProjectsPage = () => {
   const [modal, setModal] = useState<"project" | null>(null);
@@ -118,7 +119,7 @@ const IndividualProjectsPage = () => {
             </ContractsProvider>
           </TabsContent>
           <TabsContent value="beneficiaries">
-            <Beneficiaries id={id} />
+            <BeneficiariesPage projectId={id} />
           </TabsContent>
         </Tabs>
       </div>
