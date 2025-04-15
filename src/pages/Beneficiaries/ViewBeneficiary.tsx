@@ -3,7 +3,6 @@ import beneficiaryService from "api/beneficiaries";
 import evidenceService from "api/evidence";
 import { isNumber } from "lodash";
 import * as React from "react";
-import { HiPencil } from "react-icons/hi";
 import { usePhoneInput } from "react-international-phone";
 import { useParams } from "react-router-dom";
 

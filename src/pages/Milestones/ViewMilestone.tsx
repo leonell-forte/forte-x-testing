@@ -1,9 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import evidenceService from "api/evidence";
 import milestoneService from "api/milestones";
-import payoutsService from "api/payouts";
-import { useMemo, useState } from "react";
-import { HiPencil } from "react-icons/hi";
+import { useMemo } from "react";
 import { HiPlus } from "react-icons/hi2";
 import { HiEllipsisHorizontal as Ellipsis } from "react-icons/hi2";
 import { RiShareBoxLine as Share } from "react-icons/ri";
@@ -11,7 +9,6 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { ReactComponent as Pencil } from "assets/images/icons/pencil.svg";
 
-import { useAlert } from "lib/hooks";
 import { useDeleteEvidence } from "lib/mutations/evidences";
 import { MILESTONE_TYPES } from "lib/types/milestones";
 import { formatDate, formatNumber, getStatusVariant } from "lib/utils";
