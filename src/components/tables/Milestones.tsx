@@ -14,9 +14,13 @@ type TMilestonesTable = {
   href?: string;
 };
 
-const MilestonesTable = ({ list, isLoading = false }: TMilestonesTable) => {
+const MilestonesTable = ({
+  list,
+  isLoading = false,
+  href,
+}: TMilestonesTable) => {
   const navigate = useNavigate();
-
+  const linkTo = href ? href : "/milestones/";
   return (
     <>
       <div className="lg:hidden">
@@ -25,7 +29,7 @@ const MilestonesTable = ({ list, isLoading = false }: TMilestonesTable) => {
             const { id, funder, type, reference, outcome, cost, status } = item;
             return (
               <Cards.Card
-                onClick={() => navigate(`/milestones/${id}`)}
+                onClick={() => navigate(`${linkTo}${id}`)}
                 title={`Milestone ID: ${id}`}
                 key={index}
               >
@@ -77,7 +81,7 @@ const MilestonesTable = ({ list, isLoading = false }: TMilestonesTable) => {
 
               return (
                 <Table.Row
-                  onClick={() => navigate(`/milestones/${id}`)}
+                  onClick={() => navigate(`${linkTo}${id}`)}
                   key={index}
                 >
                   <Table.Data>
