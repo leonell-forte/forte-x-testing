@@ -115,7 +115,7 @@ const IndividualContractsPage = () => {
       {
         value: "milestones",
         label: `Milestones (${contractDetails?.noOfMilestones})`,
-        content: <MilestonePage hideHeader />,
+        content: <MilestonePage hideHeader contractId={params.id} />,
       },
     ];
   }, [contractDetails, contractDetailsLoading, params.id]);

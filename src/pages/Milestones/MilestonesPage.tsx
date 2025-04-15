@@ -16,13 +16,19 @@ import SearchInput from "components/ui/search-input";
 
 import ViewMilestone from "./ViewMilestone";
 
-const initialFilter = {
-  status: "",
-  contractId: "",
-  type: "",
-};
+const MilestonesComp = ({
+  hideHeader,
+  contractId,
+}: {
+  hideHeader?: boolean;
+  contractId?: string;
+}) => {
+  const initialFilter = {
+    status: "",
+    contractId: contractId || "",
+    type: "",
+  };
 
-const MilestonesComp = ({ hideHeader }: { hideHeader?: boolean }) => {
   const { page, setPage } = usePage();
 
   const [search, setSearch] = useState("");
@@ -78,7 +84,11 @@ const MilestonesComp = ({ hideHeader }: { hideHeader?: boolean }) => {
             </div>
 
             <div className="flex-1 flex-grow">
-              <Filters filters={filters} setFilters={setFilters} />
+              <Filters
+                filters={filters}
+                setFilters={setFilters}
+                initialFilter={initialFilter}
+              />
             </div>
           </div>
         </div>
@@ -105,9 +115,11 @@ interface IFilterProps {
   filters: IMilestoneFilters;
 
   setFilters: Dispatch<SetStateAction<IMilestoneFilters>>;
+
+  initialFilter: IMilestoneFilters;
 }
 
-const Filters = ({ filters, setFilters }: IFilterProps) => {
+const Filters = ({ filters, setFilters, initialFilter }: IFilterProps) => {
   const { setPage } = usePage();
 
   return (
@@ -148,14 +160,21 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
 
 export default function MilestonePage({
   hideHeader,
+  contractId,
 }: {
   hideHeader?: boolean;
+  contractId?: string;
 }) {
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
   return (
     <Routes>
-      <Route index element={<MilestonesComp hideHeader={hideHeader} />} />
+      <Route
+        index
+        element={
+          <MilestonesComp hideHeader={hideHeader} contractId={contractId} />
+        }
+      />
       <Route
         path=":milestoneId"
         element={

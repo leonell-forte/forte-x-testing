@@ -76,6 +76,7 @@ class MilestoneService {
 
         isSearch: true,
       },
+
       "contract.id": {
         value: filters?.contractId || "",
 
