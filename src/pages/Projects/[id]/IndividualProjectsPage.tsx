@@ -75,7 +75,7 @@ const IndividualProjectsPage = () => {
       {
         value: "beneficiaries",
         label: `Beneficiaries (${project?.beneficiariesCount})`,
-        content: <BeneficiariesPage projectId={id} />,
+        content: <BeneficiariesPage projectId={id} hideHeader />,
       },
     ];
   }, [project, isLoading, id]);

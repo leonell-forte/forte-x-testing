@@ -57,7 +57,15 @@ export const useBeneficiaryStore = create<TBeneStore>()((set) => ({
   setBeneficiaryName: (name) => set(() => ({ beneficiaryName: name })),
 }));
 
-const BeneficiariesComp = ({ projectId }: { projectId?: string }) => {
+const BeneficiariesComp = ({
+  projectId,
+  contractId,
+  hideHeader,
+}: {
+  projectId?: string;
+  contractId?: string;
+  hideHeader?: boolean;
+}) => {
   const [search, setSearch] = useState("");
 
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -70,6 +78,8 @@ const BeneficiariesComp = ({ projectId }: { projectId?: string }) => {
     provider: "",
 
     riskLevel: "",
+
+    contractId: contractId || "",
   };
 
   const [filters, setFilters] = useState<IBeneficiariesFilter>(initialFilter);
@@ -143,7 +153,7 @@ const BeneficiariesComp = ({ projectId }: { projectId?: string }) => {
 
       <div className="flex h-full flex-col space-y-2.5">
         <div className="space-y-4">
-          {!projectId && (
+          {!hideHeader && (
             <div className="flex flex-col justify-between gap-x-8 gap-y-1.5 lg:flex-row">
               <p className="text-[24px] font-semibold">Beneficiaries</p>
 
@@ -370,8 +380,12 @@ export const Filters = ({ filters, setFilters, projectId }: IFilterProps) => {
 
 export default function BeneficiariesPage({
   projectId,
+  contractId,
+  hideHeader,
 }: {
   projectId?: string;
+  contractId?: string;
+  hideHeader?: boolean;
 }) {
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
@@ -381,7 +395,16 @@ export default function BeneficiariesPage({
 
   return (
     <Routes>
-      <Route index element={<BeneficiariesComp projectId={projectId} />} />
+      <Route
+        index
+        element={
+          <BeneficiariesComp
+            projectId={projectId}
+            contractId={contractId}
+            hideHeader={hideHeader}
+          />
+        }
+      />
       <Route
         path=":beneficiaryId"
         element={

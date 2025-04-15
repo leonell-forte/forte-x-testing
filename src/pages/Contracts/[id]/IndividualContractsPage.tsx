@@ -99,7 +99,7 @@ const IndividualContractsPage = () => {
     return [
       {
         value: "outcomes",
-        label: `Linked outcomes`,
+        label: `Linked outcomes (${contractDetails?.outcomes?.length})`,
         content: (
           <LinkedOutcomes
             outcomes={contractDetails?.outcomes || []}
@@ -109,16 +109,16 @@ const IndividualContractsPage = () => {
       },
       {
         value: "beneficiaries",
-        label: `Beneficiaries`,
-        content: <BeneficiariesPage />,
+        label: `Beneficiaries (${contractDetails?.noOfBeneficiaries})`,
+        content: <BeneficiariesPage hideHeader contractId={params.id} />,
       },
       {
         value: "milestones",
-        label: `Milestones`,
-        content: <MilestonePage />,
+        label: `Milestones (${contractDetails?.noOfMilestones})`,
+        content: <MilestonePage hideHeader />,
       },
     ];
-  }, [contractDetails, contractDetailsLoading]);
+  }, [contractDetails, contractDetailsLoading, params.id]);
 
   if (contractDetailsLoading) {
     return (

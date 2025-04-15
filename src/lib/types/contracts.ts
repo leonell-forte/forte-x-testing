@@ -73,6 +73,8 @@ export interface IContract {
 
   noOfBeneficiaries: number;
 
+  noOfMilestones: number;
+
   updatedAt?: string;
 
   updatedBy?: number;

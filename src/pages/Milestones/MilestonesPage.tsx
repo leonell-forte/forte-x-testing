@@ -22,7 +22,7 @@ const initialFilter = {
   type: "",
 };
 
-const MilestonesComp = () => {
+const MilestonesComp = ({ hideHeader }: { hideHeader?: boolean }) => {
   const { page, setPage } = usePage();
 
   const [search, setSearch] = useState("");
@@ -59,7 +59,7 @@ const MilestonesComp = () => {
   return (
     <div className="flex h-full flex-col space-y-2.5">
       <div className="space-y-5">
-        <p className="text-[24px] font-semibold">Milestones</p>
+        {!hideHeader && <p className="text-[24px] font-semibold">Milestones</p>}
         <div className="flex flex-col justify-between gap-2.5 sm:flex-row">
           <div className="flex flex-col gap-2.5 sm:flex-row">
             <div className="flex gap-2">
@@ -146,12 +146,16 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
   );
 };
 
-export default function MilestonePage() {
+export default function MilestonePage({
+  hideHeader,
+}: {
+  hideHeader?: boolean;
+}) {
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
   return (
     <Routes>
-      <Route index element={<MilestonesComp />} />
+      <Route index element={<MilestonesComp hideHeader={hideHeader} />} />
       <Route
         path=":milestoneId"
         element={
