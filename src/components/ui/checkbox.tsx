@@ -69,9 +69,7 @@ const Checkbox = ({
 
                 labelClass,
 
-                helperText && "!text-alert",
-
-                "overflow-hidden text-ellipsis whitespace-nowrap"
+                helperText && "!text-alert"
               )}
             >
               {label}
