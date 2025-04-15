@@ -14,11 +14,7 @@ type TMilestonesTable = {
   href?: string;
 };
 
-const MilestonesTable = ({
-  list,
-  isLoading = false,
-  href = "",
-}: TMilestonesTable) => {
+const MilestonesTable = ({ list, isLoading = false }: TMilestonesTable) => {
   const navigate = useNavigate();
 
   return (
