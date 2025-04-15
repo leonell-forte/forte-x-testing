@@ -2,11 +2,14 @@ import { useCallback, useMemo, useState } from "react";
 import { FaTrash as Trash } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 
+import { ReactComponent as Pencil } from "assets/images/icons/pencil.svg";
+
 import { Contracts, IsAuthorized } from "lib/role-permissions";
 import { IContract } from "lib/types/contracts";
 import { getStatusVariant } from "lib/utils";
 
 import DeleteDialogue from "components/Dashboard/Contracts/Dialogues/DeleteDialogue";
+import { showSetupContractModal } from "components/Dashboard/Contracts/SetupContract";
 import Button from "components/ui/button";
 import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import Status from "components/ui/status";
@@ -149,6 +152,8 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
                 provider,
 
                 targetNoOfBenefeciaries,
+
+                noOfBeneficiaries,
               } = item;
 
               return (
@@ -172,27 +177,46 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
 
                   <Table.Data>{provider?.name}</Table.Data>
 
-                  <Table.Data>{targetNoOfBenefeciaries}</Table.Data>
+                  <Table.Data>
+                    {noOfBeneficiaries} / {targetNoOfBenefeciaries}
+                  </Table.Data>
 
                   <Table.Data className="capitalize">
                     <Status variant={getStatusVariant(status)}>{status}</Status>
                   </Table.Data>
 
-                  <Table.Data className="ml-auto">
-                    {IsAuthorized([Contracts.DELETE]) && (
-                      <div className="flex justify-end">
-                        <Button
-                          eventName="Delete Contract"
+                  <Table.Data>
+                    <div className="flex justify-end gap-2">
+                      {IsAuthorized([Contracts.DELETE]) && (
+                        <button
                           id={id?.toString()}
-                          buttonType="default"
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+
+                            showSetupContractModal({
+                              contract: item,
+                            });
+                          }}
+                          className="h-6 w-6"
+                        >
+                          <Pencil
+                            fill="white"
+                            className="h-auto w-5 transition-all group-hover:fill-mint"
+                          />
+                        </button>
+                      )}
+                      {IsAuthorized([Contracts.DELETE]) && (
+                        <button
+                          id={id?.toString()}
                           type="button"
                           onClick={() => handleDeleteContract(id!)}
-                          className="group p-[3px]"
+                          className="h-6 w-6"
                         >
                           <Trash className="h-auto w-5 transition-all group-hover:fill-mint" />
-                        </Button>
-                      </div>
-                    )}
+                        </button>
+                      )}
+                    </div>
                   </Table.Data>
                 </Table.Row>
               );

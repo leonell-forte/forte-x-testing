@@ -71,6 +71,8 @@ export interface IContract {
 
   targetNoOfBenefeciaries: number | string;
 
+  noOfBeneficiaries: number;
+
   updatedAt?: string;
 
   updatedBy?: number;
