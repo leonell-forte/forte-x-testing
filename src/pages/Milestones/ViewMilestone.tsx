@@ -1,13 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import evidenceService from "api/evidence";
 import milestoneService from "api/milestones";
-import { useMemo } from "react";
+import payoutsService from "api/payouts";
+import { useMemo, useState } from "react";
 import { HiPencil } from "react-icons/hi";
 import { HiPlus } from "react-icons/hi2";
 import { HiEllipsisHorizontal as Ellipsis } from "react-icons/hi2";
 import { RiShareBoxLine as Share } from "react-icons/ri";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { ReactComponent as Pencil } from "assets/images/icons/pencil.svg";
+
+import { useAlert } from "lib/hooks";
 import { useDeleteEvidence } from "lib/mutations/evidences";
 import { MILESTONE_TYPES } from "lib/types/milestones";
 import { formatDate, formatNumber, getStatusVariant } from "lib/utils";
@@ -95,7 +99,7 @@ export default function ViewMilestone() {
                   })
                 }
               >
-                <HiPencil className="h-auto w-6 transition duration-300 group-hover:fill-mint" />
+                <Pencil height={14} />
                 Override cost
               </Button>
             )}
@@ -143,7 +147,7 @@ export default function ViewMilestone() {
                 onClick={() =>
                   navigate(
                     isThreshold
-                      ? "/contracts"
+                      ? `/contracts/${milestone.reference.id}`
                       : `/beneficiaries/${milestone.reference.id}`
                   )
                 }

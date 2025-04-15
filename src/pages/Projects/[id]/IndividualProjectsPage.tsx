@@ -1,7 +1,7 @@
 import * as amplitude from "@amplitude/analytics-browser";
 import { useQuery } from "@tanstack/react-query";
 import projectService from "api/projects";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import { ReactComponent as Pencil } from "assets/images/icons/pencil.svg";
@@ -16,12 +16,7 @@ import Outcomes from "components/Dashboard/Projects/Tables/Outcomes";
 import { BreadCrumb } from "components/ui/breadcrumb/Breadcrumb";
 import Button from "components/ui/button";
 import Spinner from "components/ui/spinner/spinner";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "components/ui/tabs/Tabs";
+import Tabs from "components/ui/tabs/Tabs";
 
 import BeneficiariesPage from "pages/Beneficiaries/BeneficiariesPage";
 
@@ -58,6 +53,32 @@ const IndividualProjectsPage = () => {
     }
     // eslint-disable-next-line
   }, [modal]);
+
+  const tabs = useMemo(() => {
+    return [
+      {
+        value: "outcomes",
+        label: `Outcomes (${project?.outcomes?.length})`,
+        content: (
+          <Outcomes project={project as IProject} isLoading={isLoading} />
+        ),
+      },
+      {
+        value: "contracts",
+        label: `Contracts (${project?.contractsCount})`,
+        content: (
+          <ContractsProvider>
+            <Contracts projectId={Number(id)} />
+          </ContractsProvider>
+        ),
+      },
+      {
+        value: "beneficiaries",
+        label: `Beneficiaries (${project?.beneficiariesCount})`,
+        content: <BeneficiariesPage projectId={id} />,
+      },
+    ];
+  }, [project, isLoading, id]);
 
   if (isLoading) {
     return (
@@ -98,30 +119,7 @@ const IndividualProjectsPage = () => {
           </div>
         </div>
 
-        <Tabs defaultValue="outcomes">
-          <TabsList>
-            <TabsTrigger value="outcomes">
-              Outcomes ({project?.outcomes?.length})
-            </TabsTrigger>
-            <TabsTrigger value="contracts">
-              Contracts ({project?.contractsCount})
-            </TabsTrigger>
-            <TabsTrigger value="beneficiaries">
-              Beneficiaries ({project?.beneficiariesCount})
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="outcomes">
-            <Outcomes project={project as IProject} isLoading={isLoading} />
-          </TabsContent>
-          <TabsContent value="contracts">
-            <ContractsProvider>
-              <Contracts projectId={Number(id)} />
-            </ContractsProvider>
-          </TabsContent>
-          <TabsContent value="beneficiaries">
-            <BeneficiariesPage projectId={id} />
-          </TabsContent>
-        </Tabs>
+        <Tabs tabs={tabs} />
       </div>
     </>
   );

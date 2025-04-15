@@ -46,6 +46,8 @@ interface IDropdownProp extends InputHTMLAttributes<HTMLInputElement> {
   enableSearch?: boolean;
 
   filterOptions?: boolean;
+
+  contentWidth?: string | number;
 }
 
 const Dropdown = ({
@@ -68,6 +70,8 @@ const Dropdown = ({
   enableSearch,
 
   filterOptions,
+
+  contentWidth,
 
   ...props
 }: IDropdownProp) => {
@@ -268,7 +272,14 @@ const Dropdown = ({
           </div>
         </PopoverTrigger>
 
-        <PopoverContent onOpenAutoFocus={(e) => e.preventDefault()}>
+        <PopoverContent
+          onOpenAutoFocus={(e) => e.preventDefault()}
+          {...(contentWidth && {
+            style: {
+              width: contentWidth,
+            },
+          })}
+        >
           <div className="max-w-full">
             {loading ? (
               <div className="flex h-[100px] w-full items-center justify-center">
@@ -287,7 +298,7 @@ const Dropdown = ({
                 return isMultiSelect ? (
                   <div
                     key={index}
-                    className="checkbox gap group flex max-w-full items-center overflow-hidden rounded-[8px] px-2.5 py-1.5 transition-all hover:bg-neutral-300 hover:[&>svg]:rotate-180"
+                    className="checkbox gap group flex max-w-full items-center overflow-hidden rounded-[8px] px-2.5 py-1.5 transition-all hover:bg-neutral-300"
                     role="button"
                     onClick={(e) => onMultipleSelect(value, e)}
                   >
@@ -315,7 +326,7 @@ const Dropdown = ({
                     <li
                       className={cn(
                         "list-none truncate rounded-[8px] p-2 text-sm text-black transition duration-500",
-                        isSelected ? "bg-mint" : "hover:bg-mint"
+                        isSelected ? "bg-mint" : "hover:bg-neutral-300"
                       )}
                     >
                       {label}

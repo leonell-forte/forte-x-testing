@@ -1,9 +1,10 @@
 import * as TabsPrimitive from "@radix-ui/react-tabs";
+import { motion } from "framer-motion";
 import * as React from "react";
 
 import { cn } from "lib/utils";
 
-const Tabs = TabsPrimitive.Root;
+const TabsPrim = TabsPrimitive.Root;
 
 const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
@@ -47,4 +48,59 @@ const TabsContent = React.forwardRef<
 ));
 TabsContent.displayName = TabsPrimitive.Content.displayName;
 
-export { Tabs, TabsList, TabsTrigger, TabsContent };
+interface TabData {
+  value: string;
+  label: string;
+  content: React.ReactNode;
+}
+
+interface AnimatedTabsProps {
+  tabs: TabData[];
+  defaultValue?: string;
+}
+
+export default function Tabs({
+  tabs,
+  defaultValue = tabs[0]?.value,
+}: AnimatedTabsProps) {
+  const [activeTab, setActiveTab] = React.useState(defaultValue);
+
+  return (
+    <TabsPrim
+      defaultValue={defaultValue}
+      value={activeTab}
+      onValueChange={setActiveTab}
+      className="w-full"
+    >
+      <TabsList>
+        {tabs.map((tab) => (
+          <TabsTrigger
+            key={tab.value}
+            value={tab.value}
+            className="relative z-10"
+          >
+            {tab.label}
+          </TabsTrigger>
+        ))}
+      </TabsList>
+      <div className="relative mt-6">
+        {tabs.map((tab) => (
+          <TabsContent key={tab.value} value={tab.value} className="relative">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 30,
+              }}
+            >
+              {tab.content}
+            </motion.div>
+          </TabsContent>
+        ))}
+      </div>
+    </TabsPrim>
+  );
+}

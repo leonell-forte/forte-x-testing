@@ -285,6 +285,7 @@ export const Filters = ({ filters, setFilters, projectId }: IFilterProps) => {
           options={sortOptions(projects)}
           placeholder="Projects"
           className="xl:w-[166px]"
+          contentWidth={200}
           handleSelect={(val) => {
             setFilters((prev) => ({ ...prev, project: val as string }));
             setPage(1);
@@ -297,6 +298,7 @@ export const Filters = ({ filters, setFilters, projectId }: IFilterProps) => {
         options={BENEFICIARY_STATUS}
         placeholder="Status"
         className="xl:w-[166px]"
+        contentWidth={230}
         value={filters.status}
         handleSelect={(val) => {
           setFilters((prev) => ({ ...prev, status: val as string }));
@@ -309,6 +311,7 @@ export const Filters = ({ filters, setFilters, projectId }: IFilterProps) => {
           loading={orgLoading}
           options={organizations}
           placeholder="Provider"
+          contentWidth={270}
           className="xl:w-[166px]"
           value={findLabelFromOptions(
             organizations,

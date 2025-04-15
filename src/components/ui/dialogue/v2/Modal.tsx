@@ -61,7 +61,7 @@ const ModalMarker = () => {
       transition
     >
       <div className="fixed inset-0 z-10 w-screen overflow-y-auto bg-black/80">
-        <div className="flex min-h-full justify-center">
+        <div className="flex min-h-full items-center justify-center">
           <DialogPanel
             transition
             className={cn(

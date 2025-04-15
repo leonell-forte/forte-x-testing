@@ -21,12 +21,7 @@ import Button from "components/ui/button";
 import Dialogue from "components/ui/dialogue/dialogue";
 import Spinner from "components/ui/spinner/spinner";
 import Status from "components/ui/status";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "components/ui/tabs/Tabs";
+import Tabs from "components/ui/tabs/Tabs";
 
 import BeneficiariesPage from "pages/Beneficiaries/BeneficiariesPage";
 import MilestonePage from "pages/Milestones/MilestonesPage";
@@ -74,15 +69,8 @@ const IndividualContractsPage = () => {
     return null;
   }, [isDraft, isSigned, isCompleted]);
 
-  if (contractDetailsLoading) {
-    return (
-      <div className="flex h-full w-full items-center justify-center">
-        <Spinner />
-      </div>
-    );
-  }
-
-  const { name, status } = contractDetails!;
+  const name = contractDetails?.name || "";
+  const status = contractDetails?.status || "";
 
   const handleClose = () => {
     setModal(null);
@@ -105,6 +93,40 @@ const IndividualContractsPage = () => {
         );
     }
   };
+
+  const tabs = useMemo(() => {
+    if (!contractDetails) return [];
+    return [
+      {
+        value: "outcomes",
+        label: `Linked outcomes`,
+        content: (
+          <LinkedOutcomes
+            outcomes={contractDetails?.outcomes || []}
+            isLoading={contractDetailsLoading}
+          />
+        ),
+      },
+      {
+        value: "beneficiaries",
+        label: `Beneficiaries`,
+        content: <BeneficiariesPage />,
+      },
+      {
+        value: "milestones",
+        label: `Milestones`,
+        content: <MilestonePage />,
+      },
+    ];
+  }, [contractDetails, contractDetailsLoading]);
+
+  if (contractDetailsLoading) {
+    return (
+      <div className="flex h-full w-full items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -167,25 +189,7 @@ const IndividualContractsPage = () => {
 
         <ContractDetails contract={contractDetails as IContract} />
 
-        <Tabs defaultValue="outcomes">
-          <TabsList>
-            <TabsTrigger value="outcomes">Linked outcomes</TabsTrigger>
-            <TabsTrigger value="beneficiaries">Beneficiaries</TabsTrigger>
-            <TabsTrigger value="milestones">Milestones</TabsTrigger>
-          </TabsList>
-          <TabsContent value="outcomes">
-            <LinkedOutcomes
-              outcomes={contractDetails?.outcomes || []}
-              isLoading={contractDetailsLoading}
-            />
-          </TabsContent>
-          <TabsContent value="beneficiaries">
-            <BeneficiariesPage />
-          </TabsContent>
-          <TabsContent value="milestones">
-            <MilestonePage />
-          </TabsContent>
-        </Tabs>
+        <Tabs tabs={tabs} />
       </div>
     </>
   );
