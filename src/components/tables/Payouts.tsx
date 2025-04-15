@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import { DEFAULT_DATE_FORMAT } from "lib/constants";
 import { Payout, PayoutStatus } from "lib/types/payouts";
-import { formatDate, getStatusVariant } from "lib/utils";
+import { formatCurrency, formatDate, getStatusVariant } from "lib/utils";
 
 import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import Status from "components/ui/status";
@@ -98,7 +98,7 @@ const PayoutsTable = ({ list, isLoading }: PayoutsTableProps) => {
                   <Table.Data>{id}</Table.Data>
                   <Table.Data>{provider.name}</Table.Data>
                   <Table.Data>{noOfMilestones}</Table.Data>
-                  <Table.Data>{amount}</Table.Data>
+                  <Table.Data>{formatCurrency(Number(amount))}</Table.Data>
                   <Table.Data>
                     {settledAt
                       ? formatDate(settledAt, DEFAULT_DATE_FORMAT)

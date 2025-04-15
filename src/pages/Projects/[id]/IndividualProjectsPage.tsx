@@ -24,6 +24,8 @@ import {
   TabsTrigger,
 } from "components/ui/tabs/Tabs";
 
+import BeneficiariesPage from "pages/Beneficiaries/BeneficiariesPage";
+
 const IndividualProjectsPage = () => {
   const [modal, setModal] = useState<"project" | null>(null);
 
@@ -118,7 +120,7 @@ const IndividualProjectsPage = () => {
             </ContractsProvider>
           </TabsContent>
           <TabsContent value="beneficiaries">
-            <Beneficiaries id={id} />
+            <BeneficiariesPage projectId={id} />
           </TabsContent>
         </Tabs>
       </div>
