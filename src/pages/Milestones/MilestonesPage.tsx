@@ -16,13 +16,19 @@ import SearchInput from "components/ui/search-input";
 
 import ViewMilestone from "./ViewMilestone";
 
-const initialFilter = {
-  status: "",
-  contractId: "",
-  type: "",
-};
+const MilestonesComp = ({
+  hideHeader,
+  contractId,
+}: {
+  hideHeader?: boolean;
+  contractId?: string;
+}) => {
+  const initialFilter = {
+    status: "",
+    contractId: contractId || "",
+    type: "",
+  };
 
-const MilestonesComp = () => {
   const { page, setPage } = usePage();
 
   const [search, setSearch] = useState("");
@@ -59,7 +65,7 @@ const MilestonesComp = () => {
   return (
     <div className="flex h-full flex-col space-y-2.5">
       <div className="space-y-5">
-        <p className="text-[24px] font-semibold">Milestones</p>
+        {!hideHeader && <p className="text-[24px] font-semibold">Milestones</p>}
         <div className="flex flex-col justify-between gap-2.5 sm:flex-row">
           <div className="flex flex-col gap-2.5 sm:flex-row">
             <div className="flex gap-2">
@@ -78,7 +84,11 @@ const MilestonesComp = () => {
             </div>
 
             <div className="flex-1 flex-grow">
-              <Filters filters={filters} setFilters={setFilters} />
+              <Filters
+                filters={filters}
+                setFilters={setFilters}
+                initialFilter={initialFilter}
+              />
             </div>
           </div>
         </div>
@@ -105,9 +115,11 @@ interface IFilterProps {
   filters: IMilestoneFilters;
 
   setFilters: Dispatch<SetStateAction<IMilestoneFilters>>;
+
+  initialFilter: IMilestoneFilters;
 }
 
-const Filters = ({ filters, setFilters }: IFilterProps) => {
+const Filters = ({ filters, setFilters, initialFilter }: IFilterProps) => {
   const { setPage } = usePage();
 
   return (
@@ -146,12 +158,23 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
   );
 };
 
-export default function MilestonePage() {
+export default function MilestonePage({
+  hideHeader,
+  contractId,
+}: {
+  hideHeader?: boolean;
+  contractId?: string;
+}) {
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
   return (
     <Routes>
-      <Route index element={<MilestonesComp />} />
+      <Route
+        index
+        element={
+          <MilestonesComp hideHeader={hideHeader} contractId={contractId} />
+        }
+      />
       <Route
         path=":milestoneId"
         element={

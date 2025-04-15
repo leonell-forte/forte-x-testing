@@ -22,6 +22,7 @@ import { useCustomPrompt } from "components/ui/alert/custom-prompt";
 import Button from "components/ui/button";
 import Controller from "components/ui/custom-controller/CustomController";
 import DatePicker from "components/ui/date-picker";
+import { useModal } from "components/ui/dialogue/v2/Modal";
 import Dropdown from "components/ui/dropdown";
 import FileInput from "components/ui/file-input";
 import { Form } from "components/ui/form/Form";
@@ -36,13 +37,11 @@ interface IContractForm {
 
   onEdit?: boolean;
 
-  projectId: number;
+  projectId?: number;
 
   handleEdit: (val: boolean) => void;
 
   handleClose: () => void;
-
-  markContract: () => void;
 
   onSuccess?: (contract: ContractFieldValues) => void;
 }
@@ -58,11 +57,11 @@ const ContractForm = ({
 
   handleClose,
 
-  markContract,
-
   onSuccess,
 }: IContractForm) => {
   const { open } = useCustomPrompt();
+
+  const { setShowPromptOnClose } = useModal();
 
   const { toShowPrompt } = useContractsContext();
 
@@ -119,7 +118,7 @@ const ContractForm = ({
     pageSize: 100,
   });
 
-  const { isSigned, isCompleted, isDraft, isCancelled } = useMemo(() => {
+  const { isSigned, isCompleted } = useMemo(() => {
     const status = contractDetails?.status;
 
     return {
@@ -132,16 +131,6 @@ const ContractForm = ({
       isCancelled: status === "CANCELLED",
     };
   }, [contractDetails?.status]);
-
-  const statusActions = useMemo(() => {
-    if (isDraft) return { label: "Mark as signed" };
-
-    if (isSigned) return { label: "Mark as completed" };
-
-    if (isCompleted) return { label: "Mark as incomplete" };
-
-    return null;
-  }, [isDraft, isSigned, isCompleted]);
 
   const close = () => {
     handleClose!();
@@ -193,6 +182,14 @@ const ContractForm = ({
     enabled: !contractDetails && isDirty,
   });
   // autosave end
+
+  useEffect(() => {
+    if (!isDirty) return;
+    setShowPromptOnClose(true);
+    return () => {
+      setShowPromptOnClose(false);
+    };
+  }, [isDirty, setShowPromptOnClose]);
 
   return (
     <Form form={form} onSubmit={onSubmit} className="space-y-1">
@@ -452,17 +449,7 @@ const ContractForm = ({
         </div>
       )}
 
-      <div className="!mt-10 flex items-center justify-between">
-        {IsAuthorized([Contracts.UPDATE]) && (
-          <div>
-            {contractDetails && !isAmmending && !isCancelled && (
-              <Button onClick={markContract} buttonType="secondary">
-                {statusActions?.label}
-              </Button>
-            )}
-          </div>
-        )}
-
+      <div className="!mt-10 flex items-center justify-end">
         {!isCompleted &&
           IsAuthorized([Contracts.UPDATE]) &&
           (!onEdit ? (

@@ -57,19 +57,29 @@ export const useBeneficiaryStore = create<TBeneStore>()((set) => ({
   setBeneficiaryName: (name) => set(() => ({ beneficiaryName: name })),
 }));
 
-const BeneficiariesComp = () => {
+const BeneficiariesComp = ({
+  projectId,
+  contractId,
+  hideHeader,
+}: {
+  projectId?: string;
+  contractId?: string;
+  hideHeader?: boolean;
+}) => {
   const [search, setSearch] = useState("");
 
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
   const initialFilter = {
-    project: "",
+    project: projectId || "",
 
     status: "",
 
     provider: "",
 
     riskLevel: "",
+
+    contractId: contractId || "",
   };
 
   const [filters, setFilters] = useState<IBeneficiariesFilter>(initialFilter);
@@ -143,46 +153,48 @@ const BeneficiariesComp = () => {
 
       <div className="flex h-full flex-col space-y-2.5">
         <div className="space-y-4">
-          <div className="flex flex-col justify-between gap-x-8 gap-y-1.5 lg:flex-row">
-            <p className="text-[24px] font-semibold">Beneficiaries</p>
+          {!hideHeader && (
+            <div className="flex flex-col justify-between gap-x-8 gap-y-1.5 lg:flex-row">
+              <p className="text-[24px] font-semibold">Beneficiaries</p>
 
-            <div className="flex w-full flex-wrap justify-start gap-2.5 md:w-auto lg:justify-end">
-              {IsAuthorized([Beneficiaries.CREATE]) && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger>
-                    <Button eventName="Add Beneficiary">
-                      <HiPlus className="h-auto w-6 fill-black" />
-                      Add beneficiary
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    align="center"
-                    side="bottom"
-                    sideOffset={1}
-                  >
-                    <DropdownMenuItem
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        showSetupBeneficiaryModal();
-                      }}
+              <div className="flex w-full flex-wrap justify-start gap-2.5 md:w-auto lg:justify-end">
+                {IsAuthorized([Beneficiaries.CREATE]) && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <Button eventName="Add Beneficiary">
+                        <HiPlus className="h-auto w-6 fill-black" />
+                        Add beneficiary
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      align="center"
+                      side="bottom"
+                      sideOffset={1}
                     >
-                      Single Entry
-                    </DropdownMenuItem>
-                    {IsAuthorized([Beneficiaries.IMPORT]) && (
                       <DropdownMenuItem
                         onClick={(e) => {
                           e.stopPropagation();
-                          showImportBeneficiariesModal();
+                          showSetupBeneficiaryModal();
                         }}
                       >
-                        Bulk upload
+                        Single Entry
                       </DropdownMenuItem>
-                    )}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
+                      {IsAuthorized([Beneficiaries.IMPORT]) && (
+                        <DropdownMenuItem
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            showImportBeneficiariesModal();
+                          }}
+                        >
+                          Bulk upload
+                        </DropdownMenuItem>
+                      )}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="flex">
             <div className="flex w-full flex-col flex-wrap items-start gap-2.5 lg:w-auto lg:flex-row">
@@ -211,7 +223,11 @@ const BeneficiariesComp = () => {
                 </button>
               </div>
               <div className="hidden xl:block">
-                <Filters filters={filters} setFilters={setFilters} />
+                <Filters
+                  filters={filters}
+                  setFilters={setFilters}
+                  projectId={projectId}
+                />
               </div>
             </div>
           </div>
@@ -244,9 +260,11 @@ interface IFilterProps {
   filters: IBeneficiariesFilter;
 
   setFilters: Dispatch<SetStateAction<IBeneficiariesFilter>>;
+
+  projectId?: string;
 }
 
-const Filters = ({ filters, setFilters }: IFilterProps) => {
+export const Filters = ({ filters, setFilters, projectId }: IFilterProps) => {
   const { setPage } = usePage();
 
   const {
@@ -271,24 +289,28 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
 
   return (
     <div className="grid w-full grid-cols-1 flex-wrap gap-2.5 xl:flex xl:flex-row">
-      <Dropdown
-        enableSearch
-        value={findLabelFromOptions(projects, filters.project as string)}
-        loading={projectLoading}
-        options={sortOptions(projects)}
-        placeholder="Projects"
-        className="xl:w-[166px]"
-        handleSelect={(val) => {
-          setFilters((prev) => ({ ...prev, project: val as string }));
-          setPage(1);
-        }}
-        onChange={(e) => handleSearchProject(e.target.value)}
-      />
+      {!projectId && (
+        <Dropdown
+          enableSearch
+          value={findLabelFromOptions(projects, filters.project as string)}
+          loading={projectLoading}
+          options={sortOptions(projects)}
+          placeholder="Projects"
+          className="xl:w-[166px]"
+          contentWidth={200}
+          handleSelect={(val) => {
+            setFilters((prev) => ({ ...prev, project: val as string }));
+            setPage(1);
+          }}
+          onChange={(e) => handleSearchProject(e.target.value)}
+        />
+      )}
 
       <Dropdown
         options={BENEFICIARY_STATUS}
         placeholder="Status"
         className="xl:w-[166px]"
+        contentWidth={230}
         value={filters.status}
         handleSelect={(val) => {
           setFilters((prev) => ({ ...prev, status: val as string }));
@@ -301,6 +323,7 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
           loading={orgLoading}
           options={organizations}
           placeholder="Provider"
+          contentWidth={270}
           className="xl:w-[166px]"
           value={findLabelFromOptions(
             organizations,
@@ -355,7 +378,15 @@ const Filters = ({ filters, setFilters }: IFilterProps) => {
   );
 };
 
-export default function BeneficiariesPage() {
+export default function BeneficiariesPage({
+  projectId,
+  contractId,
+  hideHeader,
+}: {
+  projectId?: string;
+  contractId?: string;
+  hideHeader?: boolean;
+}) {
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
   const beneficiaryId = pathnames?.[1] || "";
@@ -364,7 +395,16 @@ export default function BeneficiariesPage() {
 
   return (
     <Routes>
-      <Route index element={<BeneficiariesComp />} />
+      <Route
+        index
+        element={
+          <BeneficiariesComp
+            projectId={projectId}
+            contractId={contractId}
+            hideHeader={hideHeader}
+          />
+        }
+      />
       <Route
         path=":beneficiaryId"
         element={

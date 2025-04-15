@@ -43,21 +43,29 @@ const alertConfig = {
   },
 };
 
-export function showSetupBeneficiaryModal(beneficiaryDetails?: IBeneficiaries) {
+export function showSetupBeneficiaryModal(
+  beneficiaryDetails?: IBeneficiaries,
+  contractId?: string
+) {
   const isEdit = Boolean(beneficiaryDetails);
   useModal.getState().open({
     component: (
-      <SetupBeneficiaryModal beneficiaryDetails={beneficiaryDetails} />
+      <SetupBeneficiaryModal
+        beneficiaryDetails={beneficiaryDetails}
+        contractId={contractId}
+      />
     ),
     size: "2xl",
     title: `${isEdit ? "Edit" : "Add"} Beneficiary ${isEdit ? "ID: " + beneficiaryDetails?.id : ""}`,
   });
 }
 
-function SetupBeneficiaryModal({
+export function SetupBeneficiaryModal({
   beneficiaryDetails,
+  contractId,
 }: {
   beneficiaryDetails?: IBeneficiaries;
+  contractId?: string;
 }) {
   const { close, setShowPromptOnClose } = useModal();
   const { open: openConfirmPrompt } = useConfirmPrompt();
@@ -84,10 +92,13 @@ function SetupBeneficiaryModal({
   } = form;
 
   useEffect(() => {
-    if (beneficiaryDetails) {
-      reset(beneficiaries.defaultValues({ beneficiary: beneficiaryDetails }));
-    }
-  }, [beneficiaryDetails, reset]);
+    reset(
+      beneficiaries.defaultValues({
+        beneficiary: beneficiaryDetails,
+        contractId: Number(contractId),
+      })
+    );
+  }, [beneficiaryDetails, reset, contractId]);
 
   //   const project = watch("projectId");
 

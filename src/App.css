@@ -206,7 +206,7 @@ label {
 }
 
 .link {
-  @apply text-mint transition duration-300 hover:text-[#35BD86];
+  @apply text-[14px] font-semibold text-mint underline underline-offset-4 transition duration-300 hover:text-[#35BD86];
 }
 
 .link-hover {
@@ -325,4 +325,8 @@ button.icon {
 
 .toast-default button {
   @apply border-[#0D7F51]/40;
+}
+
+.checkbox * svg {
+  @apply fill-mint stroke-mint;
 }

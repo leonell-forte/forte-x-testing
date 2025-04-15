@@ -8,6 +8,8 @@ export interface File {
   filename: string;
 
   createdAt?: string;
+
+  slug?: string;
 }
 
 export interface User {

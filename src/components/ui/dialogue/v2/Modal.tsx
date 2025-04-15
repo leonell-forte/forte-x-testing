@@ -61,11 +61,11 @@ const ModalMarker = () => {
       transition
     >
       <div className="fixed inset-0 z-10 w-screen overflow-y-auto bg-black/80">
-        <div className="my-6 flex min-h-full items-center justify-center">
+        <div className="flex min-h-full items-center justify-center">
           <DialogPanel
             transition
             className={cn(
-              "data-[closed]:transform-[scale(95%)] relative min-h-screen w-full bg-[#30F1FF1F] p-6 drop-shadow-sm backdrop-blur duration-300 ease-out data-[closed]:opacity-0 md:h-full md:min-h-fit md:rounded-lg md:p-14",
+              "data-[closed]:transform-[scale(95%)] relative my-4 min-h-screen w-full bg-[#30F1FF1F] p-6 drop-shadow-sm backdrop-blur duration-300 ease-out data-[closed]:opacity-0 md:h-full md:min-h-fit md:rounded-lg md:p-14",
               MAP_SIZE_CLASS[config?.size || "base"]
             )}
           >

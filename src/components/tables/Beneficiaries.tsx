@@ -180,7 +180,6 @@ const BeneficiariesTable = ({
               {setChecked ? (
                 <Table.Header className="!pl-4">
                   <Checkbox
-                    dark
                     checked={
                       list?.length !== 0 && selectedIds.length === list.length
                     }

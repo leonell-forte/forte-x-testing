@@ -3,9 +3,10 @@ import beneficiaryService from "api/beneficiaries";
 import evidenceService from "api/evidence";
 import { isNumber } from "lodash";
 import * as React from "react";
-import { HiPencil } from "react-icons/hi";
 import { usePhoneInput } from "react-international-phone";
 import { useParams } from "react-router-dom";
+
+import { ReactComponent as Pencil } from "assets/images/icons/pencil.svg";
 
 import { isPhoneValid } from "lib/isPhoneValid";
 import { getStatusVariant } from "lib/utils";
@@ -18,12 +19,7 @@ import MilestonesTable from "components/tables/Milestones";
 import Button from "components/ui/button";
 import Spinner from "components/ui/spinner/spinner";
 import Status from "components/ui/status";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "components/ui/tabs/Tabs";
+import Tabs from "components/ui/tabs/Tabs";
 
 import { useBeneficiaryStore } from "./BeneficiariesPage";
 
@@ -70,6 +66,60 @@ export default function ViewBeneficiary() {
     setBeneficiaryName(beneficiaryName);
   }, [beneficiaryName, setBeneficiaryName]);
 
+  const upperTabs = React.useMemo(() => {
+    if (!beneficiary) return [];
+    return [
+      {
+        value: "project-details",
+        label: "Project Details",
+        content: <ProjectDetailsSection beneficiary={beneficiary} />,
+      },
+      {
+        value: "personal-details",
+        label: "Personal Details",
+        content: (
+          <PersonalDetailsSection
+            beneficiary={{ ...beneficiary, phone: formattedPhone }}
+          />
+        ),
+      },
+    ];
+  }, [beneficiary, formattedPhone]);
+
+  const lowerTabs = React.useMemo(() => {
+    return [
+      {
+        value: "milestones",
+        label: `Miletones ${
+          milestones && isNumber(milestones?.data.length)
+            ? `(${milestones.data.length})`
+            : null
+        }`,
+        content: (
+          <MilestonesTable
+            list={milestones?.data || []}
+            isLoading={isMilestoneLoading}
+            href="milestone/"
+          />
+        ),
+      },
+      {
+        value: "evidences",
+        label: `Evidences ${
+          evidences && isNumber(evidences?.totalSize)
+            ? `(${evidences?.totalSize})`
+            : null
+        }`,
+        content: (
+          <EvidenceTable
+            list={evidences?.items || []}
+            isLoading={isEvidenceLoading}
+          />
+        ),
+      },
+    ];
+  }, [milestones, isMilestoneLoading, evidences, isEvidenceLoading]);
+
   if (isLoading)
     return (
       <div className="flex h-full w-full items-center justify-center">
@@ -103,55 +153,13 @@ export default function ViewBeneficiary() {
             className="group"
             onClick={() => showSetupBeneficiaryModal(beneficiary)}
           >
-            <HiPencil className="h-auto w-6 transition duration-100 group-hover:fill-mint" />
+            <Pencil height={14} />
             Edit
           </Button>
         </div>
-        <Tabs defaultValue="project-details">
-          <TabsList>
-            <TabsTrigger value="project-details">Project Details</TabsTrigger>
-            <TabsTrigger value="personal-details">Personal Details</TabsTrigger>
-          </TabsList>
-          <TabsContent value="project-details">
-            <ProjectDetailsSection beneficiary={beneficiary} />
-          </TabsContent>
-          <TabsContent value="personal-details">
-            <PersonalDetailsSection
-              beneficiary={{ ...beneficiary, phone: formattedPhone }}
-            />
-          </TabsContent>
-        </Tabs>
+        <Tabs tabs={upperTabs} />
 
-        <Tabs defaultValue="milestones">
-          <TabsList>
-            <TabsTrigger value="milestones">
-              Miletones{" "}
-              {milestones && isNumber(milestones?.data.length)
-                ? `(${milestones.data.length})`
-                : null}
-            </TabsTrigger>
-            <TabsTrigger value="evidences">
-              {" "}
-              Evidences{" "}
-              {evidences && isNumber(evidences?.totalSize)
-                ? `(${evidences?.totalSize})`
-                : null}
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="milestones">
-            <MilestonesTable
-              list={milestones?.data || []}
-              isLoading={isMilestoneLoading}
-              href="milestone/"
-            />
-          </TabsContent>
-          <TabsContent value="evidences">
-            <EvidenceTable
-              list={evidences?.items || []}
-              isLoading={isEvidenceLoading}
-            />
-          </TabsContent>
-        </Tabs>
+        <Tabs tabs={lowerTabs} />
       </div>
     </>
   );

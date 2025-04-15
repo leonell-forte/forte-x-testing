@@ -38,6 +38,7 @@ class BeneficiariesService {
     items: IBeneficiaries[];
 
     totalSize: number;
+
     pageSize: number;
   }> {
     const params = new URLSearchParams();

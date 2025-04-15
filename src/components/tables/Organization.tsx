@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import { IOrganization, OrgTypes } from "lib/types/organizations";
 
@@ -22,7 +23,19 @@ const OrganizationTable = ({
 
   const [selectedOrg, setSelectedOrg] = useState("");
 
+  const [params, setParams] = useSearchParams();
+
+  const id = params.get("id");
+
+  useEffect(() => {
+    if (id) {
+      handleEditOrg(id);
+    }
+  }, [id]);
+
   const close = () => {
+    setParams({});
+
     setSelectedOrg("");
 
     setModal(null);

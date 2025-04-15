@@ -17,9 +17,10 @@ type TMilestonesTable = {
 const MilestonesTable = ({
   list,
   isLoading = false,
-  href = "",
+  href,
 }: TMilestonesTable) => {
   const navigate = useNavigate();
+  const linkTo = href ? href : "/milestones/";
   return (
     <>
       <div className="lg:hidden">
@@ -28,7 +29,7 @@ const MilestonesTable = ({
             const { id, funder, type, reference, outcome, cost, status } = item;
             return (
               <Cards.Card
-                onClick={() => navigate(`${href}${id}`)}
+                onClick={() => navigate(`${linkTo}${id}`)}
                 title={`Milestone ID: ${id}`}
                 key={index}
               >
@@ -79,7 +80,10 @@ const MilestonesTable = ({
                 item;
 
               return (
-                <Table.Row onClick={() => navigate(`${href}${id}`)} key={index}>
+                <Table.Row
+                  onClick={() => navigate(`${linkTo}${id}`)}
+                  key={index}
+                >
                   <Table.Data>
                     <p className="underline">{id}</p>
                   </Table.Data>

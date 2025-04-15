@@ -91,7 +91,7 @@ function ViewEvidenceModal({ milestone, evidenceDetails }: TParams) {
           <div className="space-y-6">
             <div className="grid grid-cols-3 items-center gap-6">
               <InfoVertical label="Beneficiary">
-                <ReferenceLink hrefLink="/beneficiaries">
+                <ReferenceLink hrefLink={`/beneficiaries/${beneficiary?.id}`}>
                   {beneficiary?.firstName} {beneficiary?.firstName}
                 </ReferenceLink>
               </InfoVertical>

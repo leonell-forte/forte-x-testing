@@ -16,14 +16,15 @@ import TagExistingDialogue from "../Dialogues/TagExistingDialogue";
 type ModalLabelType = "beneficiaries" | "tag" | "import" | "";
 
 interface IProps {
-  id?: string;
+  projectId?: string;
 }
 
-const Beneficiaries = ({ id }: IProps) => {
+const Beneficiaries = ({ projectId }: IProps) => {
   const { data, isLoading } = useQuery({
-    queryKey: ["beneficiaries", id],
+    queryKey: ["beneficiaries", projectId],
 
-    queryFn: () => beneficiariesService.list({ filters: { project: id } }),
+    queryFn: () =>
+      beneficiariesService.list({ filters: { project: projectId } }),
   });
 
   const [modal, setModal] = useState<ModalLabelType>("");
@@ -37,7 +38,7 @@ const Beneficiaries = ({ id }: IProps) => {
       case "beneficiaries":
         return (
           <BeneficiariesDialogue
-            projectId={Number(id)}
+            projectId={Number(projectId)}
             isVisible={modal === "beneficiaries"}
             handleClose={close}
             editMode

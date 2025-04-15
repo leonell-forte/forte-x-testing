@@ -46,6 +46,8 @@ interface IDropdownProp extends InputHTMLAttributes<HTMLInputElement> {
   enableSearch?: boolean;
 
   filterOptions?: boolean;
+
+  contentWidth?: string | number;
 }
 
 const Dropdown = ({
@@ -69,6 +71,8 @@ const Dropdown = ({
 
   filterOptions,
 
+  contentWidth,
+
   ...props
 }: IDropdownProp) => {
   const dropdownRef = useRef(null);
@@ -80,8 +84,6 @@ const Dropdown = ({
   const [showList, setShowList] = useState(false);
 
   const [search, setSearch] = useState("");
-
-  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
   const displayValue =
     isMultiSelect && Array.isArray(props.value)
@@ -270,8 +272,15 @@ const Dropdown = ({
           </div>
         </PopoverTrigger>
 
-        <PopoverContent onOpenAutoFocus={(e) => e.preventDefault()}>
-          <div>
+        <PopoverContent
+          onOpenAutoFocus={(e) => e.preventDefault()}
+          {...(contentWidth && {
+            style: {
+              width: contentWidth,
+            },
+          })}
+        >
+          <div className="max-w-full">
             {loading ? (
               <div className="flex h-[100px] w-full items-center justify-center">
                 <Loader dark />
@@ -286,24 +295,20 @@ const Dropdown = ({
                 const isSelected =
                   props?.value === label || props?.value === value;
 
-                const isHovered = hoverIndex === index;
-
                 return isMultiSelect ? (
                   <div
                     key={index}
-                    className="checkbox group rounded-[8px] px-2.5 py-1.5 transition-all hover:bg-mint"
+                    className="checkbox gap group flex max-w-full items-center overflow-hidden rounded-[8px] px-2.5 py-1.5 transition-all hover:bg-neutral-300"
                     role="button"
                     onClick={(e) => onMultipleSelect(value, e)}
-                    onMouseEnter={() => setHoverIndex(index)}
-                    onMouseLeave={() => setHoverIndex(null)}
                   >
                     <Checkbox
-                      white={isHovered}
-                      labelClass="text-[14px] text-black transition duration-500"
                       checked={props?.value?.includes(value)}
                       onChange={() => onMultipleSelect(value)}
-                      label={label}
                     />
+                    <span className="w-full translate-x-[-15px] translate-y-[2px] overflow-hidden text-ellipsis whitespace-nowrap text-[14px] text-black transition duration-500">
+                      {label}
+                    </span>
                   </div>
                 ) : (
                   <button
@@ -321,7 +326,7 @@ const Dropdown = ({
                     <li
                       className={cn(
                         "list-none truncate rounded-[8px] p-2 text-sm text-black transition duration-500",
-                        isSelected ? "bg-mint" : "hover:bg-mint"
+                        isSelected ? "bg-mint" : "hover:bg-neutral-300"
                       )}
                     >
                       {label}

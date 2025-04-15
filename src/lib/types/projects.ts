@@ -14,6 +14,12 @@ export interface IOutcome {
   updatedAt: string;
 }
 
+type Sub = {
+  id: number;
+
+  name: string;
+};
+
 export interface IProject {
   id: number;
 
@@ -29,7 +35,13 @@ export interface IProject {
 
   providers?: string[];
 
-  funderId?: number;
+  funder?: Sub;
+
+  beneficiariesCount?: string | number;
+
+  contractsCount?: string | number;
+
+  milestonesCount?: string | number;
 }
 
 export interface IProjectOrganization {
@@ -57,3 +69,7 @@ export interface IProjectOrganization {
 }
 
 export type ProjectFieldValues = z.infer<typeof projects.schema>;
+
+export type ProjectFilter = {
+  funder: string;
+};

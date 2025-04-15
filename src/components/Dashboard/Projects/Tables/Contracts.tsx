@@ -1,40 +1,49 @@
-import { useQuery } from "@tanstack/react-query";
-import contractService from "api/contract";
 import { useState } from "react";
+import { BiSlider as SliderIcon } from "react-icons/bi";
 
-import { DEFAULT_DATE_FORMAT } from "lib/constants";
-import { IsAuthorized, Projects } from "lib/role-permissions";
-// import { Contracts as ContractPermission } from "lib/role-permissions";
-import { formatDate } from "lib/utils";
+import useContractList from "lib/common/lists/useContractList";
+import { usePage } from "lib/hooks";
+import { IContractFilters } from "lib/types/contracts";
 
+import ContractsTable from "components/tables/Contracts";
 import Button from "components/ui/button";
-import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
-import Table from "components/ui/table";
-import Cards from "components/ui/table-card";
+import Dialogue from "components/ui/dialogue/dialogue";
+import Pagination from "components/ui/pagination";
+import SearchInput from "components/ui/search-input";
+
+import { Filters } from "pages/Contracts/ContractsPage";
 
 import ContractDialogue from "../../Contracts/Dialogues/ContractDialogue";
 import TagExistingDialogue from "../Dialogues/TagExistingDialogue";
 
-type ModalLabelType = "contract" | "tag" | "";
+type ModalLabelType = "contract" | "tag" | "filter" | "";
 
 interface IProps {
   projectId?: number;
 }
 
 const Contracts = ({ projectId }: IProps) => {
-  const { data: contractList, isLoading } = useQuery({
-    queryKey: ["contracts", 1, ""],
+  const { page, setPage } = usePage();
 
-    queryFn: () =>
-      contractService.list({
-        page: 1,
+  const initialFilter = {
+    status: "",
 
-        search: "",
+    project: projectId?.toString() || "",
 
-        filters: null,
+    date: "",
+  };
 
-        projectId,
-      }),
+  const [filters, setFilters] = useState<IContractFilters>(initialFilter);
+
+  const {
+    isLoading,
+    rawList: contractList,
+    handleSearchContract,
+    searchContractValue,
+  } = useContractList({
+    key: [page, filters],
+    page,
+    filters,
   });
 
   const [selectedContract, setSelectedContract] = useState("");
@@ -59,8 +68,6 @@ const Contracts = ({ projectId }: IProps) => {
         return (
           <ContractDialogue
             id={Number(selectedContract)}
-            isVisible={modal === "contract"}
-            handleClose={close}
             projectId={projectId}
           />
         );
@@ -73,6 +80,34 @@ const Contracts = ({ projectId }: IProps) => {
             title="Add contracts to project"
           />
         );
+      case "filter":
+        return (
+          <Dialogue
+            hideClose
+            isVisible={modal === "filter"}
+            title="Filters"
+            handleClose={close}
+          >
+            <div className="space-y-6">
+              <Filters
+                filters={filters}
+                setFilters={setFilters}
+                projectId={projectId}
+              />
+              <div className="flex justify-end gap-2">
+                <Button
+                  buttonType="secondary"
+                  onClick={() => {
+                    setFilters(initialFilter);
+                  }}
+                >
+                  Clear
+                </Button>
+                <Button onClick={close}>Apply</Button>
+              </div>
+            </div>
+          </Dialogue>
+        );
     }
   };
 
@@ -81,144 +116,56 @@ const Contracts = ({ projectId }: IProps) => {
       {renderModal(modal)}
 
       <div className="space-y-2.5">
-        <div className="flex w-full flex-col items-start justify-between sm:flex-row sm:items-center">
-          <p className="text-[24px] font-semibold">Contracts</p>
+        <div className="flex flex-col gap-2.5 sm:flex-row">
+          <div className="flex gap-2">
+            <div className="w-full md:w-auto">
+              <SearchInput
+                value={searchContractValue}
+                onChange={(e) => {
+                  handleSearchContract(e.target.value);
+                }}
+                containerClass="w-full lg:max-w-[286px]"
+                placeholder="Search contracts"
+                onClear={() => handleSearchContract("")}
+              />
+            </div>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setModal("filter");
+              }}
+              className="group flex-shrink-0 lg:hidden"
+            >
+              <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
+            </button>
+          </div>
 
-          {IsAuthorized([Projects.UPDATE]) && (
-            <div className="flex w-full flex-col sm:w-auto sm:flex-row">
-              <Button onClick={() => setModal("contract")}>
-                Add new contract
-              </Button>
+          <div className="hidden lg:block">
+            <Filters
+              filters={filters}
+              setFilters={setFilters}
+              projectId={projectId}
+            />
+          </div>
+        </div>
+
+        <div className="flex h-full flex-col justify-between gap-4">
+          <ContractsTable list={contractList.items} isLoading={isLoading} />
+
+          {!!contractList?.items.length && (
+            <div className="flex w-full items-center justify-end">
+              <Pagination
+                page={page}
+                onPageChange={(val) => setPage(val)}
+                pageSize={contractList?.pageSize}
+                total={contractList?.totalSize as number}
+              />
             </div>
           )}
         </div>
-
-        <div className="lg:hidden">
-          <Cards.Container isLoading={isLoading}>
-            {contractList?.items.map((item, index) => {
-              const {
-                // id,
-
-                provider,
-
-                name,
-
-                targetNoOfBenefeciaries,
-
-                status,
-
-                startDate,
-
-                endDate,
-
-                outcomenames,
-              } = item;
-              return (
-                <Cards.Card key={index} title={name}>
-                  <Cards.Group cols={2}>
-                    <Cards.Details label="Provider" value={provider?.name} />
-                    <Cards.Details
-                      label="Outcomes"
-                      value={outcomenames?.join(", ")}
-                    />
-
-                    <Cards.Details
-                      label="Beneficiaries"
-                      value={targetNoOfBenefeciaries.toString()}
-                    />
-                    <Cards.Details
-                      label="Status"
-                      value={status.toLowerCase()}
-                      capitalize
-                    />
-                    <Cards.Details
-                      label="Start date"
-                      value={formatDate(startDate || "", DEFAULT_DATE_FORMAT)}
-                    />
-                    <Cards.Details
-                      label="End date"
-                      value={formatDate(endDate || "", DEFAULT_DATE_FORMAT)}
-                    />
-                  </Cards.Group>
-                </Cards.Card>
-              );
-            })}
-          </Cards.Container>
-        </div>
-        <ScrollArea className="hidden w-[calc(100vw-330px)] overflow-hidden lg:block">
-          <Table.Container
-            isLoading={isLoading}
-            isEmpty={!contractList?.items.length}
-          >
-            <Table.Head>
-              <Table.Row>
-                {HEADERS.map((item, index) => {
-                  return <Table.Header key={index}>{item}</Table.Header>;
-                })}
-              </Table.Row>
-            </Table.Head>
-
-            <Table.Body>
-              {contractList?.items.map((item, index) => {
-                const {
-                  id,
-
-                  provider,
-
-                  name,
-
-                  targetNoOfBenefeciaries,
-
-                  status,
-
-                  startDate,
-
-                  endDate,
-
-                  outcomenames,
-                } = item;
-                return (
-                  <Table.Row key={index}>
-                    <Table.Data>{id}</Table.Data>
-
-                    <Table.Data>{name}</Table.Data>
-
-                    <Table.Data>{provider?.name}</Table.Data>
-
-                    <Table.Data>{outcomenames?.join(", ")}</Table.Data>
-
-                    <Table.Data>{targetNoOfBenefeciaries}</Table.Data>
-
-                    <Table.Data className="capitalize">
-                      {status?.toLowerCase()}
-                    </Table.Data>
-
-                    <Table.Data>
-                      {formatDate(startDate, "LL-dd-yyyy")}
-                    </Table.Data>
-
-                    <Table.Data>{formatDate(endDate, "LL-dd-yyyy")}</Table.Data>
-                  </Table.Row>
-                );
-              })}
-            </Table.Body>
-          </Table.Container>
-          <ScrollBar orientation="horizontal" />
-        </ScrollArea>
       </div>
     </>
   );
 };
 
 export default Contracts;
-
-const HEADERS = [
-  "ID",
-  "Contract",
-  "Parties",
-  "Outcome(s)",
-  "Beneficiaries",
-  "Status",
-  "Start date",
-  "End date",
-];

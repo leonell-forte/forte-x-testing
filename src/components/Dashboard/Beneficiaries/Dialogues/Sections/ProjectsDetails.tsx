@@ -46,10 +46,14 @@ const ProjectDetailsSection = ({ beneficiary }: Params) => {
           <ReferenceLink hrefLink="/providers">{provider?.name}</ReferenceLink>
         </InfoVertical>
         <InfoVertical label="Project">
-          <ReferenceLink hrefLink="/projects">{project?.name}</ReferenceLink>
+          <ReferenceLink hrefLink={`/projects/${project?.id}`}>
+            {project?.name}
+          </ReferenceLink>
         </InfoVertical>
         <InfoVertical label="Contract">
-          <ReferenceLink hrefLink="/contracts">{contract?.name}</ReferenceLink>
+          <ReferenceLink hrefLink={`/contracts/${contract?.id}`}>
+            {contract?.name}
+          </ReferenceLink>
         </InfoVertical>
         <InfoVertical label="Program Name">
           {beneficiary.cohortName || "-"}

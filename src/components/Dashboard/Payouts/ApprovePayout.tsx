@@ -46,8 +46,10 @@ const ApprovePayout = ({ id }: ApprovePayoutProps) => {
         message: err.response.data.message,
         title: "Error",
       });
+    } finally {
+      setHasChecked(false);
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -64,7 +66,7 @@ const ApprovePayout = ({ id }: ApprovePayoutProps) => {
       >
         <div className="space-y-8">
           <div className="space-y-6">
-            <p className="text-[24px] font-semibold">Approve Payout ID#XX1?</p>
+            <p className="text-[24px] font-semibold">Approve Payout ID#{id}?</p>
             <div className="space-y-4">
               <p className="text-[20px] font-light">
                 Approving this will pay provider for all milestones associated

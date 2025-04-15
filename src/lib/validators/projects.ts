@@ -17,7 +17,7 @@ export const projects = {
 
       outcomes: project?.outcomes || [],
 
-      funderId: project?.funderId || 0,
+      funderId: project?.funder?.id || 0,
     };
 
     if (project) {
