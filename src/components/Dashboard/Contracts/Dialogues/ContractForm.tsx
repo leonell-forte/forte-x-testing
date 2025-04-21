@@ -144,6 +144,7 @@ const ContractForm = ({
       onSuccess?.(contract);
       setIsAmmending(false);
       setPage(1);
+      close();
     },
   });
 
