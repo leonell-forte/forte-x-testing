@@ -59,12 +59,10 @@ interface AnimatedTabsProps {
   defaultValue?: string;
 }
 
-export default function Tabs({
-  tabs,
-  defaultValue = tabs[0]?.value,
-}: AnimatedTabsProps) {
-  const [activeTab, setActiveTab] = React.useState(defaultValue);
-
+function Tabs({ tabs, defaultValue }: AnimatedTabsProps) {
+  const [activeTab, setActiveTab] = React.useState(
+    defaultValue || tabs[0]?.value
+  );
   return (
     <TabsPrim
       defaultValue={defaultValue}
@@ -104,3 +102,5 @@ export default function Tabs({
     </TabsPrim>
   );
 }
+
+export default React.memo(Tabs);
