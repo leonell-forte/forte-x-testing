@@ -92,7 +92,7 @@ export const signup = {
         .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
         .regex(/\d/, "Password must contain at least one number")
         .regex(
-          /[!@#$%^&*(),.?":{}|<>]/,
+          /[!@#$%^&*(),.?":{}|<>_-]/,
           "Password must contain at least one special character"
         )
         .min(8, "Password must be at least 8 characters long"),
