@@ -52,7 +52,7 @@ export default function ViewBeneficiary() {
   });
 
   const { inputValue: formattedPhone } = usePhoneInput({
-    value: beneficiary?.phone,
+    value: beneficiary?.phone || "",
   });
 
   const beneficiaryName = React.useMemo(
@@ -60,11 +60,6 @@ export default function ViewBeneficiary() {
       beneficiary ? `${beneficiary.firstName} ${beneficiary.lastName}` : "",
     [beneficiary]
   );
-
-  React.useEffect(() => {
-    if (!beneficiaryName) return;
-    setBeneficiaryName(beneficiaryName);
-  }, [beneficiaryName, setBeneficiaryName]);
 
   const upperTabs = React.useMemo(() => {
     if (!beneficiary) return [];
@@ -120,6 +115,11 @@ export default function ViewBeneficiary() {
     ];
   }, [milestones, isMilestoneLoading, evidences, isEvidenceLoading]);
 
+  React.useEffect(() => {
+    if (!beneficiaryName) return;
+    setBeneficiaryName(beneficiaryName);
+  }, [beneficiaryName, setBeneficiaryName]);
+
   if (isLoading)
     return (
       <div className="flex h-full w-full items-center justify-center">
@@ -142,7 +142,7 @@ export default function ViewBeneficiary() {
             </div>
             <div className="space-x-0.5 text-sm opacity-50">
               <span>{beneficiary.email}</span>
-              {isPhoneValid(beneficiary.phone) ? (
+              {isPhoneValid(beneficiary?.phone) ? (
                 <span> | {formattedPhone}</span>
               ) : null}
             </div>
