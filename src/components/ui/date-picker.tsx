@@ -71,7 +71,7 @@ const DatePicker = ({
                   "& fieldset": {
                     borderColor: error
                       ? "#651A1A !important"
-                      : "#ffffff !important",
+                      : "#ffffff4d !important",
                   },
 
                   "&:hover fieldset": {

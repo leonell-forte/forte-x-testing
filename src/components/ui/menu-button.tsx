@@ -15,7 +15,7 @@ const MenuButton = {
 
   Trigger: (props: PropsWithChildren<PopoverTriggerProps & IButtonProp>) => {
     return (
-      <PopoverTrigger asChild {...props}>
+      <PopoverTrigger asChild {...props} className="w-fit">
         <Button {...props}>{props.children}</Button>
       </PopoverTrigger>
     );

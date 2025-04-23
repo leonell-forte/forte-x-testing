@@ -1,25 +1,30 @@
 import * as amplitude from "@amplitude/analytics-browser";
+import { capitalize } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import organizationService from "api/organization";
+import { useNavigate } from "react-router-dom";
 
 import { formatErrorMessage } from "lib/utils";
 
 import { queryClient } from "components/QueryProvider";
+import { ToastAction, toast } from "components/ui/toast/Toast";
 
-import { useAlert } from "../hooks";
 import { OrganizationFieldTypes } from "../types/organizations";
 
 interface IOrganizationMutation {
   orgId?: string;
 
   successCallback?: (id: number) => void;
+
+  type?: string;
 }
 
 const useOrganizationMutation = ({
   orgId,
   successCallback,
+  type,
 }: IOrganizationMutation) => {
-  const { setAlert } = useAlert();
+  const navigate = useNavigate();
 
   const { mutateAsync: addOrganization, isPending } = useMutation({
     mutationFn: orgId
@@ -43,17 +48,27 @@ const useOrganizationMutation = ({
             items: [...(old?.items || []), addedOrg.data.data],
           };
         });
+      } else {
+        queryClient.setQueryData(["specific org", orgId], (old: any) => {
+          return {
+            ...addedOrg.data.data,
+          };
+        });
       }
 
-      setAlert({
-        status: "success",
-
-        message: `Organization ${orgId ? "updated" : "added"} successfully`,
-
-        title: "Success!",
-      });
-
       successCallback?.(addedOrg.data.data.id);
+
+      toast({
+        title: `${capitalize(type || "organization")} ${orgId ? "updated" : "added"} successfully`,
+        action: (
+          <ToastAction
+            altText="view"
+            onClick={() => navigate(`/${type}s/${addedOrg.data.data?.id}`)}
+          >
+            <p>View</p>
+          </ToastAction>
+        ),
+      });
 
       amplitude.track(
         `${orgId ? "Update" : "Add"} Organization Form Submission`
@@ -67,12 +82,10 @@ const useOrganizationMutation = ({
         context?.prevOrganizations
       );
 
-      setAlert({
-        status: "error",
-
-        title: `Failed ${orgId ? "updating" : "adding"} organization`,
-
-        message: formatErrorMessage(err?.response?.data?.data?.[0]),
+      toast({
+        title: `Failed ${orgId ? "updating" : "adding"} ${type}`,
+        description: formatErrorMessage(err?.response?.data?.data?.[0]),
+        variant: "danger",
       });
     },
 

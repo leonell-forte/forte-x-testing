@@ -1,13 +1,15 @@
 import { useCallback, useState } from "react";
 import { FaTrash as Trash } from "react-icons/fa6";
 import { RiPencilFill as Pencil } from "react-icons/ri";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+import { ReactComponent as LinkIcon } from "assets/images/icons/link.svg";
 
 import { IsAuthorized, Projects } from "lib/role-permissions";
 import { IProject } from "lib/types/projects";
 
 import DeleteDialogue from "components/Dashboard/Projects/Dialogues/DeleteDialogue";
-import ProjectDialogue from "components/Dashboard/Projects/Dialogues/ProjectDialogue";
+import { showProjectDialogue } from "components/Dashboard/Projects/Dialogues/ProjectDialogue";
 import Button from "components/ui/button";
 import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import Table from "components/ui/table";
@@ -16,20 +18,19 @@ import Cards from "components/ui/table-card";
 type TProjectTable = {
   list: IProject[];
   isLoading?: boolean;
+  funderId?: number;
 };
 
-const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
+const ProjectsTable = ({
+  list,
+  isLoading = false,
+  funderId,
+}: TProjectTable) => {
   const navigate = useNavigate();
 
-  const [modal, setModal] = useState<"project" | "delete" | null>(null);
+  const [modal, setModal] = useState<"delete" | null>(null);
 
   const [selectedProject, setSelectedProject] = useState<IProject | null>(null);
-
-  const handleEditUser = (item: IProject) => {
-    setModal("project");
-
-    setSelectedProject(item);
-  };
 
   const handleCloseModal = () => {
     setModal(null);
@@ -39,25 +40,17 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
 
   const renderDialog = useCallback(() => {
     switch (modal) {
-      case "project":
-        return (
-          <ProjectDialogue
-            projectId={(selectedProject?.id || "") as string}
-            isVisible={modal === "project"}
-            handleClose={handleCloseModal}
-          />
-        );
-
       case "delete":
         return (
           <DeleteDialogue
+            funderId={funderId}
             isVisible={modal === "delete"}
             project={selectedProject!}
             handleClose={handleCloseModal}
           />
         );
     }
-  }, [modal, selectedProject]);
+  }, [modal, selectedProject, funderId]);
 
   return (
     <>
@@ -95,7 +88,9 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
                       id={id.toString()}
                       buttonType="default"
                       type="button"
-                      onClick={() => handleEditUser(item)}
+                      onClick={() =>
+                        showProjectDialogue({ projectId: item.id.toString() })
+                      }
                       className="icon group"
                     >
                       <Pencil className="h-auto w-5 transition-all group-hover:fill-mint" />
@@ -125,7 +120,14 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
       </div>
 
       <ScrollArea className="hidden w-[calc(100vw-330px)] overflow-hidden lg:block">
-        <Table.Container isEmpty={!list.length} isLoading={isLoading}>
+        <Table.Container
+          emptyConfig={{
+            title: "No projects yet.",
+            description: "Add a project by clicking the ‘Add’ button above.",
+            status: !list.length,
+          }}
+          isLoading={isLoading}
+        >
           <Table.Head>
             <Table.Row>
               {TABLE_HEADER.map((key, headerIndex) => {
@@ -157,7 +159,16 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
                 >
                   <Table.Data>{name}</Table.Data>
 
-                  <Table.Data>{funder?.name}</Table.Data>
+                  <Table.Data>
+                    <Link
+                      onClick={(e) => e.stopPropagation()}
+                      to={`/funders/${funder?.id}`}
+                      className="flex items-center gap-2"
+                    >
+                      <p>{funder?.name}</p>
+                      <LinkIcon />
+                    </Link>
+                  </Table.Data>
 
                   <Table.Data>{contractsCount}</Table.Data>
 
@@ -174,7 +185,11 @@ const ProjectsTable = ({ list, isLoading = false }: TProjectTable) => {
                           id={id.toString()}
                           buttonType="default"
                           type="button"
-                          onClick={() => handleEditUser(item)}
+                          onClick={() =>
+                            showProjectDialogue({
+                              projectId: id.toString(),
+                            })
+                          }
                           className="icon group"
                         >
                           <Pencil className="h-auto w-5 transition-all group-hover:fill-mint" />

@@ -76,7 +76,14 @@ const Invoices = ({ list, isLoading }: InvoicesProps) => {
       </div>
 
       <ScrollArea className="hidden w-[calc(100vw-330px)] overflow-hidden lg:block">
-        <Table.Container isEmpty={!list?.length} isLoading={isLoading}>
+        <Table.Container
+          emptyConfig={{
+            title: "No invoices yet.",
+            description: "Add an invoice by clicking the ‘Add’ button above.",
+            status: !list?.length,
+          }}
+          isLoading={isLoading}
+        >
           <Table.Head>
             <Table.Row>
               {HEADERS.map((header, index) => (

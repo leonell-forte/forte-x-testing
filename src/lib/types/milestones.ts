@@ -57,4 +57,6 @@ export interface IMilestoneFilters {
   status?: MilestoneStatus | string;
   contractId?: string;
   type?: string;
+  providerId?: string;
+  funderId?: string;
 }

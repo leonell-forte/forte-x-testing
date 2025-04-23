@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import contractService from "api/contract";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { Contracts, IsAuthorized } from "lib/role-permissions";
 
@@ -13,13 +14,22 @@ interface IContractDialogueProps {
   id?: number;
 
   projectId?: number;
+
+  providerId?: string;
+
+  funderId?: string;
 }
 
 const ContractDialogue = ({
   id,
 
   projectId,
+
+  providerId,
+
+  funderId,
 }: IContractDialogueProps) => {
+  const navigate = useNavigate();
   const [contractId, setContractId] = useState(id);
   const { close: handleClose } = useModal();
   const {
@@ -59,9 +69,12 @@ const ContractDialogue = ({
       handleEdit={(val) => setOnEdit(val)}
       handleClose={handleClose!}
       projectId={projectId!}
+      providerId={providerId}
+      funderId={funderId}
       onSuccess={(contract) => {
         setContractId(contract.id);
         refetch();
+        navigate(`/contracts/${contract.id}`);
       }}
     />
   );

@@ -132,7 +132,14 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
       </div>
 
       <ScrollArea className="hidden w-[calc(100vw-330px)] overflow-hidden lg:block">
-        <Table.Container isEmpty={!list.length} isLoading={isLoading}>
+        <Table.Container
+          emptyConfig={{
+            title: "No users yet.",
+            description: "Add a user by clicking the ‘Add’ button above.",
+            status: !list.length,
+          }}
+          isLoading={isLoading}
+        >
           <Table.Head>
             <Table.Row>
               {TABLE_HEADER.map((key, headerIndex) => {

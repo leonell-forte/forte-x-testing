@@ -25,12 +25,20 @@ const IndividualProjectsPage = React.lazy(
 
 const FundersPage = React.lazy(() => import("../pages/Funders/FundersPage"));
 
+const IndividualFundersPage = React.lazy(
+  () => import("../pages/Funders/[id]/IndividualFundersPage")
+);
+
 const OnBoardingSuccessPage = React.lazy(
   () => import("../pages/Onboarding/OnBoardingSuccess")
 );
 
 const ProvidersPage = React.lazy(
   () => import("../pages/Providers/ProvidersPage")
+);
+
+const IndividualProvidersPage = React.lazy(
+  () => import("../pages/Providers/[id]/IndividualProvidersPage")
 );
 
 const ContractsPage = React.lazy(
@@ -124,9 +132,25 @@ export const ROUTES: RouteConfig[] = [
   },
 
   {
+    link: "funders/:id",
+
+    Component: IndividualFundersPage,
+
+    permissions: [Organizations.NAVIGATE],
+  },
+
+  {
     link: "providers",
 
     Component: ProvidersPage,
+
+    permissions: [Organizations.NAVIGATE],
+  },
+
+  {
+    link: "providers/:id",
+
+    Component: IndividualProvidersPage,
 
     permissions: [Organizations.NAVIGATE],
   },

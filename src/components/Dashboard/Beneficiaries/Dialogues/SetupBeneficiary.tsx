@@ -45,7 +45,10 @@ const alertConfig = {
 
 export function showSetupBeneficiaryModal(
   beneficiaryDetails?: IBeneficiaries,
-  contractId?: string
+  contractId?: string,
+  funderId?: string,
+  providerId?: string,
+  projectId?: string
 ) {
   const isEdit = Boolean(beneficiaryDetails);
   useModal.getState().open({
@@ -53,6 +56,9 @@ export function showSetupBeneficiaryModal(
       <SetupBeneficiaryModal
         beneficiaryDetails={beneficiaryDetails}
         contractId={contractId}
+        funderId={funderId}
+        providerId={providerId}
+        projectId={projectId}
       />
     ),
     size: "2xl",
@@ -63,9 +69,15 @@ export function showSetupBeneficiaryModal(
 export function SetupBeneficiaryModal({
   beneficiaryDetails,
   contractId,
+  funderId,
+  providerId,
+  projectId,
 }: {
   beneficiaryDetails?: IBeneficiaries;
   contractId?: string;
+  funderId?: string;
+  providerId?: string;
+  projectId?: string;
 }) {
   const { close, setShowPromptOnClose } = useModal();
   const { open: openConfirmPrompt } = useConfirmPrompt();
@@ -91,6 +103,15 @@ export function SetupBeneficiaryModal({
     formState: { isDirty },
   } = form;
 
+  const {
+    rawList: contractList,
+    isLoading: contractsLoading,
+    handleSearchContract,
+  } = useContractList({
+    key: ["dropdown"],
+    pageSize: 100,
+  });
+
   useEffect(() => {
     reset(
       beneficiaries.defaultValues({
@@ -98,9 +119,15 @@ export function SetupBeneficiaryModal({
         contractId: Number(contractId),
       })
     );
-  }, [beneficiaryDetails, reset, contractId]);
 
-  //   const project = watch("projectId");
+    if (contractId && contractList?.items) {
+      const contract = contractList?.items.find(
+        (item) => item.id === Number(contractId)
+      );
+      setValue("providerId", contract?.provider.id as number);
+      setValue("projectId", contract?.projectId as number);
+    }
+  }, [beneficiaryDetails, reset, contractId, contractList?.items, setValue]);
 
   const { data: organizationList } = useQuery({
     queryKey: ["organizations"],
@@ -110,15 +137,6 @@ export function SetupBeneficiaryModal({
         page: 1,
         filters: { type: "provider" },
       }),
-  });
-
-  const {
-    rawList: contractList,
-    isLoading: contractsLoading,
-    handleSearchContract,
-  } = useContractList({
-    key: ["dropdown"],
-    pageSize: 100,
   });
 
   const contracts: IOption[] = useMemo(
@@ -164,6 +182,14 @@ export function SetupBeneficiaryModal({
     beneficiaryId: beneficiaryDetails?.id,
 
     successCallback: () => close(),
+
+    funderId,
+
+    providerId,
+
+    projectId,
+
+    contractId,
   });
 
   const onSubmit = async (values: IBeneficiariesFieldValues) => {
@@ -297,6 +323,7 @@ export function SetupBeneficiaryModal({
                 }}
                 options={contracts}
                 placeholder="Select contract"
+                disabled={!!contractId}
                 onChange={(e) => handleSearchContract(e.target.value)}
               />
             )}

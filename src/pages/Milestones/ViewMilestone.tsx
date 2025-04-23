@@ -53,7 +53,7 @@ export default function ViewMilestone() {
     open({
       title: "Delete Evidence",
       subText:
-        "Are you sure you want to delete this evidence? This process cannot be undone.",
+        "Deleting this document will unlink and delete this document from its milestone.",
       onYes: () => deleteEvidence({ beneficiaryId: beneId, evidenceId: id }),
       yesLabel: "Proceed",
     });
@@ -250,7 +250,10 @@ export default function ViewMilestone() {
           </div>
           <div className="hidden md:block">
             <Table.Container
-              isEmpty={!milestone.evidences.length}
+              emptyConfig={{
+                title: "No evidences yet.",
+                status: !milestone.evidences.length,
+              }}
               isLoading={isLoading}
             >
               <Table.Head>

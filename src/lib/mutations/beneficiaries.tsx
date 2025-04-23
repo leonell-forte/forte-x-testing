@@ -4,6 +4,9 @@ import beneficiariesService from "api/beneficiaries";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 
+import { IContract } from "lib/types/contracts";
+import { IOrganization } from "lib/types/organizations";
+import { IProject } from "lib/types/projects";
 import { formatErrorMessage } from "lib/utils";
 
 import { queryClient } from "components/QueryProvider";
@@ -16,12 +19,28 @@ interface IBeneficiaryMutationProps {
   beneficiaryId?: number;
 
   successCallback?: (id?: number) => void;
+
+  funderId?: string;
+
+  providerId?: string;
+
+  projectId?: string;
+
+  contractId?: string;
 }
 
 export const useBeneficiaryMutation = ({
   beneficiaryId,
 
   successCallback,
+
+  funderId,
+
+  providerId,
+
+  projectId,
+
+  contractId,
 }: IBeneficiaryMutationProps) => {
   const navigate = useNavigate();
 
@@ -29,18 +48,23 @@ export const useBeneficiaryMutation = ({
 
   const beneficiaryQuery = [
     "beneficiaries",
+
     "",
+
     +page,
+
     {
-      project: "",
+      project: projectId || "",
 
       status: "",
 
-      provider: "",
+      provider: providerId || "",
 
       riskLevel: "",
 
-      // startDate: "",
+      contractId: contractId || "",
+
+      funderId: funderId || "",
     },
   ];
 
@@ -59,7 +83,56 @@ export const useBeneficiaryMutation = ({
 
     onSuccess: (addedBeneficiary) => {
       successCallback?.(addedBeneficiary.data.data?.id);
-      console.log(addedBeneficiary);
+
+      if (funderId) {
+        queryClient.setQueryData(
+          ["specific org", funderId],
+          (prev: IOrganization): IOrganization => ({
+            ...prev,
+            noOfBeneficiaries: prev.noOfBeneficiaries! + 1,
+          })
+        );
+      }
+
+      if (providerId) {
+        queryClient.setQueryData(
+          ["specific org", providerId],
+          (prev: IOrganization): IOrganization => ({
+            ...prev,
+            noOfBeneficiaries: prev.noOfBeneficiaries! + 1,
+          })
+        );
+      }
+
+      if (projectId) {
+        queryClient.setQueryData(
+          ["specific-project", projectId],
+          (prev: IProject): IProject => ({
+            ...prev,
+            beneficiariesCount: +prev.beneficiariesCount! + 1,
+          })
+        );
+      }
+
+      if (contractId) {
+        queryClient.setQueryData(
+          ["specific-contract", contractId],
+          (prev: IContract): IContract => ({
+            ...prev,
+            noOfBeneficiaries: prev.noOfBeneficiaries! + 1,
+          })
+        );
+      }
+
+      queryClient.setQueryData(
+        beneficiaryQuery,
+        (prev: { items: IBeneficiaries[] }) => {
+          return {
+            ...prev,
+            items: [...(prev?.items || []), addedBeneficiary.data.data],
+          };
+        }
+      );
 
       toast({
         title: `Beneficiary ${beneficiaryId ? "updated" : "added"} successfully`,
@@ -190,7 +263,13 @@ export const useImportBeneficiaryMutation = ({
   return { importBeneficiaries, isPending };
 };
 
-export const useDeleteBeneficiaryMutation = (successCallback?: () => void) => {
+export const useDeleteBeneficiaryMutation = (
+  successCallback?: () => void,
+  funderId?: string,
+  providerId?: string,
+  projectId?: string,
+  contractId?: string
+) => {
   const { mutateAsync: deleteBeneficiary, isPending } = useMutation({
     mutationFn: beneficiariesService.delete,
 
@@ -198,8 +277,47 @@ export const useDeleteBeneficiaryMutation = (successCallback?: () => void) => {
       await queryClient.cancelQueries({ queryKey: ["beneficiaries"] });
     },
 
-    onSuccess: (res) => {
-      console.log(res);
+    onSuccess: () => {
+      if (funderId) {
+        queryClient.setQueryData(
+          ["specific org", funderId],
+          (prev: IOrganization): IOrganization => ({
+            ...prev,
+            noOfBeneficiaries: prev.noOfBeneficiaries! - 1,
+          })
+        );
+      }
+
+      if (providerId) {
+        queryClient.setQueryData(
+          ["specific org", providerId],
+          (prev: IOrganization): IOrganization => ({
+            ...prev,
+            noOfBeneficiaries: prev.noOfBeneficiaries! - 1,
+          })
+        );
+      }
+
+      if (projectId) {
+        queryClient.setQueryData(
+          ["specific-project", projectId],
+          (prev: IProject): IProject => ({
+            ...prev,
+            beneficiariesCount: +prev.beneficiariesCount! - 1,
+          })
+        );
+      }
+
+      if (contractId) {
+        queryClient.setQueryData(
+          ["specific-contract", contractId],
+          (prev: IContract): IContract => ({
+            ...prev,
+            noOfBeneficiaries: prev.noOfBeneficiaries! - 1,
+          })
+        );
+      }
+
       successCallback?.();
 
       toast({ title: "Beneficiary deleted successfully" });

@@ -60,6 +60,7 @@ function GenerateInvoiceModal() {
     organizations,
     rawList,
     isLoading: orgLoading,
+    handleSearchOrg,
   } = useOrganizationList({
     listAll: true,
     filters: { type: "funder" },
@@ -84,6 +85,7 @@ function GenerateInvoiceModal() {
                     )?.name
                   }
                   options={organizations}
+                  onChange={(e) => handleSearchOrg(e.target.value)}
                   handleSelect={(val) => field.onChange(val)}
                   placeholder="Select funder"
                 />
@@ -121,11 +123,7 @@ function GenerateInvoiceModal() {
           </div>
         </div>
 
-        <div className="flex justify-center gap-4">
-          <Button onClick={close} buttonType="secondary" className="w-[147px]">
-            Cancel
-          </Button>
-
+        <div className="flex justify-end">
           <Button
             type="submit"
             disabled={!isValid}

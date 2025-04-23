@@ -21,7 +21,22 @@ import Dropdown from "components/ui/dropdown";
 import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
 
-const ContractsPage = () => {
+type ContractsPageProps = {
+  hideHeader?: boolean;
+
+  providerId?: string;
+
+  funderId?: string;
+
+  projectId?: number;
+};
+
+const ContractsPage = ({
+  hideHeader = false,
+  providerId,
+  funderId,
+  projectId,
+}: ContractsPageProps) => {
   const { page, setPage } = usePage();
 
   const initialFilter = {
@@ -30,6 +45,10 @@ const ContractsPage = () => {
     project: "",
 
     date: "",
+
+    providerId: providerId || "",
+
+    funderId: funderId || "",
   };
 
   const [filters, setFilters] = useState<IContractFilters>(initialFilter);
@@ -92,52 +111,65 @@ const ContractsPage = () => {
 
       <div className="flex h-full flex-col space-y-2.5">
         <div className="space-y-5">
-          <div className="flex flex-col justify-between gap-2.5 sm:flex-row">
-            <p className="text-[24px] font-semibold">Contracts</p>
+          {!hideHeader && (
+            <div className="flex flex-col justify-between gap-2.5 sm:flex-row">
+              <p className="text-[24px] font-semibold">Contracts</p>
 
-            {IsAuthorized([Contracts.CREATE]) && (
-              <Button
-                eventName="Add Contract"
-                onClick={() => showSetupContractModal({})}
-              >
-                <Add width={24} />
-                Add contract
-              </Button>
-            )}
-          </div>
-          <div className="flex flex-col gap-2.5 sm:flex-row">
-            <div className="flex gap-2">
-              <div className="w-full md:w-auto">
-                <SearchInput
-                  value={searchContractValue}
-                  onChange={(e) => {
-                    handleSearchContract(e.target.value);
-                    setPage(1);
+              {IsAuthorized([Contracts.CREATE]) && (
+                <Button
+                  eventName="Add Contract"
+                  onClick={() => showSetupContractModal({})}
+                >
+                  <Add width={24} />
+                  Add contract
+                </Button>
+              )}
+            </div>
+          )}
+          {!!contractList?.items.length && (
+            <div className="flex flex-col gap-2.5 sm:flex-row">
+              <div className="flex gap-2">
+                <div className="w-full md:w-auto">
+                  <SearchInput
+                    value={searchContractValue}
+                    onChange={(e) => {
+                      handleSearchContract(e.target.value);
+                      setPage(1);
+                    }}
+                    containerClass="w-full lg:max-w-[286px]"
+                    placeholder="Search contracts"
+                    onClear={() => handleSearchContract("")}
+                  />
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setModal("filter");
                   }}
-                  containerClass="w-full lg:max-w-[286px]"
-                  placeholder="Search contracts"
-                  onClear={() => handleSearchContract("")}
+                  className="group flex-shrink-0 lg:hidden"
+                >
+                  <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
+                </button>
+              </div>
+
+              <div className="hidden lg:block">
+                <Filters
+                  filters={filters}
+                  setFilters={setFilters}
+                  providerId={providerId}
                 />
               </div>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setModal("filter");
-                }}
-                className="group flex-shrink-0 lg:hidden"
-              >
-                <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
-              </button>
             </div>
-
-            <div className="hidden lg:block">
-              <Filters filters={filters} setFilters={setFilters} />
-            </div>
-          </div>
+          )}
         </div>
 
         <div className="flex h-full flex-col justify-between gap-4">
-          <ContractsTable list={contractList.items} isLoading={isLoading} />
+          <ContractsTable
+            list={contractList.items}
+            isLoading={isLoading}
+            orgId={funderId || providerId}
+            projectId={projectId}
+          />
 
           {!!contracts.length && (
             <div className="flex w-full items-center justify-end">
@@ -163,9 +195,19 @@ interface IFilterProps {
   setFilters: Dispatch<SetStateAction<IContractFilters>>;
 
   projectId?: number;
+
+  providerId?: string;
+
+  funderId?: string;
 }
 
-export const Filters = ({ filters, setFilters, projectId }: IFilterProps) => {
+export const Filters = ({
+  filters,
+  setFilters,
+  projectId,
+  providerId,
+  funderId,
+}: IFilterProps) => {
   const { setPage } = usePage();
 
   const {
@@ -214,6 +256,10 @@ export const Filters = ({ filters, setFilters, projectId }: IFilterProps) => {
               project: "",
 
               date: "",
+
+              providerId: providerId || "",
+
+              funderId: funderId || "",
             })
           }
           className="group hidden md:block"

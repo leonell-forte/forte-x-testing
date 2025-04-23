@@ -8,6 +8,7 @@ import { StatusVariant } from "components/ui/status";
 import { IBeneficiaries } from "./types/beneficiaries";
 import { InvoiceStatus } from "./types/invoices";
 import { EvidenceStatus, MilestoneStatus } from "./types/milestones";
+import { OrgStatus } from "./types/organizations";
 
 export const filterBySearch = (
   list: Record<string, string>[],
@@ -211,39 +212,37 @@ export const formatNumber = (v: number | string, decimal = 2) => {
   }
 };
 
+const statusGroups: Record<StatusVariant, string[]> = {
+  success: ["invoiced", "active"],
+  warning: [
+    "pending",
+    "achieved",
+    "pending review",
+    "more information requested",
+    "draft",
+  ],
+  danger: ["cancelled", "rejected", "inactive"],
+  neutral: ["paid", "settled"],
+  primary: ["open"], // fallback or initial statuses
+};
+
 export const getStatusVariant = (
   status:
     | InvoiceStatus
     | MilestoneStatus
     | EvidenceStatus
     | IBeneficiaries["status"]
+    | OrgStatus
 ): StatusVariant => {
-  switch (status?.toLowerCase()) {
-    case "paid":
-      return "neutral";
-    case "pending":
-      return "warning";
-    case "cancelled":
-      return "danger";
-    case "achieved":
-      return "warning";
-    case "open":
-      return "primary";
-    case "pending review":
-      return "warning";
-    case "more information requested":
-      return "warning";
-    case "invoiced":
-      return "success";
-    case "rejected":
-      return "danger";
-    case "draft":
-      return "warning";
-    case "settled":
-      return "neutral";
-    default:
-      return "primary";
+  const normalizedStatus = status?.toLowerCase?.() || "";
+
+  for (const [variant, statuses] of Object.entries(statusGroups)) {
+    if (statuses.includes(normalizedStatus)) {
+      return variant as StatusVariant;
+    }
   }
+
+  return "primary"; // default/fallback
 };
 
 export const shouldHref = (href: string, current: string) => {

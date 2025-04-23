@@ -1,7 +1,7 @@
 import * as amplitude from "@amplitude/analytics-browser";
 import { useQuery } from "@tanstack/react-query";
 import projectService from "api/projects";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import { ReactComponent as Pencil } from "assets/images/icons/pencil.svg";
@@ -10,7 +10,7 @@ import { IProject } from "lib/types/projects";
 
 import { ContractsProvider } from "components/Dashboard/Contracts/Dialogues/ContractContext";
 import AddOptions from "components/Dashboard/Projects/AddButton";
-import ProjectDialogue from "components/Dashboard/Projects/Dialogues/ProjectDialogue";
+import { showProjectDialogue } from "components/Dashboard/Projects/Dialogues/ProjectDialogue";
 import Contracts from "components/Dashboard/Projects/Tables/Contracts";
 import Outcomes from "components/Dashboard/Projects/Tables/Outcomes";
 import { BreadCrumb } from "components/ui/breadcrumb/Breadcrumb";
@@ -21,8 +21,6 @@ import Tabs from "components/ui/tabs/Tabs";
 import BeneficiariesPage from "pages/Beneficiaries/BeneficiariesPage";
 
 const IndividualProjectsPage = () => {
-  const [modal, setModal] = useState<"project" | null>(null);
-
   const { id } = useParams();
 
   const { data: project, isLoading } = useQuery({
@@ -39,20 +37,6 @@ const IndividualProjectsPage = () => {
     }, 300);
     return () => clearTimeout(debounce);
   }, [project?.name, id]);
-
-  const renderModal = useCallback(() => {
-    switch (modal) {
-      case "project":
-        return (
-          <ProjectDialogue
-            projectId={(id || "") as string}
-            isVisible={modal === "project"}
-            handleClose={() => setModal(null)}
-          />
-        );
-    }
-    // eslint-disable-next-line
-  }, [modal]);
 
   const tabs = useMemo(() => {
     return [
@@ -90,10 +74,9 @@ const IndividualProjectsPage = () => {
 
   return (
     <>
-      {renderModal()}
-
       <BreadCrumb href="/projects">Projects</BreadCrumb>
       <BreadCrumb>Project: {project?.name}</BreadCrumb>
+
       <div className="hide-scroll h-full space-y-8 py-3">
         <div>
           <div className="flex items-center justify-between">
@@ -108,7 +91,7 @@ const IndividualProjectsPage = () => {
             </div>
             <div className="flex gap-4">
               <Button
-                onClick={() => setModal("project")}
+                onClick={() => showProjectDialogue({ projectId: id })}
                 buttonType="secondary"
               >
                 <Pencil height={14} />

@@ -6,40 +6,13 @@ import MenuButton from "components/ui/menu-button";
 
 import { showSetupBeneficiaryModal } from "../Beneficiaries/Dialogues/SetupBeneficiary";
 import { showSetupContractModal } from "../Contracts/SetupContract";
-import ProjectDialogue from "./Dialogues/ProjectDialogue";
-
-type ModalType = "outcome" | "contract" | "beneficiary";
+import { showProjectDialogue } from "./Dialogues/ProjectDialogue";
 
 const AddOptions = ({ id }: { id: string }) => {
   const [show, setShow] = useState(false);
 
-  const [modal, setModal] = useState<ModalType | null>(null);
-
-  const handleClose = () => {
-    setModal(null);
-  };
-
-  const handleSelect = (modal: ModalType) => {
-    setModal(modal);
-    setShow(false);
-  };
-
-  const renderModal = (modal: ModalType | null) => {
-    switch (modal) {
-      case "outcome":
-        return (
-          <ProjectDialogue
-            projectId={(id || "") as string}
-            isVisible={true}
-            handleClose={handleClose}
-          />
-        );
-    }
-  };
-
   return (
     <>
-      {renderModal(modal)}
       <div className="relative">
         <MenuButton.Container
           open={show}
@@ -50,7 +23,9 @@ const AddOptions = ({ id }: { id: string }) => {
             Add
           </MenuButton.Trigger>
           <MenuButton.Menu>
-            <MenuButton.Item onClick={() => handleSelect("outcome")}>
+            <MenuButton.Item
+              onClick={() => showProjectDialogue({ projectId: id })}
+            >
               Outcome
             </MenuButton.Item>
             <MenuButton.Item
@@ -58,7 +33,17 @@ const AddOptions = ({ id }: { id: string }) => {
             >
               Contract
             </MenuButton.Item>
-            <MenuButton.Item onClick={() => showSetupBeneficiaryModal()}>
+            <MenuButton.Item
+              onClick={() =>
+                showSetupBeneficiaryModal(
+                  undefined,
+                  undefined,
+                  undefined,
+                  undefined,
+                  id
+                )
+              }
+            >
               Beneficiary
             </MenuButton.Item>
           </MenuButton.Menu>

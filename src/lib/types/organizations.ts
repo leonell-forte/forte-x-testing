@@ -2,6 +2,8 @@ import { z } from "zod";
 
 import { organizations, partner } from "lib/validators/organizations";
 
+export type OrgStatus = "active" | "inactive";
+
 export interface IOrganization {
   id?: string;
 
@@ -13,7 +15,7 @@ export interface IOrganization {
 
   type: OrgTypes;
 
-  status: string;
+  status: OrgStatus;
 
   registeredAddress: string;
 
@@ -27,11 +29,19 @@ export interface IOrganization {
 
   updatedAt?: string; // ISO date string
 
-  noOfProjects?: string;
+  noOfProjects?: number;
 
   noOfUsers?: string;
 
   registrationNumber?: string;
+
+  noOfPartners?: number;
+
+  noOfContracts?: number;
+
+  noOfBeneficiaries?: number;
+
+  noOfMilestones?: number;
 }
 
 export type OrgTypes = "funder" | "provider" | "forte";
@@ -65,6 +75,6 @@ export type BankDetails = {
   bankName: string;
   last4Digits: string;
   accountHolderName: string | null;
-  status: string;
+  status: OrgStatus;
   routingNumber: string;
 };

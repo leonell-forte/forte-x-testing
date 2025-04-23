@@ -75,9 +75,15 @@ export default function CustomController({
       open={Boolean(result?.message) && isFirstIndex}
       {...(tooltip && tooltip)}
     >
-      <div className={cn("space-y-1", containerClassName)}>
+      <div className={cn("space-y-[2px]", containerClassName)}>
         {label && (
-          <label htmlFor={name} className={cn("min-w-[140px]", labelClassName)}>
+          <label
+            htmlFor={name}
+            className={cn(
+              "min-w-[140px] !text-[12px] font-light text-white/80",
+              labelClassName
+            )}
+          >
             {label}
             {required ? "*" : ""}
           </label>

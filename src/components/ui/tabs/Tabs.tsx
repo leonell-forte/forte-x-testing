@@ -48,7 +48,7 @@ const TabsContent = React.forwardRef<
 ));
 TabsContent.displayName = TabsPrimitive.Content.displayName;
 
-interface TabData {
+export interface TabData {
   value: string;
   label: string;
   content: React.ReactNode;

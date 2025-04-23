@@ -64,7 +64,7 @@ const Outcomes = ({ project, isLoading }: IProps) => {
     await addProject(values);
   };
 
-  const outcomes = project?.outcomes.filter((item) => {
+  const outcomes = project?.outcomes?.filter((item) => {
     return item.name.toLowerCase().includes(search.toLowerCase());
   });
 
@@ -163,7 +163,14 @@ const Outcomes = ({ project, isLoading }: IProps) => {
         </div>
 
         <ScrollArea className="hidden w-[calc(100vw-330px)] overflow-hidden lg:block">
-          <Table.Container isLoading={isLoading}>
+          <Table.Container
+            emptyConfig={{
+              status: !outcomes?.length,
+              title: "No outcomes yet",
+              description: "Add an outcome by clicking the ‘Add’ button above.",
+            }}
+            isLoading={isLoading}
+          >
             <Table.Head>
               <Table.Row>
                 {HEADERS.map((item, index) => {

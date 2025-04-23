@@ -3,7 +3,7 @@ import projectService from "api/projects";
 import { useMemo } from "react";
 
 import { useDebouncedSearch } from "lib/hooks";
-import { IProject } from "lib/types/projects";
+import { IProject, ProjectFilter } from "lib/types/projects";
 import { sortOptions } from "lib/utils";
 
 import { IOption } from "components/ui/dropdown";
@@ -14,6 +14,7 @@ type UseProjectList = {
   listAll?: boolean;
   enabled?: boolean;
   pageSize?: number;
+  filter?: ProjectFilter;
 };
 
 const useProjectList = ({
@@ -22,6 +23,7 @@ const useProjectList = ({
   listAll,
   enabled,
   pageSize,
+  filter,
 }: UseProjectList) => {
   const [debouncedProjectSearch, setProjectSearch, projectSearch] =
     useDebouncedSearch("");
@@ -39,6 +41,7 @@ const useProjectList = ({
         search: debouncedProjectSearch,
         listAll,
         pageSize,
+        filter,
       }),
 
     refetchOnWindowFocus: false,

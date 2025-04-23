@@ -1,20 +1,19 @@
 import { get } from "lodash";
 import { useMemo } from "react";
 import { FaTrash as Trash } from "react-icons/fa6";
-import { HiPlusCircle } from "react-icons/hi";
 
 import { useAppDispatch, useAppSelector } from "lib/hooks";
 import { useDeletePartnerMutation } from "lib/mutations/partners";
 import { removePartner } from "lib/slice/partners";
-import { Partner } from "lib/types/organizations";
+import { IOrganization, Partner } from "lib/types/organizations";
 
+import { queryClient } from "components/QueryProvider";
 import { useCustomPrompt } from "components/ui/alert/custom-prompt";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
 
 type PartnerProps = {
   partners: Partner[];
-  handleAddPartner: () => void;
   orgId: string; // Add this prop
 };
 
@@ -25,7 +24,7 @@ const config = {
   },
 };
 
-const Partners = ({ partners, handleAddPartner, orgId }: PartnerProps) => {
+const Partners = ({ partners, orgId }: PartnerProps) => {
   const dispatch = useAppDispatch();
   const { partnersToAdd } = useAppSelector((state) => state.partners);
 
@@ -40,6 +39,15 @@ const Partners = ({ partners, handleAddPartner, orgId }: PartnerProps) => {
   const handleDelete = async (organizationId: number, partnerId?: string) => {
     if (partnerId) {
       await deletePartner(partnerId);
+
+      queryClient.setQueryData(
+        ["specific org", orgId],
+        (prev: IOrganization): IOrganization => {
+          console.log(prev);
+
+          return { ...prev, noOfPartners: prev.noOfPartners! - 1 };
+        }
+      );
       return;
     }
     dispatch(removePartner(organizationId));
@@ -47,25 +55,6 @@ const Partners = ({ partners, handleAddPartner, orgId }: PartnerProps) => {
 
   return (
     <div className="space-y-[30px]">
-      <div className="flex items-center gap-5">
-        <p className="heading w-fit whitespace-nowrap">Partners</p>
-
-        <div className="flex w-full items-center gap-5">
-          <hr className="w-full" />
-
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleAddPartner();
-            }}
-            className="group"
-          >
-            <HiPlusCircle className="h-auto w-8 text-white transition-all group-hover:fill-mint" />
-          </button>
-        </div>
-      </div>
-
       <div className="md:hidden">
         <Cards.Container>
           {partnersList.map((item, index) => {
@@ -112,7 +101,13 @@ const Partners = ({ partners, handleAddPartner, orgId }: PartnerProps) => {
       </div>
 
       <div className="hidden md:block">
-        <Table.Container isEmpty={!partnersList.length}>
+        <Table.Container
+          emptyConfig={{
+            title: "No partners yet.",
+            description: "Add a partner by clicking the ‘Add’ button above.",
+            status: !partnersList.length,
+          }}
+        >
           <Table.Head>
             <Table.Row>
               {HEADERS.map((item, index) => {

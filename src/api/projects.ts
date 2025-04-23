@@ -1,6 +1,10 @@
 import { api } from "../lib/axios/interceptor";
 import { DEFAULT_PAGE_SIZE } from "../lib/constants";
-import { IProject, ProjectFieldValues } from "../lib/types/projects";
+import {
+  IProject,
+  ProjectFieldValues,
+  ProjectFilter,
+} from "../lib/types/projects";
 import { IODataObject, generateODataQuery } from "../lib/utils";
 
 interface IProjectListProp {
@@ -11,6 +15,8 @@ interface IProjectListProp {
   listAll?: boolean;
 
   pageSize?: number;
+
+  filter?: ProjectFilter;
 }
 
 class ProjectsService {
@@ -22,6 +28,8 @@ class ProjectsService {
     listAll,
 
     pageSize,
+
+    filter,
   }: IProjectListProp): Promise<{
     items: IProject[];
     totalSize: number;
@@ -37,12 +45,10 @@ class ProjectsService {
 
         isSearch: true,
       },
-      "project.provider.name": {
-        value: search!,
+      "funder.id": {
+        value: filter?.funder?.toLowerCase() || "",
 
-        exact: false,
-
-        isSearch: true,
+        exact: true,
       },
     };
 

@@ -12,11 +12,10 @@ import { IsAuthorized, Organizations } from "lib/role-permissions";
 import { ProjectFieldValues } from "lib/types/projects";
 import { projects } from "lib/validators/projects";
 
-import { useConfirmPrompt } from "components/ui/alert/confirm-prompt";
 import { useCustomPrompt } from "components/ui/alert/custom-prompt";
 import Button from "components/ui/button";
 import Controller from "components/ui/custom-controller/CustomController";
-import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
+import { useModal } from "components/ui/dialogue/v2/Modal";
 import Dropdown from "components/ui/dropdown";
 import { Form } from "components/ui/form/Form";
 import { useAutoSaveForm } from "components/ui/form/useAutoSave";
@@ -25,17 +24,27 @@ import Spinner from "components/ui/spinner/spinner";
 
 import OutcomeField from "../OutcomeField";
 
-interface IProjectDialogueProps extends IDialogueProps {
+interface IProjectDialogueProps {
   projectId?: string;
+  funderId?: string;
 }
 
-const ProjectDialogue = ({
-  isVisible,
-  handleClose,
+export const showProjectDialogue = ({
   projectId,
+  funderId,
 }: IProjectDialogueProps) => {
-  const { setShowPrompt } = useConfirmPrompt();
+  useModal.getState().open({
+    component: <ProjectDialogue projectId={projectId} funderId={funderId} />,
+    size: "2xl",
+    title: projectId ? "Edit Project" : "Add Project",
+    panelClassName: "max-w-[584px] lg:px-[50px]",
+  });
+};
+
+const ProjectDialogue = ({ projectId, funderId }: IProjectDialogueProps) => {
   const { open } = useCustomPrompt();
+
+  const { setShowPromptOnClose } = useModal();
 
   // Project query
   const { data: project, isLoading: projectLoading } = useQuery({
@@ -60,8 +69,13 @@ const ProjectDialogue = ({
   // Form handling
   const form = useForm<ProjectFieldValues>({
     resolver: zodResolver(projects.schema),
-    defaultValues: projects.defaultValues(),
+    defaultValues: projects.defaultValues(
+      project,
+      funderId ? +funderId : undefined
+    ),
   });
+
+  const { close: handleClose } = useModal();
 
   const {
     formState: { errors, isDirty },
@@ -81,14 +95,18 @@ const ProjectDialogue = ({
 
   const close = () => {
     reset();
-    handleClose!();
+    handleClose();
   };
 
   // implements optimistic update after adding or editing project
-  const { addProject, isPending } = useProjectMutation(projectId!, close);
+  const { addProject, isPending } = useProjectMutation(
+    projectId!,
+    close,
+    funderId
+  );
 
   const onSubmit = async (values: ProjectFieldValues) => {
-    if (project) {
+    if (project && projectId) {
       open({
         title: "Confirm email with changes",
         subText:
@@ -103,10 +121,11 @@ const ProjectDialogue = ({
 
   useEffect(() => {
     // sets default value of project form
+
     if (project) {
-      reset(projects.defaultValues(project));
+      reset(projects.defaultValues(project, funderId ? +funderId : undefined));
     }
-  }, [project, reset]);
+  }, [project, reset, funderId]);
 
   useEffect(() => {
     if (
@@ -136,14 +155,16 @@ const ProjectDialogue = ({
 
   // autosave end
 
+  useEffect(() => {
+    if (isDirty) {
+      setShowPromptOnClose(true);
+    } else {
+      setShowPromptOnClose(false);
+    }
+  }, [isDirty, setShowPromptOnClose]);
+
   return (
-    <Dialogue
-      confirmBeforeLeave={isDirty}
-      isVisible={isVisible}
-      handleClose={close}
-      title={project ? "Edit project" : "Add project"}
-      formId={formId}
-    >
+    <>
       {projectLoading ? (
         <div className="flex h-[470px] w-full items-center justify-center">
           <Spinner />
@@ -179,6 +200,7 @@ const ProjectDialogue = ({
                   placeholder="Select funder"
                   loading={orgLoading}
                   onChange={(e) => handleSearchOrg(e.target.value)}
+                  disabled={!!funderId}
                 />
               );
             }}
@@ -229,25 +251,17 @@ const ProjectDialogue = ({
 
           <div className="!mt-10 flex justify-end gap-4">
             <Button
-              onClick={() => {
-                if (isDirty) {
-                  setShowPrompt(true);
-                  return;
-                }
-                close();
-              }}
-              buttonType="secondary"
+              loading={isPending}
+              type="submit"
+              disabled={!isDirty}
+              className="w-[147px]"
             >
-              Cancel
-            </Button>
-
-            <Button loading={isPending} type="submit" disabled={!isDirty}>
-              {projectId ? "Update" : "Add"}
+              {projectId ? "Save" : "Add"}
             </Button>
           </div>
         </Form>
       )}
-    </Dialogue>
+    </>
   );
 };
 

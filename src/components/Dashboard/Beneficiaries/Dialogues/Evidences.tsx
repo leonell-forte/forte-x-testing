@@ -92,7 +92,14 @@ const Evidences = ({ handleAddOrViewEvidence }: IProps) => {
       </div>
 
       <div className="hidden md:block">
-        <Table.Container isEmpty={!evidences.length} isLoading={isLoading}>
+        <Table.Container
+          emptyConfig={{
+            title: "No evidences yet.",
+            description: "Add an evidence by clicking the ‘Add’ button above.",
+            status: !evidences.length,
+          }}
+          isLoading={isLoading}
+        >
           <Table.Head>
             <Table.Row>
               {HEADERS.map((item, index) => {

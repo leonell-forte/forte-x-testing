@@ -107,4 +107,6 @@ export interface IBeneficiariesFilter {
   startDate?: string;
 
   contractId?: string;
+
+  funderId?: string;
 }

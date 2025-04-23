@@ -39,6 +39,10 @@ interface IContractForm {
 
   projectId?: number;
 
+  providerId?: string;
+
+  funderId?: string;
+
   handleEdit: (val: boolean) => void;
 
   handleClose: () => void;
@@ -58,6 +62,10 @@ const ContractForm = ({
   handleClose,
 
   onSuccess,
+
+  providerId,
+
+  funderId,
 }: IContractForm) => {
   const { open } = useCustomPrompt();
 
@@ -76,6 +84,8 @@ const ContractForm = ({
       contract: contractDetails,
 
       projectId,
+
+      providerId,
     }),
   });
 
@@ -140,12 +150,14 @@ const ContractForm = ({
 
   const { addContract, isPending } = useContractMutation({
     id: contractDetails?.id,
+    providerId: providerId ? +providerId : undefined,
     successCallback: (contract) => {
       onSuccess?.(contract);
       setIsAmmending(false);
       setPage(1);
       close();
     },
+    projectId,
   });
 
   const onSubmit = async (values: ContractFieldValues) => {
@@ -154,12 +166,16 @@ const ContractForm = ({
         title: "Confirm email with changes",
         subText:
           "Saving edits will send an email to all Contract Party users. Click cancel to revert or send to confirm changes and send the email.",
-        onYes: () => addContract(values),
+        onYes: async () => {
+          await addContract(values);
+          close();
+        },
         yesLabel: "Send email with changes",
       });
       return;
     }
     await addContract(values);
+    close();
   };
 
   const { setShowPrompt } = useConfirmPrompt();
@@ -213,148 +229,125 @@ const ContractForm = ({
           />
         </div>
       ) : (
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <Controller
-              label="Contract name"
-              required
-              name="name"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  disabled={!onEdit || isSigned}
-                  placeholder="Contract name"
-                />
-              )}
-            />
-            <Controller
-              label="Provider"
-              required
-              name="providerId"
-              control={control}
-              render={({ field }) => {
-                return (
-                  <Dropdown
-                    disabled={!onEdit}
-                    enableSearch
-                    loading={orgLoading}
-                    value={
-                      organizations.find(
-                        (item) => Number(item.value) === Number(field.value)
-                      )?.label
-                    }
-                    options={organizations}
-                    handleSelect={(val) => {
-                      field.onChange(Number(val));
-                    }}
-                    placeholder="Select provider"
-                    onChange={(e) => handleSearchOrg(e.target.value)}
-                  />
-                );
-              }}
-            />
-          </div>
+        <>
+          <Controller
+            label="Contract name"
+            required
+            name="name"
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                disabled={!onEdit || isSigned}
+                placeholder="Contract name"
+              />
+            )}
+          />
 
-          <div className="grid grid-cols-1 gap-1 md:grid-cols-2 md:gap-4">
-            <Controller
-              label="Status"
-              name="status"
-              control={control}
-              render={({ field }) => {
-                return (
-                  <Dropdown
-                    disabled={!onEdit}
-                    value={field.value.toLowerCase()}
-                    handleSelect={(val) => {
-                      field.onChange(
-                        val.toString().toUpperCase() as StatusType
-                      );
-                    }}
-                    options={CONTRACT_STATUS.filter(
-                      (item) => item.value !== "completed"
-                    )}
-                    placeholder="Select status"
-                  />
-                );
-              }}
-            />
-            <Controller
-              label="Project"
-              required
-              name="projectId"
-              control={control}
-              render={({ field }) => {
-                return (
-                  <Dropdown
-                    disabled={!!projectId || !onEdit}
-                    loading={projectLoading}
-                    enableSearch
-                    value={findLabelFromOptions(
-                      projects,
+          <Controller
+            label="Project"
+            required
+            name="projectId"
+            control={control}
+            render={({ field }) => {
+              return (
+                <Dropdown
+                  disabled={!!projectId || !onEdit}
+                  loading={projectLoading}
+                  enableSearch
+                  value={findLabelFromOptions(
+                    projects,
 
-                      field.value.toString()
-                    )}
-                    options={sortOptions(projects)}
-                    handleSelect={(val) => {
-                      field.onChange(Number(val));
+                    field.value.toString()
+                  )}
+                  options={sortOptions(projects)}
+                  handleSelect={(val) => {
+                    field.onChange(Number(val));
 
-                      setValue("outcomeRates", [
-                        {
-                          outcomeId: 0,
+                    setValue("outcomeRates", [
+                      {
+                        outcomeId: 0,
 
-                          rate: "",
+                        rate: "",
 
-                          perOutcome: true,
+                        perOutcome: true,
 
-                          threshold: "",
-                        },
-                      ]);
-                    }}
-                    placeholder="Select project"
-                    onChange={(e) => handleSearchProject(e.target.value)}
-                  />
-                );
-              }}
-            />
-          </div>
-          <div className="grid grid-cols-1 gap-1 md:grid-cols-2 md:gap-4">
-            <Controller
-              label="Target number of beneficiaries"
-              labelClassName="md:w-[150px]"
-              required
-              name="targetNoOfBenefeciaries"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  wholeNumberOnly
-                  min={0}
-                  disabled={!onEdit}
-                  placeholder="Number of beneficiaries"
-                  type="number"
-                />
-              )}
-            />
-            <Controller
-              label="Document"
-              required
-              name="documentId"
-              control={control}
-              render={({ field }) => (
-                <FileInput
-                  disabled={!onEdit || isSigned}
-                  filename={contractDetails?.document?.filename || ""}
-                  accept=".pdf"
-                  onSuccess={(data) => {
-                    field.onChange(data.id);
+                        threshold: "",
+                      },
+                    ]);
                   }}
-                  placeholder="Upload document"
+                  placeholder="Select project"
+                  onChange={(e) => handleSearchProject(e.target.value)}
                 />
-              )}
-            />
-          </div>
-          <div className="grid grid-cols-1 gap-1 md:grid-cols-2 md:gap-4">
+              );
+            }}
+          />
+
+          <Controller
+            label="Provider"
+            required
+            name="providerId"
+            control={control}
+            render={({ field }) => {
+              return (
+                <Dropdown
+                  disabled={!onEdit || !!providerId}
+                  enableSearch
+                  loading={orgLoading}
+                  value={
+                    organizations.find(
+                      (item) => Number(item.value) === Number(field.value)
+                    )?.label
+                  }
+                  options={organizations}
+                  handleSelect={(val) => {
+                    field.onChange(Number(val));
+                  }}
+                  placeholder="Select provider"
+                  onChange={(e) => handleSearchOrg(e.target.value)}
+                />
+              );
+            }}
+          />
+
+          <Controller
+            label="Target # of beneficiaries"
+            labelClassName="md:w-[150px]"
+            required
+            containerClassName="max-w-[203px]"
+            name="targetNoOfBenefeciaries"
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                wholeNumberOnly
+                min={0}
+                disabled={!onEdit}
+                placeholder="Number of beneficiaries"
+                type="number"
+              />
+            )}
+          />
+
+          <Controller
+            label="Contract document"
+            required
+            name="documentId"
+            control={control}
+            render={({ field }) => (
+              <FileInput
+                disabled={!onEdit || isSigned}
+                filename={contractDetails?.document?.filename || ""}
+                accept=".pdf"
+                onSuccess={(data) => {
+                  field.onChange(data.id);
+                }}
+                placeholder="Choose file"
+              />
+            )}
+          />
+
+          <div className="flex flex-col gap-2 md:flex-row">
             <Controller
               required
               label="Start date"
@@ -391,6 +384,29 @@ const ContractForm = ({
               )}
             />
           </div>
+
+          <Controller
+            label="Status"
+            name="status"
+            containerClassName="max-w-[203px]"
+            control={control}
+            render={({ field }) => {
+              return (
+                <Dropdown
+                  disabled={!onEdit}
+                  value={field.value.toLowerCase()}
+                  handleSelect={(val) => {
+                    field.onChange(val.toString().toUpperCase() as StatusType);
+                  }}
+                  options={CONTRACT_STATUS.filter(
+                    (item) => item.value !== "completed"
+                  )}
+                  placeholder="Select status"
+                />
+              );
+            }}
+          />
+
           <div className="space-y-10">
             {fields.map((item, index) => {
               return (
@@ -447,7 +463,7 @@ const ContractForm = ({
               );
             })}
           </div>
-        </div>
+        </>
       )}
 
       <div className="!mt-10 flex items-center justify-end">

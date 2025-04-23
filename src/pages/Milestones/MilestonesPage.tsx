@@ -16,17 +16,25 @@ import SearchInput from "components/ui/search-input";
 
 import ViewMilestone from "./ViewMilestone";
 
+type MilestonesProps = {
+  hideHeader?: boolean;
+  contractId?: string;
+  providerId?: string;
+  funderId?: string;
+};
+
 const MilestonesComp = ({
   hideHeader,
   contractId,
-}: {
-  hideHeader?: boolean;
-  contractId?: string;
-}) => {
+  providerId,
+  funderId,
+}: MilestonesProps) => {
   const initialFilter = {
     status: "",
     contractId: contractId || "",
     type: "",
+    providerId: providerId || "",
+    funderId: funderId || "",
   };
 
   const { page, setPage } = usePage();
@@ -66,32 +74,34 @@ const MilestonesComp = ({
     <div className="flex h-full flex-col space-y-2.5">
       <div className="space-y-5">
         {!hideHeader && <p className="text-[24px] font-semibold">Milestones</p>}
-        <div className="flex flex-col justify-between gap-2.5 sm:flex-row">
-          <div className="flex flex-col gap-2.5 sm:flex-row">
-            <div className="flex gap-2">
-              <div className="w-full md:w-auto">
-                <SearchInput
-                  value={search}
-                  onChange={(e) => {
-                    setSearch(e.target.value);
-                    setPage(1);
-                  }}
-                  containerClass="w-full lg:max-w-[286px]"
-                  placeholder="Search milestones"
-                  onClear={() => setSearch("")}
+        {!!milestones?.items.length && (
+          <div className="flex flex-col justify-between gap-2.5 sm:flex-row">
+            <div className="flex flex-col gap-2.5 sm:flex-row">
+              <div className="flex gap-2">
+                <div className="w-full md:w-auto">
+                  <SearchInput
+                    value={search}
+                    onChange={(e) => {
+                      setSearch(e.target.value);
+                      setPage(1);
+                    }}
+                    containerClass="w-full lg:max-w-[286px]"
+                    placeholder="Search milestones"
+                    onClear={() => setSearch("")}
+                  />
+                </div>
+              </div>
+
+              <div className="flex-1 flex-grow">
+                <Filters
+                  filters={filters}
+                  setFilters={setFilters}
+                  initialFilter={initialFilter}
                 />
               </div>
             </div>
-
-            <div className="flex-1 flex-grow">
-              <Filters
-                filters={filters}
-                setFilters={setFilters}
-                initialFilter={initialFilter}
-              />
-            </div>
           </div>
-        </div>
+        )}
       </div>
 
       <div className="flex h-full flex-col justify-between gap-4">
@@ -161,10 +171,9 @@ const Filters = ({ filters, setFilters, initialFilter }: IFilterProps) => {
 export default function MilestonePage({
   hideHeader,
   contractId,
-}: {
-  hideHeader?: boolean;
-  contractId?: string;
-}) {
+  providerId,
+  funderId,
+}: MilestonesProps) {
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
   return (
@@ -172,7 +181,12 @@ export default function MilestonePage({
       <Route
         index
         element={
-          <MilestonesComp hideHeader={hideHeader} contractId={contractId} />
+          <MilestonesComp
+            hideHeader={hideHeader}
+            contractId={contractId}
+            providerId={providerId}
+            funderId={funderId}
+          />
         }
       />
       <Route

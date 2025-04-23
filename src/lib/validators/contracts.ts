@@ -35,7 +35,11 @@ const contractOutcomeSchema = z
   );
 
 export const contracts = {
-  defaultValues: ({ contract, projectId }: IContractDefaultValues) => {
+  defaultValues: ({
+    contract,
+    projectId,
+    providerId,
+  }: IContractDefaultValues) => {
     let data: ContractFieldValues = {
       name: contract?.name || "",
 
@@ -52,7 +56,7 @@ export const contracts = {
 
       endDate: contract?.endDate || "",
 
-      providerId: contract?.provider.id || 0, // Changed from toString()
+      providerId: contract?.provider.id || (providerId ? +providerId : 0), // Changed from toString()
 
       outcomeRates: contract
         ? contract?.outcomes.map((item) => ({

@@ -10,8 +10,14 @@ const initialFilters: IFilters = {
   type: "provider",
 };
 
-const ProvidersPage = () => {
-  return <PageComponent type="provider" initialFilters={initialFilters} />;
+const ProvidersPage = ({ hideHeader = false }: { hideHeader?: boolean }) => {
+  return (
+    <PageComponent
+      hideHeader={hideHeader}
+      type="provider"
+      initialFilters={initialFilters}
+    />
+  );
 };
 
 export default ProvidersPage;

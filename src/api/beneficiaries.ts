@@ -102,6 +102,12 @@ class BeneficiariesService {
         exact: true,
       },
 
+      "funder.id": {
+        value: filters?.funderId || "",
+
+        exact: true,
+      },
+
       "beneficiary.risk_level": {
         value: filters?.riskLevel || "",
 

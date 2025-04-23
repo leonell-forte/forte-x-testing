@@ -1,11 +1,14 @@
 import * as amplitude from "@amplitude/analytics-browser";
 import { useMutation } from "@tanstack/react-query";
 import projectService from "api/projects";
+import { useNavigate } from "react-router-dom";
 
 import { useAlert, usePage } from "lib/hooks";
+import { IOrganization } from "lib/types/organizations";
 import { formatErrorMessage } from "lib/utils";
 
 import { queryClient } from "components/QueryProvider";
+import { ToastAction, toast } from "components/ui/toast/Toast";
 
 import {
   IProject,
@@ -15,13 +18,14 @@ import {
 
 export const useProjectMutation = (
   projectId: string,
-  succesCallback?: () => void
+  succesCallback?: () => void,
+  funderId?: string
 ) => {
-  const { setAlert } = useAlert();
+  const navigate = useNavigate();
 
   const { page } = usePage();
 
-  const projectQuery = ["projects", +page || 1, ""];
+  const projectQuery = ["projects", +page || 1, { funder: funderId || "" }];
 
   const { mutateAsync: addProject, isPending } = useMutation({
     mutationFn: projectId
@@ -49,28 +53,42 @@ export const useProjectMutation = (
     },
 
     onSuccess: (addedProject) => {
-      if (!projectId) {
-        queryClient.setQueryData(projectQuery, (old: { items: IProject[] }) => {
-          return {
-            ...old,
+      queryClient.setQueryData(projectQuery, (old: { items: IProject[] }) => {
+        return {
+          ...old,
 
-            items: [...(old?.items || []), addedProject.data.data],
-          };
-        });
+          items: [...(old?.items || []), addedProject.data.data],
+        };
+      });
 
-        queryClient.setQueryData(["specific-project", projectId], () => {
-          return addedProject;
-        });
+      queryClient.setQueryData(["specific-project", projectId], () => {
+        return addedProject;
+      });
+
+      if (funderId) {
+        queryClient.setQueryData(
+          ["specific org", funderId?.toString()],
+          (prev: IOrganization): IOrganization => {
+            return {
+              ...prev,
+              noOfProjects: prev.noOfProjects! + 1,
+            };
+          }
+        );
       }
 
       succesCallback?.();
 
-      setAlert({
-        status: "success",
-
-        message: `Project ${projectId ? "updated" : "added"} successfully`,
-
-        title: "Success!",
+      toast({
+        title: `Project ${projectId ? "updated" : "added"} successfully`,
+        action: (
+          <ToastAction
+            altText="view"
+            onClick={() => navigate(`/projects/${addedProject.data.data?.id}`)}
+          >
+            <p>View</p>
+          </ToastAction>
+        ),
       });
 
       amplitude.track(
@@ -79,14 +97,10 @@ export const useProjectMutation = (
     },
 
     onError: (err: any, newProject, context) => {
-      setAlert({
-        status: "error",
-
+      toast({
         title: `Failed ${projectId ? "updating" : "adding"} project`,
-
-        message:
-          formatErrorMessage(err?.response?.data?.data?.[0]) ||
-          err?.response?.data?.message,
+        description: formatErrorMessage(err?.response?.data?.data?.[0]),
+        variant: "danger",
       });
 
       queryClient.setQueryData(projectQuery, context?.previousProjects);
@@ -112,13 +126,17 @@ export const useProjectMutation = (
 export const useDeleteProjectMutation = (
   id: number,
 
-  successCallback?: () => void
-) => {
-  const { setAlert } = useAlert();
+  successCallback?: () => void,
 
+  funderId?: number
+) => {
   const { page, setPage } = usePage();
 
-  const projectQuery = ["projects", +page || 1, ""];
+  const projectQuery = [
+    "projects",
+    +page || 1,
+    { funder: funderId?.toString() || "" },
+  ];
 
   const { mutateAsync: deletProject, isPending } = useMutation({
     mutationFn: projectService.delete,
@@ -134,31 +152,37 @@ export const useDeleteProjectMutation = (
       return { previousProject };
     },
 
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.setQueryData(
         projectQuery,
 
         (old: { items: IProject[] }) => {
           // sets page to previous page if list from current page is empty (except page 1)
-          if (old.items.length === 1 && page !== 1) {
+          if (old?.items?.length === 1 && page !== 1) {
             setPage(page - 1);
           }
-
           return {
             ...old,
-
-            items: old.items.filter((item) => item.id !== id),
+            items: old?.items?.filter((item) => item.id !== id),
           };
         }
       );
 
+      if (!!funderId) {
+        queryClient.setQueryData(
+          ["specific org", funderId?.toString()],
+          (prev: IOrganization): IOrganization => {
+            return {
+              ...prev,
+              noOfProjects: prev.noOfProjects! - 1,
+            };
+          }
+        );
+      }
+
       successCallback?.();
 
-      setAlert({
-        status: "success",
-
-        message: `Project deleted successfully`,
-
+      toast({
         title: "Project deleted!",
       });
 
@@ -168,12 +192,10 @@ export const useDeleteProjectMutation = (
     },
 
     onError: (err: any, newProject, context) => {
-      setAlert({
-        status: "error",
-
+      toast({
         title: `Failed deleting project`,
-
-        message: err?.response?.data?.message,
+        description: err?.response?.data?.message,
+        variant: "danger",
       });
 
       queryClient.setQueryData(projectQuery, context?.previousProject);

@@ -66,6 +66,18 @@ class ContractService {
         isSearch: true,
       },
 
+      "organization.id": {
+        value: filters?.providerId || "",
+
+        exact: true,
+      },
+
+      "funder.id": {
+        value: filters?.funderId || "",
+
+        exact: true,
+      },
+
       "contract.status": {
         value: filters?.status.toUpperCase() || "",
 

@@ -73,7 +73,7 @@ const ContractOutcomeField = ({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2">
         <div className="w-full">
           <Controller
             label={`Outcome ${index + 1}`}
@@ -151,7 +151,7 @@ const ContractOutcomeField = ({
               return (
                 <RadioGroup
                   disabled={disabled}
-                  className="flex flex-col gap-4 md:w-[280px]"
+                  className="flex flex-col gap-4 md:w-[180px]"
                   items={["Per outcome", "If threshold reached"]}
                   value={field.value ? "Per outcome" : "If threshold reached"}
                   onChange={(e) => {
