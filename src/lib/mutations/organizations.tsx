@@ -49,7 +49,7 @@ const useOrganizationMutation = ({
           };
         });
       } else {
-        queryClient.setQueryData(["specific org", orgId], (old: any) => {
+        queryClient.setQueryData(["specific org", orgId], () => {
           return {
             ...addedOrg.data.data,
           };

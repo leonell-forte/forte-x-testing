@@ -13,6 +13,8 @@ type SetupContract = {
   providerId?: string;
 
   funderId?: string;
+
+  activeStep?: number;
 };
 
 export const showSetupContractModal = ({
@@ -20,6 +22,7 @@ export const showSetupContractModal = ({
   projectId,
   providerId,
   funderId,
+  activeStep,
 }: SetupContract) => {
   useModal.getState().open({
     component: (
@@ -29,12 +32,14 @@ export const showSetupContractModal = ({
           projectId={projectId}
           providerId={providerId}
           funderId={funderId}
+          activeStep={activeStep}
         />
       </ContractsProvider>
     ),
     size: "2xl",
     title: `${contract ? "Edit" : "Add"} Contract`,
     panelClassName: "max-w-[584px] lg:px-[85px]",
+    titleClassName: "text-center",
   });
 };
 

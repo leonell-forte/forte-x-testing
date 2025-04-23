@@ -1,4 +1,4 @@
-import { HiMinusCircle } from "react-icons/hi";
+import { ReactComponent as Bin } from "assets/images/icons/trash.svg";
 
 import Controller from "components/ui/custom-controller/CustomController";
 import Input from "components/ui/input";
@@ -25,7 +25,7 @@ const OutcomeField = ({
   return (
     <div className="space-y-[22px]">
       <div className="flex">
-        <div className="flex w-full gap-[17px]">
+        <div className="flex w-full flex-col gap-3">
           <div className="w-full">
             <Controller
               label={`Outcome ${count}`}
@@ -33,7 +33,25 @@ const OutcomeField = ({
               name={`outcomes.${index}.name`}
               control={control}
               render={({ field }) => (
-                <Input {...field} placeholder="Enter outcome name" />
+                <div className="relative flex items-center">
+                  {handleDelete && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+
+                        handleDelete();
+                      }}
+                      className="group absolute right-3 z-10 mt-[27px] md:mt-0"
+                    >
+                      <Bin
+                        width={14}
+                        className="fill-white text-white transition-all group-hover:fill-mint"
+                      />
+                    </button>
+                  )}
+                  <Input {...field} placeholder="Enter outcome name" />
+                </div>
               )}
             />
           </div>
@@ -52,20 +70,6 @@ const OutcomeField = ({
               )}
             />
           </div>
-
-          {handleDelete && (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-
-                handleDelete();
-              }}
-              className="group mt-[27px] md:mt-0"
-            >
-              <HiMinusCircle className="mt-6 h-auto w-8 text-white transition-all group-hover:fill-mint" />
-            </button>
-          )}
         </div>
       </div>
     </div>

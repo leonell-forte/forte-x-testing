@@ -15,7 +15,12 @@ export const projects = {
     const data: any = {
       name: project?.name || "",
 
-      outcomes: project?.outcomes || [],
+      outcomes: project?.outcomes || [
+        {
+          name: "",
+          description: "",
+        },
+      ],
 
       funderId: project?.funder?.id || funderId || 0,
     };

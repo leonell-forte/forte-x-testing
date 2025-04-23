@@ -24,7 +24,9 @@ const AddOptions = ({ id }: { id: string }) => {
           </MenuButton.Trigger>
           <MenuButton.Menu>
             <MenuButton.Item
-              onClick={() => showProjectDialogue({ projectId: id })}
+              onClick={() =>
+                showProjectDialogue({ projectId: id, addOutcome: true })
+              }
             >
               Outcome
             </MenuButton.Item>

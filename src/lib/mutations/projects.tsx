@@ -168,7 +168,7 @@ export const useDeleteProjectMutation = (
         }
       );
 
-      if (!!funderId) {
+      if (funderId) {
         queryClient.setQueryData(
           ["specific org", funderId?.toString()],
           (prev: IOrganization): IOrganization => {

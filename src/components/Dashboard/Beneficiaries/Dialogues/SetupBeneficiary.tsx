@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import organizationService from "api/organization";
 import { add, sub } from "date-fns";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import useContractList from "lib/common/lists/useContractList";
@@ -23,7 +23,6 @@ import {
 import { findLabelFromOptions } from "lib/utils";
 import { beneficiaries } from "lib/validators/beneficiaries";
 
-import { useConfirmPrompt } from "components/ui/alert/confirm-prompt-v2";
 import { useCustomPrompt } from "components/ui/alert/custom-prompt";
 import Button from "components/ui/button";
 import Controller from "components/ui/custom-controller/CustomController";
@@ -34,6 +33,11 @@ import { Form } from "components/ui/form/Form";
 import InputMobile from "components/ui/form/InputMobile";
 import { useAutoSaveForm } from "components/ui/form/useAutoSave";
 import Input from "components/ui/input";
+import {
+  StepContent,
+  StepTrigger,
+  Stepper,
+} from "components/ui/stepper/Stepper";
 
 const alertConfig = {
   "Pending evidence review": {
@@ -63,6 +67,8 @@ export function showSetupBeneficiaryModal(
     ),
     size: "2xl",
     title: `${isEdit ? "Edit" : "Add"} Beneficiary ${isEdit ? "ID: " + beneficiaryDetails?.id : ""}`,
+    titleClassName: "text-center",
+    panelClassName: "!max-w-[760px]",
   });
 }
 
@@ -80,7 +86,6 @@ export function SetupBeneficiaryModal({
   projectId?: string;
 }) {
   const { close, setShowPromptOnClose } = useModal();
-  const { open: openConfirmPrompt } = useConfirmPrompt();
   const { open } = useCustomPrompt();
 
   const form = useForm<IBeneficiariesFieldValues>({
@@ -91,16 +96,11 @@ export function SetupBeneficiaryModal({
 
   const {
     control,
-
     setValue,
-
     setError,
-
     watch,
-
     reset,
-
-    formState: { isDirty },
+    formState: { isDirty, errors },
   } = form;
 
   const {
@@ -154,29 +154,29 @@ export function SetupBeneficiaryModal({
     [organizationList, contractList]
   );
 
-  const selectedContract = watch("contractId");
+  // const selectedContract = watch("contractId");
 
-  const organizations: IOption[] = useMemo(
-    () =>
-      organizationList?.items
-        .filter((org) => {
-          // filter the organizations based on selected contract
-          // provider dropdown should be disabled if no contract is selected
+  // const organizations: IOption[] = useMemo(
+  //   () =>
+  //     organizationList?.items
+  //       .filter((org) => {
+  //         // filter the organizations based on selected contract
+  //         // provider dropdown should be disabled if no contract is selected
 
-          const contract = contractList?.items.find(
-            (contract) => contract.id === selectedContract
-          );
+  //         const contract = contractList?.items.find(
+  //           (contract) => contract.id === selectedContract
+  //         );
 
-          return contract?.provider.id === org.id;
-        })
-        .map((item) => ({
-          label: item.name,
+  //         return contract?.provider.id === org.id;
+  //       })
+  //       .map((item) => ({
+  //         label: item.name,
 
-          value: item.id!.toString(),
-        })) || [],
+  //         value: item.id!.toString(),
+  //       })) || [],
 
-    [organizationList, contractList, selectedContract]
-  );
+  //   [organizationList, contractList, selectedContract]
+  // );
 
   const { addBeneficiary, isPending } = useBeneficiaryMutation({
     beneficiaryId: beneficiaryDetails?.id,
@@ -223,367 +223,436 @@ export function SetupBeneficiaryModal({
     };
   }, [isDirty, setShowPromptOnClose]);
 
+  const [activeStep, setActiveStep] = useState(1);
+
+  const validateStep1 = () => {
+    const { firstName, lastName, email } = watch();
+    const hasErrors = Boolean(
+      errors.firstName || errors.lastName || errors.email
+    );
+    return firstName && lastName && email && !hasErrors;
+  };
+
+  const validateStep2 = () => {
+    const { contractId, providerId, projectId } = watch();
+    return contractId && providerId && projectId;
+  };
+
+  const validateStep3 = () => {
+    const { status } = watch();
+    return status;
+  };
+
   return (
     <Form form={form} onSubmit={onSubmit}>
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-2">
-          <Controller
-            name="firstName"
-            label="First name"
-            required
-            control={control}
-            render={({ field }) => (
-              <Input {...field} placeholder="First name" />
-            )}
-          />
-
-          <Controller
-            label="Last name"
-            required
-            control={control}
-            name="lastName"
-            render={({ field }) => <Input {...field} placeholder="Last name" />}
-          />
-
-          <Controller
-            label="Email"
-            required
-            control={control}
-            name="email"
-            render={({ field }) => <Input {...field} placeholder="Email" />}
-          />
-
-          <Controller
-            label="Phone"
-            control={control}
-            name="phone"
-            render={({ field }) => (
-              <InputMobile {...field} placeholder="Phone" />
-            )}
-          />
-
-          <Controller
-            label="Status"
-            required
-            control={control}
-            name="status"
-            render={({ field }) => (
-              <Dropdown
-                value={field.value || ""}
-                handleSelect={(val) => {
-                  field.onChange(val);
-                }}
-                options={BENEFICIARY_STATUS}
-                placeholder="Status"
+      <Stepper activeStep={activeStep}>
+        <StepTrigger stepNumber={1}>1. Personal details</StepTrigger>
+        <StepTrigger stepNumber={2}>2. Project details</StepTrigger>
+        <StepTrigger stepNumber={3}>3. Other details</StepTrigger>
+        <StepContent contentNumber={1}>
+          <div className="space-y-8 pt-10">
+            <div className="mx-auto max-w-[414px] space-y-3">
+              <div className="flex w-full gap-2">
+                <Controller
+                  name="firstName"
+                  label="First name"
+                  required
+                  control={control}
+                  containerClassName="w-full"
+                  render={({ field }) => (
+                    <Input {...field} placeholder="First name" />
+                  )}
+                />
+                <Controller
+                  label="Last name"
+                  required
+                  control={control}
+                  name="lastName"
+                  containerClassName="w-full"
+                  render={({ field }) => (
+                    <Input {...field} placeholder="Last name" />
+                  )}
+                />
+              </div>
+              <Controller
+                label="Email"
+                required
+                control={control}
+                name="email"
+                render={({ field }) => <Input {...field} placeholder="Email" />}
               />
-            )}
-          />
-
-          <Controller
-            label="Risk level"
-            control={control}
-            name="riskLevel"
-            render={({ field }) => (
-              <Dropdown
-                value={field.value as string}
-                handleSelect={(val) => {
-                  field.onChange(val);
-
-                  setError("riskLevel", { message: "" });
-                }}
-                options={RISK_LEVEL}
-                placeholder="Select risk level"
-              />
-            )}
-          />
-
-          <Controller
-            label="Contract"
-            required
-            control={control}
-            name="contractId"
-            render={({ field }) => (
-              <Dropdown
-                enableSearch
-                loading={contractsLoading}
-                value={findLabelFromOptions(
-                  contracts,
-                  (field.value || "").toString()
-                )}
-                handleSelect={(val) => {
-                  field.onChange(Number(val));
-                  const contract = contractList?.items.find(
-                    (item) => item.id === Number(val)
-                  );
-                  setValue("providerId", contract?.provider.id as number);
-                  setValue("projectId", contract?.projectId as number);
-                  setError("contractId", { message: "" });
-                  setError("projectId", { message: "" });
-                  setError("providerId", { message: "" });
-                }}
-                options={contracts}
-                placeholder="Select contract"
-                disabled={!!contractId}
-                onChange={(e) => handleSearchContract(e.target.value)}
-              />
-            )}
-          />
-
-          <Controller
-            label="Provider"
-            control={control}
-            name="providerId"
-            render={({ field }) => (
-              <Input
-                disabled
-                placeholder="Provider"
-                value={findLabelFromOptions(
-                  organizations,
-                  field.value.toString()
+              <Controller
+                label="Phone"
+                control={control}
+                name="phone"
+                containerClassName="w-[250px]"
+                render={({ field }) => (
+                  <InputMobile {...field} placeholder="Phone" />
                 )}
               />
-            )}
-          />
+            </div>
 
-          <Controller
-            label="Project"
-            control={control}
-            name="projectId"
-            render={() => (
-              <Input
-                disabled
-                placeholder="Project"
-                value={
-                  contractList?.items.find(
-                    (item) => item.id === watch("contractId")
-                  )?.project
-                }
-              />
-            )}
-          />
-        </div>
-
-        <div className="flex items-center gap-5">
-          <p className="heading w-fit whitespace-nowrap">Cohort</p>
-
-          <hr className="w-full" />
-        </div>
-
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-2">
-            <Controller
-              label="Start date"
-              control={control}
-              name="cohortStartDate"
-              render={({ field }) => (
-                <DatePicker
-                  {...(max && { maxDate: sub(max, { days: 1 }) })}
-                  value={new Date(field.value || "")}
-                  onChange={(date) => {
-                    field.onChange(date ? date.toISOString() : "");
-                  }}
-                />
-              )}
-            />
-
-            <Controller
-              label="End date"
-              control={control}
-              name="cohortEndDate"
-              render={({ field }) => (
-                <DatePicker
-                  {...(min && { minDate: add(min, { days: 1 }) })}
-                  value={new Date(field.value || "")}
-                  onChange={(date) => {
-                    field.onChange(date ? date.toISOString() : "");
-                  }}
-                />
-              )}
-            />
+            <div className="flex justify-end">
+              <Button
+                className="w-[147px]"
+                onClick={() => setActiveStep(2)}
+                disabled={!validateStep1()}
+              >
+                Next
+              </Button>
+            </div>
           </div>
+        </StepContent>
 
-          <Controller
-            label="Program"
-            control={control}
-            name="cohortName"
-            render={({ field }) => <Input {...field} placeholder="Program" />}
-          />
-        </div>
-
-        <div className="flex items-center gap-5">
-          <p className="heading w-fit whitespace-nowrap">Social media</p>
-
-          <hr className="w-full" />
-        </div>
-
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <Controller
-            label="Linkedin"
-            control={control}
-            name="linkedinUrl"
-            render={({ field }) => (
-              <Input {...field} placeholder="Linkedin link" />
-            )}
-          />
-          <Controller
-            label="Github"
-            control={control}
-            name="githubUrl"
-            render={({ field }) => (
-              <Input {...field} placeholder="Github link" />
-            )}
-          />
-          <Controller
-            label="Other"
-            control={control}
-            name="otherUrl"
-            render={({ field }) => <Input {...field} placeholder="Other" />}
-          />
-        </div>
-
-        <div className="flex items-center gap-5">
-          <p className="heading w-fit whitespace-nowrap">Demographics</p>
-
-          <hr className="w-full" />
-        </div>
-
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-2">
+        <StepContent contentNumber={2}>
+          <div className="mx-auto max-w-[414px] space-y-3 pt-10">
             <Controller
-              label="Date of birth"
+              label="Contract"
+              required
               control={control}
-              name="birthdate"
-              render={({ field }) => (
-                <DatePicker
-                  value={new Date(field.value)}
-                  onChange={(date) => {
-                    field.onChange(date ? date.toISOString() : "");
-                  }}
-                />
-              )}
-            />
-
-            <Controller
-              label="Ethnicity"
-              control={control}
-              name="ethnicity"
-              render={({ field }) => (
-                <Input {...field} placeholder="Ethnicity" />
-              )}
-            />
-          </div>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <Controller
-              label="Gender"
-              control={control}
-              name="gender"
+              name="contractId"
               render={({ field }) => (
                 <Dropdown
-                  value={field.value}
-                  handleSelect={(val) => field.onChange(val)}
-                  options={GENDER}
-                  placeholder="Select gender"
-                />
-              )}
-            />
-            <Controller
-              label="Disability status"
-              control={control}
-              name="disabilityStatus"
-              render={({ field }) => (
-                <Dropdown
-                  value={field.value}
+                  enableSearch
+                  loading={contractsLoading}
+                  value={findLabelFromOptions(
+                    contracts,
+                    (field.value || "").toString()
+                  )}
                   handleSelect={(val) => {
-                    field.onChange(val);
+                    field.onChange(Number(val));
+                    const contract = contractList?.items.find(
+                      (item) => item.id === Number(val)
+                    );
+                    setValue("providerId", contract?.provider.id as number);
+                    setValue("projectId", contract?.projectId as number);
+                    setError("contractId", { message: "" });
+                    setError("projectId", { message: "" });
+                    setError("providerId", { message: "" });
                   }}
-                  options={CONFIRM}
-                  placeholder="Select disability status"
+                  options={contracts}
+                  placeholder="Select contract"
+                  disabled={!!contractId}
+                  onChange={(e) => handleSearchContract(e.target.value)}
                 />
               )}
             />
-          </div>
-        </div>
-
-        <Controller
-          label="Address"
-          control={control}
-          name="address"
-          render={({ field }) => <Input {...field} placeholder="Address" />}
-        />
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <Controller
-            label="Socio-economic status"
-            control={control}
-            name="socioeconomicStatus"
-            render={({ field }) => (
-              <Input {...field} placeholder="Socio-economic status" />
-            )}
-          />
-
-          <Controller
-            label="Highest education level"
-            control={control}
-            name="educationLevel"
-            render={({ field }) => (
-              <Dropdown
-                value={field.value}
-                handleSelect={(val) => {
-                  field.onChange(val);
-                }}
-                options={HIGHEST_EDUCATION_LEVEL}
-                placeholder="Select highest education level"
-              />
-            )}
-          />
-        </div>
-
-        <Controller
-          label="Language(s) spoken"
-          control={control}
-          name="languages"
-          render={({ field }) => (
-            <Dropdown
-              enableSearch
-              isMultiSelect
-              showAsTags
-              value={field.value}
-              handleSelect={(val) => {
-                field.onChange(val);
-              }}
-              options={LANGUAGES.map((item) => ({
-                label: item,
-
-                value: item,
-              }))}
-              placeholder="Select languages"
-              filterOptions
+            <Controller
+              label="Program (Optional)"
+              control={control}
+              name="cohortName"
+              render={({ field }) => <Input {...field} placeholder="Program" />}
             />
-          )}
-        />
-      </div>
 
-      {IsAuthorized([Beneficiaries.UPDATE]) && (
-        <div className="flex justify-end gap-4 pt-6">
-          <>
+            <div className="flex gap-2">
+              <Controller
+                label="Start date"
+                control={control}
+                name="cohortStartDate"
+                render={({ field }) => (
+                  <DatePicker
+                    {...(max && { maxDate: sub(max, { days: 1 }) })}
+                    value={new Date(field.value || "")}
+                    onChange={(date) => {
+                      field.onChange(date ? date.toISOString() : "");
+                    }}
+                  />
+                )}
+              />
+              <Controller
+                label="End date"
+                control={control}
+                name="cohortEndDate"
+                render={({ field }) => (
+                  <DatePicker
+                    {...(min && { minDate: add(min, { days: 1 }) })}
+                    value={new Date(field.value || "")}
+                    onChange={(date) => {
+                      field.onChange(date ? date.toISOString() : "");
+                    }}
+                  />
+                )}
+              />
+            </div>
+            <div className="flex gap-2">
+              <Controller
+                label="Status"
+                required
+                control={control}
+                name="status"
+                render={({ field }) => (
+                  <Dropdown
+                    value={field.value || ""}
+                    handleSelect={(val) => {
+                      field.onChange(val);
+                    }}
+                    options={BENEFICIARY_STATUS}
+                    placeholder="Status"
+                  />
+                )}
+              />
+              <Controller
+                label="Risk level"
+                control={control}
+                name="riskLevel"
+                render={({ field }) => (
+                  <Dropdown
+                    value={field.value as string}
+                    handleSelect={(val) => {
+                      field.onChange(val);
+
+                      setError("riskLevel", { message: "" });
+                    }}
+                    options={RISK_LEVEL}
+                    placeholder="Select risk level"
+                  />
+                )}
+              />
+            </div>
+
+            {/* <Controller
+              label="Provider"
+              control={control}
+              name="providerId"
+              render={({ field }) => (
+                <Input
+                  disabled
+                  placeholder="Provider"
+                  value={findLabelFromOptions(
+                    organizations,
+                    field.value.toString()
+                  )}
+                />
+              )}
+            />
+            <Controller
+              label="Project"
+              control={control}
+              name="projectId"
+              render={() => (
+                <Input
+                  disabled
+                  placeholder="Project"
+                  value={
+                    contractList?.items.find(
+                      (item) => item.id === watch("contractId")
+                    )?.project
+                  }
+                />
+              )}
+            /> */}
+          </div>
+          <div className="flex justify-between pt-8">
             <Button
               buttonType="secondary"
-              onClick={() => {
-                if (isDirty) {
-                  openConfirmPrompt();
-                  return;
-                }
-                close();
-              }}
+              className="w-[147px]"
+              onClick={() => setActiveStep(1)}
             >
-              Cancel
+              Back
             </Button>
+            <Button
+              className="w-[147px]"
+              onClick={() => setActiveStep(3)}
+              disabled={!validateStep2()}
+            >
+              Next
+            </Button>
+          </div>
+        </StepContent>
 
-            <Button type="submit" loading={isPending} disabled={!isDirty}>
-              {beneficiaryDetails?.id ? "Update" : "Add"}
-            </Button>
-          </>
-        </div>
-      )}
+        <StepContent contentNumber={3}>
+          <div>
+            <div className="hide-scroll max-h-[554px] overflow-auto pt-10">
+              <div className="mx-auto max-w-[414px] space-y-10">
+                <div className="space-y-4">
+                  <p className="font-medium">Demographics</p>
+                  <div>
+                    <div className="flex gap-2">
+                      <Controller
+                        label="Date of birth"
+                        control={control}
+                        name="birthdate"
+                        render={({ field }) => (
+                          <DatePicker
+                            value={new Date(field.value)}
+                            onChange={(date) => {
+                              field.onChange(date ? date.toISOString() : "");
+                            }}
+                          />
+                        )}
+                      />
+
+                      <Controller
+                        label="Gender"
+                        control={control}
+                        name="gender"
+                        render={({ field }) => (
+                          <Dropdown
+                            value={field.value}
+                            handleSelect={(val) => field.onChange(val)}
+                            options={GENDER}
+                            placeholder="Select gender"
+                          />
+                        )}
+                      />
+                    </div>
+
+                    <div className="flex gap-2">
+                      <Controller
+                        label="Ethnicity"
+                        control={control}
+                        name="ethnicity"
+                        containerClassName="w-full"
+                        render={({ field }) => (
+                          <Input {...field} placeholder="Ethnicity" />
+                        )}
+                      />
+
+                      <Controller
+                        label="Highest education level"
+                        control={control}
+                        name="educationLevel"
+                        containerClassName="w-full"
+                        render={({ field }) => (
+                          <Dropdown
+                            value={field.value}
+                            handleSelect={(val) => {
+                              field.onChange(val);
+                            }}
+                            options={HIGHEST_EDUCATION_LEVEL}
+                            placeholder="Select highest education level"
+                          />
+                        )}
+                      />
+                    </div>
+
+                    <div className="flex gap-2">
+                      <Controller
+                        label="Socio-economic status"
+                        control={control}
+                        name="socioeconomicStatus"
+                        containerClassName="w-full"
+                        render={({ field }) => (
+                          <Input
+                            {...field}
+                            placeholder="Socio-economic status"
+                          />
+                        )}
+                      />
+
+                      <Controller
+                        label="Disability status"
+                        control={control}
+                        name="disabilityStatus"
+                        containerClassName="w-full"
+                        render={({ field }) => (
+                          <Dropdown
+                            value={field.value}
+                            handleSelect={(val) => {
+                              field.onChange(val);
+                            }}
+                            options={CONFIRM}
+                            placeholder="Select disability status"
+                          />
+                        )}
+                      />
+                    </div>
+
+                    <Controller
+                      label="Address"
+                      control={control}
+                      name="address"
+                      render={({ field }) => (
+                        <Input {...field} placeholder="Address" />
+                      )}
+                    />
+
+                    <Controller
+                      label="Language(s) spoken"
+                      control={control}
+                      name="languages"
+                      containerClassName="max-w-[203px]"
+                      render={({ field }) => (
+                        <Dropdown
+                          enableSearch
+                          isMultiSelect
+                          showAsTags
+                          value={field.value}
+                          handleSelect={(val) => {
+                            field.onChange(val);
+                          }}
+                          options={LANGUAGES.map((item) => ({
+                            label: item,
+
+                            value: item,
+                          }))}
+                          placeholder="Select languages"
+                          filterOptions
+                        />
+                      )}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <p className="font-medium">Social Media</p>
+                  <div>
+                    <Controller
+                      label="Linkedin"
+                      control={control}
+                      name="linkedinUrl"
+                      render={({ field }) => (
+                        <Input {...field} placeholder="Linkedin link" />
+                      )}
+                    />
+                    <Controller
+                      label="Github"
+                      control={control}
+                      name="githubUrl"
+                      render={({ field }) => (
+                        <Input {...field} placeholder="Github link" />
+                      )}
+                    />
+                    <Controller
+                      label="Other"
+                      control={control}
+                      name="otherUrl"
+                      render={({ field }) => (
+                        <Input {...field} placeholder="Other" />
+                      )}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {IsAuthorized([Beneficiaries.UPDATE]) && (
+              <div className="flex justify-between gap-4 pt-6">
+                <>
+                  <Button
+                    buttonType="secondary"
+                    className="w-[147px]"
+                    onClick={() => {
+                      setActiveStep(2);
+                    }}
+                  >
+                    Back
+                  </Button>
+
+                  <Button
+                    type="submit"
+                    loading={isPending}
+                    disabled={!validateStep3() || !isDirty}
+                    className="w-[147px]"
+                  >
+                    {beneficiaryDetails?.id ? "Update" : "Add"}
+                  </Button>
+                </>
+              </div>
+            )}
+          </div>
+        </StepContent>
+      </Stepper>
     </Form>
   );
 }

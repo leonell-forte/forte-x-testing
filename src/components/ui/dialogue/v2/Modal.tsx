@@ -23,6 +23,7 @@ export type TModalConfig = {
   size?: keyof typeof MAP_SIZE_CLASS;
   title?: ReactNode;
   panelClassName?: string;
+  titleClassName?: string;
 };
 
 export type TModalState = {
@@ -80,7 +81,14 @@ const ModalMarker = () => {
               <X className="w-[14px] transition-all group-hover:fill-mint" />
             </button>
             {typeof config?.title !== "undefined" && (
-              <div className="text-[24px] font-semibold">{config?.title}</div>
+              <div
+                className={cn(
+                  "text-[24px] font-semibold",
+                  config?.titleClassName
+                )}
+              >
+                {config?.title}
+              </div>
             )}
 
             <div className="mt-6">{config?.component}</div>
