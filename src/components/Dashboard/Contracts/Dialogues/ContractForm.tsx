@@ -472,7 +472,7 @@ const ContractForm = ({
             </StepContent>
 
             <StepContent contentNumber={2}>
-              <div>
+              <div className="pt-10">
                 <div className="mx-auto max-w-[365px] space-y-4">
                   {fields.map((item, index) => {
                     return (
