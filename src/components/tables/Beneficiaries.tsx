@@ -130,7 +130,7 @@ const BeneficiariesTable = ({
                 key={index}
                 title={`${firstName} ${lastName}`}
               >
-                {setChecked && (
+                {setChecked && IsAuthorized([Beneficiaries.UPDATE]) && (
                   <div className="absolute right-[2px] top-4">
                     <Checkbox
                       checked={selectedIds.includes(id)}
