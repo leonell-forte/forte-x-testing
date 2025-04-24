@@ -112,6 +112,7 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     Invoices.NAVIGATE,
     Invoices.LIST,
     Milestones.LIST,
+    Milestones.NAVIGATE,
   ],
 
   "provider.owner": [
@@ -168,6 +169,8 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     Organizations.LIST,
     Invoices.NAVIGATE,
     Invoices.LIST,
+    Milestones.LIST,
+    Milestones.NAVIGATE,
   ],
 
   "funder.owner": [
@@ -219,6 +222,8 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     Projects.NAVIGATE,
     Invoices.LIST,
     Invoices.NAVIGATE,
+    Milestones.LIST,
+    Milestones.NAVIGATE,
   ],
 };
 
