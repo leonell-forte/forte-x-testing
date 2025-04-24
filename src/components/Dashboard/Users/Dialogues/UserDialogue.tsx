@@ -64,7 +64,6 @@ const UserDialogue = ({
 
     enabled: !!userId,
   });
-  console.log(userData);
 
   const form = useForm<UserFieldTypes>({
     resolver: zodResolver(users.schema),
