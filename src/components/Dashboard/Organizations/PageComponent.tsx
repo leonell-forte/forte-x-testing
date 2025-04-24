@@ -14,7 +14,7 @@ import { usePage } from "lib/hooks";
 import { IsAuthorized, Organizations } from "lib/role-permissions";
 import { IFilters, OrgTypes } from "lib/types/organizations";
 
-import OrganizationDialogue from "components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
+import { showOrganizationDialogue } from "components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
 import OrganizationTable from "components/tables/Organization";
 import Button from "components/ui/button";
 import Dialogue from "components/ui/dialogue/dialogue";
@@ -25,14 +25,17 @@ import SearchInput from "components/ui/search-input";
 type PageComponentProps = {
   type: OrgTypes;
   initialFilters: IFilters;
+  hideHeader?: boolean;
 };
 
-const PageComponent = ({ type, initialFilters }: PageComponentProps) => {
+const PageComponent = ({
+  type,
+  initialFilters,
+  hideHeader = false,
+}: PageComponentProps) => {
   const [modal, setModal] = useState<"org" | "filter" | null>(null);
 
   const { page, setPage } = usePage();
-
-  const [selectedOrg, setSelectedOrg] = useState("");
 
   const [filters, setFilters] = useState<IFilters>(initialFilters);
 
@@ -48,26 +51,11 @@ const PageComponent = ({ type, initialFilters }: PageComponentProps) => {
   });
 
   const close = () => {
-    setSelectedOrg("");
-
     setModal(null);
   };
 
   const renderModal = useCallback(() => {
     switch (modal) {
-      case "org":
-        return (
-          <OrganizationDialogue
-            orgId={selectedOrg}
-            isVisible={modal === "org"}
-            handleClose={close}
-            addSuccessCallback={() => {
-              setPage(1);
-            }}
-            type={type}
-          />
-        );
-
       case "filter":
         return (
           <Dialogue
@@ -89,7 +77,7 @@ const PageComponent = ({ type, initialFilters }: PageComponentProps) => {
           </Dialogue>
         );
     }
-  }, [modal, filters, selectedOrg, setPage, initialFilters, type]);
+  }, [modal, filters, initialFilters]);
 
   return (
     <>
@@ -97,52 +85,56 @@ const PageComponent = ({ type, initialFilters }: PageComponentProps) => {
 
       <div className="flex h-full flex-col space-y-2.5">
         <div className="space-y-5">
-          <div className="flex flex-col justify-between gap-2.5 sm:flex-row">
-            <p className="text-[24px] font-semibold capitalize">{type}</p>
-            {IsAuthorized([Organizations.UPDATE]) && (
-              <Button
-                eventName="Add Organization"
-                onClick={() => {
-                  setModal("org");
-                }}
-              >
-                Add {type}
-              </Button>
-            )}
-          </div>
+          {!hideHeader && (
+            <div className="flex flex-col justify-between gap-2.5 sm:flex-row">
+              <p className="text-[24px] font-semibold capitalize">{type}</p>
+              {IsAuthorized([Organizations.UPDATE]) && (
+                <Button
+                  eventName="Add Organization"
+                  onClick={() => {
+                    showOrganizationDialogue({ type });
+                  }}
+                >
+                  Add {type}
+                </Button>
+              )}
+            </div>
+          )}
 
-          <div className="flex gap-2.5 md:flex-wrap">
-            <div className="w-full md:w-auto">
-              <SearchInput
-                value={searchOrgValue}
-                onChange={(e) => {
-                  handleSearchOrg(e.target.value);
-                  setPage(1);
-                }}
-                containerClass="lg:max-w-[286px]"
-                placeholder={`Search ${type}s`}
-                onClear={() => handleSearchOrg("")}
-              />
-            </div>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setModal("filter");
-              }}
-              className="group flex-shrink-0 lg:hidden"
-            >
-              <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
-            </button>
-            <div className="hidden lg:block">
-              <FilterWrapper>
-                <Filters
-                  initialFilters={initialFilters}
-                  filters={filters}
-                  setFilters={setFilters}
+          {!!organizationList?.items.length && (
+            <div className="flex gap-2.5 md:flex-wrap">
+              <div className="w-full md:w-auto">
+                <SearchInput
+                  value={searchOrgValue}
+                  onChange={(e) => {
+                    handleSearchOrg(e.target.value);
+                    setPage(1);
+                  }}
+                  containerClass="lg:max-w-[286px]"
+                  placeholder={`Search ${type}s`}
+                  onClear={() => handleSearchOrg("")}
                 />
-              </FilterWrapper>
+              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setModal("filter");
+                }}
+                className="group flex-shrink-0 lg:hidden"
+              >
+                <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
+              </button>
+              <div className="hidden lg:block">
+                <FilterWrapper>
+                  <Filters
+                    initialFilters={initialFilters}
+                    filters={filters}
+                    setFilters={setFilters}
+                  />
+                </FilterWrapper>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         <div className="flex h-full flex-col justify-between gap-4">

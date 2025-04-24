@@ -183,7 +183,10 @@ const IndividualContractsPage = () => {
               <Edit width={18} />
               Edit
             </Button>
-            <AddButton contractId={params.id as string} />
+            <AddButton
+              contractId={params.id as string}
+              contract={contractDetails}
+            />
           </div>
         </div>
 

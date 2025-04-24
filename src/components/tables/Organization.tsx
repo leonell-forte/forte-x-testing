@@ -1,10 +1,17 @@
+import { capitalize } from "lodash";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+
+import { ReactComponent as Pencil } from "assets/images/icons/pencil.svg";
 
 import { IOrganization, OrgTypes } from "lib/types/organizations";
+import { getStatusVariant } from "lib/utils";
 
-import OrganizationDialogue from "components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
+import OrganizationDialogue, {
+  showOrganizationDialogue,
+} from "components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
 import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
+import Status from "components/ui/status";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
 
@@ -19,6 +26,7 @@ const OrganizationTable = ({
   isLoading = false,
   type,
 }: TOrganizationTable) => {
+  const navigate = useNavigate();
   const [modal, setModal] = useState<"org" | null>(null);
 
   const [selectedOrg, setSelectedOrg] = useState("");
@@ -60,15 +68,7 @@ const OrganizationTable = ({
       <div className="lg:hidden">
         <Cards.Container isLoading={isLoading}>
           {list.map((item, index) => {
-            const {
-              id,
-              name,
-              registeredName,
-              regions,
-              type,
-              status,
-              registrationNumber,
-            } = item;
+            const { id, name, registeredName, regions, type, status } = item;
             return (
               <Cards.Card
                 onClick={(e) => {
@@ -85,10 +85,6 @@ const OrganizationTable = ({
                     label="Registered name"
                     value={registeredName}
                   />
-                  <Cards.Details
-                    label="Registration number"
-                    value={registrationNumber}
-                  />
                   <Cards.Details label="Regions" value={regions.join(", ")} />
                   <Cards.Details label="Type" value={type} capitalize />
                   <Cards.Details label="Status" value={status} capitalize />
@@ -99,46 +95,57 @@ const OrganizationTable = ({
         </Cards.Container>
       </div>
       <ScrollArea className="hidden w-[calc(100vw-330px)] overflow-hidden lg:block">
-        <Table.Container isEmpty={list.length === 0} isLoading={isLoading}>
+        <Table.Container
+          emptyConfig={{
+            title: `No organizations yet.`,
+            description: `Add an organization by clicking the ‘Add’ button above.`,
+            status: !list.length,
+          }}
+          isLoading={isLoading}
+        >
           <Table.Head>
             <Table.Row>
+              <Table.Header>{`${capitalize(type)} Name`}</Table.Header>
               {TABLE_HEADER.map((key, headerIndex) => {
                 return <Table.Header key={headerIndex}>{key}</Table.Header>;
               })}
+              <Table.Header></Table.Header>
             </Table.Row>
           </Table.Head>
           <Table.Body>
             {list.map((item: IOrganization, bodyIndex: number) => {
-              const {
-                id,
-                name,
-                registeredName,
-                regions,
-                type,
-                status,
-                registrationNumber,
-              } = item;
+              const { id, name, regions, status, registrationNumber } = item;
               return (
                 <Table.Row
                   onClick={(e) => {
                     e.stopPropagation();
-
-                    handleEditOrg(id!);
+                    navigate(`/${type}s/${id}`);
                   }}
                   key={bodyIndex}
                 >
                   <Table.Data>{name}</Table.Data>
 
-                  <Table.Data>{registeredName}</Table.Data>
-
                   <Table.Data>{registrationNumber}</Table.Data>
+
+                  <Table.Data># of contracts</Table.Data>
+
+                  <Table.Data># of beneficiaries</Table.Data>
 
                   <Table.Data>{regions?.join(", ")}</Table.Data>
 
-                  <Table.Data className="capitalize">{type}</Table.Data>
+                  <Table.Data>
+                    <Status variant={getStatusVariant(status)}>{status}</Status>
+                  </Table.Data>
 
                   <Table.Data>
-                    <p className="truncate capitalize">{status}</p>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        showOrganizationDialogue({ orgId: id, type });
+                      }}
+                    >
+                      <Pencil fill="white" width={16} />
+                    </button>
                   </Table.Data>
                 </Table.Row>
               );
@@ -154,10 +161,9 @@ const OrganizationTable = ({
 export default OrganizationTable;
 
 const TABLE_HEADER = [
-  "Organization",
-  "Registered Name",
-  "Registration Number",
+  "Registration #",
+  "# of Contracts",
+  "# of Beneficiaries",
   "Region",
-  "Type",
   "Status",
 ];

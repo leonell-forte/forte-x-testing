@@ -154,11 +154,11 @@ const Dropdown = ({
         >
           <div
             className={classNames(
-              "relative w-full rounded-lg border px-3.5 py-2.5",
+              "relative h-10 w-full rounded-lg border px-3.5 py-2.5",
               className,
               props.disabled
-                ? "cursor-not-allowed border-disabled"
-                : "border-white"
+                ? "cursor-not-allowed border-white/30"
+                : "border-white/30 hover:border-white"
             )}
           >
             <div className="relative">
@@ -263,7 +263,7 @@ const Dropdown = ({
                     "absolute right-0 h-auto w-[20px] flex-shrink-0 transition-all",
                     showList && "rotate-180",
                     props.disabled
-                      ? "cursor-not-allowed fill-disabled"
+                      ? "cursor-not-allowed fill-white/30"
                       : "fill-white"
                   )}
                 />

@@ -1,9 +1,7 @@
-import { Link } from "react-router-dom";
-
-import { ReactComponent as LinkIcon } from "assets/images/icons/link.svg";
-
 import { IContract } from "lib/types/contracts";
 import { formatDate } from "lib/utils";
+
+import Details from "components/ui/details";
 
 const ContractDetails = ({ contract }: { contract: IContract }) => {
   const {
@@ -25,59 +23,37 @@ const ContractDetails = ({ contract }: { contract: IContract }) => {
         </Link> */}
       </div>
 
-      <div className="grid grid-cols-3 gap-6 rounded-3 border border-white/30 p-6">
-        <Detail
+      <Details.Container>
+        <Details.Content
           label="Project"
           value={project as string}
           link={`/projects/${projectId}`}
         />
-        <Detail
+        <Details.Content
           label="Total # of beneficiaries"
           value={targetNoOfBenefeciaries.toString()}
         />
-        <Detail
+        <Details.Content
           label="Start date"
           value={formatDate(startDate, "dd MMM yyyy").toUpperCase()}
         />
-        <Detail
+        <Details.Content
           label="Funder"
           value={funder.name}
           link={`/funders/?id=${funder.id}`}
         />
-        <Detail
+        <Details.Content
           label="Provider"
           value={provider.name}
           link={`/providers?id=${provider.id}`}
         />
-        <Detail
+        <Details.Content
           label="End date"
           value={formatDate(endDate, "dd MMM yyyy").toUpperCase()}
         />
-      </div>
+      </Details.Container>
     </div>
   );
 };
 
 export default ContractDetails;
-
-type DetailProps = {
-  label: string;
-  value: string;
-  link?: string;
-};
-
-const Detail = ({ label, value, link }: DetailProps) => {
-  return (
-    <div className="space-y-2">
-      <p className="text-[12px] font-light text-neutral-100">{label}</p>
-      <div className="flex items-center gap-2.5">
-        <p className="font-light text-neutral-100">{value}</p>
-        {link && (
-          <Link to={link} className="link">
-            <LinkIcon />
-          </Link>
-        )}
-      </div>
-    </div>
-  );
-};

@@ -58,7 +58,11 @@ const LinkedOutcomes = ({
 
         <ScrollArea className="hidden w-[calc(100vw-330px)] overflow-hidden lg:block">
           <Table.Container
-            isEmpty={outcomes.length === 0}
+            emptyConfig={{
+              title: "No outcomes yet.",
+              description: "Add an outcome by clicking the ‘Add’ button above.",
+              status: !outcomes.length,
+            }}
             isLoading={isLoading}
           >
             <Table.Head>

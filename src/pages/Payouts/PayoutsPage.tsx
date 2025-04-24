@@ -133,37 +133,39 @@ const PayoutsPage = () => {
         </div>
         {isProvider && <BankDetails providerId={providerId.toString()} />}
 
-        <div className="flex gap-2.5 md:flex-wrap">
-          <div className="w-full md:w-auto">
-            <SearchInput
-              value={searchPayoutValue}
-              onChange={(e) => {
-                handleSearchPayout(e.target.value);
-                setPage(1);
+        {!!payouts?.items.length && (
+          <div className="flex gap-2.5 md:flex-wrap">
+            <div className="w-full md:w-auto">
+              <SearchInput
+                value={searchPayoutValue}
+                onChange={(e) => {
+                  handleSearchPayout(e.target.value);
+                  setPage(1);
+                }}
+                containerClass="lg:max-w-[286px]"
+                placeholder="Search"
+                onClear={() => handleSearchPayout("")}
+              />
+            </div>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setModal("filter");
               }}
-              containerClass="lg:max-w-[286px]"
-              placeholder="Search"
-              onClear={() => handleSearchPayout("")}
-            />
+              className="group flex-shrink-0 lg:hidden"
+            >
+              <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
+            </button>
+            <div className="hidden lg:block">
+              <Filters
+                filters={filters}
+                setFilters={setFilters}
+                initialFilters={initialFilters}
+                isForte={isForte}
+              />
+            </div>
           </div>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setModal("filter");
-            }}
-            className="group flex-shrink-0 lg:hidden"
-          >
-            <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
-          </button>
-          <div className="hidden lg:block">
-            <Filters
-              filters={filters}
-              setFilters={setFilters}
-              initialFilters={initialFilters}
-              isForte={isForte}
-            />
-          </div>
-        </div>
+        )}
 
         <div className="flex h-full flex-col justify-between gap-4">
           <PayoutsTable list={payouts?.items || []} isLoading={isLoading} />

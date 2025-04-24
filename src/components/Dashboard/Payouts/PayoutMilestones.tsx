@@ -1,5 +1,3 @@
-import React from "react";
-
 import { IMilestone } from "lib/types/milestones";
 import { formatCurrency, getStatusVariant } from "lib/utils";
 
@@ -17,7 +15,13 @@ const PayoutMilestones = ({
     <div className="space-y-4">
       <p className="text-[20px] font-semibold">Milestones</p>
 
-      <Table.Container isEmpty={milestones.length === 0} isLoading={loading}>
+      <Table.Container
+        emptyConfig={{
+          title: "No milestones yet.",
+          status: !milestones.length,
+        }}
+        isLoading={loading}
+      >
         <Table.Head>
           <Table.Row>
             {HEADER.map((key, headerIndex) => {

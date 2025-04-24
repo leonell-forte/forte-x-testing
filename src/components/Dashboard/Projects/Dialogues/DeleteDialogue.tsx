@@ -6,6 +6,8 @@ import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
 
 interface IDeleteDialogueProp extends IDialogueProps {
   project: IProject;
+
+  funderId?: number;
 }
 
 const DeleteDialogue = ({
@@ -13,11 +15,17 @@ const DeleteDialogue = ({
 
   project,
 
+  funderId,
+
   isVisible,
 }: IDeleteDialogueProp) => {
   const { id } = project;
 
-  const { deletProject, isPending } = useDeleteProjectMutation(id, handleClose);
+  const { deletProject, isPending } = useDeleteProjectMutation(
+    id,
+    handleClose,
+    funderId
+  );
 
   const handleDelete = async () => {
     await deletProject(project.id.toString());

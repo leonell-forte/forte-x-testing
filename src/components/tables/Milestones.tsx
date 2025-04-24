@@ -58,7 +58,13 @@ const MilestonesTable = ({
         </Cards.Container>
       </div>
       <ScrollArea className="hidden w-[calc(100vw-330px)] overflow-hidden lg:block">
-        <Table.Container isEmpty={!list.length} isLoading={isLoading}>
+        <Table.Container
+          emptyConfig={{
+            title: "No milestones yet.",
+            status: !list.length,
+          }}
+          isLoading={isLoading}
+        >
           <Table.Head>
             <Table.Row>
               {TABLE_HEADER.map((key, headerIndex) => {

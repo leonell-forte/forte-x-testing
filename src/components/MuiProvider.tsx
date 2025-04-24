@@ -29,7 +29,7 @@ const theme = createTheme({
               color: "white",
 
               "& fieldset": {
-                borderColor: "#ffffff",
+                borderColor: "#ffffff4d",
               },
 
               "&:hover fieldset": {
@@ -149,16 +149,16 @@ const theme = createTheme({
           ...(ownerState.disabled && {
             "& .MuiOutlinedInput-root.Mui-disabled": {
               "& .MuiInputBase-input": {
-                "-webkit-text-fill-color": "#787878 !important", // Override text fill color
+                "-webkit-text-fill-color": "#ffffff4d !important", // Override text fill color
               },
               "& > fieldset": {
-                borderColor: "#787878 !important", // Override border fill color
+                borderColor: "#ffffff4d !important", // Override border fill color
               },
             },
             "& .MuiOutlinedInput-root": {
               borderRadius: "0.5rem",
               "&.Mui-disabled fieldset": {
-                borderColor: ownerState.error ? "#787878" : "#fff",
+                borderColor: ownerState.error ? "#ffffff4d" : "#fff",
               },
             },
             // "& .MuiFormHelperText-root": {

@@ -61,7 +61,9 @@ export const organizations = {
       message: "Type is a required field",
     }),
 
-    status: z.string().min(1, "Status is a required field"),
+    status: z.enum(["active", "inactive"], {
+      errorMap: () => ({ message: "Status is a required field" }),
+    }),
   }),
 };
 

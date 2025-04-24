@@ -1,6 +1,8 @@
 import classNames from "classnames";
 import { TableHTMLAttributes, useEffect, useRef, useState } from "react";
 
+import search from "assets/images/search.png";
+
 import { Tooltip } from "./tooltip/Tooltip";
 
 interface ITableProp extends TableHTMLAttributes<HTMLTableElement> {}
@@ -10,13 +12,17 @@ interface ITableRowProps extends TableHTMLAttributes<HTMLTableRowElement> {}
 interface ITableHeadProps extends TableHTMLAttributes<HTMLHeadElement> {}
 
 interface ITableContainerProp extends ITableProp {
-  isEmpty?: boolean;
-
   isLoading?: boolean;
 
   loadingConfig?: {
     rows: number;
     columns: number;
+  };
+
+  emptyConfig?: {
+    title?: string;
+    description?: string;
+    status: boolean;
   };
 }
 
@@ -31,7 +37,7 @@ const Table = {
   Container: ({
     children,
 
-    isEmpty,
+    emptyConfig,
 
     isLoading,
 
@@ -40,6 +46,27 @@ const Table = {
     ...props
   }: ITableContainerProp) => {
     const tableRef = useRef<HTMLDivElement>(null);
+
+    if (emptyConfig?.status && !isLoading) {
+      return (
+        <div className="mx-auto space-y-2 text-center">
+          <img
+            src={search}
+            alt=""
+            loading="lazy"
+            className="mx-auto max-w-[200px]"
+          />
+          <p className="text-[20px] font-semibold">
+            {emptyConfig?.title || "No data yet"}
+          </p>
+          {emptyConfig.description && (
+            <p className="mx-auto max-w-[200px] font-light">
+              {emptyConfig?.description}
+            </p>
+          )}
+        </div>
+      );
+    }
 
     return (
       <div className={classNames("w-full pb-1", props.className)}>
@@ -78,12 +105,6 @@ const Table = {
               </tbody>
             )}
           </table>
-
-          {isEmpty && !isLoading && (
-            <div className="mx-auto flex h-40 min-w-full items-center justify-center">
-              <p>No data</p>
-            </div>
-          )}
         </div>
       </div>
     );

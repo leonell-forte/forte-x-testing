@@ -50,7 +50,13 @@ const EvidenceTable = ({ list, isLoading }: IProps) => {
       </div>
 
       <div className="hidden md:block">
-        <Table.Container isEmpty={!list.length} isLoading={isLoading}>
+        <Table.Container
+          emptyConfig={{
+            title: "No evidences yet.",
+            status: !list.length,
+          }}
+          isLoading={isLoading}
+        >
           <Table.Head>
             <Table.Row>
               {HEADERS.map((item, index) => {

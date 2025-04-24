@@ -161,7 +161,14 @@ const Partners = ({ projectId }: IProps) => {
           </Cards.Container>
         </div>
         <div className="hidden lg:block">
-          <Table.Container isEmpty={!partners?.length} isLoading={isLoading}>
+          <Table.Container
+            emptyConfig={{
+              title: "No partners yet.",
+              description: "Add a partner by clicking the ‘Add’ button above.",
+              status: !partners?.length,
+            }}
+            isLoading={isLoading}
+          >
             <Table.Head>
               <Table.Row>
                 {HEADERS.map((item, index) => {

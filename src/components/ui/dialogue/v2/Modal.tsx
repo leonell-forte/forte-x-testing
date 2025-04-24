@@ -1,7 +1,8 @@
 import { Dialog, DialogPanel } from "@headlessui/react";
 import React, { ReactNode } from "react";
-import { AiOutlineClose as X } from "react-icons/ai";
 import { create } from "zustand";
+
+import { ReactComponent as X } from "assets/images/icons/close.svg";
 
 import { cn } from "lib/utils";
 
@@ -21,6 +22,8 @@ export type TModalConfig = {
   component: React.ReactNode | null;
   size?: keyof typeof MAP_SIZE_CLASS;
   title?: ReactNode;
+  panelClassName?: string;
+  titleClassName?: string;
 };
 
 export type TModalState = {
@@ -65,8 +68,9 @@ const ModalMarker = () => {
           <DialogPanel
             transition
             className={cn(
-              "data-[closed]:transform-[scale(95%)] relative my-4 min-h-screen w-full bg-[#30F1FF1F] p-6 drop-shadow-sm backdrop-blur duration-300 ease-out data-[closed]:opacity-0 md:h-full md:min-h-fit md:rounded-lg md:p-14",
-              MAP_SIZE_CLASS[config?.size || "base"]
+              "data-[closed]:transform-[scale(95%)] relative my-4 min-h-screen w-full bg-[#30F1FF1F] p-6 drop-shadow-sm backdrop-blur duration-300 ease-out data-[closed]:opacity-0 md:h-full md:min-h-fit md:rounded-5 md:p-14",
+              MAP_SIZE_CLASS[config?.size || "base"],
+              config?.panelClassName
             )}
           >
             <button
@@ -74,10 +78,17 @@ const ModalMarker = () => {
               onClick={onClose}
               className="group absolute right-6 top-6"
             >
-              <X className="h-auto w-4 transition-all group-hover:fill-mint" />
+              <X className="w-[14px] transition-all group-hover:fill-mint" />
             </button>
             {typeof config?.title !== "undefined" && (
-              <div className="text-xl font-semibold">{config?.title}</div>
+              <div
+                className={cn(
+                  "text-[24px] font-semibold",
+                  config?.titleClassName
+                )}
+              >
+                {config?.title}
+              </div>
             )}
 
             <div className="mt-6">{config?.component}</div>

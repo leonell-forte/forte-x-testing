@@ -2,7 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import projectService from "api/projects";
 import { useMemo } from "react";
 import { Control } from "react-hook-form";
-import { HiMinusCircle, HiPlusCircle } from "react-icons/hi";
+import { HiOutlinePlusCircle } from "react-icons/hi";
+
+import { ReactComponent as Bin } from "assets/images/icons/trash.svg";
 
 import { ContractFieldValues, RateEnum } from "lib/types/contracts";
 import { findLabelFromOptions, sortOptions } from "lib/utils";
@@ -10,7 +12,6 @@ import { findLabelFromOptions, sortOptions } from "lib/utils";
 import Controller from "components/ui/custom-controller/CustomController";
 import Dropdown, { IOption } from "components/ui/dropdown";
 import Input from "components/ui/input";
-import RadioGroup from "components/ui/radio-group";
 
 interface IContractOutcomeField {
   projectId: number;
@@ -23,14 +24,18 @@ interface IContractOutcomeField {
 
   disabled?: boolean;
 
-  handleDelete: (index: number) => void;
+  handleDelete?: (index: number) => void;
 
   handleSelectOutcome: (id: string) => void;
 
   handleRadioSelect: (value: RateEnum) => void;
 
   handleAdd: (index: number) => void;
+
+  isLast?: boolean;
 }
+
+const OUTCOME_TYPES = ["Per outcome", "If threshold reached"];
 
 const ContractOutcomeField = ({
   projectId,
@@ -50,6 +55,8 @@ const ContractOutcomeField = ({
   handleRadioSelect,
 
   handleAdd,
+
+  isLast,
 }: IContractOutcomeField) => {
   const { data: project, isLoading: isProjectLoading } = useQuery({
     queryKey: ["specific-project", projectId],
@@ -72,113 +79,153 @@ const ContractOutcomeField = ({
   );
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-4">
-        <div className="w-full">
-          <Controller
-            label={`Outcome ${index + 1}`}
-            required
-            name={`outcomeRates.${index}.outcomeId`}
-            control={control}
-            render={({ field }) => {
-              return (
-                <Dropdown
-                  disabled={!projectId || disabled}
-                  loading={isProjectLoading}
-                  value={findLabelFromOptions(
-                    outcomes,
-                    field.value?.toString()
-                  )}
-                  handleSelect={(val) => {
-                    handleSelectOutcome(val as string);
+    <div className="space-y-3">
+      <Controller
+        label={`Outcome ${index + 1}`}
+        required
+        name={`outcomeRates.${index}.outcomeId`}
+        control={control}
+        containerClassName="w-full"
+        render={({ field }) => {
+          return (
+            <div className="flex items-center gap-2">
+              <Dropdown
+                disabled={!projectId || disabled}
+                loading={isProjectLoading}
+                value={findLabelFromOptions(outcomes, field.value?.toString())}
+                handleSelect={(val) => {
+                  handleSelectOutcome(val as string);
+                }}
+                options={sortOptions(outcomes)}
+                placeholder="Select outcome"
+              />
+              {handleDelete && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+
+                    handleDelete(index);
                   }}
-                  options={sortOptions(outcomes)}
-                  placeholder="Select outcome"
-                />
-              );
-            }}
-          />
-        </div>
-        <div className="w-full">
+                  className="group"
+                >
+                  <Bin
+                    width={14}
+                    className="fill-white text-white transition-all group-hover:fill-mint"
+                  />
+                </button>
+              )}
+            </div>
+          );
+        }}
+      />
+
+      <div className="flex gap-2">
+        <Controller
+          name={`outcomeRates.${index}.perOutcome`}
+          control={control}
+          label="Outcome type"
+          required
+          containerClassName="w-full"
+          render={({ field }) => {
+            return (
+              <Dropdown
+                disabled={disabled}
+                options={OUTCOME_TYPES.map((item) => ({
+                  label: item,
+                  value: item,
+                }))}
+                value={field.value ? "Per outcome" : "If threshold reached"}
+                handleSelect={(val) => {
+                  field.onChange(val);
+                  handleRadioSelect(val as RateEnum);
+                }}
+                placeholder="Select type"
+              />
+            );
+          }}
+        />
+
+        {perOutcome ? (
           <Controller
-            label="Rate"
+            label="Cost"
             required
             name={`outcomeRates.${index}.rate`}
             control={control}
+            containerClassName="w-full"
             render={({ field }) => {
               return (
                 <Input
                   {...field}
+                  isCurrency
                   min={0}
                   disabled={disabled}
-                  placeholder="Rate"
+                  placeholder="XX,XXX.XX"
                   type="number"
                 />
               );
             }}
           />
-        </div>
-
-        {!disabled && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-
-              if (!index) {
-                handleAdd(index);
-              } else {
-                handleDelete(index);
-              }
-            }}
-            type="button"
-            className="mt-6 transition-all hover:scale-[1.05] hover:opacity-80"
-          >
-            {!index ? (
-              <HiPlusCircle className="h-auto w-8 text-white" />
-            ) : (
-              <HiMinusCircle className="h-auto w-8 text-white" />
-            )}
-          </button>
-        )}
-      </div>
-
-      <div className="w-full space-y-4">
-        <div className="flex flex-col gap-2 md:flex-row md:items-end">
+        ) : (
           <Controller
-            name={`outcomeRates.${index}.perOutcome`}
+            name={`outcomeRates.${index}.threshold`}
+            label="Threshold amount"
+            containerClassName="w-full"
             control={control}
             render={({ field }) => {
               return (
-                <RadioGroup
-                  disabled={disabled}
-                  className="flex flex-col gap-4 md:w-[280px]"
-                  items={["Per outcome", "If threshold reached"]}
-                  value={field.value ? "Per outcome" : "If threshold reached"}
-                  onChange={(e) => {
-                    handleRadioSelect(e.target.value as RateEnum);
-                  }}
+                <Input
+                  {...field}
+                  disabled={perOutcome || disabled}
+                  placeholder="Threshold"
                 />
               );
             }}
           />
-
-          <div className="w-full">
-            <Controller
-              name={`outcomeRates.${index}.threshold`}
-              control={control}
-              render={({ field }) => {
-                return (
-                  <Input
-                    {...field}
-                    disabled={perOutcome}
-                    placeholder="Threshold"
-                  />
-                );
-              }}
-            />
-          </div>
-        </div>
+        )}
       </div>
+
+      {!perOutcome && (
+        <Controller
+          label="Cost when threshold reached"
+          required
+          name={`outcomeRates.${index}.rate`}
+          control={control}
+          containerClassName="w-full"
+          render={({ field }) => {
+            return (
+              <Input
+                {...field}
+                isCurrency
+                min={0}
+                disabled={disabled}
+                placeholder="XX,XXX.XX"
+                type="number"
+              />
+            );
+          }}
+        />
+      )}
+
+      {!disabled && isLast && (
+        <div className="mt-4 space-y-3">
+          <hr className="w-full" />
+
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+
+              handleAdd(index);
+            }}
+            type="button"
+            className="group flex items-center gap-2 md:mt-0"
+          >
+            <HiOutlinePlusCircle className="h-auto w-8 text-white transition-all group-hover:stroke-mint" />
+
+            <p className="font-light group-hover:text-mint">Add line item</p>
+          </button>
+        </div>
+      )}
     </div>
   );
 };

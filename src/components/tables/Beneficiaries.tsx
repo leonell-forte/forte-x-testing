@@ -26,12 +26,20 @@ type TBeneficiariesTable = {
   list: IBeneficiaries[];
   isLoading?: boolean;
   setChecked?: React.Dispatch<React.SetStateAction<number[]>>;
+  funderId?: string;
+  providerId?: string;
+  projectId?: string;
+  contractId?: string;
 };
 
 const BeneficiariesTable = ({
   list,
   isLoading = false,
   setChecked,
+  funderId,
+  providerId,
+  projectId,
+  contractId,
 }: TBeneficiariesTable) => {
   const navigate = useNavigate();
 
@@ -51,7 +59,13 @@ const BeneficiariesTable = ({
 
   const { open } = useCustomPrompt();
 
-  const { deleteBeneficiary } = useDeleteBeneficiaryMutation();
+  const { deleteBeneficiary } = useDeleteBeneficiaryMutation(
+    undefined,
+    funderId,
+    providerId,
+    projectId,
+    contractId
+  );
 
   const handleDelete = (beneId: number) => {
     open({
@@ -174,7 +188,15 @@ const BeneficiariesTable = ({
         </Cards.Container>
       </div>
       <ScrollArea className="hidden w-[calc(100vw-330px)] overflow-hidden lg:block">
-        <Table.Container isLoading={isLoading} isEmpty={!list?.length}>
+        <Table.Container
+          emptyConfig={{
+            title: "No beneficiaries yet.",
+            description:
+              "Add a beneficiary by clicking the ‘Add’ button above.",
+            status: !list?.length,
+          }}
+          isLoading={isLoading}
+        >
           <Table.Head>
             <Table.Row>
               {setChecked ? (
@@ -288,7 +310,7 @@ const BeneficiariesTable = ({
                           onClick={() => handleDelete(id)}
                           className="group"
                         >
-                          <Trash className="h-auto w-5 transition-all group-hover:fill-mint" />
+                          <Trash className="h-auto w-4 transition-all group-hover:fill-mint" />
                         </Button>
                       </div>
                     )}

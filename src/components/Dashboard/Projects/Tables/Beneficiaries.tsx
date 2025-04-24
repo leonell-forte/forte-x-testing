@@ -114,7 +114,15 @@ const Beneficiaries = ({ projectId }: IProps) => {
         </div>
 
         <ScrollArea className="hidden w-[calc(100vw-330px)] overflow-hidden lg:block">
-          <Table.Container isLoading={isLoading} isEmpty={!data?.items.length}>
+          <Table.Container
+            emptyConfig={{
+              title: "No beneficiaries yet.",
+              description:
+                "Add a beneficiary by clicking the ‘Add’ button above.",
+              status: !data?.items.length,
+            }}
+            isLoading={isLoading}
+          >
             <Table.Head>
               <Table.Row>
                 {HEADERS.map((item, index) => {

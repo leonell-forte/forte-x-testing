@@ -1,14 +1,15 @@
-import { lowerCase } from "lodash";
-import { useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { FaTrash as Trash } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 
-import { useDeleteContractMutation } from "lib/mutations/contracts";
+import { ReactComponent as Pencil } from "assets/images/icons/pencil.svg";
+
 import { Contracts, IsAuthorized } from "lib/role-permissions";
 import { IContract } from "lib/types/contracts";
 import { getStatusVariant } from "lib/utils";
 
-import { useCustomPrompt } from "components/ui/alert/custom-prompt";
+import DeleteDialogue from "components/Dashboard/Contracts/Dialogues/DeleteDialogue";
+import { showSetupContractModal } from "components/Dashboard/Contracts/SetupContract";
 import Button from "components/ui/button";
 import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import Status from "components/ui/status";
@@ -18,10 +19,18 @@ import Cards from "components/ui/table-card";
 type TContractsTable = {
   list: IContract[];
   isLoading?: boolean;
+  orgId?: string;
+  projectId?: number;
 };
 
-const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
+const ContractsTable = ({
+  list,
+  isLoading = false,
+  orgId,
+  projectId,
+}: TContractsTable) => {
   const navigate = useNavigate();
+  const [contractId, setContractId] = useState<number | null>(null);
 
   const contracts: IContract[] = useMemo(
     () =>
@@ -33,22 +42,38 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
     [list]
   );
 
-  const { deleteContract } = useDeleteContractMutation();
+  const [modal, setModal] = useState<"contract" | "delete" | null>(null);
 
-  const { open } = useCustomPrompt();
+  const close = () => {
+    setContractId(null);
+
+    setModal(null);
+  };
+
+  const renderDialog = useCallback(() => {
+    switch (modal) {
+      case "delete":
+        return (
+          <DeleteDialogue
+            id={contractId?.toString() || ""}
+            projectId={projectId}
+            orgId={orgId}
+            isVisible={modal === "delete"}
+            handleClose={close}
+          />
+        );
+    }
+  }, [modal, contractId, orgId, projectId]);
 
   const handleDeleteContract = (id: number) => {
-    open({
-      title: "Delete Beneficiary",
-      subText:
-        "Are you sure you want to delete this contract? When you delete a contract, its beneficiaries will no longer be related to the contract.",
-      onYes: () => deleteContract(String(id)),
-      yesLabel: "Proceed",
-    });
+    setModal("delete");
+
+    setContractId(id);
   };
 
   return (
     <>
+      {renderDialog()}
       <div className="lg:hidden">
         <Cards.Container isLoading={isLoading}>
           {contracts.map((item, index) => {
@@ -84,11 +109,7 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
                   <Cards.Details label="Provider" value={provider?.name} />
                   <Cards.Details
                     label="Status"
-                    value={
-                      <Status variant={getStatusVariant(status)}>
-                        {lowerCase(status)}
-                      </Status>
-                    }
+                    value={status?.toLowerCase()}
                     capitalize
                   />
                   <Cards.Details label="Project" value={project} />
@@ -115,7 +136,14 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
         </Cards.Container>
       </div>
       <ScrollArea className="hidden w-[calc(100vw-330px)] overflow-hidden lg:block">
-        <Table.Container isEmpty={!contracts.length} isLoading={isLoading}>
+        <Table.Container
+          emptyConfig={{
+            title: "No contracts yet.",
+            description: "Add a contract by clicking the ‘Add’ button above.",
+            status: !contracts.length,
+          }}
+          isLoading={isLoading}
+        >
           <Table.Head>
             <Table.Row>
               {TABLE_HEADER.map((key, headerIndex) => {
@@ -170,29 +198,43 @@ const ContractsTable = ({ list, isLoading = false }: TContractsTable) => {
                   </Table.Data>
 
                   <Table.Data className="capitalize">
-                    <Status variant={getStatusVariant(status)}>
-                      {lowerCase(status)}
-                    </Status>
+                    <Status variant={getStatusVariant(status)}>{status}</Status>
                   </Table.Data>
 
-                  <Table.Data className="ml-auto">
-                    <div className="flex justify-end">
-                      {IsAuthorized([Contracts.DELETE]) &&
-                        item.status === "DRAFT" && (
-                          <Button
-                            eventName="Delete Contract"
-                            id={id?.toString()}
-                            buttonType="default"
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDeleteContract(id!);
-                            }}
-                            className="group"
-                          >
-                            <Trash className="h-auto w-5 transition-all group-hover:fill-mint" />
-                          </Button>
-                        )}
+                  <Table.Data>
+                    <div className="flex justify-end gap-2">
+                      {IsAuthorized([Contracts.DELETE]) && (
+                        <button
+                          id={id?.toString()}
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+
+                            showSetupContractModal({
+                              contract: item,
+                            });
+                          }}
+                          className="h-6 w-6"
+                        >
+                          <Pencil
+                            fill="white"
+                            className="h-auto w-4 transition-all group-hover:fill-mint"
+                          />
+                        </button>
+                      )}
+                      {IsAuthorized([Contracts.DELETE]) && (
+                        <button
+                          id={id?.toString()}
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteContract(id!);
+                          }}
+                          className="h-6 w-6"
+                        >
+                          <Trash className="h-auto w-4 transition-all group-hover:fill-mint" />
+                        </button>
+                      )}
                     </div>
                   </Table.Data>
                 </Table.Row>

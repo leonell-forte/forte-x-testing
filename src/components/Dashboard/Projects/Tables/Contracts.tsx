@@ -20,9 +20,13 @@ type ModalLabelType = "contract" | "tag" | "filter" | "";
 
 interface IProps {
   projectId?: number;
+
+  providerId?: string;
+
+  funderId?: string;
 }
 
-const Contracts = ({ projectId }: IProps) => {
+const Contracts = ({ projectId, providerId, funderId }: IProps) => {
   const { page, setPage } = usePage();
 
   const initialFilter = {
@@ -31,6 +35,10 @@ const Contracts = ({ projectId }: IProps) => {
     project: projectId?.toString() || "",
 
     date: "",
+
+    providerId: providerId || "",
+
+    funderId: funderId || "",
   };
 
   const [filters, setFilters] = useState<IContractFilters>(initialFilter);
@@ -55,12 +63,6 @@ const Contracts = ({ projectId }: IProps) => {
 
     setSelectedContract("");
   };
-
-  // const handleEdit = (id: string) => {
-  //   setSelectedContract(id);
-
-  //   setModal("contract");
-  // };
 
   const renderModal = (modal: ModalLabelType) => {
     switch (modal) {
@@ -116,41 +118,47 @@ const Contracts = ({ projectId }: IProps) => {
       {renderModal(modal)}
 
       <div className="space-y-2.5">
-        <div className="flex flex-col gap-2.5 sm:flex-row">
-          <div className="flex gap-2">
-            <div className="w-full md:w-auto">
-              <SearchInput
-                value={searchContractValue}
-                onChange={(e) => {
-                  handleSearchContract(e.target.value);
+        {!!contractList?.items.length && (
+          <div className="flex flex-col gap-2.5 sm:flex-row">
+            <div className="flex gap-2">
+              <div className="w-full md:w-auto">
+                <SearchInput
+                  value={searchContractValue}
+                  onChange={(e) => {
+                    handleSearchContract(e.target.value);
+                  }}
+                  containerClass="w-full lg:max-w-[286px]"
+                  placeholder="Search contracts"
+                  onClear={() => handleSearchContract("")}
+                />
+              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setModal("filter");
                 }}
-                containerClass="w-full lg:max-w-[286px]"
-                placeholder="Search contracts"
-                onClear={() => handleSearchContract("")}
+                className="group flex-shrink-0 lg:hidden"
+              >
+                <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
+              </button>
+            </div>
+
+            <div className="hidden lg:block">
+              <Filters
+                filters={filters}
+                setFilters={setFilters}
+                projectId={projectId}
               />
             </div>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setModal("filter");
-              }}
-              className="group flex-shrink-0 lg:hidden"
-            >
-              <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
-            </button>
           </div>
-
-          <div className="hidden lg:block">
-            <Filters
-              filters={filters}
-              setFilters={setFilters}
-              projectId={projectId}
-            />
-          </div>
-        </div>
+        )}
 
         <div className="flex h-full flex-col justify-between gap-4">
-          <ContractsTable list={contractList.items} isLoading={isLoading} />
+          <ContractsTable
+            list={contractList.items}
+            isLoading={isLoading}
+            projectId={projectId}
+          />
 
           {!!contractList?.items.length && (
             <div className="flex w-full items-center justify-end">

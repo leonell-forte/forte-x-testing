@@ -11,13 +11,18 @@ const OutcomeSchema = z.object({
 });
 
 export const projects = {
-  defaultValues: (project?: IProject) => {
+  defaultValues: (project?: IProject, funderId?: number) => {
     const data: any = {
       name: project?.name || "",
 
-      outcomes: project?.outcomes || [],
+      outcomes: project?.outcomes || [
+        {
+          name: "",
+          description: "",
+        },
+      ],
 
-      funderId: project?.funder?.id || 0,
+      funderId: project?.funder?.id || funderId || 0,
     };
 
     if (project) {

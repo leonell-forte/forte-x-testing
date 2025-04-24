@@ -86,12 +86,18 @@ export interface IContractFilters {
   project: string;
 
   date: string;
+
+  providerId: string;
+
+  funderId: string;
 }
 
 export interface IContractDefaultValues {
   contract?: IContract | null;
 
   projectId?: number;
+
+  providerId?: string;
 }
 
 export type ContractFieldValues = z.infer<typeof contracts.schema>;

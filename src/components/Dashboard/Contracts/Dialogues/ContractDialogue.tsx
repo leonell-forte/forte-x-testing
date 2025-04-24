@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import contractService from "api/contract";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { Contracts, IsAuthorized } from "lib/role-permissions";
 
@@ -13,13 +14,26 @@ interface IContractDialogueProps {
   id?: number;
 
   projectId?: number;
+
+  providerId?: string;
+
+  funderId?: string;
+
+  activeStep?: number;
 }
 
 const ContractDialogue = ({
   id,
 
+  activeStep,
+
   projectId,
+
+  providerId,
+
+  funderId,
 }: IContractDialogueProps) => {
+  const navigate = useNavigate();
   const [contractId, setContractId] = useState(id);
   const { close: handleClose } = useModal();
   const {
@@ -38,6 +52,7 @@ const ContractDialogue = ({
 
   // sets contract form default values
 
+  // eslint-disable-next-line
   const [onEdit, setOnEdit] = useState(false);
 
   const canEdit = IsAuthorized([Contracts.UPDATE]);
@@ -54,14 +69,18 @@ const ContractDialogue = ({
     </div>
   ) : (
     <ContractForm
+      activeStep={activeStep}
       contractDetails={contractId ? contractDetails! : null}
-      onEdit={onEdit}
+      onEdit={true}
       handleEdit={(val) => setOnEdit(val)}
       handleClose={handleClose!}
       projectId={projectId!}
+      providerId={providerId}
+      funderId={funderId}
       onSuccess={(contract) => {
         setContractId(contract.id);
         refetch();
+        navigate(`/contracts/${contract.id}`);
       }}
     />
   );

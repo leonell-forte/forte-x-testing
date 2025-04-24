@@ -1,12 +1,12 @@
 import { useState } from "react";
 
 import { useAppDispatch } from "lib/hooks";
-import { clearPartners, setPartnersToAdd } from "lib/slice/partners";
+import { clearPartners } from "lib/slice/partners";
 import { OrgTypes, OrganizationFieldTypes } from "lib/types/organizations";
 
 import { IDialogueProps } from "components/ui/dialogue/dialogue";
+import { useModal } from "components/ui/dialogue/v2/Modal";
 
-import AddPartnerForm from "../Forms/AddPartnerForm";
 import OrganizationForm from "../Forms/OrganizationForm";
 
 export interface IOrganizationDialogueProps extends IDialogueProps {
@@ -17,7 +17,16 @@ export interface IOrganizationDialogueProps extends IDialogueProps {
   type?: OrgTypes;
 }
 
-type ModalType = "organization" | "partner";
+export const showOrganizationDialogue = ({
+  orgId,
+  type,
+}: IOrganizationDialogueProps) => {
+  useModal.getState().open({
+    component: <OrganizationDialogue isVisible orgId={orgId} type={type} />,
+    title: orgId ? `Edit ${type}` : `Add ${type}`,
+    panelClassName: "!max-w-[664px]",
+  });
+};
 
 const OrganizationDialogue = ({
   handleClose,
@@ -31,42 +40,26 @@ const OrganizationDialogue = ({
   type,
 }: IOrganizationDialogueProps) => {
   const dispatch = useAppDispatch();
-  const [modal, setModal] = useState<ModalType>("organization");
+
   const [formData, setFormData] = useState<OrganizationFieldTypes | null>(null);
 
-  const renderModal = (modal: ModalType) => {
-    switch (modal) {
-      case "organization":
-        return (
-          <OrganizationForm
-            handleClose={() => {
-              handleClose?.();
-              dispatch(clearPartners());
-              setFormData(null);
-            }}
-            orgId={orgId}
-            addSuccessCallback={addSuccessCallback}
-            isVisible={isVisible}
-            handleAddPartner={() => setModal("partner")}
-            savedFormData={formData}
-            onFormDataChange={setFormData}
-            type={type}
-          />
-        );
-
-      case "partner":
-        return (
-          <AddPartnerForm
-            handleClose={() => setModal("organization")}
-            orgId={orgId}
-            handleStorePartner={(partner) =>
-              dispatch(setPartnersToAdd(partner))
-            }
-          />
-        );
-    }
-  };
-  return renderModal(modal);
+  return (
+    <OrganizationForm
+      handleClose={() => {
+        handleClose?.();
+        dispatch(clearPartners());
+        setFormData(null);
+      }}
+      orgId={orgId}
+      addSuccessCallback={(id) => {
+        addSuccessCallback?.(id);
+      }}
+      isVisible={isVisible}
+      savedFormData={formData}
+      onFormDataChange={setFormData}
+      type={type}
+    />
+  );
 };
 
 export default OrganizationDialogue;

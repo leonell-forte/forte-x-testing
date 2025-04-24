@@ -39,6 +39,14 @@ import ViewMilestone from "pages/Milestones/ViewMilestone";
 
 import ViewBeneficiary from "./ViewBeneficiary";
 
+type BeneficiariesProps = {
+  projectId?: string;
+  contractId?: string;
+  hideHeader?: boolean;
+  providerId?: string;
+  funderId?: string;
+};
+
 type ModalLabelTypes =
   | "beneficiaries"
   | "delete"
@@ -61,11 +69,9 @@ const BeneficiariesComp = ({
   projectId,
   contractId,
   hideHeader,
-}: {
-  projectId?: string;
-  contractId?: string;
-  hideHeader?: boolean;
-}) => {
+  providerId,
+  funderId,
+}: BeneficiariesProps) => {
   const [search, setSearch] = useState("");
 
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -75,11 +81,13 @@ const BeneficiariesComp = ({
 
     status: "",
 
-    provider: "",
+    provider: providerId || "",
 
     riskLevel: "",
 
     contractId: contractId || "",
+
+    funderId: funderId || "",
   };
 
   const [filters, setFilters] = useState<IBeneficiariesFilter>(initialFilter);
@@ -196,41 +204,43 @@ const BeneficiariesComp = ({
             </div>
           )}
 
-          <div className="flex">
-            <div className="flex w-full flex-col flex-wrap items-start gap-2.5 lg:w-auto lg:flex-row">
-              <div className="flex w-full items-center gap-2 md:w-auto">
-                <div className="w-full md:w-auto">
-                  <SearchInput
-                    value={search}
-                    onChange={(e) => {
-                      setSearch(e.target.value);
-                      setPage(1);
+          {!!beneficiariesList?.items.length && (
+            <div className="flex">
+              <div className="flex w-full flex-col flex-wrap items-start gap-2.5 lg:w-auto lg:flex-row">
+                <div className="flex w-full items-center gap-2 md:w-auto">
+                  <div className="w-full md:w-auto">
+                    <SearchInput
+                      value={search}
+                      onChange={(e) => {
+                        setSearch(e.target.value);
+                        setPage(1);
+                      }}
+                      placeholder="Search beneficiaries"
+                      containerClass="w-full lg:max-w-[286px]"
+                      onClear={() => setSearch("")}
+                    />
+                  </div>
+
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setModal("filter");
                     }}
-                    placeholder="Search beneficiaries"
-                    containerClass="w-full lg:max-w-[286px]"
-                    onClear={() => setSearch("")}
+                    className="group flex-shrink-0 xl:hidden"
+                  >
+                    <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
+                  </button>
+                </div>
+                <div className="hidden xl:block">
+                  <Filters
+                    filters={filters}
+                    setFilters={setFilters}
+                    projectId={projectId}
                   />
                 </div>
-
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setModal("filter");
-                  }}
-                  className="group flex-shrink-0 xl:hidden"
-                >
-                  <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
-                </button>
-              </div>
-              <div className="hidden xl:block">
-                <Filters
-                  filters={filters}
-                  setFilters={setFilters}
-                  projectId={projectId}
-                />
               </div>
             </div>
-          </div>
+          )}
         </div>
 
         <div className="flex h-full flex-col justify-between gap-4">
@@ -238,6 +248,10 @@ const BeneficiariesComp = ({
             list={beneficiariesList?.items || []}
             isLoading={isLoading}
             setChecked={setSelectedIds}
+            funderId={funderId}
+            providerId={providerId}
+            projectId={projectId}
+            contractId={contractId}
           />
 
           {!!beneficiariesList?.items?.length && (
@@ -382,11 +396,9 @@ export default function BeneficiariesPage({
   projectId,
   contractId,
   hideHeader,
-}: {
-  projectId?: string;
-  contractId?: string;
-  hideHeader?: boolean;
-}) {
+  providerId,
+  funderId,
+}: BeneficiariesProps) {
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
   const beneficiaryId = pathnames?.[1] || "";
@@ -402,6 +414,8 @@ export default function BeneficiariesPage({
             projectId={projectId}
             contractId={contractId}
             hideHeader={hideHeader}
+            providerId={providerId}
+            funderId={funderId}
           />
         }
       />

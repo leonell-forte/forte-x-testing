@@ -69,7 +69,15 @@ const PayoutsTable = ({ list, isLoading }: PayoutsTableProps) => {
       </div>
 
       <ScrollArea className="hidden w-[calc(100vw-330px)] overflow-hidden lg:block">
-        <Table.Container isEmpty={!list.length} isLoading={isLoading}>
+        <Table.Container
+          emptyConfig={{
+            title: "No payouts yet.",
+            status: !list.length,
+            description:
+              "Add a payout by clicking the 'Generate payouts' button above.",
+          }}
+          isLoading={isLoading}
+        >
           <Table.Head>
             <Table.Row>
               {TABLE_HEADER.map((key, headerIndex) => {

@@ -143,7 +143,7 @@ textarea {
 
 input:disabled {
   color: #787878;
-  -webkit-text-fill-color: #787878;
+  -webkit-text-fill-color: #ffffff4d;
 }
 
 /* Hide the spinner in number input */

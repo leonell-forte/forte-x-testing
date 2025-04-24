@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import evidenceService from "api/evidence";
+import classNames from "classnames";
 import { get } from "lodash";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -58,6 +59,7 @@ export function showSetupEvidenceModal(params: TParams) {
     ),
     size: "2xl",
     title: `${isEdit ? "Edit" : "Add"} Evidence ${isEdit ? "ID: " + params.evidenceDetails?.id : ""}`,
+    panelClassName: "max-w-[584px] lg:px-[85px]",
   });
 }
 
@@ -199,7 +201,12 @@ function SetupEvidenceModal({
       ) : (
         <Form form={form} onSubmit={onSubmit} id="evidences-form">
           <div className="space-y-4">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div
+              className={classNames(
+                "grid grid-cols-1 gap-4 sm:grid-cols-2",
+                !evidenceData && "!grid-cols-1"
+              )}
+            >
               {isThreshold ? (
                 <Controller
                   label="Beneficiary"
@@ -229,7 +236,7 @@ function SetupEvidenceModal({
                 />
               ) : null}
               <Controller
-                label="Description"
+                label="Evidence Description"
                 required
                 control={control}
                 name="description"
@@ -238,21 +245,23 @@ function SetupEvidenceModal({
                 )}
               />
 
-              <Controller
-                label="Status"
-                required
-                control={control}
-                name="status"
-                render={({ field }) => (
-                  <Dropdown
-                    value={field.value}
-                    handleSelect={(val) => field.onChange(val)}
-                    placeholder="Status"
-                    options={EVIDENCE_STATUS}
-                    disabled={!evidenceDetails}
-                  />
-                )}
-              />
+              {!!evidenceData && (
+                <Controller
+                  label="Status"
+                  required
+                  control={control}
+                  name="status"
+                  render={({ field }) => (
+                    <Dropdown
+                      value={field.value}
+                      handleSelect={(val) => field.onChange(val)}
+                      placeholder="Status"
+                      options={EVIDENCE_STATUS}
+                      disabled={!evidenceDetails}
+                    />
+                  )}
+                />
+              )}
             </div>
             {!isFileLoading && fileData ? (
               <div className="flex flex-col items-center">
