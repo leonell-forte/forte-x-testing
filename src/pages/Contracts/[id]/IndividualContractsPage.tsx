@@ -172,21 +172,25 @@ const IndividualContractsPage = () => {
               </div>
             )}
 
-            <Button
-              buttonType="secondary"
-              onClick={() =>
-                showSetupContractModal({
-                  contract: contractDetails,
-                })
-              }
-            >
-              <Edit width={18} />
-              Edit
-            </Button>
-            <AddButton
-              contractId={params.id as string}
-              contract={contractDetails}
-            />
+            {IsAuthorized([Contracts.UPDATE]) && (
+              <>
+                <Button
+                  buttonType="secondary"
+                  onClick={() =>
+                    showSetupContractModal({
+                      contract: contractDetails,
+                    })
+                  }
+                >
+                  <Edit width={18} />
+                  Edit
+                </Button>
+                <AddButton
+                  contractId={params.id as string}
+                  contract={contractDetails}
+                />
+              </>
+            )}
           </div>
         </div>
 
