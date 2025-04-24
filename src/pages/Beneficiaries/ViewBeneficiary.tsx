@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import { ReactComponent as Pencil } from "assets/images/icons/pencil.svg";
 
 import { isPhoneValid } from "lib/isPhoneValid";
+import { Beneficiaries, IsAuthorized } from "lib/role-permissions";
 import { getStatusVariant } from "lib/utils";
 
 import PersonalDetailsSection from "components/Dashboard/Beneficiaries/Dialogues/Sections/PersonalDetails";
@@ -148,14 +149,16 @@ export default function ViewBeneficiary() {
             </div>
           </div>
 
-          <Button
-            buttonType="secondary"
-            className="group"
-            onClick={() => showSetupBeneficiaryModal(beneficiary)}
-          >
-            <Pencil height={14} />
-            Edit
-          </Button>
+          {IsAuthorized([Beneficiaries.UPDATE]) && (
+            <Button
+              buttonType="secondary"
+              className="group"
+              onClick={() => showSetupBeneficiaryModal(beneficiary)}
+            >
+              <Pencil height={14} />
+              Edit
+            </Button>
+          )}
         </div>
         <Tabs tabs={upperTabs} />
 

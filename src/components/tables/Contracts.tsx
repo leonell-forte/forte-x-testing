@@ -93,7 +93,7 @@ const ContractsTable = ({
             return (
               <Cards.Card
                 onClick={
-                  IsAuthorized([Contracts.UPDATE])
+                  IsAuthorized([Contracts.UPDATE, Contracts.NAVIGATE])
                     ? (e) => {
                         e.stopPropagation();
 
