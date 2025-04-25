@@ -52,7 +52,7 @@ interface IContractForm {
 
   handleClose: () => void;
 
-  onSuccess?: (contract: ContractFieldValues) => void;
+  onSuccess?: (contract: IContract) => void;
 
   activeStep?: number;
 }

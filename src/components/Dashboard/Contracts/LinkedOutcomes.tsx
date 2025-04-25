@@ -18,8 +18,9 @@ const LinkedOutcomes = ({
   const [search, setSearch] = useState("");
 
   const outcomes = list.filter((item) => {
-    return item.outcome?.toLowerCase().includes(search.toLowerCase());
+    return item?.outcome?.toLowerCase().includes(search.toLowerCase());
   });
+
   return (
     <>
       <div className="space-y-2.5">

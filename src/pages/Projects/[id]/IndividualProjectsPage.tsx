@@ -6,6 +6,7 @@ import { Link, useParams } from "react-router-dom";
 
 import { ReactComponent as Pencil } from "assets/images/icons/pencil.svg";
 
+import { IsAuthorized, Projects } from "lib/role-permissions";
 import { IProject } from "lib/types/projects";
 
 import { ContractsProvider } from "components/Dashboard/Contracts/Dialogues/ContractContext";
@@ -90,13 +91,15 @@ const IndividualProjectsPage = () => {
               </Link>
             </div>
             <div className="flex gap-4">
-              <Button
-                onClick={() => showProjectDialogue({ projectId: id })}
-                buttonType="secondary"
-              >
-                <Pencil height={14} />
-                Edit
-              </Button>
+              {IsAuthorized([Projects.UPDATE]) && (
+                <Button
+                  onClick={() => showProjectDialogue({ projectId: id })}
+                  buttonType="secondary"
+                >
+                  <Pencil height={14} />
+                  Edit
+                </Button>
+              )}
               <AddOptions id={id as string} />
             </div>
           </div>

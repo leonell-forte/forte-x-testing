@@ -55,6 +55,8 @@ export interface IContract {
 
   outcomenames?: string[];
 
+  outcomeNames?: string[];
+
   outcomes: IContractOutcomeRates[];
 
   provider: Sub;
