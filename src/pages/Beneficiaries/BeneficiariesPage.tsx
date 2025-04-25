@@ -182,7 +182,7 @@ const BeneficiariesComp = ({
                       <DropdownMenuItem
                         onClick={(e) => {
                           e.stopPropagation();
-                          showSetupBeneficiaryModal();
+                          showSetupBeneficiaryModal({});
                         }}
                       >
                         Single Entry

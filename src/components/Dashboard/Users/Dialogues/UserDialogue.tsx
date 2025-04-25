@@ -374,19 +374,22 @@ const UserDialogue = ({
             }}
           />
 
-          {Boolean(userId) && !isNonForteUser && (
-            <div
-              className={classNames(
-                "flex w-full flex-col gap-y-1.5 md:flex-row md:items-center"
-              )}
-            >
-              <label className={"min-w-[140px]"}>Terms</label>
-              <Input
-                disabled
-                value={`Accepted${userData?.signUpSource ? ` on ${userData?.signUpSource}` : ""} at ${formatDate(userData?.agreedTermsAt || userData?.createdAt || "", DEFAULT_DATE_FORMAT + " HH:mm aa")}`}
-              />
-            </div>
-          )}
+          {Boolean(userId) &&
+            !isNonForteUser &&
+            userData?.agreedTermsAt &&
+            userData?.termsVersion && (
+              <div
+                className={classNames(
+                  "flex w-full flex-col gap-y-1.5 md:flex-row md:items-center"
+                )}
+              >
+                <label className={"min-w-[140px]"}>Terms</label>
+                <Input
+                  disabled
+                  value={`Accepted${userData?.signUpSource ? ` on ${userData?.signUpSource}` : ""} at ${formatDate(userData?.agreedTermsAt || userData?.createdAt || "", DEFAULT_DATE_FORMAT + " HH:mm aa")}`}
+                />
+              </div>
+            )}
 
           <div className="!mt-10 flex justify-end gap-4">
             {editMode ? (

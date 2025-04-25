@@ -158,35 +158,40 @@ const IndividualContractsPage = () => {
           </div>
 
           <div className="flex gap-4">
-            {IsAuthorized([Contracts.UPDATE]) && (
-              <div>
-                {contractDetails && (
-                  <Button
-                    buttonType="secondary"
-                    onClick={() => setModal("mark")}
-                  >
-                    <Check fill="white" width={17.59} />
-                    {statusActions?.label}
-                  </Button>
-                )}
-              </div>
-            )}
+            {IsAuthorized([Contracts.UPDATE]) &&
+              contractDetails?.status !== "CANCELLED" && (
+                <div>
+                  {contractDetails && (
+                    <Button
+                      buttonType="secondary"
+                      onClick={() => setModal("mark")}
+                    >
+                      <Check fill="white" width={17.59} />
+                      {statusActions?.label}
+                    </Button>
+                  )}
+                </div>
+              )}
 
-            <Button
-              buttonType="secondary"
-              onClick={() =>
-                showSetupContractModal({
-                  contract: contractDetails,
-                })
-              }
-            >
-              <Edit width={18} />
-              Edit
-            </Button>
-            <AddButton
-              contractId={params.id as string}
-              contract={contractDetails}
-            />
+            <>
+              {IsAuthorized([Contracts.UPDATE]) && (
+                <Button
+                  buttonType="secondary"
+                  onClick={() =>
+                    showSetupContractModal({
+                      contract: contractDetails,
+                    })
+                  }
+                >
+                  <Edit width={18} />
+                  Edit
+                </Button>
+              )}
+              <AddButton
+                contractId={params.id as string}
+                contract={contractDetails}
+              />
+            </>
           </div>
         </div>
 

@@ -10,6 +10,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ReactComponent as Pencil } from "assets/images/icons/pencil.svg";
 
 import { useDeleteEvidence } from "lib/mutations/evidences";
+import { IsAuthorized, Milestones } from "lib/role-permissions";
 import { MILESTONE_TYPES } from "lib/types/milestones";
 import { formatDate, formatNumber, getStatusVariant } from "lib/utils";
 
@@ -85,36 +86,38 @@ export default function ViewMilestone() {
               {milestone.status}
             </Status>
           </div>
-          <div className="flex items-center gap-2">
-            {milestone.status !== "paid" && milestone.type === "outcome" && (
-              <Button
-                className="group"
-                buttonType="secondary"
-                onClick={() =>
-                  showOverrideCostModal({
-                    milestone,
-                  })
-                }
-              >
-                <Pencil height={14} />
-                Override cost
-              </Button>
-            )}
+          {IsAuthorized([Milestones.UPDATE]) && (
+            <div className="flex items-center gap-2">
+              {milestone.status !== "paid" && milestone.type === "outcome" && (
+                <Button
+                  className="group"
+                  buttonType="secondary"
+                  onClick={() =>
+                    showOverrideCostModal({
+                      milestone,
+                    })
+                  }
+                >
+                  <Pencil height={14} />
+                  Override cost
+                </Button>
+              )}
 
-            {milestone.status === "open" && (
-              <Button
-                onClick={() =>
-                  showSetupEvidenceModal({
-                    milestone,
-                    beneficiaryIdParam: beneficiaryId,
-                  })
-                }
-              >
-                <HiPlus className="h-auto w-6 fill-black" />
-                Add Evidence
-              </Button>
-            )}
-          </div>
+              {milestone.status === "open" && (
+                <Button
+                  onClick={() =>
+                    showSetupEvidenceModal({
+                      milestone,
+                      beneficiaryIdParam: beneficiaryId,
+                    })
+                  }
+                >
+                  <HiPlus className="h-auto w-6 fill-black" />
+                  Add Evidence
+                </Button>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="space-y-4">

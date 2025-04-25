@@ -47,13 +47,21 @@ const alertConfig = {
   },
 };
 
-export function showSetupBeneficiaryModal(
-  beneficiaryDetails?: IBeneficiaries,
-  contractId?: string,
-  funderId?: string,
-  providerId?: string,
-  projectId?: string
-) {
+type BeneficiaryModal = {
+  beneficiaryDetails?: IBeneficiaries;
+  contractId?: string;
+  funderId?: string;
+  providerId?: string;
+  projectId?: string;
+};
+
+export function showSetupBeneficiaryModal({
+  beneficiaryDetails,
+  contractId,
+  funderId,
+  providerId,
+  projectId,
+}: BeneficiaryModal) {
   const isEdit = Boolean(beneficiaryDetails);
   useModal.getState().open({
     component: (

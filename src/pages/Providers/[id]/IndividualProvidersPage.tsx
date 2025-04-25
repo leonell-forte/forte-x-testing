@@ -112,12 +112,9 @@ const IndividualProvidersPage = () => {
                 </MenuButton.Item>
                 <MenuButton.Item
                   onClick={() =>
-                    showSetupBeneficiaryModal(
-                      undefined,
-                      undefined,
-                      undefined,
-                      orgId
-                    )
+                    showSetupBeneficiaryModal({
+                      providerId: orgId,
+                    })
                   }
                 >
                   Beneficiary

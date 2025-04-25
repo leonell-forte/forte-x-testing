@@ -131,9 +131,7 @@ const IndividualFundersPage = () => {
                     Contract
                   </MenuButton.Item>
                   <MenuButton.Item
-                    onClick={() =>
-                      showSetupBeneficiaryModal(undefined, undefined, funderId)
-                    }
+                    onClick={() => showSetupBeneficiaryModal({ funderId })}
                   >
                     Beneficiary
                   </MenuButton.Item>

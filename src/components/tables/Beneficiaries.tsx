@@ -130,7 +130,7 @@ const BeneficiariesTable = ({
                 key={index}
                 title={`${firstName} ${lastName}`}
               >
-                {setChecked && (
+                {setChecked && IsAuthorized([Beneficiaries.UPDATE]) && (
                   <div className="absolute right-[2px] top-4">
                     <Checkbox
                       checked={selectedIds.includes(id)}
@@ -200,15 +200,22 @@ const BeneficiariesTable = ({
           <Table.Head>
             <Table.Row>
               {setChecked ? (
-                <Table.Header className="!pl-4">
-                  <Checkbox
-                    checked={
-                      list?.length !== 0 && selectedIds.length === list.length
-                    }
-                    label="Name"
-                    labelClass="!text-white text-base font-semibold"
-                    onChange={handleSelectAll}
-                  />
+                <Table.Header className="!pl-2">
+                  {IsAuthorized([Beneficiaries.UPDATE]) ? (
+                    <div className="pl-2">
+                      <Checkbox
+                        checked={
+                          list?.length !== 0 &&
+                          selectedIds.length === list.length
+                        }
+                        label="Name"
+                        labelClass="!text-white text-base font-semibold translate-x-[-4px]"
+                        onChange={handleSelectAll}
+                      />
+                    </div>
+                  ) : (
+                    "Name"
+                  )}
                 </Table.Header>
               ) : (
                 <Table.Header>Name</Table.Header>
@@ -254,7 +261,7 @@ const BeneficiariesTable = ({
                 >
                   <Table.Data className="!px-4">
                     <div className="flex items-center gap-2">
-                      {setChecked ? (
+                      {setChecked && IsAuthorized([Beneficiaries.UPDATE]) ? (
                         <div
                           className="w-6"
                           onClick={(e) => e.stopPropagation()}

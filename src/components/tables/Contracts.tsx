@@ -93,7 +93,7 @@ const ContractsTable = ({
             return (
               <Cards.Card
                 onClick={
-                  IsAuthorized([Contracts.UPDATE])
+                  IsAuthorized([Contracts.UPDATE, Contracts.NAVIGATE])
                     ? (e) => {
                         e.stopPropagation();
 
@@ -135,6 +135,7 @@ const ContractsTable = ({
           })}
         </Cards.Container>
       </div>
+
       <ScrollArea className="hidden w-[calc(100vw-330px)] overflow-hidden lg:block">
         <Table.Container
           emptyConfig={{
@@ -175,7 +176,7 @@ const ContractsTable = ({
               return (
                 <Table.Row
                   onClick={
-                    IsAuthorized([Contracts.UPDATE])
+                    IsAuthorized([Contracts.UPDATE, Contracts.NAVIGATE])
                       ? (e) => {
                           e.stopPropagation();
 

@@ -1,5 +1,6 @@
 import { ReactComponent as Add } from "assets/images/icons/add.svg";
 
+import { Beneficiaries, Contracts, IsAuthorized } from "lib/role-permissions";
 import { IContract } from "lib/types/contracts";
 
 import MenuButton from "components/ui/menu-button";
@@ -14,6 +15,11 @@ const AddButton = ({
   contractId: string;
   contract?: IContract;
 }) => {
+  if (
+    !IsAuthorized([Contracts.UPDATE]) ||
+    !IsAuthorized([Beneficiaries.CREATE])
+  )
+    return null;
   return (
     <MenuButton.Container>
       <MenuButton.Trigger>
@@ -21,16 +27,20 @@ const AddButton = ({
         Add
       </MenuButton.Trigger>
       <MenuButton.Menu>
-        <MenuButton.Item
-          onClick={() => showSetupContractModal({ contract, activeStep: 2 })}
-        >
-          Linked outcome
-        </MenuButton.Item>
-        <MenuButton.Item
-          onClick={() => showSetupBeneficiaryModal(undefined, contractId)}
-        >
-          Beneficiary
-        </MenuButton.Item>
+        {IsAuthorized([Contracts.UPDATE]) && (
+          <MenuButton.Item
+            onClick={() => showSetupContractModal({ contract, activeStep: 2 })}
+          >
+            Linked outcome
+          </MenuButton.Item>
+        )}
+        {IsAuthorized([Beneficiaries.CREATE]) && (
+          <MenuButton.Item
+            onClick={() => showSetupBeneficiaryModal({ contractId })}
+          >
+            Beneficiary
+          </MenuButton.Item>
+        )}
       </MenuButton.Menu>
     </MenuButton.Container>
   );

@@ -16,7 +16,7 @@ import { usePage } from "../hooks";
 interface IContractMutation {
   id?: number;
 
-  successCallback?: (contract: ContractFieldValues) => void;
+  successCallback?: (contract: IContract) => void;
 
   providerId?: number;
 
@@ -59,7 +59,7 @@ const useContractMutation = ({
       return { previousContracts };
     },
 
-    onSuccess: (addedContract: ContractFieldValues) => {
+    onSuccess: (addedContract: IContract, values: ContractFieldValues) => {
       queryClient.setQueryData(
         contractQuery,
 
@@ -71,6 +71,27 @@ const useContractMutation = ({
           };
         }
       );
+
+      if (id) {
+        queryClient.setQueryData(
+          ["specific-contract", id.toString()],
+          (old: IContract): IContract => {
+            const newData = {
+              ...old,
+              ...addedContract,
+              name: values.name,
+              outcomes: addedContract.outcomes.map((item, index) => ({
+                ...item,
+                id: item.id,
+                projectOutcomeId: item.projectOutcomeId,
+                outcome: addedContract.outcomeNames?.[index],
+              })),
+            };
+
+            return newData;
+          }
+        );
+      }
 
       if (providerId) {
         queryClient.setQueryData(
