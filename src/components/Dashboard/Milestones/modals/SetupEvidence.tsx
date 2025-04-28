@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import loader from "assets/images/icons/loader.svg";
 
 import useBeneficiariesList from "lib/common/lists/useBeneficiariesList";
-import { NO_PROMPT_STATUS, filterEvidenceStatus } from "lib/constants";
+import { EVIDENCE_STATUS, NO_PROMPT_STATUS, filterStatus } from "lib/constants";
 import { useEvidenceMutation } from "lib/mutations/evidences";
 import { EvidenceFieldValues } from "lib/types/evidence";
 import { IMilestone, TMilestoneEvidence } from "lib/types/milestones";
@@ -256,7 +256,7 @@ function SetupEvidenceModal({
                       value={field.value}
                       handleSelect={(val) => field.onChange(val)}
                       placeholder="Status"
-                      options={filterEvidenceStatus(profile.orgType)}
+                      options={filterStatus(EVIDENCE_STATUS, profile.orgType)}
                       disabled={!evidenceDetails}
                     />
                   )}

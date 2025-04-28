@@ -162,47 +162,58 @@ export const EVIDENCE_STATUS = [
   },
 ];
 
-export const filterEvidenceStatus = (type?: OrgTypes) => {
-  if (!type) return EVIDENCE_STATUS;
-  return EVIDENCE_STATUS.filter((e) => e.allowedOrgTypes.includes(type));
-};
-
-export const NO_PROMPT_STATUS = ["approved", "invoiced", "rejected", "paid"];
-
 export const BENEFICIARY_STATUS = [
   {
     label: "New",
     value: "New",
+    allowedOrgTypes: ["funder", "provider", "forte"],
   },
   {
     label: "In progress",
     value: "In progress",
+    allowedOrgTypes: ["funder", "provider", "forte"],
   },
   {
     label: "Withdrawn",
     value: "Withdrawn",
+    allowedOrgTypes: ["funder", "provider", "forte"],
   },
   {
     label: "Pending evidence collection",
     value: "Pending evidence collection",
+    allowedOrgTypes: ["funder", "provider", "forte"],
   },
   {
     label: "Pending evidence review",
     value: "Pending evidence review",
+    allowedOrgTypes: ["funder", "provider", "forte"],
   },
   {
     label: "Rejected",
     value: "Rejected",
+    allowedOrgTypes: ["funder", "forte"],
   },
   {
     label: "Accepted",
     value: "Accepted",
+    allowedOrgTypes: ["funder", "forte"],
   },
   {
     label: "Paid",
     value: "Paid",
+    allowedOrgTypes: ["funder", "provider", "forte"],
   },
 ];
+
+export const filterStatus = (
+  statuses: typeof EVIDENCE_STATUS | typeof BENEFICIARY_STATUS,
+  type?: OrgTypes
+) => {
+  if (!type) return statuses;
+  return statuses.filter((e) => e.allowedOrgTypes.includes(type));
+};
+
+export const NO_PROMPT_STATUS = ["approved", "invoiced", "rejected", "paid"];
 
 export const CONTRACT_STATUS = [
   {
