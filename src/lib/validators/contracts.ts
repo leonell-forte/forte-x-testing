@@ -50,7 +50,7 @@ export const contracts = {
 
       documentId: contract?.documentId || 0,
 
-      status: contract?.status || "DRAFT",
+      status: contract?.status || "draft",
 
       startDate: contract?.startDate || "",
 
@@ -103,7 +103,7 @@ export const contracts = {
 
     documentId: z.number().min(1, { message: "Document is a required field" }),
 
-    status: z.enum(["DRAFT", "SIGNED", "COMPLETED", "CANCELLED", ""]),
+    status: z.enum(["draft", "signed", "completed", "cancelled", ""]),
 
     startDate: z.string().min(1, "Start date is a required field"),
 

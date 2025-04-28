@@ -60,7 +60,7 @@ const ContractDialogue = ({
   useEffect(() => {
     // determines if form is on edit mode or not. if id is present and contract has draft status, it should automatically have edit mode on.
     // if id is not present, edit mode should automatically be on for adding contract.
-    setOnEdit(id ? contractDetails?.status === "DRAFT" && canEdit : true);
+    setOnEdit(id ? contractDetails?.status === "draft" && canEdit : true);
   }, [contractDetails?.status, id, canEdit]);
 
   return contractDetailsLoading ? (

@@ -17,7 +17,6 @@ import {
 import { findLabelFromOptions, formatDate, sortOptions } from "lib/utils";
 import { contracts } from "lib/validators/contracts";
 
-// import { useConfirmPrompt } from "components/ui/alert/confirm-prompt";
 import { useCustomPrompt } from "components/ui/alert/custom-prompt";
 import Button from "components/ui/button";
 import Controller from "components/ui/custom-controller/CustomController";
@@ -137,13 +136,13 @@ const ContractForm = ({
     const status = contractDetails?.status;
 
     return {
-      isSigned: status === "SIGNED",
+      isSigned: status === "signed",
 
-      isCompleted: status === "COMPLETED",
+      isCompleted: status === "completed",
 
-      isDraft: status === "DRAFT",
+      isDraft: status === "draft",
 
-      isCancelled: status === "CANCELLED",
+      isCancelled: status === "cancelled",
     };
   }, [contractDetails?.status]);
 
@@ -551,8 +550,8 @@ const ContractForm = ({
 
                       {isSigned &&
                       !isAmmending &&
-                      watch("status") !== "CANCELLED" &&
-                      watch("status") !== "DRAFT" ? (
+                      watch("status") !== "cancelled" &&
+                      watch("status") !== "draft" ? (
                         <Button
                           onClick={(e) => {
                             e.preventDefault();

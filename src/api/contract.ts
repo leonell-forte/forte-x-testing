@@ -4,6 +4,7 @@ import {
   ContractFieldValues,
   IContract,
   IContractFilters,
+  StatusType,
 } from "../lib/types/contracts";
 import { IODataObject, generateODataQuery } from "../lib/utils";
 
@@ -157,11 +158,23 @@ class ContractService {
   async getOne(id: string | number): Promise<IContract> {
     const response = await api.get(`/contracts/${id}`);
 
-    return response.data.data;
+    return {
+      ...response.data.data,
+      status: response.data.data.status.toLowerCase() as StatusType,
+    };
   }
 
   async delete(id: string) {
     const response = await api.delete(`/contracts/${id}`);
+
+    return response.data;
+  }
+
+  async changeStatus(id: string, status: StatusType) {
+    const response = await api.patch(`/contracts/${id}/status/${status}`, {
+      id,
+      status,
+    });
 
     return response.data;
   }

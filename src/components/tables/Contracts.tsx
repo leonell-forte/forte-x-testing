@@ -199,7 +199,9 @@ const ContractsTable = ({
                   </Table.Data>
 
                   <Table.Data className="capitalize">
-                    <Status variant={getStatusVariant(status)}>{status}</Status>
+                    <Status variant={getStatusVariant(status)}>
+                      {status.toLowerCase()}
+                    </Status>
                   </Table.Data>
 
                   <Table.Data>

@@ -49,13 +49,13 @@ const IndividualContractsPage = () => {
     const status = contractDetails?.status;
 
     return {
-      isSigned: status === "SIGNED",
+      isSigned: status === "signed",
 
-      isCompleted: status === "COMPLETED",
+      isCompleted: status === "completed",
 
-      isDraft: status === "DRAFT",
+      isDraft: status === "draft",
 
-      isCancelled: status === "CANCELLED",
+      isCancelled: status === "cancelled",
     };
   }, [contractDetails?.status]);
 
@@ -159,7 +159,7 @@ const IndividualContractsPage = () => {
 
           <div className="flex gap-4">
             {IsAuthorized([Contracts.UPDATE]) &&
-              contractDetails?.status !== "CANCELLED" && (
+              contractDetails?.status !== "cancelled" && (
                 <div>
                   {contractDetails && (
                     <Button
