@@ -1,11 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import { BENEFICIARY_STATUS } from "lib/constants";
+import { BENEFICIARY_STATUS, filterStatus } from "lib/constants";
 import { useBulkStatusUpdateMutation } from "lib/mutations/beneficiaries";
 import { BeneficiaryStatusUpdateField } from "lib/types/beneficiaries";
 import { beneficiaryStatus } from "lib/validators/beneficiaries";
 
+import { useProfile } from "components/ProfileContext";
 import Button from "components/ui/button";
 import Controller from "components/ui/custom-controller/CustomController";
 import { useModal } from "components/ui/dialogue/v2/Modal";
@@ -27,6 +28,7 @@ export function showBulkUpdateStatusModal(params: TParams) {
 }
 
 const BulkUpdateStatus = ({ ids, successCb }: TParams) => {
+  const { profile } = useProfile();
   const { close } = useModal();
   const form = useForm<BeneficiaryStatusUpdateField>({
     resolver: zodResolver(beneficiaryStatus.schema),
@@ -70,7 +72,7 @@ const BulkUpdateStatus = ({ ids, successCb }: TParams) => {
                   setValue("status", val as string);
                 }}
                 placeholder="Status"
-                options={BENEFICIARY_STATUS}
+                options={filterStatus(BENEFICIARY_STATUS, profile.orgType)}
                 error={!!error?.message}
                 helperText={error?.message}
               />

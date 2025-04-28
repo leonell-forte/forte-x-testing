@@ -2,11 +2,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import useContractMutation from "lib/mutations/contracts";
+import { useUpdateContractStatusMutation } from "lib/mutations/contracts";
 import {
   ContractFieldValues,
   IContract,
   StatusRecords,
+  StatusType,
 } from "lib/types/contracts";
 import { contracts } from "lib/validators/contracts";
 
@@ -50,11 +51,11 @@ const MarkAsCompleted = ({
     const status = contractDetails?.status;
 
     return {
-      isSigned: status === "SIGNED",
+      isSigned: status.toUpperCase() === "SIGNED",
 
-      isCompleted: status === "COMPLETED",
+      isCompleted: status.toUpperCase() === "COMPLETED",
 
-      isDraft: status === "DRAFT",
+      isDraft: status.toUpperCase() === "DRAFT",
     };
   }, [contractDetails?.status]);
 
@@ -66,34 +67,33 @@ const MarkAsCompleted = ({
 
       reset(
         contracts.defaultValues({
-          contract,
+          contract: {
+            ...contract,
+            status: contract.status.toLowerCase() as StatusType,
+          },
         })
       );
     }
   }, [contractDetails, reset, isDraft]);
 
-  const { addContract, isPending } = useContractMutation({
-    id: contractDetails.id,
-    successCallback: handleClose,
+  const { updateContract, isPending } = useUpdateContractStatusMutation({
+    id: (contractDetails.id || "").toString(),
+    callBack: handleClose,
   });
 
   const { next, revert } = useMemo(() => {
     const states: Record<StatusRecords, { next: string; revert: string }> = {
-      COMPLETED: { next: "incomplete", revert: "complete" },
+      completed: { next: "incomplete", revert: "complete" },
 
-      SIGNED: { next: "complete", revert: "incomplete" },
+      signed: { next: "complete", revert: "incomplete" },
 
-      DRAFT: { next: "signed", revert: "" },
+      draft: { next: "signed", revert: "" },
     };
-    return states[contractDetails.status as StatusRecords];
+    return states[contractDetails.status.toLowerCase() as StatusRecords];
   }, [contractDetails.status]);
 
-  const onSubmit = async (values: ContractFieldValues) => {
-    await addContract({
-      ...values,
-
-      status: isCompleted || isDraft ? "SIGNED" : "COMPLETED",
-    });
+  const onSubmit = async () => {
+    await updateContract(isDraft || isCompleted ? "signed" : "completed");
   };
 
   return (

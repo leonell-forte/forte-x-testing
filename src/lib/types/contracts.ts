@@ -4,9 +4,9 @@ import { contracts } from "lib/validators/contracts";
 
 import { File } from "./common";
 
-export type StatusType = "DRAFT" | "SIGNED" | "COMPLETED" | "CANCELLED" | "";
+export type StatusType = "draft" | "signed" | "completed" | "cancelled" | "";
 
-export type StatusRecords = Exclude<StatusType, "CANCELLED" | "">;
+export type StatusRecords = Exclude<StatusType, "cancelled" | "">;
 
 export type RateEnum = "Per outcome" | "If threshold reached";
 

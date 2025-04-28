@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { ReactNode, createContext, useContext } from "react";
+import { ReactNode, createContext, useContext, useMemo } from "react";
 
 import { api } from "lib/axios/interceptor";
+import { OrgTypes } from "lib/types/organizations";
 import { IUser } from "lib/types/users";
 
 import { queryClient } from "./QueryProvider";
@@ -36,6 +37,15 @@ const ProfileContext = createContext<IProfileContext | undefined>(undefined);
 
 function ProfileProvider({ children }: { children: ReactNode }) {
   const { isLoading, data: profile } = useFetchProfile();
+
+  const orgType = useMemo(() => {
+    if (isLoading) return "";
+    const type = profile?.role?.split(".")[0];
+    if (type === "provider") return "provider";
+    if (type === "funder") return "funder";
+    return "forte";
+  }, [profile?.role, isLoading]) as OrgTypes;
+
   if (isLoading || !profile)
     return (
       <div className="flex h-screen w-full items-center justify-center">
@@ -44,7 +54,7 @@ function ProfileProvider({ children }: { children: ReactNode }) {
     );
 
   return (
-    <ProfileContext.Provider value={{ profile }}>
+    <ProfileContext.Provider value={{ profile: { ...profile, orgType } }}>
       {children}
     </ProfileContext.Provider>
   );

@@ -9,12 +9,13 @@ import { useForm } from "react-hook-form";
 import loader from "assets/images/icons/loader.svg";
 
 import useBeneficiariesList from "lib/common/lists/useBeneficiariesList";
-import { EVIDENCE_STATUS, NO_PROMPT_STATUS } from "lib/constants";
+import { EVIDENCE_STATUS, NO_PROMPT_STATUS, filterStatus } from "lib/constants";
 import { useEvidenceMutation } from "lib/mutations/evidences";
 import { EvidenceFieldValues } from "lib/types/evidence";
 import { IMilestone, TMilestoneEvidence } from "lib/types/milestones";
 import { completeSchema, evidence } from "lib/validators/evidence";
 
+import { useProfile } from "components/ProfileContext";
 import { useCustomPrompt } from "components/ui/alert/custom-prompt";
 import Button from "components/ui/button";
 import Controller from "components/ui/custom-controller/CustomController";
@@ -68,10 +69,9 @@ function SetupEvidenceModal({
   evidenceDetails,
   beneficiaryIdParam,
 }: TParams) {
+  const { profile } = useProfile();
   const { close } = useModal();
   const { open } = useCustomPrompt();
-
-  console.log(beneficiaryIdParam, "param");
 
   const fromBeneficiaries = Boolean(beneficiaryIdParam);
 
@@ -256,7 +256,7 @@ function SetupEvidenceModal({
                       value={field.value}
                       handleSelect={(val) => field.onChange(val)}
                       placeholder="Status"
-                      options={EVIDENCE_STATUS}
+                      options={filterStatus(EVIDENCE_STATUS, profile.orgType)}
                       disabled={!evidenceDetails}
                     />
                   )}

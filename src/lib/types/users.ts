@@ -2,6 +2,8 @@ import { z } from "zod";
 
 import { users } from "lib/validators/users";
 
+import { OrgTypes } from "./organizations";
+
 export const UserRoleValues = [
   "provider.user",
   "provider.admin",
@@ -39,6 +41,8 @@ export interface IUser {
   organization?: string;
 
   organizationId?: string;
+
+  orgType?: OrgTypes;
 
   createdAt?: Date;
 

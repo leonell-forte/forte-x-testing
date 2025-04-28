@@ -3,7 +3,11 @@ import { useMutation } from "@tanstack/react-query";
 import contractService from "api/contract";
 import { useNavigate } from "react-router-dom";
 
-import { ContractFieldValues, IContract } from "lib/types/contracts";
+import {
+  ContractFieldValues,
+  IContract,
+  StatusType,
+} from "lib/types/contracts";
 import { IOrganization } from "lib/types/organizations";
 import { IProject } from "lib/types/projects";
 import { formatErrorMessage } from "lib/utils";
@@ -260,6 +264,56 @@ export const useDeleteContractMutation = (
   });
 
   return { deleteContract, isPending };
+};
+
+type UpdateContractMutation = {
+  id: string;
+  callBack?: () => void;
+};
+
+export const useUpdateContractStatusMutation = ({
+  id,
+  callBack,
+}: UpdateContractMutation) => {
+  const { mutateAsync: updateContract, isPending } = useMutation({
+    mutationFn: (status: StatusType) =>
+      contractService.changeStatus(id, status),
+
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ["specific-contract", id] });
+
+      const previousContracts = queryClient.getQueryData<IContract[]>([
+        "specific-contract",
+        id,
+      ]);
+
+      return { previousContracts };
+    },
+
+    onSuccess: (result, values, { previousContracts }) => {
+      queryClient.setQueryData(["specific-contract", id], () => {
+        return { ...previousContracts, status: values };
+      });
+      toast({
+        title: "Contract status updated successfully!",
+      });
+      callBack?.();
+    },
+
+    onError: (err: any, _, context) => {
+      toast({
+        title: "Error updating contract status!",
+        description: formatErrorMessage(err?.response?.data?.data?.[0]),
+        variant: "danger",
+      });
+
+      callBack?.();
+    },
+
+    onSettled: () => {},
+  });
+
+  return { updateContract, isPending };
 };
 
 export default useContractMutation;
