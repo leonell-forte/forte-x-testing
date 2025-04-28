@@ -17,6 +17,7 @@ import {
   Users,
 } from "./role-permissions";
 import { InvoiceStatus } from "./types/invoices";
+import { OrgTypes } from "./types/organizations";
 import { UserRoleType } from "./types/users";
 import { sortOptions } from "./utils";
 
@@ -132,28 +133,39 @@ export const EVIDENCE_STATUS = [
   {
     label: "Approved",
     value: "approved",
+    allowedOrgTypes: ["funder", "provider", "forte"],
   },
   {
     label: "Pending review",
     value: "pending review",
+    allowedOrgTypes: ["provider", "forte"],
   },
   {
     label: "More information requested",
     value: "more information requested",
+    allowedOrgTypes: ["funder", "provider", "forte"],
   },
   {
     label: "Invoiced",
     value: "invoiced",
+    allowedOrgTypes: ["provider", "forte"],
   },
   {
     label: "Rejected",
     value: "rejected",
+    allowedOrgTypes: ["provider", "forte"],
   },
   {
     label: "Paid",
     value: "paid",
+    allowedOrgTypes: ["provider", "forte"],
   },
 ];
+
+export const filterEvidenceStatus = (type?: OrgTypes) => {
+  if (!type) return EVIDENCE_STATUS;
+  return EVIDENCE_STATUS.filter((e) => e.allowedOrgTypes.includes(type));
+};
 
 export const NO_PROMPT_STATUS = ["approved", "invoiced", "rejected", "paid"];
 
