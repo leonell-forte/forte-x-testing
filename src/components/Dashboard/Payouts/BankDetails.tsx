@@ -69,7 +69,7 @@ const BankDetails = ({ providerId, total }: BankDetailsProps) => {
 
   if (bankDetails && !bankDetails?.data?.length) {
     return isForte ? (
-      <div className="mx-auto space-y-4">
+      <div className="flex flex-col items-center space-y-4 text-center">
         <div className="space-y-1">
           <p className="text-[20px] font-semibold">
             No linked bank details yet.
