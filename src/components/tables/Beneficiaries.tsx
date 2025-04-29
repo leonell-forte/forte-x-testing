@@ -13,6 +13,7 @@ import { IBeneficiaries } from "lib/types/beneficiaries";
 import { cn, getStatusVariant } from "lib/utils";
 
 import { showBulkUpdateStatusModal } from "components/Dashboard/Beneficiaries/Dialogues/BulkUpdateStatusV2";
+import { useProfile } from "components/ProfileContext";
 import { useCustomPrompt } from "components/ui/alert/custom-prompt";
 import Button from "components/ui/button";
 import Checkbox from "components/ui/checkbox";
@@ -42,6 +43,8 @@ const BeneficiariesTable = ({
   contractId,
 }: TBeneficiariesTable) => {
   const navigate = useNavigate();
+
+  const { isProviderUser } = useProfile();
 
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
@@ -154,7 +157,9 @@ const BeneficiariesTable = ({
                 <Cards.Group cols={2} className="w-[85%]">
                   <Cards.Details label="Email" value={email} />
                   <Cards.Details label="Contract" value={contract} />
-                  <Cards.Details label="Provider" value={provider} />
+                  {!isProviderUser && (
+                    <Cards.Details label="Provider" value={provider} />
+                  )}
 
                   <Cards.Details
                     label="Status"
@@ -225,7 +230,7 @@ const BeneficiariesTable = ({
 
               <Table.Header>Contract</Table.Header>
 
-              <Table.Header>Provider</Table.Header>
+              {!isProviderUser && <Table.Header>Provider</Table.Header>}
 
               <Table.Header>Status</Table.Header>
 
@@ -300,7 +305,7 @@ const BeneficiariesTable = ({
 
                   <Table.Data>{contract}</Table.Data>
 
-                  <Table.Data>{provider}</Table.Data>
+                  {!isProviderUser && <Table.Data>{provider}</Table.Data>}
 
                   <Table.Data className="capitalize">
                     <Status variant={getStatusVariant(status)}>{status}</Status>

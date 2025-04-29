@@ -31,6 +31,9 @@ function useFetchProfile() {
 
 interface IProfileContext {
   profile: IUser;
+  isProviderUser: boolean;
+  isFunderUser: boolean;
+  isForteUser: boolean;
 }
 
 const ProfileContext = createContext<IProfileContext | undefined>(undefined);
@@ -38,13 +41,35 @@ const ProfileContext = createContext<IProfileContext | undefined>(undefined);
 function ProfileProvider({ children }: { children: ReactNode }) {
   const { isLoading, data: profile } = useFetchProfile();
 
-  const orgType = useMemo(() => {
+  const { isProviderUser, isFunderUser, isForteUser, orgType } = useMemo(() => {
     if (isLoading) return "";
     const type = profile?.role?.split(".")[0];
-    if (type === "provider") return "provider";
-    if (type === "funder") return "funder";
-    return "forte";
-  }, [profile?.role, isLoading]) as OrgTypes;
+    if (type === "provider")
+      return {
+        isProviderUser: true,
+        isFunderUser: false,
+        isForteUser: false,
+        orgType: "provider",
+      };
+    if (type === "funder")
+      return {
+        isProviderUser: false,
+        isFunderUser: true,
+        isForteUser: false,
+        orgType: "funder",
+      };
+    return {
+      isProviderUser: false,
+      isFunderUser: false,
+      isForteUser: true,
+      orgType: "forte",
+    };
+  }, [profile?.role, isLoading]) as {
+    isProviderUser: boolean;
+    isFunderUser: boolean;
+    isForteUser: boolean;
+    orgType: OrgTypes;
+  };
 
   if (isLoading || !profile)
     return (
@@ -54,7 +79,14 @@ function ProfileProvider({ children }: { children: ReactNode }) {
     );
 
   return (
-    <ProfileContext.Provider value={{ profile: { ...profile, orgType } }}>
+    <ProfileContext.Provider
+      value={{
+        profile: { ...profile, orgType },
+        isForteUser,
+        isFunderUser,
+        isProviderUser,
+      }}
+    >
       {children}
     </ProfileContext.Provider>
   );

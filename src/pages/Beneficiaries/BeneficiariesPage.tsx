@@ -21,6 +21,7 @@ import { findLabelFromOptions, sortOptions } from "lib/utils";
 
 import { showImportBeneficiariesModal } from "components/Dashboard/Beneficiaries/Dialogues/ImportDialogue";
 import { showSetupBeneficiaryModal } from "components/Dashboard/Beneficiaries/Dialogues/SetupBeneficiary";
+import { useProfile } from "components/ProfileContext";
 import BeneficiariesTable from "components/tables/Beneficiaries";
 import { BreadCrumb } from "components/ui/breadcrumb/Breadcrumb";
 import Button from "components/ui/button";
@@ -280,6 +281,7 @@ interface IFilterProps {
 
 export const Filters = ({ filters, setFilters, projectId }: IFilterProps) => {
   const { setPage } = usePage();
+  const { isProviderUser } = useProfile();
 
   const {
     projects,
@@ -332,7 +334,7 @@ export const Filters = ({ filters, setFilters, projectId }: IFilterProps) => {
         }}
       />
 
-      {IsAuthorized([Organizations.LIST]) && (
+      {!isProviderUser && IsAuthorized([Organizations.LIST]) && (
         <Dropdown
           loading={orgLoading}
           options={organizations}

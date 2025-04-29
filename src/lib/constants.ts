@@ -3,7 +3,7 @@ import { ReactComponent as Contract } from "assets/images/icons/contract.svg";
 import { ReactComponent as Funder } from "assets/images/icons/funder.svg";
 import { ReactComponent as Invoice } from "assets/images/icons/invoice.svg";
 import { ReactComponent as Milestone } from "assets/images/icons/milestone.svg";
-// import { ReactComponent as Payouts } from "assets/images/icons/payouts.svg";
+import { ReactComponent as Payouts } from "assets/images/icons/payouts.svg";
 import { ReactComponent as Project } from "assets/images/icons/project.svg";
 import { ReactComponent as Provider } from "assets/images/icons/provider.svg";
 
@@ -76,12 +76,12 @@ export const MENUS = [
     icon: Milestone,
   },
 
-  // {
-  //   name: "Payouts",
-  //   link: "/payouts",
-  //   permissions: [],
-  //   icon: Payouts,
-  // },
+  {
+    name: "Payouts",
+    link: "/payouts",
+    permissions: [],
+    icon: Payouts,
+  },
 ];
 
 export const ROLES = [
@@ -201,7 +201,7 @@ export const BENEFICIARY_STATUS = [
   {
     label: "Paid",
     value: "Paid",
-    allowedOrgTypes: ["funder", "provider", "forte"],
+    allowedOrgTypes: ["provider", "forte"],
   },
 ];
 
