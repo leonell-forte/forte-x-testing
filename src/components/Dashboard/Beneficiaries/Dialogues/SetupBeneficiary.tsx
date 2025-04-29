@@ -13,6 +13,7 @@ import {
   HIGHEST_EDUCATION_LEVEL,
   LANGUAGES,
   RISK_LEVEL,
+  filterStatus,
 } from "lib/constants";
 import { useBeneficiaryMutation } from "lib/mutations/beneficiaries";
 import { Beneficiaries, IsAuthorized } from "lib/role-permissions";
@@ -23,6 +24,7 @@ import {
 import { findLabelFromOptions } from "lib/utils";
 import { beneficiaries } from "lib/validators/beneficiaries";
 
+import { useProfile } from "components/ProfileContext";
 import { useCustomPrompt } from "components/ui/alert/custom-prompt";
 import Button from "components/ui/button";
 import Controller from "components/ui/custom-controller/CustomController";
@@ -93,6 +95,7 @@ export function SetupBeneficiaryModal({
   providerId?: string;
   projectId?: string;
 }) {
+  const { profile } = useProfile();
   const { close, setShowPromptOnClose } = useModal();
   const { open } = useCustomPrompt();
 
@@ -394,7 +397,7 @@ export function SetupBeneficiaryModal({
                     handleSelect={(val) => {
                       field.onChange(val);
                     }}
-                    options={BENEFICIARY_STATUS}
+                    options={filterStatus(BENEFICIARY_STATUS, profile.orgType)}
                     placeholder="Status"
                   />
                 )}
