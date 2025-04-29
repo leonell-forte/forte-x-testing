@@ -3,11 +3,15 @@ import organizationService from "api/organization";
 import classNames from "classnames";
 import { useState } from "react";
 
+import { ReactComponent as Link2 } from "assets/images/icons/link2.svg";
+
 import { useAlert } from "lib/hooks";
 import { formatCurrency } from "lib/utils";
 
+import { useProfile } from "components/ProfileContext";
 import Button from "components/ui/button";
 import Details from "components/ui/details";
+import { toast } from "components/ui/toast/Toast";
 
 type BankDetailsProps = {
   providerId: string;
@@ -15,11 +19,14 @@ type BankDetailsProps = {
 };
 
 const BankDetails = ({ providerId, total }: BankDetailsProps) => {
+  const { profile } = useProfile();
   const { data: bankDetails, isLoading } = useQuery({
     queryKey: ["bank-details", providerId],
     queryFn: () => organizationService.getBankDetails(providerId as string),
     enabled: !!providerId,
   });
+
+  const isForte = profile.orgType === "forte";
 
   const [loading, setLoading] = useState(false);
 
@@ -31,7 +38,16 @@ const BankDetails = ({ providerId, total }: BankDetailsProps) => {
       const res = await organizationService.getStripeOnboardingLink(
         providerId as string
       );
-      window.location.href = res.data;
+      console.log(res.data);
+
+      if (isForte) {
+        navigator.clipboard.writeText(res.data);
+        toast({
+          title: "Link copied to clipboard",
+        });
+      } else {
+        window.location.href = res.data;
+      }
     } catch (err) {
       console.log(err);
 
@@ -52,10 +68,46 @@ const BankDetails = ({ providerId, total }: BankDetailsProps) => {
   }
 
   if (bankDetails && !bankDetails?.data?.length) {
-    return (
-      <Button loading={loading} onClick={handleOnboard}>
-        Enter Bank Details
-      </Button>
+    return isForte ? (
+      <div className="flex flex-col items-center space-y-4 text-center">
+        <div className="space-y-1">
+          <p className="text-[20px] font-semibold">
+            No linked bank details yet.
+          </p>
+          <p className="font-light">
+            Send provider the link below to complete payment set up.
+          </p>
+        </div>
+        <Button
+          buttonType="secondary"
+          className="!border-mint !text-mint"
+          loading={loading}
+          onClick={handleOnboard}
+        >
+          <Link2 fill="#42ECA8" width={16} />
+          Copy set up link
+        </Button>
+      </div>
+    ) : (
+      <div className="flex flex-col items-center space-y-4 text-center">
+        <div className="space-y-1">
+          <p className="text-[20px] font-semibold">
+            No linked bank details yet.
+          </p>
+          <p className="font-light">
+            Click the link below to complete payment set up.
+          </p>
+        </div>
+        <Button
+          buttonType="secondary"
+          className="!border-mint !text-mint"
+          loading={loading}
+          onClick={handleOnboard}
+        >
+          <Link2 fill="#42ECA8" width={16} />
+          Set up payment
+        </Button>
+      </div>
     );
   }
 
