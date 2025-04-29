@@ -10,6 +10,7 @@ import { getStatusVariant } from "lib/utils";
 
 import DeleteDialogue from "components/Dashboard/Contracts/Dialogues/DeleteDialogue";
 import { showSetupContractModal } from "components/Dashboard/Contracts/SetupContract";
+import { useProfile } from "components/ProfileContext";
 import Button from "components/ui/button";
 import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import Status from "components/ui/status";
@@ -30,6 +31,8 @@ const ContractsTable = ({
   projectId,
 }: TContractsTable) => {
   const navigate = useNavigate();
+  const { isProviderUser } = useProfile();
+
   const [contractId, setContractId] = useState<number | null>(null);
 
   const contracts: IContract[] = useMemo(
@@ -106,7 +109,9 @@ const ContractsTable = ({
               >
                 <Cards.Group cols={2}>
                   <Cards.Details label="Contract name" value={name} />
-                  <Cards.Details label="Provider" value={provider?.name} />
+                  {!isProviderUser && (
+                    <Cards.Details label="Provider" value={provider?.name} />
+                  )}
                   <Cards.Details
                     label="Status"
                     value={status?.toLowerCase()}
@@ -147,7 +152,10 @@ const ContractsTable = ({
         >
           <Table.Head>
             <Table.Row>
-              {TABLE_HEADER.map((key, headerIndex) => {
+              {TABLE_HEADER.filter((key) => {
+                if (isProviderUser) return key !== "Provider";
+                return true;
+              }).map((key, headerIndex) => {
                 return <Table.Header key={headerIndex}>{key}</Table.Header>;
               })}
 
@@ -192,8 +200,7 @@ const ContractsTable = ({
 
                   <Table.Data>{project}</Table.Data>
 
-                  <Table.Data>{provider?.name}</Table.Data>
-
+                  {!isProviderUser && <Table.Data>{provider?.name}</Table.Data>}
                   <Table.Data>
                     {noOfBeneficiaries} / {targetNoOfBenefeciaries}
                   </Table.Data>
