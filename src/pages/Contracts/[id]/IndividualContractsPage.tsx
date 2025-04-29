@@ -16,6 +16,7 @@ import ContractDetails from "components/Dashboard/Contracts/ContractDetails";
 import MarkContract from "components/Dashboard/Contracts/Dialogues/MarkContract";
 import LinkedOutcomes from "components/Dashboard/Contracts/LinkedOutcomes";
 import { showSetupContractModal } from "components/Dashboard/Contracts/SetupContract";
+import { useProfile } from "components/ProfileContext";
 import { BreadCrumb } from "components/ui/breadcrumb/Breadcrumb";
 import Button from "components/ui/button";
 import Dialogue from "components/ui/dialogue/dialogue";
@@ -27,6 +28,7 @@ import BeneficiariesPage from "pages/Beneficiaries/BeneficiariesPage";
 import MilestonePage from "pages/Milestones/MilestonesPage";
 
 const IndividualContractsPage = () => {
+  const { profile } = useProfile();
   const params = useParams();
 
   const [modal, setModal] = useState<"contract" | "mark" | null>(null);
@@ -175,7 +177,8 @@ const IndividualContractsPage = () => {
 
             <>
               {IsAuthorized([Contracts.UPDATE]) &&
-                contractDetails?.status === "draft" && (
+                (profile.orgType === "forte" ||
+                  contractDetails?.status === "draft") && (
                   <Button
                     buttonType="secondary"
                     onClick={() =>
