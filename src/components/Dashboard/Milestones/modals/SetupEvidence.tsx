@@ -257,7 +257,9 @@ function SetupEvidenceModal({
                       handleSelect={(val) => field.onChange(val)}
                       placeholder="Status"
                       options={filterStatus(EVIDENCE_STATUS, profile.orgType)}
-                      disabled={!evidenceDetails}
+                      disabled={
+                        !evidenceDetails || profile.orgType === "provider"
+                      }
                     />
                   )}
                 />
