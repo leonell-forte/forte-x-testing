@@ -1,20 +1,13 @@
-import { ReactComponent as Link2 } from "assets/images/icons/link2.svg";
+import PayoutBankDetails from "components/Dashboard/Payouts/BankDetails";
 
-import Button from "components/ui/button";
+type BankDetailsProps = {
+  providerId: string;
+};
 
-const BankDetails = () => {
+const BankDetails = ({ providerId }: BankDetailsProps) => {
   return (
-    <div className="space-y-4 text-center">
-      <div className="space-y-1">
-        <p className="text-[20px] font-semibold">No linked bank details yet.</p>
-        <p className="font-light">
-          Send provider the link below to complete payment set up.
-        </p>
-      </div>
-      <Button buttonType="secondary" className="!border-mint !text-mint">
-        <Link2 fill="#42ECA8" width={16} />
-        Copy set up link
-      </Button>
+    <div className="space-y-4">
+      <PayoutBankDetails providerId={providerId} />
     </div>
   );
 };

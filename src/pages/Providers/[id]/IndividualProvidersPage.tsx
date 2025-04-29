@@ -53,7 +53,7 @@ const IndividualProvidersPage = () => {
     {
       value: "bank",
       label: "Bank details",
-      content: <BankDetails />,
+      content: <BankDetails providerId={orgId as string} />,
     },
   ];
 
