@@ -146,6 +146,7 @@ const ProjectsTable = ({
                 beneficiariesCount,
                 contractsCount,
                 milestonesCount,
+                budget,
               } = item;
 
               return (
@@ -169,6 +170,8 @@ const ProjectsTable = ({
                       <LinkIcon />
                     </Link>
                   </Table.Data>
+
+                  <Table.Data>$ {budget}</Table.Data>
 
                   <Table.Data>{contractsCount}</Table.Data>
 
@@ -228,8 +231,9 @@ const ProjectsTable = ({
 export default ProjectsTable;
 
 const TABLE_HEADER = [
-  "Project",
+  "Project Name",
   "Funder  ",
+  "Budget",
   "# of Contracts",
   "# of Beneficiaries",
   "# of Milestones",
