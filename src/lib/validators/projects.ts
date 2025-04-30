@@ -23,6 +23,8 @@ export const projects = {
       ],
 
       funderId: project?.funder?.id || funderId || 0,
+
+      budget: project?.budget || "",
     };
 
     if (project) {
@@ -37,6 +39,8 @@ export const projects = {
     name: z.string().min(1, "Project name is a required field"),
 
     funderId: z.number().min(1, "Funder is a required field"),
+
+    budget: z.string().min(1, "Budget is a required field"),
 
     outcomes: z.array(OutcomeSchema).min(1, "At least one outcome is required"),
   }),

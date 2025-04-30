@@ -7,6 +7,7 @@ import { ReactComponent as LinkIcon } from "assets/images/icons/link.svg";
 
 import { IsAuthorized, Projects } from "lib/role-permissions";
 import { IProject } from "lib/types/projects";
+import { formatCurrency } from "lib/utils";
 
 import DeleteDialogue from "components/Dashboard/Projects/Dialogues/DeleteDialogue";
 import { showProjectDialogue } from "components/Dashboard/Projects/Dialogues/ProjectDialogue";
@@ -81,7 +82,10 @@ const ProjectsTable = ({
               >
                 <Cards.Group cols={2}>
                   <Cards.Details label="Funder" value={funder?.name || "-"} />
-                  <Cards.Details label="Budget" value={`$ ${budget}`} />
+                  <Cards.Details
+                    label="Budget"
+                    value={`${formatCurrency(Number(budget as string))}`}
+                  />
 
                   <Cards.Details
                     label="# of Contracts"
@@ -188,7 +192,7 @@ const ProjectsTable = ({
                     </Link>
                   </Table.Data>
 
-                  <Table.Data>$ {budget}</Table.Data>
+                  <Table.Data>{formatCurrency(Number(budget))}</Table.Data>
 
                   <Table.Data>{contractsCount}</Table.Data>
 
