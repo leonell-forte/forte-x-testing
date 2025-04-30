@@ -7,6 +7,7 @@ import { ReactComponent as LinkIcon } from "assets/images/icons/link.svg";
 
 import { IsAuthorized, Projects } from "lib/role-permissions";
 import { IProject } from "lib/types/projects";
+import { formatCurrency } from "lib/utils";
 
 import DeleteDialogue from "components/Dashboard/Projects/Dialogues/DeleteDialogue";
 import { showProjectDialogue } from "components/Dashboard/Projects/Dialogues/ProjectDialogue";
@@ -59,7 +60,15 @@ const ProjectsTable = ({
       <div className="lg:hidden">
         <Cards.Container isLoading={isLoading}>
           {list.map((item, index) => {
-            const { id, name, outcomes, providers } = item;
+            const {
+              id,
+              name,
+              funder,
+              budget,
+              contractsCount,
+              beneficiariesCount,
+              milestonesCount,
+            } = item;
 
             return (
               <Cards.Card
@@ -71,14 +80,24 @@ const ProjectsTable = ({
                 key={index}
                 title={name}
               >
-                <Cards.Group>
+                <Cards.Group cols={2}>
+                  <Cards.Details label="Funder" value={funder?.name || "-"} />
                   <Cards.Details
-                    label="Providers"
-                    value={providers?.map((item) => item).join(", ") || "-"}
+                    label="Budget"
+                    value={`${formatCurrency(Number(budget as string))}`}
+                  />
+
+                  <Cards.Details
+                    label="# of Contracts"
+                    value={contractsCount?.toString() || "0"}
                   />
                   <Cards.Details
-                    label="Outcomes"
-                    value={outcomes?.map((item) => item.name).join(", ")}
+                    label="# of Beneficiaries"
+                    value={beneficiariesCount?.toString() || "0"}
+                  />
+                  <Cards.Details
+                    label="# of Milestones"
+                    value={milestonesCount?.toString() || "0"}
                   />
                 </Cards.Group>
                 <div className="absolute bottom-3 right-3 flex gap-2">
@@ -88,9 +107,10 @@ const ProjectsTable = ({
                       id={id.toString()}
                       buttonType="default"
                       type="button"
-                      onClick={() =>
-                        showProjectDialogue({ projectId: item.id.toString() })
-                      }
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        showProjectDialogue({ projectId: item.id.toString() });
+                      }}
                       className="icon group"
                     >
                       <Pencil className="h-auto w-5 transition-all group-hover:fill-mint" />
@@ -103,7 +123,8 @@ const ProjectsTable = ({
                       id={id.toString()}
                       buttonType="default"
                       type="button"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
                         setModal("delete");
                         setSelectedProject(item);
                       }}
@@ -146,6 +167,7 @@ const ProjectsTable = ({
                 beneficiariesCount,
                 contractsCount,
                 milestonesCount,
+                budget,
               } = item;
 
               return (
@@ -169,6 +191,8 @@ const ProjectsTable = ({
                       <LinkIcon />
                     </Link>
                   </Table.Data>
+
+                  <Table.Data>{formatCurrency(Number(budget))}</Table.Data>
 
                   <Table.Data>{contractsCount}</Table.Data>
 
@@ -228,8 +252,9 @@ const ProjectsTable = ({
 export default ProjectsTable;
 
 const TABLE_HEADER = [
-  "Project",
+  "Project Name",
   "Funder  ",
+  "Budget",
   "# of Contracts",
   "# of Beneficiaries",
   "# of Milestones",

@@ -186,6 +186,7 @@ const ProjectDialogue = ({
   // Watch required fields for step validation
   const projectName = watch("name");
   const selectedFunderId = watch("funderId");
+  const budget = watch("budget");
 
   return (
     <>
@@ -235,13 +236,24 @@ const ProjectDialogue = ({
                       );
                     }}
                   />
+
+                  <Controller
+                    label="Budget"
+                    containerClassName="max-w-[182.5px]"
+                    required
+                    name="budget"
+                    control={control}
+                    render={({ field }) => {
+                      return <Input {...field} isCurrency />;
+                    }}
+                  />
                 </div>
 
                 <div className="flex justify-end">
                   <Button
                     className="w-[147px]"
                     onClick={() => setActiveStep(2)}
-                    disabled={!projectName || !selectedFunderId}
+                    disabled={!projectName || !selectedFunderId || !budget}
                   >
                     Next
                   </Button>

@@ -35,6 +35,8 @@ export interface IProject {
 
   providers?: string[];
 
+  budget?: string;
+
   funder?: Sub;
 
   beneficiariesCount?: string | number;
