@@ -77,7 +77,7 @@ const UserDropdown = () => {
         </button>
 
         <motion.ul
-          initial={{ height: 0 }}
+          initial={{ height: 0, opacity: 0 }}
           animate={
             showDropdown
               ? { opacity: 1, height: 102 }
