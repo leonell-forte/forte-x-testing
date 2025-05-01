@@ -114,7 +114,15 @@ const OrganizationTable = ({
           </Table.Head>
           <Table.Body>
             {list.map((item: IOrganization, bodyIndex: number) => {
-              const { id, name, regions, status, registrationNumber } = item;
+              const {
+                id,
+                name,
+                regions,
+                status,
+                registrationNumber,
+                noOfBeneficiaries,
+                noOfContracts,
+              } = item;
               return (
                 <Table.Row
                   onClick={(e) => {
@@ -127,9 +135,9 @@ const OrganizationTable = ({
 
                   <Table.Data>{registrationNumber}</Table.Data>
 
-                  <Table.Data># of contracts</Table.Data>
+                  <Table.Data>{noOfContracts}</Table.Data>
 
-                  <Table.Data># of beneficiaries</Table.Data>
+                  <Table.Data>{noOfBeneficiaries}</Table.Data>
 
                   <Table.Data>{regions?.join(", ")}</Table.Data>
 
