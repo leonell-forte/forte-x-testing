@@ -21,7 +21,7 @@ const PayoutsTable = ({ list, isLoading }: PayoutsTableProps) => {
 
   return (
     <div>
-      <div className="lg:hidden">
+      <div className="mt-4 lg:hidden">
         <Cards.Container isLoading={isLoading}>
           {list.map((payout, index) => {
             const { id, provider, noOfMilestones, amount, status, settledAt } =
