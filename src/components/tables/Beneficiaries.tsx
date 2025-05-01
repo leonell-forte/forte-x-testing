@@ -21,6 +21,7 @@ import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import Status from "components/ui/status";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
+import { toast } from "components/ui/toast/Toast";
 import { Toolbar } from "components/ui/toolbar/Toolbar";
 
 type TBeneficiariesTable = {
@@ -83,7 +84,18 @@ const BeneficiariesTable = ({
   const { exportEvidence } = useExportEvidenceMutation();
 
   const handleDownloadEvidence = async () => {
-    await exportEvidence({ beneficiaryIds: selectedIds });
+    const filteredIds = selectedIds.filter(
+      (id) => !!list.find((item) => item.id === id)?.evidences?.length
+    );
+
+    if (!filteredIds.length) {
+      toast({
+        title: "No evidences found",
+        variant: "danger",
+      });
+      return;
+    }
+    await exportEvidence({ beneficiaryIds: filteredIds });
     setSelectedIds([]);
   };
 
