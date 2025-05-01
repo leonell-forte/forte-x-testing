@@ -1,12 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 import { Invoice } from "lib/types/invoices";
-import {
-  formatCurrency,
-  formatDate,
-  formatNumber,
-  getStatusVariant,
-} from "lib/utils";
+import { formatCurrency, formatDate, getStatusVariant } from "lib/utils";
 
 import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import Status from "components/ui/status";
@@ -34,7 +29,7 @@ const Invoices = ({ list, isLoading }: InvoicesProps) => {
       <div className="lg:hidden">
         <Cards.Container isLoading={isLoading}>
           {list?.map((item, index) => {
-            const { id, createdAt, cost, status } = item;
+            const { id, createdAt, cost, status, noOfMilestones } = item;
             return (
               <Cards.Card
                 onClick={(e) => {
@@ -50,10 +45,18 @@ const Invoices = ({ list, isLoading }: InvoicesProps) => {
                     value={formatDate(new Date(createdAt || ""), "dd-LLL-yyyy")}
                   />
                   <Cards.Details
-                    label="Total"
-                    value={`$${formatNumber(cost)}`}
+                    label="# of Milestones"
+                    value={noOfMilestones || "-"}
                   />
-                  <Cards.Details label="Status" value={status} />
+                  <Cards.Details label="Amount" value={formatCurrency(cost)} />
+                  <Cards.Details
+                    label="Status"
+                    value={
+                      <Status variant={getStatusVariant(status)}>
+                        {status}
+                      </Status>
+                    }
+                  />
                 </Cards.Group>
                 {/* still not sure what download is for -echo
                 
