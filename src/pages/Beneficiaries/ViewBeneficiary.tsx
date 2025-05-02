@@ -86,7 +86,7 @@ export default function ViewBeneficiary() {
     return [
       {
         value: "milestones",
-        label: `Miletones ${
+        label: `Milestones ${
           milestones && isNumber(milestones?.data.length)
             ? `(${milestones.data.length})`
             : null
