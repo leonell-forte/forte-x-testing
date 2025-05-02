@@ -12,9 +12,11 @@ jobs:
     steps:
       - name: Notify Slack (Deployment Started)
         run: |
-          curl -X POST -H 'Content-type: application/json' \
-          --data '{"text":"🟡 *Frontend Deployment Started* for `development` branch.\nBuilding and deploying React app to CloudFront... ⏳"}' \
-          ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
+          COMMIT_URL="https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
+          curl -X POST -H 'Content-type: application/json' --data @- ${{ secrets.SLACK_WEBHOOK_URL_DEV }} <<EOF
+          {
+            "text": "🟡 *Frontend Deployment Started* for \`development\` branch.\n*Commit:* <${COMMIT_URL}|\`${{ github.sha }}\`>\nBuilding and deploying React app to CloudFront... ⏳"
+          }
 
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -54,13 +56,17 @@ jobs:
       - name: Notify Slack (Deployment Successful)
         if: success()
         run: |
-          curl -X POST -H 'Content-type: application/json' \
-          --data '{"text":"✅ *Frontend Deployment Successful!* React app is live on CloudFront from the `development` branch 🚀"}' \
-          ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
+          COMMIT_URL="https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
+          curl -X POST -H 'Content-type: application/json' --data @- ${{ secrets.SLACK_WEBHOOK_URL_DEV }} <<EOF
+          {
+            "text": "✅ *Frontend Deployment Successful!* React app is live on CloudFront from \`development\` branch 🚀\n*Commit:* <${COMMIT_URL}|\`${{ github.sha }}\`>"
+          }
 
       - name: Notify Slack (Deployment Failed)
         if: failure()
         run: |
-          curl -X POST -H 'Content-type: application/json' \
-          --data '{"text":"❌ *Frontend Deployment Failed* for `development` branch. Please check GitHub Actions logs 🧯"}' \
-          ${{ secrets.SLACK_WEBHOOK_URL_DEV }}
+          COMMIT_URL="https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
+          curl -X POST -H 'Content-type: application/json' --data @- ${{ secrets.SLACK_WEBHOOK_URL_DEV }} <<EOF
+          {
+            "text": "❌ *Frontend Deployment Failed* for \`development\` branch. Please check GitHub Actions logs 🧯\n*Commit:* <${COMMIT_URL}|\`${{ github.sha }}\`>"
+          }
