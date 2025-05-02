@@ -11,7 +11,6 @@ import { getStatusVariant } from "lib/utils";
 import DeleteDialogue from "components/Dashboard/Contracts/Dialogues/DeleteDialogue";
 import { showSetupContractModal } from "components/Dashboard/Contracts/SetupContract";
 import { useProfile } from "components/ProfileContext";
-import Button from "components/ui/button";
 import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import Status from "components/ui/status";
 import Table from "components/ui/table";
@@ -121,18 +120,35 @@ const ContractsTable = ({
                   <Cards.Details label="Document" value={documentName} />
                 </Cards.Group>
 
-                <div className="absolute bottom-3 right-0">
-                  {IsAuthorized([Contracts.DELETE]) && (
-                    <Button
-                      eventName="Delete Contract"
+                <div className="absolute bottom-4 right-4 flex gap-2">
+                  {IsAuthorized([Contracts.DELETE]) && status === "draft" && (
+                    <button
                       id={id?.toString()}
-                      buttonType="default"
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+
+                        showSetupContractModal({
+                          contract: item,
+                        });
+                      }}
+                    >
+                      <Pencil
+                        fill="white"
+                        className="h-auto w-4 transition-all group-hover:fill-mint"
+                      />
+                    </button>
+                  )}
+
+                  {IsAuthorized([Contracts.DELETE]) && (
+                    <button
+                      id={id?.toString()}
                       type="button"
                       onClick={() => handleDeleteContract(id!)}
                       className="group"
                     >
                       <Trash className="h-auto w-4 transition-all group-hover:fill-mint" />
-                    </Button>
+                    </button>
                   )}
                 </div>
               </Cards.Card>
@@ -232,19 +248,20 @@ const ContractsTable = ({
                           />
                         </button>
                       )}
-                      {IsAuthorized([Contracts.DELETE]) && (
-                        <button
-                          id={id?.toString()}
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteContract(id!);
-                          }}
-                          className="h-6 w-6"
-                        >
-                          <Trash className="h-auto w-4 transition-all group-hover:fill-mint" />
-                        </button>
-                      )}
+                      {IsAuthorized([Contracts.DELETE]) &&
+                        status === "draft" && (
+                          <button
+                            id={id?.toString()}
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteContract(id!);
+                            }}
+                            className="h-6 w-6"
+                          >
+                            <Trash className="h-auto w-4 transition-all group-hover:fill-mint" />
+                          </button>
+                        )}
                     </div>
                   </Table.Data>
                 </Table.Row>

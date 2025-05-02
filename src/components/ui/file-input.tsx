@@ -3,6 +3,7 @@ import { uploadFile } from "api/upload";
 import classNames from "classnames";
 import { motion } from "framer-motion";
 import { ChangeEvent, useState } from "react";
+import { create } from "zustand";
 
 import loader from "assets/images/icons/loader.svg";
 import upload from "assets/images/icons/upload.svg";
@@ -41,9 +42,8 @@ const FileInput = ({
 
   ...props
 }: IProps) => {
-  const [loading, setLoading] = useState(false);
-  const [scanning, setScanning] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const { loading, setLoading, scanning, setScanning, setProgress } =
+    useFileInput();
   const [value, setValue] = useState(filename || "");
 
   const { setAlert } = useAlert();
@@ -55,53 +55,32 @@ const FileInput = ({
     onUploadStart?.(file);
 
     if (!raw) {
-      //eslint-disable-next-line
-      let interval: NodeJS.Timeout | undefined;
-
-      const progressSteps = [15, 30, 60, 75, 90];
-      let currentStepIndex = 0;
-
-      // Start scanning animation
-      interval = setTimeout(() => {
-        setScanning(true);
-        let scanProgress = 0;
-
-        const updateProgress = async () => {
-          const targetProgress = progressSteps[currentStepIndex];
-
-          interval = setInterval(
-            () => {
-              if (scanProgress < targetProgress) {
-                scanProgress += targetProgress === 75 ? 0.2 : 1; // Slower increment at 75%
-                setProgress(scanProgress);
-              } else {
-                clearInterval(interval);
-                if (currentStepIndex < progressSteps.length - 1) {
-                  currentStepIndex++;
-                  // Add longer delay at 75%
-                  const delay =
-                    targetProgress === 75
-                      ? 4000 // 4 second delay after 75%
-                      : Math.random() * 1000 + 1000;
-                  setTimeout(updateProgress, delay);
-                }
-              }
-            },
-            targetProgress === 75 ? 100 : 50
-          ); // Slower interval at 75%
-        };
-
-        updateProgress();
-      }, 3000);
-
+      await new Promise((resolve) => {
+        setTimeout(() => {
+          setLoading(false);
+          setScanning(true);
+          resolve(true);
+        }, 2000);
+      });
       try {
         const res = await uploadFile(file);
-        setLoading(false);
 
-        // Complete the scan progress
-        setProgress(100);
-        await new Promise((resolve) => setTimeout(resolve, 1000)); // Show 100% briefly
-        setScanning(false);
+        await new Promise((resolve) => {
+          let currentProgress = 0;
+          const interval = setInterval(() => {
+            if (currentProgress >= 100) {
+              setScanning(false);
+              setLoading(false);
+              setProgress(0);
+              currentProgress = 0;
+              clearInterval(interval);
+              resolve(true);
+            }
+            currentProgress += 10;
+            setProgress(currentProgress);
+          }, 100);
+        });
+
         onSuccess?.(res.data.data);
         setValue(res.data.data.filename);
       } catch (err: any) {
@@ -111,7 +90,6 @@ const FileInput = ({
           status: "error",
         });
       } finally {
-        clearInterval(interval);
         onUploadEnd?.();
       }
     } else {
@@ -134,16 +112,8 @@ const FileInput = ({
 
       {loading || scanning ? (
         scanning ? (
-          <div className="absolute right-4 h-1.5 w-20 overflow-hidden rounded-full bg-gray-600/50">
-            <motion.div
-              className="h-full rounded-full bg-green-500"
-              initial={{ width: 0 }}
-              animate={{ width: `${progress}%` }}
-              transition={{
-                duration: 0.5,
-                ease: "easeOut",
-              }}
-            />
+          <div className="absolute left-4 w-[93%]">
+            <ScanAnimation />
           </div>
         ) : (
           <img
@@ -162,26 +132,49 @@ const FileInput = ({
           value ? "text-white" : "text-white/50"
         )}
       >
-        {scanning ? (
-          progress === 100 ? (
-            "Scanning complete"
-          ) : (
-            <span className="text-white/50">
-              Scanning for virus
-              <AnimatedEllipsis />
-            </span>
-          )
-        ) : loading ? (
-          "Uploading..."
-        ) : (
-          value || props.placeholder
-        )}
+        {!scanning && (value || props.placeholder)}
       </div>
     </div>
   );
 };
 
 export default FileInput;
+
+type ScanAnimationProps = {
+  isVertical?: boolean;
+};
+
+export const ScanAnimation = ({ isVertical }: ScanAnimationProps) => {
+  const { progress } = useFileInput();
+  return (
+    <div
+      className={classNames(
+        "flex w-full items-center justify-between gap-4",
+        isVertical && "flex-col"
+      )}
+    >
+      {progress >= 100 ? (
+        "Scanning complete"
+      ) : (
+        <span className="text-white/50">
+          Scanning for virus
+          <AnimatedEllipsis />
+        </span>
+      )}
+      <div className="h-1.5 w-20 overflow-hidden rounded-full bg-gray-600/50">
+        <motion.div
+          className="h-full rounded-full bg-green-500"
+          initial={{ width: 0 }}
+          animate={{ width: `${progress}%` }}
+          transition={{
+            duration: 0.5,
+            ease: "easeOut",
+          }}
+        />
+      </div>
+    </div>
+  );
+};
 
 const AnimatedEllipsis = () => (
   <motion.span
@@ -228,3 +221,21 @@ const AnimatedEllipsis = () => (
     </motion.span>
   </motion.span>
 );
+
+type UseFileInput = {
+  loading: boolean;
+  setLoading: (val: boolean) => void;
+  scanning: boolean;
+  setScanning: (val: boolean) => void;
+  progress: number;
+  setProgress: (val: number) => void;
+};
+
+const useFileInput = create<UseFileInput>((set) => ({
+  loading: false,
+  setLoading: (loading: boolean) => set((state) => ({ ...state, loading })),
+  scanning: false,
+  setScanning: (scanning: boolean) => set((state) => ({ ...state, scanning })),
+  progress: 0,
+  setProgress: (progress: number) => set((state) => ({ ...state, progress })),
+}));

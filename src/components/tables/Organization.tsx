@@ -1,6 +1,6 @@
 import { capitalize } from "lodash";
-import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { ReactComponent as Pencil } from "assets/images/icons/pencil.svg";
 
@@ -31,28 +31,10 @@ const OrganizationTable = ({
 
   const [selectedOrg, setSelectedOrg] = useState("");
 
-  const [params, setParams] = useSearchParams();
-
-  const id = params.get("id");
-
-  useEffect(() => {
-    if (id) {
-      handleEditOrg(id);
-    }
-  }, [id]);
-
   const close = () => {
-    setParams({});
-
     setSelectedOrg("");
 
     setModal(null);
-  };
-
-  const handleEditOrg = (id: string) => {
-    setModal("org");
-
-    setSelectedOrg(id);
   };
 
   return (
@@ -68,13 +50,21 @@ const OrganizationTable = ({
       <div className="lg:hidden">
         <Cards.Container isLoading={isLoading}>
           {list.map((item, index) => {
-            const { id, name, registeredName, regions, type, status } = item;
+            const {
+              id,
+              name,
+              registrationNumber,
+              noOfContracts,
+              noOfBeneficiaries,
+              regions,
+              status,
+            } = item;
             return (
               <Cards.Card
                 onClick={(e) => {
                   e.stopPropagation();
 
-                  handleEditOrg(id!);
+                  navigate(`/${type}s/${id}`);
                 }}
                 isLoading={isLoading}
                 key={index}
@@ -82,11 +72,15 @@ const OrganizationTable = ({
               >
                 <Cards.Group cols={2}>
                   <Cards.Details
-                    label="Registered name"
-                    value={registeredName}
+                    label="Registration #"
+                    value={registrationNumber}
                   />
-                  <Cards.Details label="Regions" value={regions.join(", ")} />
-                  <Cards.Details label="Type" value={type} capitalize />
+                  <Cards.Details label="# of Contracts" value={noOfContracts} />
+                  <Cards.Details
+                    label="# of Beneficiaries"
+                    value={noOfBeneficiaries}
+                  />
+                  <Cards.Details label="Region" value={regions.join(", ")} />
                   <Cards.Details label="Status" value={status} capitalize />
                 </Cards.Group>
               </Cards.Card>
