@@ -14,7 +14,7 @@ import useOrganizationList from "lib/common/lists/useOrganizationList";
 import usePayoutsList from "lib/common/lists/usePayoutsList";
 import { PAYOUT_STATUS } from "lib/constants";
 import { usePage } from "lib/hooks";
-import { IsAuthorized, Organizations } from "lib/role-permissions";
+import { Funders, IsAuthorized, Providers } from "lib/role-permissions";
 import { Filter } from "lib/types/payouts";
 import { findLabelFromOptions } from "lib/utils";
 
@@ -213,7 +213,7 @@ const Filters = ({
   } = useOrganizationList({
     key: ["filter"],
     filters: { type: "provider" },
-    enabled: IsAuthorized([Organizations.LIST]),
+    enabled: IsAuthorized([Providers.LIST, Funders.LIST]),
     pageSize: 1000,
   });
   const { setPage } = usePage();
@@ -228,7 +228,7 @@ const Filters = ({
   return (
     <div className="grid w-full grid-cols-1 gap-2.5 lg:flex">
       <div className="grid w-full grid-cols-1 gap-2.5 lg:flex">
-        {IsAuthorized([Organizations.LIST]) && isForte && (
+        {IsAuthorized([Providers.LIST, Funders.LIST]) && isForte && (
           <Dropdown
             loading={orgLoading}
             options={organizations}

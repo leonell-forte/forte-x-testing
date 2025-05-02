@@ -5,11 +5,12 @@ import { UserRoleType } from "./types/users";
 export type PermissionEnums =
   | Beneficiaries
   | Users
-  | Organizations
   | Contracts
   | Projects
   | Invoices
-  | Milestones;
+  | Milestones
+  | Providers
+  | Funders;
 
 export enum Beneficiaries {
   CREATE = "create:beneficiary",
@@ -28,13 +29,22 @@ export enum Users {
   NAVIGATE = "navigate:user",
 }
 
-export enum Organizations {
-  CREATE = "create:organization",
-  UPDATE = "update:organization",
-  IMPORT = "import:organization",
-  DELETE = "delete:organization",
-  LIST = "list:organization",
-  NAVIGATE = "navigate:organization",
+export enum Providers {
+  CREATE = "create:provider",
+  UPDATE = "update:provider",
+  IMPORT = "import:provider",
+  DELETE = "delete:provider",
+  LIST = "list:provider",
+  NAVIGATE = "navigate:provider",
+}
+
+export enum Funders {
+  CREATE = "create:funder",
+  UPDATE = "update:funder",
+  IMPORT = "import:funder",
+  DELETE = "delete:funder",
+  LIST = "list:funder",
+  NAVIGATE = "navigate:funder",
 }
 
 export enum Contracts {
@@ -76,7 +86,8 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
   owner: [
     ...Object.values(Beneficiaries),
     ...Object.values(Users),
-    ...Object.values(Organizations),
+    ...Object.values(Providers),
+    ...Object.values(Funders),
     ...Object.values(Contracts),
     ...Object.values(Projects),
     ...Object.values(Invoices),
@@ -85,7 +96,8 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
   admin: [
     ...Object.values(Beneficiaries),
     ...Object.values(Users),
-    ...Object.values(Organizations),
+    ...Object.values(Funders),
+    ...Object.values(Providers),
     ...Object.values(Contracts),
     ...Object.values(Projects),
     ...Object.values(Invoices),
@@ -94,7 +106,8 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
   user: [
     ...Object.values(Beneficiaries),
     ...Object.values(Contracts),
-    ...Object.values(Organizations),
+    ...Object.values(Providers),
+    ...Object.values(Funders),
     ...Object.values(Projects),
     ...Object.values(Invoices),
     ...Object.values(Milestones),
@@ -107,8 +120,10 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     Projects.LIST,
     Contracts.NAVIGATE,
     Contracts.LIST,
-    Organizations.NAVIGATE,
-    Organizations.LIST,
+    Providers.NAVIGATE,
+    Providers.LIST,
+    Funders.NAVIGATE,
+    Funders.LIST,
     Invoices.NAVIGATE,
     Invoices.LIST,
     Milestones.LIST,
@@ -126,10 +141,13 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     Users.IMPORT,
     Users.NAVIGATE,
     Users.UPDATE,
-    Organizations.NAVIGATE,
-    Organizations.LIST,
-    Organizations.UPDATE,
-    Organizations.DELETE,
+    Providers.LIST,
+    Providers.UPDATE,
+    Providers.DELETE,
+    Funders.NAVIGATE,
+    Funders.LIST,
+    Funders.UPDATE,
+    Funders.DELETE,
   ],
 
   "provider.admin": [
@@ -143,9 +161,11 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     Users.IMPORT,
     Users.NAVIGATE,
     Users.UPDATE,
-    Organizations.NAVIGATE,
-    Organizations.LIST,
-    Organizations.UPDATE,
+    Providers.LIST,
+    Providers.UPDATE,
+    Funders.NAVIGATE,
+    Funders.LIST,
+    Funders.UPDATE,
   ],
 
   "provider.user": [
@@ -155,8 +175,9 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     ...Object.values(Invoices),
     ...Object.values(Milestones),
 
-    Organizations.NAVIGATE,
-    Organizations.LIST,
+    Providers.LIST,
+    Funders.NAVIGATE,
+    Funders.LIST,
   ],
 
   "provider.read-only": [
@@ -165,8 +186,9 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     Projects.LIST,
     Contracts.NAVIGATE,
     Contracts.LIST,
-    Organizations.NAVIGATE,
-    Organizations.LIST,
+    Providers.LIST,
+    Funders.NAVIGATE,
+    Funders.LIST,
     Invoices.NAVIGATE,
     Invoices.LIST,
     Milestones.LIST,
@@ -181,10 +203,13 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     ...Object.values(Invoices),
     ...Object.values(Milestones),
 
-    Organizations.NAVIGATE,
-    Organizations.LIST,
-    Organizations.UPDATE,
-    Organizations.DELETE,
+    Providers.NAVIGATE,
+    Providers.LIST,
+    Providers.UPDATE,
+    Providers.DELETE,
+    Funders.LIST,
+    Funders.UPDATE,
+    Funders.DELETE,
   ],
 
   "funder.admin": [
@@ -198,9 +223,11 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     Users.IMPORT,
     Users.NAVIGATE,
     Users.UPDATE,
-    Organizations.NAVIGATE,
-    Organizations.UPDATE,
-    Organizations.LIST,
+    Providers.NAVIGATE,
+    Providers.UPDATE,
+    Providers.LIST,
+    Funders.UPDATE,
+    Funders.LIST,
   ],
 
   "funder.user": [
@@ -208,16 +235,18 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     ...Object.values(Contracts),
     ...Object.values(Projects),
     ...Object.values(Invoices),
-    Organizations.NAVIGATE,
-    Organizations.LIST,
+    Providers.NAVIGATE,
+    Providers.LIST,
+    Funders.LIST,
   ],
 
   "funder.read-only": [
     Beneficiaries.NAVIGATE,
     Contracts.LIST,
     Contracts.NAVIGATE,
-    Organizations.LIST,
-    Organizations.NAVIGATE,
+    Providers.LIST,
+    Providers.NAVIGATE,
+    Funders.LIST,
     Projects.LIST,
     Projects.NAVIGATE,
     Invoices.LIST,

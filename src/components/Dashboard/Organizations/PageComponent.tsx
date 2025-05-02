@@ -11,7 +11,7 @@ import { TbFilterX as FilterIcon } from "react-icons/tb";
 import useOrganizationList from "lib/common/lists/useOrganizationList";
 import { REGIONS, STATUS } from "lib/constants";
 import { usePage } from "lib/hooks";
-import { IsAuthorized, Organizations } from "lib/role-permissions";
+import { Funders, IsAuthorized, Providers } from "lib/role-permissions";
 import { IFilters, OrgTypes } from "lib/types/organizations";
 
 import { showOrganizationDialogue } from "components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
@@ -88,7 +88,7 @@ const PageComponent = ({
           {!hideHeader && (
             <div className="flex flex-col justify-between gap-2.5 sm:flex-row">
               <p className="text-[24px] font-semibold capitalize">{type}</p>
-              {IsAuthorized([Organizations.UPDATE]) && (
+              {IsAuthorized([Providers.UPDATE, Funders.UPDATE]) && (
                 <Button
                   eventName="Add Organization"
                   onClick={() => {

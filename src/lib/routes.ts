@@ -5,11 +5,12 @@ import SearchResultsPage from "pages/Search/SearchResultsPage";
 import {
   Beneficiaries,
   Contracts,
+  Funders,
   Invoices,
   Milestones,
-  Organizations,
   PermissionEnums,
   Projects,
+  Providers,
   Users,
 } from "./role-permissions";
 
@@ -128,7 +129,7 @@ export const ROUTES: RouteConfig[] = [
 
     Component: FundersPage,
 
-    permissions: [Organizations.NAVIGATE],
+    permissions: [Funders.NAVIGATE],
   },
 
   {
@@ -136,7 +137,7 @@ export const ROUTES: RouteConfig[] = [
 
     Component: IndividualFundersPage,
 
-    permissions: [Organizations.NAVIGATE],
+    permissions: [Funders.NAVIGATE],
   },
 
   {
@@ -144,7 +145,7 @@ export const ROUTES: RouteConfig[] = [
 
     Component: ProvidersPage,
 
-    permissions: [Organizations.NAVIGATE],
+    permissions: [Providers.NAVIGATE],
   },
 
   {
@@ -152,7 +153,7 @@ export const ROUTES: RouteConfig[] = [
 
     Component: IndividualProvidersPage,
 
-    permissions: [Organizations.NAVIGATE],
+    permissions: [Providers.NAVIGATE],
   },
 
   {

@@ -7,7 +7,7 @@ import { HiOutlinePlusCircle } from "react-icons/hi";
 
 import useOrganizationList from "lib/common/lists/useOrganizationList";
 import { useProjectMutation } from "lib/mutations/projects";
-import { IsAuthorized, Organizations } from "lib/role-permissions";
+import { Funders, IsAuthorized, Providers } from "lib/role-permissions";
 import { ProjectFieldValues } from "lib/types/projects";
 import { projects } from "lib/validators/projects";
 
@@ -80,7 +80,7 @@ const ProjectDialogue = ({
     key: ["dropdown"],
     pageSize: 100,
     filters: { type: "funder" },
-    enabled: IsAuthorized([Organizations.LIST]),
+    enabled: IsAuthorized([Funders.LIST, Providers.LIST]),
   });
 
   // Form handling

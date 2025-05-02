@@ -36,7 +36,7 @@ const Admin = () => {
             element={
               <>
                 <SearchConsole />
-                {IsAuthorized(permissions) && <Component />}
+                {IsAuthorized(permissions) ? <Component /> : <ErrorPage />}
               </>
             }
           />
