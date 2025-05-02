@@ -21,7 +21,7 @@ import {
   IBeneficiaries,
   IBeneficiariesFieldValues,
 } from "lib/types/beneficiaries";
-import { findLabelFromOptions } from "lib/utils";
+import { findLabelFromOptions, sortOptions } from "lib/utils";
 import { beneficiaries } from "lib/validators/beneficiaries";
 
 import { useProfile } from "components/ProfileContext";
@@ -341,7 +341,7 @@ export function SetupBeneficiaryModal({
                     setError("projectId", { message: "" });
                     setError("providerId", { message: "" });
                   }}
-                  options={contracts}
+                  options={sortOptions(contracts)}
                   placeholder="Select contract"
                   disabled={!!contractId}
                   onChange={(e) => handleSearchContract(e.target.value)}
