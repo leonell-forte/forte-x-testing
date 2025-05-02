@@ -10,10 +10,11 @@ import { ReactComponent as Provider } from "assets/images/icons/provider.svg";
 import {
   Beneficiaries,
   Contracts,
+  Funders,
   Invoices,
   Milestones,
-  Organizations,
   Projects,
+  Providers,
   Users,
 } from "./role-permissions";
 import { InvoiceStatus } from "./types/invoices";
@@ -27,13 +28,13 @@ export const MENUS = [
   {
     name: "funders",
     link: "/funders",
-    permissions: [Organizations.NAVIGATE],
+    permissions: [Funders.NAVIGATE],
     icon: Funder,
   },
   {
     name: "providers",
     link: "/providers",
-    permissions: [Organizations.NAVIGATE],
+    permissions: [Providers.NAVIGATE],
     icon: Provider,
   },
   {

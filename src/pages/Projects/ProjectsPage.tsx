@@ -7,7 +7,12 @@ import { ReactComponent as Add } from "assets/images/icons/add.svg";
 import useOrganizationList from "lib/common/lists/useOrganizationList";
 import useProjectList from "lib/common/lists/useProjectList";
 import { usePage } from "lib/hooks";
-import { IsAuthorized, Organizations, Projects } from "lib/role-permissions";
+import {
+  Funders,
+  IsAuthorized,
+  Projects,
+  Providers,
+} from "lib/role-permissions";
 import { IProject, ProjectFilter } from "lib/types/projects";
 import { findLabelFromOptions } from "lib/utils";
 
@@ -192,13 +197,13 @@ const Filters = ({ filters, setFilters, initialFilter }: IFilterProps) => {
   } = useOrganizationList({
     key: ["filter"],
     filters: { type: "funder" },
-    enabled: IsAuthorized([Organizations.LIST]),
+    enabled: IsAuthorized([Providers.LIST, Funders.LIST]),
     pageSize: 100,
   });
 
   return (
     <div className="flex w-full items-center gap-3">
-      {IsAuthorized([Organizations.LIST]) && (
+      {IsAuthorized([Providers.LIST, Funders.LIST]) && (
         <Dropdown
           loading={orgLoading}
           options={organizations}

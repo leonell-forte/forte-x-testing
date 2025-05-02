@@ -13,8 +13,9 @@ import { BENEFICIARY_STATUS, RISK_LEVEL } from "lib/constants";
 import { useDebounce, usePage } from "lib/hooks";
 import {
   Beneficiaries,
+  Funders,
   IsAuthorized,
-  Organizations,
+  Providers,
 } from "lib/role-permissions";
 import { IBeneficiariesFilter } from "lib/types/beneficiaries";
 import { findLabelFromOptions, sortOptions } from "lib/utils";
@@ -299,7 +300,7 @@ export const Filters = ({ filters, setFilters, projectId }: IFilterProps) => {
   } = useOrganizationList({
     key: ["filter"],
     filters: { type: "provider" },
-    enabled: IsAuthorized([Organizations.LIST]),
+    enabled: IsAuthorized([Providers.LIST, Funders.LIST]),
     pageSize: 100,
   });
 
@@ -334,7 +335,7 @@ export const Filters = ({ filters, setFilters, projectId }: IFilterProps) => {
         }}
       />
 
-      {!isProviderUser && IsAuthorized([Organizations.LIST]) && (
+      {!isProviderUser && IsAuthorized([Providers.LIST, Funders.LIST]) && (
         <Dropdown
           loading={orgLoading}
           options={organizations}

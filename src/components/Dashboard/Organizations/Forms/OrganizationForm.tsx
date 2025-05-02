@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { REGIONS, STATUS } from "lib/constants";
 import { useAppDispatch, useAppSelector } from "lib/hooks";
 import useOrganizationMutation from "lib/mutations/organizations";
-import { IsAuthorized, Organizations } from "lib/role-permissions";
+import { Funders, IsAuthorized, Providers } from "lib/role-permissions";
 import { clearPartners } from "lib/slice/partners";
 import { OrgStatus, OrganizationFieldTypes } from "lib/types/organizations";
 import { organizations } from "lib/validators/organizations";
@@ -385,7 +385,7 @@ const OrganizationForm = ({
               />
             ))} */}
 
-          {IsAuthorized([Organizations.UPDATE]) ? (
+          {IsAuthorized([Providers.UPDATE, Funders.UPDATE]) ? (
             <div className="!mt-10 flex justify-end gap-4">
               {editMode ? (
                 <>

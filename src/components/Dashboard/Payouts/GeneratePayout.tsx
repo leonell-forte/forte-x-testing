@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 import useOrganizationList from "lib/common/lists/useOrganizationList";
 import { useAlert } from "lib/hooks";
-import { IsAuthorized, Organizations } from "lib/role-permissions";
+import { Funders, IsAuthorized, Providers } from "lib/role-permissions";
 import { findLabelFromOptions } from "lib/utils";
 
 import Button from "components/ui/button";
@@ -23,7 +23,7 @@ const GeneratePayout = (props: GeneratePayoutProps) => {
   } = useOrganizationList({
     key: ["filter"],
     filters: { type: "provider" },
-    enabled: IsAuthorized([Organizations.LIST]),
+    enabled: IsAuthorized([Providers.LIST, Funders.LIST]),
     pageSize: 100,
   });
 
@@ -52,7 +52,7 @@ const GeneratePayout = (props: GeneratePayoutProps) => {
   return (
     <Dialogue isVisible title="Generate Payout" handleClose={props.handleClose}>
       <div className="space-y-10">
-        {IsAuthorized([Organizations.LIST]) && (
+        {IsAuthorized([Providers.LIST, Funders.LIST]) && (
           <Dropdown
             loading={orgLoading}
             options={organizations}
