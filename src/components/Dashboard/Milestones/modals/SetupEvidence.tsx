@@ -6,8 +6,6 @@ import { get } from "lodash";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import loader from "assets/images/icons/loader.svg";
-
 import useBeneficiariesList from "lib/common/lists/useBeneficiariesList";
 import { EVIDENCE_STATUS, NO_PROMPT_STATUS, filterStatus } from "lib/constants";
 import { useEvidenceMutation } from "lib/mutations/evidences";
@@ -21,7 +19,7 @@ import Button from "components/ui/button";
 import Controller from "components/ui/custom-controller/CustomController";
 import { useModal } from "components/ui/dialogue/v2/Modal";
 import Dropdown from "components/ui/dropdown";
-import FileInput from "components/ui/file-input";
+import FileInput, { ScanAnimation } from "components/ui/file-input";
 import { Form } from "components/ui/form/Form";
 import { useAutoSaveForm } from "components/ui/form/useAutoSave";
 import Input from "components/ui/input";
@@ -277,20 +275,17 @@ function SetupEvidenceModal({
                       title={file.filename}
                       className={
                         uploading || isFileLoading
-                          ? "h-full opacity-[.4]"
+                          ? "h-full opacity-[.1]"
                           : "w-[700px] max-w-full overflow-x-auto md:w-[42rem]"
                       }
                     />
                   )}
 
-                  {uploading ||
-                    (isFileLoading && (
-                      <img
-                        src={loader}
-                        alt="loader"
-                        className="absolute w-10 animate-spin"
-                      />
-                    ))}
+                  {uploading && (
+                    <div className="absolute">
+                      <ScanAnimation isVertical />
+                    </div>
+                  )}
                 </div>
 
                 {fileData && (
