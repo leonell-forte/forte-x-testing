@@ -10,6 +10,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Notify Slack (Deployment Started)
+        run: |
+          COMMIT_URL="https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
+          curl -X POST -H 'Content-type: application/json' --data @- ${{ secrets.SLACK_WEBHOOK_URL_PROD }} <<EOF
+          {
+            "text": "🟡 *Frontend Deployment Started* for \`production\` branch.\n*Commit:* <${COMMIT_URL}|\`${{ github.sha }}\`>\nBuilding and deploying React app to CloudFront... ⏳"
+          }
+
       - name: Checkout Repository
         uses: actions/checkout@v3
 
@@ -44,3 +52,21 @@ jobs:
       - name: Invalidate CloudFront Cache
         run: |
           aws cloudfront create-invalidation --distribution-id ${{ secrets.PRODUCTION_CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+
+      - name: Notify Slack (Deployment Successful)
+        if: success()
+        run: |
+          COMMIT_URL="https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
+          curl -X POST -H 'Content-type: application/json' --data @- ${{ secrets.SLACK_WEBHOOK_URL_PROD }} <<EOF
+          {
+            "text": "✅ *Frontend Deployment Successful!* React app is live on CloudFront from \`production\` branch 🚀\n*Commit:* <${COMMIT_URL}|\`${{ github.sha }}\`>"
+          }
+
+      - name: Notify Slack (Deployment Failed)
+        if: failure()
+        run: |
+          COMMIT_URL="https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
+          curl -X POST -H 'Content-type: application/json' --data @- ${{ secrets.SLACK_WEBHOOK_URL_PROD }} <<EOF
+          {
+            "text": "❌ *Frontend Deployment Failed* for \`production\` branch. Please check GitHub Actions logs 🧯\n*Commit:* <${COMMIT_URL}|\`${{ github.sha }}\`>"
+          }
