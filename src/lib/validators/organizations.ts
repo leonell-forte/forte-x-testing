@@ -4,6 +4,7 @@ import { IOrganization, OrgTypes } from "../types/organizations";
 
 export const organizations = {
   defaultValues: (type?: OrgTypes, org?: IOrganization) => {
+    console.log(org);
     let data: IOrganization = {
       name: org?.name || "",
 
@@ -25,6 +26,8 @@ export const organizations = {
       type: org?.type! || type || "",
 
       status: org?.status || "active",
+
+      invoiceFrequency: org?.invoiceFrequecy || "monthly",
     };
 
     if (org) {
@@ -64,6 +67,8 @@ export const organizations = {
     status: z.enum(["active", "inactive"], {
       errorMap: () => ({ message: "Status is a required field" }),
     }),
+
+    invoiceFrequency: z.enum(["monthly", "quarterly", "yearly"]).optional(),
   }),
 };
 

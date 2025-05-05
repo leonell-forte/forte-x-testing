@@ -5,7 +5,7 @@ import organizationService from "api/organization";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { REGIONS, STATUS } from "lib/constants";
+import { FREQUENCY, REGIONS, STATUS } from "lib/constants";
 import { useAppDispatch, useAppSelector } from "lib/hooks";
 import useOrganizationMutation from "lib/mutations/organizations";
 import { Funders, IsAuthorized, Providers } from "lib/role-permissions";
@@ -369,6 +369,31 @@ const OrganizationForm = ({
                   );
                 }}
               />
+              {type === "funder" && (
+                <Controller
+                  labelClassName={labelClass}
+                  label="Invoice frequency"
+                  required
+                  name="invoiceFrequency"
+                  control={control}
+                  render={({ field }) => {
+                    return (
+                      <Dropdown
+                        value={
+                          FREQUENCY.find((item) => item.value === field.value)
+                            ?.label
+                        }
+                        handleSelect={(val) => {
+                          field.onChange(val);
+                        }}
+                        options={FREQUENCY}
+                        placeholder="Select invoice frequency"
+                        disabled={!editMode}
+                      />
+                    );
+                  }}
+                />
+              )}
             </div>
           </div>
 

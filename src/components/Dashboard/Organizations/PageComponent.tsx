@@ -6,6 +6,7 @@ import {
   useState,
 } from "react";
 import { BiSlider as SliderIcon } from "react-icons/bi";
+import { HiPlus } from "react-icons/hi2";
 import { TbFilterX as FilterIcon } from "react-icons/tb";
 
 import useOrganizationList from "lib/common/lists/useOrganizationList";
@@ -95,6 +96,7 @@ const PageComponent = ({
                     showOrganizationDialogue({ type });
                   }}
                 >
+                  <HiPlus className="h-auto w-6 fill-black" />
                   Add {type}
                 </Button>
               )}
