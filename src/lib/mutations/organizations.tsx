@@ -48,12 +48,6 @@ const useOrganizationMutation = ({
             items: [...(old?.items || []), addedOrg.data.data],
           };
         });
-      } else {
-        queryClient.setQueryData(["specific org", orgId], () => {
-          return {
-            ...addedOrg.data.data,
-          };
-        });
       }
 
       successCallback?.(addedOrg.data.data.id);
@@ -91,6 +85,7 @@ const useOrganizationMutation = ({
 
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["organizations"] });
+      queryClient.invalidateQueries({ queryKey: ["specific org"] });
     },
   });
   return { addOrganization, isPending };

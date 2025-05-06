@@ -10,7 +10,7 @@ import { z } from "zod";
 import { useAlert, useAppSelector } from "lib/hooks";
 import { password } from "lib/validators/auth";
 
-import OTPInput from "components/ui/otp-input";
+import { OTPInput } from "components/ui/form/OTPInput";
 
 import Button from "../ui/button";
 import Input from "../ui/input";
@@ -73,19 +73,16 @@ const ResetPasswordForm = ({ handleNext, handleBack }: IProps) => {
           <label htmlFor="" className="!text-[24px] font-medium">
             Verification code
           </label>
+          1
           <Controller
             control={control}
             name="otp"
             render={({ field }) => {
-              return (
-                <OTPInput
-                  onChange={(value) => field.onChange(value.join(""))}
-                />
-              );
+              return <OTPInput onChange={(value) => field.onChange(value)} />;
             }}
           />
         </div>
-        <div className="space-y-[15px]">
+        <div className="mx-3 space-y-[15px]">
           <Controller
             name="password"
             control={control}

@@ -96,8 +96,6 @@ const OrganizationForm = ({
   }, [form.watch, onFormDataChange, form]);
 
   const onClose = () => {
-    reset();
-
     handleClose!();
   };
 
