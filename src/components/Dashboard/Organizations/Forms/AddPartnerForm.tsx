@@ -43,6 +43,9 @@ const AddPartnerForm = ({ orgId, ...props }: AddPartnerFormProps) => {
 
   const { organizations, isLoading: orgLoading } = useOrganizationList({
     key: ["dropdown"],
+    filters: {
+      type: "provider",
+    },
     pageSize: 1000,
   });
 
