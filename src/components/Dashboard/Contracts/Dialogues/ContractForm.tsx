@@ -455,9 +455,7 @@ const ContractForm = ({
                           disabled={!onEdit}
                           value={field.value.toLowerCase()}
                           handleSelect={(val) => {
-                            field.onChange(
-                              val.toString().toUpperCase() as StatusType
-                            );
+                            field.onChange(val.toString() as StatusType);
                           }}
                           options={CONTRACT_STATUS.filter(
                             (item) => item.value !== "completed"
