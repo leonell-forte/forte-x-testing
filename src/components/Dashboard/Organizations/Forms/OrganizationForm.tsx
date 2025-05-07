@@ -6,10 +6,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { FREQUENCY, REGIONS, STATUS } from "lib/constants";
-import { useAppDispatch, useAppSelector } from "lib/hooks";
 import useOrganizationMutation from "lib/mutations/organizations";
 import { Funders, IsAuthorized, Providers } from "lib/role-permissions";
-import { clearPartners } from "lib/slice/partners";
 import { OrgStatus, OrganizationFieldTypes } from "lib/types/organizations";
 import { organizations } from "lib/validators/organizations";
 
@@ -40,10 +38,7 @@ const OrganizationForm = ({
   onFormDataChange,
   type,
 }: OrganizationFormProps) => {
-  const dispatch = useAppDispatch();
   // this is a custom state to store partners to be added to the organization after creation
-
-  const { partnersToAdd } = useAppSelector((state) => state.partners);
 
   const [editMode, setEditMode] = useState(orgId ? false : true);
 
@@ -77,8 +72,8 @@ const OrganizationForm = ({
 
   // Add this computed value for form dirtiness
   const isFormDirty = useMemo(() => {
-    return isDirty || partnersToAdd.length > 0;
-  }, [isDirty, partnersToAdd.length]);
+    return isDirty;
+  }, [isDirty]);
 
   // prefill initial value from selected org
 
@@ -121,19 +116,6 @@ const OrganizationForm = ({
       onClose();
 
       addSuccessCallback?.(id);
-
-      // if there are partners to add, add them after the organization is created
-      if (partnersToAdd.length) {
-        await Promise.all(
-          partnersToAdd.map(async (partner) => {
-            return await organizationService.addPartner({
-              ...partner,
-              organizationId: id,
-            });
-          })
-        );
-        dispatch(clearPartners());
-      }
     },
 
     type,

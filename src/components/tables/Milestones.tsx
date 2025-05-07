@@ -1,8 +1,12 @@
 import { useNavigate } from "react-router-dom";
 
+import { ReactComponent as Add } from "assets/images/icons/add.svg";
+
 import { IMilestone, MILESTONE_TYPES } from "lib/types/milestones";
 import { formatNumber, getStatusVariant } from "lib/utils";
 
+import { showSetupEvidenceModal } from "components/Dashboard/Milestones/modals/SetupEvidence";
+import Button from "components/ui/button";
 import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import Status from "components/ui/status";
 import Table from "components/ui/table";
@@ -12,12 +16,14 @@ type TMilestonesTable = {
   list: IMilestone[];
   isLoading?: boolean;
   href?: string;
+  showDownloadButton?: boolean;
 };
 
 const MilestonesTable = ({
   list,
   isLoading = false,
   href,
+  showDownloadButton,
 }: TMilestonesTable) => {
   const navigate = useNavigate();
   const linkTo = href ? href : "/milestones/";
@@ -103,9 +109,27 @@ const MilestonesTable = ({
                     ${formatNumber(cost)}
                   </Table.Data>
 
-                  <Table.Data>
+                  <Table.Data className="flex items-center">
                     <Status variant={getStatusVariant(status)}>{status}</Status>
                   </Table.Data>
+
+                  {showDownloadButton && (
+                    <Table.Data>
+                      <Button
+                        buttonType="secondary"
+                        className="h-[30px] !border-mint !px-3 !text-mint"
+                        onClick={() => {
+                          showSetupEvidenceModal({
+                            milestone: item,
+                            beneficiaryIdParam: item.reference.id,
+                          });
+                        }}
+                      >
+                        <Add className="h-[14px] w-[14px] fill-mint stroke-mint" />
+                        Add evidence
+                      </Button>
+                    </Table.Data>
+                  )}
                 </Table.Row>
               );
             })}

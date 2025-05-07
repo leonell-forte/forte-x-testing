@@ -37,7 +37,7 @@ export const showSetupContractModal = ({
       </ContractsProvider>
     ),
     size: "2xl",
-    title: `${contract ? "Edit" : "Add"} Contract`,
+    title: `${contract ? (activeStep === 2 ? "Add linked outcomes" : "Edit contract") : "Add contract"}`,
     panelClassName: "max-w-[584px] lg:px-[85px]",
     titleClassName: "text-center",
   });

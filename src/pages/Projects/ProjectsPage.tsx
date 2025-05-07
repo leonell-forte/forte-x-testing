@@ -118,41 +118,39 @@ const ProjectsPage = ({ hideHeader = false, funderId }: ProjectsPageProps) => {
             </div>
           )}
 
-          {!!projectsList?.items.length && (
-            <div className="flex w-full items-center gap-2 md:w-auto">
-              <div className="w-full md:w-auto">
-                <SearchInput
-                  value={searchProjectValue}
-                  onChange={(e) => {
-                    handleSearchProject(e.target.value);
-                    setPage(1);
-                  }}
-                  containerClass="md:max-w-[286px]"
-                  onClear={() => handleSearchProject("")}
-                />
-              </div>
-              {!funderId && (
-                <>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setModal("filter");
-                    }}
-                    className="group flex-shrink-0 md:hidden"
-                  >
-                    <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
-                  </button>
-                  <div className="hidden md:block">
-                    <Filters
-                      initialFilter={initialFilter}
-                      filters={filters}
-                      setFilters={setFilters}
-                    />
-                  </div>
-                </>
-              )}
+          <div className="flex w-full items-center gap-2 md:w-auto">
+            <div className="w-full md:w-auto">
+              <SearchInput
+                value={searchProjectValue}
+                onChange={(e) => {
+                  handleSearchProject(e.target.value);
+                  setPage(1);
+                }}
+                containerClass="md:max-w-[286px]"
+                onClear={() => handleSearchProject("")}
+              />
             </div>
-          )}
+            {!funderId && (
+              <>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setModal("filter");
+                  }}
+                  className="group flex-shrink-0 md:hidden"
+                >
+                  <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
+                </button>
+                <div className="hidden md:block">
+                  <Filters
+                    initialFilter={initialFilter}
+                    filters={filters}
+                    setFilters={setFilters}
+                  />
+                </div>
+              </>
+            )}
+          </div>
         </div>
 
         <div className="flex h-full flex-col justify-between gap-4">

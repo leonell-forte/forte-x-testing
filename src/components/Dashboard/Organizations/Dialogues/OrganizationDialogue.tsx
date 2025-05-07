@@ -1,7 +1,5 @@
 import { useState } from "react";
 
-import { useAppDispatch } from "lib/hooks";
-import { clearPartners } from "lib/slice/partners";
 import { OrgTypes, OrganizationFieldTypes } from "lib/types/organizations";
 
 import { IDialogueProps } from "components/ui/dialogue/dialogue";
@@ -39,15 +37,13 @@ const OrganizationDialogue = ({
 
   type,
 }: IOrganizationDialogueProps) => {
-  const dispatch = useAppDispatch();
-
   const [formData, setFormData] = useState<OrganizationFieldTypes | null>(null);
 
   return (
     <OrganizationForm
       handleClose={() => {
         handleClose?.();
-        dispatch(clearPartners());
+
         setFormData(null);
       }}
       orgId={orgId}
