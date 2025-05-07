@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import useBeneficiariesList from "lib/common/lists/useBeneficiariesList";
+import useMilestoneList from "lib/common/lists/useMilestoneList";
 import { EVIDENCE_STATUS, NO_PROMPT_STATUS, filterStatus } from "lib/constants";
 import { useEvidenceMutation } from "lib/mutations/evidences";
 import { EvidenceFieldValues } from "lib/types/evidence";
@@ -28,7 +29,7 @@ import Spinner from "components/ui/spinner/spinner";
 import { showViewEvidenceModal } from "./ViewEvidence";
 
 type TParams = {
-  milestone: IMilestone;
+  milestone?: IMilestone;
   evidenceDetails?: TMilestoneEvidence;
   beneficiaryIdParam?: string;
 };
@@ -63,17 +64,44 @@ export function showSetupEvidenceModal(params: TParams) {
 }
 
 function SetupEvidenceModal({
-  milestone,
+  milestone: selectedMilestone,
   evidenceDetails,
   beneficiaryIdParam,
 }: TParams) {
+  const [milestone, setMilestone] = useState<IMilestone | null>(
+    selectedMilestone || null
+  );
+  const [uploading, setUploading] = useState(false);
+
   const { profile } = useProfile();
   const { close } = useModal();
   const { open } = useCustomPrompt();
 
   const fromBeneficiaries = Boolean(beneficiaryIdParam);
+  const isThreshold = milestone?.type === "threshold";
+  const formId = "evidence-form";
+  const contractId = milestone?.contract.id || "";
 
-  const isThreshold = milestone.type === "threshold";
+  const {
+    milestones,
+    handleSearchMilestone,
+    rawList,
+    isLoading: milestoneLoading,
+  } = useMilestoneList({
+    key: ["dropdown"],
+  });
+
+  const {
+    beneficiaries,
+    isLoading: beneLoading,
+    handleSearchBene,
+  } = useBeneficiariesList({
+    key: ["dropdown"],
+    pageSize: 100,
+    filters: {
+      contractId,
+    },
+  });
 
   const form = useForm<EvidenceFieldValues>({
     resolver: zodResolver(isThreshold ? completeSchema : evidence.schema),
@@ -93,18 +121,18 @@ function SetupEvidenceModal({
   const [file, beneficiaryId] = watch(["file", "beneficiaryId"]);
 
   const { addEvidence, isPending } = useEvidenceMutation({
-    milestoneId: milestone.id,
+    milestoneId: String(milestone?.id || 0),
 
-    evidenceId: evidenceDetails?.id || NaN,
+    evidenceId: evidenceDetails?.id || 0,
 
     successCallback: (res) => {
       showViewEvidenceModal({
-        milestone: milestone,
+        milestone: milestone!,
         evidenceDetails: {
           ...res,
           beneficiary: {
             ...(res.beneficiary || {}),
-            id: Number(beneficiaryId) || Number(milestone.reference.id),
+            id: Number(beneficiaryId) || Number(milestone!.reference.id),
           },
         },
       });
@@ -116,7 +144,7 @@ function SetupEvidenceModal({
       ...values,
       beneficiaryId: isThreshold
         ? values.beneficiaryId
-        : milestone.reference.id!,
+        : milestone!.reference.id!,
     };
     if (
       evidenceData &&
@@ -132,8 +160,6 @@ function SetupEvidenceModal({
     }
     await addEvidence(payload);
   };
-
-  const [uploading, setUploading] = useState(false);
 
   const { data: evidenceData, isLoading: evidenceLoading } = useQuery({
     queryKey: ["evidence", evidenceDetails?.id],
@@ -156,22 +182,6 @@ function SetupEvidenceModal({
 
     refetchOnWindowFocus: false,
   });
-
-  const contractId = milestone.contract.id;
-
-  const {
-    beneficiaries,
-    isLoading: beneLoading,
-    handleSearchBene,
-  } = useBeneficiariesList({
-    key: ["dropdown"],
-    pageSize: 100,
-    filters: {
-      contractId,
-    },
-  });
-
-  const formId = "evidence-form";
 
   useAutoSaveForm(form, {
     formId,
@@ -215,7 +225,11 @@ function SetupEvidenceModal({
                     return (
                       <Dropdown
                         enableSearch
-                        disabled={Boolean(evidenceDetails) || fromBeneficiaries}
+                        disabled={
+                          Boolean(evidenceDetails) ||
+                          fromBeneficiaries ||
+                          !milestone
+                        }
                         loading={beneLoading}
                         value={
                           beneficiaries.find(
@@ -233,6 +247,33 @@ function SetupEvidenceModal({
                   }}
                 />
               ) : null}
+
+              {!selectedMilestone && (
+                <Controller
+                  label="Milestone"
+                  name="milestoneId"
+                  control={control}
+                  render={({ field }) => {
+                    return (
+                      <Dropdown
+                        enableSearch
+                        value={milestone ? `Milestone ID: ${milestone.id}` : ""}
+                        options={milestones}
+                        handleSelect={(val) => {
+                          const milestone = rawList?.items.find(
+                            (i) => i.id === val
+                          );
+                          setMilestone(milestone || null);
+                        }}
+                        placeholder="Select milestone"
+                        onChange={(e) => handleSearchMilestone(e.target.value)}
+                        loading={milestoneLoading}
+                      />
+                    );
+                  }}
+                />
+              )}
+
               <Controller
                 label="Evidence Description"
                 required
@@ -358,7 +399,12 @@ function SetupEvidenceModal({
                 </Button>
               </div>
             ) : (
-              <Button loading={isPending} type="submit" form="evidences-form">
+              <Button
+                loading={isPending}
+                type="submit"
+                form="evidences-form"
+                disabled={!milestone}
+              >
                 Add and upload document
               </Button>
             )}

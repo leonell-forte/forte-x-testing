@@ -48,7 +48,11 @@ export const showProjectDialogue = ({
       />
     ),
     size: "2xl",
-    title: projectId ? "Edit Project" : "Add Project",
+    title: projectId
+      ? addOutcome
+        ? "Add outcomes"
+        : "Edit project"
+      : "Add project",
     panelClassName: "max-w-[584px] lg:px-[50px]",
     titleClassName: "text-center",
   });
@@ -197,8 +201,14 @@ const ProjectDialogue = ({
       ) : (
         <Form form={form} onSubmit={onSubmit} className="space-y-[22px]">
           <Stepper activeStep={activeStep}>
-            <StepTrigger stepNumber={1}>1. Project details</StepTrigger>
-            <StepTrigger stepNumber={2}>2. Project outcomes</StepTrigger>
+            {!addOutcome && (
+              <>
+                <StepTrigger stepNumber={1}>1. Project details</StepTrigger>
+                <StepTrigger stepNumber={2}>
+                  {!addOutcome ? "2." : ""} Project outcomes
+                </StepTrigger>
+              </>
+            )}
             <StepContent contentNumber={1}>
               <div className="space-y-8 pt-10">
                 <div className="mx-auto max-w-[385px] space-y-3">
@@ -212,30 +222,33 @@ const ProjectDialogue = ({
                     )}
                   />
 
-                  <Controller
-                    label="Funder"
-                    required
-                    name="funderId"
-                    control={control}
-                    render={({ field }) => {
-                      return (
-                        <Dropdown
-                          enableSearch
-                          value={
-                            organizations.find(
-                              (org) => Number(org.value) === Number(field.value)
-                            )?.label
-                          }
-                          handleSelect={(val) => field.onChange(Number(val))}
-                          options={organizations}
-                          placeholder="Select funder"
-                          loading={orgLoading}
-                          onChange={(e) => handleSearchOrg(e.target.value)}
-                          disabled={!!funderId}
-                        />
-                      );
-                    }}
-                  />
+                  {!funderId && (
+                    <Controller
+                      label="Funder"
+                      required
+                      name="funderId"
+                      control={control}
+                      render={({ field }) => {
+                        return (
+                          <Dropdown
+                            enableSearch
+                            value={
+                              organizations.find(
+                                (org) =>
+                                  Number(org.value) === Number(field.value)
+                              )?.label
+                            }
+                            handleSelect={(val) => field.onChange(Number(val))}
+                            options={organizations}
+                            placeholder="Select funder"
+                            loading={orgLoading}
+                            onChange={(e) => handleSearchOrg(e.target.value)}
+                            disabled={!!funderId}
+                          />
+                        );
+                      }}
+                    />
+                  )}
 
                   <Controller
                     label="Budget"
@@ -313,13 +326,17 @@ const ProjectDialogue = ({
               </div>
 
               <div className="!mt-10 flex justify-between gap-4">
-                <Button
-                  buttonType="secondary"
-                  className="w-[147px]"
-                  onClick={() => setActiveStep(1)}
-                >
-                  Back
-                </Button>
+                <div>
+                  {!addOutcome && (
+                    <Button
+                      buttonType="secondary"
+                      className="w-[147px]"
+                      onClick={() => setActiveStep(1)}
+                    >
+                      Back
+                    </Button>
+                  )}
+                </div>
                 <Button
                   loading={isPending}
                   type="submit"

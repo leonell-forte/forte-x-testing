@@ -6,6 +6,7 @@ import { ReactComponent as Add } from "assets/images/icons/add.svg";
 import { ReactComponent as Edit } from "assets/images/icons/pencil.svg";
 
 import usePartnerList from "lib/common/lists/usePartnerList";
+import { IsAuthorized, Providers } from "lib/role-permissions";
 import { OrgStatus } from "lib/types/organizations";
 import { getStatusVariant } from "lib/utils";
 
@@ -109,15 +110,17 @@ const IndividualFundersPage = () => {
                   Add
                 </MenuButton.Trigger>
                 <MenuButton.Menu>
-                  <MenuButton.Item
-                    onClick={() =>
-                      showAddPartnerForm({
-                        orgId: funderId,
-                      })
-                    }
-                  >
-                    Partner
-                  </MenuButton.Item>
+                  {IsAuthorized([Providers.CREATE]) && (
+                    <MenuButton.Item
+                      onClick={() =>
+                        showAddPartnerForm({
+                          orgId: funderId,
+                        })
+                      }
+                    >
+                      Partner
+                    </MenuButton.Item>
+                  )}
                   <MenuButton.Item
                     onClick={() => showProjectDialogue({ funderId })}
                   >

@@ -314,6 +314,21 @@ export const STATUS = [
   },
 ];
 
+export const FREQUENCY = [
+  {
+    label: "Monthly",
+    value: "monthly",
+  },
+  {
+    label: "Quarterly",
+    value: "quarterly",
+  },
+  {
+    label: "Yearly",
+    value: "yearly",
+  },
+];
+
 export const PAYOUT_STATUS = [
   {
     label: "Pending",

@@ -6,6 +6,7 @@ import {
   useState,
 } from "react";
 import { BiSlider as SliderIcon } from "react-icons/bi";
+import { HiPlus } from "react-icons/hi2";
 import { TbFilterX as FilterIcon } from "react-icons/tb";
 
 import useOrganizationList from "lib/common/lists/useOrganizationList";
@@ -95,46 +96,45 @@ const PageComponent = ({
                     showOrganizationDialogue({ type });
                   }}
                 >
+                  <HiPlus className="h-auto w-6 fill-black" />
                   Add {type}
                 </Button>
               )}
             </div>
           )}
 
-          {!!organizationList?.items.length && (
-            <div className="flex gap-2.5 md:flex-wrap">
-              <div className="w-full md:w-auto">
-                <SearchInput
-                  value={searchOrgValue}
-                  onChange={(e) => {
-                    handleSearchOrg(e.target.value);
-                    setPage(1);
-                  }}
-                  containerClass="lg:max-w-[286px]"
-                  placeholder={`Search ${type}s`}
-                  onClear={() => handleSearchOrg("")}
-                />
-              </div>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setModal("filter");
+          <div className="flex gap-2.5 md:flex-wrap">
+            <div className="w-full md:w-auto">
+              <SearchInput
+                value={searchOrgValue}
+                onChange={(e) => {
+                  handleSearchOrg(e.target.value);
+                  setPage(1);
                 }}
-                className="group flex-shrink-0 lg:hidden"
-              >
-                <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
-              </button>
-              <div className="hidden lg:block">
-                <FilterWrapper>
-                  <Filters
-                    initialFilters={initialFilters}
-                    filters={filters}
-                    setFilters={setFilters}
-                  />
-                </FilterWrapper>
-              </div>
+                containerClass="lg:max-w-[286px]"
+                placeholder={`Search ${type}s`}
+                onClear={() => handleSearchOrg("")}
+              />
             </div>
-          )}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setModal("filter");
+              }}
+              className="group flex-shrink-0 lg:hidden"
+            >
+              <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
+            </button>
+            <div className="hidden lg:block">
+              <FilterWrapper>
+                <Filters
+                  initialFilters={initialFilters}
+                  filters={filters}
+                  setFilters={setFilters}
+                />
+              </FilterWrapper>
+            </div>
+          </div>
         </div>
 
         <div className="flex h-full flex-col justify-between gap-4">

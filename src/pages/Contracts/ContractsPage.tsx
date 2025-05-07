@@ -126,41 +126,40 @@ const ContractsPage = ({
               )}
             </div>
           )}
-          {!!contractList?.items.length && (
-            <div className="flex flex-col gap-2.5 sm:flex-row">
-              <div className="flex gap-2">
-                <div className="w-full md:w-auto">
-                  <SearchInput
-                    value={searchContractValue}
-                    onChange={(e) => {
-                      handleSearchContract(e.target.value);
-                      setPage(1);
-                    }}
-                    containerClass="w-full lg:max-w-[286px]"
-                    placeholder="Search contracts"
-                    onClear={() => handleSearchContract("")}
-                  />
-                </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setModal("filter");
-                  }}
-                  className="group flex-shrink-0 lg:hidden"
-                >
-                  <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
-                </button>
-              </div>
 
-              <div className="hidden lg:block">
-                <Filters
-                  filters={filters}
-                  setFilters={setFilters}
-                  providerId={providerId}
+          <div className="flex flex-col gap-2.5 sm:flex-row">
+            <div className="flex gap-2">
+              <div className="w-full md:w-auto">
+                <SearchInput
+                  value={searchContractValue}
+                  onChange={(e) => {
+                    handleSearchContract(e.target.value);
+                    setPage(1);
+                  }}
+                  containerClass="w-full lg:max-w-[286px]"
+                  placeholder="Search contracts"
+                  onClear={() => handleSearchContract("")}
                 />
               </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setModal("filter");
+                }}
+                className="group flex-shrink-0 lg:hidden"
+              >
+                <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
+              </button>
             </div>
-          )}
+
+            <div className="hidden lg:block">
+              <Filters
+                filters={filters}
+                setFilters={setFilters}
+                providerId={providerId}
+              />
+            </div>
+          </div>
         </div>
 
         <div className="flex h-full flex-col justify-between gap-4">

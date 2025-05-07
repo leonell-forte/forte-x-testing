@@ -5,11 +5,9 @@ import organizationService from "api/organization";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { REGIONS, STATUS } from "lib/constants";
-import { useAppDispatch, useAppSelector } from "lib/hooks";
+import { FREQUENCY, REGIONS, STATUS } from "lib/constants";
 import useOrganizationMutation from "lib/mutations/organizations";
 import { Funders, IsAuthorized, Providers } from "lib/role-permissions";
-import { clearPartners } from "lib/slice/partners";
 import { OrgStatus, OrganizationFieldTypes } from "lib/types/organizations";
 import { organizations } from "lib/validators/organizations";
 
@@ -40,10 +38,7 @@ const OrganizationForm = ({
   onFormDataChange,
   type,
 }: OrganizationFormProps) => {
-  const dispatch = useAppDispatch();
   // this is a custom state to store partners to be added to the organization after creation
-
-  const { partnersToAdd } = useAppSelector((state) => state.partners);
 
   const [editMode, setEditMode] = useState(orgId ? false : true);
 
@@ -77,8 +72,8 @@ const OrganizationForm = ({
 
   // Add this computed value for form dirtiness
   const isFormDirty = useMemo(() => {
-    return isDirty || partnersToAdd.length > 0;
-  }, [isDirty, partnersToAdd.length]);
+    return isDirty;
+  }, [isDirty]);
 
   // prefill initial value from selected org
 
@@ -96,8 +91,6 @@ const OrganizationForm = ({
   }, [form.watch, onFormDataChange, form]);
 
   const onClose = () => {
-    reset();
-
     handleClose!();
   };
 
@@ -123,19 +116,6 @@ const OrganizationForm = ({
       onClose();
 
       addSuccessCallback?.(id);
-
-      // if there are partners to add, add them after the organization is created
-      if (partnersToAdd.length) {
-        await Promise.all(
-          partnersToAdd.map(async (partner) => {
-            return await organizationService.addPartner({
-              ...partner,
-              organizationId: id,
-            });
-          })
-        );
-        dispatch(clearPartners());
-      }
     },
 
     type,
@@ -369,6 +349,31 @@ const OrganizationForm = ({
                   );
                 }}
               />
+              {type === "funder" && (
+                <Controller
+                  labelClassName={labelClass}
+                  label="Invoice frequency"
+                  required
+                  name="invoiceFrequency"
+                  control={control}
+                  render={({ field }) => {
+                    return (
+                      <Dropdown
+                        value={
+                          FREQUENCY.find((item) => item.value === field.value)
+                            ?.label
+                        }
+                        handleSelect={(val) => {
+                          field.onChange(val);
+                        }}
+                        options={FREQUENCY}
+                        placeholder="Select invoice frequency"
+                        disabled={!editMode}
+                      />
+                    );
+                  }}
+                />
+              )}
             </div>
           </div>
 

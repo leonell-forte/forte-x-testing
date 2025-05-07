@@ -5,6 +5,7 @@ import { RiPencilFill as Pencil } from "react-icons/ri";
 
 import loader from "assets/images/icons/loader.svg";
 
+import { IsAuthorized, Milestones } from "lib/role-permissions";
 import { IMilestone, TMilestoneEvidence } from "lib/types/milestones";
 import { formatDate, getStatusVariant } from "lib/utils";
 
@@ -153,17 +154,19 @@ function ViewEvidenceModal({ milestone, evidenceDetails }: TParams) {
               </div>
             ) : null}
             <div className="flex justify-end">
-              <Button
-                onClick={() =>
-                  showSetupEvidenceModal({
-                    milestone,
-                    evidenceDetails: evidenceData as any,
-                  })
-                }
-              >
-                <Pencil className="h-auto w-5 fill-black" />
-                Edit details
-              </Button>
+              {IsAuthorized([Milestones.UPDATE]) && (
+                <Button
+                  onClick={() =>
+                    showSetupEvidenceModal({
+                      milestone,
+                      evidenceDetails: evidenceData as any,
+                    })
+                  }
+                >
+                  <Pencil className="h-auto w-5 fill-black" />
+                  Edit details
+                </Button>
+              )}
             </div>
           </div>
         </div>

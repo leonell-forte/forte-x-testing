@@ -14,6 +14,10 @@ module.exports = {
         "table-breakpoint": "1200px",
       },
       keyframes: {
+        "caret-blink": {
+          "0%,70%,100%": { opacity: "1" },
+          "20%,50%": { opacity: "0" },
+        },
         fadeIn: {
           "0%": { opacity: 0, transform: "translateY(50px)" },
           "100%": { opacity: 1, transform: "translateY(0)" },
@@ -21,6 +25,7 @@ module.exports = {
       },
       animation: {
         fadeIn: "fadeIn 0.7s cubic-bezier(0.4, 0, 0.2, 1)", // Custom easing
+        "caret-blink": "caret-blink 1.25s ease-out infinite",
       },
       backgroundImage: {
         "body-gradient":

@@ -1,11 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
-import milestoneService from "api/milestones";
 import { Dispatch, SetStateAction, useState } from "react";
 import { TbFilterX as FilterIcon } from "react-icons/tb";
 import { Route, Routes, useLocation } from "react-router-dom";
 
+import useMilestoneList from "lib/common/lists/useMilestoneList";
 import { MILESTONE_STATUS, MILESTONE_TYPES } from "lib/constants";
-import { useDebounce, usePage } from "lib/hooks";
+import { usePage } from "lib/hooks";
 import { IMilestoneFilters, MilestoneStatus } from "lib/types/milestones";
 
 import MilestonesTable from "components/tables/Milestones";
@@ -39,69 +38,52 @@ const MilestonesComp = ({
 
   const { page, setPage } = usePage();
 
-  const [search, setSearch] = useState("");
-
   const [filters, setFilters] = useState<IMilestoneFilters>(initialFilter);
 
-  const [debouncedSearch, setDebouncedSearch] = useState("");
-
-  useDebounce(
-    () => {
-      setDebouncedSearch(search);
-    },
-
-    500,
-
-    [search]
-  );
-
-  const { data: milestones, isLoading } = useQuery({
-    queryKey: ["milestones", page, debouncedSearch, filters],
-
-    queryFn: () =>
-      milestoneService.list({
-        page,
-
-        filters,
-
-        search: debouncedSearch,
-
-        listAll: false,
-      }),
+  const {
+    isLoading,
+    rawList: milestones,
+    handleSearchMilestone,
+    searchMilestoneValue,
+  } = useMilestoneList({
+    key: [page, filters],
+    page,
+    filter: filters,
+    listAll: false,
+    pageSize: 10,
   });
 
   return (
     <div className="flex h-full flex-col space-y-2.5">
       <div className="space-y-5">
         {!hideHeader && <p className="text-[24px] font-semibold">Milestones</p>}
-        {!!milestones?.items.length && (
-          <div className="flex flex-col justify-between gap-2.5 sm:flex-row">
-            <div className="flex flex-col gap-2.5 sm:flex-row">
-              <div className="flex gap-2">
-                <div className="w-full md:w-auto">
-                  <SearchInput
-                    value={search}
-                    onChange={(e) => {
-                      setSearch(e.target.value);
-                      setPage(1);
-                    }}
-                    containerClass="w-full lg:max-w-[286px]"
-                    placeholder="Search milestones"
-                    onClear={() => setSearch("")}
-                  />
-                </div>
-              </div>
 
-              <div className="flex-1 flex-grow">
-                <Filters
-                  filters={filters}
-                  setFilters={setFilters}
-                  initialFilter={initialFilter}
+        <div className="flex flex-col justify-between gap-2.5 sm:flex-row">
+          <div className="flex flex-col gap-2.5 sm:flex-row">
+            <div className="flex gap-2">
+              <div className="w-full md:w-auto">
+                <SearchInput
+                  value={searchMilestoneValue}
+                  onChange={(e) => {
+                    handleSearchMilestone(e.target.value);
+                    setPage(1);
+                  }}
+                  containerClass="w-full lg:max-w-[286px]"
+                  placeholder="Search milestones"
+                  onClear={() => handleSearchMilestone("")}
                 />
               </div>
             </div>
+
+            <div className="flex-1 flex-grow">
+              <Filters
+                filters={filters}
+                setFilters={setFilters}
+                initialFilter={initialFilter}
+              />
+            </div>
           </div>
-        )}
+        </div>
       </div>
 
       <div className="flex h-full flex-col justify-between gap-4">

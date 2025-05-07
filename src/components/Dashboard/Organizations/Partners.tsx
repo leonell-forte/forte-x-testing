@@ -2,9 +2,7 @@ import { get } from "lodash";
 import { useMemo } from "react";
 import { FaTrash as Trash } from "react-icons/fa6";
 
-import { useAppDispatch, useAppSelector } from "lib/hooks";
 import { useDeletePartnerMutation } from "lib/mutations/partners";
-import { removePartner } from "lib/slice/partners";
 import { IOrganization, Partner } from "lib/types/organizations";
 
 import { queryClient } from "components/QueryProvider";
@@ -25,13 +23,7 @@ const config = {
 };
 
 const Partners = ({ partners, orgId }: PartnerProps) => {
-  const dispatch = useAppDispatch();
-  const { partnersToAdd } = useAppSelector((state) => state.partners);
-
-  const partnersList: Partner[] = useMemo(
-    () => [...partners, ...partnersToAdd],
-    [partners, partnersToAdd]
-  );
+  const partnersList: Partner[] = useMemo(() => [...partners], [partners]);
 
   const { open } = useCustomPrompt();
   const { deletePartner } = useDeletePartnerMutation(orgId);
@@ -50,7 +42,6 @@ const Partners = ({ partners, orgId }: PartnerProps) => {
       );
       return;
     }
-    dispatch(removePartner(organizationId));
   };
 
   return (

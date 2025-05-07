@@ -42,6 +42,10 @@ export interface IOrganization {
   noOfBeneficiaries?: number;
 
   noOfMilestones?: number;
+
+  invoiceFrequency?: "monthly" | "quarterly" | "yearly";
+  invoiceFrequecy?: "monthly" | "quarterly" | "yearly";
+  invoice_frequency?: "monthly" | "quarterly" | "yearly";
 }
 
 export type OrgTypes = "funder" | "provider" | "forte";

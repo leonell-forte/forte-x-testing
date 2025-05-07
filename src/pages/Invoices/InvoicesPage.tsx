@@ -78,31 +78,29 @@ const InvoicesComp = () => {
               </Button>
             </div>
 
-            {!!invoices?.items.length && (
-              <div className="flex flex-col gap-2 md:flex-row">
-                <div className="flex gap-2">
-                  <div className="w-full md:w-[286px]">
-                    <SearchInput
-                      value={search}
-                      onChange={(e) => {
-                        setSearch(e.target.value);
-                        setPage(1);
-                      }}
-                      className="w-full"
-                      placeholder="Search invoice"
-                      onClear={() => setSearch("")}
-                    />
-                  </div>
-                </div>
-                <div className="hidden w-full md:block">
-                  <Filters
-                    filters={filters}
-                    setFilters={setFilters}
-                    handleRemoveFilters={() => setFilters({ status: "" })}
+            <div className="flex flex-col gap-2 md:flex-row">
+              <div className="flex gap-2">
+                <div className="w-full md:w-[286px]">
+                  <SearchInput
+                    value={search}
+                    onChange={(e) => {
+                      setSearch(e.target.value);
+                      setPage(1);
+                    }}
+                    className="w-full"
+                    placeholder="Search invoice"
+                    onClear={() => setSearch("")}
                   />
                 </div>
               </div>
-            )}
+              <div className="hidden w-full md:block">
+                <Filters
+                  filters={filters}
+                  setFilters={setFilters}
+                  handleRemoveFilters={() => setFilters({ status: "" })}
+                />
+              </div>
+            </div>
           </div>
         </div>
         <div className="flex h-full flex-col justify-between gap-4">

@@ -6,6 +6,7 @@ import * as React from "react";
 import { usePhoneInput } from "react-international-phone";
 import { useParams } from "react-router-dom";
 
+import { ReactComponent as Add } from "assets/images/icons/add.svg";
 import { ReactComponent as Pencil } from "assets/images/icons/pencil.svg";
 
 import { isPhoneValid } from "lib/isPhoneValid";
@@ -15,6 +16,7 @@ import { getStatusVariant } from "lib/utils";
 import PersonalDetailsSection from "components/Dashboard/Beneficiaries/Dialogues/Sections/PersonalDetails";
 import ProjectDetailsSection from "components/Dashboard/Beneficiaries/Dialogues/Sections/ProjectsDetails";
 import { showSetupBeneficiaryModal } from "components/Dashboard/Beneficiaries/Dialogues/SetupBeneficiary";
+import { showSetupEvidenceModal } from "components/Dashboard/Milestones/modals/SetupEvidence";
 import EvidenceTable from "components/tables/Evidences";
 import MilestonesTable from "components/tables/Milestones";
 import Button from "components/ui/button";
@@ -96,6 +98,7 @@ export default function ViewBeneficiary() {
             list={milestones?.data || []}
             isLoading={isMilestoneLoading}
             href="milestone/"
+            showDownloadButton
           />
         ),
       },
@@ -149,18 +152,33 @@ export default function ViewBeneficiary() {
             </div>
           </div>
 
-          {IsAuthorized([Beneficiaries.UPDATE]) && (
-            <Button
-              buttonType="secondary"
-              className="group"
-              onClick={() =>
-                showSetupBeneficiaryModal({ beneficiaryDetails: beneficiary })
-              }
-            >
-              <Pencil height={14} />
-              Edit
-            </Button>
-          )}
+          <div className="flex gap-4">
+            {IsAuthorized([Beneficiaries.UPDATE]) && (
+              <Button
+                buttonType="secondary"
+                className="group"
+                onClick={() =>
+                  showSetupBeneficiaryModal({ beneficiaryDetails: beneficiary })
+                }
+              >
+                <Pencil height={14} />
+                Edit
+              </Button>
+            )}
+            {IsAuthorized([Beneficiaries.UPDATE]) && (
+              <Button
+                className="group"
+                onClick={() => {
+                  showSetupEvidenceModal({
+                    beneficiaryIdParam: beneficiary.id.toString(),
+                  });
+                }}
+              >
+                <Add height={14} />
+                Add evidence
+              </Button>
+            )}
+          </div>
         </div>
         <Tabs tabs={upperTabs} />
 

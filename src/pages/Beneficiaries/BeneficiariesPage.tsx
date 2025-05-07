@@ -187,7 +187,7 @@ const BeneficiariesComp = ({
                           showSetupBeneficiaryModal({});
                         }}
                       >
-                        Single Entry
+                        Single entry
                       </DropdownMenuItem>
                       {IsAuthorized([Beneficiaries.IMPORT]) && (
                         <DropdownMenuItem
@@ -206,43 +206,41 @@ const BeneficiariesComp = ({
             </div>
           )}
 
-          {!!beneficiariesList?.items.length && (
-            <div className="flex">
-              <div className="flex w-full flex-col flex-wrap items-start gap-2.5 lg:w-auto lg:flex-row">
-                <div className="flex w-full items-center gap-2 md:w-auto">
-                  <div className="w-full md:w-auto">
-                    <SearchInput
-                      value={search}
-                      onChange={(e) => {
-                        setSearch(e.target.value);
-                        setPage(1);
-                      }}
-                      placeholder="Search beneficiaries"
-                      containerClass="w-full lg:max-w-[286px]"
-                      onClear={() => setSearch("")}
-                    />
-                  </div>
-
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setModal("filter");
+          <div className="flex">
+            <div className="flex w-full flex-col flex-wrap items-start gap-2.5 lg:w-auto lg:flex-row">
+              <div className="flex w-full items-center gap-2 md:w-auto">
+                <div className="w-full md:w-auto">
+                  <SearchInput
+                    value={search}
+                    onChange={(e) => {
+                      setSearch(e.target.value);
+                      setPage(1);
                     }}
-                    className="group flex-shrink-0 xl:hidden"
-                  >
-                    <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
-                  </button>
-                </div>
-                <div className="hidden xl:block">
-                  <Filters
-                    filters={filters}
-                    setFilters={setFilters}
-                    projectId={projectId}
+                    placeholder="Search beneficiaries"
+                    containerClass="w-full lg:max-w-[286px]"
+                    onClear={() => setSearch("")}
                   />
                 </div>
+
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setModal("filter");
+                  }}
+                  className="group flex-shrink-0 xl:hidden"
+                >
+                  <SliderIcon className="h-auto w-6 transition-all group-hover:fill-mint" />
+                </button>
+              </div>
+              <div className="hidden xl:block">
+                <Filters
+                  filters={filters}
+                  setFilters={setFilters}
+                  projectId={projectId}
+                />
               </div>
             </div>
-          )}
+          </div>
         </div>
 
         <div className="flex h-full flex-col justify-between gap-4">

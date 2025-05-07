@@ -7,8 +7,9 @@ import { REDIRECT_PATHS } from "lib/constants";
 import { cookie, useAlert, useAppSelector } from "lib/hooks";
 import { UserRoleType } from "lib/types/users";
 
+import { OTPInput } from "components/ui/form/OTPInput";
+
 import Button from "../ui/button";
-import OTPInput from "../ui/otp-input";
 import { ILoginProps } from "./types";
 
 const OTPForm = ({ handleNext }: ILoginProps) => {
@@ -18,11 +19,11 @@ const OTPForm = ({ handleNext }: ILoginProps) => {
 
   const { email, role, sessionToken } = useAppSelector((state) => state.auth);
 
-  const [otp, setOtp] = useState<string[]>([]);
+  const [otp, setOtp] = useState("");
 
   const { setAlert } = useAlert();
 
-  const isComplete = useMemo(() => !otp.some((item) => !item), [otp]);
+  const isComplete = useMemo(() => otp.length === 6, [otp]);
 
   useEffect(() => {
     let timer: any;
@@ -40,7 +41,7 @@ const OTPForm = ({ handleNext }: ILoginProps) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await authService.verifyCode(sessionToken, otp.join(""));
+      const res = await authService.verifyCode(sessionToken, otp);
       cookie.set("access_token", res.token, {
         path: "/",
       });

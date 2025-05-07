@@ -165,30 +165,6 @@ export function SetupBeneficiaryModal({
     [organizationList, contractList]
   );
 
-  // const selectedContract = watch("contractId");
-
-  // const organizations: IOption[] = useMemo(
-  //   () =>
-  //     organizationList?.items
-  //       .filter((org) => {
-  //         // filter the organizations based on selected contract
-  //         // provider dropdown should be disabled if no contract is selected
-
-  //         const contract = contractList?.items.find(
-  //           (contract) => contract.id === selectedContract
-  //         );
-
-  //         return contract?.provider.id === org.id;
-  //       })
-  //       .map((item) => ({
-  //         label: item.name,
-
-  //         value: item.id!.toString(),
-  //       })) || [],
-
-  //   [organizationList, contractList, selectedContract]
-  // );
-
   const { addBeneficiary, isPending } = useBeneficiaryMutation({
     beneficiaryId: beneficiaryDetails?.id,
 
@@ -317,37 +293,39 @@ export function SetupBeneficiaryModal({
 
         <StepContent contentNumber={2}>
           <div className="mx-auto max-w-[414px] space-y-3 pt-10">
-            <Controller
-              label="Contract"
-              required
-              control={control}
-              name="contractId"
-              render={({ field }) => (
-                <Dropdown
-                  enableSearch
-                  loading={contractsLoading}
-                  value={findLabelFromOptions(
-                    contracts,
-                    (field.value || "").toString()
-                  )}
-                  handleSelect={(val) => {
-                    field.onChange(Number(val));
-                    const contract = contractList?.items.find(
-                      (item) => item.id === Number(val)
-                    );
-                    setValue("providerId", contract?.provider.id as number);
-                    setValue("projectId", contract?.projectId as number);
-                    setError("contractId", { message: "" });
-                    setError("projectId", { message: "" });
-                    setError("providerId", { message: "" });
-                  }}
-                  options={sortOptions(contracts)}
-                  placeholder="Select contract"
-                  disabled={!!contractId}
-                  onChange={(e) => handleSearchContract(e.target.value)}
-                />
-              )}
-            />
+            {!contractId && (
+              <Controller
+                label="Contract"
+                required
+                control={control}
+                name="contractId"
+                render={({ field }) => (
+                  <Dropdown
+                    enableSearch
+                    loading={contractsLoading}
+                    value={findLabelFromOptions(
+                      contracts,
+                      (field.value || "").toString()
+                    )}
+                    handleSelect={(val) => {
+                      field.onChange(Number(val));
+                      const contract = contractList?.items.find(
+                        (item) => item.id === Number(val)
+                      );
+                      setValue("providerId", contract?.provider.id as number);
+                      setValue("projectId", contract?.projectId as number);
+                      setError("contractId", { message: "" });
+                      setError("projectId", { message: "" });
+                      setError("providerId", { message: "" });
+                    }}
+                    options={sortOptions(contracts)}
+                    placeholder="Select contract"
+                    disabled={!!contractId}
+                    onChange={(e) => handleSearchContract(e.target.value)}
+                  />
+                )}
+              />
+            )}
             <Controller
               label="Program (Optional)"
               control={control}

@@ -49,7 +49,7 @@ const Table = {
 
     if (emptyConfig?.status && !isLoading) {
       return (
-        <div className="mx-auto space-y-2 text-center">
+        <div className="mx-auto space-y-2 py-12 text-center">
           <img
             src={search}
             alt=""

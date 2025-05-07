@@ -35,6 +35,7 @@
     "date-fns": "^4.1.0",
     "framer-motion": "^11.11.10",
     "google-libphonenumber": "^3.2.40",
+    "input-otp": "^1.4.2",
     "lodash": "^4.17.21",
     "lucide-react": "^0.475.0",
     "react": "^18.3.1",

@@ -4,6 +4,7 @@ import { IOrganization, OrgTypes } from "../types/organizations";
 
 export const organizations = {
   defaultValues: (type?: OrgTypes, org?: IOrganization) => {
+    console.log(org);
     let data: IOrganization = {
       name: org?.name || "",
 
@@ -25,6 +26,8 @@ export const organizations = {
       type: org?.type! || type || "",
 
       status: org?.status || "active",
+
+      invoiceFrequency: org?.invoiceFrequecy || "monthly",
     };
 
     if (org) {
@@ -64,35 +67,22 @@ export const organizations = {
     status: z.enum(["active", "inactive"], {
       errorMap: () => ({ message: "Status is a required field" }),
     }),
+
+    invoiceFrequency: z.enum(["monthly", "quarterly", "yearly"]).optional(),
   }),
 };
-
-const partnerSchema = z.object({
-  id: z.number().min(1, "Partner is a required field."),
-  name: z.string(),
-  registeredName: z.string().min(1, "Registered name is a required field."),
-  registeredNumber: z.string().min(1, "Registration ID is a required field."),
-});
 
 export const partner = {
   defaultValues: (orgId: number) => {
     return {
       organizationId: orgId,
 
-      partner: {
-        id: 0,
-
-        name: "",
-
-        registeredName: "",
-
-        registeredNumber: "",
-      },
+      partner: [],
     };
   },
 
   schema: z.object({
     organizationId: z.number(),
-    partner: partnerSchema,
+    partner: z.array(z.string()).min(1, "Partners field is required"),
   }),
 };

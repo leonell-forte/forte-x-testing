@@ -69,6 +69,8 @@ const ContractForm = ({
 
   providerId,
 
+  funderId,
+
   activeStep: step,
 }: IContractForm) => {
   const { open } = useCustomPrompt();
@@ -129,6 +131,7 @@ const ContractForm = ({
     handleSearchProject,
   } = useProjectList({
     key: ["dropdown"],
+    filter: { funder: funderId || "" },
     pageSize: 100,
   });
 
@@ -272,8 +275,12 @@ const ContractForm = ({
       ) : (
         <>
           <Stepper activeStep={activeStep}>
-            <StepTrigger stepNumber={1}>1. Contract details</StepTrigger>
-            <StepTrigger stepNumber={2}>2. Linked outcomes</StepTrigger>
+            {step !== 2 && (
+              <>
+                <StepTrigger stepNumber={1}>1. Contract details</StepTrigger>
+                <StepTrigger stepNumber={2}>2. Linked outcomes</StepTrigger>
+              </>
+            )}
             <StepContent contentNumber={1}>
               <div className="space-y-8 pt-10">
                 <div className="space-y-3">
@@ -291,44 +298,48 @@ const ContractForm = ({
                     )}
                   />
 
-                  <Controller
-                    label="Project"
-                    required
-                    name="projectId"
-                    control={control}
-                    render={({ field }) => {
-                      return (
-                        <Dropdown
-                          disabled={!!projectId || !onEdit}
-                          loading={projectLoading}
-                          enableSearch
-                          value={findLabelFromOptions(
-                            projects,
+                  {!projectId && (
+                    <Controller
+                      label="Project"
+                      required
+                      name="projectId"
+                      control={control}
+                      render={({ field }) => {
+                        return (
+                          <Dropdown
+                            disabled={!!projectId || !onEdit}
+                            loading={projectLoading}
+                            enableSearch
+                            value={findLabelFromOptions(
+                              projects,
 
-                            field.value.toString()
-                          )}
-                          options={sortOptions(projects)}
-                          handleSelect={(val) => {
-                            field.onChange(Number(val));
+                              field.value.toString()
+                            )}
+                            options={sortOptions(projects)}
+                            handleSelect={(val) => {
+                              field.onChange(Number(val));
 
-                            setValue("outcomeRates", [
-                              {
-                                outcomeId: 0,
+                              setValue("outcomeRates", [
+                                {
+                                  outcomeId: 0,
 
-                                rate: "",
+                                  rate: "",
 
-                                perOutcome: true,
+                                  perOutcome: true,
 
-                                threshold: "",
-                              },
-                            ]);
-                          }}
-                          placeholder="Select project"
-                          onChange={(e) => handleSearchProject(e.target.value)}
-                        />
-                      );
-                    }}
-                  />
+                                  threshold: "",
+                                },
+                              ]);
+                            }}
+                            placeholder="Select project"
+                            onChange={(e) =>
+                              handleSearchProject(e.target.value)
+                            }
+                          />
+                        );
+                      }}
+                    />
+                  )}
 
                   <Controller
                     label="Provider"

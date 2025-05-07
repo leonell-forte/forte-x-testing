@@ -99,7 +99,7 @@ const FileInput = ({
   };
 
   return (
-    <div className="relative flex w-full cursor-pointer items-center">
+    <div className="relative flex w-full cursor-pointer items-center truncate">
       <Input
         color="primary"
         type="file"

@@ -171,29 +171,6 @@ const Dropdown = ({
               >
                 {showAsTags && isMultiSelect ? (
                   <div className="flex w-full flex-1 flex-shrink flex-wrap gap-2 truncate text-ellipsis pr-8">
-                    {(props.value as string[]).map((item, index) => {
-                      const label = options?.find(
-                        (option) => option.value === item
-                      )?.label;
-
-                      return (
-                        <Tag
-                          disabled={props.disabled}
-                          dark
-                          handleRemove={(e) => {
-                            e.stopPropagation();
-
-                            handleSelect!(
-                              (props.value as string[]).filter(
-                                (val) => val !== item
-                              )
-                            );
-                          }}
-                          key={index}
-                          label={label}
-                        />
-                      );
-                    })}
                     <input
                       type="text"
                       className={classNames(
@@ -280,13 +257,40 @@ const Dropdown = ({
             },
           })}
         >
-          <div className="max-w-full">
+          <div className="max-w-full text-black">
+            {!!props.value?.length && isMultiSelect && showAsTags && (
+              <div className="flex flex-wrap gap-2 border-b pb-4">
+                {(props.value as string[]).map((item, index) => {
+                  const label = options?.find(
+                    (option) => option.value === item
+                  )?.label;
+
+                  return (
+                    <Tag
+                      disabled={props.disabled}
+                      dark
+                      handleRemove={(e) => {
+                        e.stopPropagation();
+
+                        handleSelect!(
+                          (props.value as string[]).filter(
+                            (val) => val !== item
+                          )
+                        );
+                      }}
+                      key={index}
+                      label={label}
+                    />
+                  );
+                })}
+              </div>
+            )}
             {loading ? (
               <div className="flex h-[100px] w-full items-center justify-center">
                 <Loader dark />
               </div>
             ) : filteredOptions.length === 0 ? (
-              <div className="text-center text-sm text-black">
+              <div className="py-12 text-center text-sm text-black">
                 No results found.
               </div>
             ) : (
