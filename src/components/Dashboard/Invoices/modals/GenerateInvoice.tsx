@@ -35,7 +35,10 @@ function GenerateInvoiceModal() {
   const {
     control,
     formState: { isValid },
+    watch,
   } = form;
+
+  const { startDate, endDate } = watch();
 
   const { getAchievedMilestones } = useGetAchievedMilestones();
   const { generateInvoice } = useGenerateInvoice(close);
@@ -103,6 +106,7 @@ function GenerateInvoiceModal() {
                   onChange={(date) => {
                     field.onChange(date ? date.toISOString() : "");
                   }}
+                  maxDate={endDate ? new Date(endDate) : undefined}
                 />
               )}
             />
@@ -117,6 +121,7 @@ function GenerateInvoiceModal() {
                   onChange={(date) => {
                     field.onChange(date ? date.toISOString() : "");
                   }}
+                  minDate={startDate ? new Date(startDate) : undefined}
                 />
               )}
             />
