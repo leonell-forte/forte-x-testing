@@ -1,6 +1,7 @@
 import evidenceService from "api/evidence";
 import { HiOutlineDownload as DL } from "react-icons/hi";
 
+import { IsAuthorized, Milestones } from "lib/role-permissions";
 import { Evidence } from "lib/types/evidence";
 import { getStatusVariant } from "lib/utils";
 
@@ -29,19 +30,21 @@ const EvidenceTable = ({ list, isLoading }: IProps) => {
                     <Cards.Details label="Description" value={description} />
                     <Cards.Details label="Status" value={status} capitalize />
                   </Cards.Group>
-                  <div className="absolute bottom-3 right-4 z-50">
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        evidenceService.getFile(file.fileUrl, file.filename);
-                      }}
-                      className="group"
-                    >
-                      <DL className="h-auto w-6 transition-all group-hover:stroke-mint" />
-                    </button>
-                  </div>
+                  {IsAuthorized([Milestones.DOWNLOAD]) && (
+                    <div className="absolute bottom-3 right-4 z-50">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          evidenceService.getFile(file.fileUrl, file.filename);
+                        }}
+                        className="group"
+                      >
+                        <DL className="h-auto w-6 transition-all group-hover:stroke-mint" />
+                      </button>
+                    </div>
+                  )}
                 </div>
               </Cards.Card>
             );
@@ -81,17 +84,19 @@ const EvidenceTable = ({ list, isLoading }: IProps) => {
                   </Table.Data>
 
                   <Table.Data>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        evidenceService.getFile(file.fileUrl, file.filename);
-                      }}
-                      className="group mt-1.5"
-                    >
-                      <DL className="h-auto w-6 transition-all group-hover:stroke-mint" />
-                    </button>
+                    {IsAuthorized([Milestones.DOWNLOAD]) && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          evidenceService.getFile(file.fileUrl, file.filename);
+                        }}
+                        className="group mt-1.5"
+                      >
+                        <DL className="h-auto w-6 transition-all group-hover:stroke-mint" />
+                      </button>
+                    )}
                   </Table.Data>
                 </Table.Row>
               );

@@ -80,6 +80,7 @@ export enum Milestones {
   DELETE = "delete:milestone",
   LIST = "list:milestone",
   NAVIGATE = "navigate:milestone",
+  DOWNLOAD = "download:milestone",
 }
 
 const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
