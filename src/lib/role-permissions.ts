@@ -151,7 +151,6 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     Funders.UPDATE,
     Funders.DELETE,
     Invoices.LIST,
-    Invoices.NAVIGATE,
   ],
 
   "provider.admin": [
@@ -170,7 +169,6 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     Funders.LIST,
     Funders.UPDATE,
     Invoices.LIST,
-    Invoices.NAVIGATE,
   ],
 
   "provider.user": [
@@ -183,7 +181,6 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     Funders.NAVIGATE,
     Funders.LIST,
     Invoices.LIST,
-    Invoices.NAVIGATE,
   ],
 
   "provider.read-only": [
@@ -195,7 +192,6 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     Providers.LIST,
     Funders.NAVIGATE,
     Funders.LIST,
-    Invoices.NAVIGATE,
     Invoices.LIST,
     Milestones.LIST,
     Milestones.NAVIGATE,
