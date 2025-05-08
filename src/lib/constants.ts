@@ -130,7 +130,13 @@ export const TYPES = [
   },
 ];
 
-export const EVIDENCE_STATUS = [
+type StatusType = {
+  label: string;
+  value: string;
+  allowedOrgTypes: OrgTypes[];
+};
+
+export const EVIDENCE_STATUS: StatusType[] = [
   {
     label: "Approved",
     value: "approved",
@@ -154,7 +160,7 @@ export const EVIDENCE_STATUS = [
   {
     label: "Rejected",
     value: "rejected",
-    allowedOrgTypes: ["provider", "forte"],
+    allowedOrgTypes: ["provider", "forte", "funder"],
   },
   {
     label: "Paid",
@@ -163,7 +169,7 @@ export const EVIDENCE_STATUS = [
   },
 ];
 
-export const BENEFICIARY_STATUS = [
+export const BENEFICIARY_STATUS: StatusType[] = [
   {
     label: "New",
     value: "New",
