@@ -10,7 +10,6 @@ import { Invoices, IsAuthorized } from "lib/role-permissions";
 import { InvoiceFilters, InvoiceStatus } from "lib/types/invoices";
 
 import { showGenerateInvoiceModal } from "components/Dashboard/Invoices/modals/GenerateInvoice";
-import { useProfile } from "components/ProfileContext";
 import InvoicesTable from "components/tables/Invoices";
 import { BreadCrumb } from "components/ui/breadcrumb/Breadcrumb";
 import Button from "components/ui/button";
@@ -33,8 +32,6 @@ export function getRandomString(array: string[]): string | undefined {
 
 const InvoicesComp = () => {
   const { page, setPage } = usePage();
-
-  const { profile } = useProfile();
 
   const [filters, setFilters] = useState<InvoiceFilters>({
     status: "",
@@ -76,13 +73,12 @@ const InvoicesComp = () => {
           <div className="space-y-5">
             <div className="flex items-start justify-between">
               <p className="text-[24px] font-semibold">Invoices</p>
-              {profile.orgType === "provider" &&
-                IsAuthorized([Invoices.CREATE]) && (
-                  <Button onClick={showGenerateInvoiceModal}>
-                    <HiPlus className="h-auto w-6 fill-black" />
-                    Generate Invoice
-                  </Button>
-                )}
+              {IsAuthorized([Invoices.CREATE]) && (
+                <Button onClick={showGenerateInvoiceModal}>
+                  <HiPlus className="h-auto w-6 fill-black" />
+                  Generate Invoice
+                </Button>
+              )}
             </div>
 
             <div className="flex flex-col gap-2 md:flex-row">
