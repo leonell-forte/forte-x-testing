@@ -6,6 +6,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import useInvoiceList from "lib/common/lists/useInvoiceList";
 import { INVOICE_STATUS } from "lib/constants";
 import { useDebounce, usePage } from "lib/hooks";
+import { Invoices, IsAuthorized } from "lib/role-permissions";
 import { InvoiceFilters, InvoiceStatus } from "lib/types/invoices";
 
 import { showGenerateInvoiceModal } from "components/Dashboard/Invoices/modals/GenerateInvoice";
@@ -72,10 +73,12 @@ const InvoicesComp = () => {
           <div className="space-y-5">
             <div className="flex items-start justify-between">
               <p className="text-[24px] font-semibold">Invoices</p>
-              <Button onClick={showGenerateInvoiceModal}>
-                <HiPlus className="h-auto w-6 fill-black" />
-                Generate Invoice
-              </Button>
+              {IsAuthorized([Invoices.CREATE]) && (
+                <Button onClick={showGenerateInvoiceModal}>
+                  <HiPlus className="h-auto w-6 fill-black" />
+                  Generate Invoice
+                </Button>
+              )}
             </div>
 
             <div className="flex flex-col gap-2 md:flex-row">

@@ -597,7 +597,7 @@ export const REGIONS = sortOptions([
   },
 ]);
 
-export const DEFAULT_DATE_FORMAT = "dd-LLL-yyyy";
+export const DEFAULT_DATE_FORMAT = "dd LLL yyyy";
 
 export const REDIRECT_PATHS: Record<UserRoleType, string> = {
   "provider.user": "/beneficiaries",

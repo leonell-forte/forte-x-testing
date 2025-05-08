@@ -5,12 +5,16 @@ import { useParams } from "react-router-dom";
 import { ReactComponent as Add } from "assets/images/icons/add.svg";
 import { ReactComponent as Edit } from "assets/images/icons/pencil.svg";
 
+import usePartnerList from "lib/common/lists/usePartnerList";
+import { Funders, IsAuthorized } from "lib/role-permissions";
 import { OrgStatus } from "lib/types/organizations";
 import { getStatusVariant } from "lib/utils";
 
 import { showSetupBeneficiaryModal } from "components/Dashboard/Beneficiaries/Dialogues/SetupBeneficiary";
 import { showSetupContractModal } from "components/Dashboard/Contracts/SetupContract";
 import { showOrganizationDialogue } from "components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
+import { showAddPartnerForm } from "components/Dashboard/Organizations/Forms/AddPartnerForm";
+import Partners from "components/Dashboard/Organizations/Partners";
 import BankDetails from "components/Dashboard/Organizations/Providers/BankDetails";
 import ProviderDetails from "components/Dashboard/Organizations/Providers/ProviderDetails";
 import { BreadCrumb } from "components/ui/breadcrumb/Breadcrumb";
@@ -36,6 +40,8 @@ const IndividualProvidersPage = () => {
     enabled: !!orgId,
   });
 
+  const { partners: existingPartners } = usePartnerList(orgId);
+
   if (isLoading) {
     return (
       <div className="flex h-full w-full items-center justify-center">
@@ -58,6 +64,13 @@ const IndividualProvidersPage = () => {
   ];
 
   const tabs: TabData[] = [
+    {
+      value: "partners",
+      label: `Partners (${orgData?.noOfPartners || 0})`,
+      content: (
+        <Partners partners={existingPartners || []} orgId={orgId || ""} />
+      ),
+    },
     {
       value: "contracts",
       label: `Contracts (${orgData?.noOfContracts || 0})`,
@@ -105,6 +118,18 @@ const IndividualProvidersPage = () => {
                 Add
               </MenuButton.Trigger>
               <MenuButton.Menu>
+                {IsAuthorized([Funders.CREATE]) && (
+                  <MenuButton.Item
+                    onClick={() =>
+                      showAddPartnerForm({
+                        orgId: orgId as string,
+                        type: "funder",
+                      })
+                    }
+                  >
+                    Partner
+                  </MenuButton.Item>
+                )}
                 <MenuButton.Item
                   onClick={() => showSetupContractModal({ providerId: orgId })}
                 >

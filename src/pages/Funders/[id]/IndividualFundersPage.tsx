@@ -114,7 +114,8 @@ const IndividualFundersPage = () => {
                     <MenuButton.Item
                       onClick={() =>
                         showAddPartnerForm({
-                          orgId: funderId,
+                          orgId: funderId as string,
+                          type: "provider",
                         })
                       }
                     >

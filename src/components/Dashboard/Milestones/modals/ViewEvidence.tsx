@@ -5,6 +5,7 @@ import { RiPencilFill as Pencil } from "react-icons/ri";
 
 import loader from "assets/images/icons/loader.svg";
 
+import { DEFAULT_DATE_FORMAT } from "lib/constants";
 import { IsAuthorized, Milestones } from "lib/role-permissions";
 import { IMilestone, TMilestoneEvidence } from "lib/types/milestones";
 import { formatDate, getStatusVariant } from "lib/utils";
@@ -103,18 +104,18 @@ function ViewEvidenceModal({ milestone, evidenceDetails }: TParams) {
               <InfoVertical label="Created at">
                 {formatDate(
                   new Date(evidenceData?.createdAt || ""),
-                  "MMMM dd, yyyy"
+                  DEFAULT_DATE_FORMAT
                 )}
               </InfoVertical>
-              <InfoVertical label="Description">
-                {evidenceData?.description}
-              </InfoVertical>
             </div>
+            <InfoVertical label="Description">
+              {evidenceData?.description}
+            </InfoVertical>
 
             {!isFileLoading && fileData ? (
               <InfoVertical label={`File: ${file?.filename}`}>
-                <div className="flex flex-col items-center">
-                  <div className="flex h-[calc(100vh-550px)] w-full items-center justify-center overflow-x-auto md:h-[calc(100vh-550px)]">
+                <div className="mx-auto flex flex-col items-center py-6">
+                  <div className="flex h-[calc(100vh-550px)] w-full max-w-[500px] items-center justify-center overflow-x-auto md:h-[calc(100vh-550px)]">
                     {fileData && (
                       <>
                         <iframe

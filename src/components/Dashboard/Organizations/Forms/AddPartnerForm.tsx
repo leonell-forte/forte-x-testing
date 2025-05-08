@@ -3,8 +3,13 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import useOrganizationList from "lib/common/lists/useOrganizationList";
+import usePartnerList from "lib/common/lists/usePartnerList";
 import { usePartnerMutation } from "lib/mutations/partners";
-import { IOrganization, PartnerFieldTypes } from "lib/types/organizations";
+import {
+  IOrganization,
+  OrgTypes,
+  PartnerFieldTypes,
+} from "lib/types/organizations";
 import { partner } from "lib/validators/organizations";
 
 import { queryClient } from "components/QueryProvider";
@@ -16,19 +21,22 @@ import { Form } from "components/ui/form/Form";
 
 import { IOrganizationDialogueProps } from "../Dialogues/OrganizationDialogue";
 
-type AddPartnerFormProps = IOrganizationDialogueProps;
+type AddPartnerFormProps = IOrganizationDialogueProps & {
+  orgId: string;
+  type: OrgTypes;
+};
 
 const labelClass = "min-w-[160px]";
 
-export const showAddPartnerForm = ({ orgId }: AddPartnerFormProps) => {
+export const showAddPartnerForm = ({ orgId, type }: AddPartnerFormProps) => {
   useModal.getState().open({
-    component: <AddPartnerForm orgId={orgId} />,
+    component: <AddPartnerForm orgId={orgId} type={type} />,
     title: "Add Partner",
     size: "2xl",
   });
 };
 
-const AddPartnerForm = ({ orgId, ...props }: AddPartnerFormProps) => {
+const AddPartnerForm = ({ orgId, type, ...props }: AddPartnerFormProps) => {
   const form = useForm<PartnerFieldTypes>({
     resolver: zodResolver(partner.schema),
     defaultValues: partner.defaultValues(Number(orgId)),
@@ -39,12 +47,27 @@ const AddPartnerForm = ({ orgId, ...props }: AddPartnerFormProps) => {
   const {
     control,
     formState: { isDirty },
+    watch,
   } = form;
+
+  const { partners: existingPartners } = usePartnerList(orgId);
+
+  const selectedPartners = watch("partner");
 
   const { organizations, isLoading: orgLoading } = useOrganizationList({
     key: ["dropdown"],
+    filters: {
+      type: type,
+    },
     pageSize: 1000,
   });
+
+  const filteredOrgs = organizations.filter(
+    (org) =>
+      !existingPartners?.some(
+        (partner) => partner.partner.id.toString() === org.value
+      )
+  );
 
   const { addPartner, isPending } = usePartnerMutation({
     orgId,
@@ -57,7 +80,10 @@ const AddPartnerForm = ({ orgId, ...props }: AddPartnerFormProps) => {
       queryClient.setQueryData(
         ["specific org", orgId],
         (prev: IOrganization): IOrganization => {
-          return { ...prev, noOfPartners: prev.noOfPartners! + 1 };
+          return {
+            ...prev,
+            noOfPartners: prev.noOfPartners! + selectedPartners.length,
+          };
         }
       );
       close();
@@ -93,7 +119,7 @@ const AddPartnerForm = ({ orgId, ...props }: AddPartnerFormProps) => {
                   field.onChange(val);
                 }}
                 loading={orgLoading}
-                options={organizations}
+                options={filteredOrgs}
                 placeholder="Select partner"
                 filterOptions
               />
