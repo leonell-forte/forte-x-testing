@@ -179,7 +179,10 @@ export default function ViewMilestone() {
                   <Cards.Card
                     onClick={(e) => {
                       e.stopPropagation();
-                      alert("open view evidence");
+                      showViewEvidenceModal({
+                        milestone,
+                        evidenceDetails: item,
+                      });
                     }}
                     key={index}
                   >
@@ -231,6 +234,7 @@ export default function ViewMilestone() {
                                   item.file.filename
                                 );
                               }}
+                              disabled={!IsAuthorized([Milestones.DOWNLOAD])}
                             >
                               Download
                             </DropdownMenuItem>
@@ -239,6 +243,7 @@ export default function ViewMilestone() {
                                 e.stopPropagation();
                                 handleDelete(item.beneficiary.id, item.id);
                               }}
+                              disabled={!IsAuthorized([Milestones.DELETE])}
                             >
                               Delete
                             </DropdownMenuItem>
@@ -323,6 +328,7 @@ export default function ViewMilestone() {
                                   item.file.filename
                                 );
                               }}
+                              disabled={!IsAuthorized([Milestones.DOWNLOAD])}
                             >
                               Download
                             </DropdownMenuItem>
@@ -331,6 +337,7 @@ export default function ViewMilestone() {
                                 e.stopPropagation();
                                 handleDelete(item.beneficiary.id, item.id);
                               }}
+                              disabled={!IsAuthorized([Milestones.DELETE])}
                             >
                               Delete
                             </DropdownMenuItem>
