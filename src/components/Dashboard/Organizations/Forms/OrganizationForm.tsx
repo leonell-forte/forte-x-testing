@@ -9,6 +9,7 @@ import { FREQUENCY, REGIONS, STATUS } from "lib/constants";
 import useOrganizationMutation from "lib/mutations/organizations";
 import { Funders, IsAuthorized, Providers } from "lib/role-permissions";
 import { OrgStatus, OrganizationFieldTypes } from "lib/types/organizations";
+import { useAutofocus } from "lib/useAutoFocus";
 import { organizations } from "lib/validators/organizations";
 
 import Button from "components/ui/button";
@@ -139,6 +140,8 @@ const OrganizationForm = ({
       setShowPromptOnClose(false);
     };
   }, [isDirty, setShowPromptOnClose]);
+
+  const buttonRef = useAutofocus<HTMLButtonElement>();
 
   return (
     <>
@@ -407,7 +410,11 @@ const OrganizationForm = ({
                   </Button>
                 </>
               ) : (
-                <Button type="button" onClick={() => setEditMode(true)}>
+                <Button
+                  type="button"
+                  onClick={() => setEditMode(true)}
+                  ref={buttonRef}
+                >
                   Edit
                 </Button>
               )}

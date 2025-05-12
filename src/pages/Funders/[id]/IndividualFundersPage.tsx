@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import organizationService from "api/organization";
+import { HiPlus } from "react-icons/hi2";
 import { useParams } from "react-router-dom";
 
 import { ReactComponent as Add } from "assets/images/icons/add.svg";
@@ -19,6 +20,12 @@ import { showProjectDialogue } from "components/Dashboard/Projects/Dialogues/Pro
 import { BreadCrumb } from "components/ui/breadcrumb/Breadcrumb";
 import Button from "components/ui/button";
 import Details from "components/ui/details";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "components/ui/dropdown-menu/DropdownMenu";
 import MenuButton from "components/ui/menu-button";
 import Spinner from "components/ui/spinner/spinner";
 import Status from "components/ui/status";
@@ -104,14 +111,20 @@ const IndividualFundersPage = () => {
                 <Edit />
                 Edit
               </Button>
-              <MenuButton.Container>
-                <MenuButton.Trigger>
-                  <Add />
-                  Add
-                </MenuButton.Trigger>
-                <MenuButton.Menu>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button>
+                    <Add />
+                    Add
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="center"
+                  side="bottom"
+                  sideOffset={1}
+                >
                   {IsAuthorized([Providers.CREATE]) && (
-                    <MenuButton.Item
+                    <DropdownMenuItem
                       onClick={() =>
                         showAddPartnerForm({
                           orgId: funderId as string,
@@ -120,27 +133,27 @@ const IndividualFundersPage = () => {
                       }
                     >
                       Partner
-                    </MenuButton.Item>
+                    </DropdownMenuItem>
                   )}
-                  <MenuButton.Item
+                  <DropdownMenuItem
                     onClick={() => showProjectDialogue({ funderId })}
                   >
                     Project
-                  </MenuButton.Item>
-                  <MenuButton.Item
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
                     onClick={() =>
                       showSetupContractModal({ funderId: funderId })
                     }
                   >
                     Contract
-                  </MenuButton.Item>
-                  <MenuButton.Item
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
                     onClick={() => showSetupBeneficiaryModal({ funderId })}
                   >
                     Beneficiary
-                  </MenuButton.Item>
-                </MenuButton.Menu>
-              </MenuButton.Container>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
 

@@ -139,19 +139,26 @@ function ViewEvidenceModal({ milestone, evidenceDetails }: TParams) {
                     )}
 
                     {isFileLoading && (
-                      <img
-                        src={loader}
-                        alt="loader"
-                        className="absolute w-10 animate-spin"
-                      />
+                      <>
+                        <img
+                          src={loader}
+                          alt=""
+                          className="absolute w-10 animate-spin"
+                        />
+                        <span className="sr-only">Loading file</span>
+                      </>
                     )}
                   </div>
                 </div>
               </InfoVertical>
             ) : null}
             {isFileLoading ? (
-              <div className="flex h-[250px] w-full items-center justify-center">
+              <div
+                className="flex h-[250px] w-full items-center justify-center"
+                aria-hidden="true"
+              >
                 <Spinner />
+                <span className="sr-only">Loading file</span>
               </div>
             ) : null}
             <div className="flex justify-end">

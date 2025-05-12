@@ -162,7 +162,7 @@ const useContractMutation = ({
 };
 
 export const useDeleteContractMutation = (
-  id: string,
+  id?: string,
   succesCallback?: () => void,
   funderId?: string,
   projectId?: number

@@ -228,6 +228,7 @@ const BeneficiariesTable = ({
                         label="Name"
                         labelClass="!text-white text-base font-semibold translate-x-[-4px]"
                         onChange={handleSelectAll}
+                        tabIndex={-1}
                       />
                     </div>
                   ) : (
@@ -275,6 +276,7 @@ const BeneficiariesTable = ({
                     e.stopPropagation();
                     navigate(`/beneficiaries/${id}`);
                   }}
+                  ariaLabel={`Beneficiary name: ${firstName} ${lastName}`}
                 >
                   <Table.Data className="!px-4">
                     <div className="flex items-center gap-2">
@@ -284,6 +286,7 @@ const BeneficiariesTable = ({
                           onClick={(e) => e.stopPropagation()}
                         >
                           <Checkbox
+                            tabIndex={-1}
                             labelClass="text-[14px]"
                             checked={selectedIds.includes(id)}
                             onChange={(e) => {
@@ -334,7 +337,14 @@ const BeneficiariesTable = ({
                           onClick={() => handleDelete(id)}
                           className="group"
                         >
-                          <Trash className="h-auto w-4 transition-all group-hover:fill-mint" />
+                          <Trash
+                            className="h-auto w-5 transition group-hover:fill-mint group-focus:fill-mint group-focus:outline-white"
+                            aria-hidden="true"
+                            role="presentation"
+                          />
+                          <span className="sr-only">
+                            Delete {firstName} {lastName}
+                          </span>
                         </Button>
                       </div>
                     )}

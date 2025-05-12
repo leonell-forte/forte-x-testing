@@ -1,9 +1,12 @@
+import { capitalize } from "lodash";
 import { useCallback, useMemo, useState } from "react";
+import React from "react";
 import { FaTrash as Trash } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 
 import { ReactComponent as Pencil } from "assets/images/icons/pencil.svg";
 
+import { useDeleteContractMutation } from "lib/mutations/contracts";
 import { Contracts, IsAuthorized } from "lib/role-permissions";
 import { IContract } from "lib/types/contracts";
 import { getStatusVariant } from "lib/utils";
@@ -11,6 +14,7 @@ import { getStatusVariant } from "lib/utils";
 import DeleteDialogue from "components/Dashboard/Contracts/Dialogues/DeleteDialogue";
 import { showSetupContractModal } from "components/Dashboard/Contracts/SetupContract";
 import { useProfile } from "components/ProfileContext";
+import { useCustomPrompt } from "components/ui/alert/custom-prompt";
 import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import Status from "components/ui/status";
 import Table from "components/ui/table";
@@ -44,38 +48,28 @@ const ContractsTable = ({
     [list]
   );
 
-  const [modal, setModal] = useState<"contract" | "delete" | null>(null);
+  const { deleteContract } = useDeleteContractMutation(
+    String(contractId),
+    undefined,
+    orgId,
+    projectId
+  );
 
-  const close = () => {
-    setContractId(null);
-
-    setModal(null);
-  };
-
-  const renderDialog = useCallback(() => {
-    switch (modal) {
-      case "delete":
-        return (
-          <DeleteDialogue
-            id={contractId?.toString() || ""}
-            projectId={projectId}
-            orgId={orgId}
-            isVisible={modal === "delete"}
-            handleClose={close}
-          />
-        );
-    }
-  }, [modal, contractId, orgId, projectId]);
+  const { open } = useCustomPrompt();
 
   const handleDeleteContract = (id: number) => {
-    setModal("delete");
-
     setContractId(id);
+    open({
+      title: "Delete Contract",
+      subText:
+        "Are you sure that you want to delete this contract? When you delete a contract, its beneficiaries will no longer be related to the contract.",
+      onYes: () => deleteContract(String(id)),
+      yesLabel: "Proceed",
+    });
   };
 
   return (
     <>
-      {renderDialog()}
       <div className="lg:hidden">
         <Cards.Container isLoading={isLoading}>
           {contracts.map((item, index) => {
@@ -203,12 +197,12 @@ const ContractsTable = ({
                     IsAuthorized([Contracts.UPDATE, Contracts.NAVIGATE])
                       ? (e) => {
                           e.stopPropagation();
-
                           navigate(`/contracts/${id}`);
                         }
                       : undefined
                   }
                   key={index}
+                  ariaLabel={`Contract name: ${name}`}
                 >
                   <Table.Data>{id}</Table.Data>
 
@@ -223,7 +217,7 @@ const ContractsTable = ({
 
                   <Table.Data className="capitalize">
                     <Status variant={getStatusVariant(status)}>
-                      {status.toLowerCase()}
+                      {capitalize(status)}
                     </Status>
                   </Table.Data>
 
@@ -235,17 +229,20 @@ const ContractsTable = ({
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
-
+                            e.preventDefault();
                             showSetupContractModal({
                               contract: item,
                             });
                           }}
-                          className="h-6 w-6"
+                          className="group h-6 w-6"
                         >
                           <Pencil
                             fill="white"
-                            className="h-auto w-4 transition-all group-hover:fill-mint"
+                            className="h-auto w-4 ring-white ring-offset-1 transition-all group-hover:fill-mint group-focus:fill-mint group-focus:ring-1"
+                            aria-hidden="true"
+                            role="presentation"
                           />
+                          <span className="sr-only">Edit {name}</span>
                         </button>
                       )}
                       {IsAuthorized([Contracts.DELETE]) &&
@@ -257,9 +254,14 @@ const ContractsTable = ({
                               e.stopPropagation();
                               handleDeleteContract(id!);
                             }}
-                            className="h-6 w-6"
+                            className="group h-6 w-6"
                           >
-                            <Trash className="h-auto w-4 transition-all group-hover:fill-mint" />
+                            <Trash
+                              className="h-auto w-4 ring-white ring-offset-1 transition-all group-hover:fill-mint group-focus:fill-mint group-focus:ring-1"
+                              aria-hidden="true"
+                              role="presentation"
+                            />
+                            <span className="sr-only">Delete {name}</span>
                           </button>
                         )}
                     </div>

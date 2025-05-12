@@ -162,8 +162,10 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
         {type === "password" && (
           <button
             type="button"
-            onClick={() => setShow((prev) => !prev)}
+            onClick={(e) => setShow((prev) => !prev)}
             className="absolute right-4 top-3.5 w-4"
+            aria-hidden="true"
+            tabIndex={-1}
           >
             <img alt="eye" src={show ? eyeOpen : eyeClosed} />
           </button>

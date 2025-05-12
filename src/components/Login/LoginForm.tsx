@@ -88,45 +88,73 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
   }, [userEmail, setValue]);
 
   return (
-    <div className="w-full">
-      <Form form={form} onSubmit={onSubmit} className="w-full space-y-12">
-        <div className="mt-10 flex w-full flex-col gap-[15px]">
+    <div className="w-full" role="main">
+      <Form
+        form={form}
+        onSubmit={onSubmit}
+        className="w-full space-y-12"
+        aria-label="Login Form"
+        noValidate
+      >
+        <div
+          className="mt-10 flex w-full flex-col gap-[15px]"
+          role="group"
+          aria-label="Login Credentials"
+        >
           <Controller
             name="email"
             control={control}
-            render={({ field }) => (
-              <Input
-                {...field}
-                autoCapitalize="email"
-                label="Email"
-                autoComplete="off"
-              />
+            render={({ field, fieldState: { error } }) => (
+              <div role="presentation">
+                <Input
+                  {...field}
+                  id="email-input"
+                  type="email"
+                  label="Email Address"
+                  autoComplete="email"
+                  aria-required="true"
+                  aria-invalid={error ? "true" : "false"}
+                  aria-describedby={error ? "email-error" : undefined}
+                />
+              </div>
             )}
           />
 
           <Controller
             name="password"
             control={control}
-            render={({ field }) => (
-              <Input
-                {...field}
-                label="Password"
-                type="password"
-                autoComplete="off"
-              />
+            render={({ field, fieldState: { error } }) => (
+              <div role="presentation">
+                <Input
+                  {...field}
+                  id="password-input"
+                  label="Password"
+                  type="password"
+                  autoComplete="current-password"
+                  aria-required="true"
+                  aria-invalid={error ? "true" : "false"}
+                  aria-describedby={error ? "password-error" : undefined}
+                />
+              </div>
             )}
           />
 
-          <div className="flex items-center justify-between pl-1">
+          <div
+            className="flex items-center justify-between pl-1"
+            role="group"
+            aria-label="Additional Options"
+          >
             <Controller
               name="remember"
               control={control}
               render={({ field }) => (
                 <Checkbox
+                  id="remember-me"
                   checked={field.value}
                   onChange={(e) => field.onChange(e.target.checked)}
                   label="Remember me"
                   white
+                  aria-label="Remember me on this device"
                 />
               )}
             />
@@ -134,27 +162,53 @@ const LoginForm = ({ handleNext }: ILoginProps) => {
             <Link
               to="/forgot-password"
               className="link-hover flex-shrink-0 whitespace-normal pt-1 text-[12px] text-grey"
+              aria-label="Forgot password? Click to reset"
             >
               Forgot password?
             </Link>
           </div>
         </div>
 
-        <div className="mx-auto w-full max-w-[22rem] space-y-[15px] text-center">
-          <Button type="submit" fullWidth loading={loading}>
-            Log in
+        <div
+          className="mx-auto w-full max-w-[22rem] space-y-[15px] text-center"
+          role="group"
+          aria-label="Login Options"
+        >
+          <Button
+            type="submit"
+            fullWidth
+            loading={loading}
+            disabled={loading}
+            aria-busy={loading}
+            aria-label={
+              loading ? "Logging in..." : "Log in with your credentials"
+            }
+          >
+            {loading ? "Logging in..." : "Log in"}
           </Button>
 
-          <div className="flex items-center gap-4">
-            <hr className="w-full" />
-
-            <p className="text-[14px]">OR</p>
-
-            <hr className="w-full" />
+          <div
+            className="flex items-center gap-4"
+            role="separator"
+            aria-label="or separator"
+          >
+            <hr className="w-full" aria-hidden="true" />
+            <p className="text-[14px]" aria-hidden="true">
+              OR
+            </p>
+            <hr className="w-full" aria-hidden="true" />
           </div>
 
-          <Button type="button" fullWidth buttonType="secondary">
-            Log in with Google{" "}
+          <Button
+            type="button"
+            fullWidth
+            buttonType="secondary"
+            onClick={() => {
+              /* Google login handler */
+            }}
+            aria-label="Log in with Google account"
+          >
+            Log in with Google
           </Button>
         </div>
       </Form>

@@ -1,4 +1,4 @@
-import { Dialog, DialogPanel } from "@headlessui/react";
+import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import React, { ReactNode } from "react";
 import { create } from "zustand";
 
@@ -55,47 +55,58 @@ const ModalMarker = () => {
     }
     close();
   };
-  return (
-    <Dialog
-      open={isOpen}
-      as="div"
-      className="relative z-40 focus:outline-none"
-      onClose={onClose}
-      transition
-    >
-      <div className="fixed inset-0 z-10 w-screen overflow-y-auto bg-black/80">
-        <div className="flex min-h-full items-center justify-center">
-          <DialogPanel
-            transition
-            className={cn(
-              "data-[closed]:transform-[scale(95%)] relative my-4 min-h-screen w-full bg-[#30F1FF1F] p-6 drop-shadow-sm backdrop-blur duration-300 ease-out data-[closed]:opacity-0 md:h-full md:min-h-fit md:rounded-5 md:p-14",
-              MAP_SIZE_CLASS[config?.size || "base"],
-              config?.panelClassName
-            )}
-          >
-            <button
-              type="button"
-              onClick={onClose}
-              className="group absolute right-6 top-6"
-            >
-              <X className="w-[14px] transition-all group-hover:fill-mint" />
-            </button>
-            {typeof config?.title !== "undefined" && (
-              <div
-                className={cn(
-                  "text-[24px] font-semibold",
-                  config?.titleClassName
-                )}
-              >
-                {config?.title}
-              </div>
-            )}
 
-            <div className="mt-6">{config?.component}</div>
-          </DialogPanel>
+  return (
+    <>
+      <Dialog
+        open={isOpen}
+        as="div"
+        className="relative z-40 focus:outline-none"
+        onClose={onClose}
+        transition
+      >
+        <div
+          className="fixed inset-0 z-10 w-screen overflow-y-auto bg-black/80"
+          aria-hidden="true"
+        >
+          <div className="flex min-h-full items-center justify-center">
+            <DialogPanel
+              transition
+              className={cn(
+                "data-[closed]:transform-[scale(95%)] relative my-4 min-h-screen w-full bg-[#30F1FF1F] p-6 drop-shadow-sm backdrop-blur duration-300 ease-out data-[closed]:opacity-0 md:h-full md:min-h-fit md:rounded-5 md:p-14",
+                MAP_SIZE_CLASS[config?.size || "base"],
+                config?.panelClassName
+              )}
+            >
+              <button
+                type="button"
+                onClick={onClose}
+                className="group absolute right-6 top-6 ring-offset-1 focus:outline-2 focus:outline-white focus:ring-1 focus:ring-white"
+                aria-label="Close modal"
+              >
+                <X
+                  className="w-[14px] transition-all group-hover:fill-mint group-focus:fill-mint"
+                  aria-hidden="true"
+                />
+              </button>
+
+              {typeof config?.title !== "undefined" && (
+                <DialogTitle
+                  className={cn(
+                    "text-[24px] font-semibold",
+                    config?.titleClassName
+                  )}
+                >
+                  {config?.title}
+                </DialogTitle>
+              )}
+
+              <div className="mt-6">{config?.component}</div>
+            </DialogPanel>
+          </div>
         </div>
-      </div>
-    </Dialog>
+      </Dialog>
+    </>
   );
 };
 

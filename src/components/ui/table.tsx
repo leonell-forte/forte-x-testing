@@ -7,7 +7,9 @@ import { Tooltip } from "./tooltip/Tooltip";
 
 interface ITableProp extends TableHTMLAttributes<HTMLTableElement> {}
 
-interface ITableRowProps extends TableHTMLAttributes<HTMLTableRowElement> {}
+interface ITableRowProps extends TableHTMLAttributes<HTMLTableRowElement> {
+  ariaLabel?: string;
+}
 
 interface ITableHeadProps extends TableHTMLAttributes<HTMLHeadElement> {}
 
@@ -49,18 +51,29 @@ const Table = {
 
     if (emptyConfig?.status && !isLoading) {
       return (
-        <div className="mx-auto space-y-2 py-12 text-center">
+        <div
+          className="mx-auto space-y-2 py-12 text-center"
+          role="alert"
+          aria-label="No data available"
+        >
           <img
             src={search}
-            alt=""
+            alt="No data illustration"
             loading="lazy"
             className="mx-auto max-w-[200px]"
           />
-          <p className="text-[20px] font-semibold">
+          <p
+            className="text-[20px] font-semibold"
+            role="heading"
+            aria-level={2}
+          >
             {emptyConfig?.title || "No data yet"}
           </p>
           {emptyConfig.description && (
-            <p className="mx-auto max-w-[200px] font-light">
+            <p
+              className="mx-auto max-w-[200px] font-light"
+              aria-description={emptyConfig.description}
+            >
               {emptyConfig?.description}
             </p>
           )}
@@ -69,9 +82,19 @@ const Table = {
     }
 
     return (
-      <div className={classNames("w-full pb-1", props.className)}>
+      <div
+        className={classNames("w-full pb-1", props.className)}
+        role="region"
+        aria-label="Data table container"
+      >
         <div ref={tableRef} className="relative w-full">
-          <table {...props} className="w-full">
+          <table
+            {...props}
+            className="w-full"
+            role="table"
+            aria-busy={isLoading}
+            aria-label={props["aria-label"] || "Data table"}
+          >
             {children}
             {isLoading && (
               <tbody>
@@ -80,12 +103,16 @@ const Table = {
                     <tr
                       key={`row-${rowIndex}`}
                       className="border-b border-white/50 last:border-0"
+                      role="row"
+                      aria-label="Loading row"
                     >
                       {Array.from({ length: loadingConfig.columns }).map(
                         (_, colIndex) => (
                           <td
                             key={`cell-${rowIndex}-${colIndex}`}
                             className="p-4"
+                            role="cell"
+                            aria-label="Loading cell"
                           >
                             <div
                               className={`h-6 animate-pulse rounded-md bg-white/30 ${
@@ -95,6 +122,8 @@ const Table = {
                                     ? "w-1/2"
                                     : "w-full"
                               }`}
+                              role="presentation"
+                              aria-hidden="true"
                             />
                           </td>
                         )
@@ -116,9 +145,9 @@ const Table = {
         {...props}
         className={classNames(
           "truncate border-b border-white/50 text-left",
-
           props.className
         )}
+        aria-label="Table header"
       >
         {children}
       </thead>
@@ -126,18 +155,31 @@ const Table = {
   },
 
   Body: ({ children }: ITableProp) => {
-    return <tbody>{children}</tbody>;
+    return <tbody aria-label="Table body">{children}</tbody>;
   },
 
-  Row: ({ children, onClick }: ITableRowProps) => {
+  Row: ({ children, onClick, ariaLabel }: ITableRowProps) => {
     return (
       <tr
         className={classNames(
           "w-full",
           onClick &&
-            "cursor-pointer transition-all hover:bg-slate-50 hover:bg-opacity-5"
+            "cursor-pointer transition-all hover:bg-slate-50 hover:bg-opacity-5 focus:outline-1 focus:outline-white"
         )}
         onClick={onClick}
+        role="row"
+        tabIndex={onClick ? 0 : undefined}
+        onKeyDown={(e) => {
+          if (
+            onClick &&
+            (e.key === "Enter" || e.key === " ") &&
+            !((e.target as HTMLElement).tagName === "BUTTON")
+          ) {
+            e.preventDefault();
+            onClick(e as any);
+          }
+        }}
+        aria-label={`${ariaLabel} row` || "Table row"}
       >
         {children}
       </tr>
@@ -156,7 +198,11 @@ const Table = {
     }, [children]);
 
     const content = (
-      <div ref={textRef} className={classNames(className, "truncate px-6")}>
+      <div
+        ref={textRef}
+        className={classNames(className, "truncate px-6")}
+        role="presentation"
+      >
         {children}
       </div>
     );
@@ -165,9 +211,22 @@ const Table = {
       <td
         className="h-[50px] max-w-[300px] border-b border-white/50 text-base font-[300]"
         {...props}
+        role="cell"
+        aria-label={typeof children === "string" ? children : undefined}
+        title={
+          isOverflowed
+            ? typeof children === "string"
+              ? children
+              : ""
+            : undefined
+        }
       >
         {isOverflowed ? (
-          <Tooltip title={children} placement="top">
+          <Tooltip
+            title={children}
+            placement="top"
+            aria-hidden="true" // Hide tooltip from screen readers as content is already accessible
+          >
             {content}
           </Tooltip>
         ) : (
@@ -185,6 +244,9 @@ const Table = {
           "h-[50px] truncate px-6 text-base font-semibold text-white",
           props.className
         )}
+        role="columnheader"
+        scope="col"
+        aria-label={typeof children === "string" ? children : undefined}
       >
         {children}
       </th>

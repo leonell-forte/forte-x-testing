@@ -174,6 +174,7 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
                         }
                       : undefined
                   }
+                  ariaLabel={`User: ${firstName} ${lastName}`}
                   key={bodyIndex}
                 >
                   <Table.Data>{firstName}</Table.Data>
@@ -204,7 +205,14 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
                           }}
                           className="group"
                         >
-                          <Trash className="h-auto w-5 transition-all group-hover:fill-mint" />
+                          <Trash
+                            className="h-auto w-5 transition group-hover:fill-mint group-focus:fill-mint group-focus:outline-white"
+                            aria-hidden="true"
+                            role="presentation"
+                          />
+                          <span className="sr-only">
+                            Delete {firstName} {lastName}
+                          </span>
                         </Button>
                       </div>
                     )}

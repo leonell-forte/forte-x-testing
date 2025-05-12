@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "components/ui/dropdown-menu/DropdownMenu";
 
-import ViewProfileDialogue from "./ViewProfileDialogue";
+import { showProfileModal } from "./ViewProfileDialogue";
 
 const MobileUserDropdown = () => {
   const { profile } = useProfile();
@@ -36,17 +36,6 @@ const MobileUserDropdown = () => {
 
   return (
     <>
-      {showModal && profile?.id && (
-        <ViewProfileDialogue
-          organizations={organizations?.items || []}
-          userId={String(profile.id)}
-          isVisible={showModal}
-          handleClose={() => {
-            setShowModal(false);
-          }}
-        />
-      )}
-
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button className="group flex w-full cursor-pointer items-center gap-2 overflow-hidden rounded p-3 pl-1.5 pr-4 transition-all duration-500 hover:bg-white hover:bg-opacity-[30%]">
@@ -66,7 +55,14 @@ const MobileUserDropdown = () => {
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" side="top" sideOffset={12}>
-          <DropdownMenuItem onClick={handleViewProfile}>
+          <DropdownMenuItem
+            onClick={() =>
+              showProfileModal({
+                userId: profile.id,
+                organizations: organizations?.items,
+              })
+            }
+          >
             Profile
           </DropdownMenuItem>
           <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>

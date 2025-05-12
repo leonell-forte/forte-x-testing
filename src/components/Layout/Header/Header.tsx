@@ -31,7 +31,7 @@ const Header = () => {
 
         <Link to={REDIRECT_PATHS[profile.role!]}>
           <img
-            alt="logo"
+            alt="forte logo"
             src="/logo.png"
             className="hidden max-w-[98px] lg:block"
           />

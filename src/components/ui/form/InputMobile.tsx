@@ -66,7 +66,7 @@ const InputMobile = ({
               }}
               disabled={disabled}
               className={cn(
-                "flex h-[40.13px] w-full items-center justify-between rounded-lg border px-3 py-2 text-sm leading-4 disabled:cursor-not-allowed sm:text-base",
+                "flex h-[40.13px] w-full items-center justify-between rounded-lg border border-[#e5e7eb]/40 px-3 py-2 text-sm leading-4 hover:border-white focus:border-white disabled:cursor-not-allowed sm:text-base",
                 readOnly ? "pointer-events-none cursor-pointer" : ""
               )}
             >
@@ -81,7 +81,10 @@ const InputMobile = ({
               />
             </button>
           </PopoverTrigger>
-          <PopoverContent onPointerDownOutside={(e) => e.stopPropagation()}>
+          <PopoverContent
+            onPointerDownOutside={(e) => e.stopPropagation()}
+            className="w-[280px]"
+          >
             {defaultCountries.map((c, idx) => {
               const mCountry = parseCountry(c);
               return (
@@ -98,7 +101,7 @@ const InputMobile = ({
                     <div className="flex items-center gap-1.5">
                       <div
                         className={classNames(
-                          "text-sm",
+                          "text-left text-sm",
                           country.iso2 === mCountry.iso2
                             ? "text-[#2ca373]"
                             : "text-black transition group-hover:text-black/60"
@@ -123,8 +126,8 @@ const InputMobile = ({
         name={name}
         type="tel"
         className={classNames(
-          "h-[40.13px] w-full rounded-lg border bg-transparent px-3 py-2 text-sm leading-4 sm:text-base",
-          "focus:outline-none disabled:border-disabled",
+          "h-[40.13px] w-full rounded-lg border border-[#e5e7eb]/40 bg-transparent px-3 py-2 text-sm leading-4 hover:border-white sm:text-base",
+          "focus:border-white focus:outline-none disabled:border-disabled",
           "focus:border-selected text-white placeholder:text-white/70"
         )}
         placeholder={readOnly ? "-" : placeholder || label}

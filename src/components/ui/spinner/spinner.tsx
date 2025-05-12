@@ -8,7 +8,12 @@ interface IProp {
 
 const Spinner = ({ dark }: IProp) => {
   return (
-    <div className={classNames(styles["container"], dark && styles["-dark"])}>
+    <div
+      className={classNames(styles["container"], dark && styles["-dark"])}
+      role="status"
+      aria-live="polite"
+      aria-label="loading"
+    >
       <div className={styles["dot"]}></div>
 
       <div className={styles["dot"]}></div>

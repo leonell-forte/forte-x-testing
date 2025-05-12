@@ -14,6 +14,7 @@ const Card = ({ className, children }: ICardProp) => {
         className,
         "card rounded-0 bg-white/20 shadow backdrop-blur-xl lg:rounded-[30px]"
       )}
+      role="region"
     >
       {children}
     </div>

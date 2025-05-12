@@ -12,6 +12,7 @@ import { formatCurrency } from "lib/utils";
 import DeleteDialogue from "components/Dashboard/Projects/Dialogues/DeleteDialogue";
 import { showProjectDialogue } from "components/Dashboard/Projects/Dialogues/ProjectDialogue";
 import Button from "components/ui/button";
+import ReferenceLink from "components/ui/reference-link/ReferenceLink";
 import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
@@ -178,18 +179,14 @@ const ProjectsTable = ({
                     navigate(`/projects/${id}`);
                   }}
                   key={bodyIndex}
+                  ariaLabel={`${name} Project`}
                 >
                   <Table.Data>{name}</Table.Data>
 
                   <Table.Data>
-                    <Link
-                      onClick={(e) => e.stopPropagation()}
-                      to={`/funders/${funder?.id}`}
-                      className="flex items-center gap-2"
-                    >
-                      <p>{funder?.name}</p>
-                      <LinkIcon />
-                    </Link>
+                    <ReferenceLink hrefLink={`/funders/${funder?.id}`}>
+                      {funder?.name}
+                    </ReferenceLink>
                   </Table.Data>
 
                   <Table.Data>{formatCurrency(Number(budget))}</Table.Data>
@@ -216,7 +213,12 @@ const ProjectsTable = ({
                           }
                           className="icon group"
                         >
-                          <Pencil className="h-auto w-5 transition-all group-hover:fill-mint" />
+                          <Pencil
+                            className="h-auto w-5 transition-all group-hover:fill-mint group-focus:fill-mint"
+                            aria-hidden="true"
+                            role="presentation"
+                          />
+                          <span className="sr-only">Edit {name}</span>
                         </Button>
                       )}
 
@@ -233,7 +235,12 @@ const ProjectsTable = ({
                           }}
                           className="icon group"
                         >
-                          <Trash className="h-auto w-4 transition-all group-hover:fill-mint" />{" "}
+                          <Trash
+                            className="h-auto w-4 transition-all group-hover:fill-mint group-focus:fill-mint"
+                            aria-hidden="true"
+                            role="presentation"
+                          />{" "}
+                          <span className="sr-only">Delete {name}</span>
                         </Button>
                       )}
                     </div>

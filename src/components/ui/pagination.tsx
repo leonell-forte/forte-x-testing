@@ -42,7 +42,6 @@ const Pagination = ({
   const { start, end } = calculatePageRange(currentPage, pageSize, total);
   const [currentSet, setCurrentSet] = useState(Math.ceil(currentPage / 5));
 
-  // Update the set when currentPage changes externally
   useEffect(() => {
     setCurrentSet(Math.ceil(currentPage / 5));
   }, [currentPage]);
@@ -50,10 +49,8 @@ const Pagination = ({
   const handlePageChange = (page: number) => {
     if (page < 1 || page > totalPages) return;
 
-    // Calculate which set this page belongs to
     const newSet = Math.ceil(page / 5);
 
-    // Update the current set if needed
     if (newSet !== currentSet) {
       setCurrentSet(newSet);
     }
@@ -64,7 +61,32 @@ const Pagination = ({
     }
   };
 
-  // Get the visible pages for the current set
+  const handleKeyDown = (event: React.KeyboardEvent, targetPage: number) => {
+    switch (event.key) {
+      case "Enter":
+      case " ":
+        event.preventDefault();
+        handlePageChange(targetPage);
+        break;
+      case "ArrowLeft":
+        event.preventDefault();
+        if (currentPage > 1) handlePageChange(currentPage - 1);
+        break;
+      case "ArrowRight":
+        event.preventDefault();
+        if (currentPage < totalPages) handlePageChange(currentPage + 1);
+        break;
+      case "Home":
+        event.preventDefault();
+        handlePageChange(1);
+        break;
+      case "End":
+        event.preventDefault();
+        handlePageChange(totalPages);
+        break;
+    }
+  };
+
   const getVisiblePages = (): number[] => {
     const startPage = (currentSet - 1) * 5 + 1;
     const endPage = Math.min(startPage + 4, totalPages);
@@ -78,50 +100,66 @@ const Pagination = ({
   const visiblePages = getVisiblePages();
 
   return (
-    <div className="flex w-full flex-col items-center justify-center gap-y-3 pt-4">
+    <nav
+      role="navigation"
+      aria-label="Pagination"
+      className="flex w-full flex-col items-center justify-center gap-y-3 pt-4"
+    >
       {totalPages > 1 ? (
-        <div className="flex items-center justify-center gap-2 rounded-lg">
+        <div
+          className="flex items-center justify-center gap-2 rounded-lg"
+          role="group"
+        >
           <button
-            className="flex h-8 w-7 items-center justify-center rounded-md border border-white/10 text-white transition-colors hover:bg-[#1a2b32] disabled:cursor-not-allowed disabled:opacity-40"
+            className="flex h-8 w-7 items-center justify-center rounded-md border border-white/10 text-white transition-colors hover:bg-[#1a2b32] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-not-allowed disabled:opacity-40"
             onClick={() => handlePageChange(currentPage - 1)}
+            onKeyDown={(e) => handleKeyDown(e, currentPage - 1)}
             disabled={currentPage === 1}
+            aria-label="Previous page"
+            aria-disabled={currentPage === 1}
           >
-            <HiChevronLeft className="h-5 w-5" />
+            <HiChevronLeft className="h-5 w-5" aria-hidden="true" />
           </button>
 
           {visiblePages.map((page) => (
             <button
               key={page}
-              className={`flex h-8 w-7 items-center justify-center rounded-md font-medium text-white transition-colors ${
+              className={`flex h-8 w-7 items-center justify-center rounded-md font-medium text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
                 currentPage === page
                   ? "bg-[#1a9b78]"
                   : "border border-white/10 hover:bg-[#1a2b32]"
               }`}
               onClick={() => handlePageChange(page)}
+              onKeyDown={(e) => handleKeyDown(e, page)}
+              aria-label={`Page ${page}`}
+              aria-current={currentPage === page ? "page" : undefined}
             >
               {page}
             </button>
           ))}
 
           <button
-            className="flex h-8 w-7 items-center justify-center rounded-md border border-white/10 text-white transition-colors hover:bg-[#1a2b32] disabled:cursor-not-allowed disabled:opacity-40"
+            className="flex h-8 w-7 items-center justify-center rounded-md border border-white/10 text-white transition-colors hover:bg-[#1a2b32] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-not-allowed disabled:opacity-40"
             onClick={() => handlePageChange(currentPage + 1)}
+            onKeyDown={(e) => handleKeyDown(e, currentPage + 1)}
             disabled={currentPage === totalPages}
+            aria-label="Next page"
+            aria-disabled={currentPage === totalPages}
           >
-            <HiChevronRight className="h-5 w-5" />
+            <HiChevronRight className="h-5 w-5" aria-hidden="true" />
           </button>
         </div>
       ) : (
         <div />
       )}
       {total > 1 && (
-        <div className="text-xs opacity-60">
+        <div className="text-xs opacity-60" aria-live="polite" role="status">
           <p>
             {start} to {end} of {total} items
           </p>
         </div>
       )}
-    </div>
+    </nav>
   );
 };
 

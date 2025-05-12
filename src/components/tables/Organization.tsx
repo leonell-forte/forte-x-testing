@@ -7,9 +7,7 @@ import { ReactComponent as Pencil } from "assets/images/icons/pencil.svg";
 import { IOrganization, OrgTypes } from "lib/types/organizations";
 import { getStatusVariant } from "lib/utils";
 
-import OrganizationDialogue, {
-  showOrganizationDialogue,
-} from "components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
+import { showOrganizationDialogue } from "components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
 import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import Status from "components/ui/status";
 import Table from "components/ui/table";
@@ -27,26 +25,8 @@ const OrganizationTable = ({
   type,
 }: TOrganizationTable) => {
   const navigate = useNavigate();
-  const [modal, setModal] = useState<"org" | null>(null);
-
-  const [selectedOrg, setSelectedOrg] = useState("");
-
-  const close = () => {
-    setSelectedOrg("");
-
-    setModal(null);
-  };
-
   return (
     <>
-      {modal === "org" && (
-        <OrganizationDialogue
-          orgId={selectedOrg}
-          isVisible={modal === "org"}
-          handleClose={close}
-          type={type}
-        />
-      )}
       <div className="lg:hidden">
         <Cards.Container isLoading={isLoading}>
           {list.map((item, index) => {
@@ -124,6 +104,7 @@ const OrganizationTable = ({
                     navigate(`/${type}s/${id}`);
                   }}
                   key={bodyIndex}
+                  ariaLabel={`${type} ${name}`}
                 >
                   <Table.Data>{name}</Table.Data>
 
@@ -145,8 +126,16 @@ const OrganizationTable = ({
                         e.stopPropagation();
                         showOrganizationDialogue({ orgId: id, type });
                       }}
+                      className="icon group p-2"
                     >
-                      <Pencil fill="white" width={16} />
+                      <Pencil
+                        fill="white"
+                        width={16}
+                        className="transition group-hover:fill-mint group-focus:fill-mint group-focus:outline-white"
+                        aria-hidden="true"
+                        role="presentation"
+                      />
+                      <span className="sr-only">Edit {name}</span>
                     </button>
                   </Table.Data>
                 </Table.Row>

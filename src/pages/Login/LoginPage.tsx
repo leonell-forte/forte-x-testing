@@ -45,35 +45,55 @@ const Login = () => {
   );
 
   return (
-    <div className="main-container grid min-h-screen grid-cols-1 items-center gap-12 px-10 lg:grid-cols-2 lg:py-10 xl:gap-[70px]">
-      <div className="hidden lg:block">
+    <main
+      className="main-container grid min-h-screen grid-cols-1 items-center gap-12 px-10 lg:grid-cols-2 lg:py-10 xl:gap-[70px]"
+      role="main"
+    >
+      {/* Hero Section */}
+      <section className="hidden lg:block" aria-label="Welcome Section">
         <div className="mx-auto h-auto w-auto max-w-[437px] md:mx-0">
-          {data?.image && <img alt="jobs" src={data?.image.url} />}
+          {data?.image && (
+            <img src={data?.image.url} alt="Login illustration" />
+          )}
         </div>
 
-        <div className="max-w-xs space-y-6 text-center md:max-w-full md:text-left">
-          <p className="font-famaime text-[40px] leading-[110%] md:text-[52px]">
+        <div
+          className="max-w-xs space-y-6 text-center md:max-w-full md:text-left"
+          role="contentinfo"
+        >
+          <h1 className="font-famaime text-[40px] leading-[110%] md:text-[52px]">
             {data?.title}
-          </p>
+          </h1>
 
-          <p className="text-[18px] leading-[110%] md:text-[20px]">
+          <p
+            className="text-[18px] leading-[110%] md:text-[20px]"
+            aria-label={data?.description}
+          >
             {data?.description}
           </p>
         </div>
-      </div>
+      </section>
 
-      <Card className="mx-auto flex h-full w-full items-center px-4 pb-24 pt-4 md:px-10 md:pt-24 lg:max-h-[838px] lg:w-full lg:max-w-[580px] lg:pt-12">
-        <div className="mx-auto w-full max-w-[350px] space-y-5 md:max-w-[450px]">
-          <img
-            alt="logo"
-            src="/logo.png"
-            className="mx-auto h-auto w-auto max-w-[122px]"
-          />
+      {/* Form Card Section */}
+      <section aria-label="Registration Form">
+        <Card className="mx-auto flex min-h-screen w-full items-center px-4 pb-24 pt-4 md:px-10 md:pt-24 lg:min-h-[838px] lg:w-full lg:max-w-[580px] lg:pt-12">
+          <div className="mx-auto w-full max-w-[350px] space-y-5 md:max-w-[450px]">
+            <div role="banner">
+              <img
+                src="/logo.png"
+                alt="Forte Logo"
+                className="mx-auto h-auto w-auto max-w-[122px]"
+              />
+            </div>
 
-          {renderStep(step)}
-        </div>
-      </Card>
-    </div>
+            {/* Form Steps */}
+            <div role="form" aria-label={`Registration Step ${step}`}>
+              {renderStep(step)}
+            </div>
+          </div>
+        </Card>
+      </section>
+    </main>
   );
 };
 

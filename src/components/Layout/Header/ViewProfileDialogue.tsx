@@ -12,28 +12,39 @@ import { users } from "lib/validators/users";
 
 import Button from "components/ui/button";
 import Controller from "components/ui/custom-controller/CustomController";
-import Dialogue, { IDialogueProps } from "components/ui/dialogue/dialogue";
+import { useModal } from "components/ui/dialogue/v2/Modal";
 import Dropdown from "components/ui/dropdown";
 import { Form } from "components/ui/form/Form";
 import InputMobile from "components/ui/form/InputMobile";
 import Input from "components/ui/input";
 import Spinner from "components/ui/spinner/spinner";
 
-interface IUserDialogueProps extends IDialogueProps {
+interface IUserDialogueProps {
   userId?: string;
-
   organizations: IOrganization[];
 }
 
-const ViewProfileDialogue = ({
-  isVisible,
+type TParams = {
+  userId?: string;
+  organizations?: IOrganization[];
+};
 
-  organizations,
+export function showProfileModal(params: TParams) {
+  useModal.getState().open({
+    component: (
+      <ViewProfileDialogue
+        organizations={params.organizations || []}
+        userId={String(params.userId)}
+      />
+    ),
+    size: "lg",
+    title: "Profile",
+  });
+}
 
-  handleClose,
+const ViewProfileDialogue = ({ organizations, userId }: IUserDialogueProps) => {
+  const { close } = useModal();
 
-  userId,
-}: IUserDialogueProps) => {
   const [onEdit, setOnEdit] = useState(false);
 
   const { data: userData, isLoading } = useQuery({
@@ -60,14 +71,6 @@ const ViewProfileDialogue = ({
     }
   }, [userData, reset]);
 
-  const close = () => {
-    setOnEdit(false);
-
-    reset();
-
-    handleClose!();
-  };
-
   const { addUser, isPending } = useUserMutation({
     userId: userId!,
 
@@ -81,12 +84,7 @@ const ViewProfileDialogue = ({
   };
 
   return (
-    <Dialogue
-      confirmBeforeLeave={onEdit}
-      isVisible={isVisible}
-      handleClose={close}
-      title={onEdit ? "Edit profile" : "Profile"}
-    >
+    <div>
       {isLoading ? (
         <div className="flex h-[470px] w-full items-center justify-center">
           <Spinner />
@@ -221,7 +219,7 @@ const ViewProfileDialogue = ({
           </div>
         </Form>
       )}
-    </Dialogue>
+    </div>
   );
 };
 

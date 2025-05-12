@@ -225,10 +225,26 @@ const Filters = ({ filters, setFilters, initialFilters }: IFilterProps) => {
       />
 
       <button
+        aria-label="Reset filters"
+        type="button"
+        title="Reset all filters to default values"
+        aria-pressed={false}
+        aria-controls="filters-section"
+        tabIndex={0}
         onClick={() => setFilters(initialFilters)}
-        className="group hidden flex-shrink-0 lg:block"
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setFilters(initialFilters);
+          }
+        }}
+        className="group hidden flex-shrink-0 focus:border focus:border-white active:border-white lg:block"
       >
-        <FilterIcon className="h-auto w-5 fill-white transition-all group-hover:fill-mint group-hover:stroke-mint" />
+        <FilterIcon
+          className="h-auto w-5 fill-white transition-all group-hover:fill-mint group-hover:stroke-mint"
+          aria-hidden="true"
+          role="presentation"
+        />
       </button>
     </div>
   );

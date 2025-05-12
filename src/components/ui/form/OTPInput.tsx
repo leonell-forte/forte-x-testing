@@ -1,6 +1,10 @@
 "use client";
 
-import { OTPInputContext, OTPInput as Prim } from "input-otp";
+import {
+  OTPInputContext,
+  OTPInput as Prim,
+  REGEXP_ONLY_DIGITS,
+} from "input-otp";
 import { Minus } from "lucide-react";
 import * as React from "react";
 
@@ -58,7 +62,7 @@ const InputOTPSlot = React.forwardRef<
       {char}
       {hasFakeCaret && (
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <div className="animate-caret-blink h-7 w-px bg-black duration-1000" />
+          <div className="h-7 w-px animate-caret-blink bg-black duration-1000" />
         </div>
       )}
     </div>
@@ -80,7 +84,13 @@ export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator };
 
 export function OTPInput({ onChange }: { onChange: (input: string) => void }) {
   return (
-    <InputOTP maxLength={6} autoFocus onChange={onChange}>
+    <InputOTP
+      maxLength={6}
+      autoFocus
+      onChange={onChange}
+      inputMode="tel"
+      pattern={REGEXP_ONLY_DIGITS}
+    >
       <InputOTPGroup>
         {Array.from({ length: 6 }).map((_, index) => (
           <InputOTPSlot index={index} />

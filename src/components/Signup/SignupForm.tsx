@@ -94,34 +94,69 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
     );
   }
   return (
-    <div className="w-full">
-      <Form form={form} onSubmit={onSubmit} className="w-full space-y-12">
-        <div className="mt-10 flex w-full flex-col gap-[15px]">
+    <div className="w-full" role="main">
+      <Form
+        form={form}
+        onSubmit={onSubmit}
+        className="w-full space-y-12"
+        noValidate
+        aria-label="Sign Up Form"
+      >
+        {/* Form Fields Section */}
+        <div
+          className="mt-10 flex w-full flex-col gap-[15px]"
+          role="group"
+          aria-label="Personal Information"
+        >
           <Controller
             name="firstName"
             control={control}
-            render={({ field }) => (
-              <Input {...field} autoComplete="given-name" label="First name*" />
+            render={({ field, fieldState: { error } }) => (
+              <Input
+                {...field}
+                id="firstName"
+                autoComplete="given-name"
+                label="First name"
+                required
+                aria-required="true"
+                aria-invalid={!!error}
+                aria-describedby={error ? "firstName-error" : undefined}
+              />
             )}
           />
 
           <Controller
             name="lastName"
             control={control}
-            render={({ field }) => (
-              <Input {...field} autoComplete="family-name" label="Last name*" />
+            render={({ field, fieldState: { error } }) => (
+              <Input
+                {...field}
+                id="lastName"
+                autoComplete="family-name"
+                label="Last name"
+                required
+                aria-required="true"
+                aria-invalid={!!error}
+                aria-describedby={error ? "lastName-error" : undefined}
+              />
             )}
           />
 
           <Controller
             name="email"
             control={control}
-            render={({ field }) => (
+            render={({ field, fieldState: { error } }) => (
               <Input
                 {...field}
-                autoComplete="off"
+                id="email"
+                type="email"
+                autoComplete="email"
                 disabled={!!data}
-                label="Email*"
+                label="Email"
+                required
+                aria-required="true"
+                aria-invalid={!!error}
+                aria-describedby={error ? "email-error" : undefined}
               />
             )}
           />
@@ -129,94 +164,150 @@ const SignupForm = ({ handleNext }: ILoginProps) => {
           <Controller
             name="phoneNumber"
             control={control}
-            render={({ field }) => (
-              <InputMobile {...field} label="Phone number*" />
-            )}
-          />
-
-          <Controller
-            name="password"
-            control={control}
-            render={({ field }) => (
-              <Input {...field} label="Password*" type="password" />
-            )}
-          />
-
-          <Controller
-            name="confirmPassword"
-            control={control}
-            render={({ field }) => (
-              <Input {...field} label="Re-enter password*" type="password" />
-            )}
-          />
-          <Controller
-            tooltip={{
-              placement: "top-start",
-            }}
-            name="agreeTerms"
-            containerClassName="w-fit"
-            control={control}
-            render={({ field }) => (
-              <Checkbox
-                white
-                labelClass="font-medium"
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    field.onChange("true");
-                    return;
-                  }
-                  field.onChange("");
-                }}
-                label={
-                  <>
-                    I have read, understand, and agree to be bound by the{" "}
-                    <Link
-                      to="https://test.forteglobal.com/terms"
-                      className="link"
-                      target="_blank"
-                    >
-                      Terms of Use
-                    </Link>{" "}
-                    and{" "}
-                    <Link
-                      to="https://forteglobal.com/privacy-policy"
-                      className="link"
-                      target="_blank"
-                    >
-                      Privacy Policy
-                    </Link>
-                    .
-                  </>
-                }
+            render={({ field, fieldState: { error } }) => (
+              <InputMobile
+                {...field}
+                label="Phone number"
+                aria-required="true"
+                aria-invalid={!!error}
+                aria-describedby={error ? "phone-error" : undefined}
               />
+            )}
+          />
+
+          <div
+            role="group"
+            aria-label="Password Fields"
+            className="space-y-[15px]"
+          >
+            <Controller
+              name="password"
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <Input
+                  {...field}
+                  id="password"
+                  type="password"
+                  label="Password"
+                  required
+                  aria-required="true"
+                  aria-invalid={!!error}
+                  aria-describedby={error ? "password-error" : undefined}
+                  autoComplete="new-password"
+                />
+              )}
+            />
+
+            <Controller
+              name="confirmPassword"
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <Input
+                  {...field}
+                  id="confirmPassword"
+                  type="password"
+                  label="Re-enter password"
+                  required
+                  aria-required="true"
+                  aria-invalid={!!error}
+                  aria-describedby={
+                    error ? "confirm-password-error" : undefined
+                  }
+                  autoComplete="new-password"
+                />
+              )}
+            />
+          </div>
+
+          <Controller
+            name="agreeTerms"
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <div role="group" aria-label="Terms and Conditions">
+                <Checkbox
+                  {...field}
+                  id="agreeTerms"
+                  white
+                  labelClass="font-medium"
+                  aria-required="true"
+                  aria-invalid={!!error}
+                  aria-describedby={error ? "terms-error" : undefined}
+                  onChange={(e) => {
+                    field.onChange(e.target.checked ? "true" : "");
+                  }}
+                  label={
+                    <span className="text-sm">
+                      I have read, understand, and agree to be bound by the{" "}
+                      <Link
+                        to="https://test.forteglobal.com/terms"
+                        className="link"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Terms of Use (opens in new tab)"
+                      >
+                        Terms of Use
+                      </Link>{" "}
+                      and{" "}
+                      <Link
+                        to="https://forteglobal.com/privacy-policy"
+                        className="link"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Privacy Policy (opens in new tab)"
+                      >
+                        Privacy Policy
+                      </Link>
+                    </span>
+                  }
+                />
+              </div>
             )}
           />
         </div>
 
-        <div className="mx-auto w-full max-w-[22rem] space-y-[15px] text-center">
-          <Button type="submit" fullWidth loading={loading}>
-            Sign up
+        {/* Action Buttons Section */}
+        <div
+          className="mx-auto w-full max-w-[22rem] space-y-[15px] text-center"
+          role="group"
+          aria-label="Sign Up Options"
+        >
+          <Button
+            type="submit"
+            fullWidth
+            loading={loading}
+            disabled={loading}
+            aria-busy={loading}
+            aria-label={loading ? "Signing up..." : "Sign up"}
+          >
+            {loading ? "Signing up..." : "Sign up"}
           </Button>
-          <div className="flex items-center gap-4">
-            <hr className="w-full" />
 
-            <p className="text-[14px]">OR</p>
+          <div
+            className="flex items-center gap-4"
+            role="separator"
+            aria-label="or separator"
+          >
+            <hr className="w-full" aria-hidden="true" />
+            <p className="text-[14px]" aria-hidden="true">
+              OR
+            </p>
+            <hr className="w-full" aria-hidden="true" />
+          </div>
 
-            <hr className="w-full" />
-          </div>{" "}
           <Button
             type="button"
             fullWidth
             buttonType="secondary"
             onClick={() => authService.googleSignup(code)}
+            aria-label="Sign up with Google account"
           >
-            Sign up with Google{" "}
+            Sign up with Google
           </Button>
         </div>
 
-        <p className="text-center text-[14px]">
+        <p className="text-center text-[14px]" role="contentinfo">
           Have an account?{" "}
-          <Link className="font-bold" to="/">
+          <Link className="font-bold" to="/" aria-label="Go to login page">
             Log in
           </Link>
         </p>
