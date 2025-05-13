@@ -88,7 +88,7 @@ export default function ViewMilestone() {
           </div>
           {IsAuthorized([Milestones.UPDATE]) && (
             <div className="flex items-center gap-2">
-              {milestone.status !== "paid" && milestone.type === "outcome" && (
+              {milestone.type === "outcome" && (
                 <Button
                   className="group"
                   buttonType="secondary"
@@ -97,8 +97,12 @@ export default function ViewMilestone() {
                       milestone,
                     })
                   }
+                  disabled={milestone.status !== "open"}
                 >
-                  <Pencil height={14} />
+                  <Pencil
+                    height={14}
+                    className="group-disabled:fill-[#787878] group-disabled:stroke-[#787878]"
+                  />
                   Override cost
                 </Button>
               )}
