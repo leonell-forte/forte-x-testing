@@ -1,9 +1,7 @@
 import { useCallback, useState } from "react";
 import { FaTrash as Trash } from "react-icons/fa6";
 import { RiPencilFill as Pencil } from "react-icons/ri";
-import { Link, useNavigate } from "react-router-dom";
-
-import { ReactComponent as LinkIcon } from "assets/images/icons/link.svg";
+import { useNavigate } from "react-router-dom";
 
 import { IsAuthorized, Projects } from "lib/role-permissions";
 import { IProject } from "lib/types/projects";

@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import organizationService from "api/organization";
-import { HiPlus } from "react-icons/hi2";
 import { useParams } from "react-router-dom";
 
 import { ReactComponent as Add } from "assets/images/icons/add.svg";
@@ -26,7 +25,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "components/ui/dropdown-menu/DropdownMenu";
-import MenuButton from "components/ui/menu-button";
 import Spinner from "components/ui/spinner/spinner";
 import Status from "components/ui/status";
 import Tabs, { TabData } from "components/ui/tabs/Tabs";

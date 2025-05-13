@@ -1,14 +1,12 @@
 import authService from "api/auth";
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { HiUser } from "react-icons/hi2";
 
 import arrow from "assets/images/icons/chevron.svg";
 
 import useOrganizationList from "lib/common/lists/useOrganizationList";
-import { IOrganization } from "lib/types/organizations";
 
 import { useProfile } from "components/ProfileContext";
-import { useModal } from "components/ui/dialogue/v2/Modal";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "components/ui/dropdown-menu/DropdownMenu";
 
-import ViewProfileDialogue, { showProfileModal } from "./ViewProfileDialogue";
+import { showProfileModal } from "./ViewProfileDialogue";
 
 const UserDropdown = () => {
   const { profile: user } = useProfile();

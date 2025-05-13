@@ -1,6 +1,5 @@
 import authService from "api/auth";
-import { SyntheticEvent, useEffect } from "react";
-import { useState } from "react";
+import { useEffect } from "react";
 import { HiUser } from "react-icons/hi2";
 import { HiOutlineChevronUpDown as Chevron } from "react-icons/hi2";
 
@@ -18,7 +17,6 @@ import { showProfileModal } from "./ViewProfileDialogue";
 
 const MobileUserDropdown = () => {
   const { profile } = useProfile();
-  const [showModal, setShowModal] = useState(false);
 
   const { rawList: organizations, handleSearchOrg } = useOrganizationList({});
 
@@ -27,12 +25,6 @@ const MobileUserDropdown = () => {
   }, [profile.organization, handleSearchOrg]);
 
   const handleLogout = () => authService.logout();
-
-  const handleViewProfile = (e: SyntheticEvent) => {
-    e.stopPropagation();
-
-    setShowModal(true);
-  };
 
   return (
     <>
