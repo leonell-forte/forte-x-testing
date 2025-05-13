@@ -130,7 +130,9 @@ export function SetupBeneficiaryModal({
         contractId: Number(contractId),
       })
     );
+  }, [beneficiaryDetails, reset, contractId, setValue]);
 
+  useEffect(() => {
     if (contractId && contractList?.items) {
       const contract = contractList?.items.find(
         (item) => item.id === Number(contractId)
@@ -138,7 +140,7 @@ export function SetupBeneficiaryModal({
       setValue("providerId", contract?.provider.id as number);
       setValue("projectId", contract?.projectId as number);
     }
-  }, [beneficiaryDetails, reset, contractId, contractList?.items, setValue]);
+  }, [contractList?.items, contractId, setValue]);
 
   const { data: organizationList } = useQuery({
     queryKey: ["organizations"],
