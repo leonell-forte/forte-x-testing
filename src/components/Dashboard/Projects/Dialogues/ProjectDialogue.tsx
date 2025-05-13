@@ -103,7 +103,7 @@ const ProjectDialogue = ({
     setError,
     reset,
     control,
-    watch,
+    trigger,
   } = form;
 
   const { fields, append, remove } = useFieldArray({
@@ -187,10 +187,14 @@ const ProjectDialogue = ({
 
   const [activeStep, setActiveStep] = useState(addOutcome ? 2 : 1);
 
-  // Watch required fields for step validation
-  const projectName = watch("name");
-  const selectedFunderId = watch("funderId");
-  const budget = watch("budget");
+  const handleNext = async (
+    step: number,
+    fields: (keyof ProjectFieldValues)[]
+  ) => {
+    let isValid = await trigger(fields);
+    if (!isValid) return;
+    setActiveStep(step);
+  };
 
   return (
     <>
@@ -265,8 +269,9 @@ const ProjectDialogue = ({
                 <div className="flex justify-end">
                   <Button
                     className="w-[147px]"
-                    onClick={() => setActiveStep(2)}
-                    disabled={!projectName || !selectedFunderId || !budget}
+                    onClick={() =>
+                      handleNext(2, ["name", "funderId", "budget"])
+                    }
                   >
                     Next
                   </Button>
