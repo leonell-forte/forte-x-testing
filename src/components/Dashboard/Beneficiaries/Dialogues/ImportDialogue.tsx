@@ -5,6 +5,7 @@ import { useImportBeneficiaryMutation } from "lib/mutations/beneficiaries";
 import { IImportBeneficiariesFieldValues } from "lib/types/beneficiaries";
 import { importBeneficiaries } from "lib/validators/beneficiaries";
 
+import { useCustomPrompt } from "components/ui/alert/custom-prompt";
 import Button from "components/ui/button";
 import Checkbox from "components/ui/checkbox";
 import { useModal } from "components/ui/dialogue/v2/Modal";
@@ -21,6 +22,8 @@ export function showImportBeneficiariesModal() {
 const ImportBeneficiaries = () => {
   const { close } = useModal();
 
+  const { open } = useCustomPrompt();
+
   const {
     handleSubmit,
 
@@ -29,11 +32,15 @@ const ImportBeneficiaries = () => {
     setValue,
 
     formState: { errors },
+
+    watch,
   } = useForm<IImportBeneficiariesFieldValues>({
     resolver: zodResolver(importBeneficiaries.schema),
 
     defaultValues: importBeneficiaries.defaultValue,
   });
+
+  const { isOverwriteByEmailEnabled: overwrite } = watch();
 
   const { importBeneficiaries: beneficiariesImport, isPending } =
     useImportBeneficiaryMutation({
@@ -41,7 +48,18 @@ const ImportBeneficiaries = () => {
     });
 
   const onSubmit = async (values: IImportBeneficiariesFieldValues) => {
-    await beneficiariesImport(values);
+    open({
+      title: overwrite
+        ? "Overwrit duplicate beneficiaries"
+        : "Ignore duplicate beneficiaries",
+      subText: overwrite
+        ? "You have selected the overwrite duplicate beneficiaries checkbox, which means any beneficiaries with the same email as those being imported will be overwritten. Please confirm that you wish to overwrite any duplicate beneficiaries."
+        : "You haven’t checked the overwrite duplicate beneficiaries checkbox, which means any beneficiaries with the same email as those being imported will be ignored. Please confirm that you wish to skip any duplicate beneficiaries.",
+      yesLabel: overwrite
+        ? "Overwrite duplicate beneficiaries"
+        : "Skip duplicate beneficiaries",
+      onYes: () => beneficiariesImport(values),
+    });
   };
 
   return (

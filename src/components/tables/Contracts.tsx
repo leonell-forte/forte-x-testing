@@ -1,6 +1,5 @@
 import { capitalize } from "lodash";
 import { useMemo, useState } from "react";
-import React from "react";
 import { FaTrash as Trash } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 
