@@ -49,7 +49,7 @@ const ContractDetails = ({ contract }: { contract: IContract }) => {
         />
         <Details.Content
           label="End date"
-          value={formatDate(endDate, "dd MMM yyyy").toUpperCase()}
+          value={formatDate(endDate, "dd LLL yyyy")}
         />
       </Details.Container>
     </div>

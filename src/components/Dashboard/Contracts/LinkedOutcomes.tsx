@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { IContractOutcomeRates } from "lib/types/contracts";
-import { formatCurrency } from "lib/utils";
+import { formatCurrency, formatDate } from "lib/utils";
 
 import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import SearchInput from "components/ui/search-input";
@@ -20,6 +20,15 @@ const LinkedOutcomes = ({
   const outcomes = list.filter((item) => {
     return item?.outcome?.toLowerCase().includes(search.toLowerCase());
   });
+
+  const formatDueDate = (item: IContractOutcomeRates) => {
+    if (item.dueDate) return formatDate(item.dueDate);
+    if (item.daysAfterBeneficiaryStartDate)
+      return `${item.daysAfterBeneficiaryStartDate} days after beneficiary start date`;
+    if (item.daysAfterBeneficiaryEndDate)
+      return `${item.daysAfterBeneficiaryEndDate} days after beneficiary end date`;
+    return "-";
+  };
 
   return (
     <>
@@ -85,6 +94,7 @@ const LinkedOutcomes = ({
                     <Table.Data>
                       {perOutcome ? "Per outcome" : "Threshold"}
                     </Table.Data>
+                    <Table.Data>{formatDueDate(item)}</Table.Data>
                     <Table.Data>{formatCurrency(Number(rate))}</Table.Data>
                   </Table.Row>
                 );
@@ -100,4 +110,4 @@ const LinkedOutcomes = ({
 
 export default LinkedOutcomes;
 
-const HEADERS = ["Outcome", "Outcome name", "Outcome type", "Rate"];
+const HEADERS = ["Outcome", "Outcome name", "Outcome type", "Due date", "Rate"];

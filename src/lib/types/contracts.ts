@@ -28,6 +28,12 @@ export interface IContractOutcomeRates {
   outcomeId?: number;
 
   outcome?: string;
+
+  dueDate?: string;
+
+  daysAfterBeneficiaryStartDate?: string;
+
+  daysAfterBeneficiaryEndDate?: string;
 }
 
 export type Sub = {

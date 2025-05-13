@@ -7,9 +7,10 @@ import { HiOutlinePlusCircle } from "react-icons/hi";
 import { ReactComponent as Bin } from "assets/images/icons/trash.svg";
 
 import { ContractFieldValues, RateEnum } from "lib/types/contracts";
-import { findLabelFromOptions, sortOptions } from "lib/utils";
+import { findLabelFromOptions, formatDate, sortOptions } from "lib/utils";
 
 import Controller from "components/ui/custom-controller/CustomController";
+import DatePicker from "components/ui/date-picker";
 import Dropdown, { IOption } from "components/ui/dropdown";
 import Input from "components/ui/input";
 
@@ -33,9 +34,20 @@ interface IContractOutcomeField {
   handleAdd: (index: number) => void;
 
   isLast?: boolean;
+
+  dateType?: string;
 }
 
 const OUTCOME_TYPES = ["Per outcome", "If threshold reached"];
+
+const DATE_TYPES = [
+  { label: "By date specified", value: "date" },
+  { label: "By # of days after beneficiary start date", value: "afterStart" },
+  {
+    label: "By # of days after beneficiary end date",
+    value: "afterEnd",
+  },
+];
 
 const ContractOutcomeField = ({
   projectId,
@@ -57,6 +69,8 @@ const ContractOutcomeField = ({
   handleAdd,
 
   isLast,
+
+  dateType,
 }: IContractOutcomeField) => {
   const { data: project, isLoading: isProjectLoading } = useQuery({
     queryKey: ["specific-project", projectId],
@@ -206,6 +220,65 @@ const ContractOutcomeField = ({
           }}
         />
       )}
+
+      {/* DATE START  */}
+      <Controller
+        label="Due date"
+        required
+        name={`outcomeRates.${index}.dateType`}
+        control={control}
+        containerClassName="w-full"
+        render={({ field }) => {
+          return (
+            <div className="flex items-center gap-2">
+              <Dropdown
+                value={findLabelFromOptions(DATE_TYPES, field.value)}
+                handleSelect={(val) => field.onChange(val)}
+                options={DATE_TYPES}
+                placeholder="Select an option"
+              />
+            </div>
+          );
+        }}
+      />
+      <div className="grid grid-cols-2">
+        {dateType === "date" ? (
+          <Controller
+            required
+            label="Date"
+            name={`outcomeRates.${index}.date`}
+            control={control}
+            render={({ field }) => {
+              return (
+                <DatePicker
+                  value={new Date(field.value)}
+                  onChange={(date) => {
+                    field.onChange(formatDate(date!, "LL-dd-yyyy"));
+                  }}
+                />
+              );
+            }}
+          />
+        ) : (
+          <Controller
+            label={`# of days after ${dateType === "afterStart" ? "Start" : "End"} date`}
+            name={`outcomeRates.${index}.date`}
+            required
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                wholeNumberOnly
+                min={0}
+                placeholder="Enter number of days"
+                type="number"
+              />
+            )}
+          />
+        )}
+        <div />
+      </div>
+      {/* DATE END  */}
 
       {!disabled && isLast && (
         <div className="mt-4 space-y-3">

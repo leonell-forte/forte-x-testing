@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addDays, subDays } from "date-fns";
+import { addDays, formatISO, subDays } from "date-fns";
+import { get, omit } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 
@@ -55,6 +56,12 @@ interface IContractForm {
 
   activeStep?: number;
 }
+
+const payloadKeys = {
+  date: "dueDate",
+  afterStart: "daysAfterBeneficiaryStartDate",
+  afterEnd: "daysAfterBeneficiaryEndDate",
+};
 
 const ContractForm = ({
   contractDetails,
@@ -168,24 +175,34 @@ const ContractForm = ({
   });
 
   const onSubmit = async (values: ContractFieldValues) => {
+    const { outcomeRates } = values;
+    const temp = outcomeRates.map((item) => {
+      const key = get(payloadKeys, item.dateType, "");
+      return omit(
+        {
+          ...item,
+          [key]: item.dateType === "date" ? item.date : Number(item.date),
+        },
+        ["date", "dateType"]
+      );
+    });
+    const payload = omit({ ...values, outcomeRates: temp });
     if (contractDetails) {
       open({
         title: "Confirm email with changes",
         subText:
           "Saving edits will send an email to all Contract Party users. Click cancel to revert or send to confirm changes and send the email.",
         onYes: async () => {
-          await addContract(values);
+          await addContract(payload as any);
           close();
         },
         yesLabel: "Send email with changes",
       });
       return;
     }
-    await addContract(values);
+    await addContract(payload as any);
     close();
   };
-
-  // const { setShowPrompt } = useConfirmPrompt();
 
   // sets contract form default values
   useEffect(() => {
@@ -328,6 +345,10 @@ const ContractForm = ({
                                   perOutcome: true,
 
                                   threshold: "",
+
+                                  dateType: "date",
+
+                                  date: "",
                                 },
                               ]);
                             }}
@@ -491,6 +512,7 @@ const ContractForm = ({
                         projectId={watch("projectId")}
                         control={control}
                         perOutcome={watch(`outcomeRates.${index}.perOutcome`)}
+                        dateType={watch(`outcomeRates.${index}.dateType`)}
                         index={index}
                         handleDelete={
                           fields.length === 1
@@ -539,6 +561,10 @@ const ContractForm = ({
                             perOutcome: true,
 
                             threshold: "",
+
+                            dateType: "date",
+
+                            date: "",
                           })
                         }
                       />

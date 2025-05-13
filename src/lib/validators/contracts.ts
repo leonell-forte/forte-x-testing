@@ -4,6 +4,21 @@ import {
   ContractFieldValues,
   IContractDefaultValues,
 } from "lib/types/contracts";
+import { formatDate } from "lib/utils";
+
+const getDateData = (outcome: any) => {
+  if (outcome.dueDate)
+    return {
+      dateType: "date",
+      date: formatDate(outcome.dueDate, "LL-dd-yyyy"),
+    };
+  if (outcome.daysAfterBeneficiaryStartDate)
+    return {
+      dateType: "afterStart",
+      date: outcome.daysAfterBeneficiaryStartDate,
+    };
+  return { dateType: "afterEnd", date: outcome.daysAfterBeneficiaryEndDate };
+};
 
 const contractOutcomeSchema = z
   .object({
@@ -18,6 +33,10 @@ const contractOutcomeSchema = z
     perOutcome: z.boolean(),
 
     threshold: z.string().optional(),
+
+    dateType: z.string().min(1, { message: "Date is a required field" }),
+
+    date: z.string().min(1, { message: "This is a required field" }),
   })
   .refine(
     (data) => {
@@ -67,6 +86,8 @@ export const contracts = {
             perOutcome: item.perOutcome,
 
             threshold: item.threshold.toString(),
+
+            ...getDateData(item),
           }))
         : [
             {
@@ -77,6 +98,10 @@ export const contracts = {
               perOutcome: true,
 
               threshold: "",
+
+              dateType: "date",
+
+              date: "",
             },
           ],
     };
