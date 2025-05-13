@@ -1,5 +1,4 @@
 import { capitalize } from "lodash";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { ReactComponent as Pencil } from "assets/images/icons/pencil.svg";

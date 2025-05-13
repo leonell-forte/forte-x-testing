@@ -1,5 +1,5 @@
 import { capitalize } from "lodash";
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import React from "react";
 import { FaTrash as Trash } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +11,6 @@ import { Contracts, IsAuthorized } from "lib/role-permissions";
 import { IContract } from "lib/types/contracts";
 import { getStatusVariant } from "lib/utils";
 
-import DeleteDialogue from "components/Dashboard/Contracts/Dialogues/DeleteDialogue";
 import { showSetupContractModal } from "components/Dashboard/Contracts/SetupContract";
 import { useProfile } from "components/ProfileContext";
 import { useCustomPrompt } from "components/ui/alert/custom-prompt";
