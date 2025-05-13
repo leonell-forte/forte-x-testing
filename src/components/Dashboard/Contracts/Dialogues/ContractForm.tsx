@@ -92,7 +92,7 @@ const ContractForm = ({
 
   const form = useForm<ContractFieldValues>({
     resolver: zodResolver(contracts.schema),
-
+    mode: "onChange",
     defaultValues: contracts.defaultValues({
       contract: contractDetails,
 
@@ -112,6 +112,8 @@ const ContractForm = ({
     setError,
 
     reset,
+
+    trigger,
 
     formState: { isDirty },
   } = form;
@@ -234,40 +236,29 @@ const ContractForm = ({
 
   const [activeStep, setActiveStep] = useState(step || 1);
 
-  // Watch required fields for validation
-  const contractName = watch("name");
-  const selectedProjectId = watch("projectId");
-  const selectedProviderId = watch("providerId");
-  const targetBeneficiaries = watch("targetNoOfBenefeciaries");
-  const documentId = watch("documentId");
-  const startDate = watch("startDate");
-  const endDate = watch("endDate");
-  const status = watch("status");
-
-  // Validate step 1 required fields
-  const isStep1Valid = useMemo(() => {
-    return (
-      contractName &&
-      selectedProjectId &&
-      selectedProviderId &&
-      targetBeneficiaries &&
-      documentId &&
-      startDate &&
-      endDate &&
-      status
-    );
-  }, [
-    contractName,
-    selectedProjectId,
-    selectedProviderId,
-    targetBeneficiaries,
-    documentId,
-    startDate,
-    endDate,
-    status,
-  ]);
-
-  // Validate step 2 required fields
+  const handleNext = async (
+    step: number,
+    fields: (keyof ContractFieldValues)[]
+  ) => {
+    let isValid = await trigger(fields);
+    if (!isValid) return;
+    setActiveStep(step);
+  };
+  
+  // Clear field errors when value changes
+  useEffect(() => {
+    const subscription = form.watch((value, { name }) => {
+      if (name) {
+        // Type-safe way to check if error exists for the field
+        const hasError = name in form.formState.errors;
+        if (hasError) {
+          form.clearErrors(name);
+        }
+      }
+    });
+    
+    return () => subscription.unsubscribe();
+  }, [form]);
 
   return (
     <Form form={form} onSubmit={onSubmit} className="space-y-1">
@@ -490,9 +481,19 @@ const ContractForm = ({
 
                 <div className="flex justify-end">
                   <Button
-                    onClick={() => setActiveStep(2)}
+                    onClick={() =>
+                      handleNext(2, [
+                        "name",
+                        "projectId",
+                        "providerId",
+                        "targetNoOfBenefeciaries",
+                        "documentId",
+                        "startDate",
+                        "endDate",
+                        "status",
+                      ])
+                    }
                     className="w-[147px]"
-                    disabled={!isStep1Valid}
                   >
                     Next
                   </Button>
