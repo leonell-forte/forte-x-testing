@@ -111,7 +111,8 @@ export function SetupBeneficiaryModal({
     setError,
     watch,
     reset,
-    formState: { isDirty, errors },
+    trigger,
+    formState: { isDirty },
   } = form;
 
   const {
@@ -214,22 +215,17 @@ export function SetupBeneficiaryModal({
 
   const [activeStep, setActiveStep] = useState(1);
 
-  const validateStep1 = () => {
-    const { firstName, lastName, email } = watch();
-    const hasErrors = Boolean(
-      errors.firstName || errors.lastName || errors.email
+  const handleNext = async (
+    step: number,
+    fields: (keyof IBeneficiariesFieldValues)[]
+  ) => {
+    let results = await Promise.all(
+      fields.map((field) => {
+        return trigger(field);
+      })
     );
-    return firstName && lastName && email && !hasErrors;
-  };
-
-  const validateStep2 = () => {
-    const { contractId, providerId, projectId } = watch();
-    return contractId && providerId && projectId;
-  };
-
-  const validateStep3 = () => {
-    const { status } = watch();
-    return status;
+    if (results.some((x) => x === false)) return;
+    setActiveStep(step);
   };
 
   return (
@@ -284,8 +280,9 @@ export function SetupBeneficiaryModal({
             <div className="flex justify-end">
               <Button
                 className="w-[147px]"
-                onClick={() => setActiveStep(2)}
-                disabled={!validateStep1()}
+                onClick={() =>
+                  handleNext(2, ["phone", "email", "firstName", "lastName"])
+                }
               >
                 Next
               </Button>
@@ -443,8 +440,9 @@ export function SetupBeneficiaryModal({
             </Button>
             <Button
               className="w-[147px]"
-              onClick={() => setActiveStep(3)}
-              disabled={!validateStep2()}
+              onClick={() =>
+                handleNext(3, ["contractId", "providerId", "projectId"])
+              }
             >
               Next
             </Button>
@@ -633,7 +631,7 @@ export function SetupBeneficiaryModal({
                   <Button
                     type="submit"
                     loading={isPending}
-                    disabled={!validateStep3() || !isDirty}
+                    disabled={!isDirty}
                     className="w-[147px]"
                   >
                     {beneficiaryDetails?.id ? "Update" : "Add"}
