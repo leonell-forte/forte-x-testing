@@ -1,10 +1,13 @@
 import { TextFieldProps } from "@mui/material";
 import classNames from "classnames";
+import { motion } from "framer-motion";
+import { useState } from "react";
 import { HiSearch, HiX } from "react-icons/hi";
 
 import { cn } from "lib/utils";
 
 import Input from "./input";
+import { Tooltip } from "./tooltip/Tooltip";
 
 type IProps = TextFieldProps & {
   dark?: boolean;
@@ -12,9 +15,17 @@ type IProps = TextFieldProps & {
   onClear?: () => void;
 
   containerClass?: string;
+
+  tooltip?: string;
 };
 
-const SearchInput = ({ dark, onClear, containerClass, ...props }: IProps) => {
+const SearchInput = ({
+  dark,
+  onClear,
+  containerClass,
+  tooltip,
+  ...props
+}: IProps) => {
   return (
     <div
       className={classNames(
@@ -39,25 +50,38 @@ const SearchInput = ({ dark, onClear, containerClass, ...props }: IProps) => {
         {...props}
       />
 
-      {!!props.value && (
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onClear?.();
-          }}
-          className="flex items-center justify-center"
-        >
-          <HiX
-            className={cn(
-              "absolute right-[15.33px] w-[15px]",
-              dark ? "fill-black" : "fill-white"
-            )}
-          />
-        </button>
-      )}
+      <div className="absolute right-[15.33px]">
+        {!!props.value ? (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onClear?.();
+            }}
+            className="flex items-center justify-center"
+          >
+            <HiX
+              className={cn("w-[15px]", dark ? "fill-black" : "fill-white")}
+            />
+          </button>
+        ) : (
+          tooltip && <SearchTooltip tooltip={tooltip} />
+        )}
+      </div>
     </div>
   );
 };
 
 export default SearchInput;
+
+const SearchTooltip = ({ tooltip }: { tooltip: string }) => {
+  return (
+    <>
+      <Tooltip title={tooltip} placement="top">
+        <motion.div className="flex h-4 w-4 cursor-default items-center justify-center rounded-full bg-slate-500/70 text-[10px] font-bold">
+          i
+        </motion.div>
+      </Tooltip>
+    </>
+  );
+};
