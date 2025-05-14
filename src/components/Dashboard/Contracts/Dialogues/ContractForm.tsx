@@ -244,7 +244,7 @@ const ContractForm = ({
     if (!isValid) return;
     setActiveStep(step);
   };
-  
+
   // Clear field errors when value changes
   useEffect(() => {
     const subscription = form.watch((value, { name }) => {
@@ -256,7 +256,7 @@ const ContractForm = ({
         }
       }
     });
-    
+
     return () => subscription.unsubscribe();
   }, [form]);
 

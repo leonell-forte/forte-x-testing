@@ -1,7 +1,6 @@
 import { TextFieldProps } from "@mui/material";
 import classNames from "classnames";
 import { motion } from "framer-motion";
-import { useState } from "react";
 import { HiSearch, HiX } from "react-icons/hi";
 
 import { cn } from "lib/utils";
@@ -51,7 +50,7 @@ const SearchInput = ({
       />
 
       <div className="absolute right-[15.33px]">
-        {!!props.value ? (
+        {props.value ? (
           <button
             type="button"
             onClick={(e) => {

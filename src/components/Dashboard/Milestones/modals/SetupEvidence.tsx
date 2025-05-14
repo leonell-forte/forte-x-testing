@@ -253,7 +253,7 @@ function SetupEvidenceModal({
                   label="Milestone"
                   name="milestoneId"
                   control={control}
-                  render={({ field }) => {
+                  render={() => {
                     return (
                       <Dropdown
                         enableSearch

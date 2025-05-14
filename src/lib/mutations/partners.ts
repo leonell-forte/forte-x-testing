@@ -31,7 +31,7 @@ export const usePartnerMutation = ({
       return { prevPartners };
     },
 
-    onSuccess: (addedPartner) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey });
 
       setAlert({

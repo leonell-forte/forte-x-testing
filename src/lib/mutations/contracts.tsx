@@ -300,7 +300,7 @@ export const useUpdateContractStatusMutation = ({
       callBack?.();
     },
 
-    onError: (err: any, _, context) => {
+    onError: (err: any) => {
       toast({
         title: "Error updating contract status!",
         description: formatErrorMessage(err?.response?.data?.data?.[0]),

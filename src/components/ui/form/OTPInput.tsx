@@ -93,7 +93,7 @@ export function OTPInput({ onChange }: { onChange: (input: string) => void }) {
     >
       <InputOTPGroup>
         {Array.from({ length: 6 }).map((_, index) => (
-          <InputOTPSlot index={index} />
+          <InputOTPSlot key={index} index={index} />
         ))}
       </InputOTPGroup>
     </InputOTP>

@@ -179,7 +179,7 @@ const Table = {
             onClick(e as any);
           }
         }}
-        aria-label={`${ariaLabel} row` || "Table row"}
+        aria-label={`${ariaLabel || "Table"} row`}
       >
         {children}
       </tr>

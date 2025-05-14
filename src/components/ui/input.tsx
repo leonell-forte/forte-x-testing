@@ -162,7 +162,7 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
         {type === "password" && (
           <button
             type="button"
-            onClick={(e) => setShow((prev) => !prev)}
+            onClick={() => setShow((prev) => !prev)}
             className="absolute right-4 top-3.5 w-4"
             aria-hidden="true"
             tabIndex={-1}
