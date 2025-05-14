@@ -219,7 +219,7 @@ const BeneficiariesComp = ({
                     placeholder="Search beneficiaries"
                     containerClass="w-full lg:max-w-[286px]"
                     onClear={() => setSearch("")}
-                    tooltip="Search for first name, last name, phone number, cohort name, or email"
+                    tooltip="Search by first name, last name, phone number, cohort name, or email."
                   />
                 </div>
 
