@@ -114,6 +114,7 @@ const PageComponent = ({
                 containerClass="lg:max-w-[286px]"
                 placeholder={`Search ${type}s`}
                 onClear={() => handleSearchOrg("")}
+                tooltip={`Search for ${type} name, registered name and registration number`}
               />
             </div>
             <button

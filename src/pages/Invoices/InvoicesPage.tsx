@@ -93,6 +93,7 @@ const InvoicesComp = () => {
                     className="w-full"
                     placeholder="Search invoice"
                     onClear={() => setSearch("")}
+                    tooltip="Search for invoice ID"
                   />
                 </div>
               </div>

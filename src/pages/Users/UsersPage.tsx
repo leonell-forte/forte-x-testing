@@ -149,6 +149,7 @@ const UsersPage = () => {
                   }}
                   className="md:w-[286px]"
                   onClear={() => setSearch("")}
+                  tooltip="Search for first name, last name, or email"
                 />
               </div>
               <button

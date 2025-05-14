@@ -139,6 +139,7 @@ const ContractsPage = ({
                   containerClass="w-full lg:max-w-[286px]"
                   placeholder="Search contracts"
                   onClear={() => handleSearchContract("")}
+                  tooltip="Search for contract name, project name or provider name"
                 />
               </div>
               <button
