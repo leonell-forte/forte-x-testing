@@ -78,7 +78,7 @@ const SearchTooltip = ({ tooltip }: { tooltip: string }) => {
   return (
     <>
       <Tooltip title={tooltip} placement="top">
-        <motion.div className="flex h-4 w-4 cursor-default items-center justify-center rounded-full bg-slate-500/70 text-[10px] font-bold">
+        <motion.div className="flex h-4 w-4 cursor-default items-center justify-center rounded-full border border-[#8aa9b0] text-[10px] font-bold text-[#8aa9b0]">
           i
         </motion.div>
       </Tooltip>

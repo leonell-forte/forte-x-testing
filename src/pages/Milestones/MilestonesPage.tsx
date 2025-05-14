@@ -71,6 +71,7 @@ const MilestonesComp = ({
                   containerClass="w-full lg:max-w-[286px]"
                   placeholder="Search milestones"
                   onClear={() => handleSearchMilestone("")}
+                  tooltip="Search for milestone ID or funder name"
                 />
               </div>
             </div>

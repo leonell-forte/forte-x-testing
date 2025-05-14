@@ -146,6 +146,7 @@ const PayoutsPage = () => {
                   containerClass="lg:max-w-[286px]"
                   placeholder="Search"
                   onClear={() => handleSearchPayout("")}
+                  tooltip="Search for payout ID"
                 />
               </div>
               <button

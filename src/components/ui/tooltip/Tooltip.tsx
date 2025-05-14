@@ -34,8 +34,8 @@ const Tooltip = styled(
   )
 )(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: theme.palette.common.white,
-    color: "rgba(0, 0, 0, 0.87)",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    color: "white",
     boxShadow: theme.shadows[1],
     fontSize: 14,
     borderRadius: 4,
@@ -43,7 +43,7 @@ const Tooltip = styled(
     padding: "6px 8px",
   },
   [`& .${tooltipClasses.arrow}`]: {
-    color: theme.palette.common.white,
+    color: "rgba(0, 0, 0, 0.5)",
   },
   [`& .${tooltipClasses.popper}`]: {
     zIndex: "50",

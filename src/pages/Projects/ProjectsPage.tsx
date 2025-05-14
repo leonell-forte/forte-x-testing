@@ -128,6 +128,7 @@ const ProjectsPage = ({ hideHeader = false, funderId }: ProjectsPageProps) => {
                 }}
                 containerClass="md:max-w-[286px]"
                 onClear={() => handleSearchProject("")}
+                tooltip="Search for project name"
               />
             </div>
             {!funderId && (
