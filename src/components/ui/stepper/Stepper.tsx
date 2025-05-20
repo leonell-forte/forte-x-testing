@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import { motion } from "framer-motion";
 import React, {
   HTMLAttributes,
   createContext,
@@ -120,13 +121,28 @@ type StepperContentProps = HTMLAttributes<HTMLDivElement> & {
 };
 
 const StepContent = forwardRef<HTMLDivElement, StepperContentProps>(
-  ({ contentNumber, ...props }, ref) => {
+  ({ contentNumber, children, ...props }, ref) => {
     const { state } = useStepper();
 
     const { activeStep } = state;
 
     if (contentNumber === activeStep)
-      return <div ref={ref} className="w-full" {...props} />;
+      return (
+        <div ref={ref} className="w-full" {...props}>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 30,
+            }}
+          >
+            {children}
+          </motion.div>
+        </div>
+      );
 
     return null;
   }

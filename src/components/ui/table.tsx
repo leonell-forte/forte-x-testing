@@ -3,6 +3,8 @@ import { TableHTMLAttributes, useEffect, useRef, useState } from "react";
 
 import search from "assets/images/search.png";
 
+import { cn } from "lib/utils";
+
 import { Tooltip } from "./tooltip/Tooltip";
 
 interface ITableProp extends TableHTMLAttributes<HTMLTableElement> {}
@@ -33,7 +35,9 @@ const defaultLoadingConfig = {
   columns: 8,
 };
 
-interface ITableCellProps extends TableHTMLAttributes<HTMLTableCellElement> {}
+interface ITableCellProps extends TableHTMLAttributes<HTMLTableCellElement> {
+  cellClassName?: string;
+}
 
 const Table = {
   Container: ({
@@ -186,7 +190,7 @@ const Table = {
     );
   },
 
-  Data: ({ children, className, ...props }: ITableCellProps) => {
+  Data: ({ children, className, cellClassName, ...props }: ITableCellProps) => {
     const textRef = useRef<HTMLDivElement>(null);
     const [isOverflowed, setIsOverflowed] = useState(false);
 
@@ -209,7 +213,10 @@ const Table = {
 
     return (
       <td
-        className="h-[50px] max-w-[300px] border-b border-white/50 text-base font-[300]"
+        className={cn(
+          "h-[50px] max-w-[300px] border-b border-white/50 text-base font-[300]",
+          cellClassName
+        )}
         {...props}
         role="cell"
         aria-label={typeof children === "string" ? children : undefined}

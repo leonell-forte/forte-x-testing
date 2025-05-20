@@ -14,27 +14,42 @@ function AlertIcon() {
   );
 }
 
+interface ITooltipProps extends TooltipProps {
+  show?: boolean;
+}
+
 const Tooltip = styled(
-  ({ className, arrow = true, ...props }: TooltipProps) => (
-    <Prim
-      {...props}
-      arrow={arrow}
-      slots={{
-        transition: Zoom,
-      }}
-      slotProps={{
-        popper: {
-          style: {
-            zIndex: 41,
+  ({
+    className,
+    arrow = true,
+    show = true,
+    children,
+    ...props
+  }: ITooltipProps) => {
+    if (!show) return children;
+    return (
+      <Prim
+        {...props}
+        arrow={arrow}
+        slots={{
+          transition: Zoom,
+        }}
+        slotProps={{
+          popper: {
+            style: {
+              zIndex: 41,
+            },
           },
-        },
-      }}
-      classes={{ popper: className }}
-    />
-  )
+        }}
+        classes={{ popper: className }}
+      >
+        {children}
+      </Prim>
+    );
+  }
 )(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
     color: "white",
     boxShadow: theme.shadows[1],
     fontSize: 14,

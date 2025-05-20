@@ -68,7 +68,7 @@ export default function CustomController({
         <>
           <div className="flex items-center gap-1.5">
             <AlertIcon />
-            <div className="flex-1 text-sm text-black">{result?.message}</div>
+            <div className="flex-1 text-sm text-white">{result?.message}</div>
           </div>
         </>
       }

@@ -4,7 +4,7 @@ import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import { BiSlider as SliderIcon } from "react-icons/bi";
 import { HiPlus } from "react-icons/hi2";
 import { TbFilterX as FilterIcon } from "react-icons/tb";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { create } from "zustand";
 
 import useOrganizationList from "lib/common/lists/useOrganizationList";
@@ -20,7 +20,6 @@ import {
 import { IBeneficiariesFilter } from "lib/types/beneficiaries";
 import { findLabelFromOptions, sortOptions } from "lib/utils";
 
-import { showImportBeneficiariesModal } from "components/Dashboard/Beneficiaries/Dialogues/ImportDialogue";
 import { showSetupBeneficiaryModal } from "components/Dashboard/Beneficiaries/Dialogues/SetupBeneficiary";
 import { useProfile } from "components/ProfileContext";
 import BeneficiariesTable from "components/tables/Beneficiaries";
@@ -39,6 +38,7 @@ import SearchInput from "components/ui/search-input";
 
 import ViewMilestone from "pages/Milestones/ViewMilestone";
 
+import BulkUpload from "./BulkUpload";
 import ViewBeneficiary from "./ViewBeneficiary";
 
 type BeneficiariesProps = {
@@ -157,6 +157,8 @@ const BeneficiariesComp = ({
     //eslint-disable-next-line
   }, [modal, beneficiaryId, selectedIds, filters]);
 
+  const navigate = useNavigate();
+
   return (
     <>
       {renderModal()}
@@ -193,7 +195,7 @@ const BeneficiariesComp = ({
                         <DropdownMenuItem
                           onClick={(e) => {
                             e.stopPropagation();
-                            showImportBeneficiariesModal();
+                            navigate("/beneficiaries/bulk-upload");
                           }}
                         >
                           Bulk upload
@@ -419,6 +421,16 @@ export default function BeneficiariesPage({
             providerId={providerId}
             funderId={funderId}
           />
+        }
+      />
+      <Route
+        path="bulk-upload"
+        element={
+          <>
+            <BreadCrumb href="/beneficiaries">Beneficiaries</BreadCrumb>
+            <BreadCrumb>Bulk Upload</BreadCrumb>
+            <BulkUpload />
+          </>
         }
       />
       <Route

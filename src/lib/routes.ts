@@ -181,14 +181,6 @@ export const ROUTES: RouteConfig[] = [
   },
 
   {
-    link: "beneficiaries",
-
-    Component: BeneficiariesPage,
-
-    permissions: [Beneficiaries.NAVIGATE],
-  },
-
-  {
     link: "payouts",
 
     Component: PayoutsPage,

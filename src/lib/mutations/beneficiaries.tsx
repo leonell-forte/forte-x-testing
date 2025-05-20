@@ -27,6 +27,8 @@ interface IBeneficiaryMutationProps {
   projectId?: string;
 
   contractId?: string;
+
+  errorCallback?: () => void;
 }
 
 export const useBeneficiaryMutation = ({
@@ -178,9 +180,8 @@ export const useBeneficiaryMutation = ({
 
 export const useImportBeneficiaryMutation = ({
   successCallback,
+  errorCallback,
 }: IBeneficiaryMutationProps) => {
-  const { setAlert } = useAlert();
-
   const { page } = usePage();
 
   const beneficiaryQuery = [
@@ -218,18 +219,15 @@ export const useImportBeneficiaryMutation = ({
 
       successCallback?.();
 
-      setAlert({
-        title: "Success!",
-
-        message: `Beneficiary imported successfully`,
-
-        status: "success",
-      });
+      // toast({
+      //   title: "Beneficiary imported successfully",
+      // });
 
       amplitude.track(`Import Beneficiary Form Submission`);
     },
 
     onError: (err: any, newBeneficiary, context) => {
+      if (errorCallback) errorCallback();
       const errorMessages = err?.response?.data?.errorFields
         ? Object.values(err?.response?.data?.errorFields).map(
             (item) => item as string
@@ -238,14 +236,12 @@ export const useImportBeneficiaryMutation = ({
 
       console.log(errorMessages);
 
-      setAlert({
+      toast({
         title: `Failed importing beneficiary`,
-
-        message: errorMessages
+        description: errorMessages
           ? errorMessages.join("\n")
           : err?.response?.data?.message,
-
-        status: "error",
+        variant: "danger",
       });
 
       queryClient.setQueryData(
