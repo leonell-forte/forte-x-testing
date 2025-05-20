@@ -78,9 +78,6 @@ const MarkAsCompleted = ({
     }
   }, [contractDetails, reset, isDraft]);
 
-  console.log(getValues());
-  console.log(errors);
-
   const { updateContract, isPending } = useUpdateContractStatusMutation({
     id: (contractDetails.id || "").toString(),
     callBack: handleClose,
