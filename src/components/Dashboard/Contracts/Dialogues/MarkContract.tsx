@@ -39,8 +39,6 @@ const MarkAsCompleted = ({
     control,
 
     reset,
-
-    getValues,
   } = useForm<ContractFieldValues>({
     resolver: zodResolver(contracts.schema),
 

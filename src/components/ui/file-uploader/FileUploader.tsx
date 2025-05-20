@@ -68,6 +68,8 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onFileUpload }) => {
         alert(
           "Error processing file. Please make sure it's a valid CSV/Excel file."
         );
+        console.log(error);
+
         setFileName("");
       }
     };

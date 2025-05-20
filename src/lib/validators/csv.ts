@@ -1,39 +1,41 @@
- import { format, isValid, parse } from "date-fns";
+import { format, isValid, parse } from "date-fns";
+
 import { isPhoneValid } from "lib/isPhoneValid";
 
 export const selectOptions: { [key: string]: string[] } = {
-    "disability status": ["Yes", "No"],
-    gender: ["Male", "Female", "Non-binary", "Other"],
-    "highest education level": [
-      "Less than High School",
-      "High School Graduate",
-      "Some College",
-      "Bachelor’s Degree",
-      "Postgraduate Degree",
-    ],
-    "risk level": ["Low", "Medium", "High"],
-  };
+  "disability status": ["Yes", "No"],
+  gender: ["Male", "Female", "Non-binary", "Other"],
+  "highest education level": [
+    "Less than High School",
+    "High School Graduate",
+    "Some College",
+    "Bachelor’s Degree",
+    "Postgraduate Degree",
+  ],
+  "risk level": ["Low", "Medium", "High"],
+};
 
- 
 export const validateEmail = (email: string): boolean => {
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-return emailRegex.test(email);
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
 };
 
 export const validatePhoneNumber = (phone: string): boolean => {
-const phoneRegex = /^\+?[\d\s-]{10,}$/;
-return phoneRegex.test(phone);
+  const phoneRegex = /^\+?[\d\s-]{10,}$/;
+  return phoneRegex.test(phone);
 };
 
 export const validateDate = (date: string): boolean => {
-const dateObj = parse(date, "yyyy-MM-dd", new Date());
-return isValid(dateObj);
+  const dateObj = parse(date, "yyyy-MM-dd", new Date());
+  return isValid(dateObj);
 };
 
 const nonEmptyColumns = ["first name", "last name", "contract id", "email"];
 
-export const validateField = (value: string, columnName: string): string | null => {
-
+export const validateField = (
+  value: string,
+  columnName: string
+): string | null => {
   columnName = columnName.toLowerCase();
 
   if (nonEmptyColumns.includes(columnName) && (!value || value.trim() === "")) {
@@ -47,7 +49,10 @@ export const validateField = (value: string, columnName: string): string | null 
   }
 
   if (columnName === "email") {
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) && value.toLowerCase() !== "") {
+    if (
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) &&
+      value.toLowerCase() !== ""
+    ) {
       return "Invalid email format.";
     }
   }
@@ -65,7 +70,6 @@ export const validateField = (value: string, columnName: string): string | null 
     }
   }
 
-
   if (columnName === "highest education level") {
     const allowedLevels = selectOptions["highest education level"];
     if (!allowedLevels.includes(value) && value.toLowerCase() !== "") {
@@ -82,7 +86,10 @@ export const validateField = (value: string, columnName: string): string | null 
 
   if (columnName === "disability status") {
     const allowedDisabilityStatus = selectOptions["disability status"];
-    if (!allowedDisabilityStatus.includes(value) && value.toLowerCase() !== "") {
+    if (
+      !allowedDisabilityStatus.includes(value) &&
+      value.toLowerCase() !== ""
+    ) {
       return "Disability status must be one of: Yes, No.";
     }
   }
@@ -90,12 +97,13 @@ export const validateField = (value: string, columnName: string): string | null 
   return null;
 };
 
-export function excelDateToFormattedDate(excelDate: number | string): string | null {
-  if (typeof excelDate !== 'number' || isNaN(excelDate)) {
+export function excelDateToFormattedDate(
+  excelDate: number | string
+): string | null {
+  if (typeof excelDate !== "number" || isNaN(excelDate)) {
     return "";
   }
 
- 
   if (excelDate < 1 || excelDate > 2958465) {
     return "";
   }
@@ -111,6 +119,7 @@ export function excelDateToFormattedDate(excelDate: number | string): string | n
 
     return format(jsDate, "yyyy-MM-dd");
   } catch (error) {
+    console.log(error);
     return "";
   }
 }

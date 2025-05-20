@@ -1,4 +1,4 @@
-import { PhoneNumberUtil, PhoneNumberFormat } from "google-libphonenumber";
+import { PhoneNumberFormat, PhoneNumberUtil } from "google-libphonenumber";
 
 const phoneUtil = PhoneNumberUtil.getInstance();
 
@@ -12,24 +12,25 @@ export const isPhoneValid = (phone: string) => {
   }
 };
 
-
 export const formatToInternational = (phoneNumber: string): string => {
   try {
     const phoneUtil = PhoneNumberUtil.getInstance();
     const PNF = PhoneNumberFormat;
-    
-    if (phoneNumber.startsWith('+')) {
+
+    if (phoneNumber.startsWith("+")) {
       try {
-        const parsedNumber = phoneUtil.parse(phoneNumber, '');
+        const parsedNumber = phoneUtil.parse(phoneNumber, "");
         if (phoneUtil.isValidNumber(parsedNumber)) {
           return phoneUtil.format(parsedNumber, PNF.INTERNATIONAL);
         }
       } catch (e) {
+        console.log(e);
+
         return phoneNumber;
       }
     } else {
       const regions = phoneUtil.getSupportedRegions();
-      
+
       for (const region of regions) {
         try {
           const possibleNumber = phoneUtil.parse(phoneNumber, region);
@@ -37,13 +38,14 @@ export const formatToInternational = (phoneNumber: string): string => {
             return phoneUtil.format(possibleNumber, PNF.INTERNATIONAL);
           }
         } catch (e) {
+          console.log(e);
         }
       }
     }
-    
+
     return phoneNumber;
-    
   } catch (error) {
+    console.log(error);
     return phoneNumber;
   }
 };
