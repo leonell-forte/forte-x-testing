@@ -39,6 +39,8 @@ const MarkAsCompleted = ({
     control,
 
     reset,
+
+    getValues,
   } = useForm<ContractFieldValues>({
     resolver: zodResolver(contracts.schema),
 
@@ -75,6 +77,9 @@ const MarkAsCompleted = ({
       );
     }
   }, [contractDetails, reset, isDraft]);
+
+  console.log(getValues());
+  console.log(errors);
 
   const { updateContract, isPending } = useUpdateContractStatusMutation({
     id: (contractDetails.id || "").toString(),

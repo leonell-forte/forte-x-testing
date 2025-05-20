@@ -36,7 +36,7 @@ const contractOutcomeSchema = z
 
     dateType: z.string().min(1, { message: "Date is a required field" }),
 
-    date: z.string().min(1, { message: "This is a required field" }),
+    date: z.string().min(1, { message: "This is a required field" }).nullable(),
   })
   .refine(
     (data) => {
