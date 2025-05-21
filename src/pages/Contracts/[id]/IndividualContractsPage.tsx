@@ -28,7 +28,7 @@ import BeneficiariesPage from "pages/Beneficiaries/BeneficiariesPage";
 import MilestonePage from "pages/Milestones/MilestonesPage";
 
 const IndividualContractsPage = () => {
-  const { profile, isForteUser } = useProfile();
+  const { isForteUser } = useProfile();
   const params = useParams();
 
   const [modal, setModal] = useState<"contract" | "mark" | null>(null);
