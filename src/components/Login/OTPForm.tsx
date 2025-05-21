@@ -14,6 +14,7 @@ import { ILoginProps } from "./types";
 
 const OTPForm = ({ handleNext }: ILoginProps) => {
   const [loading, setLoading] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(300);
   const [countdown, setCountdown] = useState(120);
   const [isResendDisabled, setIsResendDisabled] = useState(true);
 
@@ -36,6 +37,19 @@ const OTPForm = ({ handleNext }: ILoginProps) => {
     }
     return () => clearInterval(timer);
   }, [countdown]);
+
+  useEffect(() => {
+    let interval: any;
+    if (timeLeft > 0) {
+      interval = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+    } else {
+      window.location.reload();
+    }
+
+    return () => clearInterval(interval);
+  }, [timeLeft]);
 
   const handleContinue = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
