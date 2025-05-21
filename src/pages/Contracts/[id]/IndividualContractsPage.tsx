@@ -177,6 +177,7 @@ const IndividualContractsPage = () => {
 
             <>
               {IsAuthorized([Contracts.UPDATE]) &&
+                contractDetails?.status === "draft" &&
                 (profile.orgType === "forte" ||
                   contractDetails?.status === "draft") && (
                   <Button
