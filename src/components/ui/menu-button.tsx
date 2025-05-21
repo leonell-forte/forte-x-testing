@@ -33,13 +33,19 @@ const MenuButton = {
     );
   },
 
-  Item: (props: HTMLAttributes<HTMLLIElement>) => {
+  Item: (
+    props: HTMLAttributes<Omit<HTMLLIElement, "onClick">> &
+      HTMLAttributes<HTMLButtonElement> & { disabled?: boolean }
+  ) => {
     return (
-      <li
-        className="cursor-pointer px-3 py-2 text-black hover:text-mint"
-        {...props}
-      >
-        {props.children}
+      <li {...props}>
+        <button
+          disabled={props.disabled}
+          onClick={props.onClick}
+          className="cursor-pointer px-3 py-2 text-black hover:text-mint disabled:cursor-not-allowed disabled:text-disabled"
+        >
+          {props.children}
+        </button>
       </li>
     );
   },

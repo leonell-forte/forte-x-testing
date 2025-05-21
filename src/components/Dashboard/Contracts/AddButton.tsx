@@ -29,6 +29,7 @@ const AddButton = ({
       <MenuButton.Menu>
         {IsAuthorized([Contracts.UPDATE]) && (
           <MenuButton.Item
+            disabled={contract?.status === "completed"}
             onClick={() => showSetupContractModal({ contract, activeStep: 2 })}
           >
             Linked outcome
