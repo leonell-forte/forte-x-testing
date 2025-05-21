@@ -279,6 +279,15 @@ const ContractForm = ({
               />
             )}
           />
+          <div className="!mt-10 flex w-full items-center justify-between">
+            {!isCompleted && IsAuthorized([Contracts.UPDATE]) && (
+              <div className="flex w-full justify-end">
+                <Button type="submit" loading={isPending} className="w-[147px]">
+                  Update
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
       ) : (
         <>
