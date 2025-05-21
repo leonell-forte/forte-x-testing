@@ -32,7 +32,7 @@ const ContractsTable = ({
   projectId,
 }: TContractsTable) => {
   const navigate = useNavigate();
-  const { isProviderUser } = useProfile();
+  const { isProviderUser, isForteUser } = useProfile();
 
   const [contractId, setContractId] = useState<number | null>(null);
 
@@ -113,7 +113,8 @@ const ContractsTable = ({
                 </Cards.Group>
 
                 <div className="absolute bottom-4 right-4 flex gap-2">
-                  {IsAuthorized([Contracts.DELETE]) && status === "draft" && (
+                  {((IsAuthorized([Contracts.UPDATE]) && status === "draft") ||
+                    isForteUser) && (
                     <button
                       id={id?.toString()}
                       type="button"
@@ -132,7 +133,7 @@ const ContractsTable = ({
                     </button>
                   )}
 
-                  {IsAuthorized([Contracts.DELETE]) && (
+                  {IsAuthorized([Contracts.DELETE]) && status === "draft" && (
                     <button
                       id={id?.toString()}
                       type="button"
@@ -221,29 +222,30 @@ const ContractsTable = ({
 
                   <Table.Data>
                     <div className="flex justify-end gap-2">
-                      {IsAuthorized([Contracts.DELETE]) &&
-                        status === "draft" && (
-                          <button
-                            id={id?.toString()}
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              e.preventDefault();
-                              showSetupContractModal({
-                                contract: item,
-                              });
-                            }}
-                            className="group h-6 w-6"
-                          >
-                            <Pencil
-                              fill="white"
-                              className="h-auto w-4 ring-white ring-offset-1 transition-all group-hover:fill-mint group-focus:fill-mint group-focus:ring-1"
-                              aria-hidden="true"
-                              role="presentation"
-                            />
-                            <span className="sr-only">Edit {name}</span>
-                          </button>
-                        )}
+                      {((IsAuthorized([Contracts.UPDATE]) &&
+                        status === "draft") ||
+                        isForteUser) && (
+                        <button
+                          id={id?.toString()}
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            showSetupContractModal({
+                              contract: item,
+                            });
+                          }}
+                          className="group h-6 w-6"
+                        >
+                          <Pencil
+                            fill="white"
+                            className="h-auto w-4 ring-white ring-offset-1 transition-all group-hover:fill-mint group-focus:fill-mint group-focus:ring-1"
+                            aria-hidden="true"
+                            role="presentation"
+                          />
+                          <span className="sr-only">Edit {name}</span>
+                        </button>
+                      )}
                       {IsAuthorized([Contracts.DELETE]) &&
                         status === "draft" && (
                           <button

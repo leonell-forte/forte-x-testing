@@ -28,7 +28,7 @@ import BeneficiariesPage from "pages/Beneficiaries/BeneficiariesPage";
 import MilestonePage from "pages/Milestones/MilestonesPage";
 
 const IndividualContractsPage = () => {
-  const { profile } = useProfile();
+  const { profile, isForteUser } = useProfile();
   const params = useParams();
 
   const [modal, setModal] = useState<"contract" | "mark" | null>(null);
@@ -176,22 +176,21 @@ const IndividualContractsPage = () => {
               )}
 
             <>
-              {IsAuthorized([Contracts.UPDATE]) &&
-                contractDetails?.status === "draft" &&
-                (profile.orgType === "forte" ||
-                  contractDetails?.status === "draft") && (
-                  <Button
-                    buttonType="secondary"
-                    onClick={() =>
-                      showSetupContractModal({
-                        contract: contractDetails,
-                      })
-                    }
-                  >
-                    <Edit width={18} />
-                    Edit
-                  </Button>
-                )}
+              {((IsAuthorized([Contracts.UPDATE]) &&
+                contractDetails?.status === "draft") ||
+                isForteUser) && (
+                <Button
+                  buttonType="secondary"
+                  onClick={() =>
+                    showSetupContractModal({
+                      contract: contractDetails,
+                    })
+                  }
+                >
+                  <Edit width={18} />
+                  Edit
+                </Button>
+              )}
               <AddButton
                 contractId={params.id as string}
                 contract={contractDetails}
