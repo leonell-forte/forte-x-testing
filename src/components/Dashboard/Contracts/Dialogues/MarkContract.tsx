@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 
@@ -40,8 +39,6 @@ const MarkAsCompleted = ({
 
     reset,
   } = useForm<ContractFieldValues>({
-    resolver: zodResolver(contracts.schema),
-
     defaultValues: contracts.defaultValues({
       contract: contractDetails,
     }),

@@ -10,14 +10,17 @@ const getDateData = (outcome: any) => {
   if (outcome.dueDate)
     return {
       dateType: "date",
-      date: formatDate(outcome.dueDate, "LL-dd-yyyy"),
+      date: outcome.dueDate ? formatDate(outcome.dueDate, "LL-dd-yyyy") : "",
     };
   if (outcome.daysAfterBeneficiaryStartDate)
     return {
       dateType: "afterStart",
-      date: outcome.daysAfterBeneficiaryStartDate,
+      date: outcome.daysAfterBeneficiaryStartDate || "",
     };
-  return { dateType: "afterEnd", date: outcome.daysAfterBeneficiaryEndDate };
+  return {
+    dateType: "afterEnd",
+    date: outcome.daysAfterBeneficiaryEndDate || "",
+  };
 };
 
 const contractOutcomeSchema = z
@@ -36,7 +39,7 @@ const contractOutcomeSchema = z
 
     dateType: z.string().min(1, { message: "Date is a required field" }),
 
-    date: z.string().min(1, { message: "This is a required field" }).nullable(),
+    date: z.string().min(1, { message: "This is a required field" }),
   })
   .refine(
     (data) => {

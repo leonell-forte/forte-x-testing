@@ -598,11 +598,15 @@ const ContractForm = ({
                       watch("status") !== "cancelled" &&
                       watch("status") !== "draft" ? (
                         <Button
-                          onClick={(e) => {
+                          onClick={async (e) => {
                             e.preventDefault();
-                            setIsAmmending(true);
-                            setValue("documentId", 0);
-                            setError("documentId", { message: "" });
+                            const valid = await trigger("outcomeRates");
+
+                            if (valid) {
+                              setIsAmmending(true);
+                              setValue("documentId", 0);
+                              setError("documentId", { message: "" });
+                            }
                           }}
                           className="w-[147px]"
                         >
