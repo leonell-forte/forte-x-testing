@@ -32,7 +32,7 @@ export interface IUser {
 
   lastName: string;
 
-  email: string;
+  email?: string;
 
   role?: UserRoleType;
 

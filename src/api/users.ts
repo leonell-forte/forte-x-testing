@@ -78,8 +78,10 @@ class UserService {
   }
 
   async update(user: UserFieldTypes) {
+    const payload = { ...user } as IUser;
+    delete payload.email;
     const res = await api.put(`/users`, {
-      ...user,
+      ...payload,
       // makes sure only roles (owner, admin, user, read-only) are passed without appended organization type (provider.owner, provider.admin, etc.)
       role: user.role.split(".").pop(),
     });
