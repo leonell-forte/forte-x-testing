@@ -1,15 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
+import organizationService from "api/organization";
 import payoutsService from "api/payouts";
+import { DownloadIcon } from "lucide-react";
 import { useParams } from "react-router-dom";
+// Import the print styles
+import "styles/print.css";
 
 import { Payout, PayoutStatus } from "lib/types/payouts";
 import { getStatusVariant } from "lib/utils";
+
+import { downloadPayoutPdf } from "utils/payout-pdf";
 
 import ApprovePayout from "components/Dashboard/Payouts/ApprovePayout";
 import BankDetails from "components/Dashboard/Payouts/BankDetails";
 import PayoutMilestones from "components/Dashboard/Payouts/PayoutMilestones";
 import { useProfile } from "components/ProfileContext";
 import { BreadCrumb } from "components/ui/breadcrumb/Breadcrumb";
+import Button from "components/ui/button";
 import Status from "components/ui/status";
 
 const IndividualPayoutsPage = () => {
@@ -23,6 +30,21 @@ const IndividualPayoutsPage = () => {
     queryKey: ["payout", params.id],
     queryFn: () => payoutsService.getById(params.id as string),
   });
+
+  const { data: bankDetails } = useQuery({
+    queryKey: ["bank-details", payout?.provider?.id],
+    queryFn: () =>
+      organizationService.getBankDetails(
+        payout?.provider?.id?.toString() as string
+      ),
+    enabled: !!payout?.provider?.id,
+  });
+
+  const handleDownloadPdf = () => {
+    if (payout) {
+      downloadPayoutPdf(payout, bankDetails);
+    }
+  };
 
   return (
     <>
@@ -38,10 +60,10 @@ const IndividualPayoutsPage = () => {
             </Status>
           </div>
           <div className="flex gap-4">
-            {/* <Button buttonType="secondary">
+            <Button buttonType="secondary" onClick={handleDownloadPdf}>
               <DownloadIcon />
               Download
-            </Button> */}
+            </Button>
             {isForteUser && payout?.status === "draft" && (
               <ApprovePayout id={params.id as string} />
             )}
