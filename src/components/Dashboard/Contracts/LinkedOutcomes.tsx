@@ -45,7 +45,7 @@ const LinkedOutcomes = ({
             className="!grid-cols-1 md:!grid-cols-2"
           >
             {outcomes?.map((item, index) => {
-              const { id, outcome, perOutcome, rate } = item;
+              const { id, outcome, perOutcome, rate, currency } = item;
 
               return (
                 <Cards.Card key={index} title={`ID#${id}`}>
@@ -57,7 +57,7 @@ const LinkedOutcomes = ({
                     />
                     <Cards.Details
                       label="Rate"
-                      value={formatCurrency(Number(rate))}
+                      value={formatCurrency(Number(rate), currency)}
                     />
                   </Cards.Group>
                 </Cards.Card>
@@ -85,7 +85,7 @@ const LinkedOutcomes = ({
 
             <Table.Body>
               {outcomes?.map((item, index) => {
-                const { id, outcome, perOutcome, rate } = item;
+                const { id, outcome, perOutcome, rate, currency } = item;
 
                 return (
                   <Table.Row key={index}>
@@ -95,7 +95,9 @@ const LinkedOutcomes = ({
                       {perOutcome ? "Per outcome" : "Threshold"}
                     </Table.Data>
                     <Table.Data>{formatDueDate(item)}</Table.Data>
-                    <Table.Data>{formatCurrency(Number(rate))}</Table.Data>
+                    <Table.Data>
+                      {formatCurrency(Number(rate), currency)}
+                    </Table.Data>
                   </Table.Row>
                 );
               })}

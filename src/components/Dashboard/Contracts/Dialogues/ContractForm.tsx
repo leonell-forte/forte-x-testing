@@ -137,6 +137,7 @@ const ContractForm = ({
   const {
     projects,
     isLoading: projectLoading,
+    rawList,
     handleSearchProject,
   } = useProjectList({
     key: ["dropdown"],
@@ -259,6 +260,15 @@ const ContractForm = ({
 
     return () => subscription.unsubscribe();
   }, [form]);
+
+  const selectedProjectId = watch("projectId");
+
+  const selectedProjectCurrency = useMemo(() => {
+    const project = rawList?.items?.find(
+      (project) => Number(project.id) === selectedProjectId
+    );
+    return project?.currency || "USD";
+  }, [rawList, selectedProjectId]);
 
   return (
     <Form form={form} onSubmit={onSubmit} className="space-y-1">
@@ -516,6 +526,7 @@ const ContractForm = ({
                   {fields.map((item, index) => {
                     return (
                       <ContractOutcomeField
+                        currency={selectedProjectCurrency}
                         isLast={index === fields.length - 1}
                         disabled={!onEdit}
                         key={item.id}

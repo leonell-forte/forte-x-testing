@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { IsAuthorized, Projects } from "lib/role-permissions";
 import { IProject } from "lib/types/projects";
-import { formatCurrency, getStatusVariant } from "lib/utils";
+import { formatCurrency, getCurrencyCode, getStatusVariant } from "lib/utils";
 
 import DeleteDialogue from "components/Dashboard/Projects/Dialogues/DeleteDialogue";
 import { showProjectDialogue } from "components/Dashboard/Projects/Dialogues/ProjectDialogue";
@@ -68,6 +68,7 @@ const ProjectsTable = ({
               contractsCount,
               beneficiariesCount,
               milestonesCount,
+              currency,
             } = item;
 
             return (
@@ -84,7 +85,7 @@ const ProjectsTable = ({
                   <Cards.Details label="Funder" value={funder?.name || "-"} />
                   <Cards.Details
                     label="Budget"
-                    value={`${formatCurrency(Number(budget as string))}`}
+                    value={`${formatCurrency(Number(budget as string), getCurrencyCode(currency))}`}
                   />
 
                   <Cards.Details
@@ -176,6 +177,7 @@ const ProjectsTable = ({
                 contractsCount,
                 milestonesCount,
                 budget,
+                currency,
               } = item;
 
               return (
@@ -202,7 +204,9 @@ const ProjectsTable = ({
                     </Status>
                   </Table.Data>
 
-                  <Table.Data>{formatCurrency(Number(budget))}</Table.Data>
+                  <Table.Data>
+                    {formatCurrency(Number(budget), getCurrencyCode(currency))}
+                  </Table.Data>
 
                   <Table.Data>{contractsCount}</Table.Data>
 

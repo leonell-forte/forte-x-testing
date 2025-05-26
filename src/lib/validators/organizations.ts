@@ -28,6 +28,8 @@ export const organizations = {
       status: org?.status || "active",
 
       invoiceFrequency: org?.invoiceFrequecy || "monthly",
+
+      currency: org?.currency || "USD",
     };
 
     if (org) {
@@ -69,6 +71,8 @@ export const organizations = {
     }),
 
     invoiceFrequency: z.enum(["monthly", "quarterly", "yearly"]).optional(),
+
+    currency: z.string().optional(),
   }),
 };
 

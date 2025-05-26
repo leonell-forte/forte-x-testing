@@ -9,7 +9,7 @@ import eyeClosed from "assets/images/icons/eye-closed.svg";
 import eyeOpen from "assets/images/icons/eye-open.svg";
 
 import { PHONE_NUMBER } from "lib/regex";
-import { cn } from "lib/utils";
+import { cn, getCurrencySymbol } from "lib/utils";
 
 type PropTypes = TextFieldProps & {
   dark?: boolean;
@@ -25,6 +25,8 @@ type PropTypes = TextFieldProps & {
   readOnly?: boolean;
 
   isCurrency?: boolean;
+
+  currency?: string;
 };
 
 const Input = forwardRef<HTMLDivElement, PropTypes>(
@@ -36,6 +38,7 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
       name,
       readOnly = false,
       isCurrency = false,
+      currency = "USD",
       ...props
     },
     ref
@@ -68,9 +71,14 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
               input: {
                 startAdornment: (
                   <InputAdornment position="start" className="ml-3">
-                    <USD
-                      className={cn(props.disabled ? "fill-[#787878]" : "", "")}
-                    />
+                    <span
+                      className={cn(
+                        props.disabled ? "text-[#787878]" : "",
+                        "text-lg"
+                      )}
+                    >
+                      {getCurrencySymbol(currency)}
+                    </span>
                   </InputAdornment>
                 ),
               },

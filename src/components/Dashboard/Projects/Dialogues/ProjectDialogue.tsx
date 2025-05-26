@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import projectService from "api/projects";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { HiOutlinePlusCircle } from "react-icons/hi";
 
@@ -79,6 +79,7 @@ const ProjectDialogue = ({
   const {
     organizations,
     isLoading: orgLoading,
+    rawList,
     handleSearchOrg,
   } = useOrganizationList({
     key: ["dropdown"],
@@ -104,6 +105,7 @@ const ProjectDialogue = ({
     reset,
     control,
     trigger,
+    watch,
   } = form;
 
   const { fields, append, remove } = useFieldArray({
@@ -196,6 +198,15 @@ const ProjectDialogue = ({
     setActiveStep(step);
   };
 
+  const selectedFunderId = watch("funderId");
+
+  const selectedFunderCurrency = useMemo(() => {
+    const org = rawList?.items?.find(
+      (org) => Number(org.id) === selectedFunderId
+    );
+    return org?.currency || "USD";
+  }, [rawList, selectedFunderId]);
+
   return (
     <>
       {projectLoading ? (
@@ -261,7 +272,13 @@ const ProjectDialogue = ({
                       name="budget"
                       control={control}
                       render={({ field }) => {
-                        return <Input {...field} isCurrency />;
+                        return (
+                          <Input
+                            {...field}
+                            isCurrency
+                            currency={selectedFunderCurrency}
+                          />
+                        );
                       }}
                     />
                     <div className="mt-px">

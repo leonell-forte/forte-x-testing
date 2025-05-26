@@ -166,6 +166,10 @@ const IndividualFundersPage = () => {
                 label="Region"
                 value={orgData?.regions?.join(", ") || ""}
               />
+              <Details.Content
+                label="Currency"
+                value={orgData?.currency || "-"}
+              />
             </Details.Container>
           </div>
         </div>

@@ -46,6 +46,8 @@ export interface IOrganization {
   invoiceFrequency?: "monthly" | "quarterly" | "yearly";
   invoiceFrequecy?: "monthly" | "quarterly" | "yearly";
   invoice_frequency?: "monthly" | "quarterly" | "yearly";
+
+  currency?: string;
 }
 
 export type OrgTypes = "funder" | "provider" | "forte";

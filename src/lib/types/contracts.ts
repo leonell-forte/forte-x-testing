@@ -34,6 +34,8 @@ export interface IContractOutcomeRates {
   daysAfterBeneficiaryStartDate?: string;
 
   daysAfterBeneficiaryEndDate?: string;
+
+  currency?: string
 }
 
 export type Sub = {

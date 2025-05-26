@@ -36,6 +36,8 @@ interface IContractOutcomeField {
   isLast?: boolean;
 
   dateType?: string;
+
+  currency?: string;
 }
 
 const OUTCOME_TYPES = ["Per outcome", "If threshold reached"];
@@ -71,6 +73,8 @@ const ContractOutcomeField = ({
   isLast,
 
   dateType,
+
+  currency,
 }: IContractOutcomeField) => {
   const { data: project, isLoading: isProjectLoading } = useQuery({
     queryKey: ["specific-project", projectId],
@@ -173,6 +177,7 @@ const ContractOutcomeField = ({
                   {...field}
                   isCurrency
                   min={0}
+                  currency={currency}
                   disabled={disabled}
                   placeholder="XX,XXX.XX"
                   type="number"
@@ -212,6 +217,7 @@ const ContractOutcomeField = ({
                 {...field}
                 isCurrency
                 min={0}
+                currency={currency}
                 disabled={disabled}
                 placeholder="XX,XXX.XX"
                 type="number"

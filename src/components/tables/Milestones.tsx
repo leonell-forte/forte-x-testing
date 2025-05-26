@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ReactComponent as Add } from "assets/images/icons/add.svg";
 
 import { IMilestone, MILESTONE_TYPES } from "lib/types/milestones";
-import { formatNumber, getStatusVariant } from "lib/utils";
+import { formatCurrency, formatNumber, getStatusVariant } from "lib/utils";
 
 import { showSetupEvidenceModal } from "components/Dashboard/Milestones/modals/SetupEvidence";
 import Button from "components/ui/button";
@@ -47,7 +47,7 @@ const MilestonesTable = ({
 
                   <Cards.Details
                     label="Cost"
-                    value={`$${formatNumber(cost)}`}
+                    value={formatCurrency(Number(cost), funder.currency)}
                   />
                   <Cards.Details
                     label="Evidence Status"
@@ -106,7 +106,7 @@ const MilestonesTable = ({
                   <Table.Data>{outcome.name}</Table.Data>
 
                   <Table.Data className="!pr-12 text-right">
-                    ${formatNumber(cost)}
+                    {formatCurrency(Number(cost), funder.currency)}
                   </Table.Data>
 
                   <Table.Data className="flex items-center">

@@ -8,7 +8,7 @@ import {
   useSearchParams,
 } from "react-router-dom";
 
-import { formatDate, formatNumber, getStatusVariant } from "lib/utils";
+import { formatCurrency, formatDate, getStatusVariant } from "lib/utils";
 
 import MilestonesTable from "components/tables/Milestones";
 import Button from "components/ui/button";
@@ -106,7 +106,7 @@ const IndividualInvoicePage = () => {
                 {formatDate(invoice.createdAt, "dd MMMM yyy")}
               </InfoVertical>
               <InfoVertical label="Cost">
-                ${formatNumber(invoice.cost)}
+                {formatCurrency(invoice.cost, invoice.currency)}
               </InfoVertical>
               <InfoVertical label="Invoice ID">{invoice.id}</InfoVertical>
 

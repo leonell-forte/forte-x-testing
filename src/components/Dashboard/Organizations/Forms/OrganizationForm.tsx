@@ -10,6 +10,7 @@ import useOrganizationMutation from "lib/mutations/organizations";
 import { Funders, IsAuthorized, Providers } from "lib/role-permissions";
 import { OrgStatus, OrganizationFieldTypes } from "lib/types/organizations";
 import { useAutofocus } from "lib/useAutoFocus";
+import { findLabelFromOptions } from "lib/utils";
 import { organizations } from "lib/validators/organizations";
 
 import Button from "components/ui/button";
@@ -17,6 +18,7 @@ import Controller from "components/ui/custom-controller/CustomController";
 import { useModal } from "components/ui/dialogue/v2/Modal";
 import Dropdown from "components/ui/dropdown";
 import { Form } from "components/ui/form/Form";
+import currencies, { stripeCurrencies } from "components/ui/form/currencies";
 import { useAutoSaveForm } from "components/ui/form/useAutoSave";
 import Input from "components/ui/input";
 import Spinner from "components/ui/spinner/spinner";
@@ -271,8 +273,8 @@ const OrganizationForm = ({
             </div>
           </div>
 
-          <div className="border-t border-white/30 pt-6">
-            <div className="max-w-[272px] space-y-3">
+          <div className="space-y-3 border-t border-white/30 pt-6">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-2">
               <Controller
                 labelClassName={labelClass}
                 label="Region"
@@ -300,32 +302,39 @@ const OrganizationForm = ({
                   );
                 }}
               />
-              {/* <Controller
-              labelClassName={labelClass}
-              label="Type"
-              required
-              name="type"
-              control={control}
-              render={() => {
-                return (
-                  <Dropdown
-                    value={
-                      TYPES.find((item) => item.value === watch("type"))?.label
-                    }
-                    handleSelect={(val) => {
-                      setError("type", { message: "" });
-
-                      setValue("type", val as OrgTypes, {
-                        shouldDirty: true,
-                      });
-                    }}
-                    options={TYPES}
-                    placeholder="Select type"
-                    disabled
-                  />
-                );
-              }}
-            /> */}
+              {type === "funder" && (
+                <Controller
+                  labelClassName={labelClass}
+                  label="Currency"
+                  required
+                  name="currency"
+                  control={control}
+                  render={({ field }) => {
+                    return (
+                      <Dropdown
+                        enableSearch
+                        value={findLabelFromOptions(currencies, field.value)}
+                        handleSelect={(val) => {
+                          field.onChange(val);
+                        }}
+                        options={currencies}
+                        placeholder="Select currency"
+                        disabled={!editMode}
+                        filterOptions
+                        leadingIcon={
+                          <span className="mb-1 text-lg">
+                            {stripeCurrencies.find(
+                              (c) => c.value === field.value
+                            )?.flag || "💱"}
+                          </span>
+                        }
+                      />
+                    );
+                  }}
+                />
+              )}
+            </div>
+            <div className="max-w-[272px] space-y-3">
               <Controller
                 labelClassName={labelClass}
                 label="Status"

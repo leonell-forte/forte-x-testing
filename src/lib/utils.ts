@@ -9,6 +9,7 @@ import { IBeneficiaries } from "./types/beneficiaries";
 import { InvoiceStatus } from "./types/invoices";
 import { EvidenceStatus, MilestoneStatus } from "./types/milestones";
 import { OrgStatus } from "./types/organizations";
+import { stripeCurrencies } from "components/ui/form/currencies";
 
 export const filterBySearch = (
   list: Record<string, string>[],
@@ -249,3 +250,15 @@ export const shouldHref = (href: string, current: string) => {
   if (href === current) return undefined;
   return href;
 };
+
+export const getCurrencyCode = (code?: string) => {
+  const currency = stripeCurrencies.find((c) => c.value === code);
+
+  return currency?.value || "USD";
+}
+
+export const getCurrencySymbol = (code?: string) => {
+  const currency = stripeCurrencies.find((c) => c.value === code);
+
+  return currency?.symbol || "USD";
+}

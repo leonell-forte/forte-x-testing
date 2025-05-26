@@ -29,7 +29,8 @@ const Invoices = ({ list, isLoading }: InvoicesProps) => {
       <div className="lg:hidden">
         <Cards.Container isLoading={isLoading}>
           {list?.map((item, index) => {
-            const { id, createdAt, cost, status, noOfMilestones } = item;
+            const { id, createdAt, cost, status, noOfMilestones, currency } =
+              item;
             return (
               <Cards.Card
                 onClick={(e) => {
@@ -48,7 +49,10 @@ const Invoices = ({ list, isLoading }: InvoicesProps) => {
                     label="# of Milestones"
                     value={noOfMilestones || "-"}
                   />
-                  <Cards.Details label="Amount" value={formatCurrency(cost)} />
+                  <Cards.Details
+                    label="Amount"
+                    value={formatCurrency(cost, currency)}
+                  />
                   <Cards.Details
                     label="Status"
                     value={
@@ -96,7 +100,8 @@ const Invoices = ({ list, isLoading }: InvoicesProps) => {
           </Table.Head>
           <Table.Body>
             {list?.map((item, index) => {
-              const { id, createdAt, cost, status, noOfMilestones } = item;
+              const { id, createdAt, cost, status, noOfMilestones, currency } =
+                item;
               return (
                 <Table.Row
                   key={index}
@@ -110,7 +115,7 @@ const Invoices = ({ list, isLoading }: InvoicesProps) => {
                     {formatDate(new Date(createdAt || ""), "dd LLLL yyyy")}
                   </Table.Data>
                   <Table.Data>{noOfMilestones || "-"}</Table.Data>
-                  <Table.Data>{formatCurrency(cost)}</Table.Data>
+                  <Table.Data>{formatCurrency(cost, currency)}</Table.Data>
                   <Table.Data>
                     <Status variant={getStatusVariant(status)}>{status}</Status>
                   </Table.Data>

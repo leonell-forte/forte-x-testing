@@ -18,6 +18,7 @@ export const MILESTONE_TYPES = {
 type Sub = {
   id?: string;
   name?: string;
+  currency?: string;
 };
 
 export type TMilestoneEvidence = {

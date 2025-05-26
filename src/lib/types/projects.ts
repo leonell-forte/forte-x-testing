@@ -46,6 +46,8 @@ export interface IProject {
   milestonesCount?: string | number;
 
   status: "active" | "completed"
+
+  currency?: string;
 }
 
 export interface IProjectOrganization {
