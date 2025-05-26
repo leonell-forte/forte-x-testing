@@ -1,12 +1,11 @@
 import { TextFieldProps } from "@mui/material";
 import classNames from "classnames";
-import { motion } from "framer-motion";
 import { HiSearch, HiX } from "react-icons/hi";
 
 import { cn } from "lib/utils";
 
+import InfoTooltip from "./info-tooltip";
 import Input from "./input";
-import { Tooltip } from "./tooltip/Tooltip";
 
 type IProps = TextFieldProps & {
   dark?: boolean;
@@ -64,7 +63,7 @@ const SearchInput = ({
             />
           </button>
         ) : (
-          tooltip && <SearchTooltip tooltip={tooltip} />
+          tooltip && <InfoTooltip tooltip={tooltip} />
         )}
       </div>
     </div>
@@ -72,15 +71,3 @@ const SearchInput = ({
 };
 
 export default SearchInput;
-
-const SearchTooltip = ({ tooltip }: { tooltip: string }) => {
-  return (
-    <>
-      <Tooltip title={tooltip} placement="top">
-        <motion.div className="flex h-4 w-4 cursor-default items-center justify-center rounded-full border border-[#8aa9b0] text-[10px] font-bold text-[#8aa9b0]">
-          i
-        </motion.div>
-      </Tooltip>
-    </>
-  );
-};

@@ -77,13 +77,13 @@ const SidePanel = () => {
                       "group flex items-center gap-3 text-lg capitalize transition-all lg:text-base"
                     )}
                   >
-                    <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center">
+                    <div className="flex flex-shrink-0 items-center justify-center">
                       <Icon
                         className={cn(
                           active
                             ? "fill-mint stroke-mint"
                             : "fill-white stroke-white group-hover:fill-mint/70 group-hover:stroke-mint/70",
-                          "transition"
+                          "h-6 w-6 transition"
                         )}
                       />
                     </div>

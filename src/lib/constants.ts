@@ -21,10 +21,17 @@ import { InvoiceStatus } from "./types/invoices";
 import { OrgTypes } from "./types/organizations";
 import { UserRoleType } from "./types/users";
 import { sortOptions } from "./utils";
+import { TbLayoutDashboardFilled as Dashboard } from "react-icons/tb";
 
 export const DEFAULT_PAGE_SIZE = "10";
 
 export const MENUS = [
+    {
+    name: "dashboard",
+    link: "/dashboard",
+    permissions: [],
+    icon: Dashboard,
+  },
   {
     name: "funders",
     link: "/funders",

@@ -185,3 +185,11 @@ export const useDebouncedSearch = (initialValue: string) => {
     string,
   ];
 };
+
+
+export const useStatusParams = () => {
+    const [params] = useSearchParams();
+    const paramStatus = params.get("status") || "";
+
+    return paramStatus;
+}

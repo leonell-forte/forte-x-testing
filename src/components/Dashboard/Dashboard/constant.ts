@@ -1,0 +1,17 @@
+export const COLOR_PALETTE = [
+  "#42ECA8",
+  "#38CBFF",
+  "#A276E7",
+  "#C954B7",
+  "#708051",
+  "#C5FF62",
+  "#E4E4D4",
+  "#E1EEA3",
+  "#F8B37D",
+  "#E9B2FF",
+  "#D06363",
+  "#A3FCFD",
+  "#57A5A4",
+  "#FF2FD9",
+  "#FF9D00",
+];

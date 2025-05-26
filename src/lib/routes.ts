@@ -14,6 +14,8 @@ import {
   Users,
 } from "./role-permissions";
 
+import DashboardPage from "pages/Dashboard/DashboardPage";
+
 const UsersPage = React.lazy(() => import("../pages/Users/UsersPage"));
 
 const InvoicesPage = React.lazy(() => import("../pages/Invoices/InvoicesPage"));
@@ -84,6 +86,13 @@ export interface RouteConfig {
 }
 
 export const ROUTES: RouteConfig[] = [
+    {
+    link: "dashboard",
+
+    Component: DashboardPage,
+
+    permissions: [],
+  },
   {
     link: "invoices/*",
 

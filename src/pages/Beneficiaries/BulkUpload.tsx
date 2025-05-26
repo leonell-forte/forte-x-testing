@@ -44,15 +44,17 @@ export const useBulkUploadStore = create<TBulkUploadStore>()((set) => ({
 }));
 
 const BulkUpload = () => {
-  const { step, setStep, setData, setCsvFile } = useBulkUploadStore();
+  const { step, setStep, setData, setCsvFile, setOriginalFileName } =
+    useBulkUploadStore();
 
   useEffect(() => {
     return () => {
       setStep(1);
       setData({ headers: [], rows: [] });
       setCsvFile(null);
+      setOriginalFileName("");
     };
-  }, [setStep, setData, setCsvFile]);
+  }, [setStep, setData, setCsvFile, setOriginalFileName]);
 
   return (
     <div>

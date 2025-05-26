@@ -5,13 +5,14 @@ import { useNavigate } from "react-router-dom";
 
 import { IsAuthorized, Projects } from "lib/role-permissions";
 import { IProject } from "lib/types/projects";
-import { formatCurrency } from "lib/utils";
+import { formatCurrency, getStatusVariant } from "lib/utils";
 
 import DeleteDialogue from "components/Dashboard/Projects/Dialogues/DeleteDialogue";
 import { showProjectDialogue } from "components/Dashboard/Projects/Dialogues/ProjectDialogue";
 import Button from "components/ui/button";
 import ReferenceLink from "components/ui/reference-link/ReferenceLink";
 import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
+import Status from "components/ui/status";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
 
@@ -97,6 +98,14 @@ const ProjectsTable = ({
                   <Cards.Details
                     label="# of Milestones"
                     value={milestonesCount?.toString() || "0"}
+                  />
+                  <Cards.Details
+                    label="Status"
+                    value={
+                      <Status variant={getStatusVariant(item.status)}>
+                        {item.status}
+                      </Status>
+                    }
                   />
                 </Cards.Group>
                 <div className="absolute bottom-3 right-3 flex gap-2">
@@ -187,6 +196,12 @@ const ProjectsTable = ({
                     </ReferenceLink>
                   </Table.Data>
 
+                  <Table.Data>
+                    <Status variant={getStatusVariant(item.status)}>
+                      {item.status}
+                    </Status>
+                  </Table.Data>
+
                   <Table.Data>{formatCurrency(Number(budget))}</Table.Data>
 
                   <Table.Data>{contractsCount}</Table.Data>
@@ -258,7 +273,8 @@ export default ProjectsTable;
 
 const TABLE_HEADER = [
   "Project Name",
-  "Funder  ",
+  "Funder",
+  "Status",
   "Budget",
   "# of Contracts",
   "# of Beneficiaries",

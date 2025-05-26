@@ -6,7 +6,7 @@ import { ReactComponent as Add } from "assets/images/icons/add.svg";
 
 import useOrganizationList from "lib/common/lists/useOrganizationList";
 import useProjectList from "lib/common/lists/useProjectList";
-import { usePage } from "lib/hooks";
+import { usePage, useStatusParams } from "lib/hooks";
 import {
   Funders,
   IsAuthorized,
@@ -30,10 +30,13 @@ type ProjectsPageProps = {
 };
 
 const ProjectsPage = ({ hideHeader = false, funderId }: ProjectsPageProps) => {
+  const paramStatus = useStatusParams();
+
   const { page, setPage } = usePage();
 
   const initialFilter = {
     funder: funderId || "",
+    status: paramStatus,
   };
 
   const [filters, setFilters] = useState<ProjectFilter>(initialFilter);
@@ -220,6 +223,21 @@ const Filters = ({ filters, setFilters, initialFilter }: IFilterProps) => {
           onChange={(e) => handleSearchOrg(e.target.value)}
         />
       )}
+      <Dropdown
+        value={filters.status}
+        placeholder="Status"
+        options={[
+          { label: "Active", value: "active" },
+          { label: "Completed", value: "completed" },
+        ]}
+        handleSelect={(val) => {
+          setPage(1);
+          setFilters((prev) => ({
+            ...prev,
+            status: val as string,
+          }));
+        }}
+      />
       <button
         onClick={() => setFilters(initialFilter)}
         className="flex-shrink-0"

@@ -253,17 +253,32 @@ const ProjectDialogue = ({
                       }}
                     />
                   )}
-
-                  <Controller
-                    label="Budget"
-                    containerClassName="max-w-[182.5px]"
-                    required
-                    name="budget"
-                    control={control}
-                    render={({ field }) => {
-                      return <Input {...field} isCurrency />;
-                    }}
-                  />
+                  <div className="grid grid-cols-2 items-center gap-2">
+                    <Controller
+                      label="Budget"
+                      containerClassName="max-w-[182.5px]"
+                      required
+                      name="budget"
+                      control={control}
+                      render={({ field }) => {
+                        return <Input {...field} isCurrency />;
+                      }}
+                    />
+                    <div className="mt-px">
+                      <label className="min-w-[140px] !text-[12px] font-light text-white/80">
+                        Status
+                      </label>
+                      <Dropdown
+                        value={project?.status || "active"}
+                        disabled
+                        placeholder="Status"
+                        options={[
+                          { label: "Active", value: "active" },
+                          { label: "Completed", value: "completed" },
+                        ]}
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <div className="flex justify-end">

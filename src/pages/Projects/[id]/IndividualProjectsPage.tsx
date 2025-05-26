@@ -8,6 +8,7 @@ import { ReactComponent as Pencil } from "assets/images/icons/pencil.svg";
 
 import { IsAuthorized, Projects } from "lib/role-permissions";
 import { IProject } from "lib/types/projects";
+import { getStatusVariant } from "lib/utils";
 
 import { ContractsProvider } from "components/Dashboard/Contracts/Dialogues/ContractContext";
 import AddOptions from "components/Dashboard/Projects/AddButton";
@@ -17,6 +18,7 @@ import Outcomes from "components/Dashboard/Projects/Tables/Outcomes";
 import { BreadCrumb } from "components/ui/breadcrumb/Breadcrumb";
 import Button from "components/ui/button";
 import Spinner from "components/ui/spinner/spinner";
+import Status from "components/ui/status";
 import Tabs from "components/ui/tabs/Tabs";
 
 import BeneficiariesPage from "pages/Beneficiaries/BeneficiariesPage";
@@ -82,7 +84,13 @@ const IndividualProjectsPage = () => {
         <div>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[24px] font-[450]">{project?.name}</p>
+              <div className="flex items-center gap-4">
+                <p className="text-[24px] font-[450]">{project?.name}</p>
+
+                <Status variant={getStatusVariant(project?.status || "")}>
+                  {project?.status}
+                </Status>
+              </div>
               <Link
                 to={`/funders?id=${project?.funder?.id}`}
                 className="link text-[14px] underline underline-offset-4"

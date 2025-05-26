@@ -50,6 +50,11 @@ class ProjectsService {
 
         exact: true,
       },
+      "project.status": {
+        value: filter?.status?.toLowerCase() || "",
+
+        exact: true,
+      },
     };
 
     params.append("$pageNum", page.toString());

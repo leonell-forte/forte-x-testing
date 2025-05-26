@@ -4,7 +4,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 
 import useMilestoneList from "lib/common/lists/useMilestoneList";
 import { MILESTONE_STATUS, MILESTONE_TYPES } from "lib/constants";
-import { usePage } from "lib/hooks";
+import { usePage, useStatusParams } from "lib/hooks";
 import { IMilestoneFilters, MilestoneStatus } from "lib/types/milestones";
 
 import MilestonesTable from "components/tables/Milestones";
@@ -28,8 +28,10 @@ const MilestonesComp = ({
   providerId,
   funderId,
 }: MilestonesProps) => {
+  const paramStatus = useStatusParams();
+
   const initialFilter = {
-    status: "",
+    status: paramStatus,
     contractId: contractId || "",
     type: "",
     providerId: providerId || "",

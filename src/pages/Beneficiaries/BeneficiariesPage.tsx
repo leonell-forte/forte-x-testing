@@ -10,7 +10,7 @@ import { create } from "zustand";
 import useOrganizationList from "lib/common/lists/useOrganizationList";
 import useProjectList from "lib/common/lists/useProjectList";
 import { BENEFICIARY_STATUS, RISK_LEVEL } from "lib/constants";
-import { useDebounce, usePage } from "lib/hooks";
+import { useDebounce, usePage, useStatusParams } from "lib/hooks";
 import {
   Beneficiaries,
   Funders,
@@ -74,6 +74,7 @@ const BeneficiariesComp = ({
   providerId,
   funderId,
 }: BeneficiariesProps) => {
+  const paramStatus = useStatusParams();
   const [search, setSearch] = useState("");
 
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -81,7 +82,7 @@ const BeneficiariesComp = ({
   const initialFilter = {
     project: projectId || "",
 
-    status: "",
+    status: paramStatus,
 
     provider: providerId || "",
 

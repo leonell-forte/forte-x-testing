@@ -61,6 +61,7 @@ const DatePicker = ({
               },
               sx: {
                 "& .MuiOutlinedInput-root": {
+                  height: 40,
                   borderRadius: "0.5rem",
                   cursor: props.readOnly
                     ? "default"

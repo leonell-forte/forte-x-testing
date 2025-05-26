@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import useOrganizationList from "lib/common/lists/useOrganizationList";
@@ -27,7 +26,6 @@ export function showGenerateInvoiceModal() {
 
 function GenerateInvoiceModal() {
   const { close } = useModal();
-  const [loading, setLoading] = useState(false);
   const form = useForm<TGenerateInvoice>({
     resolver: zodResolver(generateInvoiceForm.schema),
     defaultValues: generateInvoiceForm.defaultValues,
@@ -41,10 +39,9 @@ function GenerateInvoiceModal() {
   const { startDate, endDate } = watch();
 
   const { getAchievedMilestones } = useGetAchievedMilestones();
-  const { generateInvoice } = useGenerateInvoice(close);
+  const { generateInvoice, isPending } = useGenerateInvoice(close);
 
   const onSubmit = async (payload: TGenerateInvoice) => {
-    setLoading(true);
     const milestones = await getAchievedMilestones(payload);
     const milestoneIds = milestones.map((item: any) => item.id);
     if (milestoneIds.length === 0) {
@@ -52,11 +49,10 @@ function GenerateInvoiceModal() {
       toast({
         title: "No achieved milestones found between the selected dates",
       });
-      setLoading(false);
       return;
     }
+
     await generateInvoice({ funderId: payload.funderId, milestoneIds });
-    setLoading(false);
   };
 
   const {
@@ -132,7 +128,7 @@ function GenerateInvoiceModal() {
           <Button
             type="submit"
             disabled={!isValid}
-            loading={loading}
+            loading={isPending}
             className="w-[147px]"
           >
             Generate

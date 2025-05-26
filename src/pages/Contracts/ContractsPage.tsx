@@ -7,7 +7,7 @@ import { ReactComponent as Add } from "assets/images/icons/add.svg";
 import useContractList from "lib/common/lists/useContractList";
 import useProjectList from "lib/common/lists/useProjectList";
 import { CONTRACT_STATUS } from "lib/constants";
-import { usePage } from "lib/hooks";
+import { usePage, useStatusParams } from "lib/hooks";
 import { Contracts, IsAuthorized } from "lib/role-permissions";
 import { IContractFilters, StatusType } from "lib/types/contracts";
 import { findLabelFromOptions, sortOptions } from "lib/utils";
@@ -37,10 +37,12 @@ const ContractsPage = ({
   funderId,
   projectId,
 }: ContractsPageProps) => {
+  const paramStatus = useStatusParams();
+
   const { page, setPage } = usePage();
 
   const initialFilter = {
-    status: "",
+    status: paramStatus,
 
     project: "",
 

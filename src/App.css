@@ -117,10 +117,10 @@ body {
 
 .layout-background {
   background: radial-gradient(
-      120% 120% at 100% 0%,
-      #42eca8 0%,
+      100% 100% at 100% 0%,
+      #036a85 0%,
       #17262d 69.59%,
-      #000000 100%
+      #0b1214 100%
     )
     /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */;
 }

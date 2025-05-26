@@ -48,6 +48,8 @@ interface IDropdownProp extends InputHTMLAttributes<HTMLInputElement> {
   filterOptions?: boolean;
 
   contentWidth?: string | number;
+
+  leadingIcon?: React.ReactNode;
 }
 
 const Dropdown = ({
@@ -72,6 +74,8 @@ const Dropdown = ({
   filterOptions,
 
   contentWidth,
+
+  leadingIcon,
 
   ...props
 }: IDropdownProp) => {
@@ -179,6 +183,7 @@ const Dropdown = ({
             aria-controls="dropdown-list"
             aria-labelledby={`${props.id || "dropdown"}-label`}
           >
+            {leadingIcon}
             {showAsTags && isMultiSelect ? (
               <div className="flex w-full flex-1 flex-shrink flex-wrap gap-2 truncate text-ellipsis pr-8">
                 {(props.value as string[]).map((item, index) => {

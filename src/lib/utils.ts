@@ -222,7 +222,7 @@ const statusGroups: Record<StatusVariant, string[]> = {
     "draft",
   ],
   danger: ["cancelled", "rejected", "inactive"],
-  neutral: ["paid", "settled"],
+  neutral: ["paid", "settled", "completed"],
   primary: ["open"], // fallback or initial statuses
 };
 
