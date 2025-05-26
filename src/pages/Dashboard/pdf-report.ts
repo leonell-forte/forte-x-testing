@@ -129,6 +129,11 @@ export const generatePdf = ({
                 stroke-width: 1px !important;
               }
               
+              /* Make contract milestone segments black for printing */
+              .contract-milestone-segment {
+                fill: #000000 !important;
+              }
+              
               /* Fix SVG rendering for printing */
               svg {
                 width: 100% !important;

@@ -27,7 +27,7 @@ export type TickType = {
   value: string | number;
 };
 
-export type SegmentType = TickType & { color: string };
+export type SegmentType = TickType & { color: string; className?: string };
 
 export type Project = {
   name: string;

@@ -28,6 +28,7 @@ const ContractMilestoneProgress = () => {
           label: item.contractName,
           value: item.noOfCompletedMilestones,
           color: "#fff",
+          className: "contract-milestone-segment", // Add class for print styling
         },
       ],
       ...item,

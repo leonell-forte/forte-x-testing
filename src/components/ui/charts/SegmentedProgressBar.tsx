@@ -296,6 +296,7 @@ const SegmentedProgressBar: React.FC<SegmentedProgressBarProps> = ({
                       d={path}
                       fill={seg.color}
                       stroke="none"
+                      className={seg.className}
                       onMouseMove={(e) => {
                         if (containerRef.current) {
                           const rect =
