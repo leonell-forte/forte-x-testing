@@ -37,7 +37,7 @@ const ProjectMilestone = () => {
 
   return (
     <div className="space-y-3">
-      <TileHeader title="Milestones" onDownload={() => {}} />
+      <TileHeader title="Milestones" />
       <div className="space-y-6">
         <div className="pb-1 pt-3">
           <DataText

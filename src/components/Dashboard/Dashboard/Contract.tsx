@@ -37,7 +37,7 @@ const Contract = () => {
 
   return (
     <div className="space-y-3">
-      <TileHeader title="Contracts" onDownload={() => {}} />
+      <TileHeader title="Contracts" />
       <div className="space-y-6">
         <div className="pb-1 pt-3">
           <DataText
