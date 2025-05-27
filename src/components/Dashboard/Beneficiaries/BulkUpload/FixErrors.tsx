@@ -172,9 +172,6 @@ const FixErrors = () => {
 
   useEffect(() => {
     validateData(data);
-    return () => {
-      setPage(1);
-    };
   }, [data, setPage]);
 
   return (
