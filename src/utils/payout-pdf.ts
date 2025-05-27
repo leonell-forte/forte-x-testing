@@ -31,6 +31,7 @@ export const generatePayoutPdf = ({
       year: "numeric",
     });
   };
+  console.log(projectMilestones, "asdasds");
 
   // Current date
   const currentDate = formatDate(new Date().toISOString());
@@ -260,14 +261,7 @@ export const generatePayoutPdf = ({
           <div class="grid grid-cols-2">
             <!-- Bill To Section -->
             <div class="print-section">
-              <div class="print-section-header">BILL TO:</div>
-              <div style="padding: 10px 0">
-                <div>${payout.provider?.name || "Client Company/ Name"}</div>
-                <div>Street Address</div>
-                <div>City, Postal Code</div>
-                <div>Phone Number</div>
-                <div>Email</div>
-              </div>
+            
             </div>
             
             <!-- Account Summary Section -->
@@ -301,7 +295,7 @@ export const generatePayoutPdf = ({
             ${Object.entries(projectMilestones)
               .map(
                 ([projectName, milestones]) => `
-              <div class="print-project-header">${projectName}</div>
+              <div class="print-project-header">${projectName} (${milestones[0].funder.name})</div>
               <table class="print-table">
                 <thead>
                   <tr>
