@@ -56,6 +56,8 @@ const SearchResultsPage = () => {
     enabled: Boolean(query),
   });
 
+  console.log(data);
+
   usePageTitle(`Showing results for "${query}"`);
 
   const tables = [

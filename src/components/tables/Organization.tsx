@@ -37,6 +37,7 @@ const OrganizationTable = ({
               noOfBeneficiaries,
               regions,
               status,
+              type,
             } = item;
             return (
               <Cards.Card
@@ -95,6 +96,7 @@ const OrganizationTable = ({
                 registrationNumber,
                 noOfBeneficiaries,
                 noOfContracts,
+                type,
               } = item;
               return (
                 <Table.Row

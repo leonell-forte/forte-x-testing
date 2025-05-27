@@ -142,7 +142,6 @@ const PageComponent = ({
           <OrganizationTable
             list={organizationList?.items || []}
             isLoading={orgLoading}
-            type={type}
           />
 
           {!!organizationList?.items.length && (
