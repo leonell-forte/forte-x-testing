@@ -3,7 +3,6 @@
 import { InputAdornment, TextField, TextFieldProps } from "@mui/material";
 import classNames from "classnames";
 import { ChangeEvent, forwardRef, useState } from "react";
-import { FaDollarSign as USD } from "react-icons/fa6";
 
 import eyeClosed from "assets/images/icons/eye-closed.svg";
 import eyeOpen from "assets/images/icons/eye-open.svg";

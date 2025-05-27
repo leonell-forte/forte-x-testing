@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ReactComponent as Add } from "assets/images/icons/add.svg";
 
 import { IMilestone, MILESTONE_TYPES } from "lib/types/milestones";
-import { formatCurrency, formatNumber, getStatusVariant } from "lib/utils";
+import { formatCurrency, getStatusVariant } from "lib/utils";
 
 import { showSetupEvidenceModal } from "components/Dashboard/Milestones/modals/SetupEvidence";
 import Button from "components/ui/button";

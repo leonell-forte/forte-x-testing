@@ -12,12 +12,7 @@ import { ReactComponent as Pencil } from "assets/images/icons/pencil.svg";
 import { useDeleteEvidence } from "lib/mutations/evidences";
 import { IsAuthorized, Milestones } from "lib/role-permissions";
 import { MILESTONE_TYPES } from "lib/types/milestones";
-import {
-  formatCurrency,
-  formatDate,
-  formatNumber,
-  getStatusVariant,
-} from "lib/utils";
+import { formatCurrency, formatDate, getStatusVariant } from "lib/utils";
 
 import { showOverrideCostModal } from "components/Dashboard/Milestones/modals/OverrideCost";
 import { showSetupEvidenceModal } from "components/Dashboard/Milestones/modals/SetupEvidence";

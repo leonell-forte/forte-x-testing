@@ -185,7 +185,7 @@ export function formatCurrency(
 ) {
   return new Intl.NumberFormat(locale, {
     style: "currency",
-    currency: currency,
+    currency: currency || "USD",
   }).format(amount);
 }
 export function parseNumber<T>(
