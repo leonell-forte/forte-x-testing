@@ -186,7 +186,7 @@ const Dropdown = ({
             {leadingIcon}
             {showAsTags && isMultiSelect ? (
               <div className="flex w-full flex-1 flex-shrink flex-wrap gap-2 truncate text-ellipsis pr-8">
-                {(props.value as string[]).map((item, index) => {
+                {/* {(props.value as string[]).map((item, index) => {
                   const label = options?.find(
                     (option) => option.value === item
                   )?.label;
@@ -208,7 +208,7 @@ const Dropdown = ({
                       label={label}
                     />
                   );
-                })}
+                })} */}
                 <input
                   type="text"
                   className={classNames(
