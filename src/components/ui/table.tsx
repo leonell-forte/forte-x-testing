@@ -255,7 +255,7 @@ const Table = {
         scope="col"
         aria-label={typeof children === "string" ? children : undefined}
       >
-        {children}
+        <span className="flex items-center justify-start">{children}</span>
       </th>
     );
   },

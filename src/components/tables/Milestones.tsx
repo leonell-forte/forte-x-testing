@@ -105,7 +105,7 @@ const MilestonesTable = ({
                   <Table.Data>{reference?.name}</Table.Data>
                   <Table.Data>{outcome.name}</Table.Data>
 
-                  <Table.Data className="!pr-12 text-right">
+                  <Table.Data>
                     {formatCurrency(Number(cost), funder.currency)}
                   </Table.Data>
 
