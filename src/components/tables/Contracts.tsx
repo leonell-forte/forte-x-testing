@@ -133,16 +133,17 @@ const ContractsTable = ({
                     </button>
                   )}
 
-                  {IsAuthorized([Contracts.DELETE]) && status === "draft" && (
-                    <button
-                      id={id?.toString()}
-                      type="button"
-                      onClick={() => handleDeleteContract(id!)}
-                      className="group"
-                    >
-                      <Trash className="h-auto w-4 transition-all group-hover:fill-mint" />
-                    </button>
-                  )}
+                  {IsAuthorized([Contracts.DELETE]) &&
+                    status.toLowerCase() === "draft" && (
+                      <button
+                        id={id?.toString()}
+                        type="button"
+                        onClick={() => handleDeleteContract(id!)}
+                        className="group"
+                      >
+                        <Trash className="h-auto w-4 transition-all group-hover:fill-mint" />
+                      </button>
+                    )}
                 </div>
               </Cards.Card>
             );
