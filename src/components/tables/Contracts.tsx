@@ -247,7 +247,7 @@ const ContractsTable = ({
                         </button>
                       )}
                       {IsAuthorized([Contracts.DELETE]) &&
-                        status === "draft" && (
+                        status.toLowerCase() === "draft" && (
                           <button
                             id={id?.toString()}
                             type="button"
