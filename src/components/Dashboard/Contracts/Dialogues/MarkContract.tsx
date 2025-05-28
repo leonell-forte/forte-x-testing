@@ -38,6 +38,8 @@ const MarkAsCompleted = ({
     control,
 
     reset,
+
+    watch,
   } = useForm<ContractFieldValues>({
     defaultValues: contracts.defaultValues({
       contract: contractDetails,
@@ -134,7 +136,11 @@ const MarkAsCompleted = ({
           Cancel
         </Button>
 
-        <Button type="submit" loading={isPending}>
+        <Button
+          type="submit"
+          disabled={!watch("documentId")}
+          loading={isPending}
+        >
           Submit
         </Button>
       </div>

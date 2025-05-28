@@ -115,7 +115,7 @@ const ContractForm = ({
 
     trigger,
 
-    formState: { isDirty },
+    formState: { isDirty, dirtyFields },
   } = form;
 
   const { fields, append, remove } = useFieldArray({
@@ -270,6 +270,8 @@ const ContractForm = ({
     return project?.currency || "USD";
   }, [rawList, selectedProjectId]);
 
+  const isDocumentDirty = dirtyFields.documentId;
+
   return (
     <Form form={form} onSubmit={onSubmit} className="space-y-1">
       {isAmmending ? (
@@ -292,7 +294,12 @@ const ContractForm = ({
           <div className="!mt-10 flex w-full items-center justify-between">
             {!isCompleted && IsAuthorized([Contracts.UPDATE]) && (
               <div className="flex w-full justify-end">
-                <Button type="submit" loading={isPending} className="w-[147px]">
+                <Button
+                  type="submit"
+                  loading={isPending}
+                  disabled={!isDocumentDirty}
+                  className="w-[147px]"
+                >
                   Update
                 </Button>
               </div>
