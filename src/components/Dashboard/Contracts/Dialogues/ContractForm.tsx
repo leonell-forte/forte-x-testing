@@ -145,7 +145,7 @@ const ContractForm = ({
     pageSize: 100,
   });
 
-  const { isSigned, isCompleted } = useMemo(() => {
+  const { isSigned, isCompleted, isDraft } = useMemo(() => {
     const status = contractDetails?.status;
 
     return {
@@ -625,7 +625,16 @@ const ContractForm = ({
                         </Button>
                       ) : (
                         <Button
-                          type="submit"
+                          type={
+                            isDraft && watch("status") === "signed"
+                              ? "button"
+                              : "submit"
+                          }
+                          onClick={
+                            isDraft && watch("status") === "signed"
+                              ? () => setIsAmmending(true)
+                              : undefined
+                          }
                           loading={isPending}
                           className="w-[147px]"
                         >
