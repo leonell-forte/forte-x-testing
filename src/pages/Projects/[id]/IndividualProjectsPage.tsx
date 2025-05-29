@@ -15,6 +15,7 @@ import AddOptions from "components/Dashboard/Projects/AddButton";
 import { showProjectDialogue } from "components/Dashboard/Projects/Dialogues/ProjectDialogue";
 import Contracts from "components/Dashboard/Projects/Tables/Contracts";
 import Outcomes from "components/Dashboard/Projects/Tables/Outcomes";
+import { useProfile } from "components/ProfileContext";
 import { BreadCrumb } from "components/ui/breadcrumb/Breadcrumb";
 import Button from "components/ui/button";
 import Spinner from "components/ui/spinner/spinner";
@@ -24,6 +25,7 @@ import Tabs from "components/ui/tabs/Tabs";
 import BeneficiariesPage from "pages/Beneficiaries/BeneficiariesPage";
 
 const IndividualProjectsPage = () => {
+  const { profile } = useProfile();
   const { id } = useParams();
 
   const { data: project, isLoading } = useQuery({
@@ -101,7 +103,14 @@ const IndividualProjectsPage = () => {
             <div className="flex gap-4">
               {IsAuthorized([Projects.UPDATE]) && (
                 <Button
-                  onClick={() => showProjectDialogue({ projectId: id })}
+                  onClick={() =>
+                    showProjectDialogue({
+                      projectId: id,
+                      ...(profile?.orgType === "funder"
+                        ? { funderId: profile?.organizationId }
+                        : {}),
+                    })
+                  }
                   buttonType="secondary"
                 >
                   <Pencil height={14} />

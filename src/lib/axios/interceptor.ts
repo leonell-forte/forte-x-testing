@@ -5,7 +5,7 @@ import { add } from "date-fns";
 import { cookie } from "../hooks";
 
 export const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL,
+  baseURL: "http://localhost:3001/api/v1",
   headers: { Accept: "application/json" },
 });
 
