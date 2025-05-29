@@ -58,6 +58,20 @@ const MilestonesTable = ({
                     }
                   />
                 </Cards.Group>
+                {showDownloadButton && (
+                  <button
+                    className="absolute bottom-4 right-4"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      showSetupEvidenceModal({
+                        milestone: item,
+                        beneficiaryIdParam: item.reference.id,
+                      });
+                    }}
+                  >
+                    <Add className="h-[14px] w-[14px] fill-white stroke-white hover:fill-mint hover:stroke-mint" />
+                  </button>
+                )}
               </Cards.Card>
             );
           })}
