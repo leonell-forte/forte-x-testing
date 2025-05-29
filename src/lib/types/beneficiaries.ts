@@ -42,6 +42,8 @@ export interface IBeneficiaries {
 
   providerId: number;
 
+  providerName: string;
+
   linkedinUrl?: string;
 
   githubUrl?: string;

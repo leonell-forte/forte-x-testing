@@ -158,7 +158,9 @@ export default function ViewBeneficiary() {
                 buttonType="secondary"
                 className="group"
                 onClick={() =>
-                  showSetupBeneficiaryModal({ beneficiaryDetails: beneficiary })
+                  showSetupBeneficiaryModal({
+                    beneficiaryDetails: beneficiary,
+                  })
                 }
               >
                 <Pencil height={14} />

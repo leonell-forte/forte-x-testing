@@ -1,6 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
-import organizationService from "api/organization";
 import { add, sub } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -143,29 +141,13 @@ export function SetupBeneficiaryModal({
     }
   }, [contractList?.items, contractId, setValue]);
 
-  const { data: organizationList } = useQuery({
-    queryKey: ["organizations"],
-    queryFn: () =>
-      organizationService.list({
-        pageSize: 100,
-        page: 1,
-        filters: { type: "provider" },
-      }),
-  });
-
   const contracts: IOption[] = useMemo(
     () =>
-      contractList?.items
-        .filter((y) =>
-          organizationList?.items.some((z) =>
-            String(y.provider.id).includes(String(z.id))
-          )
-        )
-        .map((item) => ({
-          label: item.name,
-          value: item.id!.toString(),
-        })) || [],
-    [organizationList, contractList]
+      contractList?.items.map((item) => ({
+        label: item.name,
+        value: item.id!.toString(),
+      })) || [],
+    [contractList]
   );
 
   const { addBeneficiary, isPending } = useBeneficiaryMutation({
