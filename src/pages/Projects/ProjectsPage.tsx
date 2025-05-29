@@ -17,6 +17,7 @@ import { IProject, ProjectFilter } from "lib/types/projects";
 import { findLabelFromOptions } from "lib/utils";
 
 import { showProjectDialogue } from "components/Dashboard/Projects/Dialogues/ProjectDialogue";
+import { useProfile } from "components/ProfileContext";
 import ProjectsTable from "components/tables/Projects";
 import Button from "components/ui/button";
 import Dialogue from "components/ui/dialogue/dialogue";
@@ -30,6 +31,7 @@ type ProjectsPageProps = {
 };
 
 const ProjectsPage = ({ hideHeader = false, funderId }: ProjectsPageProps) => {
+  const { profile } = useProfile();
   const paramStatus = useStatusParams();
 
   const { page, setPage } = usePage();
@@ -112,7 +114,13 @@ const ProjectsPage = ({ hideHeader = false, funderId }: ProjectsPageProps) => {
                 <Button
                   className="w-full sm:w-auto"
                   eventName="Add Project"
-                  onClick={() => showProjectDialogue({})}
+                  onClick={() => {
+                    showProjectDialogue({
+                      ...(profile?.orgType === "funder"
+                        ? { funderId: profile?.organizationId }
+                        : {}),
+                    });
+                  }}
                 >
                   <Add height={14} />
                   Add project
@@ -191,6 +199,7 @@ type IFilterProps = {
 
 const Filters = ({ filters, setFilters, initialFilter }: IFilterProps) => {
   const { setPage } = usePage();
+  const { profile } = useProfile();
 
   const {
     organizations,
@@ -205,24 +214,25 @@ const Filters = ({ filters, setFilters, initialFilter }: IFilterProps) => {
 
   return (
     <div className="flex w-full items-center gap-3">
-      {IsAuthorized([Providers.LIST, Funders.LIST]) && (
-        <Dropdown
-          loading={orgLoading}
-          options={organizations}
-          placeholder="Funder"
-          className="xl:w-[166px]"
-          value={findLabelFromOptions(organizations, filters.funder)}
-          handleSelect={(val) => {
-            setPage(1);
-            setFilters((prev) => ({
-              ...prev,
-              funder: val as string,
-            }));
-          }}
-          enableSearch
-          onChange={(e) => handleSearchOrg(e.target.value)}
-        />
-      )}
+      {IsAuthorized([Providers.LIST, Funders.LIST]) &&
+        profile?.orgType !== "funder" && (
+          <Dropdown
+            loading={orgLoading}
+            options={organizations}
+            placeholder="Funder"
+            className="xl:w-[166px]"
+            value={findLabelFromOptions(organizations, filters.funder)}
+            handleSelect={(val) => {
+              setPage(1);
+              setFilters((prev) => ({
+                ...prev,
+                funder: val as string,
+              }));
+            }}
+            enableSearch
+            onChange={(e) => handleSearchOrg(e.target.value)}
+          />
+        )}
       <Dropdown
         value={filters.status}
         placeholder="Status"
