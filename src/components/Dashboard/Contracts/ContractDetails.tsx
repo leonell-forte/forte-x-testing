@@ -45,7 +45,7 @@ const ContractDetails = ({ contract }: { contract: IContract }) => {
         <Details.Content
           label="Provider"
           value={provider.name}
-          link={`/providers?id=${provider.id}`}
+          link={`/providers/${provider.id}`}
         />
         <Details.Content
           label="End date"
