@@ -3,13 +3,13 @@ import { format } from "date-fns";
 import { twMerge } from "tailwind-merge";
 
 import { IOption } from "components/ui/dropdown";
+import { stripeCurrencies } from "components/ui/form/currencies";
 import { StatusVariant } from "components/ui/status";
 
 import { IBeneficiaries } from "./types/beneficiaries";
 import { InvoiceStatus } from "./types/invoices";
 import { EvidenceStatus, MilestoneStatus } from "./types/milestones";
 import { OrgStatus } from "./types/organizations";
-import { stripeCurrencies } from "components/ui/form/currencies";
 
 export const filterBySearch = (
   list: Record<string, string>[],
@@ -59,10 +59,12 @@ export const generateODataQuery = (obj: IODataObject): string => {
 
     let condition: string | null = null;
 
+    const formattedKey = key.includes(".") ? `'${key}'` : key;
+
     if (isDate) {
       // Handle date values
       if (typeof value === "string") {
-        condition = `'${key}' ge '${value}'`;
+        condition = `${formattedKey} ge '${value}'`;
       } else {
         console.warn(`Invalid date value for key: ${key}`);
         return;
@@ -73,13 +75,15 @@ export const generateODataQuery = (obj: IODataObject): string => {
         .map((v) => `'${v}'`) // Wrap each value in quotes
         .join(", "); // Join values with commas
 
-      condition = `${key} in (${formattedValues})`;
+      condition = `${formattedKey} in (${formattedValues})`;
     } else {
       // Handle single string values
       if (exact) {
-        condition = `'${key}' eq '${value}'`;
+        condition = `${formattedKey} eq '${value}'`;
       } else {
-        condition = `contains('${key}', '${value}')`;
+        // Check if key contains a dot (.) to determine if it's a common table expression
+        // Only add quotes if it contains a dot
+        condition = `contains(${formattedKey}, '${value}')`;
       }
     }
 
@@ -255,10 +259,10 @@ export const getCurrencyCode = (code?: string) => {
   const currency = stripeCurrencies.find((c) => c.value === code);
 
   return currency?.value || "USD";
-}
+};
 
 export const getCurrencySymbol = (code?: string) => {
   const currency = stripeCurrencies.find((c) => c.value === code);
 
   return currency?.symbol || "USD";
-}
+};

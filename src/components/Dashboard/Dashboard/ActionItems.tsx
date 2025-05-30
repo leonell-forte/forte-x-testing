@@ -49,7 +49,10 @@ const ActionItems = () => {
         {actionItems &&
           Object.entries(actionItems as ActionItemsType).map(([key, value]) => {
             return (
-              <Link to={ACTION_ITEMS_LINKS[key as keyof ActionItemsType]}>
+              <Link
+                key={key}
+                to={ACTION_ITEMS_LINKS[key as keyof ActionItemsType]}
+              >
                 <li
                   key={key}
                   className="action-item group flex h-[56px] items-center justify-between gap-8 border-b-[2px] border-panel"

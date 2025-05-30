@@ -186,10 +186,9 @@ export const useDebouncedSearch = (initialValue: string) => {
   ];
 };
 
-
 export const useStatusParams = () => {
-    const [params] = useSearchParams();
-    const paramStatus = params.get("status") || "";
+  const [params] = useSearchParams();
+  const paramStatus = params.get("status") || "";
 
-    return paramStatus;
-}
+  return paramStatus;
+};

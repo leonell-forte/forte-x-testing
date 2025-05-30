@@ -1,3 +1,5 @@
+import { TbLayoutDashboardFilled as Dashboard } from "react-icons/tb";
+
 import { ReactComponent as Beneficiary } from "assets/images/icons/beneficiary.svg";
 import { ReactComponent as Contract } from "assets/images/icons/contract.svg";
 import { ReactComponent as Funder } from "assets/images/icons/funder.svg";
@@ -21,12 +23,11 @@ import { InvoiceStatus } from "./types/invoices";
 import { OrgTypes } from "./types/organizations";
 import { UserRoleType } from "./types/users";
 import { sortOptions } from "./utils";
-import { TbLayoutDashboardFilled as Dashboard } from "react-icons/tb";
 
 export const DEFAULT_PAGE_SIZE = "10";
 
 export const MENUS = [
-    {
+  {
     name: "dashboard",
     link: "/dashboard",
     permissions: [],

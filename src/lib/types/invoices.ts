@@ -22,7 +22,7 @@ export type Invoice = {
   noOfMilestones: number;
   milestones: IMilestone[];
   paidAt: string;
-  currency?: string
+  currency?: string;
 };
 
 export type InvoiceFilters = {

@@ -175,9 +175,12 @@ function DashboardPage() {
 
   const multipleTiles = useMemo(() => {
     if (project) {
-      return [<Contract />, <ProjectMilestone />];
+      return [
+        <Contract key="contract" />,
+        <ProjectMilestone key="project-milestone" />,
+      ];
     }
-    return [<Project />, <Contract />];
+    return [<Project key="project" />, <Contract key="contract" />];
   }, [project]);
 
   return (

@@ -45,7 +45,7 @@ export interface IProject {
 
   milestonesCount?: string | number;
 
-  status: "active" | "completed"
+  status: "active" | "completed";
 
   currency?: string;
 }
@@ -78,5 +78,5 @@ export type ProjectFieldValues = z.infer<typeof projects.schema>;
 
 export type ProjectFilter = {
   funder: string;
-  status?: string
+  status?: string;
 };

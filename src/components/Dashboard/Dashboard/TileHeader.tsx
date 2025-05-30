@@ -1,3 +1,5 @@
+import React from "react";
+
 import { ReactComponent as Download } from "assets/images/icons/download.svg";
 
 import InfoTooltip from "components/ui/info-tooltip";

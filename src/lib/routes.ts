@@ -1,5 +1,6 @@
 import React from "react";
 
+import DashboardPage from "pages/Dashboard/DashboardPage";
 import SearchResultsPage from "pages/Search/SearchResultsPage";
 
 import {
@@ -13,8 +14,6 @@ import {
   Providers,
   Users,
 } from "./role-permissions";
-
-import DashboardPage from "pages/Dashboard/DashboardPage";
 
 const UsersPage = React.lazy(() => import("../pages/Users/UsersPage"));
 
@@ -86,7 +85,7 @@ export interface RouteConfig {
 }
 
 export const ROUTES: RouteConfig[] = [
-    {
+  {
     link: "dashboard",
 
     Component: DashboardPage,

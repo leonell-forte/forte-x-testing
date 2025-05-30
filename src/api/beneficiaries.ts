@@ -44,7 +44,7 @@ class BeneficiariesService {
     const params = new URLSearchParams();
 
     const filterData: IODataObject = {
-      "beneficiary.firstName": {
+      fullName: {
         value: search!,
 
         exact: false,
@@ -52,7 +52,7 @@ class BeneficiariesService {
         isSearch: true,
       },
 
-      "beneficiary.lastName": {
+      phone: {
         value: search!,
 
         exact: false,
@@ -60,7 +60,7 @@ class BeneficiariesService {
         isSearch: true,
       },
 
-      "beneficiary.phone": {
+      cohortName: {
         value: search!,
 
         exact: false,
@@ -68,7 +68,7 @@ class BeneficiariesService {
         isSearch: true,
       },
 
-      "beneficiary.cohort_name": {
+      email: {
         value: search!,
 
         exact: false,
@@ -76,53 +76,45 @@ class BeneficiariesService {
         isSearch: true,
       },
 
-      "beneficiary.email": {
-        value: search!,
-
-        exact: false,
-
-        isSearch: true,
-      },
-
-      "beneficiary.project_id": {
+      projectId: {
         value: filters?.project as string,
 
         exact: true,
       },
 
-      "beneficiary.status": {
+      status: {
         value: filters?.status as string,
 
         exact: true,
       },
 
-      "beneficiary.provider_id": {
-        value: filters?.provider?.toString() || "",
+      providerId: {
+        value: filters?.provider || "",
 
         exact: true,
       },
 
-      "funder.id": {
+      funderId: {
         value: filters?.funderId || "",
 
         exact: true,
       },
 
-      "beneficiary.risk_level": {
+      riskLevel: {
         value: filters?.riskLevel || "",
 
         exact: true,
       },
 
-      "beneficiary.cohort_start_date": {
-        value: filters?.startDate || "",
+      // "beneficiary.cohort_start_date": {
+      //   value: filters?.startDate || "",
 
-        exact: false,
+      //   exact: false,
 
-        isDate: true,
-      },
+      //   isDate: true,
+      // },
 
-      "beneficiary.contract_id": {
+      contractId: {
         value: filters?.contractId || "",
 
         exact: true,
@@ -133,7 +125,7 @@ class BeneficiariesService {
 
     params.append("$pageSize", pageSize ? String(pageSize) : DEFAULT_PAGE_SIZE);
 
-    params.append("$orderBy", `"beneficiary"."createdAt" desc`);
+    params.append("$orderBy", `"createdAt" desc`);
 
     if (generateODataQuery(filterData)) {
       params.append("$filter", generateODataQuery(filterData));

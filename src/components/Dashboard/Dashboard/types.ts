@@ -35,9 +35,9 @@ export type Project = {
 };
 
 export type Contract = {
-  name: string
-  spent: string
-}
+  name: string;
+  spent: string;
+};
 
 export type Budget = {
   projects: Project[];
@@ -172,5 +172,5 @@ export type ProjectMileStoneProgress = {
   contractId: number;
   contractName: string;
   milestones: ProjectMilestone[];
-targetNoOfBenefeciaries: number;
+  targetNoOfBenefeciaries: number;
 };
