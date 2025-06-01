@@ -83,9 +83,9 @@ class BeneficiariesService {
       },
 
       status: {
-        value: filters?.status as string,
+        value: filters?.status?.toLowerCase() as string,
 
-        exact: true,
+        exact: false,
       },
 
       providerId: {
