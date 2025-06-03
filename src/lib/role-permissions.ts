@@ -12,6 +12,7 @@ export type PermissionEnums =
   | Providers
   | Funders
   | Dashboard
+  | Evidences
   | Payouts;
 
 export enum Beneficiaries {
@@ -89,6 +90,16 @@ export enum Dashboard {
   NAVIGATE = "navigate:dashboard",
 }
 
+export enum Evidences {
+  CREATE = "create:evidence",
+  UPDATE = "update:evidence",
+  IMPORT = "import:evidence",
+  DELETE = "delete:evidence",
+  LIST = "list:evidence",
+  NAVIGATE = "navigate:evidence",
+  DOWNLOAD = "download:evidence",
+}
+
 export enum Payouts {
   CREATE = "create:payout",
   UPDATE = "update:payout",
@@ -111,6 +122,7 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     ...Object.values(Milestones),
     ...Object.values(Dashboard),
     ...Object.values(Payouts).filter((item) => item !== Payouts.SETUP),
+    ...Object.values(Evidences),
   ],
   admin: [
     ...Object.values(Beneficiaries),
@@ -123,6 +135,7 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     ...Object.values(Milestones),
     ...Object.values(Dashboard),
     ...Object.values(Payouts).filter((item) => item !== Payouts.SETUP),
+    ...Object.values(Evidences),
   ],
   user: [
     ...Object.values(Beneficiaries),
@@ -132,10 +145,10 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     ...Object.values(Projects),
     ...Object.values(Milestones),
     ...Object.values(Dashboard),
+    ...Object.values(Evidences),
     Invoices.LIST,
     Invoices.NAVIGATE,
     Payouts.NAVIGATE,
-    Payouts.LIST,
   ],
 
   "read-only": [
@@ -154,7 +167,6 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     Milestones.NAVIGATE,
     Invoices.LIST,
     Invoices.NAVIGATE,
-    Payouts.LIST,
     Payouts.NAVIGATE,
     ...Object.values(Dashboard),
   ],
@@ -205,6 +217,7 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     ...Object.values(Projects),
     ...Object.values(Milestones),
 
+
     Providers.LIST,
     Funders.NAVIGATE,
     Funders.LIST,
@@ -236,6 +249,7 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     ...Object.values(Projects),
     ...Object.values(Milestones),
     ...Object.values(Dashboard),
+    ...Object.values(Evidences),
 
     Providers.NAVIGATE,
     Providers.LIST,
@@ -255,6 +269,7 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     ...Object.values(Milestones),
     ...Object.values(Dashboard),
 
+    ...Object.values(Evidences),
     Users.CREATE,
     Users.IMPORT,
     Users.NAVIGATE,
@@ -278,6 +293,8 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     Funders.LIST,
     Invoices.LIST,
     Invoices.NAVIGATE,
+    Evidences.LIST,
+    Evidences.NAVIGATE,
   ],
 
   "funder.read-only": [
@@ -294,6 +311,8 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     Milestones.LIST,
     Milestones.NAVIGATE,
     ...Object.values(Dashboard),
+    Evidences.LIST,
+    Evidences.NAVIGATE,
   ],
 };
 

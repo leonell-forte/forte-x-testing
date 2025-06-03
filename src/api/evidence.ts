@@ -4,7 +4,11 @@ import {
   AddEvidenceParams,
   DeleteParams,
   Evidence,
+  IEvidenceFilters,
+  MainEvidence,
 } from "../lib/types/evidence";
+import { IODataObject, generateODataQuery } from "../lib/utils";
+import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 
 export class EvidenceService {
   async add({
@@ -35,6 +39,42 @@ export class EvidenceService {
     beneficiaryId: number
   ): Promise<{ items: Evidence[]; totalSize: number; pageSize: number }> {
     const response = await api.get(`/beneficiaries/${beneficiaryId}/evidences`);
+
+    return response.data;
+  }
+
+    async listAll(
+    page: number,
+    pageSize: number,
+    search?: string,
+    filters?: IEvidenceFilters
+  ): Promise<{ items: MainEvidence[]; totalSize: number; pageSize: number, rejectedCount: number, pendingCount: number, approvedCount: number, moreInformationRequestedCount: number,  }> {
+        const params = new URLSearchParams();
+    
+        let filtersData: IODataObject = {
+
+          "evidence.status": {
+            value: filters?.status || "",
+    
+            exact: true,
+          },
+    
+          "type": {
+            value: filters?.type || "",
+    
+            exact: true,
+          },
+        };
+    
+        params.append("$pageSize", String(pageSize || DEFAULT_PAGE_SIZE));
+    
+        params.append("$pageNum", (page || 1).toString());
+        
+        if (generateODataQuery(filtersData)) {
+          params.append("$filter", generateODataQuery(filtersData));
+        }
+
+    const response = await api.get(`/evidences`, { params });
 
     return response.data;
   }

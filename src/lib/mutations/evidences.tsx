@@ -102,6 +102,9 @@ export const useDeleteEvidence = () => {
 
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["milestone-details"] });
+      queryClient.invalidateQueries({
+        queryKey: ["evidences"],
+      });
     },
   });
 

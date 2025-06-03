@@ -1,6 +1,9 @@
 import React from "react";
 import { ChangeEvent, useCallback, useState } from "react";
+import { BsPencilSquare as Update } from "react-icons/bs";
 import { FaTrash as Trash } from "react-icons/fa6";
+import { LuDownload as Download } from "react-icons/lu";
+import { TbFileExport as Export } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -359,9 +362,29 @@ const BeneficiariesTable = ({
       <Toolbar
         selectedCount={selectedIds.length}
         onDelete={() => setSelectedIds([])}
-        onEdit={() => handleBulkUpdate()}
-        onDownload={() => handleDownloadEvidence()}
-        onExport={() => handleExportBeneficiaries()}
+        actions={[
+          {
+            label: "Update Status",
+            onClick: () => handleBulkUpdate(),
+            icon: (
+              <Update className="h-4 w-4 transition group-hover:fill-mint" />
+            ),
+          },
+          {
+            label: "Download Evidence",
+            onClick: () => handleDownloadEvidence(),
+            icon: (
+              <Download className="h-4 w-4 transition group-hover:stroke-mint" />
+            ),
+          },
+          {
+            label: "Export CSV",
+            onClick: () => handleExportBeneficiaries(),
+            icon: (
+              <Export className="h-4 w-4 transition group-hover:stroke-mint" />
+            ),
+          },
+        ]}
       />
     </>
   );

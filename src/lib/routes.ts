@@ -17,6 +17,8 @@ import {
   Users,
 } from "./role-permissions";
 
+const EvidencesPage = React.lazy(() => import("../pages/Evidence/EvidencePage"));
+
 const UsersPage = React.lazy(() => import("../pages/Users/UsersPage"));
 
 const InvoicesPage = React.lazy(() => import("../pages/Invoices/InvoicesPage"));
@@ -100,6 +102,14 @@ export const ROUTES: RouteConfig[] = [
     Component: InvoicesPage,
 
     permissions: [Invoices.NAVIGATE],
+  },
+
+    {
+    link: "evidences/*",
+
+    Component: EvidencesPage,
+
+    permissions: [],
   },
 
   {
