@@ -96,6 +96,7 @@ export enum Payouts {
   DELETE = "delete:payout",
   LIST = "list:payout",
   NAVIGATE = "navigate:payout",
+  SETUP = "setup:payout",
 }
 
 const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
@@ -109,7 +110,7 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     ...Object.values(Invoices),
     ...Object.values(Milestones),
     ...Object.values(Dashboard),
-    ...Object.values(Payouts),
+    ...Object.values(Payouts).filter((item) => item !== Payouts.SETUP),
   ],
   admin: [
     ...Object.values(Beneficiaries),
@@ -121,7 +122,7 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     ...Object.values(Invoices),
     ...Object.values(Milestones),
     ...Object.values(Dashboard),
-    ...Object.values(Payouts),
+    ...Object.values(Payouts).filter((item) => item !== Payouts.SETUP),
   ],
   user: [
     ...Object.values(Beneficiaries),
@@ -163,6 +164,7 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     ...Object.values(Contracts),
     ...Object.values(Projects),
     ...Object.values(Milestones),
+    ...Object.values(Payouts),
 
     Users.CREATE,
     Users.IMPORT,
@@ -183,7 +185,7 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     ...Object.values(Contracts),
     ...Object.values(Projects),
     ...Object.values(Milestones),
-    ...Object.values(Payouts),
+    ...Object.values(Payouts).filter((item) => item !== Payouts.SETUP),
 
     Users.CREATE,
     Users.IMPORT,

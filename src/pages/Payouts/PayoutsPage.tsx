@@ -14,7 +14,12 @@ import useOrganizationList from "lib/common/lists/useOrganizationList";
 import usePayoutsList from "lib/common/lists/usePayoutsList";
 import { PAYOUT_STATUS } from "lib/constants";
 import { usePage } from "lib/hooks";
-import { Funders, IsAuthorized, Providers } from "lib/role-permissions";
+import {
+  Funders,
+  IsAuthorized,
+  Payouts,
+  Providers,
+} from "lib/role-permissions";
 import { Filter } from "lib/types/payouts";
 import { findLabelFromOptions } from "lib/utils";
 
@@ -31,11 +36,7 @@ import SearchInput from "components/ui/search-input";
 type ModalLabelTypes = "filter" | "generate" | "";
 
 const PayoutsPage = () => {
-  const { profile } = useProfile();
-
-  const isForte = profile?.organization === "Forte";
-
-  const isProvider = profile?.role?.split(".")[0] === "provider";
+  const { profile, isForteUser } = useProfile();
 
   const { data: userData } = useQuery({
     queryKey: ["specific user", profile?.id],
@@ -46,7 +47,7 @@ const PayoutsPage = () => {
   });
 
   const initialFilters = {
-    provider: !isForte ? userData?.organization?.toString() || "" : "",
+    provider: !isForteUser ? userData?.organization?.toString() || "" : "",
 
     status: "",
   };
@@ -60,9 +61,9 @@ const PayoutsPage = () => {
   useEffect(() => {
     setFilters((prev) => ({
       ...prev,
-      provider: !isForte ? userData?.organization?.toString() || "" : "",
+      provider: !isForteUser ? userData?.organization?.toString() || "" : "",
     }));
-  }, [isForte, userData]);
+  }, [isForteUser, userData]);
 
   const {
     rawList: payouts,
@@ -96,7 +97,7 @@ const PayoutsPage = () => {
                 filters={filters}
                 setFilters={setFilters}
                 initialFilters={initialFilters}
-                isForte={isForte}
+                isForte={isForteUser}
               />
               <div className="flex justify-end gap-2">
                 <Button
@@ -125,14 +126,16 @@ const PayoutsPage = () => {
       <div className="space-y-6">
         <div className="itemsc flex justify-between">
           <p className="text-[24px] font-semibold">Payouts</p>
-          {isForte && (
+          {isForteUser && (
             <Button onClick={() => setModal("generate")}>
               Generate payouts
             </Button>
           )}
         </div>
         <div className="space-y-10">
-          {isProvider && <BankDetails providerId={providerId.toString()} />}
+          {IsAuthorized([Payouts.SETUP]) && (
+            <BankDetails providerId={providerId.toString()} />
+          )}
 
           <div>
             <div className="flex gap-2.5 md:flex-wrap">
@@ -163,7 +166,7 @@ const PayoutsPage = () => {
                   filters={filters}
                   setFilters={setFilters}
                   initialFilters={initialFilters}
-                  isForte={isForte}
+                  isForte={isForteUser}
                 />
               </div>
             </div>
