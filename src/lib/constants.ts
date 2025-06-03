@@ -5,7 +5,7 @@ import { ReactComponent as Contract } from "assets/images/icons/contract.svg";
 import { ReactComponent as Funder } from "assets/images/icons/funder.svg";
 import { ReactComponent as Invoice } from "assets/images/icons/invoice.svg";
 import { ReactComponent as Milestone } from "assets/images/icons/milestone.svg";
-import { ReactComponent as Payouts } from "assets/images/icons/payouts.svg";
+import { ReactComponent as Payout } from "assets/images/icons/payouts.svg";
 import { ReactComponent as Project } from "assets/images/icons/project.svg";
 import { ReactComponent as Provider } from "assets/images/icons/provider.svg";
 
@@ -18,6 +18,7 @@ import {
   Projects,
   Providers,
   Users,
+  Payouts,
 } from "./role-permissions";
 import { InvoiceStatus } from "./types/invoices";
 import { OrgTypes } from "./types/organizations";
@@ -88,8 +89,8 @@ export const MENUS = [
   {
     name: "Payouts",
     link: "/payouts",
-    permissions: [],
-    icon: Payouts,
+    permissions: [Payouts.NAVIGATE],
+    icon: Payout,
   },
 ];
 

@@ -9,6 +9,7 @@ import {
   Funders,
   Invoices,
   Milestones,
+  Payouts,
   PermissionEnums,
   Projects,
   Providers,
@@ -193,7 +194,7 @@ export const ROUTES: RouteConfig[] = [
 
     Component: PayoutsPage,
 
-    permissions: [],
+    permissions: [Payouts.NAVIGATE],
   },
 
   {
@@ -201,7 +202,7 @@ export const ROUTES: RouteConfig[] = [
 
     Component: IndividualPayoutsPage,
 
-    permissions: [],
+    permissions: [Payouts.NAVIGATE],
   },
 
   {
