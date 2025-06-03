@@ -6,6 +6,7 @@ import SearchResultsPage from "pages/Search/SearchResultsPage";
 import {
   Beneficiaries,
   Contracts,
+  Dashboard,
   Funders,
   Invoices,
   Milestones,
@@ -91,7 +92,7 @@ export const ROUTES: RouteConfig[] = [
 
     Component: DashboardPage,
 
-    permissions: [],
+    permissions: [Dashboard.NAVIGATE],
   },
   {
     link: "invoices/*",

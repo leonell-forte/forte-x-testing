@@ -4,6 +4,7 @@ import React from "react";
 
 import Legend from "components/ui/charts/Legend";
 import PieChart from "components/ui/charts/PieChart";
+import Spinner from "components/ui/spinner/spinner";
 
 import DataText from "./DataText";
 import TileHeader from "./TileHeader";
@@ -28,7 +29,12 @@ const Project = () => {
     },
   ];
 
-  if (isLoading) return null;
+  if (isLoading)
+    return (
+      <div className="flex h-full items-center justify-center">
+        <Spinner />
+      </div>
+    );
 
   return (
     <div className="space-y-3">

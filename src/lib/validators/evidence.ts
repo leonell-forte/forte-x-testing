@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-import { Evidence, EvidenceFieldValues } from "../types/evidence";
+import {
+  Evidence,
+  EvidenceFieldValues,
+  UpdateEvidenceStatusEnum,
+} from "../types/evidence";
 import { fileSchema } from "./common";
 
 export const evidence = {
@@ -48,3 +52,9 @@ export const completeSchema = z.intersection(
   evidence.schema,
   beneficiaryIdSchema
 );
+
+export const updateStatusSchema = z.object({
+  evidenceIds: z.array(z.number()),
+  status: z.nativeEnum(UpdateEvidenceStatusEnum),
+  comment: z.string(),
+});

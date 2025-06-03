@@ -14,6 +14,7 @@ type Props = {
   segments: SegmentType[];
   ticks: TickType[];
   total?: number;
+  loading?: boolean;
 };
 
 const MilestoneTile = ({
@@ -24,9 +25,10 @@ const MilestoneTile = ({
   segments,
   ticks,
   total,
+  loading,
 }: Props) => {
   return (
-    <Card variant="outline" className="space-y-6">
+    <Card variant="outline" className="space-y-6" isLoading={loading}>
       <TileHeader title={title} tooltip={tooltip} />
 
       <div className="data-text-component wrapper grid grid-cols-2 divide-x divide-panel/10">

@@ -1,4 +1,4 @@
-import { TbLayoutDashboardFilled as Dashboard } from "react-icons/tb";
+import { TbLayoutDashboardFilled as DashboardIcon } from "react-icons/tb";
 
 import { ReactComponent as Beneficiary } from "assets/images/icons/beneficiary.svg";
 import { ReactComponent as Contract } from "assets/images/icons/contract.svg";
@@ -12,13 +12,14 @@ import { ReactComponent as Provider } from "assets/images/icons/provider.svg";
 import {
   Beneficiaries,
   Contracts,
+  Dashboard,
   Funders,
   Invoices,
   Milestones,
+  Payouts,
   Projects,
   Providers,
   Users,
-  Payouts,
 } from "./role-permissions";
 import { InvoiceStatus } from "./types/invoices";
 import { OrgTypes } from "./types/organizations";
@@ -31,8 +32,8 @@ export const MENUS = [
   {
     name: "dashboard",
     link: "/dashboard",
-    permissions: [],
-    icon: Dashboard,
+    permissions: [Dashboard.NAVIGATE],
+    icon: DashboardIcon,
   },
   {
     name: "funders",

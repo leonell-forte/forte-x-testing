@@ -72,8 +72,6 @@ const Milestones = () => {
     })) satisfies SegmentType[];
   }, [threshold]);
 
-  if (isLoading) return null;
-
   return (
     <>
       <MilestoneTile
@@ -94,6 +92,7 @@ const Milestones = () => {
         segments={outcomeSegment}
         ticks={outcomeTicks}
         total={outcome?.totalMilestones || 0}
+        loading={isLoading}
       />
       <MilestoneTile
         title="Threshold milestones"
@@ -113,6 +112,7 @@ const Milestones = () => {
         segments={thresholdSegment}
         ticks={thresholdTicks}
         total={threshold?.totalMilestones || 0}
+        loading={isLoading}
       />
     </>
   );

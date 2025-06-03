@@ -102,6 +102,16 @@ export class EvidenceService {
 
     return fileURL;
   }
+
+  async updateStatus(evidenceIds: number[], status: string, comment?: string) {
+    const res = await api.patch("/evidences/status", {
+      evidenceIds,
+      status,
+      comment,
+    });
+
+    return res.data;
+  }
 }
 
 const evidenceService = new EvidenceService();

@@ -21,7 +21,8 @@ export default function Card({
           ? "bg-[#30F1FF1F] bg-opacity-15 backdrop-blur"
           : "border border-panel bg-transparent",
         props.className,
-        isLoading && "animate-pulse"
+        isLoading &&
+          "animate-pulse !bg-[#30F1FF1F] !bg-opacity-15 !backdrop-blur"
       )}
     >
       {!isLoading ? children : null}

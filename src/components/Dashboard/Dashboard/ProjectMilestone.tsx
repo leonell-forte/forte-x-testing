@@ -3,6 +3,7 @@ import dashboardService from "api/dashboard";
 
 import Legend from "components/ui/charts/Legend";
 import PieChart from "components/ui/charts/PieChart";
+import Spinner from "components/ui/spinner/spinner";
 
 import DataText from "./DataText";
 import TileHeader from "./TileHeader";
@@ -11,7 +12,7 @@ import { useDashboardState } from "./useDashboardState";
 
 const ProjectMilestone = () => {
   const { project } = useDashboardState();
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["dashboard-project-milestone", project?.value],
     queryFn: () => dashboardService.getProjectMilestone(project?.value),
     enabled: !!project,
@@ -34,6 +35,13 @@ const ProjectMilestone = () => {
       label: "Paid",
     },
   ];
+
+  if (isLoading)
+    return (
+      <div className="flex h-full items-center justify-center">
+        <Spinner />
+      </div>
+    );
 
   return (
     <div className="space-y-3">

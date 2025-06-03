@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 import { cn } from "lib/utils";
 
+import { useModal } from "../dialogue/v2/Modal";
+
 type Props = {
   hrefLink: string;
   children: React.ReactNode;
@@ -23,6 +25,7 @@ function ReferenceLink({ children, hrefLink }: Props) {
         "transition-all duration-200"
       )}
       onClick={(e) => {
+        useModal.getState().close();
         e.stopPropagation();
         navigate(hrefLink);
       }}

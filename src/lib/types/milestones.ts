@@ -3,7 +3,7 @@ import { File } from "./common";
 export type MilestoneStatus = "achieved" | "paid" | "open" | "invoiced";
 
 export type EvidenceStatus =
-  | "accepted"
+  | "approved"
   | "pending review"
   | "more information requested"
   | "invoiced"

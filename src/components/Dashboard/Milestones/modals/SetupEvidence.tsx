@@ -247,7 +247,6 @@ function SetupEvidenceModal({
                   }}
                 />
               ) : null}
-
               {!selectedMilestone && (
                 <Controller
                   label="Milestone"
@@ -273,7 +272,6 @@ function SetupEvidenceModal({
                   }}
                 />
               )}
-
               <Controller
                 label="Evidence Description"
                 required
@@ -283,7 +281,6 @@ function SetupEvidenceModal({
                   <Input {...field} placeholder="Description" />
                 )}
               />
-
               {!!evidenceData && (
                 <Controller
                   label="Status"

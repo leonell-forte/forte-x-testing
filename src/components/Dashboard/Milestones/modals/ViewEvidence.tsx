@@ -1,23 +1,26 @@
 import { useQuery } from "@tanstack/react-query";
 import beneficiariesService from "api/beneficiaries";
 import evidenceService from "api/evidence";
-import { RiPencilFill as Pencil } from "react-icons/ri";
 
-import loader from "assets/images/icons/loader.svg";
-
-import { DEFAULT_DATE_FORMAT } from "lib/constants";
 import { IsAuthorized, Milestones } from "lib/role-permissions";
+import { File } from "lib/types/common";
+import {
+  Evidence as EvidenceType,
+  UpdateEvidenceStatusEnum,
+} from "lib/types/evidence";
 import { IMilestone, TMilestoneEvidence } from "lib/types/milestones";
-import { formatDate, getStatusVariant } from "lib/utils";
+import { getStatusVariant } from "lib/utils";
 
 import Button from "components/ui/button";
 import { useModal } from "components/ui/dialogue/v2/Modal";
-import InfoVertical from "components/ui/info-vertical/InfoVertical";
-import ReferenceLink from "components/ui/reference-link/ReferenceLink";
 import Spinner from "components/ui/spinner/spinner";
 import Status from "components/ui/status";
+import Tabs, { TabData } from "components/ui/tabs/Tabs";
 
-import { showSetupEvidenceModal } from "./SetupEvidence";
+import Details from "./Details";
+import Evidence from "./Evidence";
+import History from "./History";
+import { showUpdateStatus } from "./UpdateStatus";
 
 type TParams = {
   milestone: IMilestone;
@@ -59,7 +62,7 @@ function ViewEvidenceModal({ milestone, evidenceDetails }: TParams) {
     enabled: Boolean(evidenceDetails?.id),
   });
 
-  const file = evidenceDetails?.file;
+  const file = evidenceDetails?.file as File;
   const fileUrl = evidenceData?.file?.fileUrl;
 
   const { data: fileData, isLoading: isFileLoading } = useQuery({
@@ -82,6 +85,46 @@ function ViewEvidenceModal({ milestone, evidenceDetails }: TParams) {
     refetchOnWindowFocus: false,
   });
 
+  const tabs = [
+    {
+      value: "evidence",
+      label: "Evidence",
+      content: (
+        <Evidence file={file} fileData={fileData} loading={isFileLoading} />
+      ),
+    },
+    {
+      value: "evidence-details",
+      label: "Evidence Details",
+      content: (
+        <Details
+          beneficiary={beneficiary}
+          evidenceData={evidenceData}
+          milestone={milestone}
+        />
+      ),
+    },
+    {
+      value: "history",
+      label: "History",
+      content: (
+        <History
+          beneficiaryId={evidenceData?.beneficiaryId as number}
+          evidenceId={evidenceData?.id as number}
+          evidenceData={evidenceData as EvidenceType}
+        />
+      ),
+    },
+  ] satisfies TabData[];
+
+  const handleUpdateStatus = (status: UpdateEvidenceStatusEnum) => {
+    showUpdateStatus({
+      evidenceId: evidenceData?.id as number,
+      status,
+      milestoneId: milestone.id,
+    });
+  };
+
   return (
     <div>
       {evidenceLoading || isBeneficiaryLoading ? (
@@ -89,94 +132,44 @@ function ViewEvidenceModal({ milestone, evidenceDetails }: TParams) {
           <Spinner />
         </div>
       ) : (
-        <div>
-          <div className="space-y-6">
-            <div className="grid grid-cols-3 items-center gap-6">
-              <InfoVertical label="Beneficiary">
-                <ReferenceLink hrefLink={`/beneficiaries/${beneficiary?.id}`}>
-                  {beneficiary?.firstName} {beneficiary?.lastName}
-                </ReferenceLink>
-              </InfoVertical>
-              <InfoVertical label="Created by">
-                {evidenceData?.createdBy.firstName}{" "}
-                {evidenceData?.createdBy.lastName}
-              </InfoVertical>
-              <InfoVertical label="Created at">
-                {formatDate(
-                  new Date(evidenceData?.createdAt || ""),
-                  DEFAULT_DATE_FORMAT
-                )}
-              </InfoVertical>
-            </div>
-            <InfoVertical label="Description">
-              {evidenceData?.description}
-            </InfoVertical>
-
-            {!isFileLoading && fileData ? (
-              <InfoVertical label={`File: ${file?.filename}`}>
-                <div className="mx-auto flex flex-col items-center py-6">
-                  <div className="flex h-[calc(100vh-550px)] w-full max-w-[500px] items-center justify-center overflow-x-auto md:h-[calc(100vh-550px)]">
-                    {fileData && (
-                      <>
-                        <iframe
-                          src={
-                            fileData + "#navpanes=0&toolbar=0&view=Fit&page=1"
-                          }
-                          style={{
-                            border: "none",
-                            background: "transparent",
-                          }}
-                          width="100%"
-                          height="100%"
-                          title={file?.filename}
-                          className={
-                            isFileLoading
-                              ? "h-full opacity-[.4]"
-                              : "w-[700px] max-w-full overflow-x-auto md:w-[42rem]"
-                          }
-                        />
-                      </>
-                    )}
-
-                    {isFileLoading && (
-                      <>
-                        <img
-                          src={loader}
-                          alt=""
-                          className="absolute w-10 animate-spin"
-                        />
-                        <span className="sr-only">Loading file</span>
-                      </>
-                    )}
-                  </div>
-                </div>
-              </InfoVertical>
-            ) : null}
-            {isFileLoading ? (
-              <div
-                className="flex h-[250px] w-full items-center justify-center"
-                aria-hidden="true"
-              >
-                <Spinner />
-                <span className="sr-only">Loading file</span>
-              </div>
-            ) : null}
-            <div className="flex justify-end">
-              {IsAuthorized([Milestones.UPDATE]) && (
+        <div className="space-y-20">
+          <Tabs tabs={tabs} />
+          {IsAuthorized([Milestones.UPDATE]) && (
+            <div className="flex gap-10">
+              {evidenceData?.status !== "rejected" && (
                 <Button
                   onClick={() =>
-                    showSetupEvidenceModal({
-                      milestone,
-                      evidenceDetails: evidenceData as any,
-                    })
+                    handleUpdateStatus(UpdateEvidenceStatusEnum.REJECT)
                   }
+                  className="w-full"
+                  buttonType="secondary"
                 >
-                  <Pencil className="h-auto w-5 fill-black" />
-                  Edit details
+                  Reject
+                </Button>
+              )}
+              {evidenceData?.status !== "more information requested" && (
+                <Button
+                  onClick={() =>
+                    handleUpdateStatus(UpdateEvidenceStatusEnum.MORE_INFO)
+                  }
+                  className="w-full"
+                  buttonType="secondary"
+                >
+                  Request more info
+                </Button>
+              )}
+              {evidenceData?.status !== "approved" && (
+                <Button
+                  onClick={() =>
+                    handleUpdateStatus(UpdateEvidenceStatusEnum.APPROVE)
+                  }
+                  className="w-full"
+                >
+                  Approve
                 </Button>
               )}
             </div>
-          </div>
+          )}
         </div>
       )}
     </div>
