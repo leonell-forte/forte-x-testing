@@ -34,7 +34,7 @@ const ContractsTable = ({
   const navigate = useNavigate();
   const { isProviderUser, isForteUser } = useProfile();
 
-  const [contractId, setContractId] = useState<number | null>(null);
+  const [contractId, setContractId] = useState<string | null>(null);
 
   const contracts: IContract[] = useMemo(
     () =>
@@ -55,7 +55,7 @@ const ContractsTable = ({
 
   const { open } = useCustomPrompt();
 
-  const handleDeleteContract = (id: number) => {
+  const handleDeleteContract = (id: string) => {
     setContractId(id);
     open({
       title: "Delete Contract",
@@ -204,8 +204,6 @@ const ContractsTable = ({
                   key={index}
                   ariaLabel={`Contract name: ${name}`}
                 >
-                  <Table.Data>{id}</Table.Data>
-
                   <Table.Data>{name}</Table.Data>
 
                   <Table.Data>{project}</Table.Data>
@@ -282,7 +280,6 @@ const ContractsTable = ({
 export default ContractsTable;
 
 const TABLE_HEADER = [
-  "ID",
   "Contract name",
   "Project",
   "Provider",

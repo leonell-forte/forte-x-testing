@@ -59,7 +59,7 @@ export interface IContract {
 
   endDate: string;
 
-  id?: number;
+  id?: string;
 
   outcomenames?: string[];
 

@@ -67,12 +67,7 @@ const Contracts = ({ projectId, providerId, funderId }: IProps) => {
   const renderModal = (modal: ModalLabelType) => {
     switch (modal) {
       case "contract":
-        return (
-          <ContractDialogue
-            id={Number(selectedContract)}
-            projectId={projectId}
-          />
-        );
+        return <ContractDialogue id={selectedContract} projectId={projectId} />;
 
       case "tag":
         return (

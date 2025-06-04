@@ -176,7 +176,7 @@ const BeneficiariesForm = ({
           // provider dropdown should be disabled if no contract is selected
 
           const contract = contractList?.items.find(
-            (contract) => contract.id === selectedContract
+            (contract) => String(contract.id) === String(selectedContract)
           );
 
           return contract?.provider.id === org.id;
@@ -329,7 +329,7 @@ const BeneficiariesForm = ({
                 handleSelect={(val) => {
                   field.onChange(Number(val));
                   const contract = contractList?.items.find(
-                    (item) => item.id === Number(val)
+                    (item) => item.id === val
                   );
 
                   setValue("providerId", contract?.provider.id as number);
@@ -380,7 +380,7 @@ const BeneficiariesForm = ({
                 placeholder="Project"
                 value={
                   contractList?.items.find(
-                    (item) => item.id === watch("contractId")
+                    (item) => item.id === watch("contractId").toString()
                   )?.project
                 }
               />

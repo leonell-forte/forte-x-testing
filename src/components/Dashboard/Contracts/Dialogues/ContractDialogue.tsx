@@ -11,7 +11,7 @@ import Spinner from "components/ui/spinner/spinner";
 import ContractForm from "./ContractForm";
 
 interface IContractDialogueProps {
-  id?: number;
+  id?: string;
 
   projectId?: number;
 

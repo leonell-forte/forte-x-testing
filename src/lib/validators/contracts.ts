@@ -117,7 +117,7 @@ export const contracts = {
   },
 
   schema: z.object({
-    id: z.number().optional(),
+    id: z.string().optional(),
 
     name: z.string().min(1, "Contract name is a required field"),
 

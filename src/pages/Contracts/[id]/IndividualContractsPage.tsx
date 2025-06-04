@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { ReactComponent as Check } from "assets/images/icons/check.svg";
+import { ReactComponent as Copy } from "assets/images/icons/copy.svg";
 import { ReactComponent as Edit } from "assets/images/icons/pencil.svg";
 
 import { Contracts, IsAuthorized } from "lib/role-permissions";
@@ -23,6 +24,8 @@ import Dialogue from "components/ui/dialogue/dialogue";
 import Spinner from "components/ui/spinner/spinner";
 import Status from "components/ui/status";
 import Tabs from "components/ui/tabs/Tabs";
+import { toast } from "components/ui/toast/Toast";
+import { Tooltip } from "components/ui/tooltip/Tooltip";
 
 import BeneficiariesPage from "pages/Beneficiaries/BeneficiariesPage";
 import MilestonePage from "pages/Milestones/MilestonesPage";
@@ -142,6 +145,19 @@ const IndividualContractsPage = () => {
           <div>
             <div className="flex items-center gap-4">
               <p className="text-[24px] font-medium">{name}</p>
+              <Tooltip title="Copy contract ID">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigator.clipboard.writeText(params.id as string);
+                    toast({
+                      title: "Contract ID copied to clipboard",
+                    });
+                  }}
+                >
+                  <Copy className="w-4 stroke-white" />
+                </button>
+              </Tooltip>
               <Status variant={getStatusVariant(status)}>
                 {status.toLowerCase()}
               </Status>

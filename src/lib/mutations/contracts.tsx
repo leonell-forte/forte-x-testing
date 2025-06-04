@@ -18,7 +18,7 @@ import { ToastAction, toast } from "components/ui/toast/Toast";
 import { usePage } from "../hooks";
 
 interface IContractMutation {
-  id?: number;
+  id?: string;
 
   successCallback?: (contract: IContract) => void;
 
@@ -208,9 +208,7 @@ export const useDeleteContractMutation = (
           return {
             ...old,
 
-            items: [...(old?.items || [])].filter(
-              (item) => item.id !== Number(id)
-            ),
+            items: [...(old?.items || [])].filter((item) => item.id !== id),
           };
         }
       );

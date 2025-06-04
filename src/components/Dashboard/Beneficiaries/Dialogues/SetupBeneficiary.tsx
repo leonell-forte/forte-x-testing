@@ -134,7 +134,7 @@ export function SetupBeneficiaryModal({
   useEffect(() => {
     if (contractId && contractList?.items) {
       const contract = contractList?.items.find(
-        (item) => item.id === Number(contractId)
+        (item) => String(item.id) === String(contractId)
       );
       setValue("providerId", contract?.provider.id as number);
       setValue("projectId", contract?.projectId as number);
@@ -291,7 +291,7 @@ export function SetupBeneficiaryModal({
                     handleSelect={(val) => {
                       field.onChange(Number(val));
                       const contract = contractList?.items.find(
-                        (item) => item.id === Number(val)
+                        (item) => String(item.id) === String(val)
                       );
                       setValue("providerId", contract?.provider.id as number);
                       setValue("projectId", contract?.projectId as number);
