@@ -14,6 +14,7 @@ import { MainEvidence } from "lib/types/evidence";
 import { MILESTONE_TYPES } from "lib/types/milestones";
 import { cn, getStatusVariant } from "lib/utils";
 
+import { showViewEvidenceModal } from "components/Dashboard/Milestones/modals/ViewEvidence";
 import { useProfile } from "components/ProfileContext";
 import { useCustomPrompt } from "components/ui/alert/custom-prompt";
 import Checkbox from "components/ui/checkbox";
@@ -288,7 +289,11 @@ const MainEvidencesTable = ({ list, isLoading }: IProps) => {
                   key={index}
                   onClick={(e) => {
                     e.stopPropagation();
-                    console.log("details fn here");
+                    showViewEvidenceModal({
+                      milestoneId: milestoneId!,
+                      evidenceId: id,
+                      beneficiaryId: beneficiary.id,
+                    });
                   }}
                 >
                   <Table.Data className="!px-4">

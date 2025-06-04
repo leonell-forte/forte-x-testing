@@ -20,7 +20,7 @@ type UseEvidenceList = {
 const useEvidenceList = ({
   key,
   page,
-  listAll,
+  // listAll,
   enabled,
   pageSize,
   filter,

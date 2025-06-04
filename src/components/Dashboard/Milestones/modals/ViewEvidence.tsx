@@ -8,13 +8,10 @@ import {
   Evidence as EvidenceType,
   UpdateEvidenceStatusEnum,
 } from "lib/types/evidence";
-import { IMilestone, TMilestoneEvidence } from "lib/types/milestones";
-import { getStatusVariant } from "lib/utils";
 
 import Button from "components/ui/button";
 import { useModal } from "components/ui/dialogue/v2/Modal";
 import Spinner from "components/ui/spinner/spinner";
-import Status from "components/ui/status";
 import Tabs, { TabData } from "components/ui/tabs/Tabs";
 
 import Details from "./Details";
@@ -23,46 +20,48 @@ import History from "./History";
 import { showUpdateStatus } from "./UpdateStatus";
 
 type TParams = {
-  milestone: IMilestone;
-  evidenceDetails?: TMilestoneEvidence;
+  milestoneId: string;
+  evidenceId: number;
+  beneficiaryId: number;
 };
 
 export function showViewEvidenceModal(params: TParams) {
   useModal.getState().open({
     component: (
       <ViewEvidenceModal
-        milestone={params.milestone}
-        evidenceDetails={params.evidenceDetails}
+        milestoneId={params.milestoneId}
+        evidenceId={params.evidenceId}
+        beneficiaryId={params.beneficiaryId}
       />
     ),
     size: "2xl",
     title: (
       <div className="flex items-center gap-3">
-        <span>Evidence ID: {params.evidenceDetails?.id}</span>
-        {params.evidenceDetails?.status ? (
+        <span>Evidence ID: {params.evidenceId}</span>
+        {/* {params.evidenceDetails?.status ? (
           <Status variant={getStatusVariant(params.evidenceDetails?.status)}>
             {params.evidenceDetails?.status}
           </Status>
-        ) : null}
+        ) : null} */}
       </div>
     ),
   });
 }
 
-function ViewEvidenceModal({ milestone, evidenceDetails }: TParams) {
+function ViewEvidenceModal({
+  milestoneId,
+  evidenceId,
+  beneficiaryId,
+}: TParams) {
   const { data: evidenceData, isLoading: evidenceLoading } = useQuery({
-    queryKey: ["evidence", evidenceDetails?.id],
+    queryKey: ["evidence", evidenceId],
 
-    queryFn: () =>
-      evidenceService.getOne(
-        evidenceDetails ? evidenceDetails.beneficiary.id : NaN,
-        evidenceDetails ? evidenceDetails.id : NaN
-      ),
+    queryFn: () => evidenceService.getOne(beneficiaryId, evidenceId),
 
-    enabled: Boolean(evidenceDetails?.id),
+    enabled: Boolean(evidenceId) && Boolean(beneficiaryId),
   });
 
-  const file = evidenceDetails?.file as File;
+  const file = evidenceData?.file as File;
   const fileUrl = evidenceData?.file?.fileUrl;
 
   const { data: fileData, isLoading: isFileLoading } = useQuery({
@@ -76,11 +75,11 @@ function ViewEvidenceModal({ milestone, evidenceDetails }: TParams) {
   });
 
   const { data: beneficiary, isLoading: isBeneficiaryLoading } = useQuery({
-    queryKey: ["evidence-beneficiary", evidenceDetails?.beneficiary.id],
+    queryKey: ["evidence-beneficiary", evidenceData?.beneficiaryId],
 
-    queryFn: () => beneficiariesService.getOne(evidenceDetails?.beneficiary.id),
+    queryFn: () => beneficiariesService.getOne(evidenceData?.beneficiaryId),
 
-    enabled: Boolean(evidenceDetails?.beneficiary.id),
+    enabled: Boolean(evidenceData?.beneficiaryId),
 
     refetchOnWindowFocus: false,
   });
@@ -100,7 +99,7 @@ function ViewEvidenceModal({ milestone, evidenceDetails }: TParams) {
         <Details
           beneficiary={beneficiary}
           evidenceData={evidenceData}
-          milestone={milestone}
+          milestoneId={milestoneId}
         />
       ),
     },
@@ -121,7 +120,7 @@ function ViewEvidenceModal({ milestone, evidenceDetails }: TParams) {
     showUpdateStatus({
       evidenceId: evidenceData?.id as number,
       status,
-      milestoneId: milestone.id,
+      milestoneId,
     });
   };
 

@@ -1,5 +1,5 @@
-import { TbLayoutDashboardFilled as DashboardIcon } from "react-icons/tb";
 import { HiSearch as EvidenceIcon } from "react-icons/hi";
+import { TbLayoutDashboardFilled as DashboardIcon } from "react-icons/tb";
 
 import { ReactComponent as Beneficiary } from "assets/images/icons/beneficiary.svg";
 import { ReactComponent as Contract } from "assets/images/icons/contract.svg";
@@ -14,6 +14,7 @@ import {
   Beneficiaries,
   Contracts,
   Dashboard,
+  Evidences,
   Funders,
   Invoices,
   Milestones,
@@ -21,7 +22,6 @@ import {
   Projects,
   Providers,
   Users,
-  Evidences,
 } from "./role-permissions";
 import { InvoiceStatus } from "./types/invoices";
 import { OrgTypes } from "./types/organizations";
@@ -102,7 +102,6 @@ export const MENUS = [
     permissions: [Payouts.NAVIGATE],
     icon: Payout,
   },
-
 ];
 
 export const ROLES = [

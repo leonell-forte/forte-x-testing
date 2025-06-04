@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface SelectionToolbarProps {
   selectedCount: number;
@@ -49,8 +49,8 @@ export function Toolbar({
               <span className="">selected</span>
             </div>
           </div>
-          {actions.map((action) => (
-            <div className="flex items-center gap-2">
+          {actions.map((action, index) => (
+            <div className="flex items-center gap-2" key={index}>
               <button
                 type="button"
                 className="group flex items-center gap-2 text-sm transition hover:text-mint"

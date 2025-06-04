@@ -1,4 +1,5 @@
 import { api } from "../lib/axios/interceptor";
+import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import { ActivityLogs } from "../lib/types/activity-logs";
 import {
   AddEvidenceParams,
@@ -8,7 +9,6 @@ import {
   MainEvidence,
 } from "../lib/types/evidence";
 import { IODataObject, generateODataQuery } from "../lib/utils";
-import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 
 export class EvidenceService {
   async add({
@@ -43,36 +43,43 @@ export class EvidenceService {
     return response.data;
   }
 
-    async listAll(
+  async listAll(
     page: number,
     pageSize: number,
     search?: string,
     filters?: IEvidenceFilters
-  ): Promise<{ items: MainEvidence[]; totalSize: number; pageSize: number, rejectedCount: number, pendingCount: number, approvedCount: number, moreInformationRequestedCount: number,  }> {
-        const params = new URLSearchParams();
-    
-        let filtersData: IODataObject = {
+  ): Promise<{
+    items: MainEvidence[];
+    totalSize: number;
+    pageSize: number;
+    rejectedCount: number;
+    pendingCount: number;
+    approvedCount: number;
+    moreInformationRequestedCount: number;
+  }> {
+    const params = new URLSearchParams();
 
-          "evidence.status": {
-            value: filters?.status || "",
-    
-            exact: true,
-          },
-    
-          "type": {
-            value: filters?.type || "",
-    
-            exact: true,
-          },
-        };
-    
-        params.append("$pageSize", String(pageSize || DEFAULT_PAGE_SIZE));
-    
-        params.append("$pageNum", (page || 1).toString());
-        
-        if (generateODataQuery(filtersData)) {
-          params.append("$filter", generateODataQuery(filtersData));
-        }
+    let filtersData: IODataObject = {
+      "evidence.status": {
+        value: filters?.status || "",
+
+        exact: true,
+      },
+
+      type: {
+        value: filters?.type || "",
+
+        exact: true,
+      },
+    };
+
+    params.append("$pageSize", String(pageSize || DEFAULT_PAGE_SIZE));
+
+    params.append("$pageNum", (page || 1).toString());
+
+    if (generateODataQuery(filtersData)) {
+      params.append("$filter", generateODataQuery(filtersData));
+    }
 
     const response = await api.get(`/evidences`, { params });
 
@@ -153,7 +160,7 @@ export class EvidenceService {
     return res.data;
   }
 
-    async bulkEvidenceExport(data: { ids: number[] }) {
+  async bulkEvidenceExport(data: { ids: number[] }) {
     const response = api.post("/evidences/download", data, {
       responseType: "arraybuffer",
     });

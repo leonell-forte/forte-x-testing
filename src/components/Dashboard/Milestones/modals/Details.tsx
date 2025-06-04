@@ -1,26 +1,42 @@
-import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import milestoneService from "api/milestones";
 
 import { IBeneficiaries } from "lib/types/beneficiaries";
 import { Evidence } from "lib/types/evidence";
-import { IMilestone } from "lib/types/milestones";
 import { formatCurrency, formatDate } from "lib/utils";
 
 import InfoVertical from "components/ui/info-vertical/InfoVertical";
 import ReferenceLink from "components/ui/reference-link/ReferenceLink";
+import Spinner from "components/ui/spinner/spinner";
 
 type DetailsProps = {
   beneficiary?: IBeneficiaries;
   evidenceData?: Evidence;
-  milestone: IMilestone;
+  milestoneId: string;
 };
 
-const Details = ({ beneficiary, evidenceData, milestone }: DetailsProps) => {
+const Details = ({ beneficiary, evidenceData, milestoneId }: DetailsProps) => {
+  const { data: milestone, isLoading } = useQuery({
+    queryKey: ["milestone-details", milestoneId],
+
+    queryFn: () => milestoneService.getOne(milestoneId!),
+
+    enabled: Boolean(milestoneId),
+  });
+
+  if (isLoading)
+    return (
+      <div className="flex h-56 w-full items-center justify-center">
+        <Spinner />
+      </div>
+    );
+
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-2 gap-6">
         <InfoVertical label="Milestone ID">
-          <ReferenceLink hrefLink={`/milestones/${milestone?.id}`}>
-            {milestone?.id}
+          <ReferenceLink hrefLink={`/milestones/${milestoneId}`}>
+            {milestoneId}
           </ReferenceLink>
         </InfoVertical>
         <InfoVertical label="Contract Name">

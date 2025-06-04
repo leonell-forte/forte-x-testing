@@ -12,6 +12,8 @@ export interface IBeneficiaries {
 
   contractId: number;
 
+  contractName?: string;
+
   contract?: string;
 
   email: string;

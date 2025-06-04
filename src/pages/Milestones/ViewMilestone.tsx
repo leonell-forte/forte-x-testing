@@ -180,15 +180,16 @@ export default function ViewMilestone() {
           <div className="md:hidden">
             <Cards.Container>
               {milestone.evidences.map((item, index) => {
-                const { file, status, beneficiary } = item;
+                const { file, status, beneficiary, id } = item;
 
                 return (
                   <Cards.Card
                     onClick={(e) => {
                       e.stopPropagation();
                       showViewEvidenceModal({
-                        milestone,
-                        evidenceDetails: item,
+                        milestoneId: milestone.id,
+                        evidenceId: id,
+                        beneficiaryId: beneficiary.id,
                       });
                     }}
                     key={index}
@@ -283,15 +284,16 @@ export default function ViewMilestone() {
 
               <Table.Body>
                 {milestone.evidences.map((item, index) => {
-                  const { file, status, description, beneficiary } = item;
+                  const { file, status, description, beneficiary, id } = item;
                   return (
                     <Table.Row
                       key={index}
                       onClick={(e) => {
                         e.stopPropagation();
                         showViewEvidenceModal({
-                          milestone,
-                          evidenceDetails: item,
+                          milestoneId: milestone.id,
+                          evidenceId: id,
+                          beneficiaryId: beneficiary.id,
                         });
                       }}
                     >

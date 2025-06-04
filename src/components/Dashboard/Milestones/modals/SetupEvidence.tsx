@@ -118,7 +118,7 @@ function SetupEvidenceModal({
     formState: { isDirty },
   } = form;
 
-  const [file, beneficiaryId] = watch(["file", "beneficiaryId"]);
+  const [file] = watch(["file", "beneficiaryId"]);
 
   const { addEvidence, isPending } = useEvidenceMutation({
     milestoneId: String(milestone?.id || 0),
@@ -127,14 +127,9 @@ function SetupEvidenceModal({
 
     successCallback: (res) => {
       showViewEvidenceModal({
-        milestone: milestone!,
-        evidenceDetails: {
-          ...res,
-          beneficiary: {
-            ...(res.beneficiary || {}),
-            id: Number(beneficiaryId) || Number(milestone!.reference.id),
-          },
-        },
+        milestoneId: milestone?.id as string,
+        evidenceId: res.id,
+        beneficiaryId: res.beneficiary.id,
       });
     },
   });

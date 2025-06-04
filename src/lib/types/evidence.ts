@@ -60,8 +60,8 @@ export type MainEvidence = {
   id: number;
   filename: File;
   beneficiary: User;
-  milestoneId?: string,
-  type?: keyof typeof MILESTONE_TYPES,
+  milestoneId?: string;
+  type?: keyof typeof MILESTONE_TYPES;
   status: EvidenceStatus;
   outcome?: string;
-}
+};

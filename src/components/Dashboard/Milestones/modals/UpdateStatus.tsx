@@ -4,9 +4,11 @@ import evidenceService from "api/evidence";
 import { useForm } from "react-hook-form";
 
 import {
+  MainEvidence,
   UpdateEvidenceStatusEnum,
   UpdateStatusFieldValues,
 } from "lib/types/evidence";
+import { IMilestone } from "lib/types/milestones";
 import { updateStatusSchema } from "lib/validators/evidence";
 
 import { queryClient } from "components/QueryProvider";
@@ -81,18 +83,31 @@ const UpdateStatusModal = ({ evidenceId, status, milestoneId }: Params) => {
   const { mutateAsync: updateStatus, isPending } = useMutation({
     mutationFn: ({ evidenceIds, status, comment }: UpdateStatusFieldValues) =>
       evidenceService.updateStatus(evidenceIds, status, comment),
-    onSuccess: () => {
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ["evidences"] });
+
+      const prevMilestone = queryClient.getQueryData([
+        "milestone-details",
+        milestoneId,
+      ]) as IMilestone;
+
+      const evidenceQueries = queryClient.getQueriesData({
+        queryKey: ["evidences"],
+      });
+      return { prevMilestone, evidenceQueries };
+    },
+
+    onSuccess: (data, variables, { prevMilestone, evidenceQueries }) => {
       toast({
         title: "Success",
         description: "Evidence updated successfully",
       });
 
-      queryClient.setQueryData(
-        ["milestone-details", milestoneId],
-        (oldData: any) => {
+      if (prevMilestone) {
+        queryClient.setQueryData(["milestone-details", milestoneId], () => {
           return {
-            ...oldData,
-            evidences: oldData.evidences.map((evidence: any) => {
+            ...prevMilestone,
+            evidences: prevMilestone.evidences.map((evidence: any) => {
               if (evidence.id === evidenceId) {
                 return {
                   ...evidence,
@@ -102,18 +117,36 @@ const UpdateStatusModal = ({ evidenceId, status, milestoneId }: Params) => {
               return evidence;
             }),
           };
+        });
+      }
+
+      evidenceQueries.forEach(([queryKey, queryData]) => {
+        if (
+          queryData &&
+          typeof queryData === "object" &&
+          "items" in queryData
+        ) {
+          queryClient.setQueryData(queryKey, {
+            ...queryData,
+            items: (queryData.items as MainEvidence[]).map((item) => {
+              if (item.id === evidenceId) {
+                return { ...item, status };
+              }
+              return item;
+            }),
+          });
         }
-      );
+      });
 
       useModal.getState().close();
     },
     onError: (err: any) => {
-      console.log(err);
+      queryClient.invalidateQueries({ queryKey: ["evidences"] });
 
       toast({
         variant: "danger",
         title: "Error",
-        description: err.response.data.message || "Something went wrong",
+        description: err?.response?.data?.message || "Something went wrong",
       });
     },
   });
