@@ -152,6 +152,14 @@ export class EvidenceService {
 
     return res.data;
   }
+
+    async bulkEvidenceExport(data: { ids: number[] }) {
+    const response = api.post("/evidences/download", data, {
+      responseType: "arraybuffer",
+    });
+
+    return response;
+  }
 }
 
 const evidenceService = new EvidenceService();

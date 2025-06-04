@@ -3,7 +3,12 @@
 import * as ToastPrimitives from "@radix-ui/react-toast";
 import { type VariantProps, cva } from "class-variance-authority";
 import * as React from "react";
-import { HiCheckCircle, HiExclamationCircle, HiXCircle } from "react-icons/hi";
+import {
+  HiCheckCircle,
+  HiExclamationCircle,
+  HiInformationCircle,
+  HiXCircle,
+} from "react-icons/hi";
 import { MdClose as X } from "react-icons/md";
 
 import { cn } from "lib/utils";
@@ -196,12 +201,13 @@ function useToast() {
 
 export { useToast, toast };
 
-type Variants = "default" | "danger" | "warning";
+type Variants = "default" | "danger" | "warning" | "info";
 
 const TYPE_ICON: Record<Variants, React.ReactNode> = {
   default: <HiCheckCircle className="h-5 w-5 fill-[#0D7F51]" />,
   danger: <HiXCircle className="h-5 w-5 fill-red" />,
   warning: <HiExclamationCircle className="h-5 w-5 fill-yellow" />,
+  info: <HiInformationCircle className="h-5 w-5 fill-[#30F1FF80]" />,
 };
 
 export function ToastMarker() {
@@ -268,13 +274,14 @@ const ToastViewport = React.forwardRef<
 ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
 
 const toastVariants = cva(
-  "group pointer-events-auto relative flex w-full justify-between space-x-2 overflow-hidden rounded-md py-2 px-3 border shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full",
+  "group pointer-events-auto relative flex w-full justify-between space-x-2 overflow-hidden rounded-md py-2 px-3  shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full",
   {
     variants: {
       variant: {
         default: "bg-pastel-green toast-default",
         danger: "bg-red-100 toast-danger",
         warning: "bg-yellow-100 toast-warning",
+        info: "bg-[#30F1FF80] backdrop-blur-lg toast-info",
       },
     },
     defaultVariants: {

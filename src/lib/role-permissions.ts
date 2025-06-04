@@ -177,6 +177,7 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     ...Object.values(Projects),
     ...Object.values(Milestones),
     ...Object.values(Payouts),
+    ...Object.values(Evidences),
 
     Users.CREATE,
     Users.IMPORT,
@@ -190,6 +191,7 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     Funders.UPDATE,
     Funders.DELETE,
     Invoices.LIST,
+
   ],
 
   "provider.admin": [
@@ -198,6 +200,7 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     ...Object.values(Projects),
     ...Object.values(Milestones),
     ...Object.values(Payouts).filter((item) => item !== Payouts.SETUP),
+    ...Object.values(Evidences),
 
     Users.CREATE,
     Users.IMPORT,
@@ -216,7 +219,7 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     ...Object.values(Contracts),
     ...Object.values(Projects),
     ...Object.values(Milestones),
-
+    ...Object.values(Evidences),
 
     Providers.LIST,
     Funders.NAVIGATE,
@@ -224,6 +227,7 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     Invoices.LIST,
     Payouts.LIST,
     Payouts.NAVIGATE,
+
   ],
 
   "provider.read-only": [
@@ -240,6 +244,8 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     Milestones.NAVIGATE,
     Payouts.LIST,
     Payouts.NAVIGATE,
+    Evidences.LIST,
+    Evidences.NAVIGATE,
   ],
 
   "funder.owner": [

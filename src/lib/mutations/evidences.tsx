@@ -2,6 +2,7 @@ import * as amplitude from "@amplitude/analytics-browser";
 import { useMutation } from "@tanstack/react-query";
 import evidenceService from "api/evidence";
 import milestoneService, { TOverride } from "api/milestones";
+import { format } from "date-fns";
 
 import { TMilestoneEvidence } from "lib/types/milestones";
 import { formatErrorMessage } from "lib/utils";
@@ -141,4 +142,34 @@ export const useOverrideCost = () => {
   });
 
   return { overrideCost, isPending };
+};
+
+export const useBulkDownloadEvidenceMutation = () => {
+  const { mutateAsync: bulkDownloadEvidence, isPending } = useMutation({
+    mutationFn: evidenceService.bulkEvidenceExport,
+
+    onSuccess: (response) => {
+      const timestamp = format(new Date(), "MM_dd_yy-HH_mm");
+      const fileName = `Evidences_Export-${timestamp}.zip`;
+      const url = window.URL.createObjectURL(
+        new Blob([response.data], { type: "application/zip" })
+      );
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode?.removeChild(link);
+    },
+
+    onError: (err: any) => {
+      toast({
+        variant: "danger",
+        title: "Error",
+        description: err?.response?.data?.message,
+      });
+    },
+  });
+
+  return { bulkDownloadEvidence, isPending };
 };

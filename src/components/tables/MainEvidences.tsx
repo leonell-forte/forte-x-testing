@@ -1,17 +1,20 @@
 import evidenceService from "api/evidence";
-import { Delete } from "lucide-react";
 import { ChangeEvent, useCallback, useState } from "react";
 import { BsPencilSquare as Update } from "react-icons/bs";
 import { HiEllipsisHorizontal as Ellipsis } from "react-icons/hi2";
 import { LuDownload as Download } from "react-icons/lu";
 
-import { useDeleteEvidence } from "lib/mutations/evidences";
-import { IsAuthorized, Milestones } from "lib/role-permissions";
+import {
+  useBulkDownloadEvidenceMutation,
+  useDeleteEvidence,
+} from "lib/mutations/evidences";
+import { IsAuthorized } from "lib/role-permissions";
 import { Evidences } from "lib/role-permissions";
 import { MainEvidence } from "lib/types/evidence";
 import { MILESTONE_TYPES } from "lib/types/milestones";
-import { getStatusVariant } from "lib/utils";
+import { cn, getStatusVariant } from "lib/utils";
 
+import { useProfile } from "components/ProfileContext";
 import { useCustomPrompt } from "components/ui/alert/custom-prompt";
 import Checkbox from "components/ui/checkbox";
 import {
@@ -24,6 +27,7 @@ import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
 import Status from "components/ui/status";
 import Table from "components/ui/table";
 import Cards from "components/ui/table-card";
+import { toast } from "components/ui/toast/Toast";
 import { Toolbar } from "components/ui/toolbar/Toolbar";
 
 interface IProps {
@@ -34,8 +38,22 @@ interface IProps {
 const MainEvidencesTable = ({ list, isLoading }: IProps) => {
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
+  const { isProviderUser } = useProfile();
+
   const { open } = useCustomPrompt();
   const { deleteEvidence } = useDeleteEvidence();
+
+  const { bulkDownloadEvidence } = useBulkDownloadEvidenceMutation();
+
+  const handleBulkDownload = async () => {
+    toast({
+      title: "Downloading files...",
+      variant: "info",
+      duration: 1750,
+    });
+    await bulkDownloadEvidence({ ids: selectedIds });
+    setSelectedIds([]);
+  };
 
   const handleDelete = (beneId: number, id: number) => {
     open({
@@ -57,6 +75,83 @@ const MainEvidencesTable = ({ list, isLoading }: IProps) => {
     },
     [list]
   );
+
+  const dropDownItems = [
+    {
+      label: "Update Status",
+      value: "update-status",
+      permission: Evidences.UPDATE,
+      show: !isProviderUser,
+    },
+    {
+      label: "Details",
+      value: "details",
+      permission: Evidences.UPDATE,
+      show: isProviderUser,
+    },
+    {
+      label: "Download",
+      value: "download",
+      permission: Evidences.DOWNLOAD,
+      show: true,
+    },
+    {
+      label: "Delete",
+      value: "delete",
+      permission: Evidences.DELETE,
+      show: true,
+    },
+  ];
+
+  const handleDropdownAction = (action: string, evidence: MainEvidence) => {
+    switch (action) {
+      case "update-status":
+        console.log("update status fn here");
+        break;
+      case "details":
+        console.log("details fn here");
+        break;
+      case "download":
+        evidenceService.getFile(
+          evidence.filename.fileUrl,
+          evidence.filename.filename
+        );
+        break;
+      case "delete":
+        handleDelete(evidence.beneficiary?.id, evidence.id);
+        break;
+    }
+  };
+
+  const dropDownComponent = (evidence: MainEvidence) => {
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button className="group mt-1">
+            <Ellipsis className="m-auto h-auto w-8 group-hover:fill-mint" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" side="bottom" sideOffset={1}>
+          {dropDownItems
+            .filter((item) => item.show)
+            .map((item, index) => {
+              if (!IsAuthorized([item.permission])) return null;
+              return (
+                <DropdownMenuItem
+                  key={index}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDropdownAction(item.value, evidence);
+                  }}
+                >
+                  {item.label}
+                </DropdownMenuItem>
+              );
+            })}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  };
 
   return (
     <>
@@ -81,59 +176,12 @@ const MainEvidencesTable = ({ list, isLoading }: IProps) => {
                   console.log("details fn here");
                 }}
               >
-                {IsAuthorized([Evidences.UPDATE]) && (
-                  <div className="absolute right-5 top-4 flex items-center">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <button className="group mt-1">
-                          <Ellipsis className="m-auto h-auto w-8 group-hover:fill-mint" />
-                        </button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        align="end"
-                        side="bottom"
-                        sideOffset={1}
-                      >
-                        {IsAuthorized([Evidences.UPDATE]) && (
-                          <DropdownMenuItem
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              console.log("update status fn here");
-                            }}
-                          >
-                            Update Status
-                          </DropdownMenuItem>
-                        )}
-                        {IsAuthorized([Evidences.DOWNLOAD]) && (
-                          <DropdownMenuItem
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              evidenceService.getFile(
-                                filename.fileUrl,
-                                filename.filename
-                              );
-                            }}
-                          >
-                            Download
-                          </DropdownMenuItem>
-                        )}
-                        {IsAuthorized([Evidences.DELETE]) && (
-                          <DropdownMenuItem
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDelete(beneficiary.id, id);
-                            }}
-                          >
-                            Delete
-                          </DropdownMenuItem>
-                        )}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-                )}
+                <div className="absolute right-5 top-4 flex items-center">
+                  {dropDownComponent(item)}
+                </div>
                 <div className="space-y-2">
                   <p className="flex items-center gap-2 font-semibold">
-                    {IsAuthorized([Evidences.UPDATE]) && (
+                    {IsAuthorized([Evidences.UPDATE]) && !isProviderUser && (
                       <div className="w-4 translate-y-[-2px]">
                         <Checkbox
                           checked={selectedIds.includes(id)}
@@ -195,8 +243,14 @@ const MainEvidencesTable = ({ list, isLoading }: IProps) => {
         >
           <Table.Head>
             <Table.Row>
-              <Table.Header className="!pl-2">
-                {IsAuthorized([Evidences.UPDATE]) ? (
+              <Table.Header
+                className={cn(
+                  IsAuthorized([Evidences.UPDATE]) && !isProviderUser
+                    ? "!pl-2"
+                    : ""
+                )}
+              >
+                {IsAuthorized([Evidences.UPDATE]) && !isProviderUser ? (
                   <div className="pl-2">
                     <Checkbox
                       checked={
@@ -239,7 +293,7 @@ const MainEvidencesTable = ({ list, isLoading }: IProps) => {
                 >
                   <Table.Data className="!px-4">
                     <div className="flex items-center gap-2">
-                      {IsAuthorized([Evidences.UPDATE]) ? (
+                      {IsAuthorized([Evidences.UPDATE]) && !isProviderUser ? (
                         <div
                           className="w-6"
                           onClick={(e) => e.stopPropagation()}
@@ -280,54 +334,7 @@ const MainEvidencesTable = ({ list, isLoading }: IProps) => {
                     <Status variant={getStatusVariant(status)}>{status}</Status>
                   </Table.Data>
 
-                  <Table.Data>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <button className="group mt-1 flex w-full items-center justify-end">
-                          <Ellipsis className="m-auto h-auto w-8 group-hover:fill-mint" />
-                        </button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        align="end"
-                        side="bottom"
-                        sideOffset={1}
-                      >
-                        {IsAuthorized([Evidences.UPDATE]) && (
-                          <DropdownMenuItem
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              console.log("update status fn here");
-                            }}
-                          >
-                            Update Status
-                          </DropdownMenuItem>
-                        )}
-                        {IsAuthorized([Evidences.DOWNLOAD]) && (
-                          <DropdownMenuItem
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              evidenceService.getFile(
-                                filename.fileUrl,
-                                filename.filename
-                              );
-                            }}
-                          >
-                            Download
-                          </DropdownMenuItem>
-                        )}
-                        {IsAuthorized([Evidences.DELETE]) && (
-                          <DropdownMenuItem
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDelete(beneficiary.id, id);
-                            }}
-                          >
-                            Delete
-                          </DropdownMenuItem>
-                        )}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </Table.Data>
+                  <Table.Data>{dropDownComponent(item)}</Table.Data>
                 </Table.Row>
               );
             })}
@@ -348,7 +355,7 @@ const MainEvidencesTable = ({ list, isLoading }: IProps) => {
           },
           {
             label: "Download",
-            onClick: () => {},
+            onClick: handleBulkDownload,
             icon: (
               <Download className="h-4 w-4 transition group-hover:stroke-mint" />
             ),
