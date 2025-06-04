@@ -6,7 +6,6 @@ import DialogueComponent from "./DialogueComponent";
 import DropdownFields from "./DropdownFields";
 import InputFields from "./InputFields";
 import PaginationComponent from "./PaginationComponent";
-import RadioButtons from "./RadioButtons";
 import SwitchButtons from "./SwitchButtons";
 import TableComponent from "./TableComponent";
 import Tags from "./Tags";
@@ -22,8 +21,6 @@ const ComponentsPage = () => {
 
       <div className="flex flex-wrap gap-10">
         <Checkboxes />
-
-        <RadioButtons />
 
         <SwitchButtons />
 
