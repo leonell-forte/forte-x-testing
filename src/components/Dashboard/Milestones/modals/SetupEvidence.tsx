@@ -130,6 +130,7 @@ function SetupEvidenceModal({
         milestoneId: milestone?.id as string,
         evidenceId: res.id,
         beneficiaryId: res.beneficiary.id,
+        status: res.status,
       });
     },
   });

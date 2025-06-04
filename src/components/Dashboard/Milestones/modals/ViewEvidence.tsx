@@ -1,17 +1,28 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import beneficiariesService from "api/beneficiaries";
 import evidenceService from "api/evidence";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-import { IsAuthorized, Milestones } from "lib/role-permissions";
-import { File } from "lib/types/common";
+import { useEvidenceMutation } from "lib/mutations/evidences";
+import { Evidences, IsAuthorized } from "lib/role-permissions";
 import {
   Evidence as EvidenceType,
   UpdateEvidenceStatusEnum,
 } from "lib/types/evidence";
+import { EvidenceStatus } from "lib/types/milestones";
+import { getStatusVariant } from "lib/utils";
+import { evidence } from "lib/validators/evidence";
 
 import Button from "components/ui/button";
+import CustomController from "components/ui/custom-controller/CustomController";
 import { useModal } from "components/ui/dialogue/v2/Modal";
+import FileInput from "components/ui/file-input";
+import { Form } from "components/ui/form/Form";
+import Input from "components/ui/input";
 import Spinner from "components/ui/spinner/spinner";
+import Status from "components/ui/status";
 import Tabs, { TabData } from "components/ui/tabs/Tabs";
 
 import Details from "./Details";
@@ -23,6 +34,7 @@ type TParams = {
   milestoneId: string;
   evidenceId: number;
   beneficiaryId: number;
+  status: EvidenceStatus;
 };
 
 export function showViewEvidenceModal(params: TParams) {
@@ -38,11 +50,9 @@ export function showViewEvidenceModal(params: TParams) {
     title: (
       <div className="flex items-center gap-3">
         <span>Evidence ID: {params.evidenceId}</span>
-        {/* {params.evidenceDetails?.status ? (
-          <Status variant={getStatusVariant(params.evidenceDetails?.status)}>
-            {params.evidenceDetails?.status}
-          </Status>
-        ) : null} */}
+        <Status variant={getStatusVariant(params.status)}>
+          {params.status}
+        </Status>
       </div>
     ),
   });
@@ -52,7 +62,7 @@ function ViewEvidenceModal({
   milestoneId,
   evidenceId,
   beneficiaryId,
-}: TParams) {
+}: Omit<TParams, "status">) {
   const { data: evidenceData, isLoading: evidenceLoading } = useQuery({
     queryKey: ["evidence", evidenceId],
 
@@ -61,28 +71,39 @@ function ViewEvidenceModal({
     enabled: Boolean(evidenceId) && Boolean(beneficiaryId),
   });
 
-  const file = evidenceData?.file as File;
-  const fileUrl = evidenceData?.file?.fileUrl;
+  const form = useForm<z.infer<typeof evidence.schema>>({
+    defaultValues: evidence.defaultValues(evidenceData),
+    resolver: zodResolver(evidence.schema),
+  });
+
+  const { file } = form.watch();
 
   const { data: fileData, isLoading: isFileLoading } = useQuery({
-    queryKey: ["file", fileUrl],
+    queryKey: ["file", file.fileUrl],
 
-    queryFn: () => evidenceService.getFile(fileUrl || ""),
+    queryFn: () => evidenceService.getFile(file.fileUrl || ""),
 
-    enabled: Boolean(fileUrl),
+    enabled: Boolean(file.fileUrl),
 
     refetchOnWindowFocus: false,
   });
 
   const { data: beneficiary, isLoading: isBeneficiaryLoading } = useQuery({
-    queryKey: ["evidence-beneficiary", evidenceData?.beneficiaryId],
+    queryKey: ["evidence-beneficiary", beneficiaryId],
 
-    queryFn: () => beneficiariesService.getOne(evidenceData?.beneficiaryId),
+    queryFn: () => beneficiariesService.getOne(beneficiaryId),
 
-    enabled: Boolean(evidenceData?.beneficiaryId),
+    enabled: Boolean(beneficiaryId),
 
     refetchOnWindowFocus: false,
   });
+
+  // const { data: commentList, isLoading } = useQuery({
+  //   queryKey: ["comments", beneficiaryId, evidenceId],
+  //   queryFn: () => commentsService.list(beneficiaryId as number, evidenceId),
+  // });
+
+  // console.log(commentList);
 
   const tabs = [
     {
@@ -124,6 +145,15 @@ function ViewEvidenceModal({
     });
   };
 
+  const { addEvidence, isPending } = useEvidenceMutation({
+    evidenceId,
+    milestoneId,
+  });
+
+  const onReplaceFile = async (data: z.infer<typeof evidence.schema>) => {
+    addEvidence({ ...data, beneficiaryId: beneficiaryId.toString() });
+  };
+
   return (
     <div>
       {evidenceLoading || isBeneficiaryLoading ? (
@@ -131,10 +161,10 @@ function ViewEvidenceModal({
           <Spinner />
         </div>
       ) : (
-        <div className="space-y-20">
+        <div>
           <Tabs tabs={tabs} />
-          {IsAuthorized([Milestones.UPDATE]) && (
-            <div className="flex gap-10">
+          {IsAuthorized([Evidences.UPDATE]) && (
+            <div className="mt-20 flex gap-10">
               {evidenceData?.status !== "rejected" && (
                 <Button
                   onClick={() =>
@@ -167,6 +197,53 @@ function ViewEvidenceModal({
                   Approve
                 </Button>
               )}
+            </div>
+          )}
+
+          {IsAuthorized([Evidences.REPLACE]) && (
+            <div className="space-y-4">
+              <div>
+                <label
+                  className={
+                    "min-w-[140px] !text-[12px] font-light text-white/80"
+                  }
+                >
+                  Comment
+                </label>
+                <Input
+                  textarea
+                  disabled
+                  value="This is the last comment"
+                  rows={4}
+                  className="resize-none"
+                />
+              </div>
+              <Form form={form} onSubmit={onReplaceFile}>
+                <CustomController
+                  label="Upload replacement evidence file"
+                  control={form.control}
+                  name="file"
+                  render={({ field }) => {
+                    return (
+                      <FileInput
+                        accept=".pdf"
+                        onSuccess={(data) => {
+                          form.setValue("file", data);
+                          form.setError("file", { message: "" });
+                        }}
+                        placeholder="Document"
+                        error={!!form.formState.errors.file?.message}
+                        helperText={form.formState.errors.file?.message}
+                      />
+                    );
+                  }}
+                />
+                <div className="mt-12 flex justify-end">
+                  <Button type="submit" loading={isPending}>
+                    Replace evidence
+                  </Button>
+                </div>
+              </Form>
             </div>
           )}
         </div>

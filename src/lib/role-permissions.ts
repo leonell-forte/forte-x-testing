@@ -93,6 +93,7 @@ export enum Dashboard {
 export enum Evidences {
   CREATE = "create:evidence",
   UPDATE = "update:evidence",
+  REPLACE = "replace:evidence",
   IMPORT = "import:evidence",
   DELETE = "delete:evidence",
   LIST = "list:evidence",
@@ -122,7 +123,7 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     ...Object.values(Milestones),
     ...Object.values(Dashboard),
     ...Object.values(Payouts).filter((item) => item !== Payouts.SETUP),
-    ...Object.values(Evidences),
+    ...Object.values(Evidences).filter((item) => item !== Evidences.REPLACE),
   ],
   admin: [
     ...Object.values(Beneficiaries),
@@ -135,7 +136,7 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     ...Object.values(Milestones),
     ...Object.values(Dashboard),
     ...Object.values(Payouts).filter((item) => item !== Payouts.SETUP),
-    ...Object.values(Evidences),
+    ...Object.values(Evidences).filter((item) => item !== Evidences.REPLACE),
   ],
   user: [
     ...Object.values(Beneficiaries),
@@ -145,7 +146,7 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     ...Object.values(Projects),
     ...Object.values(Milestones),
     ...Object.values(Dashboard),
-    ...Object.values(Evidences),
+    ...Object.values(Evidences).filter((item) => item !== Evidences.REPLACE),
     Invoices.LIST,
     Invoices.NAVIGATE,
     Payouts.NAVIGATE,
@@ -177,7 +178,7 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     ...Object.values(Projects),
     ...Object.values(Milestones),
     ...Object.values(Payouts),
-    ...Object.values(Evidences),
+    ...Object.values(Evidences).filter((item) => item !== Evidences.UPDATE),
 
     Users.CREATE,
     Users.IMPORT,
@@ -199,7 +200,7 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     ...Object.values(Projects),
     ...Object.values(Milestones),
     ...Object.values(Payouts).filter((item) => item !== Payouts.SETUP),
-    ...Object.values(Evidences),
+    ...Object.values(Evidences).filter((item) => item !== Evidences.UPDATE),
 
     Users.CREATE,
     Users.IMPORT,
@@ -218,7 +219,7 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     ...Object.values(Contracts),
     ...Object.values(Projects),
     ...Object.values(Milestones),
-    ...Object.values(Evidences),
+    ...Object.values(Evidences).filter((item) => item !== Evidences.UPDATE),
 
     Providers.LIST,
     Funders.NAVIGATE,
@@ -253,7 +254,7 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     ...Object.values(Projects),
     ...Object.values(Milestones),
     ...Object.values(Dashboard),
-    ...Object.values(Evidences),
+    ...Object.values(Evidences).filter((item) => item !== Evidences.REPLACE),
 
     Providers.NAVIGATE,
     Providers.LIST,
@@ -273,7 +274,7 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     ...Object.values(Milestones),
     ...Object.values(Dashboard),
 
-    ...Object.values(Evidences),
+    ...Object.values(Evidences).filter((item) => item !== Evidences.REPLACE),
     Users.CREATE,
     Users.IMPORT,
     Users.NAVIGATE,

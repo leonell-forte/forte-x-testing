@@ -190,6 +190,7 @@ export default function ViewMilestone() {
                         milestoneId: milestone.id,
                         evidenceId: id,
                         beneficiaryId: beneficiary.id,
+                        status,
                       });
                     }}
                     key={index}
@@ -294,6 +295,7 @@ export default function ViewMilestone() {
                           milestoneId: milestone.id,
                           evidenceId: id,
                           beneficiaryId: beneficiary.id,
+                          status,
                         });
                       }}
                     >
