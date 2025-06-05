@@ -108,10 +108,20 @@ const MainEvidencesTable = ({ list, isLoading }: IProps) => {
   const handleDropdownAction = (action: string, evidence: MainEvidence) => {
     switch (action) {
       case "update-status":
-        console.log("update status fn here");
+        showViewEvidenceModal({
+          milestoneId: evidence.milestoneId as string,
+          evidenceId: evidence.id,
+          beneficiaryId: evidence.beneficiary?.id,
+          status: evidence.status,
+        });
         break;
       case "details":
-        console.log("details fn here");
+        showViewEvidenceModal({
+          milestoneId: evidence.milestoneId as string,
+          evidenceId: evidence.id,
+          beneficiaryId: evidence.beneficiary?.id,
+          status: evidence.status,
+        });
         break;
       case "download":
         evidenceService.getFile(
@@ -202,7 +212,17 @@ const MainEvidencesTable = ({ list, isLoading }: IProps) => {
                     {filename?.filename}
                   </p>
 
-                  <Cards.Group>
+                  <Cards.Group
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      showViewEvidenceModal({
+                        milestoneId: milestoneId!,
+                        evidenceId: id,
+                        beneficiaryId: beneficiary.id,
+                        status,
+                      });
+                    }}
+                  >
                     <Cards.Details
                       label="Beneficiary"
                       value={
@@ -294,6 +314,7 @@ const MainEvidencesTable = ({ list, isLoading }: IProps) => {
                       milestoneId: milestoneId!,
                       evidenceId: id,
                       beneficiaryId: beneficiary.id,
+                      status,
                     });
                   }}
                 >

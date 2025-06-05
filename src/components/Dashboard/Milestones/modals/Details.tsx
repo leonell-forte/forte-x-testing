@@ -32,7 +32,7 @@ const Details = ({ beneficiary, evidenceData, milestoneId }: DetailsProps) => {
     );
 
   return (
-    <div className="space-y-8">
+    <div className="mb-10 space-y-8">
       <div className="grid grid-cols-2 gap-6">
         <InfoVertical label="Milestone ID">
           <ReferenceLink hrefLink={`/milestones/${milestoneId}`}>
