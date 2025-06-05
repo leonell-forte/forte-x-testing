@@ -11,7 +11,7 @@ import { Evidence } from "./evidence";
 export interface IBeneficiaries {
   id: number;
 
-  contractId: number;
+  contractId: string;
 
   contractName?: string;
 
