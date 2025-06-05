@@ -14,6 +14,7 @@ import { MainEvidence } from "lib/types/evidence";
 import { MILESTONE_TYPES } from "lib/types/milestones";
 import { cn, getStatusVariant } from "lib/utils";
 
+import { showBulkUpdateStatusModal } from "components/Dashboard/Evidence/modals/BulkUpdateStatus";
 import { showViewEvidenceModal } from "components/Dashboard/Milestones/modals/ViewEvidence";
 import { useProfile } from "components/ProfileContext";
 import { useCustomPrompt } from "components/ui/alert/custom-prompt";
@@ -374,7 +375,12 @@ const MainEvidencesTable = ({ list, isLoading }: IProps) => {
         actions={[
           {
             label: "Update Status",
-            onClick: () => {},
+            onClick: () => {
+              showBulkUpdateStatusModal({
+                ids: selectedIds,
+                successCb: () => setSelectedIds([]),
+              });
+            },
             icon: (
               <Update className="h-4 w-4 transition group-hover:fill-mint" />
             ),

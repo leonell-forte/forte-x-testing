@@ -10,7 +10,10 @@ import radioChecked from "assets/images/icons/radio-checked.svg";
 import radioUnchecked from "assets/images/icons/radio-unchecked.svg";
 
 interface IRadioGroupProps {
-  items: string[];
+  items: {
+    label: string;
+    value: string;
+  }[];
 
   className?: string;
 
@@ -43,15 +46,14 @@ const RadioGroup = ({
     <FormControl>
       <RadioButtons
         aria-labelledby="demo-radio-buttons-group-label"
-        defaultValue="female"
         name="radio-buttons-group"
       >
         <div className={className}>
           {items?.map((item, index) => {
             return (
               <FormControlLabel
-                value={item}
-                checked={value === item}
+                value={item.value}
+                checked={value === item.value}
                 control={
                   <Radio
                     disabled={disabled}
@@ -73,7 +75,7 @@ const RadioGroup = ({
                     onChange={onChange}
                   />
                 }
-                label={item}
+                label={item.label}
                 key={index}
                 sx={{
                   "& .MuiFormControlLabel-label": {

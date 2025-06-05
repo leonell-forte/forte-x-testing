@@ -11,7 +11,10 @@ import { queryClient } from "components/QueryProvider";
 import { useModal } from "components/ui/dialogue/v2/Modal";
 import { ToastAction, toast } from "components/ui/toast/Toast";
 
-import { EvidenceFieldValues } from "../types/evidence";
+import {
+  EvidenceFieldValues,
+  UpdateStatusFieldValues,
+} from "../types/evidence";
 
 interface IEvidenceMutation {
   evidenceId: number;
@@ -172,4 +175,46 @@ export const useBulkDownloadEvidenceMutation = () => {
   });
 
   return { bulkDownloadEvidence, isPending };
+};
+
+export const useBulkUpdateStatus = ({
+  count,
+  statusType,
+}: {
+  count: number;
+  statusType: string;
+}) => {
+  const toastText = () => {
+    if (statusType === "more information requested") {
+      return `More information requested for ${count} evidence${count === 1 ? "" : "s"}`;
+    }
+    return `${count} evidence${count === 1 ? "" : "s"} successfully ${statusType}`;
+  };
+  const { mutateAsync: updateStatus, isPending } = useMutation({
+    mutationFn: ({ evidenceIds, status, comment }: UpdateStatusFieldValues) =>
+      evidenceService.updateStatus(evidenceIds, status, comment),
+    onSuccess: () => {
+      toast({
+        title: toastText(),
+      });
+    },
+    onError: (err: any) => {
+      toast({
+        variant: "danger",
+        title: `Failed updating status of ${count} evidence${count === 1 ? "" : "s"}`,
+
+        description:
+          formatErrorMessage(err?.response?.data?.data?.[0]) ||
+          `There has been an error with updating the status of ${count} evidence${count === 1 ? "" : "s"}.`,
+      });
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["evidences"],
+      });
+    },
+  });
+
+  return { updateStatus, isPending };
 };
