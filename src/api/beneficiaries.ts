@@ -1,8 +1,10 @@
+import { SortValues } from "lib/types/common";
 import { IMilestone } from "lib/types/milestones";
 
 import { api } from "../lib/axios/interceptor";
 import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import {
+  BeneficiarySortLabel,
   IBeneficiaries,
   IBeneficiariesFieldValues,
   IBeneficiariesFilter,
@@ -125,7 +127,10 @@ class BeneficiariesService {
 
     params.append("$pageSize", pageSize ? String(pageSize) : DEFAULT_PAGE_SIZE);
 
-    params.append("$orderBy", `"createdAt" desc`);
+    params.append(
+      "$orderBy",
+      `"${filters?.sortLabel || BeneficiarySortLabel.CREATED_AT}" ${filters?.sortValue || SortValues.DESC}`
+    );
 
     if (generateODataQuery(filterData)) {
       params.append("$filter", generateODataQuery(filterData));
