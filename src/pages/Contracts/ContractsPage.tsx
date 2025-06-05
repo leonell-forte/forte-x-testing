@@ -9,7 +9,12 @@ import useProjectList from "lib/common/lists/useProjectList";
 import { CONTRACT_STATUS } from "lib/constants";
 import { usePage, useStatusParams } from "lib/hooks";
 import { Contracts, IsAuthorized } from "lib/role-permissions";
-import { IContractFilters, StatusType } from "lib/types/contracts";
+import { SortValues } from "lib/types/common";
+import {
+  ContractSortLabel,
+  IContractFilters,
+  StatusType,
+} from "lib/types/contracts";
 import { findLabelFromOptions, sortOptions } from "lib/utils";
 
 import { ContractsProvider } from "components/Dashboard/Contracts/Dialogues/ContractContext";
@@ -41,7 +46,7 @@ const ContractsPage = ({
 
   const { page, setPage } = usePage();
 
-  const initialFilter = {
+  const initialFilter: IContractFilters = {
     status: paramStatus,
 
     project: "",
@@ -51,6 +56,10 @@ const ContractsPage = ({
     providerId: providerId || "",
 
     funderId: funderId || "",
+
+    sortLabel: ContractSortLabel.CREATED_AT,
+
+    sortValue: SortValues.DESC,
   };
 
   const [filters, setFilters] = useState<IContractFilters>(initialFilter);
@@ -88,7 +97,11 @@ const ContractsPage = ({
             handleClose={close}
           >
             <div className="space-y-6">
-              <Filters filters={filters} setFilters={setFilters} />
+              <Filters
+                filters={filters}
+                setFilters={setFilters}
+                initialFilter={initialFilter}
+              />
               <div className="flex justify-end gap-2">
                 <Button
                   buttonType="secondary"
@@ -160,6 +173,7 @@ const ContractsPage = ({
                 filters={filters}
                 setFilters={setFilters}
                 providerId={providerId}
+                initialFilter={initialFilter}
               />
             </div>
           </div>
@@ -167,6 +181,16 @@ const ContractsPage = ({
 
         <div className="flex h-full flex-col justify-between gap-4">
           <ContractsTable
+            handleSort={(sortLabel) =>
+              setFilters((prev) => ({
+                ...prev,
+                sortLabel,
+                sortValue:
+                  prev.sortValue === SortValues.ASC
+                    ? SortValues.DESC
+                    : SortValues.ASC,
+              }))
+            }
             list={contractList.items}
             isLoading={isLoading}
             orgId={funderId || providerId}
@@ -201,6 +225,8 @@ interface IFilterProps {
   providerId?: string;
 
   funderId?: string;
+
+  initialFilter: IContractFilters;
 }
 
 export const Filters = ({
@@ -209,6 +235,7 @@ export const Filters = ({
   projectId,
   providerId,
   funderId,
+  initialFilter,
 }: IFilterProps) => {
   const { setPage } = usePage();
 
@@ -251,19 +278,7 @@ export const Filters = ({
         )}
 
         <button
-          onClick={() =>
-            setFilters({
-              status: "",
-
-              project: "",
-
-              date: "",
-
-              providerId: providerId || "",
-
-              funderId: funderId || "",
-            })
-          }
+          onClick={() => setFilters(initialFilter)}
           className="group hidden md:block"
         >
           <FilterIcon className="h-auto w-5 fill-white transition-all group-hover:fill-mint group-hover:stroke-mint" />

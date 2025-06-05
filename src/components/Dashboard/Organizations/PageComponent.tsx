@@ -40,7 +40,7 @@ const PageComponent = ({
   const { page, setPage } = usePage();
 
   const [filters, setFilters] = useState<IFilters>(initialFilters);
-  console.log(filters);
+
   const {
     rawList: organizationList,
     isLoading: orgLoading,

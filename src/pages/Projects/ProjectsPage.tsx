@@ -103,7 +103,6 @@ const ProjectsPage = ({ hideHeader = false, funderId }: ProjectsPageProps) => {
     }
     // eslint-disable-next-line
   }, [modal, selectedProject]);
-  console.log(filters);
 
   return (
     <>

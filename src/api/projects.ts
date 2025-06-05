@@ -6,6 +6,7 @@ import {
   IProject,
   ProjectFieldValues,
   ProjectFilter,
+  ProjectSortLabel,
 } from "../lib/types/projects";
 import { IODataObject, generateODataQuery } from "../lib/utils";
 
@@ -65,7 +66,7 @@ class ProjectsService {
 
     params.append(
       "$orderBy",
-      `${filter?.sortLabel || "project.createdAt"} ${filter?.sortValue || SortValues.DESC}`
+      `${filter?.sortLabel || ProjectSortLabel.CREATED_AT} ${filter?.sortValue || SortValues.DESC}`
     );
 
     if (listAll) {
