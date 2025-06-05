@@ -1,3 +1,4 @@
+import { SortValues } from "lib/types/common";
 import { IFilters } from "lib/types/organizations";
 
 import PageComponent from "components/Dashboard/Organizations/PageComponent";
@@ -11,7 +12,7 @@ const initialFilters: IFilters = {
 
   sortLabel: "createdAt",
 
-  sortValue: "desc",
+  sortValue: SortValues.DESC,
 };
 
 const ProvidersPage = ({ hideHeader = false }: { hideHeader?: boolean }) => {

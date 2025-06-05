@@ -1,3 +1,5 @@
+import { SortValues } from "lib/types/common";
+
 import { api } from "../lib/axios/interceptor";
 import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import {
@@ -61,7 +63,10 @@ class ProjectsService {
 
     params.append("$pageSize", pageSize?.toString() || DEFAULT_PAGE_SIZE);
 
-    params.append("$orderBy", `"project"."createdAt" desc`);
+    params.append(
+      "$orderBy",
+      `${filter?.sortLabel || "project.createdAt"} ${filter?.sortValue || SortValues.DESC}`
+    );
 
     if (listAll) {
       params.append("$listAll", "true");

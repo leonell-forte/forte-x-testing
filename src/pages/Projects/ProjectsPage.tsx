@@ -13,7 +13,8 @@ import {
   Projects,
   Providers,
 } from "lib/role-permissions";
-import { IProject, ProjectFilter } from "lib/types/projects";
+import { SortValues } from "lib/types/common";
+import { IProject, ProjectFilter, ProjectSortLabel } from "lib/types/projects";
 import { findLabelFromOptions } from "lib/utils";
 
 import { showProjectDialogue } from "components/Dashboard/Projects/Dialogues/ProjectDialogue";
@@ -36,9 +37,11 @@ const ProjectsPage = ({ hideHeader = false, funderId }: ProjectsPageProps) => {
 
   const { page, setPage } = usePage();
 
-  const initialFilter = {
+  const initialFilter: ProjectFilter = {
     funder: funderId || "",
     status: paramStatus,
+    sortLabel: ProjectSortLabel.CREATED_AT,
+    sortValue: SortValues.DESC,
   };
 
   const [filters, setFilters] = useState<ProjectFilter>(initialFilter);
@@ -100,6 +103,7 @@ const ProjectsPage = ({ hideHeader = false, funderId }: ProjectsPageProps) => {
     }
     // eslint-disable-next-line
   }, [modal, selectedProject]);
+  console.log(filters);
 
   return (
     <>
@@ -170,6 +174,16 @@ const ProjectsPage = ({ hideHeader = false, funderId }: ProjectsPageProps) => {
             funderId={Number(funderId)}
             list={projectsList?.items || []}
             isLoading={projectLoading}
+            handleSort={(sortLabel) =>
+              setFilters((prev) => ({
+                ...prev,
+                sortLabel,
+                sortValue:
+                  prev.sortValue === SortValues.ASC
+                    ? SortValues.DESC
+                    : SortValues.ASC,
+              }))
+            }
           />
 
           {!!projects.length && (
