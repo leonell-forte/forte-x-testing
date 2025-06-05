@@ -1,6 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Skeleton } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import beneficiariesService from "api/beneficiaries";
+import commentsService from "api/comments";
 import evidenceService from "api/evidence";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -98,12 +100,10 @@ function ViewEvidenceModal({
     refetchOnWindowFocus: false,
   });
 
-  // const { data: commentList, isLoading } = useQuery({
-  //   queryKey: ["comments", beneficiaryId, evidenceId],
-  //   queryFn: () => commentsService.list(beneficiaryId as number, evidenceId),
-  // });
-
-  // console.log(commentList);
+  const { data: commentList, isLoading: commentsLoading } = useQuery({
+    queryKey: ["comments", beneficiaryId, evidenceId],
+    queryFn: () => commentsService.list(beneficiaryId as number, evidenceId),
+  });
 
   const tabs = [
     {
@@ -202,22 +202,26 @@ function ViewEvidenceModal({
 
           {IsAuthorized([Evidences.REPLACE]) && (
             <div className="space-y-4">
-              <div>
-                <label
-                  className={
-                    "min-w-[140px] !text-[12px] font-light text-white/80"
-                  }
-                >
-                  Comment
-                </label>
-                <Input
-                  textarea
-                  disabled
-                  value="This is the last comment"
-                  rows={4}
-                  className="resize-none"
-                />
-              </div>
+              {commentsLoading ? (
+                <Skeleton height={200} />
+              ) : (
+                <div>
+                  <label
+                    className={
+                      "min-w-[140px] !text-[12px] font-light text-white/80"
+                    }
+                  >
+                    Comment
+                  </label>
+                  <Input
+                    textarea
+                    disabled
+                    value={commentList?.items?.slice(-1)?.[0]?.message}
+                    rows={4}
+                    className="resize-none"
+                  />
+                </div>
+              )}
               <Form form={form} onSubmit={onReplaceFile}>
                 <CustomController
                   label="Upload replacement evidence file"
