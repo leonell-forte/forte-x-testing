@@ -135,7 +135,7 @@ export const useDeleteProjectMutation = (
   const projectQuery = [
     "projects",
     +page || 1,
-    { funder: funderId?.toString() || "" },
+    { funder: funderId?.toString() || "", sortLabel: "", sortValue: "" },
   ];
 
   const { mutateAsync: deletProject, isPending } = useMutation({

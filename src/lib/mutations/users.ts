@@ -123,12 +123,12 @@ export const useDeleteUserMutation = (
 
     onSuccess: () => {
       queryClient.setQueryData(userQueryKeys, (old: { items: IUser[] }) => {
-        if (old.items.length === 1 && +page !== 1) {
+        if (old?.items?.length === 1 && +page !== 1) {
           setPage(page - 1);
         }
         return {
           ...old,
-          items: [...old.items].filter((item) => item.id !== id),
+          items: [...(old?.items || [])].filter((item) => item.id !== id),
         };
       });
       succesCallback?.();

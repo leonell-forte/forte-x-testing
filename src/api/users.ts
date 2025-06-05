@@ -1,6 +1,13 @@
+import { SortValues } from "lib/types/common";
+
 import { api } from "../lib/axios/interceptor";
 import { DEFAULT_PAGE_SIZE } from "../lib/constants";
-import { IUser, UserFieldTypes } from "../lib/types/users";
+import {
+  IUser,
+  SortType,
+  UserFieldTypes,
+  UserSortLabel,
+} from "../lib/types/users";
 import { IODataObject, generateODataQuery } from "../lib/utils";
 
 class UserService {
@@ -8,7 +15,8 @@ class UserService {
     page: number,
     search?: string,
     role?: string,
-    organization?: string[]
+    organization?: string[],
+    sort?: SortType
   ): Promise<{ items: IUser[]; totalSize: number; pageSize: number }> {
     const params = new URLSearchParams();
 
@@ -54,7 +62,10 @@ class UserService {
 
     params.append("$pageNum", page.toString());
 
-    params.append("$orderBy", `"user"."createdAt" desc`);
+    params.append(
+      "$orderBy",
+      `${sort?.label || UserSortLabel.CREATED_AT} ${sort?.value || SortValues.DESC}`
+    );
 
     if (generateODataQuery(filter)) {
       params.append("$filter", generateODataQuery(filter));

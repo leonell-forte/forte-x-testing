@@ -15,7 +15,8 @@ import useOrganizationList from "lib/common/lists/useOrganizationList";
 import { ROLES } from "lib/constants";
 import { useDebounce, usePage } from "lib/hooks";
 import { IsAuthorized, Users } from "lib/role-permissions";
-import { IUser } from "lib/types/users";
+import { SortValues } from "lib/types/common";
+import { IUser, SortType, UserSortLabel } from "lib/types/users";
 
 import UserDialogue from "components/Dashboard/Users/Dialogues/UserDialogue";
 import { useProfile } from "components/ProfileContext";
@@ -37,6 +38,11 @@ const UsersPage = () => {
 
   const [organization, setOrganization] = useState<string[]>([]);
 
+  const [sort, setSort] = useState<SortType>({
+    label: UserSortLabel.CREATED_AT,
+    value: SortValues.DESC,
+  });
+
   useDebounce(
     () => {
       setDebouncedSearch(search);
@@ -46,9 +52,10 @@ const UsersPage = () => {
   );
 
   const { data: userList, isLoading: userLoading } = useQuery({
-    queryKey: ["users", page, debouncedSearch, role, organization],
+    queryKey: ["users", page, debouncedSearch, role, organization, sort],
 
-    queryFn: () => userService.list(page, debouncedSearch, role, organization),
+    queryFn: () =>
+      userService.list(page, debouncedSearch, role, organization, sort),
   });
 
   const [modal, setModal] = useState<"user" | "filter" | null>(null);
@@ -176,7 +183,19 @@ const UsersPage = () => {
         </div>
 
         <div className="flex h-full flex-col justify-between gap-4">
-          <UsersTable list={users} isLoading={userLoading} />
+          <UsersTable
+            list={users}
+            isLoading={userLoading}
+            handleSort={(label) =>
+              setSort((prev) => ({
+                label,
+                value:
+                  prev.value === SortValues.ASC
+                    ? SortValues.DESC
+                    : SortValues.ASC,
+              }))
+            }
+          />
 
           {!!users.length && (
             <div className="flex w-full items-center justify-end">
