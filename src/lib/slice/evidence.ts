@@ -5,7 +5,7 @@ interface IEvidenceDatas {
 
   projectId: number | null;
 
-  contractId: number | null;
+  contractId: string | null;
 }
 
 const initialState: IEvidenceDatas = {
