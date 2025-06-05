@@ -58,6 +58,10 @@ export interface IFilters {
   status?: string;
 
   type?: "funder" | "provider" | "forte" | "";
+
+  sortLabel?: "createdAt" | "name";
+
+  sortValue?: "asc" | "desc";
 }
 
 type PartnerData = {

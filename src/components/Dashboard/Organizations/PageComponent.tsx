@@ -39,7 +39,7 @@ const PageComponent = ({
   const { page, setPage } = usePage();
 
   const [filters, setFilters] = useState<IFilters>(initialFilters);
-
+  console.log(filters);
   const {
     rawList: organizationList,
     isLoading: orgLoading,
@@ -140,8 +140,16 @@ const PageComponent = ({
 
         <div className="flex h-full flex-col justify-between gap-4">
           <OrganizationTable
+            type={type}
             list={organizationList?.items || []}
             isLoading={orgLoading}
+            handleSort={() => {
+              setFilters((prev) => ({
+                ...prev,
+                sortLabel: "name",
+                sortValue: prev.sortValue === "asc" ? "desc" : "asc",
+              }));
+            }}
           />
 
           {!!organizationList?.items.length && (

@@ -8,6 +8,10 @@ const initialFilters: IFilters = {
   status: "",
 
   type: "provider",
+
+  sortLabel: "createdAt",
+
+  sortValue: "desc",
 };
 
 const ProvidersPage = ({ hideHeader = false }: { hideHeader?: boolean }) => {

@@ -8,6 +8,10 @@ const initialFilters: IFilters = {
   status: "",
 
   type: "funder",
+
+  sortLabel: "createdAt",
+
+  sortValue: "desc",
 };
 
 const FundersPage = () => {
