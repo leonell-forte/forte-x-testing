@@ -1,8 +1,13 @@
 import { useNavigate } from "react-router-dom";
 
 import { ReactComponent as Add } from "assets/images/icons/add.svg";
+import { ReactComponent as Sort } from "assets/images/icons/sort.svg";
 
-import { IMilestone, MILESTONE_TYPES } from "lib/types/milestones";
+import {
+  IMilestone,
+  MILESTONE_TYPES,
+  SortMilestoneLabel,
+} from "lib/types/milestones";
 import { formatCurrency, getStatusVariant } from "lib/utils";
 
 import { showSetupEvidenceModal } from "components/Dashboard/Milestones/modals/SetupEvidence";
@@ -17,6 +22,7 @@ type TMilestonesTable = {
   isLoading?: boolean;
   href?: string;
   showDownloadButton?: boolean;
+  handleSort?: (label: SortMilestoneLabel) => void;
 };
 
 const MilestonesTable = ({
@@ -24,6 +30,7 @@ const MilestonesTable = ({
   isLoading = false,
   href,
   showDownloadButton,
+  handleSort,
 }: TMilestonesTable) => {
   const navigate = useNavigate();
   const linkTo = href ? href : "/milestones/";
@@ -87,16 +94,30 @@ const MilestonesTable = ({
         >
           <Table.Head>
             <Table.Row>
-              {TABLE_HEADER.map((key, headerIndex) => {
-                return (
-                  <Table.Header
-                    key={headerIndex}
-                    {...(key === "Cost" && { className: "text-right !pr-12" })}
+              <Table.Header>
+                {" "}
+                <div className="flex items-center gap-2">
+                  <span>Milestone ID</span>
+                  <button onClick={() => handleSort?.(SortMilestoneLabel.ID)}>
+                    <Sort className="w-4 fill-white" />
+                  </button>
+                </div>
+              </Table.Header>
+              <Table.Header>
+                <div className="flex items-center gap-2">
+                  <span>Funder</span>
+                  <button
+                    onClick={() => handleSort?.(SortMilestoneLabel.FUNDER)}
                   >
-                    {key}
-                  </Table.Header>
-                );
-              })}
+                    <Sort className="w-4 fill-white" />
+                  </button>
+                </div>
+              </Table.Header>
+              <Table.Header>Type</Table.Header>
+              <Table.Header>Reference</Table.Header>
+              <Table.Header>Outcome Name</Table.Header>
+              <Table.Header>Cost</Table.Header>
+              "Evidence Status",
             </Table.Row>
           </Table.Head>
 
@@ -156,13 +177,3 @@ const MilestonesTable = ({
 };
 
 export default MilestonesTable;
-
-const TABLE_HEADER = [
-  "Milestone ID",
-  "Funder",
-  "Type",
-  "Reference",
-  "Outcome Name",
-  "Cost",
-  "Evidence Status",
-];
