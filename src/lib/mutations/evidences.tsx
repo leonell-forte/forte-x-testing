@@ -99,7 +99,7 @@ export const useDeleteEvidence = () => {
       toast({
         variant: "danger",
         title:
-          formatErrorMessage(err?.response?.data?.data?.[0]) ||
+          formatErrorMessage(err?.response?.data?.message) ||
           "There has been an error with deleting the evidence",
       });
     },
