@@ -1,3 +1,4 @@
+import { SortValues } from "./common";
 import { IMilestone } from "./milestones";
 
 type Funder = {
@@ -25,6 +26,15 @@ export type Invoice = {
   currency?: string;
 };
 
+export enum SortInvoiceLabel {
+  ID = `"invoice"."id"`,
+  CREATED_AT = `"invoice"."created_at"`,
+}
+
 export type InvoiceFilters = {
   status: InvoiceStatus | "";
+
+  sortLabel: SortInvoiceLabel;
+
+  sortValue: SortValues;
 };

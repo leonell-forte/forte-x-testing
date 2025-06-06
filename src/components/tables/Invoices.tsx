@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 
-import { Invoice } from "lib/types/invoices";
+import { ReactComponent as Sort } from "assets/images/icons/sort.svg";
+
+import { Invoice, SortInvoiceLabel } from "lib/types/invoices";
 import { formatCurrency, formatDate, getStatusVariant } from "lib/utils";
 
 import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
@@ -11,9 +13,10 @@ import Cards from "components/ui/table-card";
 type InvoicesProps = {
   list?: Invoice[];
   isLoading?: boolean;
+  handleSort?: (sortLabel: SortInvoiceLabel) => void;
 };
 
-const Invoices = ({ list, isLoading }: InvoicesProps) => {
+const Invoices = ({ list, isLoading, handleSort }: InvoicesProps) => {
   const navigate = useNavigate();
 
   const handleView = (id: string) => {
@@ -93,9 +96,27 @@ const Invoices = ({ list, isLoading }: InvoicesProps) => {
         >
           <Table.Head>
             <Table.Row>
-              {HEADERS.map((header, index) => (
-                <Table.Header key={index}>{header}</Table.Header>
-              ))}
+              <Table.Header>
+                <div className="flex items-center gap-2">
+                  <span>Invoice ID</span>
+                  <button onClick={() => handleSort?.(SortInvoiceLabel.ID)}>
+                    <Sort className="w-4 fill-white" />
+                  </button>
+                </div>
+              </Table.Header>
+              <Table.Header>
+                <div className="flex items-center gap-2">
+                  <span>Invoice date</span>
+                  <button
+                    onClick={() => handleSort?.(SortInvoiceLabel.CREATED_AT)}
+                  >
+                    <Sort className="w-4 fill-white" />
+                  </button>
+                </div>
+              </Table.Header>
+              <Table.Header># of Milestones</Table.Header>
+              <Table.Header>Amount</Table.Header>
+              <Table.Header>Status</Table.Header>
             </Table.Row>
           </Table.Head>
           <Table.Body>

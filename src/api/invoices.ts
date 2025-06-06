@@ -1,6 +1,7 @@
 import { api } from "lib/axios/interceptor";
 import { DEFAULT_PAGE_SIZE } from "lib/constants";
-import { Invoice, InvoiceFilters } from "lib/types/invoices";
+import { SortValues } from "lib/types/common";
+import { Invoice, InvoiceFilters, SortInvoiceLabel } from "lib/types/invoices";
 import { IODataObject, generateODataQuery } from "lib/utils";
 
 type ListParams = {
@@ -21,7 +22,10 @@ export class InvoiceService {
 
     params.append("$pageSize", DEFAULT_PAGE_SIZE);
 
-    params.append("$orderBy", `"invoice"."created_at" desc`);
+    params.append(
+      "$orderBy",
+      `${filters?.sortLabel || SortInvoiceLabel.CREATED_AT} ${filters?.sortValue || SortValues.DESC}`
+    );
 
     const searchFilter: IODataObject = {
       "invoice.id": {
