@@ -227,7 +227,7 @@ function ViewEvidenceModal({
                   label="Upload replacement evidence file"
                   control={form.control}
                   name="file"
-                  render={({ field }) => {
+                  render={() => {
                     return (
                       <FileInput
                         accept=".pdf"

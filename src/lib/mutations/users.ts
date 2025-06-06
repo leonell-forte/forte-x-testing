@@ -100,10 +100,7 @@ const useUserMutation = ({
   return { addUser, isPending };
 };
 
-export const useDeleteUserMutation = (
-  id: string,
-  onSuccess?: () => void
-) => {
+export const useDeleteUserMutation = (id: string, onSuccess?: () => void) => {
   const { page, setPage } = usePage();
 
   const { setAlert } = useAlert();
@@ -123,26 +120,29 @@ export const useDeleteUserMutation = (
 
       // Store all matching queries to restore in case of error
       const previousQueries = new Map();
-      
+
       // Find all user queries in the cache
       const queryCache = queryClient.getQueryCache();
       const userQueries = queryCache.findAll({
         queryKey: usersQueryKeyPrefix,
         exact: false,
       });
-      
+
       // Store the current state of each query
-      userQueries.forEach(query => {
-        previousQueries.set(query.queryKey, queryClient.getQueryData(query.queryKey));
+      userQueries.forEach((query) => {
+        previousQueries.set(
+          query.queryKey,
+          queryClient.getQueryData(query.queryKey)
+        );
       });
 
       // Optimistically update all user queries
-      userQueries.forEach(query => {
+      userQueries.forEach((query) => {
         const data = queryClient.getQueryData(query.queryKey);
-        if (data && typeof data === 'object' && 'items' in data) {
+        if (data && typeof data === "object" && "items" in data) {
           queryClient.setQueryData(query.queryKey, {
             ...data,
-            items: (data.items as IUser[]).filter(item => item.id !== id),
+            items: (data.items as IUser[]).filter((item) => item.id !== id),
           });
         }
       });
@@ -152,15 +152,11 @@ export const useDeleteUserMutation = (
 
     onSuccess: () => {
       // If we're on a page that's now empty (except page 1), go to previous page
-      const currentPageQuery = [
-        "users",
-        +page || 1,
-        "",
-        "",
-        [],
-      ];
-      
-      const currentPageData = queryClient.getQueryData<{ items: IUser[] }>(currentPageQuery);
+      const currentPageQuery = ["users", +page || 1, "", "", []];
+
+      const currentPageData = queryClient.getQueryData<{ items: IUser[] }>(
+        currentPageQuery
+      );
       if (currentPageData?.items?.length === 0 && +page !== 1) {
         setPage(page - 1);
       }
@@ -199,9 +195,9 @@ export const useDeleteUserMutation = (
 
     onSettled: () => {
       // Invalidate all user queries to ensure data consistency
-      queryClient.invalidateQueries({ 
+      queryClient.invalidateQueries({
         queryKey: usersQueryKeyPrefix,
-        exact: false 
+        exact: false,
       });
     },
   });

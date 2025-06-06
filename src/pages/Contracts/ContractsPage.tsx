@@ -233,8 +233,8 @@ export const Filters = ({
   filters,
   setFilters,
   projectId,
-  providerId,
-  funderId,
+  // providerId,
+  // funderId,
   initialFilter,
 }: IFilterProps) => {
   const { setPage } = usePage();

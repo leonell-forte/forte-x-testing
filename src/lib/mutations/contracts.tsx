@@ -185,26 +185,29 @@ export const useDeleteContractMutation = (
 
       // Store all matching queries to restore in case of error
       const previousQueries = new Map();
-      
+
       // Find all contract queries in the cache
       const queryCache = queryClient.getQueryCache();
       const contractQueries = queryCache.findAll({
         queryKey: contractsQueryKeyPrefix,
         exact: false,
       });
-      
+
       // Store the current state of each query
-      contractQueries.forEach(query => {
-        previousQueries.set(query.queryKey, queryClient.getQueryData(query.queryKey));
+      contractQueries.forEach((query) => {
+        previousQueries.set(
+          query.queryKey,
+          queryClient.getQueryData(query.queryKey)
+        );
       });
 
       // Optimistically update all contract queries
-      contractQueries.forEach(query => {
+      contractQueries.forEach((query) => {
         const data = queryClient.getQueryData(query.queryKey);
-        if (data && typeof data === 'object' && 'items' in data) {
+        if (data && typeof data === "object" && "items" in data) {
           queryClient.setQueryData(query.queryKey, {
             ...data,
-            items: (data.items as IContract[]).filter(item => item.id !== id),
+            items: (data.items as IContract[]).filter((item) => item.id !== id),
           });
         }
       });
@@ -224,8 +227,10 @@ export const useDeleteContractMutation = (
           date: "",
         },
       ];
-      
-      const currentPageData = queryClient.getQueryData<{ items: IContract[] }>(currentPageQuery);
+
+      const currentPageData = queryClient.getQueryData<{ items: IContract[] }>(
+        currentPageQuery
+      );
       if (currentPageData?.items?.length === 0 && +page !== 1) {
         setPage(page - 1);
       }
@@ -282,9 +287,9 @@ export const useDeleteContractMutation = (
 
     onSettled: () => {
       // Invalidate all contract queries to ensure data consistency
-      queryClient.invalidateQueries({ 
+      queryClient.invalidateQueries({
         queryKey: contractsQueryKeyPrefix,
-        exact: false 
+        exact: false,
       });
     },
   });

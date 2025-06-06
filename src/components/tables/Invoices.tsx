@@ -165,12 +165,3 @@ const Invoices = ({ list, isLoading, handleSort }: InvoicesProps) => {
 };
 
 export default Invoices;
-
-const HEADERS = [
-  "Invoice ID",
-  "Invoice date",
-  "# of Milestones",
-  "Amount",
-  "Status",
-  // "",
-];

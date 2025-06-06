@@ -146,26 +146,29 @@ export const useDeleteProjectMutation = (
 
       // Store all matching queries to restore in case of error
       const previousQueries = new Map();
-      
+
       // Find all project queries in the cache
       const queryCache = queryClient.getQueryCache();
       const projectQueries = queryCache.findAll({
         queryKey: projectsQueryKeyPrefix,
         exact: false,
       });
-      
+
       // Store the current state of each query
-      projectQueries.forEach(query => {
-        previousQueries.set(query.queryKey, queryClient.getQueryData(query.queryKey));
+      projectQueries.forEach((query) => {
+        previousQueries.set(
+          query.queryKey,
+          queryClient.getQueryData(query.queryKey)
+        );
       });
 
       // Optimistically update all project queries
-      projectQueries.forEach(query => {
+      projectQueries.forEach((query) => {
         const data = queryClient.getQueryData(query.queryKey);
-        if (data && typeof data === 'object' && 'items' in data) {
+        if (data && typeof data === "object" && "items" in data) {
           queryClient.setQueryData(query.queryKey, {
             ...data,
-            items: (data.items as IProject[]).filter(item => item.id !== id),
+            items: (data.items as IProject[]).filter((item) => item.id !== id),
           });
         }
       });
@@ -180,8 +183,10 @@ export const useDeleteProjectMutation = (
         +page || 1,
         { funder: funderId?.toString() || "", sortLabel: "", sortValue: "" },
       ];
-      
-      const currentPageData = queryClient.getQueryData<{ items: IProject[] }>(currentPageQuery);
+
+      const currentPageData = queryClient.getQueryData<{ items: IProject[] }>(
+        currentPageQuery
+      );
       if (currentPageData?.items?.length === 0 && page !== 1) {
         setPage(page - 1);
       }
@@ -226,9 +231,9 @@ export const useDeleteProjectMutation = (
 
     onSettled: () => {
       // Invalidate all project queries to ensure data consistency
-      queryClient.invalidateQueries({ 
+      queryClient.invalidateQueries({
         queryKey: projectsQueryKeyPrefix,
-        exact: false 
+        exact: false,
       });
     },
   });

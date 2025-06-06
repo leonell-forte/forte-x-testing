@@ -117,7 +117,7 @@ const MilestonesTable = ({
               <Table.Header>Reference</Table.Header>
               <Table.Header>Outcome Name</Table.Header>
               <Table.Header>Cost</Table.Header>
-              "Evidence Status",
+              <Table.Header>Evidence Status</Table.Header>
             </Table.Row>
           </Table.Head>
 

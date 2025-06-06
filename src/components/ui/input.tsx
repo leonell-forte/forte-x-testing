@@ -2,6 +2,7 @@
 
 import { InputAdornment, TextField, TextFieldProps } from "@mui/material";
 import classNames from "classnames";
+import React from "react";
 import { ChangeEvent, forwardRef, useState } from "react";
 
 import eyeClosed from "assets/images/icons/eye-closed.svg";
