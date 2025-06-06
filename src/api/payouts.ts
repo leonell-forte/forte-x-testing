@@ -1,6 +1,7 @@
 import { api } from "lib/axios/interceptor";
 import { DEFAULT_PAGE_SIZE } from "lib/constants";
-import { Payout } from "lib/types/payouts";
+import { SortValues } from "lib/types/common";
+import { Payout, PayoutSortLabel } from "lib/types/payouts";
 import { IODataObject, generateODataQuery } from "lib/utils";
 
 type ListParams = {
@@ -21,7 +22,10 @@ class PayoutsService {
 
     params.append("$pageSize", DEFAULT_PAGE_SIZE);
 
-    params.append("$orderBy", `"payout"."created_at" desc`);
+    params.append(
+      "$orderBy",
+      `${filters?.sortLabel || PayoutSortLabel.CREATED_AT} ${filters?.sortValue || SortValues.DESC}`
+    );
 
     const searchFilter: IODataObject = {
       "payout.id": {

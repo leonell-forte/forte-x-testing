@@ -20,7 +20,8 @@ import {
   Payouts,
   Providers,
 } from "lib/role-permissions";
-import { Filter } from "lib/types/payouts";
+import { SortValues } from "lib/types/common";
+import { Filter, PayoutSortLabel } from "lib/types/payouts";
 import { findLabelFromOptions } from "lib/utils";
 
 import BankDetails from "components/Dashboard/Payouts/BankDetails";
@@ -46,10 +47,14 @@ const PayoutsPage = () => {
     enabled: !!profile?.id,
   });
 
-  const initialFilters = {
+  const initialFilters: Filter = {
     provider: !isForteUser ? userData?.organization?.toString() || "" : "",
 
     status: "",
+
+    sortLabel: PayoutSortLabel.CREATED_AT,
+
+    sortValue: SortValues.DESC,
   };
 
   const { page, setPage } = usePage();
@@ -172,7 +177,20 @@ const PayoutsPage = () => {
             </div>
 
             <div className="flex h-full flex-col justify-between gap-4">
-              <PayoutsTable list={payouts?.items || []} isLoading={isLoading} />
+              <PayoutsTable
+                list={payouts?.items || []}
+                isLoading={isLoading}
+                handleSort={(sortLabel) =>
+                  setFilters((prev) => ({
+                    ...prev,
+                    sortLabel,
+                    sortValue:
+                      prev.sortValue === SortValues.ASC
+                        ? SortValues.DESC
+                        : SortValues.ASC,
+                  }))
+                }
+              />
 
               {!!payouts?.items.length && (
                 <div className="flex w-full items-center justify-end">

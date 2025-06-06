@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
 
+import { ReactComponent as Sort } from "assets/images/icons/sort.svg";
+
 // import { ReactComponent as MoreIcon } from "assets/images/icons/more.svg";
 
 import { DEFAULT_DATE_FORMAT } from "lib/constants";
-import { Payout, PayoutStatus } from "lib/types/payouts";
+import { Payout, PayoutSortLabel, PayoutStatus } from "lib/types/payouts";
 import { formatCurrency, formatDate, getStatusVariant } from "lib/utils";
 
 import { ScrollArea, ScrollBar } from "components/ui/scroll-area/ScrollArea";
@@ -14,9 +16,10 @@ import Cards from "components/ui/table-card";
 type PayoutsTableProps = {
   list: Payout[];
   isLoading: boolean;
+  handleSort: (sortLabel: PayoutSortLabel) => void;
 };
 
-const PayoutsTable = ({ list, isLoading }: PayoutsTableProps) => {
+const PayoutsTable = ({ list, isLoading, handleSort }: PayoutsTableProps) => {
   const navigate = useNavigate();
 
   return (
@@ -80,10 +83,28 @@ const PayoutsTable = ({ list, isLoading }: PayoutsTableProps) => {
         >
           <Table.Head>
             <Table.Row>
-              {TABLE_HEADER.map((key, headerIndex) => {
-                return <Table.Header key={headerIndex}>{key}</Table.Header>;
-              })}
-              {/* <Table.Header></Table.Header> */}
+              <Table.Header>
+                <div className="flex items-center gap-2">
+                  <span>Payout ID</span>
+                  <button onClick={() => handleSort?.(PayoutSortLabel.ID)}>
+                    <Sort className="w-4 fill-white" />
+                  </button>
+                </div>
+              </Table.Header>
+              <Table.Header>
+                <div className="flex items-center gap-2">
+                  <span>Provider</span>
+                  <button
+                    onClick={() => handleSort?.(PayoutSortLabel.PROVIDER)}
+                  >
+                    <Sort className="w-4 fill-white" />
+                  </button>
+                </div>
+              </Table.Header>
+              <Table.Header># of Milestones</Table.Header>
+              <Table.Header>Amount</Table.Header>
+              <Table.Header>Date settled</Table.Header>
+              <Table.Header>Status</Table.Header>
             </Table.Row>
           </Table.Head>
           <Table.Body>
@@ -134,12 +155,3 @@ const PayoutsTable = ({ list, isLoading }: PayoutsTableProps) => {
 };
 
 export default PayoutsTable;
-
-const TABLE_HEADER = [
-  "Payout ID",
-  "Provider",
-  "# of Milestones",
-  "Amount",
-  "Date settled",
-  "Status",
-];

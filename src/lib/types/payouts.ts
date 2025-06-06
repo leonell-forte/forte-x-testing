@@ -1,8 +1,17 @@
+import { SortValues } from "./common";
 import { IMilestone } from "./milestones";
+
+export enum PayoutSortLabel {
+  CREATED_AT = `"payout"."created_at"`,
+  ID = `"payout"."id"`,
+  PROVIDER = `"provider"."name"`,
+}
 
 export type Filter = {
   provider: string;
   status: string;
+  sortLabel: PayoutSortLabel;
+  sortValue: SortValues;
 };
 
 export type PayoutStatus = "pending" | "settled" | "draft";
