@@ -5,7 +5,8 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import useEvidenceList from "lib/common/lists/useEvidenceList";
 import { EVIDENCE_STATUS, MILESTONE_TYPES } from "lib/constants";
 import { usePage, useStatusParams } from "lib/hooks";
-import { IEvidenceFilters } from "lib/types/evidence";
+import { SortValues } from "lib/types/common";
+import { EvidenceSortLabel, IEvidenceFilters } from "lib/types/evidence";
 import { EvidenceStatus } from "lib/types/milestones";
 
 import MainEvidencesTable from "components/tables/MainEvidences";
@@ -20,9 +21,11 @@ import ViewEvidence from "./ViewEvidence";
 const EvidencesComp = () => {
   const paramStatus = useStatusParams();
 
-  const initialFilter = {
+  const initialFilter: IEvidenceFilters = {
     status: paramStatus,
     type: "",
+    sortLabel: EvidenceSortLabel.CREATED_AT,
+    sortValue: SortValues.DESC,
   };
 
   const { page, setPage } = usePage();
@@ -44,7 +47,7 @@ const EvidencesComp = () => {
 
   const { rawList: evidencesStats } = useEvidenceList({
     key: ["stats", filters.type],
-    filter: { type: filters.type },
+    filter: filters,
     listAll: false,
   });
 
@@ -126,6 +129,16 @@ const EvidencesComp = () => {
         <MainEvidencesTable
           list={evidences?.items || []}
           isLoading={isLoading}
+          handleSort={(sortLabel) =>
+            setFilters((prev) => ({
+              ...prev,
+              sortLabel,
+              sortValue:
+                prev.sortValue === SortValues.ASC
+                  ? SortValues.DESC
+                  : SortValues.ASC,
+            }))
+          }
         />
 
         {!!evidences?.items.length && (

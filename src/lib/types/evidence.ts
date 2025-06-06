@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { evidence, updateStatusSchema } from "../validators/evidence";
-import { File, User } from "./common";
+import { File, SortValues, User } from "./common";
 import { EvidenceStatus, MILESTONE_TYPES } from "./milestones";
 
 export type EvidenceFieldValues = z.infer<typeof evidence.schema> & {
@@ -51,9 +51,18 @@ export type DeleteParams = {
 
 export type UpdateStatusFieldValues = z.infer<typeof updateStatusSchema>;
 
+export enum EvidenceSortLabel {
+  CREATED_AT = `"evidence"."createdAt"`,
+  NAME = `"beneficiary"."firstName"`,
+  OUTCOME = `"outcome"`,
+  FILENAME = `"filename"`,
+}
+
 export interface IEvidenceFilters {
   status?: EvidenceStatus | string;
   type?: string;
+  sortLabel?: EvidenceSortLabel;
+  sortValue: SortValues;
 }
 
 export type MainEvidence = {
