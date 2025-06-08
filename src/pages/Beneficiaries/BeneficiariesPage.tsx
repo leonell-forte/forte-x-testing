@@ -10,7 +10,7 @@ import { create } from "zustand";
 import useOrganizationList from "lib/common/lists/useOrganizationList";
 import useProjectList from "lib/common/lists/useProjectList";
 import { BENEFICIARY_STATUS, RISK_LEVEL } from "lib/constants";
-import { useDebounce, usePage, useStatusParams } from "lib/hooks";
+import { useDebounce, usePage, usePageSize, useStatusParams } from "lib/hooks";
 import {
   Beneficiaries,
   Funders,
@@ -74,6 +74,9 @@ const BeneficiariesComp = ({
   providerId,
   funderId,
 }: BeneficiariesProps) => {
+  const { pageSize, setPageSize, isLoaded } = usePageSize({
+    defaultPageSize: 10,
+  });
   const paramStatus = useStatusParams();
   const [search, setSearch] = useState("");
 
@@ -114,10 +117,15 @@ const BeneficiariesComp = ({
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   const { data: beneficiariesList, isLoading } = useQuery({
-    queryKey: ["beneficiaries", debouncedSearch, page, filters],
+    queryKey: ["beneficiaries", debouncedSearch, page, filters, pageSize],
 
     queryFn: () =>
-      beneficiariesService.list({ search: debouncedSearch, page, filters }),
+      beneficiariesService.list({
+        search: debouncedSearch,
+        page,
+        filters,
+        pageSize,
+      }),
   });
 
   const close = () => {
@@ -263,7 +271,8 @@ const BeneficiariesComp = ({
               <Pagination
                 page={page}
                 onPageChange={(val) => setPage(val)}
-                pageSize={beneficiariesList.pageSize}
+                pageSize={pageSize}
+                onPageSizeChange={setPageSize}
                 total={beneficiariesList?.totalSize as number}
               />
             </div>

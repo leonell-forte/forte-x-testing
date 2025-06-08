@@ -1,13 +1,19 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
+import {
+  HiChevronLeft,
+  HiChevronRight,
+  HiOutlineChevronDoubleLeft,
+  HiOutlineChevronDoubleRight,
+} from "react-icons/hi2";
 
 interface IPaginationProps {
   page: number;
   onPageChange: (value: number) => void;
   total: number;
   pageSize?: number;
+  onPageSizeChange?: (value: number) => void;
 }
 
 export function calculateTotalPages(
@@ -31,11 +37,14 @@ export function calculatePageRange(
   return { start, end };
 }
 
+const pageSizeOptions = [10, 25, 50, 100];
+
 const Pagination = ({
   page = 1,
   total,
   onPageChange,
   pageSize = 10,
+  onPageSizeChange,
 }: IPaginationProps) => {
   const [currentPage, setCurrentPage] = useState(page);
   const totalPages = calculateTotalPages(total, pageSize);
@@ -59,6 +68,13 @@ const Pagination = ({
     if (onPageChange) {
       onPageChange(page);
     }
+  };
+
+  const handlePageSizeChange = (newPageSize: number) => {
+    if (onPageSizeChange) {
+      onPageSizeChange(newPageSize);
+    }
+    handlePageChange(1);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent, targetPage: number) => {
@@ -105,11 +121,25 @@ const Pagination = ({
       aria-label="Pagination"
       className="flex w-full flex-col items-center justify-center gap-y-3 pt-4"
     >
-      {totalPages > 1 ? (
+      {totalPages > 1 && (
         <div
           className="flex items-center justify-center gap-2 rounded-lg"
           role="group"
         >
+          <button
+            className="flex h-8 w-7 items-center justify-center rounded-md border border-white/10 text-white transition-colors hover:bg-[#1a2b32] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-not-allowed disabled:opacity-40"
+            onClick={() => handlePageChange(1)}
+            onKeyDown={(e) => handleKeyDown(e, 1)}
+            disabled={currentPage === 1}
+            aria-label="First page"
+            aria-disabled={currentPage === 1}
+          >
+            <HiOutlineChevronDoubleLeft
+              className="h-5 w-5"
+              aria-hidden="true"
+            />
+          </button>
+
           <button
             className="flex h-8 w-7 items-center justify-center rounded-md border border-white/10 text-white transition-colors hover:bg-[#1a2b32] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-not-allowed disabled:opacity-40"
             onClick={() => handlePageChange(currentPage - 1)}
@@ -148,17 +178,54 @@ const Pagination = ({
           >
             <HiChevronRight className="h-5 w-5" aria-hidden="true" />
           </button>
+
+          <button
+            className="flex h-8 w-7 items-center justify-center rounded-md border border-white/10 text-white transition-colors hover:bg-[#1a2b32] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-not-allowed disabled:opacity-40"
+            onClick={() => handlePageChange(totalPages)}
+            onKeyDown={(e) => handleKeyDown(e, totalPages)}
+            disabled={currentPage === totalPages}
+            aria-label="Last page"
+            aria-disabled={currentPage === totalPages}
+          >
+            <HiOutlineChevronDoubleRight
+              className="h-5 w-5"
+              aria-hidden="true"
+            />
+          </button>
         </div>
-      ) : (
-        <div />
       )}
-      {total > 1 && (
-        <div className="text-xs opacity-60" aria-live="polite" role="status">
-          <p>
-            {start} to {end} of {total} items
-          </p>
-        </div>
-      )}
+
+      <div className="flex items-center gap-4 text-xs">
+        {total > 0 && (
+          <div className="opacity-60" aria-live="polite" role="status">
+            <p>
+              {start} to {end} of {total} items
+            </p>
+          </div>
+        )}
+
+        {onPageSizeChange && (
+          <div className="flex items-center gap-2">
+            <label htmlFor="page-size-select" className="!text-xs opacity-60">
+              Show:
+            </label>
+            <select
+              id="page-size-select"
+              value={pageSize}
+              onChange={(e) => handlePageSizeChange(Number(e.target.value))}
+              className="rounded-md border border-white/10 bg-transparent px-2 py-1 text-white focus:outline-none focus:ring-2 focus:ring-[#1a9b78]"
+              aria-label="Items per page"
+            >
+              {pageSizeOptions.map((size) => (
+                <option key={size} value={size} className="bg-gray-800">
+                  {size}
+                </option>
+              ))}
+            </select>
+            <span className="text-xs opacity-60">per page</span>
+          </div>
+        )}
+      </div>
     </nav>
   );
 };

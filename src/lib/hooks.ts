@@ -13,6 +13,7 @@ import Cookies from "universal-cookie";
 import { IAlert, setToast } from "./slice/alert";
 import { setTitle } from "./slice/layout";
 import type { AppDispatch, AppStore, RootState } from "./store";
+import { DEFAULT_PAGE_SIZE } from "./constants";
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
@@ -192,3 +193,53 @@ export const useStatusParams = () => {
 
   return paramStatus;
 };
+
+
+
+
+interface UsePageSizeOptions {
+  defaultPageSize?: number;
+  storageKey?: string;
+}
+
+export function usePageSize({
+  defaultPageSize = Number(DEFAULT_PAGE_SIZE),
+  storageKey = 'pagination-page-size'
+}: UsePageSizeOptions = {}) {
+  const [pageSize, setPageSizeState] = useState<number>(defaultPageSize);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    try {
+      const savedPageSize = localStorage.getItem(storageKey);
+      if (savedPageSize) {
+        const parsedPageSize = parseInt(savedPageSize, 10);
+        if (!isNaN(parsedPageSize) && parsedPageSize > 0) {
+          setPageSizeState(parsedPageSize);
+        }
+      }
+    } catch (error) {
+      console.warn('Failed to load page size from localStorage:', error);
+    } finally {
+      setIsLoaded(true);
+    }
+  }, [storageKey]);
+
+  const setPageSize = (newPageSize: number) => {
+    if (newPageSize <= 0) return;
+    
+    setPageSizeState(newPageSize);
+    
+    try {
+      localStorage.setItem(storageKey, newPageSize.toString());
+    } catch (error) {
+      console.warn('Failed to save page size to localStorage:', error);
+    }
+  };
+
+  return {
+    pageSize,
+    setPageSize,
+    isLoaded,
+  };
+}
