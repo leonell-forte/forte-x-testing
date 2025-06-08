@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { users } from "lib/validators/users";
 
+import { SortValues } from "./common";
 import { OrgTypes } from "./organizations";
 
 export const UserRoleValues = [
@@ -66,6 +67,22 @@ export type UserFieldTypes = z.infer<typeof users.schema>;
 
 //   token: string;
 // };
+
+export enum UserSortLabel {
+  CREATED_AT = `"user"."createdAt"`,
+
+  FIRSTNAME = `"user"."firstName"`,
+
+  LASTNAME = `"user"."lastName"`,
+
+  EMAIL = `"user"."email"`,
+}
+
+export type SortType = {
+  label: UserSortLabel;
+
+  value: SortValues;
+};
 
 export type LoginReturnType = {
   sessionToken: string;

@@ -7,7 +7,12 @@ import useInvoiceList from "lib/common/lists/useInvoiceList";
 import { INVOICE_STATUS } from "lib/constants";
 import { useDebounce, usePage } from "lib/hooks";
 import { Invoices, IsAuthorized } from "lib/role-permissions";
-import { InvoiceFilters, InvoiceStatus } from "lib/types/invoices";
+import { SortValues } from "lib/types/common";
+import {
+  InvoiceFilters,
+  InvoiceStatus,
+  SortInvoiceLabel,
+} from "lib/types/invoices";
 
 import { showGenerateInvoiceModal } from "components/Dashboard/Invoices/modals/GenerateInvoice";
 import InvoicesTable from "components/tables/Invoices";
@@ -30,12 +35,18 @@ export function getRandomString(array: string[]): string | undefined {
   return array[randomIndex];
 }
 
+const initialFilter: InvoiceFilters = {
+  status: "",
+
+  sortLabel: SortInvoiceLabel.CREATED_AT,
+
+  sortValue: SortValues.DESC,
+};
+
 const InvoicesComp = () => {
   const { page, setPage } = usePage();
 
-  const [filters, setFilters] = useState<InvoiceFilters>({
-    status: "",
-  });
+  const [filters, setFilters] = useState<InvoiceFilters>(initialFilter);
 
   const [showFilter, setShowFilter] = useState(false);
 
@@ -64,7 +75,7 @@ const InvoicesComp = () => {
       <FilterDialogue
         filters={filters}
         setFilters={setFilters}
-        handleRemoveFilters={() => setFilters({ status: "" })}
+        handleRemoveFilters={() => setFilters(initialFilter)}
         isVisible={showFilter}
         handleClose={() => setShowFilter(false)}
       />
@@ -101,14 +112,27 @@ const InvoicesComp = () => {
                 <Filters
                   filters={filters}
                   setFilters={setFilters}
-                  handleRemoveFilters={() => setFilters({ status: "" })}
+                  handleRemoveFilters={() => setFilters(initialFilter)}
                 />
               </div>
             </div>
           </div>
         </div>
         <div className="flex h-full flex-col justify-between gap-4">
-          <InvoicesTable list={invoices?.items} isLoading={isLoading} />
+          <InvoicesTable
+            list={invoices?.items}
+            isLoading={isLoading}
+            handleSort={(sortLabel) =>
+              setFilters((prev) => ({
+                ...prev,
+                sortLabel,
+                sortValue:
+                  prev.sortValue === SortValues.ASC
+                    ? SortValues.DESC
+                    : SortValues.ASC,
+              }))
+            }
+          />
 
           <div className="flex w-full items-center justify-end">
             <Pagination

@@ -1,8 +1,10 @@
 import { useCallback, useState } from "react";
 import { FaTrash as Trash } from "react-icons/fa6";
 
+import { ReactComponent as Sort } from "assets/images/icons/sort.svg";
+
 import { IsAuthorized, Users } from "lib/role-permissions";
-import { IUser } from "lib/types/users";
+import { IUser, UserSortLabel } from "lib/types/users";
 
 import DeleteDialogue from "components/Dashboard/Users/Dialogues/DeleteDialogue";
 import UserDialogue from "components/Dashboard/Users/Dialogues/UserDialogue";
@@ -14,9 +16,10 @@ import Cards from "components/ui/table-card";
 type TUsersTable = {
   list: IUser[];
   isLoading?: boolean;
+  handleSort?: (sort: UserSortLabel) => void;
 };
 
-const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
+const UsersTable = ({ list, isLoading = false, handleSort }: TUsersTable) => {
   const [modal, setModal] = useState<"user" | "delete" | null>(null);
 
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
@@ -142,9 +145,36 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
         >
           <Table.Head>
             <Table.Row>
-              {TABLE_HEADER.map((key, headerIndex) => {
-                return <Table.Header key={headerIndex}>{key}</Table.Header>;
-              })}
+              <Table.Header>
+                {" "}
+                <div className="flex items-center gap-2">
+                  <span>First name</span>
+                  <button onClick={() => handleSort?.(UserSortLabel.FIRSTNAME)}>
+                    <Sort className="w-4 fill-white" />
+                  </button>
+                </div>
+              </Table.Header>
+              <Table.Header>
+                <div className="flex items-center gap-2">
+                  <span>Last name</span>
+                  <button onClick={() => handleSort?.(UserSortLabel.LASTNAME)}>
+                    <Sort className="w-4 fill-white" />
+                  </button>
+                </div>
+              </Table.Header>
+              <Table.Header>
+                <div className="flex items-center gap-2">
+                  <span>Email</span>
+                  <button onClick={() => handleSort?.(UserSortLabel.EMAIL)}>
+                    <Sort className="w-4 fill-white" />
+                  </button>
+                </div>
+              </Table.Header>
+              <Table.Header>Phone</Table.Header>
+              <Table.Header>Role</Table.Header>
+              <Table.Header>Status</Table.Header>
+              <Table.Header>Organization</Table.Header>
+              <Table.Header></Table.Header>
             </Table.Row>
           </Table.Head>
           <Table.Body>
@@ -229,14 +259,3 @@ const UsersTable = ({ list, isLoading = false }: TUsersTable) => {
 };
 
 export default UsersTable;
-
-const TABLE_HEADER = [
-  "First name",
-  "Last name",
-  "Email",
-  "Phone",
-  "Role",
-  "Status",
-  "Organization",
-  "",
-];

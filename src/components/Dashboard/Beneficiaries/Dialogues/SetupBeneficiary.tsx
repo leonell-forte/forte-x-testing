@@ -126,7 +126,7 @@ export function SetupBeneficiaryModal({
     reset(
       beneficiaries.defaultValues({
         beneficiary: beneficiaryDetails,
-        contractId: Number(contractId),
+        contractId: contractId,
       })
     );
   }, [beneficiaryDetails, reset, contractId, setValue]);
@@ -289,7 +289,7 @@ export function SetupBeneficiaryModal({
                       (field.value || "").toString()
                     )}
                     handleSelect={(val) => {
-                      field.onChange(Number(val));
+                      field.onChange(val);
                       const contract = contractList?.items.find(
                         (item) => String(item.id) === String(val)
                       );

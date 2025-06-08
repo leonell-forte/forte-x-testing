@@ -1,5 +1,7 @@
 import { omit } from "lodash";
 
+import { SortValues } from "lib/types/common";
+
 import { api } from "../lib/axios/interceptor";
 import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import {
@@ -90,7 +92,10 @@ class OrganizationService {
       },
     };
 
-    params.append("$orderBy", '"organizations"."createdAt" desc');
+    params.append(
+      "$orderBy",
+      `"organizations"."${filters?.sortLabel || "createdAt"}" ${filters?.sortValue || SortValues.DESC}`
+    );
 
     if (generateODataQuery(searchFilter)) {
       params.append("$filter", generateODataQuery(searchFilter));

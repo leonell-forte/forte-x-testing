@@ -2,6 +2,7 @@
 
 import { InputAdornment, TextField, TextFieldProps } from "@mui/material";
 import classNames from "classnames";
+import React from "react";
 import { ChangeEvent, forwardRef, useState } from "react";
 
 import eyeClosed from "assets/images/icons/eye-closed.svg";
@@ -12,20 +13,14 @@ import { cn, getCurrencySymbol } from "lib/utils";
 
 type PropTypes = TextFieldProps & {
   dark?: boolean;
-
   min?: number;
-
   wholeNumberOnly?: boolean;
-
   accept?: string;
-
   phoneNUmber?: boolean;
-
   readOnly?: boolean;
-
   isCurrency?: boolean;
-
   currency?: string;
+  textarea?: boolean;
 };
 
 const Input = forwardRef<HTMLDivElement, PropTypes>(
@@ -54,6 +49,69 @@ const Input = forwardRef<HTMLDivElement, PropTypes>(
       props.onChange?.(e);
     };
 
+    if (props.textarea) {
+      // Only extract textarea-specific props if textarea is true
+      const {
+        className,
+        value,
+        onChange,
+        minLength,
+        maxLength,
+        rows,
+        placeholder,
+        disabled,
+        autoFocus,
+        required,
+        id,
+        name: inputName,
+        readOnly: inputReadOnly,
+        style,
+        tabIndex,
+        title,
+        defaultValue,
+      } = props as Omit<typeof props, "textarea"> & {
+        minLength?: number;
+        maxLength?: number;
+        rows?: number | string;
+        autoFocus?: boolean;
+        required?: boolean;
+        id?: string;
+        name?: string;
+        readOnly?: boolean;
+        style?: React.CSSProperties;
+        tabIndex?: number;
+        title?: string;
+        defaultValue?: string;
+      };
+      const textareaRows = typeof rows === "number" ? rows : Number(rows) || 4;
+      return (
+        <div className={classNames("relative w-full")}>
+          <textarea
+            id={id || name}
+            name={inputName || name}
+            ref={ref as any}
+            className={classNames(
+              className,
+              "block w-full rounded-lg border border-gray-300 bg-transparent p-2 focus:border-blue-500 focus:ring-blue-500 disabled:cursor-not-allowed disabled:border-white/10"
+            )}
+            value={value as string | undefined}
+            onChange={onChange as React.ChangeEventHandler<HTMLTextAreaElement>}
+            readOnly={inputReadOnly ?? readOnly}
+            disabled={disabled}
+            minLength={minLength}
+            maxLength={maxLength}
+            rows={textareaRows}
+            placeholder={placeholder}
+            autoFocus={autoFocus}
+            required={required}
+            style={style}
+            tabIndex={tabIndex}
+            title={title}
+            defaultValue={defaultValue}
+          />
+        </div>
+      );
+    }
     return (
       <div className={classNames("relative w-full")}>
         <TextField

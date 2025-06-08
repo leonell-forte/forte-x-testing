@@ -74,7 +74,7 @@ const History = ({
     );
 
   return (
-    <div>
+    <div className="mb-10">
       {!data?.length ? (
         <p className="text-[14px]">No activities at the moment</p>
       ) : (

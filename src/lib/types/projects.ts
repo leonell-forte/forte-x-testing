@@ -2,6 +2,8 @@ import { z } from "zod";
 
 import { projects } from "lib/validators/projects";
 
+import { SortValues } from "./common";
+
 export interface IOutcome {
   id: number;
 
@@ -76,7 +78,15 @@ export interface IProjectOrganization {
 
 export type ProjectFieldValues = z.infer<typeof projects.schema>;
 
+export enum ProjectSortLabel {
+  FUNDER = `"funder"."name"`,
+  PROJECT = `"project"."name"`,
+  CREATED_AT = `"project"."createdAt"`,
+}
+
 export type ProjectFilter = {
   funder: string;
   status?: string;
+  sortLabel?: ProjectSortLabel;
+  sortValue?: SortValues;
 };

@@ -4,13 +4,15 @@ import { BsPencilSquare as Update } from "react-icons/bs";
 import { HiEllipsisHorizontal as Ellipsis } from "react-icons/hi2";
 import { LuDownload as Download } from "react-icons/lu";
 
+import { ReactComponent as Sort } from "assets/images/icons/sort.svg";
+
 import {
   useBulkDownloadEvidenceMutation,
   useDeleteEvidence,
 } from "lib/mutations/evidences";
 import { IsAuthorized } from "lib/role-permissions";
 import { Evidences } from "lib/role-permissions";
-import { MainEvidence } from "lib/types/evidence";
+import { EvidenceSortLabel, MainEvidence } from "lib/types/evidence";
 import { MILESTONE_TYPES } from "lib/types/milestones";
 import { cn, getStatusVariant } from "lib/utils";
 
@@ -35,9 +37,10 @@ import { Toolbar } from "components/ui/toolbar/Toolbar";
 interface IProps {
   list: MainEvidence[];
   isLoading: boolean;
+  handleSort?: (sortLabel: EvidenceSortLabel) => void;
 }
 
-const MainEvidencesTable = ({ list, isLoading }: IProps) => {
+const MainEvidencesTable = ({ list, isLoading, handleSort }: IProps) => {
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   const { isProviderUser } = useProfile();
@@ -108,10 +111,20 @@ const MainEvidencesTable = ({ list, isLoading }: IProps) => {
   const handleDropdownAction = (action: string, evidence: MainEvidence) => {
     switch (action) {
       case "update-status":
-        console.log("update status fn here");
+        showViewEvidenceModal({
+          milestoneId: evidence.milestoneId as string,
+          evidenceId: evidence.id,
+          beneficiaryId: evidence.beneficiary?.id,
+          status: evidence.status,
+        });
         break;
       case "details":
-        console.log("details fn here");
+        showViewEvidenceModal({
+          milestoneId: evidence.milestoneId as string,
+          evidenceId: evidence.id,
+          beneficiaryId: evidence.beneficiary?.id,
+          status: evidence.status,
+        });
         break;
       case "download":
         evidenceService.getFile(
@@ -202,7 +215,17 @@ const MainEvidencesTable = ({ list, isLoading }: IProps) => {
                     {filename?.filename}
                   </p>
 
-                  <Cards.Group>
+                  <Cards.Group
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      showViewEvidenceModal({
+                        milestoneId: milestoneId!,
+                        evidenceId: id,
+                        beneficiaryId: beneficiary.id,
+                        status,
+                      });
+                    }}
+                  >
                     <Cards.Details
                       label="Beneficiary"
                       value={
@@ -258,7 +281,18 @@ const MainEvidencesTable = ({ list, isLoading }: IProps) => {
                       checked={
                         list?.length !== 0 && selectedIds.length === list.length
                       }
-                      label="Evidence file"
+                      label={
+                        <div className="flex items-center gap-2">
+                          <span>Evidence File</span>
+                          <button
+                            onClick={() =>
+                              handleSort?.(EvidenceSortLabel.FILENAME)
+                            }
+                          >
+                            <Sort className="w-4 fill-white" />
+                          </button>
+                        </div>
+                      }
                       labelClass="!text-white text-base font-semibold translate-x-[-4px]"
                       onChange={handleSelectAll}
                       tabIndex={-1}
@@ -268,9 +302,28 @@ const MainEvidencesTable = ({ list, isLoading }: IProps) => {
                   "Evidence file"
                 )}
               </Table.Header>
-              {HEADERS.map((item, index) => {
-                return <Table.Header key={index}>{item}</Table.Header>;
-              })}
+              <Table.Header>
+                <div className="flex items-center gap-2">
+                  <span>Beneficiary name</span>
+                  <button onClick={() => handleSort?.(EvidenceSortLabel.NAME)}>
+                    <Sort className="w-4 fill-white" />
+                  </button>
+                </div>
+              </Table.Header>
+              <Table.Header>Type</Table.Header>
+              <Table.Header>
+                <div className="flex items-center gap-2">
+                  <span>Outcome name</span>
+                  <button
+                    onClick={() => handleSort?.(EvidenceSortLabel.OUTCOME)}
+                  >
+                    <Sort className="w-4 fill-white" />
+                  </button>
+                </div>
+              </Table.Header>
+              <Table.Header>Milestone ID</Table.Header>
+              <Table.Header>Status</Table.Header>
+              <Table.Header></Table.Header>
             </Table.Row>
           </Table.Head>
 
@@ -294,6 +347,7 @@ const MainEvidencesTable = ({ list, isLoading }: IProps) => {
                       milestoneId: milestoneId!,
                       evidenceId: id,
                       beneficiaryId: beneficiary.id,
+                      status,
                     });
                   }}
                 >
@@ -378,12 +432,3 @@ const MainEvidencesTable = ({ list, isLoading }: IProps) => {
 };
 
 export default MainEvidencesTable;
-
-const HEADERS = [
-  "Beneficiary Name",
-  "Type",
-  "Outcome name",
-  "Milestone ID",
-  "Status",
-  "",
-];

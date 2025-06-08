@@ -5,12 +5,13 @@ import {
   beneficiaryStatus,
   importBeneficiaries,
 } from "../validators/beneficiaries";
+import { SortValues } from "./common";
 import { Evidence } from "./evidence";
 
 export interface IBeneficiaries {
   id: number;
 
-  contractId: number;
+  contractId: string;
 
   contractName?: string;
 
@@ -99,6 +100,12 @@ export type BeneficiaryStatusUpdateField = z.infer<
   typeof beneficiaryStatus.schema
 >;
 
+export enum BeneficiarySortLabel {
+  CREATED_AT = "createdAt",
+  NAME = "fullName",
+  EMAIL = "email",
+}
+
 export interface IBeneficiariesFilter {
   project?: string;
 
@@ -113,4 +120,8 @@ export interface IBeneficiariesFilter {
   contractId?: string;
 
   funderId?: string;
+
+  sortLabel?: BeneficiarySortLabel;
+
+  sortValue?: SortValues;
 }

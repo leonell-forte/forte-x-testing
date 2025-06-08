@@ -2,6 +2,7 @@ import { capitalize } from "lodash";
 import { useNavigate } from "react-router-dom";
 
 import { ReactComponent as Pencil } from "assets/images/icons/pencil.svg";
+import { ReactComponent as Sort } from "assets/images/icons/sort.svg";
 
 import { IOrganization, OrgTypes } from "lib/types/organizations";
 import { getStatusVariant } from "lib/utils";
@@ -16,12 +17,14 @@ type TOrganizationTable = {
   list: IOrganization[];
   isLoading?: boolean;
   type?: OrgTypes;
+  handleSort?: () => void;
 };
 
 const OrganizationTable = ({
   list,
   isLoading = false,
   type,
+  handleSort,
 }: TOrganizationTable) => {
   const navigate = useNavigate();
   return (
@@ -79,7 +82,14 @@ const OrganizationTable = ({
         >
           <Table.Head>
             <Table.Row>
-              <Table.Header>{`${capitalize(type)} Name`}</Table.Header>
+              <Table.Header>
+                <div className="flex items-center gap-2">
+                  <span>{`${capitalize(type)} Name`}</span>
+                  <button onClick={handleSort}>
+                    <Sort className="w-4 fill-white" />
+                  </button>
+                </div>
+              </Table.Header>
               {TABLE_HEADER.map((key, headerIndex) => {
                 return <Table.Header key={headerIndex}>{key}</Table.Header>;
               })}

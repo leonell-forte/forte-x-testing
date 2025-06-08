@@ -5,7 +5,12 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import useMilestoneList from "lib/common/lists/useMilestoneList";
 import { MILESTONE_STATUS, MILESTONE_TYPES } from "lib/constants";
 import { usePage, useStatusParams } from "lib/hooks";
-import { IMilestoneFilters, MilestoneStatus } from "lib/types/milestones";
+import { SortValues } from "lib/types/common";
+import {
+  IMilestoneFilters,
+  MilestoneStatus,
+  SortMilestoneLabel,
+} from "lib/types/milestones";
 
 import MilestonesTable from "components/tables/Milestones";
 import { BreadCrumb } from "components/ui/breadcrumb/Breadcrumb";
@@ -36,6 +41,8 @@ const MilestonesComp = ({
     type: "",
     providerId: providerId || "",
     funderId: funderId || "",
+    sortLabel: SortMilestoneLabel.CREATED_AT,
+    sortValue: SortValues.DESC,
   };
 
   const { page, setPage } = usePage();
@@ -90,7 +97,20 @@ const MilestonesComp = ({
       </div>
 
       <div className="flex h-full flex-col justify-between gap-4">
-        <MilestonesTable list={milestones?.items || []} isLoading={isLoading} />
+        <MilestonesTable
+          list={milestones?.items || []}
+          isLoading={isLoading}
+          handleSort={(sortLabel) =>
+            setFilters((state) => ({
+              ...state,
+              sortLabel,
+              sortValue:
+                state.sortValue === SortValues.ASC
+                  ? SortValues.DESC
+                  : SortValues.ASC,
+            }))
+          }
+        />
 
         {!!milestones?.items.length && (
           <div className="flex w-full items-center justify-end">

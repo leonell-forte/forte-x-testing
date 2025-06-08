@@ -1,6 +1,12 @@
+import { SortValues } from "lib/types/common";
+
 import { api } from "../lib/axios/interceptor";
 import { DEFAULT_PAGE_SIZE } from "../lib/constants";
-import { IMilestone, IMilestoneFilters } from "../lib/types/milestones";
+import {
+  IMilestone,
+  IMilestoneFilters,
+  SortMilestoneLabel,
+} from "../lib/types/milestones";
 import { IODataObject, generateODataQuery } from "../lib/utils";
 
 export interface IMilestoneListProps {
@@ -112,7 +118,10 @@ class MilestoneService {
 
     params.append("$pageNum", (page || 1).toString());
 
-    params.append("$orderBy", `"milestone"."created_at" desc`);
+    params.append(
+      "$orderBy",
+      `${filters?.sortLabel || SortMilestoneLabel.CREATED_AT} ${filters?.sortValue || SortValues.DESC}`
+    );
 
     if (generateODataQuery(filtersData)) {
       params.append("$filter", generateODataQuery(filtersData));

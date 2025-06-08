@@ -23,3 +23,8 @@ export interface User {
 export type StatusTypes = "active" | "inactive";
 
 export type RolesTypes = "provider" | "admin" | "user";
+
+export enum SortValues {
+  ASC = "asc",
+  DESC = "desc",
+}

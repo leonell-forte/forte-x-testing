@@ -3,8 +3,10 @@ import { FaTrash as Trash } from "react-icons/fa6";
 import { RiPencilFill as Pencil } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 
+import { ReactComponent as Sort } from "assets/images/icons/sort.svg";
+
 import { IsAuthorized, Projects } from "lib/role-permissions";
-import { IProject } from "lib/types/projects";
+import { IProject, ProjectSortLabel } from "lib/types/projects";
 import { formatCurrency, getCurrencyCode, getStatusVariant } from "lib/utils";
 
 import DeleteDialogue from "components/Dashboard/Projects/Dialogues/DeleteDialogue";
@@ -20,12 +22,14 @@ type TProjectTable = {
   list: IProject[];
   isLoading?: boolean;
   funderId?: number;
+  handleSort?: (label: ProjectSortLabel) => void;
 };
 
 const ProjectsTable = ({
   list,
   isLoading = false,
   funderId,
+  handleSort,
 }: TProjectTable) => {
   const navigate = useNavigate();
 
@@ -160,9 +164,29 @@ const ProjectsTable = ({
         >
           <Table.Head>
             <Table.Row>
-              {TABLE_HEADER.map((key, headerIndex) => {
-                return <Table.Header key={headerIndex}>{key}</Table.Header>;
-              })}
+              <Table.Header>
+                <div className="flex items-center gap-2">
+                  <span>Project Name</span>
+                  <button
+                    onClick={() => handleSort?.(ProjectSortLabel.PROJECT)}
+                  >
+                    <Sort className="w-4 fill-white" />
+                  </button>
+                </div>
+              </Table.Header>
+              <Table.Header>
+                <div className="flex items-center gap-2">
+                  <span>Funder</span>
+                  <button onClick={() => handleSort?.(ProjectSortLabel.FUNDER)}>
+                    <Sort className="w-4 fill-white" />
+                  </button>
+                </div>
+              </Table.Header>
+              <Table.Header>Status</Table.Header>
+              <Table.Header>Budget</Table.Header>
+              <Table.Header># of Contracts</Table.Header>
+              <Table.Header># of Beneficiaries</Table.Header>
+              <Table.Header># of Milestones</Table.Header>
 
               <Table.Header></Table.Header>
             </Table.Row>
@@ -274,13 +298,3 @@ const ProjectsTable = ({
 };
 
 export default ProjectsTable;
-
-const TABLE_HEADER = [
-  "Project Name",
-  "Funder",
-  "Status",
-  "Budget",
-  "# of Contracts",
-  "# of Beneficiaries",
-  "# of Milestones",
-];

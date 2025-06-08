@@ -13,7 +13,7 @@ interface IBeneficiaryDefaultValue {
 
   projectId?: number;
 
-  contractId?: number;
+  contractId?: string;
 }
 
 export const beneficiaries = {
@@ -35,7 +35,7 @@ export const beneficiaries = {
 
       status: beneficiary?.status || "New",
 
-      contractId: beneficiary?.contractId || contractId || 0,
+      contractId: beneficiary?.contractId || contractId || "",
 
       projectId: beneficiary?.projectId || projectId || 0,
 
@@ -104,7 +104,7 @@ export const beneficiaries = {
 
     status: z.string().min(1, { message: "Status is required" }),
 
-    contractId: z.number().min(1, { message: "Contract is required" }),
+    contractId: z.string().min(1, { message: "Contract is required" }),
 
     providerId: z.number().min(1, { message: "Provider is required" }),
 

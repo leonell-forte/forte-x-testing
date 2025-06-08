@@ -13,6 +13,7 @@ import useOrganizationList from "lib/common/lists/useOrganizationList";
 import { REGIONS, STATUS } from "lib/constants";
 import { usePage } from "lib/hooks";
 import { Funders, IsAuthorized, Providers } from "lib/role-permissions";
+import { SortValues } from "lib/types/common";
 import { IFilters, OrgTypes } from "lib/types/organizations";
 
 import { showOrganizationDialogue } from "components/Dashboard/Organizations/Dialogues/OrganizationDialogue";
@@ -140,8 +141,19 @@ const PageComponent = ({
 
         <div className="flex h-full flex-col justify-between gap-4">
           <OrganizationTable
+            type={type}
             list={organizationList?.items || []}
             isLoading={orgLoading}
+            handleSort={() => {
+              setFilters((prev) => ({
+                ...prev,
+                sortLabel: "name",
+                sortValue:
+                  prev.sortValue === SortValues.ASC
+                    ? SortValues.DESC
+                    : SortValues.ASC,
+              }));
+            }}
           />
 
           {!!organizationList?.items.length && (

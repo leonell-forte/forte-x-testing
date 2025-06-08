@@ -1,7 +1,10 @@
+import { SortValues } from "lib/types/common";
+
 import { api } from "../lib/axios/interceptor";
 import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import {
   ContractFieldValues,
+  ContractSortLabel,
   IContract,
   IContractFilters,
   StatusType,
@@ -104,7 +107,10 @@ class ContractService {
 
     params.append("$pageNum", (page || 1).toString());
 
-    params.append("$orderBy", `"contract"."createdAt" desc`);
+    params.append(
+      "$orderBy",
+      `${filters?.sortLabel || ContractSortLabel.CREATED_AT} ${filters?.sortValue || SortValues.DESC}`
+    );
 
     if (listAll) {
       params.append("$listAll", "true");

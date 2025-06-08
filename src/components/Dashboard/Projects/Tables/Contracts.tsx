@@ -3,7 +3,8 @@ import { BiSlider as SliderIcon } from "react-icons/bi";
 
 import useContractList from "lib/common/lists/useContractList";
 import { usePage } from "lib/hooks";
-import { IContractFilters } from "lib/types/contracts";
+import { SortValues } from "lib/types/common";
+import { ContractSortLabel, IContractFilters } from "lib/types/contracts";
 
 import ContractsTable from "components/tables/Contracts";
 import Button from "components/ui/button";
@@ -29,7 +30,7 @@ interface IProps {
 const Contracts = ({ projectId, providerId, funderId }: IProps) => {
   const { page, setPage } = usePage();
 
-  const initialFilter = {
+  const initialFilter: IContractFilters = {
     status: "",
 
     project: projectId?.toString() || "",
@@ -39,6 +40,10 @@ const Contracts = ({ projectId, providerId, funderId }: IProps) => {
     providerId: providerId || "",
 
     funderId: funderId || "",
+
+    sortLabel: ContractSortLabel.CREATED_AT,
+
+    sortValue: SortValues.DESC,
   };
 
   const [filters, setFilters] = useState<IContractFilters>(initialFilter);
@@ -90,6 +95,7 @@ const Contracts = ({ projectId, providerId, funderId }: IProps) => {
                 filters={filters}
                 setFilters={setFilters}
                 projectId={projectId}
+                initialFilter={initialFilter}
               />
               <div className="flex justify-end gap-2">
                 <Button
@@ -143,6 +149,7 @@ const Contracts = ({ projectId, providerId, funderId }: IProps) => {
                 filters={filters}
                 setFilters={setFilters}
                 projectId={projectId}
+                initialFilter={initialFilter}
               />
             </div>
           </div>

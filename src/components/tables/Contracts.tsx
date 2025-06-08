@@ -4,10 +4,11 @@ import { FaTrash as Trash } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 
 import { ReactComponent as Pencil } from "assets/images/icons/pencil.svg";
+import { ReactComponent as Sort } from "assets/images/icons/sort.svg";
 
 import { useDeleteContractMutation } from "lib/mutations/contracts";
 import { Contracts, IsAuthorized } from "lib/role-permissions";
-import { IContract } from "lib/types/contracts";
+import { ContractSortLabel, IContract } from "lib/types/contracts";
 import { getStatusVariant } from "lib/utils";
 
 import { showSetupContractModal } from "components/Dashboard/Contracts/SetupContract";
@@ -23,6 +24,7 @@ type TContractsTable = {
   isLoading?: boolean;
   orgId?: string;
   projectId?: number;
+  handleSort?: (label: ContractSortLabel) => void;
 };
 
 const ContractsTable = ({
@@ -30,6 +32,7 @@ const ContractsTable = ({
   isLoading = false,
   orgId,
   projectId,
+  handleSort,
 }: TContractsTable) => {
   const navigate = useNavigate();
   const { isProviderUser, isForteUser } = useProfile();
@@ -162,12 +165,38 @@ const ContractsTable = ({
         >
           <Table.Head>
             <Table.Row>
-              {TABLE_HEADER.filter((key) => {
-                if (isProviderUser) return key !== "Provider";
-                return true;
-              }).map((key, headerIndex) => {
-                return <Table.Header key={headerIndex}>{key}</Table.Header>;
-              })}
+              <Table.Header>
+                <div className="flex items-center gap-2">
+                  <span>Contract name</span>
+                  <button
+                    onClick={() => handleSort?.(ContractSortLabel.CONTRACT)}
+                  >
+                    <Sort className="w-4 fill-white" />
+                  </button>
+                </div>
+              </Table.Header>
+              <Table.Header>
+                <div className="flex items-center gap-2">
+                  <span>Project</span>
+                  <button
+                    onClick={() => handleSort?.(ContractSortLabel.PROJECT)}
+                  >
+                    <Sort className="w-4 fill-white" />
+                  </button>
+                </div>
+              </Table.Header>
+              <Table.Header>
+                <div className="flex items-center gap-2">
+                  <span>Provider</span>
+                  <button
+                    onClick={() => handleSort?.(ContractSortLabel.PROVIDER)}
+                  >
+                    <Sort className="w-4 fill-white" />
+                  </button>
+                </div>
+              </Table.Header>
+              <Table.Header># of Beneficiaries</Table.Header>
+              <Table.Header>Status</Table.Header>
 
               <Table.Header></Table.Header>
             </Table.Row>
@@ -278,11 +307,3 @@ const ContractsTable = ({
 };
 
 export default ContractsTable;
-
-const TABLE_HEADER = [
-  "Contract name",
-  "Project",
-  "Provider",
-  "# of Beneficiaries",
-  "Status",
-];

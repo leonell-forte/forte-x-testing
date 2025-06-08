@@ -2,6 +2,8 @@ import { z } from "zod";
 
 import { organizations, partner } from "lib/validators/organizations";
 
+import { SortValues } from "./common";
+
 export type OrgStatus = "active" | "inactive";
 
 export interface IOrganization {
@@ -58,6 +60,10 @@ export interface IFilters {
   status?: string;
 
   type?: "funder" | "provider" | "forte" | "";
+
+  sortLabel?: "createdAt" | "name";
+
+  sortValue?: SortValues;
 }
 
 type PartnerData = {

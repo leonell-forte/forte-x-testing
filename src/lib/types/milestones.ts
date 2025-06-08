@@ -1,4 +1,4 @@
-import { File } from "./common";
+import { File, SortValues } from "./common";
 
 export type MilestoneStatus = "achieved" | "paid" | "open" | "invoiced";
 
@@ -54,10 +54,18 @@ export interface IMilestone {
   invoiceId: string;
 }
 
+export enum SortMilestoneLabel {
+  ID = `"milestone"."id"`,
+  FUNDER = `"funder"."name"`,
+  CREATED_AT = `"milestone"."created_at"`,
+}
+
 export interface IMilestoneFilters {
   status?: MilestoneStatus | string;
   contractId?: string;
   type?: string;
   providerId?: string;
   funderId?: string;
+  sortLabel: SortMilestoneLabel;
+  sortValue: SortValues;
 }

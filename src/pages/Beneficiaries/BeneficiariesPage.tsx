@@ -18,6 +18,7 @@ import {
   Providers,
 } from "lib/role-permissions";
 import { IBeneficiariesFilter } from "lib/types/beneficiaries";
+import { SortValues } from "lib/types/common";
 import { findLabelFromOptions, sortOptions } from "lib/utils";
 
 import { showSetupBeneficiaryModal } from "components/Dashboard/Beneficiaries/Dialogues/SetupBeneficiary";
@@ -82,7 +83,7 @@ const BeneficiariesComp = ({
 
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
-  const initialFilter = {
+  const initialFilter: IBeneficiariesFilter = {
     project: projectId || "",
 
     status: paramStatus,
@@ -264,6 +265,16 @@ const BeneficiariesComp = ({
             providerId={providerId}
             projectId={projectId}
             contractId={contractId}
+            handleSort={(sortLabel) =>
+              setFilters((prev) => ({
+                ...prev,
+                sortLabel,
+                sortValue:
+                  prev.sortValue === SortValues.ASC
+                    ? SortValues.DESC
+                    : SortValues.ASC,
+              }))
+            }
           />
 
           {!!beneficiariesList?.items?.length && (

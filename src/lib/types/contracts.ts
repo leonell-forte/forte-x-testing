@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { contracts } from "lib/validators/contracts";
 
-import { File } from "./common";
+import { File, SortValues } from "./common";
 
 export type StatusType = "draft" | "signed" | "completed" | "cancelled" | "";
 
@@ -90,6 +90,13 @@ export interface IContract {
   updatedBy?: number;
 }
 
+export enum ContractSortLabel {
+  CREATED_AT = `"contract"."createdAt"`,
+  PROVIDER = `"organization"."name"`,
+  CONTRACT = `"contract"."name"`,
+  PROJECT = `"project"."name"`,
+}
+
 export interface IContractFilters {
   status: StatusType | string;
 
@@ -100,6 +107,10 @@ export interface IContractFilters {
   providerId: string;
 
   funderId: string;
+
+  sortLabel: string;
+
+  sortValue: SortValues;
 }
 
 export interface IContractDefaultValues {

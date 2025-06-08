@@ -100,64 +100,105 @@ const useUserMutation = ({
   return { addUser, isPending };
 };
 
-export const useDeleteUserMutation = (
-  id: string,
-  succesCallback?: () => void
-) => {
+export const useDeleteUserMutation = (id: string, onSuccess?: () => void) => {
   const { page, setPage } = usePage();
 
   const { setAlert } = useAlert();
 
-  const userQueryKeys = ["users", +page || 1, "", "", []];
+  // Create a more flexible query key matcher that will match all user queries
+  const usersQueryKeyPrefix = ["users"];
 
   const { mutateAsync: deleteUser, isPending } = useMutation({
     mutationFn: userService.delete,
 
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: userQueryKeys });
+      // Cancel all queries that start with the users prefix
+      await queryClient.cancelQueries({
+        queryKey: usersQueryKeyPrefix,
+        exact: false,
+      });
 
-      const previousUsers = queryClient.getQueryData<IUser[]>(userQueryKeys);
+      // Store all matching queries to restore in case of error
+      const previousQueries = new Map();
 
-      return { previousUsers };
+      // Find all user queries in the cache
+      const queryCache = queryClient.getQueryCache();
+      const userQueries = queryCache.findAll({
+        queryKey: usersQueryKeyPrefix,
+        exact: false,
+      });
+
+      // Store the current state of each query
+      userQueries.forEach((query) => {
+        previousQueries.set(
+          query.queryKey,
+          queryClient.getQueryData(query.queryKey)
+        );
+      });
+
+      // Optimistically update all user queries
+      userQueries.forEach((query) => {
+        const data = queryClient.getQueryData(query.queryKey);
+        if (data && typeof data === "object" && "items" in data) {
+          queryClient.setQueryData(query.queryKey, {
+            ...data,
+            items: (data.items as IUser[]).filter((item) => item.id !== id),
+          });
+        }
+      });
+
+      return { previousQueries };
     },
 
     onSuccess: () => {
-      queryClient.setQueryData(userQueryKeys, (old: { items: IUser[] }) => {
-        if (old.items.length === 1 && +page !== 1) {
-          setPage(page - 1);
-        }
-        return {
-          ...old,
-          items: [...old.items].filter((item) => item.id !== id),
-        };
-      });
-      succesCallback?.();
+      // If we're on a page that's now empty (except page 1), go to previous page
+      const currentPageQuery = ["users", +page || 1, "", "", []];
+
+      const currentPageData = queryClient.getQueryData<{ items: IUser[] }>(
+        currentPageQuery
+      );
+      if (currentPageData?.items?.length === 0 && +page !== 1) {
+        setPage(page - 1);
+      }
+
+      if (onSuccess) {
+        onSuccess();
+      }
+
       setAlert({
         status: "success",
         message: "User deleted successfully",
         title: "User deleted!",
       });
-      amplitude.track(`Delete User Performed`, {
-        id,
+
+      amplitude.track("Delete User Performed", {
+        userId: id,
       });
     },
 
-    onError: (err: any, _, context) => {
+    onError: (err: any, _: any, context: any) => {
       setAlert({
         status: "error",
-
         title: "Failed deleting user",
-
         message:
           formatErrorMessage(err?.response?.data?.data?.[0]) ||
           err?.response?.data?.message,
       });
 
-      queryClient.setQueryData(userQueryKeys, context?.previousUsers);
+      // Restore all previous queries from the context
+      if (context?.previousQueries) {
+        context.previousQueries.forEach((data: any, queryKey: any) => {
+          queryClient.setQueryData(queryKey, data);
+        });
+      }
     },
 
     onSettled: () => {
-      // queryClient.invalidateQueries({ queryKey: userQueryKeys });
+      // Invalidate all user queries to ensure data consistency
+      queryClient.invalidateQueries({
+        queryKey: usersQueryKeyPrefix,
+        exact: false,
+      });
     },
   });
 

@@ -1,3 +1,5 @@
+import { SortValues } from "lib/types/common";
+
 import { api } from "../lib/axios/interceptor";
 import { DEFAULT_PAGE_SIZE } from "../lib/constants";
 import { ActivityLogs } from "../lib/types/activity-logs";
@@ -5,6 +7,7 @@ import {
   AddEvidenceParams,
   DeleteParams,
   Evidence,
+  EvidenceSortLabel,
   IEvidenceFilters,
   MainEvidence,
 } from "../lib/types/evidence";
@@ -76,6 +79,11 @@ export class EvidenceService {
     params.append("$pageSize", String(pageSize || DEFAULT_PAGE_SIZE));
 
     params.append("$pageNum", (page || 1).toString());
+
+    params.append(
+      "$orderBy",
+      `${filters?.sortLabel || EvidenceSortLabel.CREATED_AT} ${filters?.sortValue || SortValues.DESC}`
+    );
 
     if (generateODataQuery(filtersData)) {
       params.append("$filter", generateODataQuery(filtersData));
@@ -167,7 +175,6 @@ export class EvidenceService {
 
     return response;
   }
-
 }
 
 const evidenceService = new EvidenceService();

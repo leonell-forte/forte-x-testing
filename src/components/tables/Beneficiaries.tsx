@@ -6,13 +6,15 @@ import { LuDownload as Download } from "react-icons/lu";
 import { TbFileExport as Export } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 
+import { ReactComponent as Sort } from "assets/images/icons/sort.svg";
+
 import {
   useDeleteBeneficiaryMutation,
   useExportBeneficiaries,
   useExportEvidenceMutation,
 } from "lib/mutations/beneficiaries";
 import { Beneficiaries, IsAuthorized } from "lib/role-permissions";
-import { IBeneficiaries } from "lib/types/beneficiaries";
+import { BeneficiarySortLabel, IBeneficiaries } from "lib/types/beneficiaries";
 import { cn, getStatusVariant } from "lib/utils";
 
 import { showBulkUpdateStatusModal } from "components/Dashboard/Beneficiaries/Dialogues/BulkUpdateStatusV2";
@@ -35,6 +37,7 @@ type TBeneficiariesTable = {
   providerId?: string;
   projectId?: string;
   contractId?: string;
+  handleSort?: (label: BeneficiarySortLabel) => void;
 };
 
 const BeneficiariesTable = ({
@@ -45,6 +48,7 @@ const BeneficiariesTable = ({
   providerId,
   projectId,
   contractId,
+  handleSort,
 }: TBeneficiariesTable) => {
   const navigate = useNavigate();
 
@@ -228,21 +232,57 @@ const BeneficiariesTable = ({
                           list?.length !== 0 &&
                           selectedIds.length === list.length
                         }
-                        label="Name"
+                        label={
+                          <div className="flex items-center gap-2">
+                            <span>Name</span>
+                            <button
+                              onClick={() =>
+                                handleSort?.(BeneficiarySortLabel.NAME)
+                              }
+                            >
+                              <Sort className="w-4 fill-white" />
+                            </button>
+                          </div>
+                        }
                         labelClass="!text-white text-base font-semibold translate-x-[-4px]"
                         onChange={handleSelectAll}
                         tabIndex={-1}
                       />
                     </div>
                   ) : (
-                    "Name"
+                    <div className="flex items-center gap-2">
+                      <span>Name</span>
+                      <button
+                        onClick={() => handleSort?.(BeneficiarySortLabel.NAME)}
+                      >
+                        <Sort className="w-4 fill-white" />
+                      </button>
+                    </div>
                   )}
                 </Table.Header>
               ) : (
-                <Table.Header>Name</Table.Header>
+                <Table.Header>
+                  <div className="flex items-center gap-2">
+                    <span>Name</span>
+                    <button
+                      onClick={() => handleSort?.(BeneficiarySortLabel.NAME)}
+                    >
+                      <Sort className="w-4 fill-white" />
+                    </button>
+                  </div>
+                </Table.Header>
               )}
 
-              <Table.Header>Email</Table.Header>
+              <Table.Header>
+                <div className="flex items-center gap-2">
+                  <span>Email</span>
+                  <button
+                    onClick={() => handleSort?.(BeneficiarySortLabel.EMAIL)}
+                  >
+                    <Sort className="w-4 fill-white" />
+                  </button>
+                </div>
+              </Table.Header>
 
               <Table.Header>Contract</Table.Header>
 
