@@ -12,7 +12,7 @@ export const evidence = {
     let data: EvidenceFieldValues = {
       beneficiaryId: String(evidence?.beneficiaryId) || "",
 
-      description: evidence?.description || "description",
+      description: evidence?.description || "",
 
       status: evidence?.status || "pending review",
 
