@@ -4,11 +4,13 @@ import { useQuery } from "@tanstack/react-query";
 import beneficiariesService from "api/beneficiaries";
 import commentsService from "api/comments";
 import evidenceService from "api/evidence";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { useEvidenceMutation } from "lib/mutations/evidences";
 import { Evidences, IsAuthorized } from "lib/role-permissions";
+import { File } from "lib/types/common";
 import {
   Evidence as EvidenceType,
   UpdateEvidenceStatusEnum,
@@ -31,6 +33,25 @@ import Details from "./Details";
 import Evidence from "./Evidence";
 import History from "./History";
 import { showUpdateStatus } from "./UpdateStatus";
+
+// Define allowable transitions between different evidence statuses based on the rules
+const allowableTransitions: Record<string, UpdateEvidenceStatusEnum[]> = {
+  "pending review": [
+    UpdateEvidenceStatusEnum.MORE_INFO,
+    UpdateEvidenceStatusEnum.APPROVE,
+    UpdateEvidenceStatusEnum.REJECT,
+  ],
+  "more information requested": [
+    UpdateEvidenceStatusEnum.APPROVE,
+    UpdateEvidenceStatusEnum.REJECT,
+    // Note: Can't transition to PENDING_REVIEW as it's not in UpdateEvidenceStatusEnum
+  ],
+  approved: [UpdateEvidenceStatusEnum.REJECT],
+  rejected: [
+    UpdateEvidenceStatusEnum.MORE_INFO,
+    // Note: Can't transition to PENDING_REVIEW as it's not in UpdateEvidenceStatusEnum
+  ],
+};
 
 type TParams = {
   milestoneId: string;
@@ -78,9 +99,9 @@ function ViewEvidenceModal({
     resolver: zodResolver(evidence.schema),
   });
 
-  const { file } = form.watch();
-
-  console.log(form.formState.errors);
+  useEffect(() => {
+    form.reset(evidence.defaultValues(evidenceData));
+  }, [evidenceData, form]);
 
   const { data: fileData, isLoading: isFileLoading } = useQuery({
     queryKey: ["file", evidenceData?.file.fileUrl],
@@ -112,7 +133,11 @@ function ViewEvidenceModal({
       value: "evidence",
       label: "Evidence",
       content: (
-        <Evidence file={file} fileData={fileData} loading={isFileLoading} />
+        <Evidence
+          file={evidenceData?.file as File}
+          fileData={fileData}
+          loading={isFileLoading}
+        />
       ),
     },
     {
@@ -167,38 +192,48 @@ function ViewEvidenceModal({
           <Tabs tabs={tabs} />
           {IsAuthorized([Evidences.UPDATE]) && (
             <div className="mt-20 flex gap-10">
-              {evidenceData?.status !== "rejected" && (
-                <Button
-                  onClick={() =>
-                    handleUpdateStatus(UpdateEvidenceStatusEnum.REJECT)
-                  }
-                  className="w-full"
-                  buttonType="secondary"
-                >
-                  Reject
-                </Button>
-              )}
-              {evidenceData?.status !== "more information requested" && (
-                <Button
-                  onClick={() =>
-                    handleUpdateStatus(UpdateEvidenceStatusEnum.MORE_INFO)
-                  }
-                  className="w-full"
-                  buttonType="secondary"
-                >
-                  Request more info
-                </Button>
-              )}
-              {evidenceData?.status !== "approved" && (
-                <Button
-                  onClick={() =>
-                    handleUpdateStatus(UpdateEvidenceStatusEnum.APPROVE)
-                  }
-                  className="w-full"
-                >
-                  Approve
-                </Button>
-              )}
+              {/* Only show buttons for allowable transitions based on current status */}
+              {evidenceData?.status &&
+                allowableTransitions[evidenceData?.status]?.includes(
+                  UpdateEvidenceStatusEnum.REJECT
+                ) && (
+                  <Button
+                    onClick={() =>
+                      handleUpdateStatus(UpdateEvidenceStatusEnum.REJECT)
+                    }
+                    className="w-full"
+                    buttonType="secondary"
+                  >
+                    Reject
+                  </Button>
+                )}
+              {evidenceData?.status &&
+                allowableTransitions[evidenceData?.status]?.includes(
+                  UpdateEvidenceStatusEnum.MORE_INFO
+                ) && (
+                  <Button
+                    onClick={() =>
+                      handleUpdateStatus(UpdateEvidenceStatusEnum.MORE_INFO)
+                    }
+                    className="w-full"
+                    buttonType="secondary"
+                  >
+                    Request more info
+                  </Button>
+                )}
+              {evidenceData?.status &&
+                allowableTransitions[evidenceData?.status]?.includes(
+                  UpdateEvidenceStatusEnum.APPROVE
+                ) && (
+                  <Button
+                    onClick={() =>
+                      handleUpdateStatus(UpdateEvidenceStatusEnum.APPROVE)
+                    }
+                    className="w-full"
+                  >
+                    Approve
+                  </Button>
+                )}
             </div>
           )}
 
