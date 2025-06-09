@@ -5,7 +5,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 
 import useInvoiceList from "lib/common/lists/useInvoiceList";
 import { INVOICE_STATUS } from "lib/constants";
-import { useDebounce, usePage } from "lib/hooks";
+import { useDebounce, usePage, usePageSize } from "lib/hooks";
 import { Invoices, IsAuthorized } from "lib/role-permissions";
 import { SortValues } from "lib/types/common";
 import {
@@ -63,11 +63,14 @@ const InvoicesComp = () => {
     [search]
   );
 
+  const { pageSize, setPageSize } = usePageSize();
+
   const { invoices, isLoading } = useInvoiceList({
     page,
     search: debouncedSearch,
-    key: [page, debouncedSearch, filters],
+    key: [page, debouncedSearch, filters, pageSize],
     filters,
+    pageSize,
   });
 
   return (
@@ -138,7 +141,9 @@ const InvoicesComp = () => {
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}
+              pageSize={pageSize}
               total={invoices?.totalSize as number}
+              onPageSizeChange={setPageSize}
             />
           </div>
         </div>

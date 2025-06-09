@@ -204,7 +204,7 @@ const Pagination = ({
           </div>
         )}
 
-        {onPageSizeChange && (
+        {onPageSizeChange && total > pageSizeOptions[0] && (
           <div className="flex items-center gap-2">
             <label htmlFor="page-size-select" className="!text-xs opacity-60">
               Show:

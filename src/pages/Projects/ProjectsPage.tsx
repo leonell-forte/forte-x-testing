@@ -6,7 +6,7 @@ import { ReactComponent as Add } from "assets/images/icons/add.svg";
 
 import useOrganizationList from "lib/common/lists/useOrganizationList";
 import useProjectList from "lib/common/lists/useProjectList";
-import { usePage, useStatusParams } from "lib/hooks";
+import { usePage, usePageSize, useStatusParams } from "lib/hooks";
 import {
   Funders,
   IsAuthorized,
@@ -32,6 +32,8 @@ type ProjectsPageProps = {
 };
 
 const ProjectsPage = ({ hideHeader = false, funderId }: ProjectsPageProps) => {
+  const { pageSize, setPageSize } = usePageSize();
+
   const { profile } = useProfile();
   const paramStatus = useStatusParams();
 
@@ -53,9 +55,10 @@ const ProjectsPage = ({ hideHeader = false, funderId }: ProjectsPageProps) => {
     handleSearchProject,
     searchProjectValue,
   } = useProjectList({
-    key: [page, filters, funderId || ""],
+    key: [page, filters, funderId || "", pageSize],
     page,
     filter: filters,
+    pageSize,
   });
 
   const [modal, setModal] = useState<"project" | "filter" | null>(null);
@@ -191,6 +194,8 @@ const ProjectsPage = ({ hideHeader = false, funderId }: ProjectsPageProps) => {
                 page={page}
                 onPageChange={(val) => setPage(val)}
                 total={projectsList?.totalSize as number}
+                pageSize={pageSize}
+                onPageSizeChange={setPageSize}
               />
             </div>
           )}

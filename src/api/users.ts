@@ -16,7 +16,8 @@ class UserService {
     search?: string,
     role?: string,
     organization?: string[],
-    sort?: SortType
+    sort?: SortType,
+    pageSize?: number
   ): Promise<{ items: IUser[]; totalSize: number; pageSize: number }> {
     const params = new URLSearchParams();
 
@@ -58,7 +59,7 @@ class UserService {
       },
     };
 
-    params.append("$pageSize", DEFAULT_PAGE_SIZE);
+    params.append("$pageSize", pageSize?.toString() || DEFAULT_PAGE_SIZE);
 
     params.append("$pageNum", page.toString());
 

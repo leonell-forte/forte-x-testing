@@ -41,7 +41,7 @@ const useContractList = ({
         search: debouncedContractSearch,
         listAll,
         filters: filters,
-        pageSize: pageSize || undefined,
+        pageSize
       }),
     refetchOnWindowFocus: false,
     enabled: enabled ? enabled : true,

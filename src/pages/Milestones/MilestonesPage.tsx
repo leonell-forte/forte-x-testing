@@ -4,7 +4,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 
 import useMilestoneList from "lib/common/lists/useMilestoneList";
 import { MILESTONE_STATUS, MILESTONE_TYPES } from "lib/constants";
-import { usePage, useStatusParams } from "lib/hooks";
+import { usePage, usePageSize, useStatusParams } from "lib/hooks";
 import { SortValues } from "lib/types/common";
 import {
   IMilestoneFilters,
@@ -49,17 +49,19 @@ const MilestonesComp = ({
 
   const [filters, setFilters] = useState<IMilestoneFilters>(initialFilter);
 
+  const { pageSize, setPageSize } = usePageSize();
+
   const {
     isLoading,
     rawList: milestones,
     handleSearchMilestone,
     searchMilestoneValue,
   } = useMilestoneList({
-    key: [page, filters],
+    key: [page, filters, pageSize],
     page,
     filter: filters,
     listAll: false,
-    pageSize: 10,
+    pageSize,
   });
 
   return (
@@ -117,7 +119,9 @@ const MilestonesComp = ({
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}
+              pageSize={pageSize}
               total={milestones?.totalSize as number}
+              onPageSizeChange={setPageSize}
             />
           </div>
         )}

@@ -9,6 +9,7 @@ type UseInvoiceList = {
   key?: any[];
   enabled?: boolean;
   filters?: InvoiceFilters;
+  pageSize?: number;
 };
 
 const useInvoiceList = ({
@@ -17,10 +18,11 @@ const useInvoiceList = ({
   key,
   enabled,
   filters,
+  pageSize,
 }: UseInvoiceList) => {
   const { data, isLoading } = useQuery({
     queryKey: ["invoices", key],
-    queryFn: () => invoiceService.list({ search, page: page || 1, filters }),
+    queryFn: () => invoiceService.list({ search, page: page || 1, filters, pageSize }),
     enabled: enabled ? enabled : true,
   });
 

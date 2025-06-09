@@ -7,7 +7,7 @@ import { ReactComponent as Add } from "assets/images/icons/add.svg";
 import useContractList from "lib/common/lists/useContractList";
 import useProjectList from "lib/common/lists/useProjectList";
 import { CONTRACT_STATUS } from "lib/constants";
-import { usePage, useStatusParams } from "lib/hooks";
+import { usePage, usePageSize, useStatusParams } from "lib/hooks";
 import { Contracts, IsAuthorized } from "lib/role-permissions";
 import { SortValues } from "lib/types/common";
 import {
@@ -42,6 +42,8 @@ const ContractsPage = ({
   funderId,
   projectId,
 }: ContractsPageProps) => {
+  const { pageSize, setPageSize } = usePageSize();
+
   const paramStatus = useStatusParams();
 
   const { page, setPage } = usePage();
@@ -73,9 +75,10 @@ const ContractsPage = ({
     handleSearchContract,
     searchContractValue,
   } = useContractList({
-    key: [page, filters],
+    key: [page, filters, pageSize],
     page,
     filters,
+    pageSize,
   });
 
   const [modal, setModal] = useState<"delete" | "filter" | null>(null);
@@ -202,8 +205,9 @@ const ContractsPage = ({
               <Pagination
                 page={page}
                 onPageChange={(val) => setPage(val)}
-                pageSize={contractList?.pageSize}
+                pageSize={pageSize}
                 total={contractList?.totalSize as number}
+                onPageSizeChange={setPageSize}
               />
             </div>
           )}

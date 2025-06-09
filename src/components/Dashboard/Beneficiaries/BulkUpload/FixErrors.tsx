@@ -6,7 +6,7 @@ import * as XLSX from "xlsx";
 
 import { ReactComponent as Exclamation } from "assets/images/icons/exclamation.svg";
 
-import { usePage } from "lib/hooks";
+import { usePage, usePageSize } from "lib/hooks";
 import { formatDate } from "lib/utils";
 import { selectOptions, validateField } from "lib/validators/csv";
 
@@ -29,6 +29,8 @@ interface ValidationError {
 }
 
 const FixErrors = () => {
+  const { pageSize, setPageSize } = usePageSize();
+
   const {
     data,
     setData,
@@ -45,7 +47,6 @@ const FixErrors = () => {
     value: string;
   } | null>(null);
   const { page, setPage } = usePage();
-  const pageSize: number = 10;
 
   const validateData = (csvData: CsvData) => {
     const newErrors: ValidationError[] = [];
@@ -118,7 +119,6 @@ const FixErrors = () => {
     : data.rows.map((row, idx) => ({ row, originalIndex: idx }));
 
   const totalRecords: number = filteredRows.length;
-  const totalPages: number = Math.ceil(totalRecords / pageSize);
   const startIndex: number = (page - 1) * pageSize;
   const endIndex: number = Math.min(startIndex + pageSize, totalRecords);
   const currentData = filteredRows.slice(startIndex, endIndex);
@@ -506,14 +506,14 @@ const FixErrors = () => {
             >
               Back
             </Button>
-            {totalPages > 1 && (
-              <Pagination
-                page={page}
-                onPageChange={(val) => setPage(val)}
-                pageSize={pageSize}
-                total={totalRecords}
-              />
-            )}
+
+            <Pagination
+              page={page}
+              onPageChange={(val) => setPage(val)}
+              pageSize={pageSize}
+              total={totalRecords}
+              onPageSizeChange={setPageSize}
+            />
 
             <Button
               className="w-[147px]"

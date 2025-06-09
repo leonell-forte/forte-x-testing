@@ -8,9 +8,10 @@ type UsePayoutsList = {
   key?: any[];
   enabled?: boolean;
   filters?: any;
+  pageSize?: number;
 };
 
-const usePayoutsList = ({ page, key, enabled, filters }: UsePayoutsList) => {
+const usePayoutsList = ({ page, key, enabled, filters, pageSize }: UsePayoutsList) => {
   const [debouncedPayoutSearch, setPayoutSearch, payoutSearch] =
     useDebouncedSearch("");
   const handleSearchPayout = (value: string) => {
@@ -23,6 +24,7 @@ const usePayoutsList = ({ page, key, enabled, filters }: UsePayoutsList) => {
         search: debouncedPayoutSearch,
         page: page || 1,
         filters,
+        pageSize,
       }),
     enabled: enabled ? enabled : true,
   });

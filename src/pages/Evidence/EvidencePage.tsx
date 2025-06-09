@@ -4,7 +4,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 
 import useEvidenceList from "lib/common/lists/useEvidenceList";
 import { EVIDENCE_STATUS, MILESTONE_TYPES } from "lib/constants";
-import { usePage, useStatusParams } from "lib/hooks";
+import { usePage, usePageSize, useStatusParams } from "lib/hooks";
 import { SortValues } from "lib/types/common";
 import { EvidenceSortLabel, IEvidenceFilters } from "lib/types/evidence";
 import { EvidenceStatus } from "lib/types/milestones";
@@ -19,6 +19,8 @@ import Tile from "components/ui/tile/Tile";
 import ViewEvidence from "./ViewEvidence";
 
 const EvidencesComp = () => {
+  const { pageSize, setPageSize } = usePageSize();
+
   const paramStatus = useStatusParams();
 
   const initialFilter: IEvidenceFilters = {
@@ -38,11 +40,11 @@ const EvidencesComp = () => {
     handleSearchEvidence,
     searchEvidenceValue,
   } = useEvidenceList({
-    key: [page, filters],
+    key: [page, filters, pageSize],
     page,
     filter: filters,
     listAll: false,
-    pageSize: 10,
+    pageSize,
   });
 
   const { rawList: evidencesStats } = useEvidenceList({
@@ -146,7 +148,9 @@ const EvidencesComp = () => {
             <Pagination
               page={page}
               onPageChange={(val) => setPage(val)}
+              pageSize={pageSize}
               total={evidences?.totalSize as number}
+              onPageSizeChange={setPageSize}
             />
           </div>
         )}

@@ -8,10 +8,11 @@ type ListParams = {
   page: number;
   search?: string;
   filters?: any;
+  pageSize?: number;
 };
 
 class PayoutsService {
-  async list({ page, search, filters }: ListParams): Promise<{
+  async list({ page, search, filters, pageSize }: ListParams): Promise<{
     items: Payout[];
     totalSize: number;
     pageSize: number;
@@ -20,7 +21,7 @@ class PayoutsService {
 
     params.append("$pageNum", page.toString());
 
-    params.append("$pageSize", DEFAULT_PAGE_SIZE);
+    params.append("$pageSize", pageSize?.toString() || DEFAULT_PAGE_SIZE);
 
     params.append(
       "$orderBy",

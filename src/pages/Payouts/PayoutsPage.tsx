@@ -13,7 +13,7 @@ import { TbFilterX as FilterIcon } from "react-icons/tb";
 import useOrganizationList from "lib/common/lists/useOrganizationList";
 import usePayoutsList from "lib/common/lists/usePayoutsList";
 import { PAYOUT_STATUS } from "lib/constants";
-import { usePage } from "lib/hooks";
+import { usePage, usePageSize } from "lib/hooks";
 import {
   Funders,
   IsAuthorized,
@@ -37,6 +37,8 @@ import SearchInput from "components/ui/search-input";
 type ModalLabelTypes = "filter" | "generate" | "";
 
 const PayoutsPage = () => {
+  const { pageSize, setPageSize } = usePageSize();
+
   const { profile, isForteUser } = useProfile();
 
   const { data: userData } = useQuery({
@@ -76,9 +78,10 @@ const PayoutsPage = () => {
     searchPayoutValue,
     handleSearchPayout,
   } = usePayoutsList({
-    key: [page, filters],
+    key: [page, filters, pageSize],
     page,
     filters,
+    pageSize,
   });
 
   const providerId = userData?.organization || "";
@@ -198,6 +201,8 @@ const PayoutsPage = () => {
                     page={page}
                     onPageChange={(val) => setPage(val)}
                     total={payouts.totalSize as number}
+                    pageSize={pageSize}
+                    onPageSizeChange={setPageSize}
                   />
                 </div>
               )}

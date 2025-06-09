@@ -2,7 +2,7 @@ import { useState } from "react";
 import { BiSlider as SliderIcon } from "react-icons/bi";
 
 import useContractList from "lib/common/lists/useContractList";
-import { usePage } from "lib/hooks";
+import { usePage, usePageSize } from "lib/hooks";
 import { SortValues } from "lib/types/common";
 import { ContractSortLabel, IContractFilters } from "lib/types/contracts";
 
@@ -29,6 +29,7 @@ interface IProps {
 
 const Contracts = ({ projectId, providerId, funderId }: IProps) => {
   const { page, setPage } = usePage();
+  const { pageSize, setPageSize } = usePageSize();
 
   const initialFilter: IContractFilters = {
     status: "",
@@ -54,10 +55,13 @@ const Contracts = ({ projectId, providerId, funderId }: IProps) => {
     handleSearchContract,
     searchContractValue,
   } = useContractList({
-    key: [page, filters],
+    key: [page, filters, pageSize],
     page,
     filters,
+    pageSize,
   });
+
+  console.log(contractList);
 
   const [selectedContract, setSelectedContract] = useState("");
 
@@ -167,8 +171,9 @@ const Contracts = ({ projectId, providerId, funderId }: IProps) => {
               <Pagination
                 page={page}
                 onPageChange={(val) => setPage(val)}
-                pageSize={contractList?.pageSize}
+                pageSize={pageSize}
                 total={contractList?.totalSize as number}
+                onPageSizeChange={setPageSize}
               />
             </div>
           )}

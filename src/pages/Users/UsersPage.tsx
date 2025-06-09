@@ -13,7 +13,7 @@ import { TbFilterX as FilterIcon } from "react-icons/tb";
 
 import useOrganizationList from "lib/common/lists/useOrganizationList";
 import { ROLES } from "lib/constants";
-import { useDebounce, usePage } from "lib/hooks";
+import { useDebounce, usePage, usePageSize } from "lib/hooks";
 import { IsAuthorized, Users } from "lib/role-permissions";
 import { SortValues } from "lib/types/common";
 import { IUser, SortType, UserSortLabel } from "lib/types/users";
@@ -28,6 +28,8 @@ import Pagination from "components/ui/pagination";
 import SearchInput from "components/ui/search-input";
 
 const UsersPage = () => {
+  const { pageSize, setPageSize } = usePageSize();
+
   const { page, setPage } = usePage();
 
   const [search, setSearch] = useState("");
@@ -52,10 +54,25 @@ const UsersPage = () => {
   );
 
   const { data: userList, isLoading: userLoading } = useQuery({
-    queryKey: ["users", page, debouncedSearch, role, organization, sort],
+    queryKey: [
+      "users",
+      page,
+      debouncedSearch,
+      role,
+      organization,
+      sort,
+      pageSize,
+    ],
 
     queryFn: () =>
-      userService.list(page, debouncedSearch, role, organization, sort),
+      userService.list(
+        page,
+        debouncedSearch,
+        role,
+        organization,
+        sort,
+        pageSize
+      ),
   });
 
   const [modal, setModal] = useState<"user" | "filter" | null>(null);
@@ -203,6 +220,8 @@ const UsersPage = () => {
                 page={page}
                 onPageChange={(val) => setPage(val)}
                 total={userList?.totalSize as number}
+                pageSize={pageSize}
+                onPageSizeChange={setPageSize}
               />
             </div>
           )}

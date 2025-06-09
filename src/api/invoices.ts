@@ -8,10 +8,11 @@ type ListParams = {
   page: number;
   search?: string;
   filters?: InvoiceFilters;
+  pageSize?: number;
 };
 
 export class InvoiceService {
-  async list({ page, search, filters }: ListParams): Promise<{
+  async list({ page, search, filters, pageSize }: ListParams): Promise<{
     items: Invoice[];
     totalSize: number;
     pageSize: number;
@@ -20,7 +21,7 @@ export class InvoiceService {
 
     params.append("$pageNum", page.toString());
 
-    params.append("$pageSize", DEFAULT_PAGE_SIZE);
+    params.append("$pageSize", pageSize?.toString() || DEFAULT_PAGE_SIZE);
 
     params.append(
       "$orderBy",

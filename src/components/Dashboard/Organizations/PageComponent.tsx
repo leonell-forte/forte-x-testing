@@ -11,7 +11,7 @@ import { TbFilterX as FilterIcon } from "react-icons/tb";
 
 import useOrganizationList from "lib/common/lists/useOrganizationList";
 import { REGIONS, STATUS } from "lib/constants";
-import { usePage } from "lib/hooks";
+import { usePage, usePageSize } from "lib/hooks";
 import { Funders, IsAuthorized, Providers } from "lib/role-permissions";
 import { SortValues } from "lib/types/common";
 import { IFilters, OrgTypes } from "lib/types/organizations";
@@ -35,6 +35,8 @@ const PageComponent = ({
   initialFilters,
   hideHeader = false,
 }: PageComponentProps) => {
+  const { pageSize, setPageSize } = usePageSize();
+
   const [modal, setModal] = useState<"org" | "filter" | null>(null);
 
   const { page, setPage } = usePage();
@@ -47,9 +49,10 @@ const PageComponent = ({
     handleSearchOrg,
     searchOrgValue,
   } = useOrganizationList({
-    key: [page, filters],
+    key: [page, filters, pageSize],
     page,
     filters,
+    pageSize,
   });
 
   const close = () => {
@@ -161,6 +164,8 @@ const PageComponent = ({
               <Pagination
                 page={page}
                 onPageChange={(val) => setPage(val)}
+                pageSize={pageSize}
+                onPageSizeChange={setPageSize}
                 total={organizationList?.totalSize as number}
               />
             </div>

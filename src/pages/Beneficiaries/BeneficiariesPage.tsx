@@ -75,9 +75,7 @@ const BeneficiariesComp = ({
   providerId,
   funderId,
 }: BeneficiariesProps) => {
-  const { pageSize, setPageSize } = usePageSize({
-    defaultPageSize: 10,
-  });
+  const { pageSize, setPageSize } = usePageSize();
   const paramStatus = useStatusParams();
   const [search, setSearch] = useState("");
 
