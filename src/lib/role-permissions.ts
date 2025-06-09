@@ -169,6 +169,7 @@ const ROLES: Record<UserRoleType, Array<PermissionEnums>> = {
     Invoices.LIST,
     Invoices.NAVIGATE,
     Payouts.NAVIGATE,
+    Evidences.NAVIGATE,
     ...Object.values(Dashboard),
   ],
 

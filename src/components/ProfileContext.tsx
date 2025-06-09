@@ -34,6 +34,7 @@ interface IProfileContext {
   isProviderUser: boolean;
   isFunderUser: boolean;
   isForteUser: boolean;
+  isReadonly: boolean;
 }
 
 const ProfileContext = createContext<IProfileContext | undefined>(undefined);
@@ -85,6 +86,7 @@ function ProfileProvider({ children }: { children: ReactNode }) {
         isForteUser,
         isFunderUser,
         isProviderUser,
+        isReadonly: !!profile?.role?.includes("read-only"),
       }}
     >
       {children}

@@ -43,7 +43,7 @@ interface IProps {
 const MainEvidencesTable = ({ list, isLoading, handleSort }: IProps) => {
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
-  const { isProviderUser } = useProfile();
+  const { isProviderUser, isReadonly } = useProfile();
 
   const { open } = useCustomPrompt();
   const { deleteEvidence } = useDeleteEvidence();
@@ -188,11 +188,16 @@ const MainEvidencesTable = ({ list, isLoading, handleSort }: IProps) => {
                 key={index}
                 onClick={(e) => {
                   e.stopPropagation();
-                  console.log("details fn here");
+                  showViewEvidenceModal({
+                    milestoneId: milestoneId!,
+                    evidenceId: id,
+                    beneficiaryId: beneficiary.id,
+                    status,
+                  });
                 }}
               >
                 <div className="absolute right-5 top-4 flex items-center">
-                  {dropDownComponent(item)}
+                  {!isReadonly && dropDownComponent(item)}
                 </div>
                 <div className="space-y-2">
                   <p className="flex items-center gap-2 font-semibold">
@@ -394,7 +399,11 @@ const MainEvidencesTable = ({ list, isLoading, handleSort }: IProps) => {
                     <Status variant={getStatusVariant(status)}>{status}</Status>
                   </Table.Data>
 
-                  <Table.Data>{dropDownComponent(item)}</Table.Data>
+                  {
+                    <Table.Data>
+                      {!isReadonly && dropDownComponent(item)}
+                    </Table.Data>
+                  }
                 </Table.Row>
               );
             })}
