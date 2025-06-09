@@ -12,7 +12,7 @@ export const evidence = {
     let data: EvidenceFieldValues = {
       beneficiaryId: String(evidence?.beneficiaryId) || "",
 
-      description: evidence?.description || "",
+      description: evidence?.description || "description",
 
       status: evidence?.status || "pending review",
 
@@ -34,7 +34,7 @@ export const evidence = {
   schema: z.object({
     id: z.number().optional(),
 
-    description: z.string().min(1, "Description is a required field"),
+    description: z.string().optional(),
 
     status: z.string().min(1, "Status is a required field"),
 

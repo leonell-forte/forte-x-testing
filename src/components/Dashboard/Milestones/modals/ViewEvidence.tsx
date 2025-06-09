@@ -80,12 +80,14 @@ function ViewEvidenceModal({
 
   const { file } = form.watch();
 
+  console.log(form.formState.errors);
+
   const { data: fileData, isLoading: isFileLoading } = useQuery({
-    queryKey: ["file", file.fileUrl],
+    queryKey: ["file", evidenceData?.file.fileUrl],
 
-    queryFn: () => evidenceService.getFile(file.fileUrl || ""),
+    queryFn: () => evidenceService.getFile(evidenceData?.file.fileUrl || ""),
 
-    enabled: Boolean(file.fileUrl),
+    enabled: Boolean(evidenceData?.file.fileUrl),
 
     refetchOnWindowFocus: false,
   });

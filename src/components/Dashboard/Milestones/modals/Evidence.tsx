@@ -28,6 +28,7 @@ const Evidence = ({
   const handleZoomOut = () => {
     setZoomLevel((prevZoom) => Math.max(prevZoom - 0.25, 0.5));
   };
+
   return (
     <>
       {!loading && fileData ? (
