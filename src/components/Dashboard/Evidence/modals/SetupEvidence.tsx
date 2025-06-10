@@ -132,7 +132,7 @@ function SetupEvidenceModal({
           ...res,
           beneficiary: {
             ...(res.beneficiary || {}),
-            id: Number(beneficiaryId) || Number(milestone!.reference.id),
+            id: Number(beneficiaryId) || Number(milestone!.reference?.id),
           },
         },
       });
@@ -144,7 +144,7 @@ function SetupEvidenceModal({
       ...values,
       beneficiaryId: isThreshold
         ? values.beneficiaryId
-        : milestone!.reference.id!,
+        : milestone!.reference?.id || "",
     };
     if (
       evidenceData &&

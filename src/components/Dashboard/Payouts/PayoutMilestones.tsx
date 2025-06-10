@@ -36,7 +36,7 @@ const PayoutMilestones = ({
                 <Table.Data>{milestone.id}</Table.Data>
                 <Table.Data>{milestone.outcome.name}</Table.Data>
                 <Table.Data>{milestone.type}</Table.Data>
-                <Table.Data>{milestone.reference.name}</Table.Data>
+                <Table.Data>{milestone.reference?.name}</Table.Data>
                 <Table.Data>{milestone.outcome.name}</Table.Data>
                 <Table.Data>
                   {formatCurrency(Number(milestone.cost))}

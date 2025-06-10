@@ -46,7 +46,7 @@ export interface IMilestone {
   paidAt: string;
   achievedAt: string;
   provider: Sub;
-  reference: Sub;
+  reference: Sub | null;
   status: MilestoneStatus;
   type: keyof typeof MILESTONE_TYPES;
   updatedAt: string;

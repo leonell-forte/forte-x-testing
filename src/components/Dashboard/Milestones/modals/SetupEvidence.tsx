@@ -140,7 +140,7 @@ function SetupEvidenceModal({
       ...values,
       beneficiaryId: isThreshold
         ? values.beneficiaryId
-        : milestone!.reference.id!,
+        : milestone?.reference?.id || "",
     };
     if (
       evidenceData &&

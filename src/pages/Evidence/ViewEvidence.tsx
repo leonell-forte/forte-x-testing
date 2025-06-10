@@ -154,13 +154,13 @@ export default function ViewMilestone() {
                 onClick={() =>
                   navigate(
                     isThreshold
-                      ? `/contracts/${milestone.reference.id}`
-                      : `/beneficiaries/${milestone.reference.id}`
+                      ? `/contracts/${milestone.reference?.id}`
+                      : `/beneficiaries/${milestone.reference?.id}`
                   )
                 }
                 className="group flex items-center gap-x-2 transition hover:text-mint"
               >
-                {milestone.reference.name}
+                {milestone.reference?.name}
                 <Share className="fill-mint" />
               </button>
             </InfoVertical>

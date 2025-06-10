@@ -72,7 +72,7 @@ const MilestonesTable = ({
                       e.stopPropagation();
                       showSetupEvidenceModal({
                         milestone: item,
-                        beneficiaryIdParam: item.reference.id,
+                        beneficiaryIdParam: item.reference?.id,
                       });
                     }}
                   >
@@ -156,7 +156,7 @@ const MilestonesTable = ({
                         onClick={() => {
                           showSetupEvidenceModal({
                             milestone: item,
-                            beneficiaryIdParam: item.reference.id,
+                            beneficiaryIdParam: item.reference?.id,
                           });
                         }}
                       >
