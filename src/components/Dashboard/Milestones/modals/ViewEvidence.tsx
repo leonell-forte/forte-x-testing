@@ -190,104 +190,108 @@ function ViewEvidenceModal({
       ) : (
         <div>
           <Tabs tabs={tabs} />
-          {IsAuthorized([Evidences.UPDATE]) && (
-            <div className="mt-20 flex gap-10">
-              {/* Only show buttons for allowable transitions based on current status */}
-              {evidenceData?.status &&
-                allowableTransitions[evidenceData?.status]?.includes(
-                  UpdateEvidenceStatusEnum.REJECT
-                ) && (
-                  <Button
-                    onClick={() =>
-                      handleUpdateStatus(UpdateEvidenceStatusEnum.REJECT)
-                    }
-                    className="w-full"
-                    buttonType="secondary"
-                  >
-                    Reject
-                  </Button>
-                )}
-              {evidenceData?.status &&
-                allowableTransitions[evidenceData?.status]?.includes(
-                  UpdateEvidenceStatusEnum.MORE_INFO
-                ) && (
-                  <Button
-                    onClick={() =>
-                      handleUpdateStatus(UpdateEvidenceStatusEnum.MORE_INFO)
-                    }
-                    className="w-full"
-                    buttonType="secondary"
-                  >
-                    Request more info
-                  </Button>
-                )}
-              {evidenceData?.status &&
-                allowableTransitions[evidenceData?.status]?.includes(
-                  UpdateEvidenceStatusEnum.APPROVE
-                ) && (
-                  <Button
-                    onClick={() =>
-                      handleUpdateStatus(UpdateEvidenceStatusEnum.APPROVE)
-                    }
-                    className="w-full"
-                  >
-                    Approve
-                  </Button>
-                )}
-            </div>
-          )}
 
-          {evidenceData?.status !== "approved" &&
-            IsAuthorized([Evidences.REPLACE]) && (
-              <div className="space-y-4">
-                {commentsLoading ? (
-                  <Skeleton height={200} />
-                ) : (
-                  <div>
-                    <label
-                      className={
-                        "min-w-[140px] !text-[12px] font-light text-white/80"
-                      }
-                    >
-                      Comment
-                    </label>
-                    <Input
-                      textarea
-                      disabled
-                      value={commentList?.items?.slice(-1)?.[0]?.message}
-                      rows={4}
-                      className="resize-none"
+          {evidenceData?.status !== "approved" && (
+            <>
+              {IsAuthorized([Evidences.UPDATE]) && (
+                <div className="mt-20 flex gap-10">
+                  {/* Only show buttons for allowable transitions based on current status */}
+                  {evidenceData?.status &&
+                    allowableTransitions[evidenceData?.status]?.includes(
+                      UpdateEvidenceStatusEnum.REJECT
+                    ) && (
+                      <Button
+                        onClick={() =>
+                          handleUpdateStatus(UpdateEvidenceStatusEnum.REJECT)
+                        }
+                        className="w-full"
+                        buttonType="secondary"
+                      >
+                        Reject
+                      </Button>
+                    )}
+                  {evidenceData?.status &&
+                    allowableTransitions[evidenceData?.status]?.includes(
+                      UpdateEvidenceStatusEnum.MORE_INFO
+                    ) && (
+                      <Button
+                        onClick={() =>
+                          handleUpdateStatus(UpdateEvidenceStatusEnum.MORE_INFO)
+                        }
+                        className="w-full"
+                        buttonType="secondary"
+                      >
+                        Request more info
+                      </Button>
+                    )}
+                  {evidenceData?.status &&
+                    allowableTransitions[evidenceData?.status]?.includes(
+                      UpdateEvidenceStatusEnum.APPROVE
+                    ) && (
+                      <Button
+                        onClick={() =>
+                          handleUpdateStatus(UpdateEvidenceStatusEnum.APPROVE)
+                        }
+                        className="w-full"
+                      >
+                        Approve
+                      </Button>
+                    )}
+                </div>
+              )}
+
+              {IsAuthorized([Evidences.REPLACE]) && (
+                <div className="space-y-4">
+                  {commentsLoading ? (
+                    <Skeleton height={200} />
+                  ) : (
+                    <div>
+                      <label
+                        className={
+                          "min-w-[140px] !text-[12px] font-light text-white/80"
+                        }
+                      >
+                        Comment
+                      </label>
+                      <Input
+                        textarea
+                        disabled
+                        value={commentList?.items?.slice(-1)?.[0]?.message}
+                        rows={4}
+                        className="resize-none"
+                      />
+                    </div>
+                  )}
+                  <Form form={form} onSubmit={onReplaceFile}>
+                    <CustomController
+                      label="Upload replacement evidence file"
+                      control={form.control}
+                      name="file"
+                      render={() => {
+                        return (
+                          <FileInput
+                            accept=".pdf"
+                            onSuccess={(data) => {
+                              form.setValue("file", data);
+                              form.setError("file", { message: "" });
+                            }}
+                            placeholder="Document"
+                            error={!!form.formState.errors.file?.message}
+                            helperText={form.formState.errors.file?.message}
+                          />
+                        );
+                      }}
                     />
-                  </div>
-                )}
-                <Form form={form} onSubmit={onReplaceFile}>
-                  <CustomController
-                    label="Upload replacement evidence file"
-                    control={form.control}
-                    name="file"
-                    render={() => {
-                      return (
-                        <FileInput
-                          accept=".pdf"
-                          onSuccess={(data) => {
-                            form.setValue("file", data);
-                            form.setError("file", { message: "" });
-                          }}
-                          placeholder="Document"
-                          error={!!form.formState.errors.file?.message}
-                          helperText={form.formState.errors.file?.message}
-                        />
-                      );
-                    }}
-                  />
-                  <div className="mt-12 flex justify-end">
-                    <Button type="submit" loading={isPending}>
-                      Replace evidence
-                    </Button>
-                  </div>
-                </Form>
-              </div>
-            )}
+                    <div className="mt-12 flex justify-end">
+                      <Button type="submit" loading={isPending}>
+                        Replace evidence
+                      </Button>
+                    </div>
+                  </Form>
+                </div>
+              )}
+            </>
+          )}
         </div>
       )}
     </div>
