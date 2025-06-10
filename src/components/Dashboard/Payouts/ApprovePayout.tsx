@@ -3,7 +3,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAlert } from "lib/hooks";
+import { Payout } from "lib/types/payouts";
 
+import { queryClient } from "components/QueryProvider";
 import Button from "components/ui/button";
 import Checkbox from "components/ui/checkbox";
 import Dialogue from "components/ui/dialogue/dialogue";
@@ -39,6 +41,12 @@ const ApprovePayout = ({ id }: ApprovePayoutProps) => {
           </ToastAction>
         ),
       });
+
+      queryClient.setQueryData(["payout", id], (prev: Payout) => ({
+        ...prev,
+        status: "paid",
+      }));
+
       setShowModal(false);
     } catch (err: any) {
       setAlert({
