@@ -230,7 +230,6 @@ const ContractOutcomeField = ({
       {/* DATE START  */}
       <Controller
         label="Due date"
-        required
         name={`outcomeRates.${index}.dateType`}
         control={control}
         containerClassName="w-full"
@@ -250,7 +249,6 @@ const ContractOutcomeField = ({
       <div className="grid grid-cols-2">
         {dateType === "date" ? (
           <Controller
-            required
             label="Date"
             name={`outcomeRates.${index}.date`}
             control={control}
@@ -265,11 +263,10 @@ const ContractOutcomeField = ({
               );
             }}
           />
-        ) : (
+        ) : dateType === "afterStart" || dateType === "afterEnd" ? (
           <Controller
             label={`# of days after ${dateType === "afterStart" ? "Start" : "End"} date`}
             name={`outcomeRates.${index}.date`}
-            required
             control={control}
             render={({ field }) => (
               <Input
@@ -281,8 +278,7 @@ const ContractOutcomeField = ({
               />
             )}
           />
-        )}
-        <div />
+        ) : null}
       </div>
       {/* DATE END  */}
 

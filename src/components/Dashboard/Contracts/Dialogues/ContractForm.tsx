@@ -180,16 +180,20 @@ const ContractForm = ({
   const onSubmit = async (values: ContractFieldValues) => {
     const { outcomeRates } = values;
     const temp = outcomeRates.map((item) => {
-      const key = get(payloadKeys, item.dateType, "");
+      const key = get(payloadKeys, item.dateType || "", "");
       return omit(
         {
           ...item,
-          [key]: item.dateType === "date" ? item.date : Number(item.date),
+          ...(key && Boolean(item.date)
+            ? {
+                [key]: item.dateType === "date" ? item.date : Number(item.date),
+              }
+            : {}),
         },
         ["date", "dateType"]
       );
     });
-    const payload = omit({ ...values, outcomeRates: temp });
+    const payload = { ...values, outcomeRates: temp };
     if (contractDetails) {
       open({
         title: "Confirm email with changes",
