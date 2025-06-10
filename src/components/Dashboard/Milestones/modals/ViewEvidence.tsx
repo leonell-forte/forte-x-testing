@@ -272,7 +272,9 @@ function ViewEvidenceModal({
                           <FileInput
                             accept=".pdf"
                             onSuccess={(data) => {
-                              form.setValue("file", data);
+                              form.setValue("file", data, {
+                                shouldDirty: true,
+                              });
                               form.setError("file", { message: "" });
                             }}
                             placeholder="Document"
@@ -283,7 +285,11 @@ function ViewEvidenceModal({
                       }}
                     />
                     <div className="mt-12 flex justify-end">
-                      <Button type="submit" loading={isPending}>
+                      <Button
+                        disabled={!form.formState.isDirty}
+                        type="submit"
+                        loading={isPending}
+                      >
                         Replace evidence
                       </Button>
                     </div>
