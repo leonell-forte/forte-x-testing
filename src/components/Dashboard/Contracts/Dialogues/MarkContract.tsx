@@ -1,7 +1,10 @@
+import { omit } from "lodash";
 import { useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import { useUpdateContractStatusMutation } from "lib/mutations/contracts";
+import useContractMutation, {
+  useUpdateContractStatusMutation,
+} from "lib/mutations/contracts";
 import {
   ContractFieldValues,
   IContract,
@@ -26,6 +29,11 @@ const MarkAsCompleted = ({
   handleBack,
   handleClose,
 }: IMarkContract) => {
+  const { addContract: updateFile, isPending: updateFilePending } =
+    useContractMutation({
+      id: contractDetails?.id,
+    });
+
   const {
     handleSubmit,
 
@@ -92,6 +100,27 @@ const MarkAsCompleted = ({
   }, [contractDetails.status]);
 
   const onSubmit = async () => {
+    if (isDraft) {
+      await updateFile({
+        documentId: watch("documentId"),
+        outcomeRates: contractDetails.outcomes
+          .map((item) => omit(item, ["outcome", "currency"]))
+          .map((item) => ({
+            ...item,
+            id: String(item.id),
+          })) as ContractFieldValues["outcomeRates"],
+        id: contractDetails.id,
+        name: contractDetails.name,
+        providerId: contractDetails.provider.id,
+        projectId: contractDetails.projectId,
+        startDate: contractDetails.startDate,
+        endDate: contractDetails.endDate,
+        targetNoOfBenefeciaries: String(
+          contractDetails.targetNoOfBenefeciaries
+        ),
+        status: contractDetails.status.toLowerCase() as StatusType,
+      });
+    }
     await updateContract(isDraft || isCompleted ? "signed" : "completed");
   };
 
@@ -139,7 +168,7 @@ const MarkAsCompleted = ({
         <Button
           type="submit"
           disabled={!watch("documentId")}
-          loading={isPending}
+          loading={isPending || updateFilePending}
         >
           Submit
         </Button>
