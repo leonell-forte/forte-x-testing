@@ -103,12 +103,9 @@ const MarkAsCompleted = ({
     if (isDraft) {
       await updateFile({
         documentId: watch("documentId"),
-        outcomeRates: contractDetails.outcomes
-          .map((item) => omit(item, ["outcome", "currency"]))
-          .map((item) => ({
-            ...item,
-            id: String(item.id),
-          })) as ContractFieldValues["outcomeRates"],
+        outcomeRates: contractDetails.outcomes.map((item) =>
+          omit(item, ["outcome", "currency", "id"])
+        ) as ContractFieldValues["outcomeRates"],
         id: contractDetails.id,
         name: contractDetails.name,
         providerId: contractDetails.provider.id,

@@ -10,12 +10,12 @@ const getDateData = (outcome: any) => {
   if (outcome.daysAfterBeneficiaryStartDate)
     return {
       dateType: "afterStart",
-      date: outcome.daysAfterBeneficiaryStartDate || "",
+      date: String(outcome.daysAfterBeneficiaryStartDate) || "",
     };
   if (outcome.daysAfterBeneficiaryEndDate)
     return {
       dateType: "afterEnd",
-      date: outcome.daysAfterBeneficiaryEndDate || "",
+      date: String(outcome.daysAfterBeneficiaryEndDate) || "",
     };
   return {
     dateType: "date",
@@ -89,6 +89,8 @@ export const contracts = {
             perOutcome: item.perOutcome,
 
             threshold: item.threshold.toString(),
+
+
 
             ...getDateData(item),
           }))

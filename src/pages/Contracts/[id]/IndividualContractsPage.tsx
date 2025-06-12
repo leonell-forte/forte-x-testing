@@ -184,7 +184,7 @@ const IndividualContractsPage = () => {
                       buttonType="secondary"
                       onClick={() => setModal("mark")}
                     >
-                      <Check fill="white" width={17.59} />
+                      <Check width={17.59} />
                       {statusActions?.label}
                     </Button>
                   )}
