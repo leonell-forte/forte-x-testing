@@ -9,6 +9,7 @@ import {
   ProjectSortLabel,
 } from "../lib/types/projects";
 import { IODataObject, generateODataQuery } from "../lib/utils";
+import { pickBy } from "lodash";
 
 interface IProjectListProp {
   page?: number;
@@ -83,7 +84,7 @@ class ProjectsService {
   }
 
   async add(project: ProjectFieldValues) {
-    const res = await api.post("/projects", project);
+    const res = await api.post("/projects", pickBy(project, (value) => value));
 
     return res;
   }
@@ -103,6 +104,7 @@ class ProjectsService {
   async update(project: ProjectFieldValues) {
     const data = {
       ...project,
+      budget: project.budget ? Number(project.budget) : 0,
 
       outcomes: [
         ...project.outcomes.map((item) => ({

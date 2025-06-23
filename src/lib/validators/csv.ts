@@ -4,7 +4,7 @@ import { isPhoneValid } from "lib/isPhoneValid";
 
 export const selectOptions: { [key: string]: string[] } = {
   "disability status": ["Yes", "No"],
-  gender: ["Male", "Female", "Non-binary", "Other"],
+  gender: ["Male", "Female", "Other", "Prefer not to say"],
   "highest education level": [
     "Less than High School",
     "High School Graduate",
@@ -66,7 +66,7 @@ export const validateField = (
   if (columnName === "gender") {
     const allowedGenders = selectOptions.gender;
     if (!allowedGenders.includes(value) && value.toLowerCase() !== "") {
-      return "Gender must be one of: Male, Female, Non-binary, Other.";
+      return "Gender must be one of: Male, Female, Other, Prefer not to say.";
     }
   }
 

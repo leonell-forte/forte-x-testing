@@ -35,7 +35,7 @@ const SignupPage = () => {
       <Card className="mx-auto flex h-full w-full items-center px-4 py-8 md:px-10 lg:w-full lg:max-w-[580px]">
         <div className="mx-auto w-full max-w-[350px] space-y-5 md:max-w-[450px]">
           <img
-            alt="logo"
+            alt="Forte logo"
             src="/logo.png"
             className="mx-auto h-auto w-auto max-w-[122px]"
           />

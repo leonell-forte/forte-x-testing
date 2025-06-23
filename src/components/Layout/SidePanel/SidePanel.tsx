@@ -60,7 +60,7 @@ const SidePanel = () => {
       <div className="flex h-full flex-col justify-between">
         <div className="space-y-6 lg:space-y-0">
           <img
-            alt="logo"
+            alt="Forte logo"
             src="/logo.png"
             className="mt-2 block max-w-[100px] px-2.5 lg:hidden"
           />

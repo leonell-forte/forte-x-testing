@@ -268,7 +268,6 @@ const ProjectDialogue = ({
                     <Controller
                       label="Budget"
                       containerClassName="max-w-[182.5px]"
-                      required
                       name="budget"
                       control={control}
                       render={({ field }) => {

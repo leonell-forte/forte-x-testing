@@ -52,10 +52,10 @@ class UserService {
         exact: false,
       },
 
-      '"organization"."id"': {
+      "organization.id": {
         value: organization!,
 
-        exact: false,
+        exact: true,
       },
     };
 

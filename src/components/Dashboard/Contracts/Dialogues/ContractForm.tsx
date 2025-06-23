@@ -647,6 +647,7 @@ const ContractForm = ({
                               : undefined
                           }
                           loading={isPending}
+                          disabled={!isDirty}
                           className="w-[147px]"
                         >
                           {contractDetails ? "Update" : "Add"}
