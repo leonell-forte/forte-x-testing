@@ -1,0 +1,113 @@
+"use client";
+
+import classNames from "classnames";
+import { motion } from "framer-motion";
+import { useCallback, useEffect, useMemo } from "react";
+import { RxHamburgerMenu as Burger } from "react-icons/rx";
+import { Link, useLocation } from "react-router-dom";
+
+import { MENUS } from "@/lib/constants";
+import { useAppDispatch, useAppSelector, useScreenSize } from "@/lib/hooks";
+import { IsAuthorized } from "@/lib/role-permissions";
+import { setShowSidePanel } from "@/lib/slice/layout";
+import { cn } from "@/lib/utils";
+
+import MobileUserDropdown from "../Header/MobileUserDropdown";
+
+const SidePanel = () => {
+  const location = useLocation();
+  const dispatch = useAppDispatch();
+
+  const { isMobile, isTablet } = useScreenSize();
+
+  const { showSidePanel } = useAppSelector((state) => state.layout);
+
+  const { pathname } = useLocation();
+
+  const handleClose = useCallback(
+    () => dispatch(setShowSidePanel(false)),
+    [dispatch]
+  );
+
+  const variants = {
+    true: { left: 0 },
+
+    false: { left: !isMobile && !isTablet ? 0 : "-100%" },
+  };
+
+  const filteredMenu = useMemo(
+    () => MENUS.filter((item) => IsAuthorized(item.permissions)),
+    []
+  );
+
+  useEffect(() => {
+    handleClose();
+  }, [location.pathname, handleClose]);
+
+  return (
+    <motion.div
+      initial={variants[showSidePanel.toString() as "true" | "false"]}
+      animate={variants[showSidePanel.toString() as "true" | "false"]}
+      transition={{ type: "spring", duration: 0.7, bounce: 0 }}
+      className="lg:max-h-auto bg-panel fixed left-0 top-0 z-20 h-full w-[260px] flex-shrink-0 rounded-[16px] border-transparent px-8 py-6 backdrop-blur-md backdrop-brightness-[60%] lg:relative lg:h-auto lg:w-[206px] lg:backdrop-blur-0 lg:backdrop-brightness-100"
+    >
+      <button
+        onClick={handleClose}
+        className="absolute right-4 top-4 block lg:hidden"
+      >
+        <Burger className="h-auto w-4" />
+      </button>
+      <div className="flex h-full flex-col justify-between">
+        <div className="space-y-6 lg:space-y-0">
+          <img
+            alt="Forte logo"
+            src="/logo.png"
+            className="mt-2 block max-w-[100px] px-2.5 lg:hidden"
+          />
+          <ul className="flex flex-col gap-6">
+            {filteredMenu.map((item, index) => {
+              const { name, link, icon: Icon } = item;
+
+              const active = pathname.includes(link);
+
+              return (
+                <Link key={index} to={link}>
+                  <li
+                    className={classNames(
+                      "group flex items-center gap-3 text-lg capitalize transition-all lg:text-base"
+                    )}
+                  >
+                    <div className="flex flex-shrink-0 items-center justify-center">
+                      <Icon
+                        className={cn(
+                          active
+                            ? "fill-mint stroke-mint"
+                            : "group-hover:fill-mint/70 group-hover:stroke-mint/70 fill-white stroke-white",
+                          "h-6 w-6 transition"
+                        )}
+                      />
+                    </div>
+                    <span
+                      className={cn(
+                        "font-light transition",
+                        active ? "text-mint" : "group-hover:text-mint/70"
+                      )}
+                    >
+                      {name}
+                    </span>
+                  </li>
+                </Link>
+              );
+            })}
+          </ul>
+        </div>
+
+        <div className="mb-2 block w-full md:hidden">
+          <MobileUserDropdown />
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+export default SidePanel;

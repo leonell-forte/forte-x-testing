@@ -1,0 +1,124 @@
+import { z } from "zod";
+
+import type { contracts } from "@/lib/validators/contracts";
+
+import type { File, SortValues } from "./common";
+
+export type StatusType = "draft" | "signed" | "completed" | "cancelled" | "";
+
+export type StatusRecords = Exclude<StatusType, "cancelled" | "">;
+
+export type RateEnum = "Per outcome" | "If threshold reached";
+
+export interface IContractParties {
+  organizationId: number;
+}
+
+export interface IContractOutcomeRates {
+  id: number;
+
+  projectOutcomeId: number;
+
+  rate: string | number;
+
+  perOutcome: boolean;
+
+  threshold: string | number;
+
+  outcomeId?: number;
+
+  outcome?: string;
+
+  dueDate?: string;
+
+  daysAfterBeneficiaryStartDate?: string;
+
+  daysAfterBeneficiaryEndDate?: string;
+
+  currency?: string;
+}
+
+export type Sub = {
+  id: number;
+
+  name: string;
+};
+
+export interface IContract {
+  name: string;
+
+  createdAt?: string;
+
+  createdBy?: number;
+
+  document?: File;
+
+  documentName?: string;
+
+  documentId?: number;
+
+  endDate: string;
+
+  id?: string;
+
+  outcomenames?: string[];
+
+  outcomeNames?: string[];
+
+  outcomes: IContractOutcomeRates[];
+
+  provider: Sub;
+
+  funder: Sub;
+
+  project?: string;
+
+  projectId: number;
+
+  startDate: string;
+
+  status: StatusType;
+
+  targetNoOfBenefeciaries: number | string;
+
+  noOfBeneficiaries: number;
+
+  noOfMilestones: number;
+
+  updatedAt?: string;
+
+  updatedBy?: number;
+}
+
+export enum ContractSortLabel {
+  CREATED_AT = `"contract"."createdAt"`,
+  PROVIDER = `"organization"."name"`,
+  CONTRACT = `"contract"."name"`,
+  PROJECT = `"project"."name"`,
+}
+
+export interface IContractFilters {
+  status: StatusType | string;
+
+  project: string;
+
+  date: string;
+
+  providerId: string;
+
+  funderId: string;
+
+  sortLabel: string;
+
+  sortValue: SortValues;
+}
+
+export interface IContractDefaultValues {
+  contract?: IContract | null;
+
+  projectId?: number;
+
+  providerId?: string;
+}
+
+export type ContractFieldValues = z.infer<typeof contracts.schema>;
