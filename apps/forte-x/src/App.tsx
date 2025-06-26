@@ -1,5 +1,5 @@
 import { ThemeProvider } from "./components/providers/theme-provider";
-import LoginPage from "./features/auth/LoginPage";
+import LoginPage from "./pages/public/LoginPage";
 
 function App() {
   return (

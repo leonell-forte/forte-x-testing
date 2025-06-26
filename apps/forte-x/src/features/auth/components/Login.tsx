@@ -2,34 +2,18 @@ import { Button } from "@repo/ui/components/button";
 import Form from "@repo/ui/components/forms/form";
 import FormCheckbox from "@repo/ui/components/forms/form-checkbox";
 import FormInput from "@repo/ui/components/forms/form-input";
-import { formSchemas, useZodForm } from "@repo/ui/hooks/useZodForm";
-import { z } from "zod";
+import { useZodForm } from "@repo/ui/hooks/useZodForm";
 
 import { logo } from "@/assets";
 import { ModeToggle } from "@/components/mode-toggle";
 
-// Clean schema definition using helpers
-const loginSchema = z.object({
-  email: formSchemas.email(),
-  password: formSchemas.password(6),
-  rememberMe: formSchemas.boolean(),
-});
+import { type LoginFormData, loginForm } from "../form";
 
-type LoginFormData = z.infer<typeof loginSchema>;
-
-export default function LoginPage() {
-  const form = useZodForm({
-    schema: loginSchema,
-    defaultValues: {
-      rememberMe: false,
-    },
-  });
+export default function Login() {
+  const form = useZodForm(loginForm);
 
   const onSubmit = async (data: LoginFormData) => {
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log("Login data:", data);
-    // Handle login logic here
+    alert("Login data:" + JSON.stringify(data));
   };
 
   return (
@@ -37,7 +21,6 @@ export default function LoginPage() {
       <div className="absolute right-4 top-4">
         <ModeToggle />
       </div>
-      {/* Background decorative elements */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="bg-primary/10 absolute -right-40 -top-40 h-80 w-80 rounded-full blur-3xl"></div>
         <div className="bg-accent/10 absolute -bottom-40 -left-40 h-80 w-80 rounded-full blur-3xl"></div>
@@ -103,7 +86,7 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* Social Login */}
+          {/* Social Login Temp */}
           <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
