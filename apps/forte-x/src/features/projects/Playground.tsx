@@ -1,5 +1,6 @@
 import { BallChart } from "@/components/ball-chart/BallChart";
 import { ModeToggle } from "@/components/mode-toggle";
+import StudentsTable from "@/components/playground/StudentsTable";
 
 export default function Playground() {
   return (
@@ -9,7 +10,6 @@ export default function Playground() {
           <h1 className="text-2xl font-bold">Playground</h1>
           <ModeToggle />
         </div>
-
         <BallChart
           size="big"
           sets={[
@@ -18,6 +18,7 @@ export default function Playground() {
             { percentage: 10, label: "Post-Training" },
           ]}
         />
+        <StudentsTable />
       </div>
     </div>
   );
