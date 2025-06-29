@@ -1,17 +1,11 @@
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "../../../../@repo/ui/components/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/avatar";
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
-} from "../../../../@repo/ui/components/card";
+} from "@/components/card";
 
 const ProjectCard = () => {
   return (
