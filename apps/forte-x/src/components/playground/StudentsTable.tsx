@@ -16,7 +16,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Box, Check, Square } from "lucide-react";
+import { Check, Square } from "lucide-react";
 import * as React from "react";
 
 type Student = {
