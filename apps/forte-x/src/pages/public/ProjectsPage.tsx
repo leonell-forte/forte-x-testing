@@ -1,6 +1,8 @@
+import ProjectCard from "@/features/projects/components/ProjectCard";
+
 import {
   Tabs,
-  TabsContent,
+  // TabsContent,
   TabsList,
   TabsTrigger,
 } from "../../../@repo/ui/components/tabs";
@@ -21,6 +23,12 @@ const ProjectsPage = () => {
           <TabsContent value="past"></TabsContent>
           <TabsContent value="all"></TabsContent> */}
         </Tabs>
+      </div>
+
+      <div className="space-y-4">
+        {Array.from({ length: 5 }).map((_, index) => (
+          <ProjectCard key={index} />
+        ))}
       </div>
     </div>
   );
