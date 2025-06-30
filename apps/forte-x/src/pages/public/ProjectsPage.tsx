@@ -1,11 +1,5 @@
+import { Tabs, TabsList, TabsTrigger } from "@/components/tabs";
 import ProjectCard from "@/features/projects/components/ProjectCard";
-
-import {
-  Tabs,
-  // TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "../../../@repo/ui/components/tabs";
 
 const ProjectsPage = () => {
   return (

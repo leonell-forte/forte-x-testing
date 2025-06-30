@@ -1,6 +1,6 @@
 import React from "react";
 
-type SizePreset = "small" | "big";
+type SizePreset = "smaller" | "small" | "big";
 
 type BallChartSet = {
   percentage: number;
@@ -27,6 +27,7 @@ function getRandomColors(palette: string[], count: number): string[] {
 }
 
 const sizePresets = {
+  smaller: { width: 80, height: 50, ballRadius: 2.0 },
   small: { width: 120, height: 80, ballRadius: 2.5 },
   big: { width: 300, height: 200, ballRadius: 4 },
 };

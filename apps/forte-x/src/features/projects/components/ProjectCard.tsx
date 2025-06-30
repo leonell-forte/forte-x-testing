@@ -1,40 +1,35 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/avatar";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardHeader,
   CardTitle,
 } from "@/components/card";
+
+import GraduationRates from "./GraduationRates";
+import OutcomesAchieved from "./OutcomesAchieved";
+import ProviderAvatars from "./ProviderAvatars";
+import StudentStatuses from "./StudentStatuses";
 
 const ProjectCard = () => {
   return (
     <Card className="flex flex-row">
-      <CardHeader className="w-80">
-        <CardTitle>Project Title</CardTitle>
-        <CardDescription>Q1 2024 - Q3 2025</CardDescription>
-        {/* <CardAction>Card Action</CardAction> */}
-      </CardHeader>
-      <CardContent className="grid w-full grid-cols-5 items-center gap-4">
+      <CardContent className="flex w-full items-center gap-12">
+        <div>
+          <CardTitle>Project Title</CardTitle>
+          <CardDescription>Q1 2024 - Q3 2025</CardDescription>
+        </div>
         <div>
           <CardTitle>3000</CardTitle>
           <CardDescription>students</CardDescription>
         </div>
-        <div className="flex">
-          {Array.from({ length: 4 }).map((_, index) => (
-            <Avatar key={index} className="-ml-2">
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-          ))}
-        </div>
+        <ProviderAvatars />
+
+        <StudentStatuses />
+
+        <GraduationRates />
+
+        <OutcomesAchieved />
       </CardContent>
-      {/* <CardContent>
-        <p>Card Content</p>
-      </CardContent>
-      <CardFooter>
-        <p>Card Footer</p>
-      </CardFooter> */}
     </Card>
   );
 };
