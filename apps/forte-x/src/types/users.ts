@@ -1,9 +1,4 @@
-import type { z } from "zod";
 
-import type { users } from "@/lib/validators/users";
-
-import type { SortValues } from "./common";
-import type { OrgTypes } from "./organizations";
 
 export const UserRoleValues = [
   "provider.user",
@@ -43,8 +38,6 @@ export interface IUser {
 
   organizationId?: string;
 
-  orgType?: OrgTypes;
-
   createdAt?: Date;
 
   agreedTermsAt?: Date;
@@ -58,31 +51,6 @@ export interface IUser {
   signUpSource?: string;
 }
 
-export type UserFieldTypes = z.infer<typeof users.schema>;
-
-// export type LoginReturnType = {
-//   refreshToken: string;
-
-//   role: UserRoleType;
-
-//   token: string;
-// };
-
-export enum UserSortLabel {
-  CREATED_AT = `"user"."createdAt"`,
-
-  FIRSTNAME = `"user"."firstName"`,
-
-  LASTNAME = `"user"."lastName"`,
-
-  EMAIL = `"user"."email"`,
-}
-
-export type SortType = {
-  label: UserSortLabel;
-
-  value: SortValues;
-};
 
 export type LoginReturnType = {
   sessionToken: string;

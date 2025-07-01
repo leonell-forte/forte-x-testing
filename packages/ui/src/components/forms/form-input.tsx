@@ -5,7 +5,6 @@ import { useFormContext } from "react-hook-form";
 import { Input } from "../input";
 import InputShell from "./input-shell";
 
-// Base input props - no more register or error props needed!
 interface BaseInputProps {
   name: string;
   label?: string;

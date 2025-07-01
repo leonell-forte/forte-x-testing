@@ -1,4 +1,3 @@
-import type { RolesTypes, StatusTypes } from "./common";
 
 export type ProfileType = {
   id: number;
@@ -13,9 +12,6 @@ export type ProfileType = {
 
   organization: string;
 
-  role: RolesTypes;
-
-  status: StatusTypes;
 
   createdAt: string;
 

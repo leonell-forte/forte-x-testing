@@ -24,7 +24,7 @@ export type InferFormData<T extends z.ZodType> = z.infer<T>;
 export const formSchemas = {
   email: () => z.string().min(1, 'Email is required').email('Please enter a valid email'),
   password: (minLength = 6) => z.string().min(1, 'Password is required').min(minLength, `Password must be at least ${minLength} characters`),
-  confirmPassword: (passwordField = 'password') => z.string().min(1, 'Please confirm your password'),
+  confirmPassword: () => z.string().min(1, 'Please confirm your password'),
   name: () => z.string().min(1, 'Name is required').min(2, 'Name must be at least 2 characters'),
   phone: () => z.string().min(1, 'Phone number is required').regex(/^[+]?[\d\s\-\(\)]+$/, 'Please enter a valid phone number'),
   url: () => z.string().url('Please enter a valid URL'),

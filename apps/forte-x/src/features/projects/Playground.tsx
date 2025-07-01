@@ -1,5 +1,6 @@
 import { BallChart } from "@/components/ball-chart/BallChart";
 import { ModeToggle } from "@/components/mode-toggle";
+import RegistrationForm from "@/components/playground/RegistrationForm";
 import StudentsTable from "@/components/playground/StudentsTable";
 import ProjectsPage from "@/pages/public/ProjectsPage";
 
@@ -20,6 +21,7 @@ export default function Playground() {
           ]}
         />
         <StudentsTable />
+        <RegistrationForm />
       </div>
 
       <ProjectsPage />
