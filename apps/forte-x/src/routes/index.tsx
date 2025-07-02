@@ -1,5 +1,5 @@
 import Playground from "@/features/Playground";
-import ProjectDetailsPage from "@/pages/private/projects/ProjectDetailsPage";
+import ProjectDetailsPage from "@/pages/private/projects/ProjectDetailsPage/ProjectDetailsPage";
 import ProjectsPage from "@/pages/private/projects/ProjectsPage";
 import LoginPage from "@/pages/public/LoginPage";
 

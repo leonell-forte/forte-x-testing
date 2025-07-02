@@ -5,11 +5,11 @@ import {
   TabsTrigger,
 } from "@repo/ui/components/tabs";
 
-import CaseStudies from "./CaseStudies";
-import Finances from "./Finances";
-import Overview from "./Overview";
-import Providers from "./Providers";
-import Students from "./Students";
+import CaseStudies from "../CaseStudies/CaseStudies";
+import Finances from "../Finances/Finances";
+import Overview from "../Overview/Overview";
+import Providers from "../Providers/Providers";
+import Students from "../Students/Students";
 
 const ProjectDetailsPage = () => {
   return (

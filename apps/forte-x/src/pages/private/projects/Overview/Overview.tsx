@@ -8,7 +8,7 @@ import { Progress } from "@repo/ui/components/progress";
 
 import { BallChart } from "@/components/ball-chart/BallChart";
 
-import content from "./content.json";
+import content from "../content.json";
 
 const Overview = () => {
   return (
@@ -17,8 +17,8 @@ const Overview = () => {
         <CardContent>
           <div className="grid grid-cols-2 gap-x-4 gap-y-12">
             <div>
-              <CardTitle>Overview</CardTitle>
-              <CardDescription>asdkasdlkasj;</CardDescription>
+              <CardTitle>Project Status</CardTitle>
+              <CardDescription>Student Progress</CardDescription>
             </div>
 
             <BallChart
@@ -31,8 +31,7 @@ const Overview = () => {
             />
 
             <div>
-              <CardTitle>Overview</CardTitle>
-              <CardDescription>asdkasdlkasj;</CardDescription>
+              <CardTitle>Timeline</CardTitle>
             </div>
 
             <Progress value={60} />
