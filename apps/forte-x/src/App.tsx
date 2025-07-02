@@ -1,11 +1,15 @@
+import { BrowserRouter } from "react-router-dom";
+
 import { ThemeProvider } from "./components/providers/theme-provider";
-import Playground from "./features/projects/Playground";
+import Pages from "./pages";
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <Playground />
-    </ThemeProvider>
+    <BrowserRouter>
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <Pages />
+      </ThemeProvider>
+    </BrowserRouter>
   );
 }
 

@@ -3,6 +3,8 @@ import Form from "@repo/ui/components/forms/form";
 import FormCheckbox from "@repo/ui/components/forms/form-checkbox";
 import FormInput from "@repo/ui/components/forms/form-input";
 import { useZodForm } from "@repo/ui/hooks/useZodForm";
+import { login } from "@repo/ui/lib/auth";
+import { useNavigate } from "react-router-dom";
 
 import { logo } from "@/assets";
 import { ModeToggle } from "@/components/mode-toggle";
@@ -10,10 +12,12 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { type LoginFormData, loginForm } from "../form";
 
 export default function Login() {
+  const navigate = useNavigate();
   const form = useZodForm(loginForm);
 
   const onSubmit = async (data: LoginFormData) => {
-    alert("Login data:" + JSON.stringify(data));
+    login(JSON.stringify(data));
+    navigate("/projects");
   };
 
   return (

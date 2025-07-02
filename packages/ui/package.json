@@ -32,7 +32,9 @@
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.58.1",
     "tailwind-merge": "^3.3.0",
-    "zod": "^3.25.67"
+    "universal-cookie": "^7.2.2",
+    "zod": "^3.25.67",
+    "zustand": "^5.0.6"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
