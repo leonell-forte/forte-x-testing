@@ -1,0 +1,41 @@
+{
+  "sampleImage": "https://fastly.picsum.photos/id/780/200/300.jpg?hmac=Zmxf0t2fpCbfZrR5NAXA_IKAP_8P6fYe9P440jUTWag",
+  "keyInformation": [
+    "Total Budget",
+    "# of Providers",
+    "# of Courses",
+    "# of Students",
+    "Primary Location"
+  ],
+  "providers": {
+    "Provider 1": [
+      {
+        "course": "Course 1",
+        "cohort": "Cohort 1",
+        "students": "10"
+      },
+      {
+        "course": "Course 2",
+        "cohort": "Cohort 2",
+        "students": "20"
+      },
+      {
+        "course": "Course 3",
+        "cohort": "Cohort 3",
+        "students": "30"
+      }
+    ],
+    "Provider 2": [
+      {
+        "course": "Course 1",
+        "cohort": "Cohort 1",
+        "students": "10"
+      },
+      {
+        "course": "Course 2",
+        "cohort": "Cohort 2",
+        "students": "20"
+      }
+    ]
+  }
+}

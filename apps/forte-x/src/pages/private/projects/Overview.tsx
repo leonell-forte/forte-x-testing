@@ -8,6 +8,8 @@ import { Progress } from "@repo/ui/components/progress";
 
 import { BallChart } from "@/components/ball-chart/BallChart";
 
+import content from "./content.json";
+
 const Overview = () => {
   return (
     <div className="space-y-6">
@@ -39,10 +41,55 @@ const Overview = () => {
       </Card>
 
       <Card>
-        <CardContent>
+        <CardContent className="space-y-6">
           <CardTitle>Key Information</CardTitle>
+          <div className="flex gap-6">
+            {content.keyInformation.map((item, index) => {
+              return (
+                <Card key={index} className="bg-white/50">
+                  <CardContent>
+                    <CardTitle>{item}</CardTitle>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
         </CardContent>
       </Card>
+
+      <div className="grid grid-cols-2">
+        <div className="space-y-6">
+          {Object.entries(content.providers).map(([key, value]) => {
+            return (
+              <div key={key} className="space-y-4">
+                <p className="text-lg font-semibold">{key}</p>
+                {value.map((item, index) => {
+                  return (
+                    <Card key={index} className="overflow-hidden p-0">
+                      <div className="flex items-center">
+                        <img
+                          src={content.sampleImage}
+                          alt="sample"
+                          className="h-16 w-24"
+                        />
+                        <CardContent className="flex w-full justify-between">
+                          <div>
+                            <CardTitle>{item.course}</CardTitle>
+                            <CardDescription>{item.cohort}</CardDescription>
+                          </div>
+                          <p className="text-lg font-semibold">
+                            {item.students} Students
+                          </p>
+                        </CardContent>
+                      </div>
+                    </Card>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 };
