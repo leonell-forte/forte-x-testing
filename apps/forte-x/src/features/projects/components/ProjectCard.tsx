@@ -14,7 +14,7 @@ const ProjectCard = () => {
   return (
     <Card className="flex flex-row">
       <CardContent className="flex w-full items-center gap-12">
-        <div>
+        <div className="flex-shrink-0">
           <CardTitle>Project Title</CardTitle>
           <CardDescription>Q1 2024 - Q3 2025</CardDescription>
         </div>
