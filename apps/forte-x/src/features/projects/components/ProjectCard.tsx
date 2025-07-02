@@ -3,7 +3,7 @@ import {
   CardContent,
   CardDescription,
   CardTitle,
-} from "@/components/card";
+} from "@repo/ui/components/card";
 
 import GraduationRates from "./GraduationRates";
 import OutcomesAchieved from "./OutcomesAchieved";

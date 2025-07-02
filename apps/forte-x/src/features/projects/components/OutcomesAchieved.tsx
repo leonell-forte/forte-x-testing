@@ -1,12 +1,10 @@
-import React from "react";
-import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
-
 import {
   type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/chart";
+} from "@repo/ui/components/chart";
+import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
 
 const OutcomesAchieved = () => {
   const lineChartData = [

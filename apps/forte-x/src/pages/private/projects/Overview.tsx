@@ -1,11 +1,12 @@
-import { BallChart } from "@/components/ball-chart/BallChart";
 import {
   Card,
   CardContent,
   CardDescription,
   CardTitle,
-} from "@/components/card";
-import { Progress } from "@/components/progress";
+} from "@repo/ui/components/card";
+import { Progress } from "@repo/ui/components/progress";
+
+import { BallChart } from "@/components/ball-chart/BallChart";
 
 const Overview = () => {
   return (

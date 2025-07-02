@@ -1,6 +1,8 @@
-import React from "react";
-
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/avatar";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@repo/ui/components/avatar";
 
 const ProviderAvatars = () => {
   return (

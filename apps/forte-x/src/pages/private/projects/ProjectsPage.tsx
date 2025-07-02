@@ -1,6 +1,6 @@
+import { Tabs, TabsList, TabsTrigger } from "@repo/ui/components/tabs";
 import { Link } from "react-router-dom";
 
-import { Tabs, TabsList, TabsTrigger } from "@/components/tabs";
 import ProjectCard from "@/features/projects/components/ProjectCard";
 
 const ProjectsPage = () => {
