@@ -1,8 +1,7 @@
-import { cn } from "@repo/ui/lib/utils";
 import React from "react";
-import { useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 
-import { Input } from "../input";
+import InputMobile from "../input-mobile";
 import InputShell from "./input-shell";
 
 interface BaseInputProps {
@@ -10,26 +9,22 @@ interface BaseInputProps {
   label?: string;
   helperText?: string;
   required?: boolean;
-  className?: string;
   containerClassName?: string;
 }
 
-// Text Input Component
-interface FormInputProps
+interface FormMobileProps
   extends BaseInputProps,
     Omit<React.InputHTMLAttributes<HTMLInputElement>, "className" | "name"> {}
 
-const FormInput = ({
+const FormMobile = ({
   name,
   label,
   helperText,
   required,
-  className,
   containerClassName,
-  ...props
-}: FormInputProps) => {
+}: FormMobileProps) => {
   const {
-    register,
+    control,
     formState: { errors },
   } = useFormContext<{ [x: string]: string }>();
   const error = errors[name];
@@ -43,16 +38,15 @@ const FormInput = ({
       containerClassName={containerClassName}
       error={error?.message}
     >
-      <Input
-        id={name}
-        {...register(name)}
-        {...props}
-        className={cn("form-input", error && "error", className)}
+      <Controller
+        name={name}
+        control={control}
+        render={({ field }) => <InputMobile {...field} />}
       />
     </InputShell>
   );
 };
 
-FormInput.displayName = "FormInput";
+FormMobile.displayName = "FormMobile";
 
-export default FormInput;
+export default FormMobile;

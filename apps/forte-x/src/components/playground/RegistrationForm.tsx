@@ -2,6 +2,7 @@ import { Button } from "@repo/ui/components/button";
 import Form from "@repo/ui/components/forms/form";
 import FormDatePicker from "@repo/ui/components/forms/form-datepicker";
 import FormInput from "@repo/ui/components/forms/form-input";
+import FormMobile from "@repo/ui/components/forms/form-mobile";
 import FormSelect from "@repo/ui/components/forms/form-select";
 import { formSchemas, useZodForm } from "@repo/ui/hooks/useZodForm";
 import { z } from "zod";
@@ -21,6 +22,10 @@ const registrationForm = {
     rememberMe: false,
     linkedin: "",
     status: "",
+    cohortRange: {
+      from: undefined,
+      to: undefined,
+    },
   },
   schema: z
     .object({
@@ -29,8 +34,7 @@ const registrationForm = {
       gender: formSchemas.required(),
       password: formSchemas.password(6),
       confirmPassword: formSchemas.confirmPassword(),
-      startDate: formSchemas.required(),
-      endDate: formSchemas.required(),
+      cohortRange: formSchemas.dateRange(),
       phone: formSchemas.phone(),
       rememberMe: formSchemas.boolean(),
       linkedin: formSchemas.url(),
@@ -100,6 +104,12 @@ export default function RegistrationForm() {
               ]}
             />
             <FormDatePicker name="birthDate" label="Birth Date" mode="single" />
+            <FormDatePicker
+              name="cohortRange"
+              label="Cohort Period"
+              mode="range"
+            />
+            <FormMobile name="phone" label="Phone" />
           </div>
 
           {/* Submit Button */}

@@ -1,4 +1,3 @@
-import { Button } from "@repo/ui/components/button";
 import { Calendar } from "@repo/ui/components/calendar";
 import {
   Popover,
@@ -6,6 +5,7 @@ import {
   PopoverTrigger,
 } from "@repo/ui/components/popover";
 import { cn } from "@repo/ui/lib/utils";
+import { get } from "lodash";
 import { CalendarIcon } from "lucide-react";
 import * as React from "react";
 import type { DateRange, PropsBase } from "react-day-picker";
@@ -80,6 +80,12 @@ export function DatePicker(props: DatePickerProps) {
       const range = selected as DateRange;
       if (!range?.from) return placeholder;
       if (!range.to) return `${range.from.toLocaleDateString()} - ...`;
+
+      // Don't show "to" date if it's the same as "from" date
+      if (range.from.getTime() === range.to.getTime()) {
+        return `${range.from.toLocaleDateString()} - ...`;
+      }
+
       return `${range.from.toLocaleDateString()} - ${range.to.toLocaleDateString()}`;
     }
 
@@ -92,13 +98,16 @@ export function DatePicker(props: DatePickerProps) {
       if (onSelect) {
         onSelect(value);
       }
-      if (
-        (mode === "single" && value) ||
-        (mode === "range" && value?.from && value?.to)
+      if (mode === "single" && value) {
+        setOpen(false);
+      } else if (
+        mode === "range" &&
+        value?.from &&
+        value?.to &&
+        value.from.getTime() !== value.to.getTime()
       ) {
         setOpen(false);
       }
-      // For multiple, don't auto-close
     },
     [onSelect, mode]
   );
@@ -106,22 +115,29 @@ export function DatePicker(props: DatePickerProps) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
-          variant="outline"
+        <button
           className={cn(
-            "w-full justify-between font-normal",
-            !selected && "text-muted-foreground",
+            "form-input data-[state=open]:border-ring data-[state=open]:ring-ring/50 w-full items-center justify-between font-normal data-[state=open]:ring-[3px]",
             className
           )}
           disabled={disabled}
         >
-          <span className="truncate">{formatDisplayValue()}</span>
+          <span
+            className={cn(
+              "truncate",
+              !selected ||
+                (mode === "range" &&
+                  (!get(selected, "from") || !get(selected, "to")))
+                ? "text-muted-foreground"
+                : ""
+            )}
+          >
+            {formatDisplayValue()}
+          </span>
           {showIcon && (
-            <span className="ml-2 flex shrink-0">
-              <CalendarIcon className="h-4 w-4" />
-            </span>
+            <CalendarIcon className="ml-2 size-4 shrink-0 opacity-50" />
           )}
-        </Button>
+        </button>
       </PopoverTrigger>
       <PopoverContent className="w-auto overflow-hidden p-0" align="start">
         <Calendar

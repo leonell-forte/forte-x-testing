@@ -77,12 +77,13 @@ export function Combobox({
             selectedOption?.label
               ? "text-primary-foreground"
               : "text-muted-foreground",
+            "data-[state=open]:border-ring data-[state=open]:ring-ring/50 data-[state=open]:ring-[3px]",
             className
           )}
           disabled={loading}
         >
           {selectedOption?.label || placeholder}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
         </button>
       </PopoverTrigger>
       <PopoverContent className="w-full p-0" align="start">

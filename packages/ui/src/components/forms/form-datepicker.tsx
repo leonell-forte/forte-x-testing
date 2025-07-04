@@ -55,14 +55,7 @@ function FormDatePicker<TFieldValues extends FieldValues = FieldValues>({
             {...datePickerProps}
             selected={field.value}
             onSelect={field.onChange}
-            className={cn(
-              "bg-input/50 border-border",
-              "focus:ring-primary/50 focus:border-primary focus:ring-2",
-              "transition-colors",
-              error &&
-                "border-destructive focus:border-destructive focus:ring-destructive/50",
-              className
-            )}
+            className={cn("form-input", error && "error", className)}
           />
         )}
       />

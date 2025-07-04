@@ -1,7 +1,9 @@
+import Playground from "@/features/Playground";
+
 export default function ProjectsPage() {
   return (
     <div>
-      <h1>Projects Page</h1>
+      <Playground />
     </div>
   );
 }
