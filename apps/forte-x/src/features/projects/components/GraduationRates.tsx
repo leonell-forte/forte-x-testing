@@ -1,12 +1,11 @@
-import React, { useMemo } from "react";
-import { Label, Pie, PieChart } from "recharts";
-
 import {
   type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/chart";
+} from "@repo/ui/components/chart";
+import { useMemo } from "react";
+import { Label, Pie, PieChart } from "recharts";
 
 const GraduationRates = () => {
   const chartData = [
