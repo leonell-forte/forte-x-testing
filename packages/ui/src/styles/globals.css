@@ -102,6 +102,8 @@
   --color-success-foreground: var(--success-foreground);
   --color-warning: var(--warning);
   --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -144,6 +146,19 @@
 
   .form-input.error {
     @apply border-destructive focus:border-destructive focus:ring-destructive/50;
+  }
+
+  [data-sonner-toast][data-variant="success"] {
+    @apply bg-success text-success-foreground;
+  }
+  [data-sonner-toast][data-variant="info"] {
+    @apply bg-info text-info-foreground;
+  }
+  [data-sonner-toast][data-variant="warning"] {
+    @apply bg-warning text-warning-foreground;
+  }
+  [data-sonner-toast][data-variant="danger"] {
+    @apply bg-destructive text-destructive-foreground;
   }
 
   /* https://tailwindcss.com/docs/upgrade-guide#buttons-use-the-default-cursor */

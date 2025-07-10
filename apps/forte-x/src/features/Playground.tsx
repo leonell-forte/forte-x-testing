@@ -1,5 +1,7 @@
 import { Button } from "@repo/ui/components/button";
 import { useModal } from "@repo/ui/components/dialog";
+import { format } from "date-fns";
+import { toast } from "sonner";
 
 import { BallChart } from "@/components/ball-chart/BallChart";
 import { ModeToggle } from "@/components/mode-toggle";
@@ -22,6 +24,8 @@ function SampleModal({ name }: { name: string }) {
   );
 }
 
+const today = new Date();
+
 export default function Playground() {
   return (
     <div>
@@ -30,7 +34,26 @@ export default function Playground() {
           <h1 className="text-2xl font-bold">Playground</h1>
           <ModeToggle />
         </div>
-        <Button onClick={() => showSampleModal("John Doe")}>Open Modal</Button>
+        <div className="flex gap-2">
+          <Button onClick={() => showSampleModal("John Doe")}>
+            Open Modal
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() =>
+              toast("Event has been created", {
+                description: format(today, "iiii, MMMM dd, yyyy hh:mm a"),
+                action: {
+                  label: "Undo",
+                  onClick: () => console.log("Undo"),
+                },
+                position: "top-center",
+              })
+            }
+          >
+            Open Toast
+          </Button>
+        </div>
         <BallChart
           size="big"
           sets={[

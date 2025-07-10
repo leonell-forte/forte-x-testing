@@ -1,4 +1,5 @@
 import { ModalMarker } from "@repo/ui/components/dialog";
+import { Toaster } from "@repo/ui/components/sonner";
 import { BrowserRouter } from "react-router-dom";
 
 import { ThemeProvider } from "./components/providers/theme-provider";
@@ -10,6 +11,7 @@ function App() {
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <Pages />
         <ModalMarker />
+        <Toaster />
       </ThemeProvider>
     </BrowserRouter>
   );
