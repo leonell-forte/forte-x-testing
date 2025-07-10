@@ -16,7 +16,7 @@ const ProjectDetailsPage = () => {
     <div className="space-y-6">
       <h2 className="text-2xl font-bold">Projects Details</h2>
 
-      <Tabs defaultValue="overview">
+      <Tabs defaultValue="overview" className="space-y-5">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="students">Students</TabsTrigger>
