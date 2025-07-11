@@ -22,9 +22,6 @@ export default function Login() {
 
   return (
     <div className="from-primary/20 via-accent/10 to-secondary/30 dark:from-primary/10 dark:via-accent/5 dark:to-secondary/20 flex h-screen items-center justify-center bg-gradient-to-br p-4">
-      <div className="absolute right-4 top-4">
-        <ModeToggle />
-      </div>
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="bg-primary/10 absolute -right-40 -top-40 h-80 w-80 rounded-full blur-3xl"></div>
         <div className="bg-accent/10 absolute -bottom-40 -left-40 h-80 w-80 rounded-full blur-3xl"></div>

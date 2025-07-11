@@ -1,13 +1,14 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "./fonts.css";
 
 @source "../../../../packages/ui/src/**/*.{js,ts,jsx,tsx}";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: "Lato", sans-serif;
+  --font-mono: "Lato", monospace;
 }
 
 :root {
@@ -35,6 +36,11 @@
   --chart-3: hsl(50 90% 85%);
   --chart-4: hsl(320 70% 90%);
   --chart-5: hsl(30 80% 90%);
+  --chart-6: hsl(260 70% 90%);
+  --chart-7: hsl(100 60% 85%);
+  --chart-8: hsl(0 80% 90%);
+  --chart-9: hsl(220 60% 85%);
+  --chart-10: hsl(280 70% 90%);
   --success: hsl(140 60% 85%);
   --success-foreground: hsl(140 40% 30%);
   --info: hsl(200 80% 90%);
@@ -71,6 +77,12 @@
   --chart-3: hsl(50 90% 30%);
   --chart-4: hsl(320 70% 35%);
   --chart-5: hsl(30 80% 35%);
+  --chart-6: hsl(260 70% 35%);
+  --chart-7: hsl(100 60% 30%);
+  --chart-8: hsl(0 80% 35%);
+  --chart-9: hsl(220 60% 30%);
+  --chart-10: hsl(280 70% 35%);
+
   --success: hsl(140 40% 25%);
   --success-foreground: hsl(140 60% 85%);
   --info: hsl(200 40% 25%);
@@ -112,6 +124,11 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+  --color-chart-6: var(--chart-6);
+  --color-chart-7: var(--chart-7);
+  --color-chart-8: var(--chart-8);
+  --color-chart-9: var(--chart-9);
+  --color-chart-10: var(--chart-10);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -120,11 +137,19 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/50 font-mono;
   }
   body {
     @apply bg-background text-foreground;
   }
+
+  /* playground styles */
+
+  .playground * {
+    @apply font-mono;
+  }
+
+  /* playground styles */
 
   .dark .rdp-caption_label {
     @apply bg-transparent text-white;

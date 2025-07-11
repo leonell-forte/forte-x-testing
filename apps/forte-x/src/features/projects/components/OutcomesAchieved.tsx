@@ -3,6 +3,7 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  type CustomTooltipProps,
 } from "@repo/ui/components/chart";
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
 
@@ -19,7 +20,7 @@ const OutcomesAchieved = () => {
   const lineChartConfig = {
     desktop: {
       label: "Desktop",
-      color: "blue",
+      color: "var(--chart-1)",
     },
   } satisfies ChartConfig;
   return (
@@ -43,12 +44,14 @@ const OutcomesAchieved = () => {
           />
           <ChartTooltip
             cursor={false}
-            content={<ChartTooltipContent hideLabel />}
+            content={(props: CustomTooltipProps) => (
+              <ChartTooltipContent {...props} hideIndicator hideLabel />
+            )}
           />
           <Line
             dataKey="desktop"
             type="natural"
-            stroke="blue"
+            stroke="var(--chart-1)"
             strokeWidth={2}
             dot={true}
           />

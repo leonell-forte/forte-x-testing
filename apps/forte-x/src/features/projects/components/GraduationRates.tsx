@@ -3,55 +3,85 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  type CustomTooltipProps,
 } from "@repo/ui/components/chart";
 import { useMemo } from "react";
-import { Label, Pie, PieChart } from "recharts";
+import { Cell, Label, Pie, PieChart } from "recharts";
+
+const chartData = [
+  {
+    browser: "chrome",
+    visitors: 275,
+    fill: "var(--chart-1)",
+    stroke: "var(--chart-1)",
+  },
+  {
+    browser: "safari",
+    visitors: 200,
+    fill: "var(--chart-2)",
+    stroke: "var(--chart-2)",
+  },
+  {
+    browser: "firefox",
+    visitors: 287,
+    fill: "var(--chart-3)",
+    stroke: "var(--chart-3)",
+  },
+  {
+    browser: "edge",
+    visitors: 173,
+    fill: "var(--chart-4)",
+    stroke: "var(--chart-4)",
+  },
+  {
+    browser: "other",
+    visitors: 190,
+    fill: "var(--chart-5)",
+    stroke: "var(--chart-5)",
+  },
+];
+
+const chartConfig = {
+  visitors: {
+    label: "Visitors",
+    color: "var(--chart-1)",
+  },
+  chrome: {
+    label: "Chrome",
+    color: "var(--chart-2)",
+  },
+  safari: {
+    label: "Safari",
+    color: "var(--chart-3)",
+  },
+  firefox: {
+    label: "Firefox",
+    color: "var(--chart-4)",
+  },
+  edge: {
+    label: "Edge",
+    color: "var(--chart-5)",
+  },
+  other: {
+    label: "Other",
+    color: "var(--chart-6)",
+  },
+} satisfies ChartConfig;
 
 const GraduationRates = () => {
-  const chartData = [
-    { browser: "chrome", visitors: 275, fill: "red", stroke: "red" },
-    { browser: "safari", visitors: 200, fill: "blue", stroke: "blue" },
-    { browser: "firefox", visitors: 287, fill: "green", stroke: "green" },
-    { browser: "edge", visitors: 173, fill: "yellow", stroke: "yellow" },
-    { browser: "other", visitors: 190, fill: "purple", stroke: "purple" },
-  ];
-
-  const chartConfig = {
-    visitors: {
-      label: "Visitors",
-    },
-    chrome: {
-      label: "Chrome",
-      color: "red",
-    },
-    safari: {
-      label: "Safari",
-      color: "blue",
-    },
-    firefox: {
-      label: "Firefox",
-      color: "green",
-    },
-    edge: {
-      label: "Edge",
-      color: "yellow",
-    },
-    other: {
-      label: "Other",
-      color: "purple",
-    },
-  } satisfies ChartConfig;
-
   const totalVisitors = useMemo(() => {
     return chartData.reduce((acc, curr) => acc + curr.visitors, 0);
-  }, [chartData]);
+  }, []);
+
   return (
     <div className="flex items-center">
       <ChartContainer config={chartConfig} className="h-40 w-40">
         <PieChart>
           <ChartTooltip
             cursor={false}
-            content={<ChartTooltipContent hideLabel />}
+            content={(props: CustomTooltipProps) => (
+              <ChartTooltipContent {...props} hideIndicator hideLabel />
+            )}
           />
           <Pie
             data={chartData}
@@ -60,6 +90,9 @@ const GraduationRates = () => {
             innerRadius={60}
             strokeWidth={5}
           >
+            {chartData.map((entry) => (
+              <Cell key={entry.browser} fill={entry.fill} />
+            ))}
             <Label
               content={({ viewBox }) => {
                 if (viewBox && "cx" in viewBox && "cy" in viewBox) {
@@ -80,6 +113,7 @@ const GraduationRates = () => {
                     </text>
                   );
                 }
+                return null;
               }}
             />
           </Pie>
