@@ -46,11 +46,13 @@ const InputMobile = ({
       defaultCountry: "us",
       value,
       countries: defaultCountries,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       onChange: (data) => {
         onChange(data.phone);
       },
     });
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const filteredOptions = defaultCountries.filter((option) => {
     const mCountry = parseCountry(option);
     return mCountry.name.toLowerCase().includes(search.toLowerCase());
@@ -85,6 +87,7 @@ const InputMobile = ({
               />
               <ScrollArea className="max-h-[24rem]">
                 <CommandGroup>
+                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                   {filteredOptions.map((option) => {
                     const mCountry = parseCountry(option);
                     return (

@@ -1,5 +1,3 @@
-import React from "react";
-
 import { BallChart } from "@/components/ball-chart/BallChart";
 
 const StudentStatuses = () => {
