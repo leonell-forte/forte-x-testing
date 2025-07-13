@@ -1,5 +1,0 @@
-{
-  "buildCommand": "cd ../.. && pnpm run build --filter=forte-x",
-  "outputDirectory": ".",
-  "installCommand": "cd ../.. && pnpm install"
-}
