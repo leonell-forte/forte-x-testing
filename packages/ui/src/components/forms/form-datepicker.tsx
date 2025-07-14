@@ -1,4 +1,7 @@
 import { cn } from "@repo/ui/lib/utils";
+import { compareAsc } from "date-fns";
+import { get } from "lodash";
+import { useMemo } from "react";
 import {
   Controller,
   type FieldValues,
@@ -37,7 +40,20 @@ function FormDatePicker<TFieldValues extends FieldValues = FieldValues>({
     formState: { errors },
   } = useFormContext<TFieldValues>();
   const error = errors[name];
-
+  const errMsg = useMemo(() => {
+    if (
+      datePickerProps.mode === "range" &&
+      get(error, "from") &&
+      get(error, "to")
+    ) {
+      return (
+        get(error, "from.message", "") ||
+        get(error, "to.message", "") ||
+        "Please select a date range"
+      );
+    }
+    return error?.message;
+  }, [error, datePickerProps.mode]);
   return (
     <InputShell
       name={name}
@@ -45,7 +61,7 @@ function FormDatePicker<TFieldValues extends FieldValues = FieldValues>({
       helperText={helperText}
       required={required}
       containerClassName={containerClassName}
-      error={error?.message as string}
+      error={errMsg as string}
     >
       <Controller
         name={name}
@@ -55,7 +71,7 @@ function FormDatePicker<TFieldValues extends FieldValues = FieldValues>({
             {...datePickerProps}
             selected={field.value}
             onSelect={field.onChange}
-            className={cn("form-input", error && "error", className)}
+            className={cn("form-input", errMsg && "error", className)}
           />
         )}
       />

@@ -1,10 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { compareAsc } from "date-fns";
 import {
   type UseFormProps,
   type UseFormReturn,
   useForm,
 } from "react-hook-form";
 import { z } from "zod";
+
+import { isPhoneValid } from "../lib/utils";
 
 type UseZodFormProps<T extends z.ZodType> = {
   schema: T;
@@ -40,19 +43,29 @@ export const formSchemas = {
       .min(1, "Name is required")
       .min(2, "Name must be at least 2 characters"),
   phone: () =>
-    z
-      .string()
-      .min(1, "Phone number is required")
-      .regex(/^[+]?[\d\s\-\(\)]+$/, "Please enter a valid phone number"),
+    z.string().refine((pn) => isPhoneValid(pn), {
+      message: "Invalid phone number",
+    }),
   url: () => z.string().url("Please enter a valid URL"),
   required: (message = "This field is required") => z.string().min(1, message),
   optional: () => z.string().optional(),
   boolean: () => z.boolean().optional(),
   dateRange: () =>
-    z.object({
-      from: z.date({ required_error: "Start date is required" }),
-      to: z.date({ required_error: "End date is required" }),
-    }),
+    z
+      .object({
+        from: z.date({ required_error: "Start date is required" }),
+        to: z.date({ required_error: "End date is required" }),
+      })
+      .refine(
+        (data) => {
+          console.log(compareAsc(data.to, data.from));
+          return compareAsc(data.to, data.from) <= 0;
+        },
+        {
+          message: "End date must be after start date",
+          path: ["to"],
+        }
+      ),
 };
 
 // Helper for password confirmation validation
