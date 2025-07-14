@@ -28,6 +28,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
 export { Toaster };
 
 function toast(toast: Omit<ToastProps, "id">) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return sonnerToast.custom((id) => (
     <Toast
       id={id}

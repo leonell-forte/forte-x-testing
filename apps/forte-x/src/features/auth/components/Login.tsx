@@ -7,7 +7,6 @@ import { login } from "@repo/ui/lib/auth";
 import { useNavigate } from "react-router-dom";
 
 import { logo } from "@/assets";
-import { ModeToggle } from "@/components/mode-toggle";
 
 import { type LoginFormData, loginForm } from "../form";
 
