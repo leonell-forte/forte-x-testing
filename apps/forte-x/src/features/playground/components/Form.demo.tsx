@@ -23,6 +23,7 @@ const registrationForm = {
     startDate: "",
     endDate: "",
     phone: "",
+    birthDate: "",
     rememberMe: false,
     linkedin: "",
     status: "",

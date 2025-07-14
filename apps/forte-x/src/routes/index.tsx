@@ -5,7 +5,7 @@ import PlaygroundPage from "@/pages/public/PlaygroundPage";
 
 export const publicRoutes = [
   { path: "login", element: <LoginPage /> },
-  { path: "playground", element: <PlaygroundPage /> },
+  { path: "demo", element: <PlaygroundPage /> },
 ];
 
 export const privateRoutes = [

@@ -80,7 +80,7 @@ const GraduationRates = () => {
           <ChartTooltip
             cursor={false}
             content={(props: CustomTooltipProps) => (
-              <ChartTooltipContent {...props} hideIndicator hideLabel />
+              <ChartTooltipContent {...props} hideLabel />
             )}
           />
           <Pie

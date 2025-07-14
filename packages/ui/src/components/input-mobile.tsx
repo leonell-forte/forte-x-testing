@@ -6,6 +6,7 @@ import {
 import { cn } from "@repo/ui/lib/utils";
 import { ChevronsUpDown } from "lucide-react";
 import * as React from "react";
+import { useFormContext } from "react-hook-form";
 import {
   type CountryIso2,
   FlagImage,
@@ -38,6 +39,10 @@ const InputMobile = ({
   onChange,
   value = "",
 }: Props) => {
+  const {
+    formState: { errors },
+  } = useFormContext<{ [x: string]: string }>();
+  const error = errors[name];
   const [search, setSearch] = React.useState("");
 
   const [open, setOpen] = React.useState(false);
@@ -82,6 +87,7 @@ const InputMobile = ({
                 placeholder={"Search"}
                 value={search}
                 onValueChange={setSearch}
+                name={name}
               />
               <ScrollArea className="max-h-[24rem]">
                 <CommandGroup>
@@ -134,6 +140,7 @@ const InputMobile = ({
         ref={inputRef}
         value={inputValue}
         onChange={handlePhoneValueChange}
+        className={cn("form-input", error && "error")}
         onClick={(e) => e.stopPropagation()}
       />
     </div>
