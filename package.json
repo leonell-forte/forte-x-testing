@@ -8,7 +8,8 @@
     "dev-admin": "turbo run dev --filter admin",
     "lint": "turbo run lint",
     "check-types": "turbo run check-types",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "preview-fortex": "turbo run preview --filter forte-x"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^5.2.0",
