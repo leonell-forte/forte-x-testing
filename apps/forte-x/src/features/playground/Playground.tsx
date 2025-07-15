@@ -6,6 +6,7 @@ import BallChartDemo from "./components/BallChart.demo";
 import ButtonDemo from "./components/Button.demo";
 import ColorPalette from "./components/ColorPallete.demo";
 import FormDemo from "./components/Form.demo";
+import FormTableDemo from "./components/FormTable.demo";
 import LineChartDemo from "./components/LineChart.demo";
 import ModalDemo from "./components/Modal.demo";
 import PieChartDemo from "./components/PieChart.demo";
@@ -37,6 +38,8 @@ export default function Playground() {
           <PieChartDemo />
           <LineChartDemo />
         </div>
+
+        <FormTableDemo />
       </div>
     </section>
   );
