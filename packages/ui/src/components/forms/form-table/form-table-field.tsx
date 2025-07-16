@@ -7,6 +7,7 @@ import {
 } from "react-hook-form";
 
 import { Combobox } from "../../combobox";
+import { DatePicker } from "../../datepicker";
 import { Input } from "../../input";
 import type { ColumnConfig } from "./form-table.types";
 
@@ -23,9 +24,10 @@ export function TableField<T extends FieldValues>({
   config,
   hasError,
 }: FieldProps<T>) {
-  // const baseClassName = `border-0 bg-transparent px-2 py-1 w-full focus:outline-none focus:ring-1 focus:ring-blue-500 rounded ${
-  //   hasError ? "pr-8" : ""
-  // }`;
+  const baseClassName = cn(
+    "form-input hover:border-input border-transparent shadow-none",
+    hasError ? "border-destructive" : ""
+  );
 
   return (
     <Controller
@@ -38,11 +40,19 @@ export function TableField<T extends FieldValues>({
               value={typeof field.value === "string" ? field.value : ""}
               onValueChange={field.onChange}
               localSearch
-              className={cn(
-                "form-input hover:border-input border-transparent shadow-none",
-                hasError ? "border-destructive" : ""
-              )}
+              className={baseClassName}
               options={config.options}
+            />
+          );
+        }
+
+        if (config.type === "date") {
+          return (
+            <DatePicker
+              mode="single"
+              selected={field.value as Date}
+              onSelect={field.onChange}
+              className={baseClassName}
             />
           );
         }
@@ -53,10 +63,7 @@ export function TableField<T extends FieldValues>({
               <Input
                 {...field}
                 type={config.type}
-                className={cn(
-                  "hover:border-input border-transparent shadow-none",
-                  hasError ? "border-destructive" : ""
-                )}
+                className={baseClassName}
                 placeholder={config.placeholder}
                 value={field.value as string}
               />

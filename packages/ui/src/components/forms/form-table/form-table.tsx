@@ -1,4 +1,3 @@
-// components/editable-table.tsx
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@repo/ui/lib/utils";
 import {
@@ -40,7 +39,6 @@ import {
 import { TableField } from "./form-table-field";
 import type { ColumnConfig, EditableTableProps } from "./form-table.types";
 
-// Error icon component
 const ErrorIcon = ({ message }: { message: string }) => (
   <Tooltip>
     <TooltipTrigger asChild>
@@ -54,7 +52,6 @@ const ErrorIcon = ({ message }: { message: string }) => (
   </Tooltip>
 );
 
-// Helper to get field error with proper typing
 function getFieldError<T extends FieldValues>(
   errors: FieldErrors<{ rows: T[] }>,
   rowIndex: number,
@@ -63,7 +60,6 @@ function getFieldError<T extends FieldValues>(
   const rowErrors = errors.rows?.[rowIndex];
   if (!rowErrors) return undefined;
 
-  // Check if this is a direct FieldError (rare case)
   if (
     typeof rowErrors === "object" &&
     "message" in rowErrors &&
@@ -72,7 +68,6 @@ function getFieldError<T extends FieldValues>(
     return rowErrors.message;
   }
 
-  // Type-safe field access
   if (
     typeof rowErrors === "object" &&
     rowErrors !== null &&
@@ -87,7 +82,6 @@ function getFieldError<T extends FieldValues>(
   return undefined;
 }
 
-// Type-safe row casting helper
 function castFieldArrayToRows<T extends FieldValues>(
   fields: Array<T & { id: string }>
 ): T[] {
@@ -108,7 +102,6 @@ export default function EditableTable<T extends FieldValues>({
   const [newRowInput, setNewRowInput] = useState("");
   const [addHover, setAddHover] = useState(false);
 
-  // Create form schema and types
   const formSchema = z.object({
     rows: z.array(schema),
   });
@@ -134,7 +127,6 @@ export default function EditableTable<T extends FieldValues>({
   const handleAddRow = () => {
     if (newRowInput.trim()) {
       const firstColumnKey = columns[0].key;
-      // Type-safe object creation
       const newRow: T = {
         ...defaultRow,
         [firstColumnKey]: newRowInput.trim(),
@@ -144,12 +136,10 @@ export default function EditableTable<T extends FieldValues>({
     }
   };
 
-  // Type-safe submit handler
   const handleFormSubmit: SubmitHandler<FormData> = (data) => {
     onSubmit(data);
   };
 
-  // Generate table columns with proper typing
   const tableColumns = React.useMemo<ColumnDef<T>[]>(
     () => [
       ...columns.map((config) => {
@@ -190,17 +180,19 @@ export default function EditableTable<T extends FieldValues>({
       {
         header: "",
         id: "actions",
-        size: 50,
+        size: 5,
         cell: ({ row }) => (
-          <button
-            type="button"
-            className="hover:text-destructive text-muted-foreground disabled:text-muted p-1 transition-colors disabled:pointer-events-none"
-            onClick={() => remove(row.index)}
-            disabled={fields.length === 1}
-            title="Delete row"
-          >
-            <Trash className="h-4 w-4" />
-          </button>
+          <div className="flex items-center justify-center">
+            <button
+              type="button"
+              className="hover:text-destructive text-muted-foreground disabled:text-muted p-1 transition-colors disabled:pointer-events-none"
+              onClick={() => remove(row.index)}
+              disabled={fields.length === 1}
+              title="Delete row"
+            >
+              <Trash className="h-4 w-4" />
+            </button>
+          </div>
         ),
       },
     ],
@@ -244,7 +236,7 @@ export default function EditableTable<T extends FieldValues>({
                   {headerGroup.headers.map((header) => (
                     <TableHead
                       key={header.id}
-                      className="px-4.5 overflow-hidden text-ellipsis whitespace-nowrap"
+                      className="px-4.5 overflow-hidden text-ellipsis whitespace-nowrap border-r text-center last:border-r-0"
                       style={{
                         width: header.getSize(),
                       }}
@@ -264,7 +256,7 @@ export default function EditableTable<T extends FieldValues>({
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
-                      className="overflow-hidden text-ellipsis whitespace-nowrap"
+                      className="overflow-hidden text-ellipsis whitespace-nowrap border-r last:border-r-0"
                       style={{
                         width: cell.column.getSize(),
                       }}

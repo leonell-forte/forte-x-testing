@@ -50,6 +50,7 @@ export const formSchemas = {
   required: (message = "This field is required") => z.string().min(1, message),
   optional: () => z.string().optional(),
   boolean: () => z.boolean().optional(),
+  date: () => z.union([z.string(), z.date()]),
   dateRange: () =>
     z
       .object({
@@ -58,7 +59,6 @@ export const formSchemas = {
       })
       .refine(
         (data) => {
-          console.log(compareAsc(data.to, data.from));
           return compareAsc(data.to, data.from) <= 0;
         },
         {

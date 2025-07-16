@@ -85,7 +85,7 @@ export default function PieChartDemo() {
       </CardHeader>
       <CardContent className="flex items-center justify-center">
         <ChartContainer config={chartConfig} className="h-40 w-40">
-          <PieChart>
+          <PieChart width={160} height={160}>
             <ChartTooltip
               cursor={false}
               content={(props: CustomTooltipProps) => (
@@ -97,32 +97,27 @@ export default function PieChartDemo() {
               dataKey="visitors"
               nameKey="browser"
               innerRadius={60}
-              strokeWidth={5}
+              strokeWidth={10}
             >
               {chartData.map((entry) => (
                 <Cell key={entry.browser} fill={entry.fill} />
               ))}
               <Label
-                content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                    return (
-                      <text
-                        x={viewBox.cx}
-                        y={viewBox.cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                      >
-                        <tspan
-                          x={viewBox.cx}
-                          y={viewBox.cy}
-                          className="fill-foreground text-3xl font-bold"
-                        >
-                          {totalVisitors.toLocaleString()}
-                        </tspan>
-                      </text>
-                    );
-                  }
-                  return null;
+                position="center"
+                content={() => {
+                  return (
+                    <text
+                      x={"50%"}
+                      y={"50%"}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      fill="#222"
+                      fontSize={24}
+                      fontWeight="bold"
+                    >
+                      {totalVisitors.toLocaleString()}
+                    </text>
+                  );
                 }}
               />
             </Pie>

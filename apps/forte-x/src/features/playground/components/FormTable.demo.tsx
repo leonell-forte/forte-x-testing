@@ -8,13 +8,15 @@ import {
 import FormTable, {
   type ColumnConfig,
 } from "@repo/ui/components/forms/form-table/form-table";
+import { formSchemas } from "@repo/ui/hooks/useZodForm";
 import { z } from "zod";
 
 const UserSchema = z.object({
-  name: z.string().min(1, "Name required"),
-  email: z.string().email("Invalid email"),
-  role: z.string().min(1, "Role required"),
-  status: z.string().min(1, "Status required"),
+  name: formSchemas.name(),
+  email: formSchemas.email(),
+  role: formSchemas.required(),
+  status: formSchemas.required(),
+  birthdate: formSchemas.date(),
 });
 
 type User = z.infer<typeof UserSchema>;
@@ -45,6 +47,12 @@ const userColumns: ColumnConfig<User>[] = [
     ],
     width: "130px",
   },
+  {
+    key: "birthdate",
+    header: "Birth Date",
+    type: "date",
+    placeholder: "Enter birthdate...",
+  },
 ];
 
 export default function FormTableDemo() {
@@ -61,7 +69,13 @@ export default function FormTableDemo() {
         <FormTable<User>
           schema={UserSchema}
           columns={userColumns}
-          defaultRow={{ name: "", email: "", role: "", status: "" }}
+          defaultRow={{
+            name: "",
+            email: "",
+            role: "",
+            status: "",
+            birthdate: "",
+          }}
           onSubmit={(data) => {
             // Do something with the data
             console.log("Submitted users:", data.rows);
