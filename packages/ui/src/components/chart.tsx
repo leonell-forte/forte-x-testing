@@ -158,11 +158,12 @@ function ChartTooltipContent({
 }: CustomTooltipProps) {
   const { config } = useChart();
 
+  console.log("Tooltip Debug:", { active, payload, label });
+
   const tooltipLabel = React.useMemo(() => {
     if (hideLabel || !payload?.length) {
       return null;
     }
-
     const [item] = payload;
     const key = `${labelKey || item?.dataKey || item?.name || "value"}`;
     const itemConfig = getPayloadConfigFromPayload(config, item, key);
