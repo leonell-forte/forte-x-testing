@@ -53,19 +53,13 @@ export const formSchemas = {
   dateRange: () =>
     z
       .object({
-        from: z.date({ required_error: "Start date is required" }),
-        to: z.date({ required_error: "End date is required" }),
+        from: z.string().min(1, "Start date is required"),
+        to: z.string().min(1, "End date is required"),
       })
-      .refine(
-        (data) => {
-          console.log(compareAsc(data.to, data.from));
-          return compareAsc(data.to, data.from) <= 0;
-        },
-        {
-          message: "End date must be after start date",
-          path: ["to"],
-        }
-      ),
+      .refine((data) => compareAsc(data.to, data.from) > 0, {
+        message: "End date must be after start date",
+        path: ["to"],
+      }),
 };
 
 // Helper for password confirmation validation

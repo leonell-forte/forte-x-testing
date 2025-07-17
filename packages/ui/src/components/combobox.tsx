@@ -28,6 +28,7 @@ export interface ComboboxProps {
   search?: string;
   onSearchChange?: (search: string) => void;
   localSearch?: boolean;
+  showIcon?: boolean;
 }
 
 export function Combobox({
@@ -42,6 +43,7 @@ export function Combobox({
   search,
   onSearchChange,
   localSearch = false,
+  showIcon = true,
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
   const [internalSearch, setInternalSearch] = React.useState("");
@@ -83,7 +85,9 @@ export function Combobox({
           disabled={loading}
         >
           {selectedOption?.label || placeholder}
-          <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
+          {showIcon && (
+            <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
+          )}
         </button>
       </PopoverTrigger>
       <PopoverContent className="w-full p-0" align="start">

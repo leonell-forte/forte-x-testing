@@ -49,14 +49,6 @@
   font-display: swap;
 }
 
-@font-face {
-  font-family: "Lato";
-  src: url("../assets/fonts/Lato-SemiboldItalic.ttf") format("truetype");
-  font-weight: 600;
-  font-style: italic;
-  font-display: swap;
-}
-
 /* Lato Bold (700) */
 @font-face {
   font-family: "Lato";
