@@ -8,6 +8,7 @@ import {
 
 import { Combobox } from "../../combobox";
 import { DatePicker } from "../../datepicker";
+import { FileUpload } from "../../file-upload";
 import { Input } from "../../input";
 import type { ColumnConfig } from "./form-table.types";
 
@@ -34,6 +35,16 @@ export function TableField<T extends FieldValues>({
       control={control}
       name={name}
       render={({ field }) => {
+        if (config.type === "file") {
+          return (
+            <FileUpload
+              value={field.value as File | null}
+              onChange={field.onChange}
+              accept={config.accept}
+              hasError={hasError}
+            />
+          );
+        }
         if (config.type === "select") {
           return (
             <Combobox
@@ -42,10 +53,10 @@ export function TableField<T extends FieldValues>({
               localSearch
               className={baseClassName}
               options={config.options}
+              showIcon={false}
             />
           );
         }
-
         if (config.type === "date") {
           return (
             <DatePicker
@@ -53,10 +64,10 @@ export function TableField<T extends FieldValues>({
               selected={field.value as Date}
               onSelect={field.onChange}
               className={baseClassName}
+              showIcon={false}
             />
           );
         }
-
         switch (config.type) {
           default:
             return (

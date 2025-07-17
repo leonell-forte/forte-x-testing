@@ -28,8 +28,8 @@ const registrationForm = {
     linkedin: "",
     status: "",
     cohortRange: {
-      from: undefined,
-      to: undefined,
+      from: "",
+      to: "",
     },
   },
   schema: z

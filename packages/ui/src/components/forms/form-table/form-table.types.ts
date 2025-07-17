@@ -1,7 +1,13 @@
 import type { FieldPath, FieldValues } from "react-hook-form";
 import { z } from "zod";
 
-export type ColumnType = "text" | "email" | "number" | "select" | "date";
+export type ColumnType =
+  | "text"
+  | "email"
+  | "number"
+  | "select"
+  | "date"
+  | "file";
 
 export interface BaseColumnConfig<T extends FieldValues> {
   key: FieldPath<T>;
@@ -29,6 +35,10 @@ export type ColumnConfig<T extends FieldValues> =
     })
   | (BaseColumnConfig<T> & {
       type: "date";
+    })
+  | (BaseColumnConfig<T> & {
+      type: "file";
+      accept?: Record<string, string[]>; // e.g., { 'image/*': ['.png', '.jpg'] }
     });
 
 export interface EditableTableProps<T extends FieldValues> {

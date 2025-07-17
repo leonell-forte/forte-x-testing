@@ -42,8 +42,7 @@ function FormDatePicker<TFieldValues extends FieldValues = FieldValues>({
   const errMsg = useMemo(() => {
     if (
       datePickerProps.mode === "range" &&
-      get(error, "from") &&
-      get(error, "to")
+      (get(error, "from") || get(error, "to"))
     ) {
       return (
         get(error, "from.message", "") ||
@@ -53,6 +52,8 @@ function FormDatePicker<TFieldValues extends FieldValues = FieldValues>({
     }
     return error?.message;
   }, [error, datePickerProps.mode]);
+
+  console.log(error);
   return (
     <InputShell
       name={name}

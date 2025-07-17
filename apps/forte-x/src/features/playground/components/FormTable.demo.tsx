@@ -14,22 +14,27 @@ import { z } from "zod";
 const UserSchema = z.object({
   name: formSchemas.name(),
   email: formSchemas.email(),
-  role: formSchemas.required(),
   status: formSchemas.required(),
-  birthdate: formSchemas.date(),
+  birthdate: formSchemas.required(),
+  document: formSchemas.required(),
 });
 
 type User = z.infer<typeof UserSchema>;
 
 const userColumns: ColumnConfig<User>[] = [
-  { key: "name", header: "Name", type: "text", placeholder: "Enter name..." },
+  {
+    key: "name",
+    header: "Name",
+    type: "text",
+    placeholder: "Enter name...",
+    minWidth: "182px",
+  },
   {
     key: "email",
     header: "Email",
     type: "email",
     placeholder: "Enter email...",
   },
-  { key: "role", header: "Role", type: "text", placeholder: "Enter role..." },
   {
     key: "status",
     header: "Status",
@@ -53,6 +58,16 @@ const userColumns: ColumnConfig<User>[] = [
     type: "date",
     placeholder: "Enter birthdate...",
   },
+  {
+    key: "document",
+    type: "file",
+    header: "Files",
+    accept: {
+      "application/pdf": [".pdf"],
+      "image/*": [".png", ".jpg", ".jpeg"],
+    },
+    maxWidth: "120px",
+  },
 ];
 
 export default function FormTableDemo() {
@@ -72,9 +87,9 @@ export default function FormTableDemo() {
           defaultRow={{
             name: "",
             email: "",
-            role: "",
             status: "",
             birthdate: "",
+            document: "",
           }}
           onSubmit={(data) => {
             // Do something with the data

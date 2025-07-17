@@ -137,19 +137,11 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50 font-mono;
+    @apply border-border outline-ring/50 font-sans;
   }
   body {
     @apply bg-background text-foreground;
   }
-
-  /* playground styles */
-
-  .playground * {
-    @apply font-mono;
-  }
-
-  /* playground styles */
 
   .dark .rdp-caption_label {
     @apply bg-transparent text-white;

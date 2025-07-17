@@ -111,9 +111,9 @@ export default function PieChartDemo() {
                       y={"50%"}
                       textAnchor="middle"
                       dominantBaseline="middle"
-                      fill="#222"
                       fontSize={24}
                       fontWeight="bold"
+                      fill="var(--foreground)"
                     >
                       {totalVisitors.toLocaleString()}
                     </text>

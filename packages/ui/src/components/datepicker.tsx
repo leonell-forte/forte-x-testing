@@ -57,31 +57,30 @@ export function DatePicker(props: DatePickerProps) {
     required = false,
   } = props;
 
+  const [local, setLocal] = React.useState<
+    Date | Date[] | DateRange | undefined
+  >(selected);
   const [open, setOpen] = React.useState(false);
 
-  // Format the display value based on mode and selection
   const formatDisplayValue = React.useCallback(() => {
-    if (!selected) return placeholder;
+    if (!local) return placeholder;
 
     if (mode === "single") {
-      return selected instanceof Date
-        ? selected.toLocaleDateString()
-        : placeholder;
+      return local instanceof Date ? local.toLocaleDateString() : placeholder;
     }
 
     if (mode === "multiple") {
-      const dates = Array.isArray(selected) ? selected : [];
+      const dates = Array.isArray(local) ? local : [];
       if (dates.length === 0) return placeholder;
       if (dates.length === 1) return dates[0].toLocaleDateString();
       return `${dates.length} dates selected`;
     }
 
     if (mode === "range") {
-      const range = selected as DateRange;
+      const range = local as DateRange;
       if (!range?.from) return placeholder;
       if (!range.to) return `${range.from.toLocaleDateString()} - ...`;
 
-      // Don't show "to" date if it's the same as "from" date
       if (range.from.getTime() === range.to.getTime()) {
         return `${range.from.toLocaleDateString()} - ...`;
       }
@@ -90,13 +89,22 @@ export function DatePicker(props: DatePickerProps) {
     }
 
     return placeholder;
-  }, [selected, mode, placeholder]);
+  }, [local, mode, placeholder]);
 
-  // Handle selection and popover closing
   const handleSelect = React.useCallback(
     (value: any) => {
       if (onSelect) {
-        onSelect(value);
+        if (mode === "single") {
+          onSelect(value.toLocaleDateString());
+        } else if (mode === "multiple") {
+          onSelect(value.map((date: Date) => date.toLocaleDateString()));
+        } else if (mode === "range") {
+          onSelect({
+            from: value.from.toLocaleDateString(),
+            to: value.to.toLocaleDateString(),
+          });
+        }
+        setLocal(value);
       }
       if (mode === "single" && value) {
         setOpen(false);
@@ -125,9 +133,8 @@ export function DatePicker(props: DatePickerProps) {
           <span
             className={cn(
               "truncate",
-              !selected ||
-                (mode === "range" &&
-                  (!get(selected, "from") || !get(selected, "to")))
+              !local ||
+                (mode === "range" && (!get(local, "from") || !get(local, "to")))
                 ? "text-muted-foreground"
                 : ""
             )}
@@ -142,7 +149,7 @@ export function DatePicker(props: DatePickerProps) {
       <PopoverContent className="w-auto overflow-hidden p-0" align="start">
         <Calendar
           mode={mode}
-          selected={selected as any}
+          selected={local as any}
           onSelect={handleSelect}
           captionLayout={captionLayout}
           numberOfMonths={mode === "range" ? 2 : 1}
