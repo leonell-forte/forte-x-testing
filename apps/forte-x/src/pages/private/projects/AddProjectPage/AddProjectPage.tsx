@@ -1,3 +1,7 @@
+import { Button } from "@repo/ui/components/button";
+import { Input } from "@repo/ui/components/input";
+import { Label } from "@repo/ui/components/label";
+
 import {
   Stepper,
   StepperContent,
@@ -9,7 +13,7 @@ import {
 const AddProjectPage = () => {
   return (
     <div className="h-full">
-      <Stepper>
+      <Stepper defaultValue="project-details">
         <StepperTitle>
           Complete these steps to fully set up your project
         </StepperTitle>
@@ -42,7 +46,12 @@ const AddProjectPage = () => {
             value="student-set-up"
           />
         </StepperList>
-        {/* <StepperContent></StepperContent> */}
+        <StepperContent value="project-details">
+          <p>Project details</p>
+        </StepperContent>
+        <StepperContent value="milestones">
+          <p>Milestones</p>
+        </StepperContent>
       </Stepper>
     </div>
   );
