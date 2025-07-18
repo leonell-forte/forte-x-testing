@@ -12,6 +12,7 @@ import {
 
 import Milestones from "./Steps/Milestones/Milestones";
 import ProjectDetails from "./Steps/ProjectDetails";
+import Providers from "./Steps/Providers/Providers";
 
 const AddProjectPage = () => {
   return (
@@ -54,6 +55,9 @@ const AddProjectPage = () => {
         </StepperContent>
         <StepperContent value="milestones">
           <Milestones />
+        </StepperContent>
+        <StepperContent value="providers">
+          <Providers />
         </StepperContent>
       </Stepper>
     </div>
