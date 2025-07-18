@@ -1,5 +1,4 @@
 import { Button } from "@repo/ui/components/button";
-import React from "react";
 
 import ProvidersTable from "./ProvidersTable";
 

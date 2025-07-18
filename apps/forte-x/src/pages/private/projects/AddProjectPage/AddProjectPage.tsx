@@ -1,7 +1,3 @@
-import { Button } from "@repo/ui/components/button";
-import { Input } from "@repo/ui/components/input";
-import { Label } from "@repo/ui/components/label";
-
 import {
   Stepper,
   StepperContent,
