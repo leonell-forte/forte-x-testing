@@ -17,9 +17,7 @@ import {
   Users,
 } from "./role-permissions";
 
-const EvidencesPage = React.lazy(
-  () => import("@/pages/Evidence/EvidencePage")
-);
+const EvidencesPage = React.lazy(() => import("@/pages/Evidence/EvidencePage"));
 
 const UsersPage = React.lazy(() => import("@/pages/Users/UsersPage"));
 
