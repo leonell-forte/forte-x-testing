@@ -40,7 +40,7 @@ export function FilePreviewPopover({
           onMouseEnter={() => setOpen(true)}
           onMouseLeave={() => setOpen(false)}
           tabIndex={0}
-          className="outline-none"
+          className="w-full outline-none"
         >
           {children}
         </div>
@@ -166,28 +166,28 @@ export function FileUpload({
       ) : (
         <div className="flex h-full w-full items-center justify-center space-y-2">
           {!uploadState.isUploading ? (
-            <div className="flex w-full items-center justify-between rounded-md border pl-2">
-              <FilePreviewPopover file={currentFile}>
+            <FilePreviewPopover file={currentFile}>
+              <div className="flex w-full min-w-0 items-center justify-between rounded-md border pl-2">
                 <div className="flex min-w-0 flex-1 items-center gap-x-1.5">
                   <span className="flex-shrink-0">
                     {getFileIcon(currentFile)}
                   </span>
-                  <span className="w-full min-w-0 truncate text-xs font-medium">
-                    {currentFile.name}
-                  </span>
                 </div>
-              </FilePreviewPopover>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                onClick={removeFile}
-                disabled={uploadState.isUploading}
-                className="ml-1"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
+                <span className="ml-5 w-full min-w-0 truncate text-xs font-medium">
+                  {currentFile.name}
+                </span>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={removeFile}
+                  disabled={uploadState.isUploading}
+                  className="ml-1"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </FilePreviewPopover>
           ) : (
             <div className="flex h-full w-full items-center">
               <Progress value={uploadState.progress} className="h-2" />

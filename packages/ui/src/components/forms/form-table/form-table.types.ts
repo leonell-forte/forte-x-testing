@@ -7,7 +7,8 @@ export type ColumnType =
   | "number"
   | "select"
   | "date"
-  | "file";
+  | "file"
+  | "multi-select";
 
 export interface BaseColumnConfig<T extends FieldValues> {
   key: FieldPath<T>;
@@ -39,6 +40,15 @@ export type ColumnConfig<T extends FieldValues> =
   | (BaseColumnConfig<T> & {
       type: "file";
       accept?: Record<string, string[]>; // e.g., { 'image/*': ['.png', '.jpg'] }
+    })
+  | (BaseColumnConfig<T> & {
+      type: "multi-select";
+      options: Array<{
+        value: string;
+        label: string;
+        icon?: React.ComponentType<{ className?: string }>;
+      }>;
+      maxCount?: number;
     });
 
 export interface EditableTableProps<T extends FieldValues> {

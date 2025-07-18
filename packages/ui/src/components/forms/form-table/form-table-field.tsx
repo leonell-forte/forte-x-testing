@@ -10,6 +10,7 @@ import { Combobox } from "../../combobox";
 import { DatePicker } from "../../datepicker";
 import { FileUpload } from "../../file-upload";
 import { Input } from "../../input";
+import { MultiSelect } from "../../multi-select";
 import type { ColumnConfig } from "./form-table.types";
 
 interface FieldProps<T extends FieldValues> {
@@ -54,6 +55,7 @@ export function TableField<T extends FieldValues>({
               className={baseClassName}
               options={config.options}
               showIcon={false}
+              placeholder={config.placeholder || ""}
             />
           );
         }
@@ -65,6 +67,22 @@ export function TableField<T extends FieldValues>({
               onSelect={field.onChange}
               className={baseClassName}
               showIcon={false}
+              placeholder={config.placeholder || ""}
+            />
+          );
+        }
+        if (config.type === "multi-select") {
+          return (
+            <MultiSelect
+              options={config.options}
+              value={field.value as string[]}
+              onValueChange={field.onChange}
+              className={baseClassName}
+              maxCount={config.maxCount}
+              placeholder={config.placeholder || ""}
+              hideClear
+              hideChevron
+              modalPopover
             />
           );
         }
@@ -75,7 +93,7 @@ export function TableField<T extends FieldValues>({
                 {...field}
                 type={config.type}
                 className={baseClassName}
-                placeholder={config.placeholder}
+                placeholder={config.placeholder || ""}
                 value={field.value as string}
               />
             );

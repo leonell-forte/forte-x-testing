@@ -9,14 +9,15 @@ import FormTable, {
   type ColumnConfig,
 } from "@repo/ui/components/forms/form-table/form-table";
 import { formSchemas } from "@repo/ui/hooks/useZodForm";
+import { Cat, Dog, Dumbbell, Fish, Guitar, Rabbit, Turtle } from "lucide-react";
 import { z } from "zod";
 
 const UserSchema = z.object({
   name: formSchemas.name(),
-  email: formSchemas.email(),
   status: formSchemas.required(),
   birthdate: formSchemas.required(),
-  document: formSchemas.required(),
+  document: formSchemas.file(),
+  courses: formSchemas.array(),
 });
 
 type User = z.infer<typeof UserSchema>;
@@ -26,20 +27,12 @@ const userColumns: ColumnConfig<User>[] = [
     key: "name",
     header: "Name",
     type: "text",
-    placeholder: "Enter name...",
-    minWidth: "182px",
-  },
-  {
-    key: "email",
-    header: "Email",
-    type: "email",
-    placeholder: "Enter email...",
+    maxWidth: "208px",
   },
   {
     key: "status",
     header: "Status",
     type: "select",
-    placeholder: "Select status",
     options: [
       { value: "active", label: "Active" },
       { value: "suspended", label: "Suspended" },
@@ -50,13 +43,14 @@ const userColumns: ColumnConfig<User>[] = [
       { value: "banned", label: "Banned" },
       { value: "inactive", label: "Inactive" },
     ],
-    width: "130px",
+    maxWidth: "70px",
   },
   {
     key: "birthdate",
     header: "Birth Date",
     type: "date",
-    placeholder: "Enter birthdate...",
+    maxWidth: "80px",
+    minWidth: "80px",
   },
   {
     key: "document",
@@ -66,7 +60,28 @@ const userColumns: ColumnConfig<User>[] = [
       "application/pdf": [".pdf"],
       "image/*": [".png", ".jpg", ".jpeg"],
     },
-    maxWidth: "120px",
+    maxWidth: "80px",
+  },
+  {
+    key: "courses",
+    type: "multi-select",
+    header: "Courses",
+    options: [
+      { value: "math", label: "Math", icon: Turtle },
+      { value: "science", label: "Science", icon: Cat },
+      { value: "history", label: "History", icon: Dog },
+      { value: "english", label: "English", icon: Fish },
+      { value: "art", label: "Art", icon: Rabbit },
+      { value: "music", label: "Music", icon: Guitar },
+      {
+        value: "physical-education",
+        label: "Physical Education",
+        icon: Dumbbell,
+      },
+    ],
+    maxCount: 3,
+    minWidth: "100px",
+    maxWidth: "550px",
   },
 ];
 
@@ -86,10 +101,10 @@ export default function FormTableDemo() {
           columns={userColumns}
           defaultRow={{
             name: "",
-            email: "",
             status: "",
             birthdate: "",
-            document: "",
+            document: "" as any,
+            courses: [],
           }}
           onSubmit={(data) => {
             // Do something with the data

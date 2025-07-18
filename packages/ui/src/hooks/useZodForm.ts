@@ -48,6 +48,10 @@ export const formSchemas = {
     }),
   url: () => z.string().url("Please enter a valid URL"),
   required: (message = "This field is required") => z.string().min(1, message),
+  file: () =>
+    z.instanceof(File).refine((file) => file.size > 0, {
+      message: "File is required",
+    }),
   optional: () => z.string().optional(),
   boolean: () => z.boolean().optional(),
   dateRange: () =>
@@ -60,6 +64,8 @@ export const formSchemas = {
         message: "End date must be after start date",
         path: ["to"],
       }),
+  array: () =>
+    z.array(z.string()).min(1, { message: "Please add at least one item" }),
 };
 
 // Helper for password confirmation validation
