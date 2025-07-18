@@ -10,6 +10,8 @@ import {
   StepperTrigger,
 } from "@/components/ui/stepper";
 
+import ProjectDetails from "./Steps/ProjectDetails";
+
 const AddProjectPage = () => {
   return (
     <div className="h-full">
@@ -47,7 +49,7 @@ const AddProjectPage = () => {
           />
         </StepperList>
         <StepperContent value="project-details">
-          <p>Project details</p>
+          <ProjectDetails />
         </StepperContent>
         <StepperContent value="milestones">
           <p>Milestones</p>

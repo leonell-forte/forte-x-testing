@@ -10,10 +10,10 @@ import React, {
   useState,
 } from "react";
 
-const Stepper = ({ 
-  children, 
-  defaultValue 
-}: { 
+const Stepper = ({
+  children,
+  defaultValue,
+}: {
   children: React.ReactNode;
   defaultValue: string; // Required prop to determine initial active step
 }) => {
@@ -23,7 +23,7 @@ const Stepper = ({
         <div className="h-full w-[480px] space-y-10 rounded-[30px] border border-gray-400 bg-green-50/50 p-10">
           {children}
         </div>
-        <div className="pl-24">
+        <div className="px-24 py-10">
           <StepperContentDisplay />
         </div>
       </div>
@@ -48,16 +48,26 @@ const StepperTrigger = ({
   description: string;
   value: string;
 }) => {
-  const { dispatch } = useContext(StepperContext);
+  const { dispatch, activeStep } = useContext(StepperContext);
 
   const handleClick = () => {
     dispatch({ type: "SET_ACTIVE_STEP", payload: value });
   };
 
+  const isActive = value === activeStep;
+
   return (
-    <li onClick={handleClick}>
-      <p className={cn("text-lg font-bold")}>{title}</p>
-      <p className={cn("text-[14px]")}>{description}</p>
+    <li
+      onClick={handleClick}
+      className={cn("cursor-pointer", isActive && "text-green-300")}
+    >
+      <div>
+        <div></div>
+        <div>
+          <p className={cn("text-lg font-bold")}>{title}</p>
+          <p className={cn("text-[14px]")}>{description}</p>
+        </div>
+      </div>
     </li>
   );
 };
@@ -125,14 +135,14 @@ const reducer = (state: State, action: Actions) => {
   }
 };
 
-const StepperProvider = ({ 
-  children, 
-  defaultValue 
+const StepperProvider = ({
+  children,
+  defaultValue,
 }: PropsWithChildren<{ defaultValue: string }>) => {
   // Initialize with the defaultValue
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
-    activeStep: defaultValue
+    activeStep: defaultValue,
   });
   const [contentMap, setContentMap] = useState<Record<string, ReactNode>>({});
 
