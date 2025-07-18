@@ -48,7 +48,7 @@ const StepperTrigger = ({
   description: string;
   value: string;
 }) => {
-  const { dispatch, activeStep } = useContext(StepperContext);
+  const { dispatch, activeStep } = useStepper();
 
   const handleClick = () => {
     dispatch({ type: "SET_ACTIVE_STEP", payload: value });
@@ -79,7 +79,7 @@ const StepperContent = ({
   children: React.ReactNode;
   value: string;
 }) => {
-  const { registerContent } = useContext(StepperContext);
+  const { registerContent } = useStepper();
 
   // Register this content with the context when mounted
   React.useEffect(() => {
@@ -92,7 +92,7 @@ const StepperContent = ({
 
 // Component to display the active step content in the sample area
 const StepperContentDisplay = () => {
-  const { activeStep, contentMap } = useContext(StepperContext);
+  const { activeStep, contentMap } = useStepper();
 
   if (!activeStep || !contentMap[activeStep]) {
     return <p className="text-gray-500">Select a step to view content</p>;
@@ -108,6 +108,7 @@ type State = {
   contentMap: Record<string, React.ReactNode>;
   registerContent: (key: string, content: React.ReactNode) => void;
   dispatch: Dispatch<Actions>;
+  setActiveStep: (step: string) => void;
 };
 
 type Actions = {
@@ -120,6 +121,7 @@ const initialState: State = {
   contentMap: {},
   registerContent: () => {},
   dispatch: () => {},
+  setActiveStep: () => {},
 };
 
 const StepperContext = createContext(initialState);
@@ -153,6 +155,10 @@ const StepperProvider = ({
     }));
   }, []);
 
+  const setActiveStep = (step: string) => {
+    dispatch({ type: "SET_ACTIVE_STEP", payload: step });
+  };
+
   return (
     <StepperContext.Provider
       value={{
@@ -160,6 +166,7 @@ const StepperProvider = ({
         contentMap,
         registerContent,
         dispatch,
+        setActiveStep,
       }}
     >
       {children}
@@ -167,4 +174,21 @@ const StepperProvider = ({
   );
 };
 
-export { Stepper, StepperList, StepperTrigger, StepperContent, StepperTitle };
+const useStepper = () => {
+  const context = useContext(StepperContext);
+
+  if (!context) {
+    throw new Error("useStepper must be used within a StepperProvider");
+  }
+
+  return context;
+};
+
+export {
+  Stepper,
+  StepperList,
+  StepperTrigger,
+  StepperContent,
+  StepperTitle,
+  useStepper,
+};

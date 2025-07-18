@@ -1,8 +1,11 @@
 import { Button } from "@repo/ui/components/button";
 
+import { useStepper } from "@/components/ui/stepper";
+
 import MilestoneTable from "./MilestoneTable";
 
 const Milestones = () => {
+  const { setActiveStep } = useStepper();
   return (
     <div className="max-w-[800px] space-y-4">
       <p className="text-lg text-green-300">Step 2 of 5</p>
@@ -24,8 +27,13 @@ const Milestones = () => {
           </div>
 
           <div className="flex justify-between">
-            <Button variant="outline">Back</Button>
-            <Button>Next</Button>
+            <Button
+              variant="outline"
+              onClick={() => setActiveStep("project-details")}
+            >
+              Back
+            </Button>
+            <Button onClick={() => setActiveStep("providers")}>Next</Button>
           </div>
         </div>
       </div>

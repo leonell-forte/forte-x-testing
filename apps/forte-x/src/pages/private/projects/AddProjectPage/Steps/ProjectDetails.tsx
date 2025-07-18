@@ -4,11 +4,18 @@ import FormInput from "@repo/ui/components/forms/form-input";
 import { useZodForm } from "@repo/ui/hooks/useZodForm";
 import { z } from "zod";
 
+import { useStepper } from "@/components/ui/stepper";
+
 const ProjectDetails = () => {
+  const { setActiveStep } = useStepper();
   const form = useZodForm({
     defaultValues: {},
     schema: z.object({}),
   });
+
+  const onSubmit = () => {
+    setActiveStep("milestones");
+  };
   return (
     <div className="max-w-[800px] space-y-4">
       <p className="text-lg text-green-300">Step 1 of 5</p>
@@ -25,7 +32,7 @@ const ProjectDetails = () => {
         <div className="space-y-6">
           <h3 className="text-xl font-semibold">Project details</h3>
 
-          <Form form={form} onSubmit={() => {}} className="space-y-12">
+          <Form form={form} onSubmit={onSubmit} className="space-y-12">
             <div>
               <FormInput name="projectName" label="Project name" />
               <FormInput name="description" label="Project description" />
