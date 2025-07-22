@@ -34,10 +34,7 @@ function toast(toast: Omit<ToastProps, "id">) {
       id={id}
       title={toast.title}
       description={toast.description}
-      button={{
-        label: toast.button.label,
-        onClick: () => console.log("Button clicked"),
-      }}
+      button={toast.button}
     />
   ));
 }
@@ -50,19 +47,24 @@ function Toast(props: ToastProps) {
       <div className="flex flex-1 items-center">
         <div className="w-full">
           <p className="text-popover-foreground text-sm font-medium">{title}</p>
-          <p className="text-popover-foreground mt-1 text-sm">{description}</p>
+          {description && (
+            <p className="text-popover-foreground mt-1 text-sm">
+              {description}
+            </p>
+          )}
         </div>
       </div>
-
-      <Button
-        size="sm"
-        onClick={() => {
-          button.onClick();
-          sonnerToast.dismiss(id);
-        }}
-      >
-        {button.label}
-      </Button>
+      {button && (
+        <Button
+          size="sm"
+          onClick={() => {
+            button.onClick();
+            sonnerToast.dismiss(id);
+          }}
+        >
+          {button.label}
+        </Button>
+      )}
     </div>
   );
 }
@@ -70,8 +72,8 @@ function Toast(props: ToastProps) {
 interface ToastProps {
   id: string | number;
   title: string;
-  description: string;
-  button: {
+  description?: string;
+  button?: {
     label: string;
     onClick: () => void;
   };

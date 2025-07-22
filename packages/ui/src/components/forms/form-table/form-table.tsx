@@ -6,21 +6,26 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { CircleAlert, Trash } from "lucide-react";
-import React, { useState } from "react";
+import { CircleAlert } from "lucide-react";
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
 import {
   type FieldError,
   type FieldErrors,
   type FieldPath,
   type FieldValues,
   type Path,
-  type SubmitHandler,
   useFieldArray,
   useForm,
+  useWatch,
 } from "react-hook-form";
 import { z } from "zod";
 
-import { Button } from "../../button";
+import { Checkbox } from "../../checkbox";
 import { Input } from "../../input";
 import {
   Table,
@@ -88,17 +93,28 @@ function castFieldArrayToRows<T extends FieldValues>(
   return fields.map(({ id, ...rest }) => rest as unknown as T);
 }
 
-export default function EditableTable<T extends FieldValues>({
-  schema,
-  columns,
-  defaultRow,
-  onSubmit,
-  initialData = [defaultRow],
-  addRowPlaceholder = "+ Add new item",
-  submitButtonText = "Save Changes",
-  className = "",
-  color = "primary",
-}: EditableTableProps<T>) {
+interface ModifiedEditableTableProps<T extends FieldValues>
+  extends Omit<EditableTableProps<T>, "onSubmit" | "submitButtonText"> {
+  onChange?: (data: { rows: T[] }) => void;
+  selectedRows: Set<number>;
+  onSelectionChange: (selectedRows: Set<number>) => void;
+}
+
+const EditableTable = forwardRef(function EditableTable<T extends FieldValues>(
+  {
+    schema,
+    columns,
+    defaultRow,
+    onChange,
+    initialData = [defaultRow],
+    addRowPlaceholder = "+ Add new item",
+    className = "",
+    color = "primary",
+    selectedRows,
+    onSelectionChange,
+  }: ModifiedEditableTableProps<T>,
+  ref: React.Ref<any>
+) {
   const [newRowInput, setNewRowInput] = useState("");
   const [addHover, setAddHover] = useState(false);
 
@@ -110,12 +126,13 @@ export default function EditableTable<T extends FieldValues>({
 
   const {
     control,
-    handleSubmit,
     formState: { errors },
+    trigger,
+    getValues,
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: { rows: initialData },
-    mode: "onSubmit",
+    mode: "onChange",
   });
 
   // @ts-expect-error - react-hook-form constraint issue with generic types
@@ -123,6 +140,33 @@ export default function EditableTable<T extends FieldValues>({
     control,
     name: "rows",
   });
+
+  const watchedData = useWatch({
+    control,
+    name: "rows",
+  });
+
+  useEffect(() => {
+    if (onChange && watchedData) {
+      onChange({ rows: watchedData });
+    }
+  }, [watchedData, onChange]);
+
+  useImperativeHandle(ref, () => ({
+    validate: () => trigger(),
+    getValues: () => getValues(),
+    errors,
+    removeRows: (indices: number[]) => {
+      const sortedIndices = [...indices].sort((a, b) => b - a);
+      sortedIndices.forEach((index) => remove(index));
+    },
+    getSelectedRowsData: () => {
+      const currentData = getValues().rows;
+      return Array.from(selectedRows)
+        .map((index) => currentData[index])
+        .filter(Boolean);
+    },
+  }));
 
   const handleAddRow = () => {
     if (newRowInput.trim()) {
@@ -136,12 +180,52 @@ export default function EditableTable<T extends FieldValues>({
     }
   };
 
-  const handleFormSubmit: SubmitHandler<FormData> = (data) => {
-    onSubmit(data);
+  const handleRowSelection = (rowIndex: number, checked: boolean) => {
+    const newSelection = new Set(selectedRows);
+    if (checked) {
+      newSelection.add(rowIndex);
+    } else {
+      newSelection.delete(rowIndex);
+    }
+    onSelectionChange(newSelection);
   };
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      const allIndices = new Set(fields.map((_, index) => index));
+      onSelectionChange(allIndices);
+    } else {
+      onSelectionChange(new Set());
+    }
+  };
+
+  const isAllSelected =
+    fields.length > 0 && selectedRows.size === fields.length;
+  const isIndeterminate =
+    selectedRows.size > 0 && selectedRows.size < fields.length;
 
   const tableColumns = React.useMemo<ColumnDef<T>[]>(
     () => [
+      {
+        header: () => (
+          <Checkbox
+            checked={isAllSelected}
+            onCheckedChange={handleSelectAll}
+            aria-label="Select all rows"
+          />
+        ),
+        id: "select",
+        size: 1,
+        cell: ({ row }) => (
+          <Checkbox
+            checked={selectedRows.has(row.index)}
+            onCheckedChange={(checked) =>
+              handleRowSelection(row.index, Boolean(checked))
+            }
+            aria-label={`Select row ${row.index + 1}`}
+          />
+        ),
+      },
       ...columns.map((config) => {
         const column: ColumnDef<T> = {
           header: config.header,
@@ -177,26 +261,18 @@ export default function EditableTable<T extends FieldValues>({
         };
         return column;
       }),
-      {
-        header: "",
-        id: "actions",
-        size: 5,
-        cell: ({ row }) => (
-          <div className="flex items-center justify-center">
-            <button
-              type="button"
-              className="hover:text-destructive text-muted-foreground disabled:text-muted p-1 transition-colors disabled:pointer-events-none"
-              onClick={() => remove(row.index)}
-              disabled={fields.length === 1}
-              title="Delete row"
-            >
-              <Trash className="h-4 w-4" />
-            </button>
-          </div>
-        ),
-      },
     ],
-    [columns, control, remove, fields.length, errors]
+    [
+      columns,
+      control,
+      remove,
+      fields.length,
+      errors,
+      selectedRows,
+      onSelectionChange,
+      isAllSelected,
+      isIndeterminate,
+    ]
   );
 
   const table = useReactTable({
@@ -224,10 +300,7 @@ export default function EditableTable<T extends FieldValues>({
 
   return (
     <TooltipProvider>
-      <form
-        onSubmit={handleSubmit(handleFormSubmit)}
-        className={cn("w-full space-y-4", className)}
-      >
+      <div className={cn("w-full", className)}>
         <div className="overflow-hidden rounded-lg border">
           <Table className="w-full table-fixed">
             <TableHeader>
@@ -236,7 +309,10 @@ export default function EditableTable<T extends FieldValues>({
                   {headerGroup.headers.map((header) => (
                     <TableHead
                       key={header.id}
-                      className="px-4.5 overflow-hidden text-ellipsis whitespace-nowrap border-r text-center last:border-r-0"
+                      className={cn(
+                        "px-4.5 overflow-hidden text-ellipsis whitespace-nowrap border-r text-center last:border-r-0",
+                        header.column.id === "select" && "pl-0"
+                      )}
                       style={{
                         width: header.getSize(),
                       }}
@@ -256,7 +332,10 @@ export default function EditableTable<T extends FieldValues>({
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
-                      className="overflow-hidden text-ellipsis whitespace-nowrap border-r last:border-r-0"
+                      className={cn(
+                        "overflow-hidden text-ellipsis whitespace-nowrap border-r last:border-r-0",
+                        cell.column.id === "select" && "pl-0 text-center"
+                      )}
                       style={{
                         width: cell.column.getSize(),
                       }}
@@ -270,7 +349,6 @@ export default function EditableTable<T extends FieldValues>({
                 </TableRow>
               ))}
 
-              {/* Add new row input */}
               <TableRow {...addBorder}>
                 <TableCell colSpan={tableColumns.length} className="p-2">
                   <Input
@@ -291,13 +369,11 @@ export default function EditableTable<T extends FieldValues>({
             </TableBody>
           </Table>
         </div>
-
-        <div className="flex justify-end">
-          <Button type="submit">{submitButtonText}</Button>
-        </div>
-      </form>
+      </div>
     </TooltipProvider>
   );
-}
+});
+
+export default EditableTable;
 
 export { type ColumnConfig };

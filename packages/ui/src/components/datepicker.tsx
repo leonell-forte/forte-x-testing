@@ -104,7 +104,6 @@ export function DatePicker(props: DatePickerProps) {
             to: value.to.toLocaleDateString(),
           });
         }
-        setLocal(value);
       }
       if (mode === "single" && value) {
         setOpen(false);
@@ -119,6 +118,21 @@ export function DatePicker(props: DatePickerProps) {
     },
     [onSelect, mode]
   );
+
+  React.useEffect(() => {
+    if (selected) {
+      if (mode === "single") {
+        setLocal(new Date(selected));
+      } else if (mode === "multiple") {
+        setLocal(selected.map((date: Date) => new Date(date)));
+      } else if (mode === "range" && selected.from && selected.to) {
+        setLocal({
+          from: new Date(selected.from),
+          to: new Date(selected.to),
+        });
+      }
+    }
+  }, [selected, mode]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

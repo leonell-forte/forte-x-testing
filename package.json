@@ -5,6 +5,7 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "dev-fortex": "turbo run dev --filter forte-x",
+    "build-fortex": "turbo run build --filter forte-x",
     "dev-admin": "turbo run dev --filter admin",
     "lint": "turbo run lint",
     "check-types": "turbo run check-types",

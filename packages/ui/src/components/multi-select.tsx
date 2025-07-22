@@ -50,15 +50,15 @@ interface MultiSelectProps
     icon?: React.ComponentType<{ className?: string }>;
   }[];
   onValueChange: (value: string[]) => void;
-  defaultValue?: string[];
+  value?: string[];
   placeholder?: string;
   animation?: number;
   maxCount?: number;
   modalPopover?: boolean;
   asChild?: boolean;
   className?: string;
-  hideClear?: boolean; // NEW: Hide the "X" (clear all) button
-  hideChevron?: boolean; // NEW: Hide the chevron
+  hideClear?: boolean;
+  hideChevron?: boolean;
 }
 
 export const MultiSelect = React.forwardRef<
@@ -70,7 +70,7 @@ export const MultiSelect = React.forwardRef<
       options,
       onValueChange,
       variant,
-      defaultValue = [],
+      value = [],
       placeholder = "Select options",
       animation = 0,
       maxCount = 3,
@@ -84,7 +84,7 @@ export const MultiSelect = React.forwardRef<
     ref
   ) => {
     const [selectedValues, setSelectedValues] = React.useState<string[]>(
-      defaultValue ?? []
+      value ?? []
     );
     const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
     const [isAnimating, setIsAnimating] = React.useState(false);

@@ -9,6 +9,7 @@ import Form from "@repo/ui/components/forms/form";
 import FormDatePicker from "@repo/ui/components/forms/form-datepicker";
 import FormInput from "@repo/ui/components/forms/form-input";
 import FormMobile from "@repo/ui/components/forms/form-mobile";
+import FormNumber from "@repo/ui/components/forms/form-number";
 import FormSelect from "@repo/ui/components/forms/form-select";
 import { formSchemas, useZodForm } from "@repo/ui/hooks/useZodForm";
 import { z } from "zod";
@@ -24,6 +25,7 @@ const registrationForm = {
     endDate: "",
     phone: "",
     birthDate: "",
+    salary: "",
     rememberMe: false,
     linkedin: "",
     status: "",
@@ -44,6 +46,7 @@ const registrationForm = {
       rememberMe: formSchemas.boolean(),
       linkedin: formSchemas.url(),
       birthDate: formSchemas.required(),
+      salary: formSchemas.required(),
       status: formSchemas.required(),
     })
     .refine((data) => data.password === data.confirmPassword, {
@@ -104,6 +107,7 @@ export default function FormDemo() {
               mode="range"
             />
             <FormMobile name="phone" label="Phone" />
+            <FormNumber name="salary" label="Salary" />
           </div>
           <Button type="submit" className="w-36">
             Submit

@@ -50,6 +50,7 @@
   --danger: hsl(0 80% 85%);
   --danger-foreground: hsl(0 60% 30%);
   --radius: 0.6rem;
+  --toolbar: hsl(247.9, 0.5%, 97.6%);
 }
 
 .dark {
@@ -82,7 +83,6 @@
   --chart-8: hsl(0 80% 35%);
   --chart-9: hsl(220 60% 30%);
   --chart-10: hsl(280 70% 35%);
-
   --success: hsl(140 40% 25%);
   --success-foreground: hsl(140 60% 85%);
   --info: hsl(200 40% 25%);
@@ -91,6 +91,7 @@
   --warning-foreground: hsl(45 100% 85%);
   --danger: hsl(0 60% 30%);
   --danger-foreground: hsl(0 80% 90%);
+  --toolbar: hsl(265.8, 25.5%, 16.2%);
 }
 
 @theme inline {
@@ -133,6 +134,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --color-toolbar: var(--toolbar);
 }
 
 @layer base {
