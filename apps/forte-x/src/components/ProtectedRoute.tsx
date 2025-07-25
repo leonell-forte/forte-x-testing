@@ -13,7 +13,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  return <div className="h-screen p-10">{children}</div>;
+  return <div>{children}</div>;
 };
 
 export default ProtectedRoute;

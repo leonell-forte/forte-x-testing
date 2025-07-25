@@ -10,7 +10,8 @@
     "lint": "turbo run lint",
     "check-types": "turbo run check-types",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "preview-fortex": "turbo run preview --filter forte-x"
+    "preview-fortex": "turbo run preview --filter forte-x",
+    "deploy": "pnpm run build-fortex && firebase deploy"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^5.2.0",

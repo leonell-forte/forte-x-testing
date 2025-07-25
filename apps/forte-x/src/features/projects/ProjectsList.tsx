@@ -2,9 +2,9 @@ import { Button } from "@repo/ui/components/button";
 import { Tabs, TabsList, TabsTrigger } from "@repo/ui/components/tabs";
 import { Link, useNavigate } from "react-router-dom";
 
-import ProjectCard from "@/features/projects/components/ProjectCard";
+import ProjectCard from "./components/ProjectCard";
 
-const ProjectsPage = () => {
+const ProjectsList = () => {
   const navigate = useNavigate();
   return (
     <div className="space-y-6">
@@ -18,9 +18,6 @@ const ProjectsPage = () => {
               <TabsTrigger value="past">Past Projects</TabsTrigger>
               <TabsTrigger value="all">All</TabsTrigger>
             </TabsList>
-            {/* <TabsContent value="current"></TabsContent>
-          <TabsContent value="past"></TabsContent>
-          <TabsContent value="all"></TabsContent> */}
           </Tabs>
         </div>
         <Button onClick={() => navigate("/projects/add")}>Add Project</Button>
@@ -37,4 +34,4 @@ const ProjectsPage = () => {
   );
 };
 
-export default ProjectsPage;
+export default ProjectsList;

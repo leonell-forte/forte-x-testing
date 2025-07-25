@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "apps/forte-x/dist",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

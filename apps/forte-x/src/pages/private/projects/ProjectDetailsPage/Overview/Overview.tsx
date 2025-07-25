@@ -8,7 +8,7 @@ import { Progress } from "@repo/ui/components/progress";
 
 import { BallChart } from "@/components/ball-chart/BallChart";
 
-import content from "../content.json";
+import content from "../../content.json";
 
 const Overview = () => {
   return (

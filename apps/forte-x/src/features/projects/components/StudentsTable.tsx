@@ -277,14 +277,14 @@ export default function StudentsTable() {
       </div>
       <DataTable
         table={table}
-        renderExpandedContent={(row) => (
-          <div>
-            {row.name} Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Saepe fugit iusto veritatis vitae quasi, beatae nihil, officia cum
-            ad voluptatem, molestias earum cupiditate? Deleniti voluptatum animi
-            temporibus, maiores voluptates impedit.
-          </div>
-        )}
+        // renderExpandedContent={(row) => (
+        //   <div>
+        //     {row.name} Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        //     Saepe fugit iusto veritatis vitae quasi, beatae nihil, officia cum
+        //     ad voluptatem, molestias earum cupiditate? Deleniti voluptatum animi
+        //     temporibus, maiores voluptates impedit.
+        //   </div>
+        // )}
       />
     </div>
   );
